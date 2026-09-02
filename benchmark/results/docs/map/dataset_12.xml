@@ -1,0 +1,85 @@
+<map d="20260603" l="es" t="Biología celular" src="clase-64">
+  <rec>
+    <src>célula</src>
+    <rel>has_part</rel>
+    <dst>núcleo</dst>
+    <weight>0.9</weight>
+    <evidence>s2</evidence>
+  </rec>
+  <rec>
+    <src>célula</src>
+    <rel>has_part</rel>
+    <dst>mitocondria</dst>
+    <weight>0.9</weight>
+    <evidence>s2</evidence>
+  </rec>
+  <rec>
+    <src>célula</src>
+    <rel>has_part</rel>
+    <dst>membrana plasmática</dst>
+    <weight>0.85</weight>
+    <evidence>s3</evidence>
+  </rec>
+  <rec>
+    <src>cloroplasto</src>
+    <rel>performs</rel>
+    <dst>fotosíntesis</dst>
+    <weight>0.95</weight>
+    <evidence>s4</evidence>
+  </rec>
+  <rec>
+    <src>fotosíntesis</src>
+    <rel>has_part</rel>
+    <dst>fase luminosa</dst>
+    <weight>0.9</weight>
+    <evidence>s4</evidence>
+  </rec>
+  <rec>
+    <src>fotosíntesis</src>
+    <rel>has_part</rel>
+    <dst>ciclo de Calvin</dst>
+    <weight>0.9</weight>
+    <evidence>s5</evidence>
+  </rec>
+  <rec>
+    <src>fase luminosa</src>
+    <rel>produces</rel>
+    <dst>ATP</dst>
+    <weight>0.8</weight>
+    <evidence>s4</evidence>
+  </rec>
+  <rec>
+    <src>mitocondria</src>
+    <rel>performs</rel>
+    <dst>respiración celular</dst>
+    <weight>0.95</weight>
+    <evidence>s6</evidence>
+  </rec>
+  <rec>
+    <src>respiración celular</src>
+    <rel>produces</rel>
+    <dst>ATP</dst>
+    <weight>0.9</weight>
+    <evidence>s6</evidence>
+  </rec>
+  <rec>
+    <src>fotosíntesis</src>
+    <rel>contrasts</rel>
+    <dst>respiración celular</dst>
+    <weight>0.7</weight>
+    <evidence>s7</evidence>
+  </rec>
+  <rec>
+    <src>ciclo celular</src>
+    <rel>has_part</rel>
+    <dst>mitosis</dst>
+    <weight>0.85</weight>
+    <evidence>s8</evidence>
+  </rec>
+  <rec>
+    <src>meiosis</src>
+    <rel>causes</rel>
+    <dst>variabilidad genética</dst>
+    <weight>0.8</weight>
+  </rec>
+</map>

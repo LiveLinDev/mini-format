@@ -1,0 +1,2 @@
+tc|n=1|d=20260603|l=en|t=SIMA release 1.2 regression|proj=SIMA
+TC-001|pipe \| and back\\slash, comma, "quotes", star* and newline\nend|Login with valid credentials|User registered and active|a\, b \| c \\ d\*,enter valid email and password,click Sign in|Dashboard is shown and session cookie is set|high|functional|true

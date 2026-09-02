@@ -1,0 +1,25 @@
+{
+ "prefix": "cat",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "store": "campus-shop",
+  "cur": "USD",
+  "v": 1
+ },
+ "products": [
+  {
+   "sku": "SKU-1001",
+   "name": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "category": "audio",
+   "price": 89.9,
+   "currency": "USD",
+   "stock": 120,
+   "tags": [
+    "a, b | c \\ d*",
+    "noise-cancelling"
+   ],
+   "rating": 4.5
+  }
+ ]
+}

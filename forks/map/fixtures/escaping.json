@@ -1,0 +1,20 @@
+{
+ "prefix": "map",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "es",
+  "t": "Biología celular",
+  "src": "clase-64",
+  "v": 1
+ },
+ "edges": [
+  {
+   "src": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "rel": "has_part",
+   "dst": "núcleo",
+   "weight": 0.9,
+   "evidence": "s2"
+  }
+ ]
+}

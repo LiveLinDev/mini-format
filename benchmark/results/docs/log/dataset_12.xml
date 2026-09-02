@@ -1,0 +1,116 @@
+<log d="20260603" env="staging" host="sima-app-01">
+  <rec>
+    <ts>2026-06-03T08:00:01Z</ts>
+    <level>INFO</level>
+    <service>web</service>
+    <code>HTTP200</code>
+    <message>GET /dashboard served</message>
+    <tags><i>user:26</i></tags>
+    <trace>t-1001</trace>
+    <duration_ms>42</duration_ms>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:00:05Z</ts>
+    <level>INFO</level>
+    <service>worker</service>
+    <code>JOB_START</code>
+    <message>LessonJob 64 started stage transcribe</message>
+    <tags><i>job:64</i><i>stage:transcribe</i></tags>
+    <trace>t-1002</trace>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:02:11Z</ts>
+    <level>WARN</level>
+    <service>worker</service>
+    <code>ASR_SLOW</code>
+    <message>Whisper took longer than budget</message>
+    <tags><i>job:64</i></tags>
+    <trace>t-1003</trace>
+    <duration_ms>126000</duration_ms>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:02:12Z</ts>
+    <level>INFO</level>
+    <service>worker</service>
+    <code>JOB_STAGE</code>
+    <message>stage generate started with 16 chunks</message>
+    <tags><i>job:64</i><i>stage:generate</i></tags>
+    <trace>t-1004</trace>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:05:40Z</ts>
+    <level>ERROR</level>
+    <service>llm</service>
+    <code>NUL_CHAR</code>
+    <message>NUL character in model output; sanitized</message>
+    <tags><i>job:64</i><i>chunk:7</i></tags>
+    <trace>t-1005</trace>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:05:41Z</ts>
+    <level>INFO</level>
+    <service>worker</service>
+    <code>MINI_PARSE</code>
+    <message>150 records parsed, 22 flagged incoherent</message>
+    <tags><i>job:64</i></tags>
+    <trace>t-1006</trace>
+    <duration_ms>310</duration_ms>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:06:02Z</ts>
+    <level>INFO</level>
+    <service>verify</service>
+    <code>WEB_CTX</code>
+    <message>6 queries, 4 results, 2 usable sources</message>
+    <tags><i>job:64</i></tags>
+    <trace>t-1007</trace>
+    <duration_ms>8900</duration_ms>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:06:30Z</ts>
+    <level>ERROR</level>
+    <service>llm</service>
+    <code>CTX_OVERFLOW</code>
+    <message>verification prompt exceeds context; truncated</message>
+    <tags><i>job:64</i></tags>
+    <trace>t-1008</trace>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:07:00Z</ts>
+    <level>INFO</level>
+    <service>worker</service>
+    <code>JOB_DONE</code>
+    <message>LessonJob 64 finished</message>
+    <tags><i>job:64</i></tags>
+    <trace>t-1009</trace>
+    <duration_ms>419000</duration_ms>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:10:15Z</ts>
+    <level>WARN</level>
+    <service>web</service>
+    <code>HTTP404</code>
+    <message>GET /clase/999/ not found</message>
+    <tags><i>user:12</i></tags>
+    <trace>t-1010</trace>
+    <duration_ms>5</duration_ms>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:12:00Z</ts>
+    <level>CRITICAL</level>
+    <service>llm</service>
+    <code>ENDPOINT_DOWN</code>
+    <message>local API base unreachable; retry scheduled</message>
+    <tags><i>endpoint:8003</i></tags>
+    <trace>t-1011</trace>
+  </rec>
+  <rec>
+    <ts>2026-06-03T08:12:30Z</ts>
+    <level>INFO</level>
+    <service>llm</service>
+    <code>ENDPOINT_UP</code>
+    <message>local API base healthy after retry</message>
+    <tags><i>endpoint:8003</i></tags>
+    <trace>t-1012</trace>
+  </rec>
+</log>

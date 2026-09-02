@@ -1,0 +1,98 @@
+<s d="20260603" l="en" t="Post-pilot satisfaction survey" k="2">
+  <rec>
+    <id>q1</id>
+    <construct>Usefulness</construct>
+    <statement>The platform helps me review lectures faster.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q2</id>
+    <construct>Usefulness</construct>
+    <statement>Generated quizzes reflect the lecture content.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q3</id>
+    <construct>Usefulness</construct>
+    <statement>I would not use this tool for other courses.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>true</reverse>
+  </rec>
+  <rec>
+    <id>q4</id>
+    <construct>Ease of use</construct>
+    <statement>Uploading a lecture is simple.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q5</id>
+    <construct>Ease of use</construct>
+    <statement>I needed help to understand the interface.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>true</reverse>
+  </rec>
+  <rec>
+    <id>q6</id>
+    <construct>Ease of use</construct>
+    <statement>The study resources are easy to find.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q7</id>
+    <construct>Engagement</construct>
+    <statement>Adaptive quizzes keep me motivated.</statement>
+    <scale>7</scale>
+    <anchors><i>never</i><i>always</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q8</id>
+    <construct>Engagement</construct>
+    <statement>I lose interest after a few questions.</statement>
+    <scale>7</scale>
+    <anchors><i>never</i><i>always</i></anchors>
+    <reverse>true</reverse>
+  </rec>
+  <rec>
+    <id>q9</id>
+    <construct>Engagement</construct>
+    <statement>I come back to review flashcards.</statement>
+    <scale>7</scale>
+    <anchors><i>never</i><i>always</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q10</id>
+    <construct>Trust</construct>
+    <statement>The generated content is accurate.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+  <rec>
+    <id>q11</id>
+    <construct>Trust</construct>
+    <statement>I double-check the answers with my notes.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>true</reverse>
+  </rec>
+  <rec>
+    <id>q12</id>
+    <construct>Trust</construct>
+    <statement>I trust the difficulty level assigned to me.</statement>
+    <scale>5</scale>
+    <anchors><i>strongly disagree</i><i>strongly agree</i></anchors>
+    <reverse>false</reverse>
+  </rec>
+</s>

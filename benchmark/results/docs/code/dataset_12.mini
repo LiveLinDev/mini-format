@@ -1,0 +1,13 @@
+code|n=12|d=20260603|l=en|t=Intro programming lab 3
+c1|L3|lists|Write a function maximum(xs) that returns the largest number in a non-empty list.|python|maximum([2\,8\,3])==8,maximum([-1\,-5])==-1|int or float|iterate once,track the best so far
+c2|L3|strings|Write is_palindrome(s) ignoring case and spaces.|python|is_palindrome('Anita lava la tina'),not is_palindrome('hello')|bool|normalize first
+c3|L2|arithmetic|Return the sum of the digits of a positive integer.|python|digit_sum(1234)==10,digit_sum(7)==7|int|
+c4|L4|recursion|Implement fib(n) iteratively with O(1) memory.|python|fib(10)==55,fib(0)==0|int|two variables suffice
+c5|L3|dictionaries|Count word frequencies in a text and return a dict.|python|word_count('a b a')=={'a':2\,'b':1}|dict|split on whitespace
+c6|L5|sorting|Sort a list of (name, score) tuples by score descending, then name.|python|rank([('b'\,1)\,('a'\,1)\,('c'\,2)])==[('c'\,2)\,('a'\,1)\,('b'\,1)]|list|use a key function
+c7|L3|arrays|Return the second largest distinct element of an array.|javascript|secondLargest([3\,1\,3\,2])===2|number|deduplicate first
+c8|L2|conditionals|Classify a temperature in Celsius as cold, mild or hot.|javascript|classify(5)==='cold',classify(30)==='hot'|string|
+c9|L4|regex|Validate an email address with a regular expression.|javascript|isEmail('a@b.co')===true,isEmail('a@b')===false|boolean|require a dot in the domain
+c10|L5|algorithms|Implement binary search returning the index or -1.|java|binarySearch(new int[]{1\,3\,5}\,5)==2,binarySearch(new int[]{1\,3\,5}\,4)==-1|int|halve the interval
+c11|L6|design|Design a Stack class with push, pop and peek using an array.|java|new Stack().push(1).pop()==1|class|track the top index,throw on empty pop
+c12|L3|sql|Return the names of students with an average grade above 14.|sql|rows==3|result set|GROUP BY student,HAVING AVG(grade)>14

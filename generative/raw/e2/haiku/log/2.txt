@@ -1,0 +1,13 @@
+log|d=20260603|env=staging|host=sima-app-01|n=12
+2026-06-03T08:00:01Z|INFO|web|HTTP200|GET /dashboard served|user:26|t-1001|42
+2026-06-03T08:00:05Z|INFO|worker|JOB_START|LessonJob 64 started stage transcribe|job:64,stage:transcribe|t-1002|
+2026-06-03T08:02:11Z|WARN|worker|ASR_SLOW|Whisper took longer than budget|job:64|t-1002|126000
+2026-06-03T08:02:12Z|INFO|worker|JOB_STAGE|stage generate started with 16 chunks|job:64,stage:generate|t-1002|
+2026-06-03T08:05:40Z|ERROR|llm|NUL_CHAR|NUL character in model output; sanitized|job:64,chunk:7|t-1002|
+2026-06-03T08:05:41Z|INFO|worker|MINI_PARSE|150 records parsed, 22 flagged incoherent|job:64|t-1002|310
+2026-06-03T08:06:02Z|INFO|verify|WEB_CTX|6 queries, 4 results, 2 usable sources|job:64|t-1002|8900
+2026-06-03T08:06:30Z|ERROR|llm|CTX_OVERFLOW|verification prompt exceeds context; truncated|job:64|t-1002|
+2026-06-03T08:07:00Z|INFO|worker|JOB_DONE|LessonJob 64 finished|job:64|t-1002|419000
+2026-06-03T08:10:15Z|WARN|web|HTTP404|GET /clase/999/ not found|user:12|t-1003|5
+2026-06-03T08:12:00Z|CRITICAL|llm|ENDPOINT_DOWN|local API base unreachable; retry scheduled|endpoint:8003|t-1004|
+2026-06-03T08:12:30Z|INFO|llm|ENDPOINT_UP|local API base healthy after retry|endpoint:8003|t-1004|

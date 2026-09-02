@@ -1,0 +1,97 @@
+{
+ "prefix": "map",
+ "header": {
+  "n": 12,
+  "d": "20260603",
+  "l": "es",
+  "t": "Biología celular",
+  "src": "clase-64",
+  "v": 1
+ },
+ "edges": [
+  {
+   "src": "célula",
+   "rel": "has_part",
+   "dst": "núcleo",
+   "weight": 0.9,
+   "evidence": "s2"
+  },
+  {
+   "src": "célula",
+   "rel": "has_part",
+   "dst": "mitocondria",
+   "weight": 0.9,
+   "evidence": "s2"
+  },
+  {
+   "src": "célula",
+   "rel": "has_part",
+   "dst": "membrana plasmática",
+   "weight": 0.85,
+   "evidence": "s3"
+  },
+  {
+   "src": "cloroplasto",
+   "rel": "performs",
+   "dst": "fotosíntesis",
+   "weight": 0.95,
+   "evidence": "s4"
+  },
+  {
+   "src": "fotosíntesis",
+   "rel": "has_part",
+   "dst": "fase luminosa",
+   "weight": 0.9,
+   "evidence": "s4"
+  },
+  {
+   "src": "fotosíntesis",
+   "rel": "has_part",
+   "dst": "ciclo de Calvin",
+   "weight": 0.9,
+   "evidence": "s5"
+  },
+  {
+   "src": "fase luminosa",
+   "rel": "produces",
+   "dst": "ATP",
+   "weight": 0.8,
+   "evidence": "s4"
+  },
+  {
+   "src": "mitocondria",
+   "rel": "performs",
+   "dst": "respiración celular",
+   "weight": 0.95,
+   "evidence": "s6"
+  },
+  {
+   "src": "respiración celular",
+   "rel": "produces",
+   "dst": "ATP",
+   "weight": 0.9,
+   "evidence": "s6"
+  },
+  {
+   "src": "fotosíntesis",
+   "rel": "contrasts",
+   "dst": "respiración celular",
+   "weight": 0.7,
+   "evidence": "s7"
+  },
+  {
+   "src": "ciclo celular",
+   "rel": "has_part",
+   "dst": "mitosis",
+   "weight": 0.85,
+   "evidence": "s8"
+  },
+  {
+   "src": "meiosis",
+   "rel": "causes",
+   "dst": "variabilidad genética",
+   "weight": 0.8,
+   "evidence": null
+  }
+ ]
+}

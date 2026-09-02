@@ -1,0 +1,24 @@
+{
+ "prefix": "s",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "en",
+  "t": "Post-pilot satisfaction survey",
+  "k": 2,
+  "v": 1
+ },
+ "items": [
+  {
+   "id": "q1",
+   "construct": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "statement": "The platform helps me review lectures faster.",
+   "scale": 5,
+   "anchors": [
+    "a, b | c \\ d*",
+    "strongly agree"
+   ],
+   "reverse": false
+  }
+ ]
+}

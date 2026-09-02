@@ -1,0 +1,2 @@
+cls|n=1|d=20260603|l=en|model=cls-support-2026|k=6
+m1|pipe \| and back\\slash, comma, "quotes", star* and newline\nend|a\, b \| c \\ d\**,feedback,bug*,request,praise,other|0.91|reports a malfunction and asks

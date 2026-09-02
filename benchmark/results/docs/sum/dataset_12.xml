@@ -1,0 +1,110 @@
+<sum d="20260603" l="es" t="Biología celular" src="clase-64" dur="2520">
+  <rec>
+    <id>s1</id>
+    <t_start>0</t_start>
+    <t_end>180</t_end>
+    <title>Introducción a la célula</title>
+    <summary>La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.</summary>
+    <keywords><i>célula</i><i>procariota</i><i>eucariota</i></keywords>
+    <bloom>L1</bloom>
+  </rec>
+  <rec>
+    <id>s2</id>
+    <t_start>180</t_start>
+    <t_end>420</t_end>
+    <title>Organelos y funciones</title>
+    <summary>Mitocondria produce energía; el cloroplasto realiza la fotosíntesis; el núcleo guarda el ADN.</summary>
+    <keywords><i>mitocondria</i><i>cloroplasto</i><i>núcleo</i></keywords>
+    <bloom>L2</bloom>
+  </rec>
+  <rec>
+    <id>s3</id>
+    <t_start>420</t_start>
+    <t_end>600</t_end>
+    <title>Membrana plasmática</title>
+    <summary>La membrana regula el intercambio de sustancias mediante transporte pasivo y activo.</summary>
+    <keywords><i>membrana</i><i>transporte</i></keywords>
+    <bloom>L2</bloom>
+  </rec>
+  <rec>
+    <id>s4</id>
+    <t_start>600</t_start>
+    <t_end>840</t_end>
+    <title>Fotosíntesis: fase luminosa</title>
+    <summary>La luz excita la clorofila y se produce ATP y NADPH liberando oxígeno.</summary>
+    <keywords><i>ATP</i><i>NADPH</i><i>clorofila</i></keywords>
+    <bloom>L3</bloom>
+  </rec>
+  <rec>
+    <id>s5</id>
+    <t_start>840</t_start>
+    <t_end>1080</t_end>
+    <title>Fotosíntesis: ciclo de Calvin</title>
+    <summary>El CO2 se fija en azúcares usando el ATP y NADPH de la fase luminosa.</summary>
+    <keywords><i>Calvin</i><i>CO2</i><i>glucosa</i></keywords>
+    <bloom>L3</bloom>
+  </rec>
+  <rec>
+    <id>s6</id>
+    <t_start>1080</t_start>
+    <t_end>1320</t_end>
+    <title>Respiración celular</title>
+    <summary>La glucosa se oxida en glucólisis, ciclo de Krebs y cadena de transporte para obtener ATP.</summary>
+    <keywords><i>glucólisis</i><i>Krebs</i><i>ATP</i></keywords>
+    <bloom>L3</bloom>
+  </rec>
+  <rec>
+    <id>s7</id>
+    <t_start>1320</t_start>
+    <t_end>1500</t_end>
+    <title>Comparación fotosíntesis y respiración</title>
+    <summary>Procesos complementarios: uno almacena energía en glucosa, el otro la libera.</summary>
+    <keywords><i>comparación</i><i>energía</i></keywords>
+    <bloom>L4</bloom>
+  </rec>
+  <rec>
+    <id>s8</id>
+    <t_start>1500</t_start>
+    <t_end>1740</t_end>
+    <title>División celular: mitosis</title>
+    <summary>La mitosis produce dos células idénticas en profase, metafase, anafase y telofase.</summary>
+    <keywords><i>mitosis</i><i>ciclo celular</i></keywords>
+    <bloom>L2</bloom>
+  </rec>
+  <rec>
+    <id>s9</id>
+    <t_start>1740</t_start>
+    <t_end>1980</t_end>
+    <title>Meiosis y variabilidad</title>
+    <summary>La meiosis reduce el número cromosómico a la mitad y genera variabilidad genética.</summary>
+    <keywords><i>meiosis</i><i>gametos</i><i>variabilidad</i></keywords>
+    <bloom>L4</bloom>
+  </rec>
+  <rec>
+    <id>s10</id>
+    <t_start>1980</t_start>
+    <t_end>2160</t_end>
+    <title>Errores frecuentes</title>
+    <summary>Confundir mitosis con meiosis y atribuir la fotosíntesis a la mitocondria.</summary>
+    <keywords><i>errores</i><i>repaso</i></keywords>
+    <bloom>L5</bloom>
+  </rec>
+  <rec>
+    <id>s11</id>
+    <t_start>2160</t_start>
+    <t_end>2400</t_end>
+    <title>Aplicaciones biotecnológicas</title>
+    <summary>Cultivos celulares y edición genética aprovechan el conocimiento de la célula.</summary>
+    <keywords><i>biotecnología</i><i>CRISPR</i></keywords>
+    <bloom>L6</bloom>
+  </rec>
+  <rec>
+    <id>s12</id>
+    <t_start>2400</t_start>
+    <t_end>2520</t_end>
+    <title>Cierre y síntesis</title>
+    <summary>Recapitulación de estructuras, procesos energéticos y división celular.</summary>
+    <keywords><i>síntesis</i></keywords>
+    <bloom>L2</bloom>
+  </rec>
+</sum>

@@ -1,0 +1,142 @@
+[
+  {
+    "prefix": "a",
+    "version": 1,
+    "name": "Assessment items (multiple choice, Bloom + IRT 3PL + CAT metadata)",
+    "parent": null,
+    "domain": "education / adaptive assessment",
+    "arity": 8,
+    "extensions": 0,
+    "signature": "id:str | bloom:enum{L1|L2|L3|L4|L5|L6} | topic:str | statement:str | options:mlist<str>[2..6]*1 | irt:tuple(a:float,b:float,c:float) | difficulty:int[1..5] | cat:tuple(area:str,exposure_cap:float,demand:enum)"
+  },
+  {
+    "prefix": "card",
+    "version": 1,
+    "name": "Flashcards (spaced repetition)",
+    "parent": null,
+    "domain": "education / microlearning",
+    "arity": 8,
+    "extensions": 0,
+    "signature": "id:str | topic:str | front:str | back:str | hint:str? | tags:list<str>[0..8] | bloom:enum{L1|L2|L3|L4|L5|L6} | ease:float[1.3..3.0]"
+  },
+  {
+    "prefix": "cat",
+    "version": 1,
+    "name": "Product catalogue entries",
+    "parent": null,
+    "domain": "e-commerce",
+    "arity": 8,
+    "extensions": 0,
+    "signature": "sku:str | name:str | category:str | price:float[0..] | currency:enum{USD|PEN|EUR} | stock:int[0..] | tags:list<str>[0..10] | rating:float[0..5]?"
+  },
+  {
+    "prefix": "cls",
+    "version": 1,
+    "name": "Multi-label text classification outputs",
+    "parent": null,
+    "domain": "NLP / support triage",
+    "arity": 5,
+    "extensions": 0,
+    "signature": "id:str | text:str | labels:mlist<str>*1+ | conf:float[0..1] | rationale:str?"
+  },
+  {
+    "prefix": "code",
+    "version": 1,
+    "name": "Programming exercises with tests",
+    "parent": null,
+    "domain": "education / programming",
+    "arity": 8,
+    "extensions": 0,
+    "signature": "id:str | bloom:enum{L1|L2|L3|L4|L5|L6} | topic:str | statement:str | lang:enum{python|javascript|java|sql|c|cpp|go} | tests:list<str>[1..10] | expected:str | hints:list<str>[0..5]"
+  },
+  {
+    "prefix": "log",
+    "version": 1,
+    "name": "Service events / incident records",
+    "parent": null,
+    "domain": "operations / observability",
+    "arity": 8,
+    "extensions": 0,
+    "signature": "ts:str | level:enum{DEBUG|INFO|WARN|ERROR|CRITICAL} | service:str | code:str | message:str | tags:list<str>[0..10] | trace:str? | duration_ms:int[0..]?"
+  },
+  {
+    "prefix": "map",
+    "version": 1,
+    "name": "Concept map edges",
+    "parent": null,
+    "domain": "education / knowledge graphs",
+    "arity": 5,
+    "extensions": 0,
+    "signature": "src:str | rel:enum{is_a|has_part|performs|produces|causes|requires|contrasts|example_of} | dst:str | weight:float[0..1] | evidence:str?"
+  },
+  {
+    "prefix": "ner",
+    "version": 1,
+    "name": "Named-entity annotations",
+    "parent": null,
+    "domain": "NLP / data labelling",
+    "arity": 6,
+    "extensions": 0,
+    "signature": "doc:str | start:int[0..] | end:int[0..] | text:str | type:enum{PERSON|ORG|LOC|DATE|PRODUCT|CONCEPT|MISC} | conf:float[0..1]"
+  },
+  {
+    "prefix": "q",
+    "version": 1,
+    "name": "Formative quiz items (assessment + feedback)",
+    "parent": "a",
+    "domain": "education / formative assessment",
+    "arity": 8,
+    "extensions": 3,
+    "signature": "id:str | bloom:enum{L1|L2|L3|L4|L5|L6} | topic:str | statement:str | options:mlist<str>[2..6]*1 | irt:tuple(a:float,b:float,c:float) | difficulty:int[1..5] | cat:tuple(area:str,exposure_cap:float,demand:enum) || feedback:str? | hint:str? | objective:str?"
+  },
+  {
+    "prefix": "r",
+    "version": 1,
+    "name": "Analytic rubric criteria",
+    "parent": null,
+    "domain": "education / assessment",
+    "arity": 6,
+    "extensions": 0,
+    "signature": "id:str | dimension:str | criterion:str | levels:list<str> | weight:float[0..1] | evidence:str"
+  },
+  {
+    "prefix": "s",
+    "version": 1,
+    "name": "Survey items (Likert)",
+    "parent": null,
+    "domain": "research instruments",
+    "arity": 6,
+    "extensions": 0,
+    "signature": "id:str | construct:str | statement:str | scale:int[2..11] | anchors:list<str> | reverse:bool"
+  },
+  {
+    "prefix": "sum",
+    "version": 1,
+    "name": "Micro-lesson summary segments",
+    "parent": null,
+    "domain": "education / microlearning",
+    "arity": 7,
+    "extensions": 0,
+    "signature": "id:str | t_start:int[0..] | t_end:int[0..] | title:str | summary:str | keywords:list<str>[1..10] | bloom:enum{L1|L2|L3|L4|L5|L6}"
+  },
+  {
+    "prefix": "tc",
+    "version": 1,
+    "name": "Software test cases",
+    "parent": null,
+    "domain": "software engineering / QA",
+    "arity": 9,
+    "extensions": 0,
+    "signature": "id:str | module:str | title:str | precondition:str | steps:list<str>[1..20] | expected:str | priority:enum{low|medium|high|critical} | type:enum{functional|integration|performance|security|usability|regression} | automated:bool"
+  },
+  {
+    "prefix": "us",
+    "version": 1,
+    "name": "User stories with acceptance criteria",
+    "parent": null,
+    "domain": "software engineering / agile",
+    "arity": 8,
+    "extensions": 0,
+    "signature": "id:str | epic:str | role:str | goal:str | benefit:str | acceptance:list<str>[1..10] | sp:int[1..100] | priority:enum{must|should|could|wont}"
+  }
+]

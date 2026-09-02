@@ -1,0 +1,114 @@
+header:
+  d: "20260603"
+  l: en
+  t: SIMA release 1.2 regression
+  proj: SIMA
+cases[12]:
+  - id: TC-001
+    module: auth
+    title: Login with valid credentials
+    precondition: User registered and active
+    steps[3]: open /login,enter valid email and password,click Sign in
+    expected: Dashboard is shown and session cookie is set
+    priority: high
+    type: functional
+    automated: true
+  - id: TC-002
+    module: auth
+    title: Login with wrong password
+    precondition: User registered
+    steps[3]: open /login,enter valid email and wrong password,click Sign in
+    expected: Error message; no session created
+    priority: high
+    type: functional
+    automated: true
+  - id: TC-003
+    module: auth
+    title: Password reset email
+    precondition: User registered
+    steps[2]: open /reset,submit registered email
+    expected: Reset email delivered within 60 s
+    priority: medium
+    type: integration
+    automated: false
+  - id: TC-004
+    module: courses
+    title: Create course
+    precondition: Logged-in student
+    steps[3]: open /courses/new,"fill name, period and topics",save
+    expected: Course appears in dashboard
+    priority: high
+    type: functional
+    automated: true
+  - id: TC-005
+    module: lessons
+    title: Upload audio lecture
+    precondition: Course exists; credits available
+    steps[3]: open /api/new,select course and upload 20 MB mp3,confirm credit estimate
+    expected: LessonJob created with status queued
+    priority: high
+    type: functional
+    automated: true
+  - id: TC-006
+    module: lessons
+    title: Reject unsupported file
+    precondition: Course exists
+    steps[2]: open /api/new,upload .exe file
+    expected: Validation error; nothing stored
+    priority: medium
+    type: security
+    automated: true
+  - id: TC-007
+    module: pipeline
+    title: Transcription completes
+    precondition: Job queued; Whisper available
+    steps[2]: run worker,wait for stage transcribe
+    expected: Transcript stored; stage advances to generate
+    priority: high
+    type: integration
+    automated: true
+  - id: TC-008
+    module: pipeline
+    title: .mini bank parses
+    precondition: Generation stage finished
+    steps[2]: fetch job output,run parser
+    expected: All records valid; n equals record lines
+    priority: high
+    type: functional
+    automated: true
+  - id: TC-009
+    module: pipeline
+    title: Incoherent items repaired
+    precondition: Bank with declarative items
+    steps[2]: run coherence filter,run repair
+    expected: Items repaired or excluded with trace
+    priority: medium
+    type: functional
+    automated: true
+  - id: TC-010
+    module: quiz
+    title: Adaptive quiz updates theta
+    precondition: Lesson ready; profile exists
+    steps[2]: start quiz with 6 items,answer all
+    expected: theta and SE updated; XP awarded
+    priority: high
+    type: functional
+    automated: true
+  - id: TC-011
+    module: quiz
+    title: Quiz under load
+    precondition: 50 concurrent students
+    steps[2]: start 50 quizzes,answer concurrently
+    expected: p95 latency below 2 s; no errors
+    priority: medium
+    type: performance
+    automated: false
+  - id: TC-012
+    module: admin
+    title: Credit ledger consistency
+    precondition: Several jobs processed
+    steps[2]: open admin ledger,sum entries
+    expected: Ledger total equals profile balance
+    priority: low
+    type: functional
+    automated: false

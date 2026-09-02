@@ -1,0 +1,68 @@
+{
+  "prefix": "cls",
+  "version": 1,
+  "parent": null,
+  "name": "Multi-label text classification outputs",
+  "domain": "NLP / support triage",
+  "records_key": "messages",
+  "description": "Classifier outputs: the label set is written in full and the predicted labels carry *, so both the label space and the prediction are self-describing.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "model": {
+        "type": "str"
+      },
+      "k": {
+        "type": "int",
+        "desc": "labels in the label set"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "text",
+      "type": "str"
+    },
+    {
+      "name": "labels",
+      "type": "mlist",
+      "item": "str",
+      "marker": "at_least_one",
+      "count_key": "k",
+      "json": {
+        "items": "labels",
+        "selected": "selected"
+      }
+    },
+    {
+      "name": "conf",
+      "type": "float",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "rationale",
+      "type": "str",
+      "optional": true
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

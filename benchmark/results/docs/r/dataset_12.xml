@@ -1,0 +1,98 @@
+<r d="20260603" l="en" t="Argumentative essay" k="4" scale="0-3">
+  <rec>
+    <id>r1</id>
+    <dimension>Argument</dimension>
+    <criterion>Thesis clarity</criterion>
+    <levels><i>absent or unclear</i><i>stated but vague</i><i>clear and focused</i><i>clear, focused and original</i></levels>
+    <weight>0.2</weight>
+    <evidence>Introduction paragraph</evidence>
+  </rec>
+  <rec>
+    <id>r2</id>
+    <dimension>Argument</dimension>
+    <criterion>Use of evidence</criterion>
+    <levels><i>no evidence</i><i>evidence unrelated to claims</i><i>relevant evidence</i><i>relevant, well-integrated evidence</i></levels>
+    <weight>0.2</weight>
+    <evidence>Body paragraphs</evidence>
+  </rec>
+  <rec>
+    <id>r3</id>
+    <dimension>Argument</dimension>
+    <criterion>Counterarguments</criterion>
+    <levels><i>ignored</i><i>mentioned</i><i>addressed</i><i>addressed and refuted</i></levels>
+    <weight>0.1</weight>
+    <evidence>Discussion section</evidence>
+  </rec>
+  <rec>
+    <id>r4</id>
+    <dimension>Structure</dimension>
+    <criterion>Organization</criterion>
+    <levels><i>disorganized</i><i>partially organized</i><i>logical order</i><i>logical order with transitions</i></levels>
+    <weight>0.1</weight>
+    <evidence>Whole essay</evidence>
+  </rec>
+  <rec>
+    <id>r5</id>
+    <dimension>Structure</dimension>
+    <criterion>Paragraphing</criterion>
+    <levels><i>no paragraphs</i><i>inconsistent</i><i>one idea per paragraph</i><i>purposeful paragraphing</i></levels>
+    <weight>0.05</weight>
+    <evidence>Whole essay</evidence>
+  </rec>
+  <rec>
+    <id>r6</id>
+    <dimension>Language</dimension>
+    <criterion>Grammar and mechanics</criterion>
+    <levels><i>frequent errors</i><i>several errors</i><i>few errors</i><i>error-free</i></levels>
+    <weight>0.1</weight>
+    <evidence>Whole essay</evidence>
+  </rec>
+  <rec>
+    <id>r7</id>
+    <dimension>Language</dimension>
+    <criterion>Academic register</criterion>
+    <levels><i>informal</i><i>mixed</i><i>mostly academic</i><i>consistently academic</i></levels>
+    <weight>0.05</weight>
+    <evidence>Whole essay</evidence>
+  </rec>
+  <rec>
+    <id>r8</id>
+    <dimension>Sources</dimension>
+    <criterion>Citation accuracy</criterion>
+    <levels><i>missing</i><i>inconsistent</i><i>mostly correct</i><i>correct APA/IEEE</i></levels>
+    <weight>0.1</weight>
+    <evidence>Reference list</evidence>
+  </rec>
+  <rec>
+    <id>r9</id>
+    <dimension>Sources</dimension>
+    <criterion>Source quality</criterion>
+    <levels><i>unreliable</i><i>mixed</i><i>reliable</i><i>peer-reviewed and recent</i></levels>
+    <weight>0.05</weight>
+    <evidence>Reference list</evidence>
+  </rec>
+  <rec>
+    <id>r10</id>
+    <dimension>Critical thinking</dimension>
+    <criterion>Analysis depth</criterion>
+    <levels><i>descriptive only</i><i>some analysis</i><i>consistent analysis</i><i>insightful analysis</i></levels>
+    <weight>0.03</weight>
+    <evidence>Body paragraphs</evidence>
+  </rec>
+  <rec>
+    <id>r11</id>
+    <dimension>Critical thinking</dimension>
+    <criterion>Synthesis</criterion>
+    <levels><i>none</i><i>lists ideas</i><i>connects ideas</i><i>builds new insight</i></levels>
+    <weight>0.01</weight>
+    <evidence>Conclusion</evidence>
+  </rec>
+  <rec>
+    <id>r12</id>
+    <dimension>Presentation</dimension>
+    <criterion>Formatting</criterion>
+    <levels><i>not followed</i><i>partially</i><i>mostly</i><i>fully compliant</i></levels>
+    <weight>0.01</weight>
+    <evidence>Document</evidence>
+  </rec>
+</r>

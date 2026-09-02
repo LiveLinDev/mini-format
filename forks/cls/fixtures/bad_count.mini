@@ -1,0 +1,13 @@
+cls|n=13|d=20260603|l=en|model=cls-support-2026|k=6
+m1|The quiz froze after question 4, is that a known issue?|question*,feedback,bug*,request,praise,other|0.91|reports a malfunction and asks
+m2|Great flashcards, they saved my week!|question,feedback,bug,request,praise*,other|0.97|
+m3|Could you add export to Anki?|question,feedback,bug,request*,praise,other|0.94|feature request
+m4|Transcription missed the last ten minutes of the lecture.|question,feedback,bug*,request,praise,other|0.9|
+m5|How is my level computed?|question*,feedback,bug,request,praise,other|0.95|
+m6|The map view is confusing but the summaries are excellent.|question,feedback*,bug,request,praise*,other|0.82|mixed sentiment
+m7|Please support PDF slides as input.|question,feedback,bug,request*,praise,other|0.93|
+m8|Nothing to report.|question,feedback,bug,request,praise,other*|0.7|
+m9|Why does the same question repeat twice?|question*,feedback,bug*,request,praise,other|0.86|possible exposure-control bug
+m10|Love the adaptive difficulty, keep it up.|question,feedback*,bug,request,praise*,other|0.9|
+m11|Credits were deducted twice for one upload.|question,feedback,bug*,request,praise,other|0.96|billing bug
+m12|Can I share a class with a friend?|question*,feedback,bug,request*,praise,other|0.88|

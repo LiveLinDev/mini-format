@@ -1,0 +1,27 @@
+{
+ "prefix": "sum",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "es",
+  "t": "Biología celular",
+  "src": "clase-64",
+  "dur": 2520,
+  "v": 1
+ },
+ "segments": [
+  {
+   "id": "s1",
+   "t_start": 0,
+   "t_end": 180,
+   "title": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "summary": "La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.",
+   "keywords": [
+    "a, b | c \\ d*",
+    "procariota",
+    "eucariota"
+   ],
+   "bloom": "L1"
+  }
+ ]
+}

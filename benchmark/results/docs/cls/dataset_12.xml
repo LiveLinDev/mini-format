@@ -1,0 +1,79 @@
+<cls d="20260603" l="en" model="cls-support-2026" k="6">
+  <rec>
+    <id>m1</id>
+    <text>The quiz froze after question 4, is that a known issue?</text>
+    <labels><i sel="1">question</i><i>feedback</i><i sel="1">bug</i><i>request</i><i>praise</i><i>other</i></labels>
+    <conf>0.91</conf>
+    <rationale>reports a malfunction and asks</rationale>
+  </rec>
+  <rec>
+    <id>m2</id>
+    <text>Great flashcards, they saved my week!</text>
+    <labels><i>question</i><i>feedback</i><i>bug</i><i>request</i><i sel="1">praise</i><i>other</i></labels>
+    <conf>0.97</conf>
+  </rec>
+  <rec>
+    <id>m3</id>
+    <text>Could you add export to Anki?</text>
+    <labels><i>question</i><i>feedback</i><i>bug</i><i sel="1">request</i><i>praise</i><i>other</i></labels>
+    <conf>0.94</conf>
+    <rationale>feature request</rationale>
+  </rec>
+  <rec>
+    <id>m4</id>
+    <text>Transcription missed the last ten minutes of the lecture.</text>
+    <labels><i>question</i><i>feedback</i><i sel="1">bug</i><i>request</i><i>praise</i><i>other</i></labels>
+    <conf>0.9</conf>
+  </rec>
+  <rec>
+    <id>m5</id>
+    <text>How is my level computed?</text>
+    <labels><i sel="1">question</i><i>feedback</i><i>bug</i><i>request</i><i>praise</i><i>other</i></labels>
+    <conf>0.95</conf>
+  </rec>
+  <rec>
+    <id>m6</id>
+    <text>The map view is confusing but the summaries are excellent.</text>
+    <labels><i>question</i><i sel="1">feedback</i><i>bug</i><i>request</i><i sel="1">praise</i><i>other</i></labels>
+    <conf>0.82</conf>
+    <rationale>mixed sentiment</rationale>
+  </rec>
+  <rec>
+    <id>m7</id>
+    <text>Please support PDF slides as input.</text>
+    <labels><i>question</i><i>feedback</i><i>bug</i><i sel="1">request</i><i>praise</i><i>other</i></labels>
+    <conf>0.93</conf>
+  </rec>
+  <rec>
+    <id>m8</id>
+    <text>Nothing to report.</text>
+    <labels><i>question</i><i>feedback</i><i>bug</i><i>request</i><i>praise</i><i sel="1">other</i></labels>
+    <conf>0.7</conf>
+  </rec>
+  <rec>
+    <id>m9</id>
+    <text>Why does the same question repeat twice?</text>
+    <labels><i sel="1">question</i><i>feedback</i><i sel="1">bug</i><i>request</i><i>praise</i><i>other</i></labels>
+    <conf>0.86</conf>
+    <rationale>possible exposure-control bug</rationale>
+  </rec>
+  <rec>
+    <id>m10</id>
+    <text>Love the adaptive difficulty, keep it up.</text>
+    <labels><i>question</i><i sel="1">feedback</i><i>bug</i><i>request</i><i sel="1">praise</i><i>other</i></labels>
+    <conf>0.9</conf>
+  </rec>
+  <rec>
+    <id>m11</id>
+    <text>Credits were deducted twice for one upload.</text>
+    <labels><i>question</i><i>feedback</i><i sel="1">bug</i><i>request</i><i>praise</i><i>other</i></labels>
+    <conf>0.96</conf>
+    <rationale>billing bug</rationale>
+  </rec>
+  <rec>
+    <id>m12</id>
+    <text>Can I share a class with a friend?</text>
+    <labels><i sel="1">question</i><i>feedback</i><i>bug</i><i sel="1">request</i><i>praise</i><i>other</i></labels>
+    <conf>0.88</conf>
+  </rec>
+</cls>

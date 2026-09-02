@@ -1,0 +1,13 @@
+src,rel,dst,weight,evidence
+célula,has_part,núcleo,0.9,s2
+célula,has_part,mitocondria,0.9,s2
+célula,has_part,membrana plasmática,0.85,s3
+cloroplasto,performs,fotosíntesis,0.95,s4
+fotosíntesis,has_part,fase luminosa,0.9,s4
+fotosíntesis,has_part,ciclo de Calvin,0.9,s5
+fase luminosa,produces,ATP,0.8,s4
+mitocondria,performs,respiración celular,0.95,s6
+respiración celular,produces,ATP,0.9,s6
+fotosíntesis,contrasts,respiración celular,0.7,s7
+ciclo celular,has_part,mitosis,0.85,s8
+meiosis,causes,variabilidad genética,0.8,

@@ -1,0 +1,160 @@
+<q m="IRT3PL" d="20260603" l="es" t="cuestionario formativo" k="4">
+  <bd><i>1</i><i>1</i><i>1</i><i>1</i><i>1</i><i>1</i></bd>
+  <cat theta_init="0" theta_min="-3" theta_max="3" se_stop="0.3" max_items="12" exposure_ctrl="SH"/>
+  <rec>
+    <id>i1</id>
+    <bloom>L1</bloom>
+    <topic>Biología</topic>
+    <statement>¿Dónde ocurre principalmente la fotosíntesis?</statement>
+    <options><i sel="1">cloroplastos</i><i>núcleo</i><i>mitocondria</i><i>ribosoma</i></options>
+    <irt a="0.9" b="-1" c="0.25"/>
+    <difficulty>1</difficulty>
+    <cat area="biología" exposure_cap="0.2" demand="low"/>
+    <feedback>La fotosíntesis ocurre en los cloroplastos, donde está la clorofila.</feedback>
+    <hint>Piensa en el pigmento verde.</hint>
+    <objective>Identificar organelos vegetales</objective>
+  </rec>
+  <rec>
+    <id>i2</id>
+    <bloom>L2</bloom>
+    <topic>Química</topic>
+    <statement>¿Qué representa el pH de una solución?</statement>
+    <options><i sel="1">acidez o basicidad</i><i>masa molecular</i><i>temperatura</i><i>presión osmótica</i></options>
+    <irt a="1.1" b="-0.3" c="0.25"/>
+    <difficulty>2</difficulty>
+    <cat area="química" exposure_cap="0.2" demand="medium"/>
+    <feedback>El pH mide la concentración de iones hidrógeno: acidez o basicidad.</feedback>
+    <hint>Escala de 0 a 14.</hint>
+    <objective>Interpretar la escala de pH</objective>
+  </rec>
+  <rec>
+    <id>i3</id>
+    <bloom>L3</bloom>
+    <topic>Matemática</topic>
+    <statement>Si 3x+6=18, ¿cuál es el valor de x?</statement>
+    <options><i sel="1">4</i><i>6</i><i>8</i><i>12</i></options>
+    <irt a="1.4" b="0.2" c="0.2"/>
+    <difficulty>3</difficulty>
+    <cat area="matemática" exposure_cap="0.25" demand="medium"/>
+    <feedback>3x = 18 - 6 = 12, por lo tanto x = 4.</feedback>
+    <hint>Despeja el término independiente.</hint>
+    <objective>Resolver ecuaciones lineales</objective>
+  </rec>
+  <rec>
+    <id>i4</id>
+    <bloom>L4</bloom>
+    <topic>Historia</topic>
+    <statement>¿Qué factor explica mejor la caída del Imperio romano de Occidente?</statement>
+    <options><i sel="1">presiones militares y crisis internas</i><i>un solo terremoto</i><i>la invención de la imprenta</i><i>la conquista española</i></options>
+    <irt a="1.7" b="0.8" c="0.2"/>
+    <difficulty>4</difficulty>
+    <cat area="historia" exposure_cap="0.18" demand="high"/>
+    <feedback>La caída combinó presión externa e inestabilidad interna prolongada.</feedback>
+    <hint>No fue un evento único.</hint>
+    <objective>Analizar causas multifactoriales</objective>
+  </rec>
+  <rec>
+    <id>i5</id>
+    <bloom>L5</bloom>
+    <topic>Literatura</topic>
+    <statement>Evalúa cuál opción interpreta mejor un narrador no confiable.</statement>
+    <options><i sel="1">su relato debe contrastarse con evidencias</i><i>siempre dice la verdad</i><i>solo narra en tercera persona</i><i>no participa en la trama</i></options>
+    <irt a="2" b="1.2" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="literatura" exposure_cap="0.15" demand="high"/>
+    <feedback>Un narrador no confiable exige contrastar su versión con otras evidencias del texto.</feedback>
+    <hint>Sospecha del relato.</hint>
+    <objective>Evaluar la voz narrativa</objective>
+  </rec>
+  <rec>
+    <id>i6</id>
+    <bloom>L6</bloom>
+    <topic>Computación</topic>
+    <statement>¿Qué solución diseñarías para reducir errores en una API?</statement>
+    <options><i sel="1">validación de esquema y pruebas automatizadas</i><i>eliminar logs</i><i>usar variables globales</i><i>evitar documentación</i></options>
+    <irt a="2.3" b="1.7" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="computación" exposure_cap="0.15" demand="high"/>
+    <feedback>Validar esquemas y automatizar pruebas reduce errores en interfaces de programación.</feedback>
+    <hint>Piensa en verificación temprana.</hint>
+    <objective>Diseñar controles de calidad</objective>
+  </rec>
+  <rec>
+    <id>i7</id>
+    <bloom>L1</bloom>
+    <topic>Física</topic>
+    <statement>¿Cuál es la unidad de fuerza en el SI?</statement>
+    <options><i sel="1">newton</i><i>joule</i><i>watt</i><i>pascal</i></options>
+    <irt a="0.9" b="-1.2" c="0.25"/>
+    <difficulty>1</difficulty>
+    <cat area="física" exposure_cap="0.2" demand="low"/>
+    <feedback>El newton (N) es la unidad SI de fuerza.</feedback>
+    <hint>Segunda ley de Newton.</hint>
+    <objective>Reconocer unidades SI</objective>
+  </rec>
+  <rec>
+    <id>i8</id>
+    <bloom>L2</bloom>
+    <topic>Geografía</topic>
+    <statement>¿Qué describe una cuenca hidrográfica?</statement>
+    <options><i sel="1">territorio drenado por un río</i><i>altura de una montaña</i><i>tipo de clima</i><i>frontera política</i></options>
+    <irt a="1.1" b="-0.2" c="0.25"/>
+    <difficulty>2</difficulty>
+    <cat area="geografía" exposure_cap="0.22" demand="medium"/>
+    <feedback>Una cuenca es el territorio cuyas aguas drenan hacia un mismo río.</feedback>
+    <hint>Piensa en el drenaje.</hint>
+    <objective>Definir unidades hidrográficas</objective>
+  </rec>
+  <rec>
+    <id>i9</id>
+    <bloom>L3</bloom>
+    <topic>Comunicación</topic>
+    <statement>Elige el conector que completa una relación de causa.</statement>
+    <options><i sel="1">porque</i><i>sin embargo</i><i>además</i><i>por ejemplo</i></options>
+    <irt a="1.4" b="0.1" c="0.2"/>
+    <difficulty>3</difficulty>
+    <cat area="comunicación" exposure_cap="0.25" demand="medium"/>
+    <feedback>"Porque" introduce la causa de un hecho.</feedback>
+    <hint>Relación causa-efecto.</hint>
+    <objective>Usar conectores lógicos</objective>
+  </rec>
+  <rec>
+    <id>i10</id>
+    <bloom>L4</bloom>
+    <topic>Economía</topic>
+    <statement>Analiza qué sucede si sube el precio y baja la demanda.</statement>
+    <options><i sel="1">disminuye la cantidad demandada</i><i>sube la oferta siempre</i><i>desaparece el mercado</i><i>no cambia el equilibrio</i></options>
+    <irt a="1.7" b="0.7" c="0.2"/>
+    <difficulty>4</difficulty>
+    <cat area="economía" exposure_cap="0.18" demand="high"/>
+    <feedback>Con precio mayor y demanda menor, la cantidad demandada disminuye.</feedback>
+    <hint>Ley de la demanda.</hint>
+    <objective>Analizar el equilibrio de mercado</objective>
+  </rec>
+  <rec>
+    <id>i11</id>
+    <bloom>L5</bloom>
+    <topic>Ética</topic>
+    <statement>¿Qué criterio permite evaluar mejor una decisión pública?</statement>
+    <options><i sel="1">impacto, justicia y evidencia</i><i>popularidad inmediata</i><i>costo únicamente</i><i>autoridad del emisor</i></options>
+    <irt a="2" b="1.3" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="ética" exposure_cap="0.15" demand="high"/>
+    <feedback>Una decisión pública se evalúa por impacto, justicia y evidencia disponible.</feedback>
+    <hint>Criterios múltiples.</hint>
+    <objective>Evaluar decisiones con criterios éticos</objective>
+  </rec>
+  <rec>
+    <id>i12</id>
+    <bloom>L6</bloom>
+    <topic>Arte</topic>
+    <statement>Propón el principio clave para crear una campaña visual coherente.</statement>
+    <options><i sel="1">unidad entre mensaje, color y audiencia</i><i>usar todos los colores</i><i>copiar una plantilla</i><i>evitar bocetos</i></options>
+    <irt a="2.3" b="1.8" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="arte" exposure_cap="0.15" demand="high"/>
+    <feedback>Una campaña coherente mantiene unidad entre mensaje, color y audiencia.</feedback>
+    <hint>Coherencia visual.</hint>
+    <objective>Proponer principios de diseño</objective>
+  </rec>
+</q>

@@ -1,0 +1,24 @@
+{
+ "prefix": "log",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "env": "staging",
+  "host": "sima-app-01",
+  "v": 1
+ },
+ "events": [
+  {
+   "ts": "2026-06-03T08:00:01Z",
+   "level": "INFO",
+   "service": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "code": "HTTP200",
+   "message": "GET /dashboard served",
+   "tags": [
+    "a, b | c \\ d*"
+   ],
+   "trace": "t-1001",
+   "duration_ms": 42
+  }
+ ]
+}

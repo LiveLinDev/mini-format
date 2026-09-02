@@ -1,0 +1,13 @@
+s|n=12|d=20260603|l=en|t=Post-pilot satisfaction survey|k=2
+q1|Usefulness|The platform helps me review lectures faster.|many|strongly disagree,strongly agree|false
+q2|Usefulness|Generated quizzes reflect the lecture content.|5|strongly disagree,strongly agree|false
+q3|Usefulness|I would not use this tool for other courses.|5|strongly disagree,strongly agree|true
+q4|Ease of use|Uploading a lecture is simple.|5|strongly disagree,strongly agree|false
+q5|Ease of use|I needed help to understand the interface.|5|strongly disagree,strongly agree|true
+q6|Ease of use|The study resources are easy to find.|5|strongly disagree,strongly agree|false
+q7|Engagement|Adaptive quizzes keep me motivated.|7|never,always|false
+q8|Engagement|I lose interest after a few questions.|7|never,always|true
+q9|Engagement|I come back to review flashcards.|7|never,always|false
+q10|Trust|The generated content is accurate.|5|strongly disagree,strongly agree|false
+q11|Trust|I double-check the answers with my notes.|5|strongly disagree,strongly agree|true
+q12|Trust|I trust the difficulty level assigned to me.|5|strongly disagree,strongly agree|false

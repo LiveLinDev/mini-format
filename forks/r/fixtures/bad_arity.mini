@@ -1,0 +1,13 @@
+r|n=12|d=20260603|l=en|t=Argumentative essay|k=4|scale=0-3
+r1|Argument|Thesis clarity|absent or unclear,stated but vague,clear and focused,clear\, focused and original|0.2|Introduction paragraph
+r2|Argument|Use of evidence|no evidence,evidence unrelated to claims,relevant evidence,relevant\, well-integrated evidence|0.2
+r3|Argument|Counterarguments|ignored,mentioned,addressed,addressed and refuted|0.1|Discussion section
+r4|Structure|Organization|disorganized,partially organized,logical order,logical order with transitions|0.1|Whole essay
+r5|Structure|Paragraphing|no paragraphs,inconsistent,one idea per paragraph,purposeful paragraphing|0.05|Whole essay
+r6|Language|Grammar and mechanics|frequent errors,several errors,few errors,error-free|0.1|Whole essay
+r7|Language|Academic register|informal,mixed,mostly academic,consistently academic|0.05|Whole essay
+r8|Sources|Citation accuracy|missing,inconsistent,mostly correct,correct APA/IEEE|0.1|Reference list
+r9|Sources|Source quality|unreliable,mixed,reliable,peer-reviewed and recent|0.05|Reference list
+r10|Critical thinking|Analysis depth|descriptive only,some analysis,consistent analysis,insightful analysis|0.03|Body paragraphs
+r11|Critical thinking|Synthesis|none,lists ideas,connects ideas,builds new insight|0.01|Conclusion
+r12|Presentation|Formatting|not followed,partially,mostly,fully compliant|0.01|Document

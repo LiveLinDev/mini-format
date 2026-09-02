@@ -1,0 +1,222 @@
+{
+ "prefix": "cls",
+ "header": {
+  "n": 12,
+  "d": "20260603",
+  "l": "en",
+  "model": "cls-support-2026",
+  "k": 6,
+  "v": 1
+ },
+ "messages": [
+  {
+   "id": "m1",
+   "text": "The quiz froze after question 4, is that a known issue?",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    0,
+    2
+   ],
+   "conf": 0.91,
+   "rationale": "reports a malfunction and asks"
+  },
+  {
+   "id": "m2",
+   "text": "Great flashcards, they saved my week!",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    4
+   ],
+   "conf": 0.97,
+   "rationale": null
+  },
+  {
+   "id": "m3",
+   "text": "Could you add export to Anki?",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    3
+   ],
+   "conf": 0.94,
+   "rationale": "feature request"
+  },
+  {
+   "id": "m4",
+   "text": "Transcription missed the last ten minutes of the lecture.",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    2
+   ],
+   "conf": 0.9,
+   "rationale": null
+  },
+  {
+   "id": "m5",
+   "text": "How is my level computed?",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    0
+   ],
+   "conf": 0.95,
+   "rationale": null
+  },
+  {
+   "id": "m6",
+   "text": "The map view is confusing but the summaries are excellent.",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    1,
+    4
+   ],
+   "conf": 0.82,
+   "rationale": "mixed sentiment"
+  },
+  {
+   "id": "m7",
+   "text": "Please support PDF slides as input.",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    3
+   ],
+   "conf": 0.93,
+   "rationale": null
+  },
+  {
+   "id": "m8",
+   "text": "Nothing to report.",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    5
+   ],
+   "conf": 0.7,
+   "rationale": null
+  },
+  {
+   "id": "m9",
+   "text": "Why does the same question repeat twice?",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    0,
+    2
+   ],
+   "conf": 0.86,
+   "rationale": "possible exposure-control bug"
+  },
+  {
+   "id": "m10",
+   "text": "Love the adaptive difficulty, keep it up.",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    1,
+    4
+   ],
+   "conf": 0.9,
+   "rationale": null
+  },
+  {
+   "id": "m11",
+   "text": "Credits were deducted twice for one upload.",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    2
+   ],
+   "conf": 0.96,
+   "rationale": "billing bug"
+  },
+  {
+   "id": "m12",
+   "text": "Can I share a class with a friend?",
+   "labels": [
+    "question",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    0,
+    3
+   ],
+   "conf": 0.88,
+   "rationale": null
+  }
+ ]
+}

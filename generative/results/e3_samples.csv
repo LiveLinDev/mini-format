@@ -1,0 +1,17 @@
+model,prefix,sample,all_ok,valid_ok,escaping_ok,negatives_rejected,detail
+opus,a,1,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+opus,a,2,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+opus,cls,1,False,False,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+opus,cls,2,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+opus,log,1,True,True,True,3/3,bad_arity.mini=rejected; bad_count.mini=rejected; bad_type.mini=rejected
+opus,log,2,True,True,True,3/3,bad_arity.mini=rejected; bad_count.mini=rejected; bad_type.mini=rejected
+opus,tc,1,True,True,True,2/2,bad_arity.mini=rejected; bad_count.mini=rejected
+opus,tc,2,True,True,True,2/2,bad_arity.mini=rejected; bad_count.mini=rejected
+sonnet,a,1,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+sonnet,a,2,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+sonnet,cls,1,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+sonnet,cls,2,True,True,True,4/4,bad_arity.mini=rejected; bad_count.mini=rejected; bad_marker.mini=rejected; bad_type.mini=rejected
+sonnet,log,1,True,True,True,3/3,bad_arity.mini=rejected; bad_count.mini=rejected; bad_type.mini=rejected
+sonnet,log,2,True,True,True,3/3,bad_arity.mini=rejected; bad_count.mini=rejected; bad_type.mini=rejected
+sonnet,tc,1,True,True,True,2/2,bad_arity.mini=rejected; bad_count.mini=rejected
+sonnet,tc,2,True,True,True,2/2,bad_arity.mini=rejected; bad_count.mini=rejected

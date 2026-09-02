@@ -1,0 +1,26 @@
+{
+ "prefix": "us",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "en",
+  "t": "SIMA backlog",
+  "sprint": "S3",
+  "v": 1
+ },
+ "stories": [
+  {
+   "id": "US-01",
+   "epic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "role": "student",
+   "goal": "upload a recorded lecture",
+   "benefit": "I can study it later in small pieces",
+   "acceptance": [
+    "a, b | c \\ d*",
+    "credit estimate shown before confirming"
+   ],
+   "sp": 5,
+   "priority": "must"
+  }
+ ]
+}

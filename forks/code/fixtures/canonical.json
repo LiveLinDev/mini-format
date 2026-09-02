@@ -1,0 +1,186 @@
+{
+ "prefix": "code",
+ "header": {
+  "n": 12,
+  "d": "20260603",
+  "l": "en",
+  "t": "Intro programming lab 3",
+  "v": 1
+ },
+ "exercises": [
+  {
+   "id": "c1",
+   "bloom": "L3",
+   "topic": "lists",
+   "statement": "Write a function maximum(xs) that returns the largest number in a non-empty list.",
+   "lang": "python",
+   "tests": [
+    "maximum([2,8,3])==8",
+    "maximum([-1,-5])==-1"
+   ],
+   "expected": "int or float",
+   "hints": [
+    "iterate once",
+    "track the best so far"
+   ]
+  },
+  {
+   "id": "c2",
+   "bloom": "L3",
+   "topic": "strings",
+   "statement": "Write is_palindrome(s) ignoring case and spaces.",
+   "lang": "python",
+   "tests": [
+    "is_palindrome('Anita lava la tina')",
+    "not is_palindrome('hello')"
+   ],
+   "expected": "bool",
+   "hints": [
+    "normalize first"
+   ]
+  },
+  {
+   "id": "c3",
+   "bloom": "L2",
+   "topic": "arithmetic",
+   "statement": "Return the sum of the digits of a positive integer.",
+   "lang": "python",
+   "tests": [
+    "digit_sum(1234)==10",
+    "digit_sum(7)==7"
+   ],
+   "expected": "int",
+   "hints": []
+  },
+  {
+   "id": "c4",
+   "bloom": "L4",
+   "topic": "recursion",
+   "statement": "Implement fib(n) iteratively with O(1) memory.",
+   "lang": "python",
+   "tests": [
+    "fib(10)==55",
+    "fib(0)==0"
+   ],
+   "expected": "int",
+   "hints": [
+    "two variables suffice"
+   ]
+  },
+  {
+   "id": "c5",
+   "bloom": "L3",
+   "topic": "dictionaries",
+   "statement": "Count word frequencies in a text and return a dict.",
+   "lang": "python",
+   "tests": [
+    "word_count('a b a')=={'a':2,'b':1}"
+   ],
+   "expected": "dict",
+   "hints": [
+    "split on whitespace"
+   ]
+  },
+  {
+   "id": "c6",
+   "bloom": "L5",
+   "topic": "sorting",
+   "statement": "Sort a list of (name, score) tuples by score descending, then name.",
+   "lang": "python",
+   "tests": [
+    "rank([('b',1),('a',1),('c',2)])==[('c',2),('a',1),('b',1)]"
+   ],
+   "expected": "list",
+   "hints": [
+    "use a key function"
+   ]
+  },
+  {
+   "id": "c7",
+   "bloom": "L3",
+   "topic": "arrays",
+   "statement": "Return the second largest distinct element of an array.",
+   "lang": "javascript",
+   "tests": [
+    "secondLargest([3,1,3,2])===2"
+   ],
+   "expected": "number",
+   "hints": [
+    "deduplicate first"
+   ]
+  },
+  {
+   "id": "c8",
+   "bloom": "L2",
+   "topic": "conditionals",
+   "statement": "Classify a temperature in Celsius as cold, mild or hot.",
+   "lang": "javascript",
+   "tests": [
+    "classify(5)==='cold'",
+    "classify(30)==='hot'"
+   ],
+   "expected": "string",
+   "hints": []
+  },
+  {
+   "id": "c9",
+   "bloom": "L4",
+   "topic": "regex",
+   "statement": "Validate an email address with a regular expression.",
+   "lang": "javascript",
+   "tests": [
+    "isEmail('a@b.co')===true",
+    "isEmail('a@b')===false"
+   ],
+   "expected": "boolean",
+   "hints": [
+    "require a dot in the domain"
+   ]
+  },
+  {
+   "id": "c10",
+   "bloom": "L5",
+   "topic": "algorithms",
+   "statement": "Implement binary search returning the index or -1.",
+   "lang": "java",
+   "tests": [
+    "binarySearch(new int[]{1,3,5},5)==2",
+    "binarySearch(new int[]{1,3,5},4)==-1"
+   ],
+   "expected": "int",
+   "hints": [
+    "halve the interval"
+   ]
+  },
+  {
+   "id": "c11",
+   "bloom": "L6",
+   "topic": "design",
+   "statement": "Design a Stack class with push, pop and peek using an array.",
+   "lang": "java",
+   "tests": [
+    "new Stack().push(1).pop()==1"
+   ],
+   "expected": "class",
+   "hints": [
+    "track the top index",
+    "throw on empty pop"
+   ]
+  },
+  {
+   "id": "c12",
+   "bloom": "L3",
+   "topic": "sql",
+   "statement": "Return the names of students with an average grade above 14.",
+   "lang": "sql",
+   "tests": [
+    "rows==3"
+   ],
+   "expected": "result set",
+   "hints": [
+    "GROUP BY student",
+    "HAVING AVG(grade)>14"
+   ]
+  }
+ ]
+}

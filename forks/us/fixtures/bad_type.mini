@@ -1,0 +1,13 @@
+us|n=12|d=20260603|l=en|t=SIMA backlog|sprint=S3
+US-01|EP-01|student|upload a recorded lecture|I can study it later in small pieces|audio up to 200 MB accepted,credit estimate shown before confirming|many|must
+US-02|EP-01|student|paste a transcript instead of audio|I can skip transcription when I already have notes|plain text accepted,same pipeline from generation stage|3|should
+US-03|EP-02|student|see the generated question bank|I can check what will be asked|items listed with Bloom level,download as JSON|3|must
+US-04|EP-02|system|generate items in .mini|token cost per bank drops|n matches record lines,parser reports zero errors|8|must
+US-05|EP-03|reviewer|flag incoherent items|students never see broken questions|declarative stems detected,repair trace stored|5|must
+US-06|EP-03|reviewer|verify facts against sources|the bank is trustworthy|web or EduQG context attached,report lists weak items|8|should
+US-07|EP-04|student|keep my progress per course|I know what to review next|theta stored per profile,dashboard shows level|5|must
+US-08|EP-05|student|take an adaptive quiz|questions match my level|next item chosen by information,stops at SE threshold|8|must
+US-09|EP-05|student|review flashcards|I retain key concepts|cards derived from the bank,spaced repetition schedule|5|should
+US-10|EP-05|student|see a concept map|I understand how topics connect|edges from the bank,clickable nodes|3|could
+US-11|EP-05|student|solve matching and cloze exercises|I practise in different ways|two exercise types,scored instantly|5|could
+US-12|EP-04|admin|audit credit consumption|billing is transparent|ledger per user,export CSV|3|should

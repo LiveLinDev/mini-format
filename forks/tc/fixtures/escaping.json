@@ -1,0 +1,28 @@
+{
+ "prefix": "tc",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "en",
+  "t": "SIMA release 1.2 regression",
+  "proj": "SIMA",
+  "v": 1
+ },
+ "cases": [
+  {
+   "id": "TC-001",
+   "module": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "title": "Login with valid credentials",
+   "precondition": "User registered and active",
+   "steps": [
+    "a, b | c \\ d*",
+    "enter valid email and password",
+    "click Sign in"
+   ],
+   "expected": "Dashboard is shown and session cookie is set",
+   "priority": "high",
+   "type": "functional",
+   "automated": true
+  }
+ ]
+}

@@ -1,0 +1,121 @@
+<cat d="20260603" store="campus-shop" cur="USD">
+  <rec>
+    <sku>SKU-1001</sku>
+    <name>Wireless headset</name>
+    <category>audio</category>
+    <price>89.9</price>
+    <currency>USD</currency>
+    <stock>120</stock>
+    <tags><i>bluetooth</i><i>noise-cancelling</i></tags>
+    <rating>4.5</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1002</sku>
+    <name>USB-C hub 7-in-1</name>
+    <category>accessories</category>
+    <price>39.99</price>
+    <currency>USD</currency>
+    <stock>300</stock>
+    <tags><i>usb-c</i><i>hdmi</i></tags>
+    <rating>4.2</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1003</sku>
+    <name>Mechanical keyboard</name>
+    <category>input</category>
+    <price>129</price>
+    <currency>USD</currency>
+    <stock>45</stock>
+    <tags><i>mechanical</i><i>rgb</i><i>wired</i></tags>
+    <rating>4.7</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1004</sku>
+    <name>27" 4K monitor</name>
+    <category>display</category>
+    <price>349</price>
+    <currency>USD</currency>
+    <stock>18</stock>
+    <tags><i>4k</i><i>ips</i></tags>
+    <rating>4.6</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1005</sku>
+    <name>Laptop stand</name>
+    <category>accessories</category>
+    <price>25.5</price>
+    <currency>USD</currency>
+    <stock>500</stock>
+    <tags><i>aluminium</i></tags>
+    <rating>4.1</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1006</sku>
+    <name>Webcam 1080p</name>
+    <category>video</category>
+    <price>59</price>
+    <currency>USD</currency>
+    <stock>80</stock>
+    <tags><i>1080p</i><i>autofocus</i></tags>
+    <rating>3.9</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1007</sku>
+    <name>Micrófono condensador</name>
+    <category>audio</category>
+    <price>249</price>
+    <currency>PEN</currency>
+    <stock>22</stock>
+    <tags><i>usb</i><i>cardioide</i></tags>
+    <rating>4.4</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1008</sku>
+    <name>Mouse ergonómico</name>
+    <category>input</category>
+    <price>119</price>
+    <currency>PEN</currency>
+    <stock>64</stock>
+    <tags><i>ergonómico</i><i>inalámbrico</i></tags>
+    <rating>4.3</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1009</sku>
+    <name>SSD NVMe 1 TB</name>
+    <category>storage</category>
+    <price>99</price>
+    <currency>USD</currency>
+    <stock>150</stock>
+    <tags><i>nvme</i><i>pcie4</i></tags>
+    <rating>4.8</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1010</sku>
+    <name>Router Wi-Fi 6</name>
+    <category>network</category>
+    <price>79</price>
+    <currency>USD</currency>
+    <stock>33</stock>
+    <tags><i>wifi6</i><i>mesh</i></tags>
+    <rating>4</rating>
+  </rec>
+  <rec>
+    <sku>SKU-1011</sku>
+    <name>Cable HDMI 2.1 2 m</name>
+    <category>accessories</category>
+    <price>15.9</price>
+    <currency>USD</currency>
+    <stock>900</stock>
+    <tags><i>hdmi</i><i>8k</i></tags>
+  </rec>
+  <rec>
+    <sku>SKU-1012</sku>
+    <name>Silla de oficina</name>
+    <category>furniture</category>
+    <price>899</price>
+    <currency>PEN</currency>
+    <stock>7</stock>
+    <tags><i>ergonómica</i><i>malla</i></tags>
+    <rating>4.2</rating>
+  </rec>
+</cat>

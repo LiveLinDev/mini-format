@@ -1,0 +1,57 @@
+{
+ "prefix": "q",
+ "header": {
+  "n": 1,
+  "m": "IRT3PL",
+  "d": "20260603",
+  "l": "es",
+  "t": "cuestionario formativo",
+  "bd": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "cat": {
+   "theta_init": 0.0,
+   "theta_min": -3.0,
+   "theta_max": 3.0,
+   "se_stop": 0.3,
+   "max_items": 12,
+   "exposure_ctrl": "SH"
+  },
+  "k": 4,
+  "v": 1
+ },
+ "items": [
+  {
+   "id": "i1",
+   "bloom": "L1",
+   "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "statement": "¿Dónde ocurre principalmente la fotosíntesis?",
+   "options": [
+    "a, b | c \\ d*",
+    "núcleo",
+    "mitocondria",
+    "ribosoma"
+   ],
+   "correct": 0,
+   "irt": {
+    "a": 0.9,
+    "b": -1.0,
+    "c": 0.25
+   },
+   "difficulty": 1,
+   "cat": {
+    "area": "biología",
+    "exposure_cap": 0.2,
+    "demand": "low"
+   },
+   "feedback": "La fotosíntesis ocurre en los cloroplastos, donde está la clorofila.",
+   "hint": "Piensa en el pigmento verde.",
+   "objective": "Identificar organelos vegetales"
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+{
+  "prefix": "us",
+  "version": 1,
+  "parent": null,
+  "name": "User stories with acceptance criteria",
+  "domain": "software engineering / agile",
+  "records_key": "stories",
+  "description": "Product-backlog stories: epic, role, goal, benefit, acceptance criteria, story points and MoSCoW priority.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      },
+      "sprint": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "epic",
+      "type": "str"
+    },
+    {
+      "name": "role",
+      "type": "str"
+    },
+    {
+      "name": "goal",
+      "type": "str"
+    },
+    {
+      "name": "benefit",
+      "type": "str"
+    },
+    {
+      "name": "acceptance",
+      "type": "list",
+      "item": "str",
+      "min": 1,
+      "max": 10
+    },
+    {
+      "name": "sp",
+      "type": "int",
+      "min": 1,
+      "max": 100
+    },
+    {
+      "name": "priority",
+      "type": "enum",
+      "values": [
+        "must",
+        "should",
+        "could",
+        "wont"
+      ]
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

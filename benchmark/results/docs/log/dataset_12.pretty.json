@@ -1,0 +1,156 @@
+{
+  "header": {
+    "d": "20260603",
+    "env": "staging",
+    "host": "sima-app-01"
+  },
+  "events": [
+    {
+      "ts": "2026-06-03T08:00:01Z",
+      "level": "INFO",
+      "service": "web",
+      "code": "HTTP200",
+      "message": "GET /dashboard served",
+      "tags": [
+        "user:26"
+      ],
+      "trace": "t-1001",
+      "duration_ms": 42
+    },
+    {
+      "ts": "2026-06-03T08:00:05Z",
+      "level": "INFO",
+      "service": "worker",
+      "code": "JOB_START",
+      "message": "LessonJob 64 started stage transcribe",
+      "tags": [
+        "job:64",
+        "stage:transcribe"
+      ],
+      "trace": "t-1002",
+      "duration_ms": null
+    },
+    {
+      "ts": "2026-06-03T08:02:11Z",
+      "level": "WARN",
+      "service": "worker",
+      "code": "ASR_SLOW",
+      "message": "Whisper took longer than budget",
+      "tags": [
+        "job:64"
+      ],
+      "trace": "t-1003",
+      "duration_ms": 126000
+    },
+    {
+      "ts": "2026-06-03T08:02:12Z",
+      "level": "INFO",
+      "service": "worker",
+      "code": "JOB_STAGE",
+      "message": "stage generate started with 16 chunks",
+      "tags": [
+        "job:64",
+        "stage:generate"
+      ],
+      "trace": "t-1004",
+      "duration_ms": null
+    },
+    {
+      "ts": "2026-06-03T08:05:40Z",
+      "level": "ERROR",
+      "service": "llm",
+      "code": "NUL_CHAR",
+      "message": "NUL character in model output; sanitized",
+      "tags": [
+        "job:64",
+        "chunk:7"
+      ],
+      "trace": "t-1005",
+      "duration_ms": null
+    },
+    {
+      "ts": "2026-06-03T08:05:41Z",
+      "level": "INFO",
+      "service": "worker",
+      "code": "MINI_PARSE",
+      "message": "150 records parsed, 22 flagged incoherent",
+      "tags": [
+        "job:64"
+      ],
+      "trace": "t-1006",
+      "duration_ms": 310
+    },
+    {
+      "ts": "2026-06-03T08:06:02Z",
+      "level": "INFO",
+      "service": "verify",
+      "code": "WEB_CTX",
+      "message": "6 queries, 4 results, 2 usable sources",
+      "tags": [
+        "job:64"
+      ],
+      "trace": "t-1007",
+      "duration_ms": 8900
+    },
+    {
+      "ts": "2026-06-03T08:06:30Z",
+      "level": "ERROR",
+      "service": "llm",
+      "code": "CTX_OVERFLOW",
+      "message": "verification prompt exceeds context; truncated",
+      "tags": [
+        "job:64"
+      ],
+      "trace": "t-1008",
+      "duration_ms": null
+    },
+    {
+      "ts": "2026-06-03T08:07:00Z",
+      "level": "INFO",
+      "service": "worker",
+      "code": "JOB_DONE",
+      "message": "LessonJob 64 finished",
+      "tags": [
+        "job:64"
+      ],
+      "trace": "t-1009",
+      "duration_ms": 419000
+    },
+    {
+      "ts": "2026-06-03T08:10:15Z",
+      "level": "WARN",
+      "service": "web",
+      "code": "HTTP404",
+      "message": "GET /clase/999/ not found",
+      "tags": [
+        "user:12"
+      ],
+      "trace": "t-1010",
+      "duration_ms": 5
+    },
+    {
+      "ts": "2026-06-03T08:12:00Z",
+      "level": "CRITICAL",
+      "service": "llm",
+      "code": "ENDPOINT_DOWN",
+      "message": "local API base unreachable; retry scheduled",
+      "tags": [
+        "endpoint:8003"
+      ],
+      "trace": "t-1011",
+      "duration_ms": null
+    },
+    {
+      "ts": "2026-06-03T08:12:30Z",
+      "level": "INFO",
+      "service": "llm",
+      "code": "ENDPOINT_UP",
+      "message": "local API base healthy after retry",
+      "tags": [
+        "endpoint:8003"
+      ],
+      "trace": "t-1012",
+      "duration_ms": null
+    }
+  ]
+}

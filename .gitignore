@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+benchmark/toon_ref/node_modules/
+benchmark/toon_ref/package*.json
+*.egg-info/
+build/
+dist/

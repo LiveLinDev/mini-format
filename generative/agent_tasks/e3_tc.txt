@@ -1,0 +1,49 @@
+You are taking part in a controlled experiment on specification transferability. Complete the task below. You may think as long as you need, but do NOT read any files of the repository and do NOT run code: write the parser from the specification alone. Save the Python file with the Write tool to exactly this path: {PATH} — the file must contain ONLY Python code. Then reply with the single word: saved.
+
+=== TASK ===
+.mini FORMAT — family 'tc' v1 (Software test cases)
+Manual or automated test cases: module, title, precondition, ordered steps, expected result, priority, type and automation flag.
+Rules:
+- Plain UTF-8 text. The FIRST line is the header: 'tc|d=<str>?, l=<str>?, t=<str>?, proj=<str>?, n=<int>'. n is mandatory and must equal the exact number of record lines.
+- After the header, ONE line per record and nothing else (no comments, no code fences, no blank lines in between).
+- Each record has these fields in THIS order, separated by '|' (position is the semantics; field names are never written):
+  1. id: str
+  2. module: str
+  3. title: str
+  4. precondition: str
+  5. steps: ','-separated list of str, 1 to 20 elements
+  6. expected: str
+  7. priority: one of {low|medium|high|critical}
+  8. type: one of {functional|integration|performance|security|usability|regression}
+  9. automated: bool
+- If a list element contains the separator ',', enclose the element in double quotes CSV-style ("impact, justice and evidence"; the * marker goes after the closing quote) or escape the separator as '\,'. A literal trailing asterisk is written '\*'.
+- Escapes valid in any value: '\|' for a literal vertical bar, '\\' for a backslash, '\n' for a line break.
+- Numbers unquoted; booleans true/false. Scalar fields are never quoted.
+- An empty field means null (allowed only for optional fields).
+- Record: 9 core fields.
+
+TASK: write a deterministic Python parser for family 'tc'. It must: validate the header and n; validate the arity of every record; process lists, tuples and the * marker; apply the escapes; and return the canonical JSON object shaped {'prefix', 'header', 'cases': [records]} where each record is an object keyed by the field names above; a marked list is returned as {'items': [...], 'correct': index}.
+Reject any invalid document with an exception that reports the line. No external libraries.
+
+--- fixture: valid.mini ---
+tc|n=12|d=20260603|l=en|t=SIMA release 1.2 regression|proj=SIMA
+TC-001|auth|Login with valid credentials|User registered and active|open /login,enter valid email and password,click Sign in|Dashboard is shown and session cookie is set|high|functional|true
+TC-002|auth|Login with wrong password|User registered|open /login,enter valid email and wrong password,click Sign in|Error message; no session created|high|functional|true
+TC-003|auth|Password reset email|User registered|open /reset,submit registered email|Reset email delivered within 60 s|medium|integration|false
+TC-004|courses|Create course|Logged-in student|open /courses/new,fill name\, period and topics,save|Course appears in dashboard|high|functional|true
+TC-005|lessons|Upload audio lecture|Course exists; credits available|open /api/new,select course and upload 20 MB mp3,confirm credit estimate|LessonJob created with status queued|high|functional|true
+TC-006|lessons|Reject unsupported file|Course exists|open /api/new,upload .exe file|Validation error; nothing stored|medium|security|true
+TC-007|pipeline|Transcription completes|Job queued; Whisper available|run worker,wait for stage transcribe|Transcript stored; stage advances to generate|high|integration|true
+TC-008|pipeline|.mini bank parses|Generation stage finished|fetch job output,run parser|All records valid; n equals record lines|high|functional|true
+TC-009|pipeline|Incoherent items repaired|Bank with declarative items|run coherence filter,run repair|Items repaired or excluded with trace|medium|functional|true
+TC-010|quiz|Adaptive quiz updates theta|Lesson ready; profile exists|start quiz with 6 items,answer all|theta and SE updated; XP awarded|high|functional|true
+TC-011|quiz|Quiz under load|50 concurrent students|start 50 quizzes,answer concurrently|p95 latency below 2 s; no errors|medium|performance|false
+TC-012|admin|Credit ledger consistency|Several jobs processed|open admin ledger,sum entries|Ledger total equals profile balance|low|functional|false
+
+
+--- fixture: escaping.mini ---
+tc|n=1|d=20260603|l=en|t=SIMA release 1.2 regression|proj=SIMA
+TC-001|pipe \| and back\\slash, comma, "quotes", star* and newline\nend|Login with valid credentials|User registered and active|a\, b \| c \\ d\*,enter valid email and password,click Sign in|Dashboard is shown and session cookie is set|high|functional|true
+
+
+Deliver a single Python 3 file defining `def parse(text: str) -> dict` (raise ValueError on invalid input, mentioning the line number). No third-party imports. Do not include tests or a main block. OUTPUT: only the Python code, no markdown fences, no explanations.

@@ -1,0 +1,13 @@
+ner|n=12|d=20260603|l=en|model=ner-base-2026|schema=ontonotes-lite
+d1|0|17|Whisper|PRODUCT|0.98
+d1|25|31|OpenAI|ORG|0.99
+d1|60|64|2023|DATE|0.97
+d2|4|10|Django|PRODUCT|0.96
+d2|30|40|PostgreSQL|PRODUCT|0.95
+d2|0|4|Lima|LOC|0.99
+d3|6|10|Perú|LOC|0.99
+d3|45|48|UPC|ORG|0.93
+d3|12|30|Item Response Theory|CONCEPT|0.91
+d4|35|38|CAT|CONCEPT|0.88
+d4|0|12|Adrián Palma|PERSON|0.97
+d4|17|31|Erick Palomino|PERSON|0.97

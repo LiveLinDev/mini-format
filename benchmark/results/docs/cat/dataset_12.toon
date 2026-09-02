@@ -1,0 +1,101 @@
+header:
+  d: "20260603"
+  store: campus-shop
+  cur: USD
+products[12]:
+  - sku: SKU-1001
+    name: Wireless headset
+    category: audio
+    price: 89.9
+    currency: USD
+    stock: 120
+    tags[2]: bluetooth,noise-cancelling
+    rating: 4.5
+  - sku: SKU-1002
+    name: USB-C hub 7-in-1
+    category: accessories
+    price: 39.99
+    currency: USD
+    stock: 300
+    tags[2]: usb-c,hdmi
+    rating: 4.2
+  - sku: SKU-1003
+    name: Mechanical keyboard
+    category: input
+    price: 129
+    currency: USD
+    stock: 45
+    tags[3]: mechanical,rgb,wired
+    rating: 4.7
+  - sku: SKU-1004
+    name: "27\" 4K monitor"
+    category: display
+    price: 349
+    currency: USD
+    stock: 18
+    tags[2]: 4k,ips
+    rating: 4.6
+  - sku: SKU-1005
+    name: Laptop stand
+    category: accessories
+    price: 25.5
+    currency: USD
+    stock: 500
+    tags[1]: aluminium
+    rating: 4.1
+  - sku: SKU-1006
+    name: Webcam 1080p
+    category: video
+    price: 59
+    currency: USD
+    stock: 80
+    tags[2]: 1080p,autofocus
+    rating: 3.9
+  - sku: SKU-1007
+    name: Micrófono condensador
+    category: audio
+    price: 249
+    currency: PEN
+    stock: 22
+    tags[2]: usb,cardioide
+    rating: 4.4
+  - sku: SKU-1008
+    name: Mouse ergonómico
+    category: input
+    price: 119
+    currency: PEN
+    stock: 64
+    tags[2]: ergonómico,inalámbrico
+    rating: 4.3
+  - sku: SKU-1009
+    name: SSD NVMe 1 TB
+    category: storage
+    price: 99
+    currency: USD
+    stock: 150
+    tags[2]: nvme,pcie4
+    rating: 4.8
+  - sku: SKU-1010
+    name: Router Wi-Fi 6
+    category: network
+    price: 79
+    currency: USD
+    stock: 33
+    tags[2]: wifi6,mesh
+    rating: 4
+  - sku: SKU-1011
+    name: Cable HDMI 2.1 2 m
+    category: accessories
+    price: 15.9
+    currency: USD
+    stock: 900
+    tags[2]: hdmi,8k
+    rating: null
+  - sku: SKU-1012
+    name: Silla de oficina
+    category: furniture
+    price: 899
+    currency: PEN
+    stock: 7
+    tags[2]: ergonómica,malla
+    rating: 4.2

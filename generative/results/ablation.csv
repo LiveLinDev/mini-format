@@ -1,0 +1,17 @@
+model,spec,sample,parseable,round_trip,field_accuracy,n_records,error,error_class
+haiku,v1-draft (backslash only),1,False,False,0.0,0,E07 line 12 [options]: list has 5 elements but header k=4; E07 line 13 [options]: list has 5 elements but header k=4,delimiter
+haiku,v1-draft (backslash only),2,False,False,0.0,0,E07 line 12 [options]: list has 5 elements but header k=4; E07 line 13 [options]: list has 5 elements but header k=4,delimiter
+haiku,v1-draft (backslash only),3,False,False,0.0,0,E07 line 12 [options]: list has 5 elements but header k=4; E07 line 13 [options]: list has 5 elements but header k=4,delimiter
+haiku,v1-draft (backslash only),4,False,False,0.0,0,E07 line 12 [options]: list has 5 elements but header k=4; E07 line 13 [options]: list has 5 elements but header k=4,delimiter
+haiku,v1-draft (backslash only),5,True,True,1.0,12,,
+haiku,v1-draft (backslash only),6,False,False,0.0,0,E07 line 12 [options]: list has 5 elements but header k=4; E07 line 13 [options]: list has 5 elements but header k=4,delimiter
+haiku,v1.0 (quotes or escapes + count key),1,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),10,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),2,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),3,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),4,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),5,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),6,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),7,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),8,True,True,1.0,12,,
+haiku,v1.0 (quotes or escapes + count key),9,True,True,1.0,12,,

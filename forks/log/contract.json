@@ -1,0 +1,78 @@
+{
+  "prefix": "log",
+  "version": 1,
+  "parent": null,
+  "name": "Service events / incident records",
+  "domain": "operations / observability",
+  "records_key": "events",
+  "description": "Structured events emitted by services: timestamp, level, service, code, message, tags, trace id and optional duration.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "env": {
+        "type": "str"
+      },
+      "host": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "ts",
+      "type": "str",
+      "desc": "ISO-8601 UTC timestamp"
+    },
+    {
+      "name": "level",
+      "type": "enum",
+      "values": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR",
+        "CRITICAL"
+      ]
+    },
+    {
+      "name": "service",
+      "type": "str"
+    },
+    {
+      "name": "code",
+      "type": "str"
+    },
+    {
+      "name": "message",
+      "type": "str"
+    },
+    {
+      "name": "tags",
+      "type": "list",
+      "item": "str",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "name": "trace",
+      "type": "str",
+      "optional": true
+    },
+    {
+      "name": "duration_ms",
+      "type": "int",
+      "optional": true,
+      "min": 0
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

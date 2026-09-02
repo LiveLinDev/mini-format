@@ -1,0 +1,2 @@
+ner|n=1|d=20260603|l=en|model=ner-base-2026|schema=ontonotes-lite
+pipe \| and back\\slash, comma, "quotes", star* and newline\nend|0|17|Whisper|PRODUCT|0.98

@@ -1,0 +1,123 @@
+header:
+  d: '20260603'
+  l: es
+  t: repaso transversal
+  src: clase-64
+cards:
+- id: c1
+  topic: Biología
+  front: ¿Qué organelo realiza la fotosíntesis?
+  back: El cloroplasto, gracias a la clorofila.
+  hint: Pigmento verde
+  tags:
+  - célula
+  - plantas
+  bloom: L1
+  ease: 2.5
+- id: c2
+  topic: Química
+  front: ¿Qué mide el pH?
+  back: La acidez o basicidad de una solución (0-14).
+  hint: Iones H+
+  tags:
+  - soluciones
+  - ácidos
+  bloom: L2
+  ease: 2.5
+- id: c3
+  topic: Matemática
+  front: Resuelve 3x+6=18
+  back: x = 4
+  hint: null
+  tags:
+  - álgebra
+  bloom: L3
+  ease: 2.6
+- id: c4
+  topic: Historia
+  front: Causas de la caída de Roma de Occidente
+  back: Presiones militares externas y crisis internas (económica, política).
+  hint: Multicausal
+  tags:
+  - roma
+  - antigüedad
+  bloom: L4
+  ease: 2.3
+- id: c5
+  topic: Literatura
+  front: ¿Qué es un narrador no confiable?
+  back: Un narrador cuya versión debe contrastarse con otras evidencias del texto.
+  hint: null
+  tags:
+  - narrativa
+  bloom: L5
+  ease: 2.4
+- id: c6
+  topic: Computación
+  front: Dos prácticas para reducir errores en una API
+  back: Validación de esquema y pruebas automatizadas.
+  hint: Verificación temprana
+  tags:
+  - api
+  - calidad
+  - testing
+  bloom: L6
+  ease: 2.5
+- id: c7
+  topic: Física
+  front: Unidad SI de fuerza
+  back: El newton (N) = kg·m/s².
+  hint: null
+  tags:
+  - unidades
+  bloom: L1
+  ease: 2.7
+- id: c8
+  topic: Geografía
+  front: Define cuenca hidrográfica
+  back: Territorio cuyas aguas drenan hacia un mismo río o lago.
+  hint: Drenaje
+  tags:
+  - hidrografía
+  bloom: L2
+  ease: 2.5
+- id: c9
+  topic: Comunicación
+  front: Conector de causa
+  back: '"Porque" introduce la causa de un hecho.'
+  hint: null
+  tags:
+  - conectores
+  - redacción
+  bloom: L3
+  ease: 2.6
+- id: c10
+  topic: Economía
+  front: 'Sube el precio y baja la demanda: ¿qué pasa?'
+  back: Disminuye la cantidad demandada.
+  hint: Ley de la demanda
+  tags:
+  - mercado
+  bloom: L4
+  ease: 2.4
+- id: c11
+  topic: Ética
+  front: Criterios para evaluar una decisión pública
+  back: Impacto, justicia y evidencia.
+  hint: null
+  tags:
+  - ética
+  - política
+  bloom: L5
+  ease: 2.3
+- id: c12
+  topic: Arte
+  front: Principio de una campaña visual coherente
+  back: Unidad entre mensaje, color y audiencia.
+  hint: Coherencia
+  tags:
+  - diseño
+  - comunicación
+  bloom: L6
+  ease: 2.4
+

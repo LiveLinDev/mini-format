@@ -1,0 +1,90 @@
+{
+  "prefix": "code",
+  "version": 1,
+  "parent": null,
+  "name": "Programming exercises with tests",
+  "domain": "education / programming",
+  "records_key": "exercises",
+  "description": "Auto-gradable programming exercises: statement, language, test expressions, expected type and hints.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "bloom",
+      "type": "enum",
+      "values": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6"
+      ]
+    },
+    {
+      "name": "topic",
+      "type": "str"
+    },
+    {
+      "name": "statement",
+      "type": "str"
+    },
+    {
+      "name": "lang",
+      "type": "enum",
+      "values": [
+        "python",
+        "javascript",
+        "java",
+        "sql",
+        "c",
+        "cpp",
+        "go"
+      ]
+    },
+    {
+      "name": "tests",
+      "type": "list",
+      "item": "str",
+      "min": 1,
+      "max": 10,
+      "desc": "boolean test expressions"
+    },
+    {
+      "name": "expected",
+      "type": "str"
+    },
+    {
+      "name": "hints",
+      "type": "list",
+      "item": "str",
+      "min": 0,
+      "max": 5
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

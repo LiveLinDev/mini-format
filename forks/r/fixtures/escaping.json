@@ -1,0 +1,27 @@
+{
+ "prefix": "r",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "en",
+  "t": "Argumentative essay",
+  "k": 4,
+  "scale": "0-3",
+  "v": 1
+ },
+ "criteria": [
+  {
+   "id": "r1",
+   "dimension": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "criterion": "Thesis clarity",
+   "levels": [
+    "a, b | c \\ d*",
+    "stated but vague",
+    "clear and focused",
+    "clear, focused and original"
+   ],
+   "weight": 0.2,
+   "evidence": "Introduction paragraph"
+  }
+ ]
+}

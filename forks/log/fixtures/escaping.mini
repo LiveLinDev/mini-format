@@ -1,0 +1,2 @@
+log|n=1|d=20260603|env=staging|host=sima-app-01
+2026-06-03T08:00:01Z|INFO|pipe \| and back\\slash, comma, "quotes", star* and newline\nend|HTTP200|GET /dashboard served|a\, b \| c \\ d\*|t-1001|42

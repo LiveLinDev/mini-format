@@ -1,0 +1,26 @@
+{
+ "prefix": "card",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "es",
+  "t": "repaso transversal",
+  "src": "clase-64",
+  "v": 1
+ },
+ "cards": [
+  {
+   "id": "c1",
+   "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "front": "¿Qué organelo realiza la fotosíntesis?",
+   "back": "El cloroplasto, gracias a la clorofila.",
+   "hint": "Pigmento verde",
+   "tags": [
+    "a, b | c \\ d*",
+    "plantas"
+   ],
+   "bloom": "L1",
+   "ease": 2.5
+  }
+ ]
+}

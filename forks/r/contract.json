@@ -1,0 +1,71 @@
+{
+  "prefix": "r",
+  "version": 1,
+  "parent": null,
+  "name": "Analytic rubric criteria",
+  "domain": "education / assessment",
+  "records_key": "criteria",
+  "description": "One rubric criterion per line with k ordered performance levels (k declared in the header), a weight and the evidence to inspect.",
+  "header": {
+    "required": [
+      "n",
+      "k"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      },
+      "k": {
+        "type": "int",
+        "desc": "number of performance levels"
+      },
+      "scale": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "dimension",
+      "type": "str"
+    },
+    {
+      "name": "criterion",
+      "type": "str"
+    },
+    {
+      "name": "levels",
+      "type": "list",
+      "item": "str",
+      "count_key": "k",
+      "desc": "ordered level descriptors"
+    },
+    {
+      "name": "weight",
+      "type": "float",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "evidence",
+      "type": "str"
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

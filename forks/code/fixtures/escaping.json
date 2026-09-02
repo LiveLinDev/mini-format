@@ -1,0 +1,28 @@
+{
+ "prefix": "code",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "en",
+  "t": "Intro programming lab 3",
+  "v": 1
+ },
+ "exercises": [
+  {
+   "id": "c1",
+   "bloom": "L3",
+   "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "statement": "Write a function maximum(xs) that returns the largest number in a non-empty list.",
+   "lang": "python",
+   "tests": [
+    "a, b | c \\ d*",
+    "maximum([-1,-5])==-1"
+   ],
+   "expected": "int or float",
+   "hints": [
+    "iterate once",
+    "track the best so far"
+   ]
+  }
+ ]
+}

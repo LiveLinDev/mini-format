@@ -1,0 +1,45 @@
+.mini FORMAT — family 'log' v1 (Service events / incident records)
+Structured events emitted by services: timestamp, level, service, code, message, tags, trace id and optional duration.
+Rules:
+- Plain UTF-8 text. The FIRST line is the header: 'log|d=<str>?, env=<str>?, host=<str>?, n=<int>'. n is mandatory and must equal the exact number of record lines.
+- After the header, ONE line per record and nothing else (no comments, no code fences, no blank lines in between).
+- Each record has these fields in THIS order, separated by '|' (position is the semantics; field names are never written):
+  1. ts: str — ISO-8601 UTC timestamp
+  2. level: one of {DEBUG|INFO|WARN|ERROR|CRITICAL}
+  3. service: str
+  4. code: str
+  5. message: str
+  6. tags: ','-separated list of str, 0 to 10 elements
+  7. trace: str (optional)
+  8. duration_ms: int [0..] (optional)
+- If a list element contains the separator ',', enclose the element in double quotes CSV-style ("impact, justice and evidence"; the * marker goes after the closing quote) or escape the separator as '\,'. A literal trailing asterisk is written '\*'.
+- Escapes valid in any value: '\|' for a literal vertical bar, '\\' for a backslash, '\n' for a line break.
+- Numbers unquoted; booleans true/false. Scalar fields are never quoted.
+- An empty field means null (allowed only for optional fields).
+- Record: 8 core fields.
+
+TASK: write a deterministic Python parser for family 'log'. It must: validate the header and n; validate the arity of every record; process lists, tuples and the * marker; apply the escapes; and return the canonical JSON object shaped {'prefix', 'header', 'events': [records]} where each record is an object keyed by the field names above; a marked list is returned as two sibling keys of the record: the element list and the selected index (or indices), named as the contract states (e.g. 'options' and 'correct'). When the marker rule is exactly_one/at_most_one the selected value is a single 0-based index (or null); when it is at_least_one/any it is always a list of ascending 0-based indices, even when only one element is marked.
+Reject any invalid document with an exception that reports the line. No external libraries.
+
+--- fixture: valid.mini ---
+log|n=12|d=20260603|env=staging|host=sima-app-01
+2026-06-03T08:00:01Z|INFO|web|HTTP200|GET /dashboard served|user:26|t-1001|42
+2026-06-03T08:00:05Z|INFO|worker|JOB_START|LessonJob 64 started stage transcribe|job:64,stage:transcribe|t-1002|
+2026-06-03T08:02:11Z|WARN|worker|ASR_SLOW|Whisper took longer than budget|job:64|t-1002|126000
+2026-06-03T08:02:12Z|INFO|worker|JOB_STAGE|stage generate started with 16 chunks|job:64,stage:generate|t-1002|
+2026-06-03T08:05:40Z|ERROR|llm|NUL_CHAR|NUL character in model output; sanitized|job:64,chunk:7|t-1002|
+2026-06-03T08:05:41Z|INFO|worker|MINI_PARSE|150 records parsed, 22 flagged incoherent|job:64|t-1002|310
+2026-06-03T08:06:02Z|INFO|verify|WEB_CTX|6 queries, 4 results, 2 usable sources|job:64|t-1002|8900
+2026-06-03T08:06:30Z|ERROR|llm|CTX_OVERFLOW|verification prompt exceeds context; truncated|job:64|t-1002|
+2026-06-03T08:07:00Z|INFO|worker|JOB_DONE|LessonJob 64 finished|job:64|t-1002|419000
+2026-06-03T08:10:15Z|WARN|web|HTTP404|GET /clase/999/ not found|user:12|t-1003|5
+2026-06-03T08:12:00Z|CRITICAL|llm|ENDPOINT_DOWN|local API base unreachable; retry scheduled|endpoint:8003|t-1004|
+2026-06-03T08:12:30Z|INFO|llm|ENDPOINT_UP|local API base healthy after retry|endpoint:8003|t-1004|
+
+
+--- fixture: escaping.mini ---
+log|n=1|d=20260603|env=staging|host=sima-app-01
+2026-06-03T08:00:01Z|INFO|pipe \| and back\\slash, comma, "quotes", star* and newline\nend|HTTP200|GET /dashboard served|a\, b \| c \\ d\*|t-1001|42
+
+
+Deliver a single Python 3 file defining `def parse(text: str) -> dict` (raise ValueError on invalid input, mentioning the line number). No third-party imports. Do not include tests or a main block. OUTPUT: only the Python code, no markdown fences, no explanations.

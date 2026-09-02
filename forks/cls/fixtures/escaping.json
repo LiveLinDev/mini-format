@@ -1,0 +1,31 @@
+{
+ "prefix": "cls",
+ "header": {
+  "n": 1,
+  "d": "20260603",
+  "l": "en",
+  "model": "cls-support-2026",
+  "k": 6,
+  "v": 1
+ },
+ "messages": [
+  {
+   "id": "m1",
+   "text": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+   "labels": [
+    "a, b | c \\ d*",
+    "feedback",
+    "bug",
+    "request",
+    "praise",
+    "other"
+   ],
+   "selected": [
+    0,
+    2
+   ],
+   "conf": 0.91,
+   "rationale": "reports a malfunction and asks"
+  }
+ ]
+}

@@ -1,0 +1,117 @@
+<card d="20260603" l="es" t="repaso transversal" src="clase-64">
+  <rec>
+    <id>c1</id>
+    <topic>Biología</topic>
+    <front>¿Qué organelo realiza la fotosíntesis?</front>
+    <back>El cloroplasto, gracias a la clorofila.</back>
+    <hint>Pigmento verde</hint>
+    <tags><i>célula</i><i>plantas</i></tags>
+    <bloom>L1</bloom>
+    <ease>2.5</ease>
+  </rec>
+  <rec>
+    <id>c2</id>
+    <topic>Química</topic>
+    <front>¿Qué mide el pH?</front>
+    <back>La acidez o basicidad de una solución (0-14).</back>
+    <hint>Iones H+</hint>
+    <tags><i>soluciones</i><i>ácidos</i></tags>
+    <bloom>L2</bloom>
+    <ease>2.5</ease>
+  </rec>
+  <rec>
+    <id>c3</id>
+    <topic>Matemática</topic>
+    <front>Resuelve 3x+6=18</front>
+    <back>x = 4</back>
+    <tags><i>álgebra</i></tags>
+    <bloom>L3</bloom>
+    <ease>2.6</ease>
+  </rec>
+  <rec>
+    <id>c4</id>
+    <topic>Historia</topic>
+    <front>Causas de la caída de Roma de Occidente</front>
+    <back>Presiones militares externas y crisis internas (económica, política).</back>
+    <hint>Multicausal</hint>
+    <tags><i>roma</i><i>antigüedad</i></tags>
+    <bloom>L4</bloom>
+    <ease>2.3</ease>
+  </rec>
+  <rec>
+    <id>c5</id>
+    <topic>Literatura</topic>
+    <front>¿Qué es un narrador no confiable?</front>
+    <back>Un narrador cuya versión debe contrastarse con otras evidencias del texto.</back>
+    <tags><i>narrativa</i></tags>
+    <bloom>L5</bloom>
+    <ease>2.4</ease>
+  </rec>
+  <rec>
+    <id>c6</id>
+    <topic>Computación</topic>
+    <front>Dos prácticas para reducir errores en una API</front>
+    <back>Validación de esquema y pruebas automatizadas.</back>
+    <hint>Verificación temprana</hint>
+    <tags><i>api</i><i>calidad</i><i>testing</i></tags>
+    <bloom>L6</bloom>
+    <ease>2.5</ease>
+  </rec>
+  <rec>
+    <id>c7</id>
+    <topic>Física</topic>
+    <front>Unidad SI de fuerza</front>
+    <back>El newton (N) = kg·m/s².</back>
+    <tags><i>unidades</i></tags>
+    <bloom>L1</bloom>
+    <ease>2.7</ease>
+  </rec>
+  <rec>
+    <id>c8</id>
+    <topic>Geografía</topic>
+    <front>Define cuenca hidrográfica</front>
+    <back>Territorio cuyas aguas drenan hacia un mismo río o lago.</back>
+    <hint>Drenaje</hint>
+    <tags><i>hidrografía</i></tags>
+    <bloom>L2</bloom>
+    <ease>2.5</ease>
+  </rec>
+  <rec>
+    <id>c9</id>
+    <topic>Comunicación</topic>
+    <front>Conector de causa</front>
+    <back>"Porque" introduce la causa de un hecho.</back>
+    <tags><i>conectores</i><i>redacción</i></tags>
+    <bloom>L3</bloom>
+    <ease>2.6</ease>
+  </rec>
+  <rec>
+    <id>c10</id>
+    <topic>Economía</topic>
+    <front>Sube el precio y baja la demanda: ¿qué pasa?</front>
+    <back>Disminuye la cantidad demandada.</back>
+    <hint>Ley de la demanda</hint>
+    <tags><i>mercado</i></tags>
+    <bloom>L4</bloom>
+    <ease>2.4</ease>
+  </rec>
+  <rec>
+    <id>c11</id>
+    <topic>Ética</topic>
+    <front>Criterios para evaluar una decisión pública</front>
+    <back>Impacto, justicia y evidencia.</back>
+    <tags><i>ética</i><i>política</i></tags>
+    <bloom>L5</bloom>
+    <ease>2.3</ease>
+  </rec>
+  <rec>
+    <id>c12</id>
+    <topic>Arte</topic>
+    <front>Principio de una campaña visual coherente</front>
+    <back>Unidad entre mensaje, color y audiencia.</back>
+    <hint>Coherencia</hint>
+    <tags><i>diseño</i><i>comunicación</i></tags>
+    <bloom>L6</bloom>
+    <ease>2.4</ease>
+  </rec>
+</card>

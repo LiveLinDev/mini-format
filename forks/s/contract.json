@@ -1,0 +1,66 @@
+{
+  "prefix": "s",
+  "version": 1,
+  "parent": null,
+  "name": "Survey items (Likert)",
+  "domain": "research instruments",
+  "records_key": "items",
+  "description": "Likert-type survey items grouped by construct, with scale size, anchor labels and reverse-scoring flag.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      },
+      "k": {
+        "type": "int",
+        "desc": "anchors per item"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "construct",
+      "type": "str"
+    },
+    {
+      "name": "statement",
+      "type": "str"
+    },
+    {
+      "name": "scale",
+      "type": "int",
+      "min": 2,
+      "max": 11
+    },
+    {
+      "name": "anchors",
+      "type": "list",
+      "item": "str",
+      "count_key": "k"
+    },
+    {
+      "name": "reverse",
+      "type": "bool"
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

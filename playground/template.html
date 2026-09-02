@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>.mini Playground</title>
+<meta name="description" content="Interactive playground for .mini — forkable, token-efficient notation for LLM structured outputs. Validate, convert, compare tokens and design your own fork.">
+<style>
+:root{--bg:#f6f7f9;--panel:#fff;--ink:#1a1d24;--muted:#5b6472;--line:#dfe3ea;--accent:#1f5fbf;--accent2:#0f8f6a;--warn:#b3261e;--code:#f1f3f7;--chip:#e8eefb}
+:root[data-theme="dark"]{--bg:#0f1218;--panel:#171b23;--ink:#e8ebf1;--muted:#9aa4b2;--line:#2a3140;--accent:#7aa7ff;--accent2:#3ec99a;--warn:#ff7b72;--code:#0b0e14;--chip:#1f2a44}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1218;--panel:#171b23;--ink:#e8ebf1;--muted:#9aa4b2;--line:#2a3140;--accent:#7aa7ff;--accent2:#3ec99a;--warn:#ff7b72;--code:#0b0e14;--chip:#1f2a44}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+header h1{font-size:18px;margin:0;font-weight:700}header h1 small{color:var(--muted);font-weight:400;margin-left:8px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav button{background:none;border:1px solid transparent;padding:6px 12px;border-radius:8px;color:var(--muted);cursor:pointer;font:inherit}
+nav button.active{background:var(--chip);color:var(--accent);border-color:var(--line)}nav button:hover{color:var(--ink)}
+main{padding:16px 20px;max-width:1500px;margin:0 auto}.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}.panel h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+textarea,pre,code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+textarea{width:100%;min-height:260px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--code);color:var(--ink);resize:vertical;white-space:pre;overflow:auto}
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;max-height:420px;margin:0;white-space:pre}
+select,input[type=text],input[type=number]{font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
+button.primary{background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit}button.ghost{background:none;border:1px solid var(--line);padding:7px 12px;border-radius:8px;cursor:pointer;font:inherit;color:var(--ink)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{background:var(--chip);color:var(--accent);padding:2px 8px;border-radius:999px;font-size:12px}
+.ok{color:var(--accent2);font-weight:600}.err{color:var(--warn)}.muted{color:var(--muted)}
+ul.errors{margin:8px 0 0;padding-left:18px}ul.errors li{color:var(--warn)}
+table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:600;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}.card{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel);cursor:pointer}.card:hover{border-color:var(--accent)}.card h3{margin:0 0 4px;font-size:15px}.card .sig{font-size:11px;color:var(--muted);word-break:break-all}
+.bar{height:18px;background:var(--accent);border-radius:4px}.bar.mini{background:var(--accent2)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}
+.fields .frow{display:grid;grid-template-columns:1.2fr 1fr 1.6fr auto;gap:6px;margin-bottom:6px;align-items:center}
+footer{padding:20px;color:var(--muted);text-align:center;font-size:12px}
+.toggle{margin-left:auto}
+.note{font-size:12px;color:var(--muted)}
+.highlight{background:rgba(255,120,120,.25)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+svg text{fill:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <h1>.mini <small>playground · spec 1.0</small></h1>
+  <nav>
+    <button data-tab="forks" class="active">Forks</button>
+    <button data-tab="editor">Editor &amp; validator</button>
+    <button data-tab="compare">Compare formats</button>
+    <button data-tab="wizard">Fork wizard</button>
+    <button data-tab="bench">Benchmark</button>
+    <button data-tab="spec">Spec cheatsheet</button>
+  </nav>
+  <button class="ghost toggle" id="themeBtn" title="toggle theme">◐</button>
+</header>
+<main>
+
+<!-- ============================================================ FORKS -->
+<section class="tab active" id="tab-forks">
+  <p class="note"><b>.mini</b> is a family of contracts. Each card is a fork: a contract (data, not code) that the same parser interprets. Click a card to load its example in the editor. Lineage arrows show <code>parent → child</code> forks that keep the core stable and only append fields.</p>
+  <div class="cards" id="forkCards"></div>
+</section>
+
+<!-- ============================================================ EDITOR -->
+<section class="tab" id="tab-editor">
+  <div class="row">
+    <label>Fork <select id="forkSel"></select></label>
+    <button class="ghost" id="loadExample">Load example</button>
+    <button class="ghost" id="loadEscaping">Load escaping example</button>
+    <button class="ghost" id="breakIt">Inject 3 errors</button>
+    <span id="status" class="muted"></span>
+  </div>
+  <div class="grid">
+    <div class="panel"><h2>.mini document</h2><textarea id="miniText" spellcheck="false"></textarea><ul class="errors" id="errList"></ul></div>
+    <div class="panel"><h2>Canonical JSON <span class="muted">(edit and press “JSON → .mini”)</span></h2><textarea id="jsonText" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:8px"><button class="primary" id="toMini">JSON → .mini</button><span id="jsonStatus" class="muted"></span></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:16px"><h2>Contract signature</h2><pre id="sigBox"></pre>
+    <details style="margin-top:8px"><summary>Prompt block for a generative model (EN)</summary><pre id="promptEn"></pre></details>
+    <details style="margin-top:8px"><summary>Bloque de especificación para un modelo generativo (ES)</summary><pre id="promptEs"></pre></details>
+    <details style="margin-top:8px"><summary>contract.json</summary><pre id="contractBox"></pre></details>
+  </div>
+</section>
+
+<!-- ============================================================ COMPARE -->
+<section class="tab" id="tab-compare">
+  <p class="note">The current editor document (canonical object) serialized into every format from the <em>same</em> data. TOON is encoded with the <b>official TOON reference implementation</b> (v4.1.1, bundled). Token counts use <span id="tokBackend">…</span>.</p>
+  <div class="grid">
+    <div class="panel"><h2>Tokens per format</h2><div id="tokChart"></div><div id="tokTable"></div></div>
+    <div class="panel"><h2>Serialized output</h2>
+      <div class="row"><label>Show <select id="fmtSel"><option value="mini">.mini</option><option value="toon">TOON (official, as-is)</option><option value="toon_flat">TOON (flattened, tabular)</option><option value="csv">CSV (flattened)</option><option value="json">JSON compact</option><option value="json_pretty">JSON pretty</option><option value="yaml">YAML</option><option value="xml">XML</option></select></label></div>
+      <pre id="fmtOut"></pre></div>
+  </div>
+</section>
+
+<!-- ============================================================ WIZARD -->
+<section class="tab" id="tab-wizard">
+  <p class="note">Design a fork in four steps: (1) choose a parent or start blank, (2) add fields — inherited fields stay fixed, new ones are appended, (3) read the contract + prompt block, (4) download <code>contract.json</code> and run <code>mini check-forks</code>. The invariants of §10 are checked live.</p>
+  <div class="grid">
+    <div class="panel"><h2>1 · Identity</h2>
+      <div class="row"><label>Prefix <input type="text" id="wPrefix" value="quiz2" size="10"></label><label>Name <input type="text" id="wName" value="My quiz fork" size="28"></label></div>
+      <div class="row"><label>Parent <select id="wParent"><option value="">(none — blank contract)</option></select></label><label>List separator <input type="text" id="wSep" value="," size="2" maxlength="1"></label><label>Records key <input type="text" id="wRecKey" value="items" size="10"></label></div>
+      <h2 style="margin-top:14px">2 · Fields</h2>
+      <div class="fields" id="wFields"></div>
+      <div class="row"><button class="ghost" id="wAdd">+ add field</button><span class="note">types: str, int, float, bool, enum{a|b}, list&lt;str&gt;, mlist&lt;str&gt;, tuple(a:float,b:int)</span></div>
+      <h2 style="margin-top:14px">Invariant check</h2><div id="wCheck"></div>
+    </div>
+    <div class="panel"><h2>3 · Generated contract</h2><pre id="wContract"></pre>
+      <div class="row" style="margin-top:8px"><button class="primary" id="wDownload">Download contract.json</button><button class="ghost" id="wToEditor">Open example in editor</button></div>
+      <h2 style="margin-top:14px">Prompt block</h2><pre id="wPrompt"></pre>
+      <h2 style="margin-top:14px">Example document</h2><pre id="wExample"></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ BENCH -->
+<section class="tab" id="tab-bench">
+  <p class="note">Pre-computed results of <code>benchmark/run_benchmark.py</code> (o200k_base, n = 12 records per fork). Bars are tokens; the dotted line is the content-only lower bound (payload).</p>
+  <div class="panel"><h2>Tokens by format and fork (n = 12)</h2><div id="benchChart"></div><div class="legend" id="benchLegend"></div></div>
+  <div class="panel" style="margin-top:16px"><h2>Summary</h2><div id="benchTable"></div></div>
+</section>
+
+<!-- ============================================================ SPEC -->
+<section class="tab" id="tab-spec">
+  <div class="grid">
+    <div class="panel"><h2>Structure</h2>
+<pre>prefix|n=12|key=value|key=a,b,c        ← header (contract + count + metadata)
+f1|f2|f3,f4*,f5|a,b,c|…                ← one record per line, fields by position
+                                        list elements separated by ','
+                                        selected element ends with *
+                                        tuple = fixed comma-separated group</pre>
+      <h2 style="margin-top:14px">Escapes</h2>
+<pre>\|   literal vertical bar          (everywhere)
+\\   literal backslash             (everywhere)
+\n   line break inside a value     (everywhere)
+\,   literal list separator        (inside list elements)
+\*   literal trailing asterisk     (inside list elements)</pre>
+      <h2 style="margin-top:14px">Fork invariants</h2>
+<pre>I1 one line = one valid record      I4 new fields only at the tail
+I2 prefix and n are mandatory        I5 fixtures must round-trip
+I3 inherited core never changes      (breaking change ⇒ new prefix)</pre>
+    </div>
+    <div class="panel"><h2>Error codes</h2>
+      <table><tr><th>Code</th><th>Condition</th></tr>
+      <tr><td>E01</td><td>no header</td></tr><tr><td>E02</td><td>prefix ≠ contract</td></tr><tr><td>E03</td><td>missing n</td></tr><tr><td>E04</td><td>record count ≠ n</td></tr>
+      <tr><td>E05</td><td>record arity outside core…core+extensions</td></tr><tr><td>E06</td><td>type mismatch / required empty</td></tr><tr><td>E07</td><td>list or tuple arity</td></tr>
+      <tr><td>E08</td><td>marker rule violated</td></tr><tr><td>E09</td><td>bad escape</td></tr><tr><td>E10</td><td>enum violation</td></tr><tr><td>E11</td><td>duplicate unique value</td></tr>
+      <tr><td>E12</td><td>header entry malformed/missing</td></tr><tr><td>E13</td><td>numeric range</td></tr><tr><td>E20/E21</td><td>invalid contract / fork invariant</td></tr></table>
+      <p class="note" style="margin-top:12px">Full specification: <code>SPEC.md</code> in the repository. Reference implementation: Python (<code>src/minifmt</code>) and JavaScript (<code>js/mini.js</code>, the engine of this page).</p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>.mini — forkable, token-efficient notation for LLM structured outputs · A. E. J. Palma Obispo &amp; E. J. Palomino Santa Cruz · UPC 2026 · MIT</footer>
+
+<script>__MINI_JS__</script>
+<script>__TOON_JS__</script>
+<script id="forksData" type="application/json">__FORKS_JSON__</script>
+<script id="benchData" type="application/json">__BENCH_JSON__</script>
+<script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@3.0.1/dist/o200k_base.js" onerror="window.__tokFail=true"></script>
+<script>
+(function(){
+'use strict';
+const FORKS = JSON.parse(document.getElementById('forksData').textContent);
+const BENCH = JSON.parse(document.getElementById('benchData').textContent);
+const $ = s => document.querySelector(s);
+const contracts = {}; for (const f of FORKS) contracts[f.prefix] = MINI.normalizeContract(f.contract);
+let current = 'a';
+
+// ---------------------------------------------------------------- theme
+$('#themeBtn').onclick = () => { const r=document.documentElement; const cur=r.getAttribute('data-theme'); const next = cur==='dark'?'light':(cur==='light'?'dark':(matchMedia('(prefers-color-scheme: dark)').matches?'light':'dark')); r.setAttribute('data-theme', next); try{localStorage.setItem('mini-theme',next)}catch(e){} };
+try{const t=localStorage.getItem('mini-theme'); if(t) document.documentElement.setAttribute('data-theme',t);}catch(e){}
+
+// ---------------------------------------------------------------- tabs
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+function showTab(name){ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name)); document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id==='tab-'+name)); if(name==='compare') renderCompare(); if(name==='bench') renderBench(); if(name==='wizard') wizardRender(); }
+
+// ---------------------------------------------------------------- tokens
+let tokenize = null, tokBackend = '';
+function initTokens(){
+  const g = window.GPTTokenizer_o200k_base;
+  if (g && typeof g.encode === 'function') { tokenize = t => g.encode(t).length; tokBackend = 'gpt-tokenizer o200k_base (exact, GPT-4o tokenizer)'; }
+  else { tokenize = t => { const b = new TextEncoder().encode(t).length; return Math.round(b/3.6); }; tokBackend = 'an estimate (≈ bytes/3.6) — the exact tokenizer could not be loaded from the CDN; run benchmark/run_benchmark.py for exact counts'; }
+  $('#tokBackend').textContent = tokBackend;
+}
+
+// ---------------------------------------------------------------- forks gallery
+function renderForks(){
+  const box = $('#forkCards'); box.innerHTML = '';
+  for (const f of FORKS) {
+    const c = contracts[f.prefix];
+    const lineage = []; let p = c; while (p) { lineage.unshift(p.prefix); p = p.parent ? contracts[p.parent] : null; }
+    const el = document.createElement('div'); el.className = 'card';
+    el.innerHTML = `<h3>.mini-${c.prefix} <span class="chip">${c.domain||''}</span></h3><div>${c.name}</div><div class="muted" style="font-size:12px;margin:4px 0">${c.arity} core fields${c.extensions.length? ' + '+c.extensions.length+' extensions':''} · lineage ${lineage.join(' → ')}</div><div class="sig">${MINI.signature(c)}</div>`;
+    el.onclick = () => { current = c.prefix; $('#forkSel').value = c.prefix; loadExample(); showTab('editor'); };
+    box.appendChild(el);
+  }
+  const sel = $('#forkSel'); sel.innerHTML = FORKS.map(f => `<option value="${f.prefix}">${f.prefix} — ${f.contract.name}</option>`).join('');
+  sel.value = current; sel.onchange = () => { current = sel.value; loadExample(); };
+  const wp = $('#wParent'); wp.innerHTML += FORKS.map(f => `<option value="${f.prefix}">${f.prefix} — ${f.contract.name}</option>`).join('');
+}
+
+// ---------------------------------------------------------------- editor
+function fork(){ return FORKS.find(f => f.prefix === current); }
+function loadExample(){ $('#miniText').value = fork().example; validate(); renderContractPanels(); }
+$('#loadExample').onclick = loadExample;
+$('#loadEscaping').onclick = () => { $('#miniText').value = fork().escaping || fork().example; validate(); };
+$('#breakIt').onclick = () => {
+  const lines = $('#miniText').value.replace(/\n$/,'').split('\n'); if (lines.length < 4) return;
+  lines[0] = lines[0].replace(/n=(\d+)/, (m,n)=>'n='+(Number(n)+1));          // E04
+  lines[1] = lines[1].split('|').slice(0,-1).join('|');                        // E05
+  lines[2] = lines[2].replace('*','');                                          // E08 (if any mlist) or no-op
+  lines[3] = lines[3] + '\\';                                                   // E09
+  $('#miniText').value = lines.join('\n'); validate();
+};
+$('#miniText').addEventListener('input', validate);
+function validate(){
+  const c = contracts[current]; const text = $('#miniText').value; const errBox = $('#errList'); errBox.innerHTML = '';
+  let doc; try { doc = MINI.parse(text, c, {strict:false}); } catch (e) { $('#status').innerHTML = `<span class="err">${e.message}</span>`; return; }
+  const nTok = tokenize ? tokenize(text) : '?';
+  if (doc.errors.length) { $('#status').innerHTML = `<span class="err">✗ ${doc.errors.length} error(s)</span> · ${doc.records.length} valid record(s) recovered · ${nTok} tokens`; for (const e of doc.errors) { const li = document.createElement('li'); li.textContent = String(e); errBox.appendChild(li); } }
+  else $('#status').innerHTML = `<span class="ok">✓ valid</span> · ${doc.records.length} records · n=${doc.header.n} · ${nTok} tokens`;
+  $('#jsonText').value = JSON.stringify(doc.canonical(), null, 1);
+}
+$('#toMini').onclick = () => { const c = contracts[current]; try { const obj = JSON.parse($('#jsonText').value); $('#miniText').value = MINI.dumps(obj, c); $('#jsonStatus').innerHTML = '<span class="ok">serialized</span>'; validate(); } catch (e) { $('#jsonStatus').innerHTML = `<span class="err">${e.message}</span>`; } };
+function renderContractPanels(){ const c = contracts[current]; const f = fork(); $('#sigBox').textContent = MINI.signature(c); const ex = f.example.split('\n').slice(0,3).join('\n').replace(/n=\d+/, 'n=2'); $('#promptEn').textContent = MINI.specBlock(c,'en',ex); $('#promptEs').textContent = MINI.specBlock(c,'es',ex); $('#contractBox').textContent = JSON.stringify(f.contract, null, 2); }
+
+// ---------------------------------------------------------------- formats (compare)
+function flattenDoc(obj, c){
+  const hdr = obj.header; const rows = (obj[c.records_key]||[]).map(rec => { const o = {}; for (const f of c.fields) {
+    if (['str','int','float','bool','enum'].includes(f.type)) o[f.name] = rec[f.name] ?? null;
+    else if (f.type==='list') { const v = rec[f.name]||[]; const k = arity(f,hdr); if (k) for (let i=0;i<k;i++) o[`${f.name}_${i+1}`] = v[i] ?? null; else o[f.name] = v.map(s).join(';'); }
+    else if (f.type==='mlist') { const v = rec[f.json_items]||[]; const sel = rec[f.json_selected]; const k = arity(f,hdr); if (k) for (let i=0;i<k;i++) o[`${f.json_items}_${i+1}`] = v[i] ?? null; else o[f.json_items] = v.map(s).join(';'); o[f.json_selected] = Array.isArray(sel) ? sel.map(i=>i+1).join(';') : (sel===null||sel===undefined? null : sel+1); }
+    else if (f.type==='tuple') { const t = rec[f.name]||{}; for (const cmp of f.items) o[`${f.name}_${cmp.name}`] = t[cmp.name] ?? null; } } return o; });
+  const out = { header: hdr }; out[c.records_key] = rows; return out;
+}
+function arity(f, hdr){ if (f.count_key && Number.isInteger(hdr[f.count_key])) return hdr[f.count_key]; if (f.min!==null && f.max!==null && f.min===f.max) return f.min; return null; }
+function s(v){ if (v===null||v===undefined) return ''; if (typeof v==='boolean') return v?'true':'false'; return String(v); }
+function csvSer(obj, c){ const flat = flattenDoc(obj,c); const rows = flat[c.records_key]; if (!rows.length) return ''; const cols = Object.keys(rows[0]); const q = v => { const t = s(v); return /[",\n]/.test(t) ? '"'+t.replace(/"/g,'""')+'"' : t; }; return [cols.join(','), ...rows.map(r => cols.map(k => q(r[k])).join(','))].join('\n'); }
+function yamlSer(v, ind){ ind = ind||''; if (Array.isArray(v)) { if (!v.length) return '[]'; return v.map(x => (typeof x==='object' && x!==null) ? ind+'- '+yamlSer(x, ind+'  ').replace(/^\s+/,'') : ind+'- '+yscalar(x)).join('\n'); }
+  if (v && typeof v==='object') { const ks = Object.keys(v); if (!ks.length) return '{}'; return ks.map(k => { const x = v[k]; if (x && typeof x==='object') { const inner = yamlSer(x, ind+'  '); return `${ind}${k}:\n${Array.isArray(x)? inner : inner}`; } return `${ind}${k}: ${yscalar(x)}`; }).join('\n'); } return yscalar(v); }
+function yscalar(x){ if (x===null||x===undefined) return 'null'; if (typeof x==='number'||typeof x==='boolean') return String(x); const t=String(x); return /^[\d.+-]|[:#\[\]{},&*!|>'"%@`]|^\s|\s$|^(true|false|null|yes|no)$/i.test(t) ? "'"+t.replace(/'/g,"''")+"'" : t; }
+function xmlSer(obj, c){ const esc = t => s(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); const hdr = obj.header; const L = [`<${c.prefix} ${Object.keys(hdr).filter(k=>typeof hdr[k]!=='object').map(k=>`${k}="${esc(hdr[k])}"`).join(' ')}>`];
+  for (const k of Object.keys(hdr)) { const v = hdr[k]; if (Array.isArray(v)) L.push(`  <${k}>${v.map(x=>`<i>${esc(x)}</i>`).join('')}</${k}>`); else if (v && typeof v==='object') L.push(`  <${k} ${Object.keys(v).map(kk=>`${kk}="${esc(v[kk])}"`).join(' ')}/>`); }
+  for (const rec of obj[c.records_key]||[]) { L.push('  <rec>'); for (const f of c.fields) { if (['str','int','float','bool','enum'].includes(f.type)) { if (rec[f.name]!==null && rec[f.name]!==undefined) L.push(`    <${f.name}>${esc(rec[f.name])}</${f.name}>`); }
+    else if (f.type==='list') L.push(`    <${f.name}>${(rec[f.name]||[]).map(x=>`<i>${esc(x)}</i>`).join('')}</${f.name}>`);
+    else if (f.type==='mlist') { const sel = rec[f.json_selected]; const set = new Set(Array.isArray(sel)?sel:(sel===null||sel===undefined?[]:[sel])); L.push(`    <${f.json_items}>${(rec[f.json_items]||[]).map((x,i)=>`<i${set.has(i)?' sel="1"':''}>${esc(x)}</i>`).join('')}</${f.json_items}>`); }
+    else if (f.type==='tuple') { const t = rec[f.name]; if (t) L.push(`    <${f.name} ${f.items.filter(cmp=>t[cmp.name]!==null&&t[cmp.name]!==undefined).map(cmp=>`${cmp.name}="${esc(t[cmp.name])}"`).join(' ')}/>`); } } L.push('  </rec>'); }
+  L.push(`</${c.prefix}>`); return L.join('\n'); }
+function allFormats(obj, c){ const out = { mini: MINI.dumps(obj,c), json: JSON.stringify(obj), json_pretty: JSON.stringify(obj,null,2), yaml: yamlSer(obj), xml: xmlSer(obj,c), csv: csvSer(obj,c) };
+  try { out.toon = TOON.encode(obj); } catch(e) { out.toon = '# TOON encode failed: '+e.message; } try { out.toon_flat = TOON.encode(flattenDoc(obj,c)); } catch(e) { out.toon_flat = '# TOON encode failed: '+e.message; } return out; }
+const LABELS = { mini:'.mini', toon_flat:'TOON (flattened)', toon:'TOON (official, as-is)', csv:'CSV (flattened)', json:'JSON compact', yaml:'YAML', xml:'XML', json_pretty:'JSON pretty' };
+let lastFormats = null;
+function renderCompare(){
+  const c = contracts[current]; let obj; try { obj = JSON.parse($('#jsonText').value); } catch(e) { $('#tokTable').innerHTML = '<span class="err">Fix the JSON in the editor first.</span>'; return; }
+  const F = allFormats(obj, c); lastFormats = F;
+  const rows = Object.keys(LABELS).map(k => ({k, label: LABELS[k], tokens: tokenize(F[k]), bytes: new TextEncoder().encode(F[k]).length}));
+  const max = Math.max(...rows.map(r=>r.tokens)); const base = rows.find(r=>r.k==='json').tokens;
+  $('#tokChart').innerHTML = rows.map(r => `<div style="display:grid;grid-template-columns:150px 1fr 70px;gap:8px;align-items:center;margin:4px 0"><span style="font-size:12px">${r.label}</span><div class="bar ${r.k==='mini'?'mini':''}" style="width:${(100*r.tokens/max).toFixed(1)}%"></div><span class="mono" style="font-size:12px">${r.tokens}</span></div>`).join('');
+  $('#tokTable').innerHTML = `<table><tr><th>Format</th><th>Tokens</th><th>vs JSON compact</th><th>Bytes</th></tr>${rows.map(r=>`<tr><td>${r.label}</td><td class="mono">${r.tokens}</td><td class="mono">${(100*(1-r.tokens/base)).toFixed(1)}%</td><td class="mono">${r.bytes}</td></tr>`).join('')}</table>`;
+  renderFmtOut();
+}
+function renderFmtOut(){ if (!lastFormats) return; $('#fmtOut').textContent = lastFormats[$('#fmtSel').value]; }
+$('#fmtSel').onchange = renderFmtOut;
+
+// ---------------------------------------------------------------- benchmark
+function renderBench(){
+  const fmts = ['mini','toon_flat','toon','csv','json_compact','yaml','xml','json_pretty']; const colors = {mini:'var(--accent2)',toon_flat:'#7c9cd6',toon:'#4a6fb5',csv:'#b8bec9',json_compact:'#e0a03b',yaml:'#c77d3d',xml:'#a34a4a',json_pretty:'#7a4a8a'};
+  const rows = BENCH; const W = 1100, H = 420, padL = 60, padB = 60, groupW = (W-padL-20)/rows.length, barW = groupW/(fmts.length+1);
+  const max = Math.max(...rows.map(r => Math.max(...fmts.map(f => r[f]))));
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">`;
+  for (let i=0;i<=4;i++){ const y = H-padB-(H-padB-20)*i/4; svg += `<line x1="${padL}" x2="${W-20}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${padL-6}" y="${y+4}" font-size="11" text-anchor="end">${Math.round(max*i/4)}</text>`; }
+  rows.forEach((r,gi) => { const x0 = padL + gi*groupW; fmts.forEach((f,fi) => { const h = (H-padB-20)*r[f]/max; svg += `<rect x="${x0+fi*barW}" y="${H-padB-h}" width="${barW-1}" height="${h}" fill="${colors[f]}"><title>${r.prefix} · ${LABELS[f]||f}: ${r[f]} tokens</title></rect>`; });
+    const py = H-padB-(H-padB-20)*r.payload/max; svg += `<line x1="${x0}" x2="${x0+groupW-barW}" y1="${py}" y2="${py}" stroke="var(--ink)" stroke-dasharray="3,3"/>`;
+    svg += `<text x="${x0+groupW/2-barW/2}" y="${H-padB+16}" font-size="12" text-anchor="middle">${r.prefix}</text>`; });
+  svg += '</svg>'; $('#benchChart').innerHTML = svg;
+  $('#benchLegend').innerHTML = fmts.map(f => `<span><span style="display:inline-block;width:12px;height:12px;background:${colors[f]};border-radius:2px;vertical-align:middle;margin-right:4px"></span>${LABELS[f]||f}</span>`).join('') + '<span>┄ payload (content-only lower bound)</span>';
+  $('#benchTable').innerHTML = `<table><tr><th>fork</th><th>.mini</th><th>TOON flat</th><th>TOON as-is</th><th>CSV</th><th>JSON</th><th>YAML</th><th>XML</th><th>JSON pretty</th><th>payload</th><th>.mini vs JSON</th><th>.mini vs TOON flat</th><th>.mini vs TOON as-is</th></tr>${rows.map(r=>`<tr><td>${r.prefix}</td><td class="mono">${r.mini}</td><td class="mono">${r.toon_flat}</td><td class="mono">${r.toon}</td><td class="mono">${r.csv}</td><td class="mono">${r.json_compact}</td><td class="mono">${r.yaml}</td><td class="mono">${r.xml}</td><td class="mono">${r.json_pretty}</td><td class="mono">${r.payload}</td><td class="mono">−${r.mini_vs_json_compact_pct}%</td><td class="mono">−${r.mini_vs_toon_flat_pct}%</td><td class="mono">−${r.mini_vs_toon_pct}%</td></tr>`).join('')}</table>`;
+}
+
+// ---------------------------------------------------------------- wizard
+let wFields = [];
+function parseType(t){ t = t.trim(); let m;
+  if ((m = t.match(/^enum\{(.+)\}$/))) return { type:'enum', values: m[1].split('|') };
+  if ((m = t.match(/^(m?list)<(\w+)>(?:\[(\d*)\.\.(\d*)\])?$/))) { const f = { type: m[1], item: m[2] }; if (m[3]) f.min = Number(m[3]); if (m[4]) f.max = Number(m[4]); if (m[1]==='mlist') f.marker='exactly_one'; return f; }
+  if ((m = t.match(/^tuple\((.+)\)$/))) return { type:'tuple', items: m[1].split(',').map(p => { const [n,ty] = p.split(':'); return { name: n.trim(), type: (ty||'str').trim() }; }) };
+  if (['str','int','float','bool'].includes(t)) return { type: t }; return null; }
+function wizardInit(){ $('#wParent').onchange = () => { wFields = []; wizardRender(); }; $('#wAdd').onclick = () => { wFields.push({name:'field'+(wFields.length+1), type:'str', optional:false}); wizardRender(); }; ['wPrefix','wName','wSep','wRecKey'].forEach(id => $('#'+id).addEventListener('input', wizardRender)); }
+function buildWizardContract(){
+  const parentPrefix = $('#wParent').value; const parent = parentPrefix ? FORKS.find(f=>f.prefix===parentPrefix).contract : null;
+  const d = { prefix: $('#wPrefix').value.trim() || 'x', version: 1, name: $('#wName').value, parent: parentPrefix || null, list_separator: $('#wSep').value || ',', records_key: $('#wRecKey').value || 'records',
+    header: parent ? JSON.parse(JSON.stringify(parent.header)) : { required:['n'], keys:{ d:{type:'str',desc:'date'}, l:{type:'str',desc:'language'} } }, core: [], extensions: [] };
+  if (parent) d.core = [...parent.core, ...parent.extensions].map(f => JSON.parse(JSON.stringify(f)));
+  const errs = [];
+  wFields.forEach(f => { const ty = parseType(f.type); if (!ty) { errs.push(`field '${f.name}': unknown type '${f.type}'`); return; } const fd = Object.assign({ name: f.name.trim() || 'field' }, ty); if (f.optional) fd.optional = true; (parent ? d.extensions : d.core).push(fd); });
+  return { d, errs, parent };
+}
+function wizardRender(){
+  const { d, errs, parent } = buildWizardContract();
+  const box = $('#wFields'); box.innerHTML = '';
+  if (parent) box.innerHTML = `<div class="note" style="margin-bottom:6px">Inherited (fixed): ${[...parent.core, ...parent.extensions].map(f=>'<code>'+f.name+'</code>').join(' · ')}</div>`;
+  wFields.forEach((f, i) => { const row = document.createElement('div'); row.className='frow'; row.innerHTML = `<input type="text" value="${f.name}" placeholder="name"><input type="text" value="${f.type}" placeholder="type"><label><input type="checkbox" ${f.optional?'checked':''}> optional</label><button class="ghost">✕</button>`;
+    const [nI, tI, oI, del] = [row.children[0], row.children[1], row.querySelector('input[type=checkbox]'), row.querySelector('button')];
+    nI.oninput = () => { f.name = nI.value; wizardRender(); }; tI.oninput = () => { f.type = tI.value; wizardRender(); }; oI.onchange = () => { f.optional = oI.checked; wizardRender(); }; del.onclick = () => { wFields.splice(i,1); wizardRender(); }; box.appendChild(row); });
+  let c = null; const check = [];
+  try { c = MINI.normalizeContract(d); } catch (e) { check.push('✗ '+e.message); }
+  errs.forEach(e => check.push('✗ '+e));
+  if (c && parent) { const pe = MINI.checkFork(c, contracts[parent.prefix]); if (pe.length) pe.forEach(e=>check.push('✗ '+e.message)); else check.push(`✓ I3/I4: core of '${parent.prefix}' preserved, ${d.extensions.length} extension(s) appended`); }
+  if (c && contracts[c.prefix] && (!parent || c.prefix!==parent.prefix)) check.push(`✗ prefix '${c.prefix}' is already registered — choose another`);
+  if (c && !check.some(x=>x.startsWith('✗'))) check.push('✓ I1/I2: one line per record, header with prefix and n', '⚠ I5: add fixtures (valid.mini + canonical.json) and run mini check-forks');
+  $('#wCheck').innerHTML = check.map(x => `<div class="${x.startsWith('✗')?'err':(x.startsWith('⚠')?'muted':'ok')}">${x}</div>`).join('');
+  $('#wContract').textContent = JSON.stringify(d, null, 2);
+  if (c) { const ex = exampleFor(c, parent); $('#wExample').textContent = ex; $('#wPrompt').textContent = MINI.specBlock(c, 'en', ex); window.__wizardState = { c, ex }; } else { $('#wExample').textContent = ''; $('#wPrompt').textContent = ''; }
+}
+function sampleValue(f, i){ const t = f.type; if (t==='int') return (f.min ?? 1) + i; if (t==='float') return Number(((f.min ?? 0) + 0.5*(i+1)).toFixed(2)); if (t==='bool') return i%2===0; if (t==='enum') return f.values[i % f.values.length]; if (t==='str') return `${f.name} ${i+1}`; return `${f.name}${i+1}`; }
+function exampleFor(c, parent){
+  const base = parent ? FORKS.find(f=>f.prefix===parent.prefix) : null;
+  let header = {};
+  if (base) { try { header = MINI.parse(base.example, contracts[parent.prefix]).header; delete header.n; delete header.v; } catch(e){} }
+  for (const k of Object.keys(c.headerKeys)) { if (k==='n'||k==='v'|| k in header) continue; const hk = c.headerKeys[k]; header[k] = hk.type==='int'? 4 : hk.type==='list' ? [1,2] : hk.type==='tuple' ? Object.fromEntries(hk.items.map(x=>[x.name, sampleValue(x,0)])) : (k==='d'?'20260901':k==='l'?'en':'example'); }
+  const recs = [];
+  for (let i=0;i<2;i++){ const r = {}; if (base) { try { Object.assign(r, MINI.parse(base.example, contracts[parent.prefix]).records[i]); } catch(e){} }
+    for (const f of c.fields) { if (base && [...contracts[parent.prefix].fields].some(x=>x.name===f.name)) continue;
+      if (['str','int','float','bool','enum'].includes(f.type)) r[f.name] = sampleValue(f,i);
+      else if (f.type==='list') { const k = arity(f, header) || 2; r[f.name] = Array.from({length:k}, (_,j)=>sampleValue(Object.assign({},f,{type:f.item}), j)); }
+      else if (f.type==='mlist') { const k = arity(f, header) || 3; r[f.json_items] = Array.from({length:k}, (_,j)=>`option ${j+1}`); r[f.json_selected] = (f.marker==='exactly_one'||f.marker==='at_most_one') ? 0 : [0]; }
+      else if (f.type==='tuple') r[f.name] = Object.fromEntries(f.items.map(x=>[x.name, sampleValue(x,i)])); } recs.push(r); }
+  const obj = { header }; obj[c.records_key] = recs; try { return MINI.dumps(obj, c); } catch (e) { return '# cannot build example: '+e.message; }
+}
+$('#wDownload').onclick = () => { const blob = new Blob([$('#wContract').textContent], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'contract.json'; a.click(); };
+$('#wToEditor').onclick = () => { const st = window.__wizardState; if (!st) return; const c = st.c; contracts[c.prefix] = c; if (!FORKS.find(f=>f.prefix===c.prefix)) { FORKS.push({prefix:c.prefix, contract: JSON.parse($('#wContract').textContent), example: st.ex}); const o = document.createElement('option'); o.value = c.prefix; o.textContent = c.prefix+' — '+c.name+' (wizard)'; $('#forkSel').appendChild(o); } else FORKS.find(f=>f.prefix===c.prefix).example = st.ex; current = c.prefix; $('#forkSel').value = c.prefix; loadExample(); showTab('editor'); };
+
+// ---------------------------------------------------------------- boot
+window.addEventListener('load', () => { initTokens(); renderForks(); wizardInit(); loadExample(); validate(); });
+if (document.readyState === 'complete') { initTokens(); renderForks(); wizardInit(); loadExample(); validate(); }
+})();
+</script>
+</body>
+</html>

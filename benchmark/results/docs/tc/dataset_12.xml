@@ -1,0 +1,134 @@
+<tc d="20260603" l="en" t="SIMA release 1.2 regression" proj="SIMA">
+  <rec>
+    <id>TC-001</id>
+    <module>auth</module>
+    <title>Login with valid credentials</title>
+    <precondition>User registered and active</precondition>
+    <steps><i>open /login</i><i>enter valid email and password</i><i>click Sign in</i></steps>
+    <expected>Dashboard is shown and session cookie is set</expected>
+    <priority>high</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-002</id>
+    <module>auth</module>
+    <title>Login with wrong password</title>
+    <precondition>User registered</precondition>
+    <steps><i>open /login</i><i>enter valid email and wrong password</i><i>click Sign in</i></steps>
+    <expected>Error message; no session created</expected>
+    <priority>high</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-003</id>
+    <module>auth</module>
+    <title>Password reset email</title>
+    <precondition>User registered</precondition>
+    <steps><i>open /reset</i><i>submit registered email</i></steps>
+    <expected>Reset email delivered within 60 s</expected>
+    <priority>medium</priority>
+    <type>integration</type>
+    <automated>false</automated>
+  </rec>
+  <rec>
+    <id>TC-004</id>
+    <module>courses</module>
+    <title>Create course</title>
+    <precondition>Logged-in student</precondition>
+    <steps><i>open /courses/new</i><i>fill name, period and topics</i><i>save</i></steps>
+    <expected>Course appears in dashboard</expected>
+    <priority>high</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-005</id>
+    <module>lessons</module>
+    <title>Upload audio lecture</title>
+    <precondition>Course exists; credits available</precondition>
+    <steps><i>open /api/new</i><i>select course and upload 20 MB mp3</i><i>confirm credit estimate</i></steps>
+    <expected>LessonJob created with status queued</expected>
+    <priority>high</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-006</id>
+    <module>lessons</module>
+    <title>Reject unsupported file</title>
+    <precondition>Course exists</precondition>
+    <steps><i>open /api/new</i><i>upload .exe file</i></steps>
+    <expected>Validation error; nothing stored</expected>
+    <priority>medium</priority>
+    <type>security</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-007</id>
+    <module>pipeline</module>
+    <title>Transcription completes</title>
+    <precondition>Job queued; Whisper available</precondition>
+    <steps><i>run worker</i><i>wait for stage transcribe</i></steps>
+    <expected>Transcript stored; stage advances to generate</expected>
+    <priority>high</priority>
+    <type>integration</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-008</id>
+    <module>pipeline</module>
+    <title>.mini bank parses</title>
+    <precondition>Generation stage finished</precondition>
+    <steps><i>fetch job output</i><i>run parser</i></steps>
+    <expected>All records valid; n equals record lines</expected>
+    <priority>high</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-009</id>
+    <module>pipeline</module>
+    <title>Incoherent items repaired</title>
+    <precondition>Bank with declarative items</precondition>
+    <steps><i>run coherence filter</i><i>run repair</i></steps>
+    <expected>Items repaired or excluded with trace</expected>
+    <priority>medium</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-010</id>
+    <module>quiz</module>
+    <title>Adaptive quiz updates theta</title>
+    <precondition>Lesson ready; profile exists</precondition>
+    <steps><i>start quiz with 6 items</i><i>answer all</i></steps>
+    <expected>theta and SE updated; XP awarded</expected>
+    <priority>high</priority>
+    <type>functional</type>
+    <automated>true</automated>
+  </rec>
+  <rec>
+    <id>TC-011</id>
+    <module>quiz</module>
+    <title>Quiz under load</title>
+    <precondition>50 concurrent students</precondition>
+    <steps><i>start 50 quizzes</i><i>answer concurrently</i></steps>
+    <expected>p95 latency below 2 s; no errors</expected>
+    <priority>medium</priority>
+    <type>performance</type>
+    <automated>false</automated>
+  </rec>
+  <rec>
+    <id>TC-012</id>
+    <module>admin</module>
+    <title>Credit ledger consistency</title>
+    <precondition>Several jobs processed</precondition>
+    <steps><i>open admin ledger</i><i>sum entries</i></steps>
+    <expected>Ledger total equals profile balance</expected>
+    <priority>low</priority>
+    <type>functional</type>
+    <automated>false</automated>
+  </rec>
+</tc>

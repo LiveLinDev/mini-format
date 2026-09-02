@@ -1,0 +1,122 @@
+<us d="20260603" l="en" t="SIMA backlog" sprint="S3">
+  <rec>
+    <id>US-01</id>
+    <epic>EP-01</epic>
+    <role>student</role>
+    <goal>upload a recorded lecture</goal>
+    <benefit>I can study it later in small pieces</benefit>
+    <acceptance><i>audio up to 200 MB accepted</i><i>credit estimate shown before confirming</i></acceptance>
+    <sp>5</sp>
+    <priority>must</priority>
+  </rec>
+  <rec>
+    <id>US-02</id>
+    <epic>EP-01</epic>
+    <role>student</role>
+    <goal>paste a transcript instead of audio</goal>
+    <benefit>I can skip transcription when I already have notes</benefit>
+    <acceptance><i>plain text accepted</i><i>same pipeline from generation stage</i></acceptance>
+    <sp>3</sp>
+    <priority>should</priority>
+  </rec>
+  <rec>
+    <id>US-03</id>
+    <epic>EP-02</epic>
+    <role>student</role>
+    <goal>see the generated question bank</goal>
+    <benefit>I can check what will be asked</benefit>
+    <acceptance><i>items listed with Bloom level</i><i>download as JSON</i></acceptance>
+    <sp>3</sp>
+    <priority>must</priority>
+  </rec>
+  <rec>
+    <id>US-04</id>
+    <epic>EP-02</epic>
+    <role>system</role>
+    <goal>generate items in .mini</goal>
+    <benefit>token cost per bank drops</benefit>
+    <acceptance><i>n matches record lines</i><i>parser reports zero errors</i></acceptance>
+    <sp>8</sp>
+    <priority>must</priority>
+  </rec>
+  <rec>
+    <id>US-05</id>
+    <epic>EP-03</epic>
+    <role>reviewer</role>
+    <goal>flag incoherent items</goal>
+    <benefit>students never see broken questions</benefit>
+    <acceptance><i>declarative stems detected</i><i>repair trace stored</i></acceptance>
+    <sp>5</sp>
+    <priority>must</priority>
+  </rec>
+  <rec>
+    <id>US-06</id>
+    <epic>EP-03</epic>
+    <role>reviewer</role>
+    <goal>verify facts against sources</goal>
+    <benefit>the bank is trustworthy</benefit>
+    <acceptance><i>web or EduQG context attached</i><i>report lists weak items</i></acceptance>
+    <sp>8</sp>
+    <priority>should</priority>
+  </rec>
+  <rec>
+    <id>US-07</id>
+    <epic>EP-04</epic>
+    <role>student</role>
+    <goal>keep my progress per course</goal>
+    <benefit>I know what to review next</benefit>
+    <acceptance><i>theta stored per profile</i><i>dashboard shows level</i></acceptance>
+    <sp>5</sp>
+    <priority>must</priority>
+  </rec>
+  <rec>
+    <id>US-08</id>
+    <epic>EP-05</epic>
+    <role>student</role>
+    <goal>take an adaptive quiz</goal>
+    <benefit>questions match my level</benefit>
+    <acceptance><i>next item chosen by information</i><i>stops at SE threshold</i></acceptance>
+    <sp>8</sp>
+    <priority>must</priority>
+  </rec>
+  <rec>
+    <id>US-09</id>
+    <epic>EP-05</epic>
+    <role>student</role>
+    <goal>review flashcards</goal>
+    <benefit>I retain key concepts</benefit>
+    <acceptance><i>cards derived from the bank</i><i>spaced repetition schedule</i></acceptance>
+    <sp>5</sp>
+    <priority>should</priority>
+  </rec>
+  <rec>
+    <id>US-10</id>
+    <epic>EP-05</epic>
+    <role>student</role>
+    <goal>see a concept map</goal>
+    <benefit>I understand how topics connect</benefit>
+    <acceptance><i>edges from the bank</i><i>clickable nodes</i></acceptance>
+    <sp>3</sp>
+    <priority>could</priority>
+  </rec>
+  <rec>
+    <id>US-11</id>
+    <epic>EP-05</epic>
+    <role>student</role>
+    <goal>solve matching and cloze exercises</goal>
+    <benefit>I practise in different ways</benefit>
+    <acceptance><i>two exercise types</i><i>scored instantly</i></acceptance>
+    <sp>5</sp>
+    <priority>could</priority>
+  </rec>
+  <rec>
+    <id>US-12</id>
+    <epic>EP-04</epic>
+    <role>admin</role>
+    <goal>audit credit consumption</goal>
+    <benefit>billing is transparent</benefit>
+    <acceptance><i>ledger per user</i><i>export CSV</i></acceptance>
+    <sp>3</sp>
+    <priority>should</priority>
+  </rec>
+</us>

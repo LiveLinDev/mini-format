@@ -1,0 +1,13 @@
+sum|n=12|d=20260603|l=es|t=Biología celular|src=clase-64|dur=2520
+s1|0|180|Introducción a la célula|La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.|célula,procariota,eucariota|L1
+s2|180|420|Organelos y funciones|Mitocondria produce energía; el cloroplasto realiza la fotosíntesis; el núcleo guarda el ADN.|mitocondria,cloroplasto,núcleo|L2
+s3|420|600|Membrana plasmática|La membrana regula el intercambio de sustancias mediante transporte pasivo y activo.|membrana,transporte|L2
+s4|600|840|Fotosíntesis: fase luminosa|La luz excita la clorofila y se produce ATP y NADPH liberando oxígeno.|ATP,NADPH,clorofila|L3
+s5|840|1080|Fotosíntesis: ciclo de Calvin|El CO2 se fija en azúcares usando el ATP y NADPH de la fase luminosa.|Calvin,CO2,glucosa|L3
+s6|1080|1320|Respiración celular|La glucosa se oxida en glucólisis, ciclo de Krebs y cadena de transporte para obtener ATP.|glucólisis,Krebs,ATP|L3
+s7|1320|1500|Comparación fotosíntesis y respiración|Procesos complementarios: uno almacena energía en glucosa, el otro la libera.|comparación,energía|L4
+s8|1500|1740|División celular: mitosis|La mitosis produce dos células idénticas en profase, metafase, anafase y telofase.|mitosis,ciclo celular|L2
+s9|1740|1980|Meiosis y variabilidad|La meiosis reduce el número cromosómico a la mitad y genera variabilidad genética.|meiosis,gametos,variabilidad|L4
+s10|1980|2160|Errores frecuentes|Confundir mitosis con meiosis y atribuir la fotosíntesis a la mitocondria.|errores,repaso|L5
+s11|2160|2400|Aplicaciones biotecnológicas|Cultivos celulares y edición genética aprovechan el conocimiento de la célula.|biotecnología,CRISPR|L6
+s12|2400|2520|Cierre y síntesis|Recapitulación de estructuras, procesos energéticos y división celular.|síntesis|L2

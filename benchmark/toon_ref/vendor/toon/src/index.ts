@@ -1,0 +1,217 @@
+import type { DecodeOptions, DecodeStreamOptions, EncodeOptions, JsonStreamEvent, JsonValue, ResolvedDecodeOptions, ResolvedEncodeOptions } from './types.ts'
+import { DEFAULT_DELIMITER } from './constants.ts'
+import { decodeStream as decodeStreamCore, decodeStreamSync as decodeStreamSyncCore } from './decode/decoders.ts'
+import { buildValueFromEvents } from './decode/event-builder.ts'
+import { encodeJsonValue } from './encode/encoders.ts'
+import { normalizeValue } from './encode/normalize.ts'
+import { applyReplacer } from './encode/replacer.ts'
+import { assertValidDelimiter } from './shared/validation.ts'
+
+export { DEFAULT_DELIMITER, DELIMITERS } from './constants.ts'
+export { ToonDecodeError } from './decode/errors.ts'
+export { rawString } from './encode/raw-string.ts'
+export type { RawString } from './encode/raw-string.ts'
+export { escapeString } from './shared/string-utils.ts'
+export type {
+  DecodeOptions,
+  DecodeStreamOptions,
+  Delimiter,
+  DelimiterKey,
+  EncodeOptions,
+  EncodeReplacer,
+  JsonArray,
+  JsonObject,
+  JsonPrimitive,
+  JsonStreamEvent,
+  JsonValue,
+  ResolvedDecodeOptions,
+  ResolvedEncodeOptions,
+} from './types.ts'
+
+/**
+ * Encodes a JavaScript value into TOON format string.
+ *
+ * @param input Any JavaScript value (objects, arrays, primitives)
+ * @param options Optional encoding configuration
+ * @returns TOON formatted string
+ *
+ * @example
+ * ```ts
+ * encode({ name: 'Ada', age: 30 })
+ * // name: Ada
+ * // age: 30
+ *
+ * encode({ users: [{ id: 1 }, { id: 2 }] })
+ * // users[2]{id}:
+ * //   1
+ * //   2
+ *
+ * encode({ tags: [] })
+ * // tags: []
+ *
+ * encode(data, { indentSize: 4 })
+ * ```
+ */
+export function encode(input: unknown, options?: EncodeOptions): string {
+  return Array.from(encodeLines(input, options)).join('\n')
+}
+
+/**
+ * Decodes a TOON format string into a JavaScript value.
+ *
+ * @param input TOON formatted string
+ * @param options Optional decoding configuration
+ * @returns Parsed JavaScript value (object, array, or primitive)
+ *
+ * @example
+ * ```ts
+ * decode('name: Ada\nage: 30')
+ * // { name: 'Ada', age: 30 }
+ *
+ * decode('users[2]:\n  - id: 1\n  - id: 2')
+ * // { users: [{ id: 1 }, { id: 2 }] }
+ *
+ * decode('tags: []')
+ * // { tags: [] }
+ *
+ * decode(toonString, { strict: false })
+ * ```
+ */
+export function decode(input: string, options?: DecodeOptions): JsonValue {
+  const lines = input.split('\n')
+  return decodeFromLines(lines, options)
+}
+
+/**
+ * Encodes a JavaScript value into TOON format as a sequence of lines.
+ *
+ * This function yields TOON lines one at a time without building the full string,
+ * making it suitable for streaming large outputs to files, HTTP responses, or process stdout.
+ *
+ * @param input Any JavaScript value (objects, arrays, primitives)
+ * @param options Optional encoding configuration
+ * @returns Iterable of TOON lines (without trailing newlines)
+ *
+ * @example
+ * ```ts
+ * // Stream to stdout
+ * for (const line of encodeLines({ name: 'Ada', age: 30 })) {
+ *   console.log(line)
+ * }
+ *
+ * // Collect to array
+ * const lines = Array.from(encodeLines(data))
+ *
+ * // Equivalent to encode()
+ * const toonString = Array.from(encodeLines(data, options)).join('\n')
+ * ```
+ */
+export function encodeLines(input: unknown, options?: EncodeOptions): Iterable<string> {
+  const normalizedValue = normalizeValue(input)
+  const resolvedOptions = resolveOptions(options)
+
+  const maybeReplacedValue = resolvedOptions.replacer
+    ? applyReplacer(normalizedValue, resolvedOptions.replacer)
+    : normalizedValue
+
+  return encodeJsonValue(maybeReplacedValue, resolvedOptions, 0)
+}
+
+/**
+ * Decodes TOON format from pre-split lines into a JavaScript value.
+ *
+ * Convenience wrapper around the streaming decoder that builds the full
+ * value in memory.
+ *
+ * @param lines Iterable of TOON lines (without newlines)
+ * @param options Optional decoding configuration
+ * @returns Parsed JavaScript value (object, array, or primitive)
+ *
+ * @example
+ * ```ts
+ * const lines = ['name: Ada', 'age: 30']
+ * decodeFromLines(lines)
+ * // { name: 'Ada', age: 30 }
+ * ```
+ */
+export function decodeFromLines(lines: Iterable<string>, options?: DecodeOptions): JsonValue {
+  const resolvedOptions = resolveDecodeOptions(options)
+  const events = decodeStreamSyncCore(lines, resolvedOptions)
+  return buildValueFromEvents(events)
+}
+
+/**
+ * Synchronously decodes TOON lines into a stream of JSON events.
+ *
+ * Yields structured events (startObject, endObject, startArray, endArray, key,
+ * primitive) that represent the JSON data model without building the full value tree.
+ *
+ * @param lines Iterable of TOON lines (without newlines)
+ * @param options Optional decoding configuration
+ * @returns Iterable of JSON stream events
+ *
+ * @example
+ * ```ts
+ * const lines = ['name: Ada', 'age: 30']
+ * for (const event of decodeStreamSync(lines)) {
+ *   console.log(event)
+ *   // { type: 'startObject' }
+ *   // { type: 'key', key: 'name' }
+ *   // { type: 'primitive', value: 'Ada' }
+ *   // ...
+ * }
+ * ```
+ */
+export function decodeStreamSync(lines: Iterable<string>, options?: DecodeStreamOptions): Iterable<JsonStreamEvent> {
+  return decodeStreamSyncCore(lines, options)
+}
+
+/**
+ * Asynchronously decodes TOON lines into a stream of JSON events.
+ *
+ * Yields structured events (startObject, endObject, startArray, endArray, key,
+ * primitive) that represent the JSON data model without building the full value tree.
+ * Supports both sync and async iterables.
+ *
+ * @param source Async or sync iterable of TOON lines (without newlines)
+ * @param options Optional decoding configuration
+ * @returns Async iterable of JSON stream events
+ *
+ * @example
+ * ```ts
+ * const fileStream = createReadStream('data.toon', 'utf-8')
+ * const lines = splitLines(fileStream) // Async iterable of lines
+ *
+ * for await (const event of decodeStream(lines)) {
+ *   console.log(event)
+ *   // { type: 'startObject' }
+ *   // { type: 'key', key: 'name' }
+ *   // { type: 'primitive', value: 'Ada' }
+ *   // ...
+ * }
+ * ```
+ */
+export function decodeStream(
+  source: AsyncIterable<string> | Iterable<string>,
+  options?: DecodeStreamOptions,
+): AsyncIterable<JsonStreamEvent> {
+  return decodeStreamCore(source, options)
+}
+
+function resolveOptions(options?: EncodeOptions): ResolvedEncodeOptions {
+  const delimiter = options?.delimiter ?? DEFAULT_DELIMITER
+  assertValidDelimiter(delimiter)
+
+  return {
+    indentSize: options?.indentSize ?? options?.indent ?? 2,
+    delimiter,
+    replacer: options?.replacer,
+  }
+}
+
+function resolveDecodeOptions(options?: DecodeOptions): ResolvedDecodeOptions {
+  return {
+    indentSize: options?.indentSize ?? options?.indent ?? 2,
+    strict: options?.strict ?? true,
+  }
+}

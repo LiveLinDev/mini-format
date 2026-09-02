@@ -1,0 +1,6 @@
+alternative,spec_tokens_alt,spec_tokens_mini,tokens_per_record_alt,tokens_per_record_mini,saving_per_record,breakeven_records,breakeven_documents_of_12
+json,223,640,102.6,62.68,39.92,10.4,0.87
+yaml,211,640,124.26,62.68,61.58,7.0,0.58
+xml,219,640,146.01,62.68,83.33,5.1,0.42
+csv,191,640,63.59,62.68,0.91,493.4,41.12
+toon,325,640,64.67,62.68,1.99,158.1,13.17

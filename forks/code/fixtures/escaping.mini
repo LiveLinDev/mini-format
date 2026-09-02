@@ -1,0 +1,2 @@
+code|n=1|d=20260603|l=en|t=Intro programming lab 3
+c1|L3|pipe \| and back\\slash, comma, "quotes", star* and newline\nend|Write a function maximum(xs) that returns the largest number in a non-empty list.|python|a\, b \| c \\ d\*,maximum([-1\,-5])==-1|int or float|iterate once,track the best so far

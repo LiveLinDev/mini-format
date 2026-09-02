@@ -1,0 +1,194 @@
+{
+  "prefix": "q",
+  "version": 1,
+  "parent": "a",
+  "name": "Formative quiz items (assessment + feedback)",
+  "domain": "education / formative assessment",
+  "records_key": "items",
+  "description": "Fork of 'a': the same core, plus trailing feedback, hint and learning objective so that a quiz can explain each answer.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "number of records"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      },
+      "m": {
+        "type": "str",
+        "desc": "psychometric model, e.g. IRT3PL"
+      },
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str",
+        "desc": "topic of the bank"
+      },
+      "bd": {
+        "type": "list",
+        "item": "int",
+        "desc": "Bloom distribution L1..L6"
+      },
+      "cat": {
+        "type": "tuple",
+        "items": [
+          {
+            "name": "theta_init",
+            "type": "float"
+          },
+          {
+            "name": "theta_min",
+            "type": "float"
+          },
+          {
+            "name": "theta_max",
+            "type": "float"
+          },
+          {
+            "name": "se_stop",
+            "type": "float"
+          },
+          {
+            "name": "max_items",
+            "type": "int"
+          },
+          {
+            "name": "exposure_ctrl",
+            "type": "str"
+          }
+        ]
+      },
+      "k": {
+        "type": "int",
+        "desc": "options per item (every options list must have exactly k elements)"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true,
+      "desc": "item identifier"
+    },
+    {
+      "name": "bloom",
+      "type": "enum",
+      "values": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6"
+      ],
+      "desc": "Bloom level"
+    },
+    {
+      "name": "topic",
+      "type": "str"
+    },
+    {
+      "name": "statement",
+      "type": "str",
+      "desc": "question stem"
+    },
+    {
+      "name": "options",
+      "type": "mlist",
+      "item": "str",
+      "min": 2,
+      "max": 6,
+      "marker": "exactly_one",
+      "json": {
+        "items": "options",
+        "selected": "correct"
+      },
+      "desc": "answer options; the correct one carries *",
+      "count_key": "k"
+    },
+    {
+      "name": "irt",
+      "type": "tuple",
+      "items": [
+        {
+          "name": "a",
+          "type": "float",
+          "desc": "discrimination"
+        },
+        {
+          "name": "b",
+          "type": "float",
+          "desc": "difficulty"
+        },
+        {
+          "name": "c",
+          "type": "float",
+          "desc": "guessing"
+        }
+      ]
+    },
+    {
+      "name": "difficulty",
+      "type": "int",
+      "min": 1,
+      "max": 5
+    },
+    {
+      "name": "cat",
+      "type": "tuple",
+      "items": [
+        {
+          "name": "area",
+          "type": "str"
+        },
+        {
+          "name": "exposure_cap",
+          "type": "float"
+        },
+        {
+          "name": "demand",
+          "type": "enum",
+          "values": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      ]
+    }
+  ],
+  "extensions": [
+    {
+      "name": "feedback",
+      "type": "str",
+      "desc": "explanation shown after answering"
+    },
+    {
+      "name": "hint",
+      "type": "str",
+      "optional": true
+    },
+    {
+      "name": "objective",
+      "type": "str",
+      "optional": true,
+      "desc": "learning objective"
+    }
+  ],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

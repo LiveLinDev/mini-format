@@ -1,0 +1,102 @@
+header:
+  d: "20260603"
+  l: en
+  t: SIMA backlog
+  sprint: S3
+stories[12]:
+  - id: US-01
+    epic: EP-01
+    role: student
+    goal: upload a recorded lecture
+    benefit: I can study it later in small pieces
+    acceptance[2]: audio up to 200 MB accepted,credit estimate shown before confirming
+    sp: 5
+    priority: must
+  - id: US-02
+    epic: EP-01
+    role: student
+    goal: paste a transcript instead of audio
+    benefit: I can skip transcription when I already have notes
+    acceptance[2]: plain text accepted,same pipeline from generation stage
+    sp: 3
+    priority: should
+  - id: US-03
+    epic: EP-02
+    role: student
+    goal: see the generated question bank
+    benefit: I can check what will be asked
+    acceptance[2]: items listed with Bloom level,download as JSON
+    sp: 3
+    priority: must
+  - id: US-04
+    epic: EP-02
+    role: system
+    goal: generate items in .mini
+    benefit: token cost per bank drops
+    acceptance[2]: n matches record lines,parser reports zero errors
+    sp: 8
+    priority: must
+  - id: US-05
+    epic: EP-03
+    role: reviewer
+    goal: flag incoherent items
+    benefit: students never see broken questions
+    acceptance[2]: declarative stems detected,repair trace stored
+    sp: 5
+    priority: must
+  - id: US-06
+    epic: EP-03
+    role: reviewer
+    goal: verify facts against sources
+    benefit: the bank is trustworthy
+    acceptance[2]: web or EduQG context attached,report lists weak items
+    sp: 8
+    priority: should
+  - id: US-07
+    epic: EP-04
+    role: student
+    goal: keep my progress per course
+    benefit: I know what to review next
+    acceptance[2]: theta stored per profile,dashboard shows level
+    sp: 5
+    priority: must
+  - id: US-08
+    epic: EP-05
+    role: student
+    goal: take an adaptive quiz
+    benefit: questions match my level
+    acceptance[2]: next item chosen by information,stops at SE threshold
+    sp: 8
+    priority: must
+  - id: US-09
+    epic: EP-05
+    role: student
+    goal: review flashcards
+    benefit: I retain key concepts
+    acceptance[2]: cards derived from the bank,spaced repetition schedule
+    sp: 5
+    priority: should
+  - id: US-10
+    epic: EP-05
+    role: student
+    goal: see a concept map
+    benefit: I understand how topics connect
+    acceptance[2]: edges from the bank,clickable nodes
+    sp: 3
+    priority: could
+  - id: US-11
+    epic: EP-05
+    role: student
+    goal: solve matching and cloze exercises
+    benefit: I practise in different ways
+    acceptance[2]: two exercise types,scored instantly
+    sp: 5
+    priority: could
+  - id: US-12
+    epic: EP-04
+    role: admin
+    goal: audit credit consumption
+    benefit: billing is transparent
+    acceptance[2]: ledger per user,export CSV
+    sp: 3
+    priority: should

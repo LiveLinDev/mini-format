@@ -1,0 +1,70 @@
+{
+  "prefix": "map",
+  "version": 1,
+  "parent": null,
+  "name": "Concept map edges",
+  "domain": "education / knowledge graphs",
+  "records_key": "edges",
+  "description": "One directed relation per line (source, relation, target, weight, evidence segment).",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      },
+      "src": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "src",
+      "type": "str"
+    },
+    {
+      "name": "rel",
+      "type": "enum",
+      "values": [
+        "is_a",
+        "has_part",
+        "performs",
+        "produces",
+        "causes",
+        "requires",
+        "contrasts",
+        "example_of"
+      ]
+    },
+    {
+      "name": "dst",
+      "type": "str"
+    },
+    {
+      "name": "weight",
+      "type": "float",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "evidence",
+      "type": "str",
+      "optional": true,
+      "desc": "segment id supporting the edge"
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

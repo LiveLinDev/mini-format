@@ -1,0 +1,73 @@
+{
+  "prefix": "ner",
+  "version": 1,
+  "parent": null,
+  "name": "Named-entity annotations",
+  "domain": "NLP / data labelling",
+  "records_key": "entities",
+  "description": "One entity mention per line (relational pattern: several lines share a document id).",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "model": {
+        "type": "str"
+      },
+      "schema": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "doc",
+      "type": "str"
+    },
+    {
+      "name": "start",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "end",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "text",
+      "type": "str"
+    },
+    {
+      "name": "type",
+      "type": "enum",
+      "values": [
+        "PERSON",
+        "ORG",
+        "LOC",
+        "DATE",
+        "PRODUCT",
+        "CONCEPT",
+        "MISC"
+      ]
+    },
+    {
+      "name": "conf",
+      "type": "float",
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

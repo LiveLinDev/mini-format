@@ -1,0 +1,90 @@
+{
+  "prefix": "tc",
+  "version": 1,
+  "parent": null,
+  "name": "Software test cases",
+  "domain": "software engineering / QA",
+  "records_key": "cases",
+  "description": "Manual or automated test cases: module, title, precondition, ordered steps, expected result, priority, type and automation flag.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      },
+      "proj": {
+        "type": "str"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "module",
+      "type": "str"
+    },
+    {
+      "name": "title",
+      "type": "str"
+    },
+    {
+      "name": "precondition",
+      "type": "str"
+    },
+    {
+      "name": "steps",
+      "type": "list",
+      "item": "str",
+      "min": 1,
+      "max": 20
+    },
+    {
+      "name": "expected",
+      "type": "str"
+    },
+    {
+      "name": "priority",
+      "type": "enum",
+      "values": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    {
+      "name": "type",
+      "type": "enum",
+      "values": [
+        "functional",
+        "integration",
+        "performance",
+        "security",
+        "usability",
+        "regression"
+      ]
+    },
+    {
+      "name": "automated",
+      "type": "bool"
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

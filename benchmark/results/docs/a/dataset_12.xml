@@ -1,0 +1,124 @@
+<a m="IRT3PL" d="20260603" l="es" t="evaluación transversal" k="4">
+  <bd><i>1</i><i>1</i><i>1</i><i>1</i><i>1</i><i>1</i></bd>
+  <cat theta_init="0" theta_min="-3" theta_max="3" se_stop="0.3" max_items="12" exposure_ctrl="SH"/>
+  <rec>
+    <id>i1</id>
+    <bloom>L1</bloom>
+    <topic>Biología</topic>
+    <statement>¿Dónde ocurre principalmente la fotosíntesis?</statement>
+    <options><i sel="1">cloroplastos</i><i>núcleo</i><i>mitocondria</i><i>ribosoma</i></options>
+    <irt a="0.9" b="-1" c="0.25"/>
+    <difficulty>1</difficulty>
+    <cat area="biología" exposure_cap="0.2" demand="low"/>
+  </rec>
+  <rec>
+    <id>i2</id>
+    <bloom>L2</bloom>
+    <topic>Química</topic>
+    <statement>¿Qué representa el pH de una solución?</statement>
+    <options><i sel="1">acidez o basicidad</i><i>masa molecular</i><i>temperatura</i><i>presión osmótica</i></options>
+    <irt a="1.1" b="-0.3" c="0.25"/>
+    <difficulty>2</difficulty>
+    <cat area="química" exposure_cap="0.2" demand="medium"/>
+  </rec>
+  <rec>
+    <id>i3</id>
+    <bloom>L3</bloom>
+    <topic>Matemática</topic>
+    <statement>Si 3x+6=18, ¿cuál es el valor de x?</statement>
+    <options><i sel="1">4</i><i>6</i><i>8</i><i>12</i></options>
+    <irt a="1.4" b="0.2" c="0.2"/>
+    <difficulty>3</difficulty>
+    <cat area="matemática" exposure_cap="0.25" demand="medium"/>
+  </rec>
+  <rec>
+    <id>i4</id>
+    <bloom>L4</bloom>
+    <topic>Historia</topic>
+    <statement>¿Qué factor explica mejor la caída del Imperio romano de Occidente?</statement>
+    <options><i sel="1">presiones militares y crisis internas</i><i>un solo terremoto</i><i>la invención de la imprenta</i><i>la conquista española</i></options>
+    <irt a="1.7" b="0.8" c="0.2"/>
+    <difficulty>4</difficulty>
+    <cat area="historia" exposure_cap="0.18" demand="high"/>
+  </rec>
+  <rec>
+    <id>i5</id>
+    <bloom>L5</bloom>
+    <topic>Literatura</topic>
+    <statement>Evalúa cuál opción interpreta mejor un narrador no confiable.</statement>
+    <options><i sel="1">su relato debe contrastarse con evidencias</i><i>siempre dice la verdad</i><i>solo narra en tercera persona</i><i>no participa en la trama</i></options>
+    <irt a="2" b="1.2" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="literatura" exposure_cap="0.15" demand="high"/>
+  </rec>
+  <rec>
+    <id>i6</id>
+    <bloom>L6</bloom>
+    <topic>Computación</topic>
+    <statement>¿Qué solución diseñarías para reducir errores en una API?</statement>
+    <options><i sel="1">validación de esquema y pruebas automatizadas</i><i>eliminar logs</i><i>usar variables globales</i><i>evitar documentación</i></options>
+    <irt a="2.3" b="1.7" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="computación" exposure_cap="0.15" demand="high"/>
+  </rec>
+  <rec>
+    <id>i7</id>
+    <bloom>L1</bloom>
+    <topic>Física</topic>
+    <statement>¿Cuál es la unidad de fuerza en el SI?</statement>
+    <options><i sel="1">newton</i><i>joule</i><i>watt</i><i>pascal</i></options>
+    <irt a="0.9" b="-1.2" c="0.25"/>
+    <difficulty>1</difficulty>
+    <cat area="física" exposure_cap="0.2" demand="low"/>
+  </rec>
+  <rec>
+    <id>i8</id>
+    <bloom>L2</bloom>
+    <topic>Geografía</topic>
+    <statement>¿Qué describe una cuenca hidrográfica?</statement>
+    <options><i sel="1">territorio drenado por un río</i><i>altura de una montaña</i><i>tipo de clima</i><i>frontera política</i></options>
+    <irt a="1.1" b="-0.2" c="0.25"/>
+    <difficulty>2</difficulty>
+    <cat area="geografía" exposure_cap="0.22" demand="medium"/>
+  </rec>
+  <rec>
+    <id>i9</id>
+    <bloom>L3</bloom>
+    <topic>Comunicación</topic>
+    <statement>Elige el conector que completa una relación de causa.</statement>
+    <options><i sel="1">porque</i><i>sin embargo</i><i>además</i><i>por ejemplo</i></options>
+    <irt a="1.4" b="0.1" c="0.2"/>
+    <difficulty>3</difficulty>
+    <cat area="comunicación" exposure_cap="0.25" demand="medium"/>
+  </rec>
+  <rec>
+    <id>i10</id>
+    <bloom>L4</bloom>
+    <topic>Economía</topic>
+    <statement>Analiza qué sucede si sube el precio y baja la demanda.</statement>
+    <options><i sel="1">disminuye la cantidad demandada</i><i>sube la oferta siempre</i><i>desaparece el mercado</i><i>no cambia el equilibrio</i></options>
+    <irt a="1.7" b="0.7" c="0.2"/>
+    <difficulty>4</difficulty>
+    <cat area="economía" exposure_cap="0.18" demand="high"/>
+  </rec>
+  <rec>
+    <id>i11</id>
+    <bloom>L5</bloom>
+    <topic>Ética</topic>
+    <statement>¿Qué criterio permite evaluar mejor una decisión pública?</statement>
+    <options><i sel="1">impacto, justicia y evidencia</i><i>popularidad inmediata</i><i>costo únicamente</i><i>autoridad del emisor</i></options>
+    <irt a="2" b="1.3" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="ética" exposure_cap="0.15" demand="high"/>
+  </rec>
+  <rec>
+    <id>i12</id>
+    <bloom>L6</bloom>
+    <topic>Arte</topic>
+    <statement>Propón el principio clave para crear una campaña visual coherente.</statement>
+    <options><i sel="1">unidad entre mensaje, color y audiencia</i><i>usar todos los colores</i><i>copiar una plantilla</i><i>evitar bocetos</i></options>
+    <irt a="2.3" b="1.8" c="0.15"/>
+    <difficulty>5</difficulty>
+    <cat area="arte" exposure_cap="0.15" demand="high"/>
+  </rec>
+</a>

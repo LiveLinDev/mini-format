@@ -1,0 +1,45 @@
+You are taking part in a controlled serialization experiment. Complete the task below BY HAND (do not write or run code to generate the document, do not read any files, do not search). Save your document with the Write tool to exactly this path: {PATH} — the file must contain ONLY the document (no fences, no commentary). Then reply with the single word: saved.
+
+=== TASK ===
+You are a data serializer. Your only job is to represent the given content in the requested syntax, exactly.
+
+TARGET FORMAT (.mini, family 'log'):
+.mini FORMAT — family 'log' v1 (Service events / incident records)
+Structured events emitted by services: timestamp, level, service, code, message, tags, trace id and optional duration.
+Rules:
+- Plain UTF-8 text. The FIRST line is the header: 'log|d=<str>?, env=<str>?, host=<str>?, n=<int>'. n is mandatory and must equal the exact number of record lines.
+- After the header, ONE line per record and nothing else (no comments, no code fences, no blank lines in between).
+- Each record has these fields in THIS order, separated by '|' (position is the semantics; field names are never written):
+  1. ts: str — ISO-8601 UTC timestamp
+  2. level: one of {DEBUG|INFO|WARN|ERROR|CRITICAL}
+  3. service: str
+  4. code: str
+  5. message: str
+  6. tags: ','-separated list of str, 0 to 10 elements
+  7. trace: str (optional)
+  8. duration_ms: int [0..] (optional)
+- If a list element contains the separator ',', enclose the element in double quotes CSV-style ("impact, justice and evidence"; the * marker goes after the closing quote) or escape the separator as '\,'. A literal trailing asterisk is written '\*'.
+- Escapes valid in any value: '\|' for a literal vertical bar, '\\' for a backslash, '\n' for a line break.
+- Numbers unquoted; booleans true/false. Scalar fields are never quoted.
+- An empty field means null (allowed only for optional fields).
+- Record: 8 core fields.
+Valid example:
+log|n=1|d=20260603|env=staging|host=sima-app-01
+2026-06-03T08:00:01Z|INFO|web|HTTP200|GET /dashboard served|user:26|t-1001|42
+Header values to use: d=20260603, env=staging, host=sima-app-01.
+
+CONTENT TO REPRESENT (12 records; keep the order; copy every text verbatim; '(none)' means the field is empty/null):
+Record 1: ts=2026-06-03T08:00:01Z; level=INFO; service=web; code=HTTP200; message=GET /dashboard served; tags=(1 items) user:26; trace=t-1001; duration_ms=42
+Record 2: ts=2026-06-03T08:00:05Z; level=INFO; service=worker; code=JOB_START; message=LessonJob 64 started stage transcribe; tags=(2 items) job:64 / stage:transcribe; trace=t-1002; duration_ms=(none)
+Record 3: ts=2026-06-03T08:02:11Z; level=WARN; service=worker; code=ASR_SLOW; message=Whisper took longer than budget; tags=(1 items) job:64; trace=t-1002; duration_ms=126000
+Record 4: ts=2026-06-03T08:02:12Z; level=INFO; service=worker; code=JOB_STAGE; message=stage generate started with 16 chunks; tags=(2 items) job:64 / stage:generate; trace=t-1002; duration_ms=(none)
+Record 5: ts=2026-06-03T08:05:40Z; level=ERROR; service=llm; code=NUL_CHAR; message=NUL character in model output; sanitized; tags=(2 items) job:64 / chunk:7; trace=t-1002; duration_ms=(none)
+Record 6: ts=2026-06-03T08:05:41Z; level=INFO; service=worker; code=MINI_PARSE; message=150 records parsed, 22 flagged incoherent; tags=(1 items) job:64; trace=t-1002; duration_ms=310
+Record 7: ts=2026-06-03T08:06:02Z; level=INFO; service=verify; code=WEB_CTX; message=6 queries, 4 results, 2 usable sources; tags=(1 items) job:64; trace=t-1002; duration_ms=8900
+Record 8: ts=2026-06-03T08:06:30Z; level=ERROR; service=llm; code=CTX_OVERFLOW; message=verification prompt exceeds context; truncated; tags=(1 items) job:64; trace=t-1002; duration_ms=(none)
+Record 9: ts=2026-06-03T08:07:00Z; level=INFO; service=worker; code=JOB_DONE; message=LessonJob 64 finished; tags=(1 items) job:64; trace=t-1002; duration_ms=419000
+Record 10: ts=2026-06-03T08:10:15Z; level=WARN; service=web; code=HTTP404; message=GET /clase/999/ not found; tags=(1 items) user:12; trace=t-1003; duration_ms=5
+Record 11: ts=2026-06-03T08:12:00Z; level=CRITICAL; service=llm; code=ENDPOINT_DOWN; message=local API base unreachable; retry scheduled; tags=(1 items) endpoint:8003; trace=t-1004; duration_ms=(none)
+Record 12: ts=2026-06-03T08:12:30Z; level=INFO; service=llm; code=ENDPOINT_UP; message=local API base healthy after retry; tags=(1 items) endpoint:8003; trace=t-1004; duration_ms=(none)
+
+OUTPUT: only the .mini document. No explanations, no markdown code fences, no comments.

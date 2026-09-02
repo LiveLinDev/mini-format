@@ -1,0 +1,82 @@
+{
+  "prefix": "sum",
+  "version": 1,
+  "parent": null,
+  "name": "Micro-lesson summary segments",
+  "domain": "education / microlearning",
+  "records_key": "segments",
+  "description": "Time-aligned summary segments of a recorded lecture (SIMA microcontent).",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "l": {
+        "type": "str",
+        "desc": "language code"
+      },
+      "t": {
+        "type": "str"
+      },
+      "src": {
+        "type": "str"
+      },
+      "dur": {
+        "type": "int",
+        "desc": "lecture duration in seconds"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "t_start",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "t_end",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "title",
+      "type": "str"
+    },
+    {
+      "name": "summary",
+      "type": "str"
+    },
+    {
+      "name": "keywords",
+      "type": "list",
+      "item": "str",
+      "min": 1,
+      "max": 10
+    },
+    {
+      "name": "bloom",
+      "type": "enum",
+      "values": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6"
+      ]
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}
