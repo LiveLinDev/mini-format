@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-09-02T00:50:01.235167</dc:date>
+    <dc:date>2026-09-02T01:45:13.587263</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -40,7 +40,7 @@ Q 10.36944 34.067077 10.36944 37.478769
 L 10.36944 72.875077 
 Q 10.36944 76.286769 13.53888 76.286769 
 z
-" clip-path="url(#p1195d8e2b6)" style="fill: #52514e"/>
+" clip-path="url(#p3c003c65d3)" style="fill: #52514e"/>
    </g>
    <g id="patch_3">
     <path d="M 79.70094 76.286769 
@@ -53,7 +53,7 @@ Q 76.5315 34.067077 76.5315 37.478769
 L 76.5315 72.875077 
 Q 76.5315 76.286769 79.70094 76.286769 
 z
-" clip-path="url(#p1195d8e2b6)" style="fill: #52514e"/>
+" clip-path="url(#p3c003c65d3)" style="fill: #52514e"/>
    </g>
    <g id="patch_4">
     <path d="M 145.863 76.286769 
@@ -66,7 +66,7 @@ Q 142.69356 34.067077 142.69356 37.478769
 L 142.69356 72.875077 
 Q 142.69356 76.286769 145.863 76.286769 
 z
-" clip-path="url(#p1195d8e2b6)" style="fill: #2a78d6"/>
+" clip-path="url(#p3c003c65d3)" style="fill: #2a78d6"/>
    </g>
    <g id="patch_5">
     <path d="M 212.02506 76.286769 
@@ -79,7 +79,7 @@ Q 208.85562 34.067077 208.85562 37.478769
 L 208.85562 72.875077 
 Q 208.85562 76.286769 212.02506 76.286769 
 z
-" clip-path="url(#p1195d8e2b6)" style="fill: #eb6834"/>
+" clip-path="url(#p3c003c65d3)" style="fill: #eb6834"/>
    </g>
    <g id="patch_6">
     <path d="M 278.18712 76.286769 
@@ -92,7 +92,7 @@ Q 275.01768 34.067077 275.01768 37.478769
 L 275.01768 72.875077 
 Q 275.01768 76.286769 278.18712 76.286769 
 z
-" clip-path="url(#p1195d8e2b6)" style="fill: #0b0b0b"/>
+" clip-path="url(#p3c003c65d3)" style="fill: #0b0b0b"/>
    </g>
    <g id="patch_7">
     <path d="M 344.34918 76.286769 
@@ -105,7 +105,7 @@ Q 341.17974 34.067077 341.17974 37.478769
 L 341.17974 72.875077 
 Q 341.17974 76.286769 344.34918 76.286769 
 z
-" clip-path="url(#p1195d8e2b6)" style="fill: #1baf7a"/>
+" clip-path="url(#p3c003c65d3)" style="fill: #1baf7a"/>
    </g>
    <g id="text_1">
     <!-- Lecture audio / -->
@@ -2268,7 +2268,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p1195d8e2b6">
+  <clipPath id="p3c003c65d3">
    <rect x="7.2" y="7.2" width="396.18" height="110.88"/>
   </clipPath>
  </defs>

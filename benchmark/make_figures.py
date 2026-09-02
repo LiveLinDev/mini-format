@@ -15,18 +15,23 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+import os
+LANG = os.environ.get("MINI_FIG_LANG", "en")
+TR_ES = {'content only ({payload} tokens)': 'solo contenido ({payload} tokens)', 'output tokens (o200k_base), 12 assessment items': 'tokens de salida (o200k_base), 12 ítems', 'tokens, % of JSON compact (lower is better)': 'tokens, % de JSON compacto (menor es mejor)', 'Token cost across 14 domains (n = 12 records, o200k_base)': 'Costo en tokens en 14 dominios (n = 12 registros, o200k_base)', 'records (assessment items)': 'registros (ítems de evaluación)', 'output tokens (o200k_base)': 'tokens de salida (o200k_base)', 'structural overhead = (tokens − content) / tokens, % (14 domains)': 'sobrecarga estructural = (tokens − contenido) / tokens, % (14 dominios)', '.mini token saving, %\n(mean of 14 domains)': 'ahorro de tokens de .mini, %\n(media de 14 dominios)', 'USD per month for 360 000 records\n(1 000 banks × 12 items × 30 days; $10 per 1M output tokens)': 'USD al mes para 360 000 registros\n(1 000 bancos × 12 ítems × 30 días; 10 USD por millón de tokens de salida)', 'round-trip success, %': 'éxito de ida y vuelta, %', 'v0 · quotes only\nDeepSeek-V3\nn = 30': 'v0 · solo comillas\nDeepSeek-V3\nn = 30', 'v0 · quotes only\nDeepSeek-R1\nn = 20': 'v0 · solo comillas\nDeepSeek-R1\nn = 20', 'v1 draft\nbackslash only\nHaiku 4.5, n = 6': 'v1 borrador\nsolo escapes\nHaiku 4.5, n = 6', 'v1.0 · quotes or\nescapes + count key\nHaiku 4.5, n = 10': 'v1.0 · comillas o\nescapes + clave k\nHaiku 4.5, n = 10', '.mini round-trip success, %': 'éxito de ida y vuelta de .mini, %', 'round-trip success, % (n = 6)': 'éxito de ida y vuelta, % (n = 6)', 'E2 · generation from the contract alone': 'E2 · generación desde el contrato', 'parsers passing all fixtures, % (n = 2)': 'analizadores correctos, % (n = 2)', 'E3 · parser written from the spec block': 'E3 · analizador desde el bloque', '.mini (spec 640 tok)': '.mini (spec 640 tok)', 'records generated in one call': 'registros generados en una llamada', 'total tokens = specification + output': 'tokens totales = especificación + salida', 'Break-even including the cost of teaching the format': 'Punto de equilibrio incluyendo el costo de enseñar el formato', 'complete records recovered\nafter random truncation, %': 'registros completos recuperados\ntras truncamiento aleatorio, %', 'CONTRACT\ncontract.json\nprefix · header keys\ncore fields · extensions\ntypes · arity · markers': 'CONTRATO\ncontract.json\nprefijo · claves cabecera\nnúcleo · extensiones\ntipos · aridad · marcas', 'spec block\n(mini prompt)': 'bloque de spec\n(mini prompt)', 'parser\n(interpreted)': 'analizador\n(interpretado)', 'serializer\n(interpreted)': 'serializador\n(interpretado)', 'fork checker\nI1–I5': 'verificador de\nbifurcaciones I1–I5', 'generative model\n(any provider)': 'modelo generativo\n(todo proveedor)', '.mini document\n(one line per record)': 'documento .mini\n(1 línea/registro)', 'canonical JSON\n(application object)': 'JSON canónico\n(objeto de la app)', 'fixtures\nvalid · escaping · bad': 'fixtures\nválido·escapes·malos', 'child fork\nparent core +\nappended tail': 'bifurcación hija\nnúcleo padre +\ncola nueva', 'fork: new prefix · inherited fields unchanged · new fields appended': 'bifurcación: prefijo nuevo · campos heredados intactos · campos nuevos al final', 'registry\nunique prefixes\nlineage · CI\n(mini check-forks)': 'registro\nprefijos únicos\nlinaje · CI\n(mini check-forks)', 'A .mini family: the contract is data; every tool is derived from it': 'Una familia .mini: el contrato es un dato; toda herramienta se deriva de él', 'Lecture audio /\ntranscript': 'audio de clase /\ntranscripción', 'Whisper ASR\n(local)': 'Whisper ASR\n(local)', 'LLM generation\nin .mini-a': 'generación LLM\nen .mini-a', 'parse + validate\n(E01–E13), repair': 'parse + validar\n(E01–E13)\ny reparar', 'canonical JSON\n→ Django ORM': 'JSON canónico\n→ ORM Django', 'IRT 3PL / CAT\nquiz · cards · map': 'IRT 3PL / CAT\nquiz · tarjetas\n· mapa', 'SIMA case study: where .mini sits in the microlearning pipeline': 'Caso SIMA: dónde se sitúa .mini en el pipeline de microaprendizaje', '−38 % tokens vs\nJSON compact per bank': '−38 % tokens vs\nJSON por banco', '22/53 incoherent items\ncaught before persistence': '22/53 ítems incoherentes\ndetectados antes', 'θ estimate, SE stop rule,\nexposure control': 'estimación de θ, parada por EE,\ncontrol de exposición', 'education': 'educación', 'software / ops': 'software / operaciones', 'NLP / commerce': 'PLN / comercio', 'Each box is a contract shipped with fixtures and a README; the number is core fields + extension fields. ': 'Cada caja es un contrato publicado con fixtures y README; el número es campos del núcleo + extensiones. ', 'q is a fork of a (same core, +3 trailing fields). All 14 pass `mini check-forks` and round-trip in both implementations.': 'q es bifurcación de a (mismo núcleo, +3 campos finales). Las 14 pasan `mini check-forks` e ida y vuelta en ambas implementaciones.', 'marginal tokens per record\n(slope n = 100 → 500)': 'tokens marginales por registro\n(pendiente n = 100 → 500)', '(unseen fork)': '(no vista)', 'data': 'datos', 'format': 'formato', 'TOON (as-is)': 'TOON (tal cual)', 'JSON compact': 'JSON compacto', 'JSON pretty': 'JSON indentado'}
+def _(text):
+    return TR_ES.get(text, text) if LANG == "es" else text
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib import patches  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 RES = ROOT / "benchmark" / "results"
 GEN = ROOT / "generative" / "results"
-OUT = ROOT / "benchmark" / "figures"
+OUT = ROOT / "benchmark" / ("figures_es" if LANG == "es" else "figures")
 OUT.mkdir(parents=True, exist_ok=True)
 
 FMT_ORDER = ["mini", "toon_flat", "toon", "csv", "json_compact", "yaml", "xml", "json_pretty"]
-LABEL = {"mini": ".mini", "toon_flat": "TOON (tabular)", "toon": "TOON (as-is)", "csv": "CSV", "json_compact": "JSON compact",
-         "yaml": "YAML", "xml": "XML", "json_pretty": "JSON pretty", "json": "JSON compact"}
+LABEL = {"mini": ".mini", "toon_flat": "TOON (tabular)", "toon": _("TOON (as-is)"), "csv": "CSV", "json_compact": _("JSON compact"),
+         "yaml": "YAML", "xml": "XML", "json_pretty": _("JSON pretty"), "json": _("JSON compact")}
 COLOR = {"mini": "#2a78d6", "toon_flat": "#eb6834", "toon": "#1baf7a", "csv": "#eda100", "json_compact": "#e87ba4",
          "yaml": "#008300", "xml": "#4a3aa7", "json_pretty": "#e34948", "json": "#e87ba4", "payload": "#52514e"}
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e6e6e3"
@@ -72,9 +77,9 @@ def fig1():
     for i, v in enumerate(vals):
         ax.text(v + 25, i, f"{v:,}", va="center", fontsize=7, color=INK)
     ax.axvline(payload, color=COLOR["payload"], ls=(0, (3, 3)), lw=1)
-    ax.text(payload + 15, -0.45, f"content only ({payload} tokens)", fontsize=6.5, color=INK2, va="bottom")
+    ax.text(payload + 15, -0.45, _("content only ({payload} tokens)").format(payload=payload), fontsize=6.5, color=INK2, va="bottom")
     ax.set_yticks(list(y)); ax.set_yticklabels([LABEL[f] for f in FMT_ORDER]); ax.invert_yaxis()
-    ax.set_xlabel("output tokens (o200k_base), 12 assessment items"); ax.grid(axis="y", visible=False)
+    ax.set_xlabel(_("output tokens (o200k_base), 12 assessment items")); ax.grid(axis="y", visible=False)
     ax.set_xlim(0, max(vals) * 1.18)
     save(fig, "fig01_tokens_assessment")
 
@@ -98,8 +103,8 @@ def fig2():
             v = M[i, j]
             ax.text(j, i, f"{v:.0f}", ha="center", va="center", fontsize=6.5, color="white" if v < 110 else INK)
     ax.grid(False)
-    cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.02); cb.set_label("tokens, % of JSON compact (lower is better)", fontsize=7); cb.ax.tick_params(labelsize=6.5)
-    ax.set_title("Token cost across 14 domains (n = 12 records, o200k_base)")
+    cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.02); cb.set_label(_("tokens, % of JSON compact (lower is better)"), fontsize=7); cb.ax.tick_params(labelsize=6.5)
+    ax.set_title(_("Token cost across 14 domains (n = 12 records, o200k_base)"))
     save(fig, "fig02_multidomain_heatmap")
 
 
@@ -111,7 +116,7 @@ def fig3():
         ys = [tokens("a", f, n)["tokens"] for n in sizes]
         ax.plot(sizes, ys, color=COLOR[f], lw=1.6, marker="o", ms=3, label=LABEL[f])
     ax.set_xscale("log"); ax.set_yscale("log")
-    ax.set_xlabel("records (assessment items)"); ax.set_ylabel("output tokens (o200k_base)")
+    ax.set_xlabel(_("records (assessment items)")); ax.set_ylabel(_("output tokens (o200k_base)"))
     ax.set_xticks(sizes); ax.set_xticklabels([str(s) for s in sizes])
     ax.legend(ncol=2, loc="upper left")
     save(fig, "fig03_scaling")
@@ -131,7 +136,7 @@ def fig4():
     for patch, f in zip(bp["boxes"], FMT_ORDER):
         patch.set_facecolor(COLOR[f]); patch.set_alpha(0.85); patch.set_edgecolor("white")
     ax.set_yticks(range(1, len(FMT_ORDER) + 1)); ax.set_yticklabels([LABEL[f] for f in FMT_ORDER]); ax.invert_yaxis()
-    ax.set_xlabel("structural overhead = (tokens − content) / tokens, % (14 domains)")
+    ax.set_xlabel(_("structural overhead = (tokens − content) / tokens, % (14 domains)"))
     ax.grid(axis="y", visible=False)
     save(fig, "fig04_overhead")
 
@@ -152,7 +157,7 @@ def fig5():
         for b, v in zip(bars, vals):
             ax.text(b.get_x() + b.get_width() / 2, v + 0.8, f"{v:.0f}", ha="center", fontsize=6, color=INK)
     ax.set_xticks(x); ax.set_xticklabels([LABEL[f] for f in FMT_ORDER[1:]], rotation=25, ha="right")
-    ax.set_ylabel(".mini token saving, %\n(mean of 14 domains)")
+    ax.set_ylabel(_(".mini token saving, %\n(mean of 14 domains)"))
     ax.set_ylim(-12, 78)
     ax.legend(handles=[patches.Patch(facecolor="#bbbbbb", label="o200k_base (GPT-4o family)"),
                        patches.Patch(facecolor="#bbbbbb", hatch="////", label="cl100k_base (GPT-4 family)")], loc="upper left", fontsize=6)
@@ -174,7 +179,7 @@ def fig6():
     for i, v in enumerate(vals):
         ax.text(v + 4, i, f"${v:,.0f}", va="center", fontsize=7)
     ax.set_yticks(range(len(FMT_ORDER))); ax.set_yticklabels([LABEL[f] for f in FMT_ORDER]); ax.invert_yaxis()
-    ax.set_xlabel("USD per month for 360 000 records\n(1 000 banks × 12 items × 30 days; $10 per 1M output tokens)")
+    ax.set_xlabel(_("USD per month for 360 000 records\n(1 000 banks × 12 items × 30 days; $10 per 1M output tokens)"))
     ax.set_xlim(0, max(vals) * 1.15); ax.grid(axis="y", visible=False)
     save(fig, "fig06_cost")
     return costs
@@ -197,8 +202,8 @@ def fig7():
         for b, v in zip(bars, vals):
             ax.text(b.get_x() + b.get_width() / 2, v + 2, f"{v:.0f}", ha="center", fontsize=6.5)
         ax.set_xticks(range(len(fmts))); ax.set_xticklabels([LABEL.get(f, f) if f != "toon" else "TOON" for f in fmts], rotation=30, ha="right")
-        ax.set_title(f"{mlabel[m].replace('Claude ', '')}  (n = {n}/format)", fontsize=7.5); ax.set_ylim(0, 112); ax.grid(axis="x", visible=False)
-    axes[0].set_ylabel("round-trip success, %")
+        ax.set_title(f"{mlabel[m].replace('Claude ', '')}  (n = {n}/" + _("format") + ")", fontsize=7.5); ax.set_ylim(0, 112); ax.grid(axis="x", visible=False)
+    axes[0].set_ylabel(_("round-trip success, %"))
     save(fig, "fig07_generative_e1")
 
 
@@ -208,8 +213,8 @@ def fig8():
     groups = defaultdict(list)
     for r in rows:
         groups[r["spec"]].append(r["round_trip"] == "True")
-    labels = ["v0 · quotes only\nDeepSeek-V3\nn = 30", "v0 · quotes only\nDeepSeek-R1\nn = 20",
-              "v1 draft\nbackslash only\nHaiku 4.5, n = 6", "v1.0 · quotes or\nescapes + count key\nHaiku 4.5, n = 10"]
+    labels = [_("v0 · quotes only\nDeepSeek-V3\nn = 30"), _("v0 · quotes only\nDeepSeek-R1\nn = 20"),
+              _("v1 draft\nbackslash only\nHaiku 4.5, n = 6"), _("v1.0 · quotes or\nescapes + count key\nHaiku 4.5, n = 10")]
     vals = [80.0, 100.0]
     for spec in ["v1-draft (backslash only)", "v1.0 (quotes or escapes + count key)"]:
         g = groups[spec]; vals.append(100 * sum(g) / len(g))
@@ -219,7 +224,7 @@ def fig8():
     for b, v in zip(bars, vals):
         ax.text(b.get_x() + b.get_width() / 2, v + 2, f"{v:.0f}%", ha="center", fontsize=7)
     ax.set_xticks(range(4)); ax.set_xticklabels(labels, fontsize=5.8)
-    ax.set_ylabel(".mini round-trip success, %"); ax.set_ylim(0, 115); ax.grid(axis="x", visible=False)
+    ax.set_ylabel(_(".mini round-trip success, %")); ax.set_ylim(0, 115); ax.grid(axis="x", visible=False)
     save(fig, "fig08_ablation")
 
 
@@ -236,8 +241,8 @@ def fig9():
         bars = ax1.bar(x + (k - 0.5) * 0.36, vals, width=0.34, color=["#2a78d6", "#1baf7a"][k], edgecolor="white", label={"haiku": "Haiku 4.5", "sonnet": "Sonnet 5"}[m])
         for b, v in zip(bars, vals):
             ax1.text(b.get_x() + b.get_width() / 2, v + 2, f"{v:.0f}", ha="center", fontsize=6.5)
-    ax1.set_xticks(x); ax1.set_xticklabels([f".mini-{p}\n(unseen fork)" for p in prefixes]); ax1.set_ylim(0, 115)
-    ax1.set_ylim(0, 135); ax1.set_ylabel("round-trip success, % (n = 6)"); ax1.set_title("E2 · generation from the contract alone"); ax1.legend(loc="upper right", ncol=2); ax1.grid(axis="x", visible=False)
+    ax1.set_xticks(x); ax1.set_xticklabels([f".mini-{p}\n" + _("(unseen fork)") for p in prefixes]); ax1.set_ylim(0, 115)
+    ax1.set_ylim(0, 135); ax1.set_ylabel(_("round-trip success, % (n = 6)")); ax1.set_title(_("E2 · generation from the contract alone")); ax1.legend(loc="upper right", ncol=2); ax1.grid(axis="x", visible=False)
     prefixes3 = ["a", "tc", "log", "cls"]
     for k, m in enumerate(["sonnet", "opus"]):
         vals = []
@@ -248,7 +253,7 @@ def fig9():
         for b, v in zip(bars, vals):
             ax2.text(b.get_x() + b.get_width() / 2, v + 2, f"{v:.0f}", ha="center", fontsize=6.5)
     ax2.set_xticks(range(4)); ax2.set_xticklabels([f".mini-{p}" for p in prefixes3]); ax2.set_ylim(0, 115)
-    ax2.set_ylim(0, 135); ax2.set_ylabel("parsers passing all fixtures, % (n = 2)"); ax2.set_title("E3 · parser written from the spec block"); ax2.legend(loc="upper right", ncol=2); ax2.grid(axis="x", visible=False)
+    ax2.set_ylim(0, 135); ax2.set_ylabel(_("parsers passing all fixtures, % (n = 2)")); ax2.set_title(_("E3 · parser written from the spec block")); ax2.legend(loc="upper right", ncol=2); ax2.grid(axis="x", visible=False)
     save(fig, "fig09_transfer_parsers")
 
 
@@ -259,7 +264,7 @@ def fig10():
     import numpy as np
     n = np.arange(0, 61)
     mini_spec = int(rows[0]["spec_tokens_mini"]); mini_rec = float(rows[0]["tokens_per_record_mini"])
-    ax.plot(n, mini_spec + mini_rec * n, color=COLOR["mini"], lw=2, label=".mini (spec 640 tok)")
+    ax.plot(n, mini_spec + mini_rec * n, color=COLOR["mini"], lw=2, label=_(".mini (spec 640 tok)"))
     for r in rows:
         f = r["alternative"]
         key = {"json": "json_compact", "toon": "toon_flat"}.get(f, f)
@@ -267,9 +272,9 @@ def fig10():
         be = r["breakeven_records"]
         if be != "never" and float(be) <= 60:
             ax.axvline(float(be), color=COLOR[key], lw=0.7, ls=":")
-    ax.set_xlabel("records generated in one call"); ax.set_ylabel("total tokens = specification + output")
+    ax.set_xlabel(_("records generated in one call")); ax.set_ylabel(_("total tokens = specification + output"))
     ax.set_ylim(0, 12500); ax.legend(loc="upper left", fontsize=6.2)
-    ax.set_title("Break-even including the cost of teaching the format")
+    ax.set_title(_("Break-even including the cost of teaching the format"))
     save(fig, "fig10_breakeven")
 
 
@@ -283,11 +288,11 @@ def fig11():
     x = np.arange(len(fmts))
     for k, p in enumerate(prefixes):
         vals = [float(next(r["recovery_efficiency"] for r in rows if r["prefix"] == p and r["format"] == f)) for f in fmts]
-        bars = ax.bar(x + (k - 1) * 0.27, vals, width=0.25, color=["#2a78d6", "#1baf7a", "#eda100"][k], edgecolor="white", label=f".mini-{p} data")
+        bars = ax.bar(x + (k - 1) * 0.27, vals, width=0.25, color=["#2a78d6", "#1baf7a", "#eda100"][k], edgecolor="white", label=f".mini-{p} " + _("data"))
         for b, v in zip(bars, vals):
             ax.text(b.get_x() + b.get_width() / 2, v + 1.5, f"{v:.0f}", ha="center", fontsize=5.8)
     ax.set_xticks(x); ax.set_xticklabels([LABEL[f] for f in fmts], rotation=25, ha="right")
-    ax.set_ylabel("complete records recovered\nafter random truncation, %"); ax.set_ylim(0, 112); ax.legend(loc="upper right", fontsize=6); ax.grid(axis="x", visible=False)
+    ax.set_ylabel(_("complete records recovered\nafter random truncation, %")); ax.set_ylim(0, 112); ax.legend(loc="upper right", fontsize=6); ax.grid(axis="x", visible=False)
     save(fig, "fig11_truncation")
 
 
@@ -304,28 +309,28 @@ def arrow(ax, x1, y1, x2, y2, color=INK2, lw=1):
 def fig12():
     fig, ax = plt.subplots(figsize=(DBL_W, 2.9))
     ax.set_xlim(0, 10); ax.set_ylim(-0.45, 4.25); ax.axis("off"); ax.grid(False)
-    box(ax, 0.1, 2.3, 2.3, 1.5, "CONTRACT\ncontract.json\nprefix · header keys\ncore fields · extensions\ntypes · arity · markers", "#2a78d6", fs=6.6)
-    box(ax, 3.0, 3.1, 1.9, 0.75, "spec block\n(mini prompt)", "#1baf7a", fs=6.8)
-    box(ax, 3.0, 2.1, 1.9, 0.75, "parser\n(interpreted)", "#eb6834", fs=6.8)
-    box(ax, 3.0, 1.1, 1.9, 0.75, "serializer\n(interpreted)", "#eda100", fs=6.8, tc=INK)
-    box(ax, 3.0, 0.1, 1.9, 0.75, "fork checker\nI1–I5", "#4a3aa7", fs=6.8)
+    box(ax, 0.1, 2.3, 2.3, 1.5, _("CONTRACT\ncontract.json\nprefix · header keys\ncore fields · extensions\ntypes · arity · markers"), "#2a78d6", fs=6.6)
+    box(ax, 3.0, 3.1, 1.9, 0.75, _("spec block\n(mini prompt)"), "#1baf7a", fs=6.8)
+    box(ax, 3.0, 2.1, 1.9, 0.75, _("parser\n(interpreted)"), "#eb6834", fs=6.8)
+    box(ax, 3.0, 1.1, 1.9, 0.75, _("serializer\n(interpreted)"), "#eda100", fs=6.8, tc=INK)
+    box(ax, 3.0, 0.1, 1.9, 0.75, _("fork checker\nI1–I5"), "#4a3aa7", fs=6.8)
     for y in (3.475, 2.475, 1.475, 0.475):
         arrow(ax, 2.4, 3.05, 3.0, y)
-    box(ax, 5.7, 3.1, 1.9, 0.75, "generative model\n(any provider)", "#52514e", fs=6.8)
-    box(ax, 5.7, 2.1, 1.9, 0.75, ".mini document\n(one line per record)", "#0b0b0b", fs=6.8)
-    box(ax, 5.7, 1.1, 1.9, 0.75, "canonical JSON\n(application object)", "#0b0b0b", fs=6.8)
-    box(ax, 5.7, 0.1, 1.9, 0.75, "fixtures\nvalid · escaping · bad", "#52514e", fs=6.4)
+    box(ax, 5.7, 3.1, 1.9, 0.75, _("generative model\n(any provider)"), "#52514e", fs=6.8)
+    box(ax, 5.7, 2.1, 1.9, 0.75, _(".mini document\n(one line per record)"), "#0b0b0b", fs=6.8)
+    box(ax, 5.7, 1.1, 1.9, 0.75, _("canonical JSON\n(application object)"), "#0b0b0b", fs=6.8)
+    box(ax, 5.7, 0.1, 1.9, 0.75, _("fixtures\nvalid · escaping · bad"), "#52514e", fs=6.4)
     arrow(ax, 4.9, 3.475, 5.7, 3.475); arrow(ax, 6.65, 3.1, 6.65, 2.85)
     arrow(ax, 6.65, 2.1, 6.65, 1.85); ax.text(6.75, 1.98, "parse", fontsize=6.3, color=INK2)
     arrow(ax, 6.25, 1.85, 6.25, 2.1); ax.text(5.75, 1.98, "dumps", fontsize=6.3, color=INK2, ha="left")
     arrow(ax, 4.9, 0.475, 5.7, 0.475)
-    box(ax, 8.2, 0.3, 1.6, 1.0, "child fork\nparent core +\nappended tail", "#2a78d6", fs=6.6)
+    box(ax, 8.2, 0.3, 1.6, 1.0, _("child fork\nparent core +\nappended tail"), "#2a78d6", fs=6.6)
     ax.plot([1.25, 1.25, 9.0], [2.3, -0.2, -0.2], color="#2a78d6", lw=1.2, solid_capstyle="round")
     arrow(ax, 9.0, -0.2, 9.0, 0.3, color="#2a78d6", lw=1.2)
-    ax.text(5.0, -0.12, "fork: new prefix · inherited fields unchanged · new fields appended", fontsize=6.3, color="#2a78d6", ha="center", va="bottom")
-    box(ax, 8.2, 2.0, 1.6, 1.2, "registry\nunique prefixes\nlineage · CI\n(mini check-forks)", "#52514e", fs=6.6)
+    ax.text(5.0, -0.12, _("fork: new prefix · inherited fields unchanged · new fields appended"), fontsize=6.3, color="#2a78d6", ha="center", va="bottom")
+    box(ax, 8.2, 2.0, 1.6, 1.2, _("registry\nunique prefixes\nlineage · CI\n(mini check-forks)"), "#52514e", fs=6.6)
     arrow(ax, 9.0, 1.3, 9.0, 2.0)
-    ax.text(0.2, 4.05, "A .mini family: the contract is data; every tool is derived from it", fontsize=8.5, weight="bold", color=INK, va="center")
+    ax.text(0.2, 4.05, _("A .mini family: the contract is data; every tool is derived from it"), fontsize=8.5, weight="bold", color=INK, va="center")
     save(fig, "fig12_architecture")
 
 
@@ -333,18 +338,18 @@ def fig12():
 def fig13():
     fig, ax = plt.subplots(figsize=(DBL_W, 2.0))
     ax.set_xlim(0, 10); ax.set_ylim(0, 2.6); ax.axis("off"); ax.grid(False)
-    steps = [("Lecture audio /\ntranscript", "#52514e"), ("Whisper ASR\n(local)", "#52514e"), ("LLM generation\nin .mini-a", "#2a78d6"),
-             ("parse + validate\n(E01–E13), repair", "#eb6834"), ("canonical JSON\n→ Django ORM", "#0b0b0b"), ("IRT 3PL / CAT\nquiz · cards · map", "#1baf7a")]
+    steps = [(_("Lecture audio /\ntranscript"), "#52514e"), (_("Whisper ASR\n(local)"), "#52514e"), (_("LLM generation\nin .mini-a"), "#2a78d6"),
+             (_("parse + validate\n(E01–E13), repair"), "#eb6834"), (_("canonical JSON\n→ Django ORM"), "#0b0b0b"), (_("IRT 3PL / CAT\nquiz · cards · map"), "#1baf7a")]
     w, gap = 1.45, 0.22
     for i, (t, c) in enumerate(steps):
         x = 0.1 + i * (w + gap)
-        box(ax, x, 1.0, w, 0.95, t, c, fs=6.2)
+        box(ax, x, 1.0, w, 0.95, t, c, fs=5.9 if LANG == "es" else 6.2)
         if i < len(steps) - 1:
             arrow(ax, x + w, 1.475, x + w + gap, 1.475)
-    ax.text(0.1, 2.35, "SIMA case study: where .mini sits in the microlearning pipeline", fontsize=8.5, weight="bold")
-    ax.text(0.1 + 2 * (w + gap) + w / 2, 0.75, "−38 % tokens vs\nJSON compact per bank", fontsize=6.2, color="#2a78d6", ha="center", va="top")
-    ax.text(0.1 + 3 * (w + gap) + w / 2, 0.75, "22/53 incoherent items\ncaught before persistence", fontsize=6.2, color="#eb6834", ha="center", va="top")
-    ax.text(0.1 + 5 * (w + gap) + w / 2, 0.75, "θ estimate, SE stop rule,\nexposure control", fontsize=6.2, color="#1baf7a", ha="center", va="top")
+    ax.text(0.1, 2.35, _("SIMA case study: where .mini sits in the microlearning pipeline"), fontsize=8.5, weight="bold")
+    ax.text(0.1 + 2 * (w + gap) + w / 2, 0.75, _("−38 % tokens vs\nJSON compact per bank"), fontsize=6.2, color="#2a78d6", ha="center", va="top")
+    ax.text(0.1 + 3 * (w + gap) + w / 2, 0.75, _("22/53 incoherent items\ncaught before persistence"), fontsize=6.2, color="#eb6834", ha="center", va="top")
+    ax.text(0.1 + 5 * (w + gap) + w / 2, 0.75, _("θ estimate, SE stop rule,\nexposure control"), fontsize=6.2, color="#1baf7a", ha="center", va="top")
     save(fig, "fig13_sima_pipeline")
 
 
@@ -356,8 +361,8 @@ def fig14():
     arity = {r["prefix"]: (r["arity"], r["extensions"]) for r in reg}
     fig, ax = plt.subplots(figsize=(DBL_W, 2.6))
     ax.set_xlim(0, 10); ax.set_ylim(0, 3.2); ax.axis("off"); ax.grid(False)
-    groups = [("education", ["a", "q", "card", "sum", "map", "r", "s", "code"], "#2a78d6"),
-              ("software / ops", ["tc", "us", "log"], "#eb6834"), ("NLP / commerce", ["ner", "cat", "cls"], "#1baf7a")]
+    groups = [(_("education"), ["a", "q", "card", "sum", "map", "r", "s", "code"], "#2a78d6"),
+              (_("software / ops"), ["tc", "us", "log"], "#eb6834"), (_("NLP / commerce"), ["ner", "cat", "cls"], "#1baf7a")]
     x = 0.15
     for name, ps, col in groups:
         ax.text(x, 2.95, name, fontsize=7.5, weight="bold", color=col)
@@ -366,8 +371,8 @@ def fig14():
             box(ax, cx, cy, 0.68, 0.72, f"{p}\n{arity[p][0]}+{arity[p][1]}", col, fs=6.6)
         x += 0.75 * min(4, len(ps)) + 0.35
     arrow(ax, 0.83, 2.41, 0.90, 2.41, color="#2a78d6", lw=1.2)
-    ax.text(0.15, 0.55, "Each box is a contract shipped with fixtures and a README; the number is core fields + extension fields. "
-            "q is a fork of a (same core, +3 trailing fields). All 14 pass `mini check-forks` and round-trip in both implementations.",
+    ax.text(0.15, 0.55, _("Each box is a contract shipped with fixtures and a README; the number is core fields + extension fields. ")
+            + _("q is a fork of a (same core, +3 trailing fields). All 14 pass `mini check-forks` and round-trip in both implementations."),
             fontsize=6.4, color=INK2, wrap=True)
     save(fig, "fig14_fork_gallery")
 
@@ -383,7 +388,7 @@ def fig15():
         vals = [(tokens(p, f, 500)["tokens"] - tokens(p, f, 100)["tokens"]) / 400 for p in prefixes]
         ax.bar(x + (k - 1.5) * 0.2, vals, width=0.19, color=COLOR[f], edgecolor="white", label=LABEL[f])
     ax.set_xticks(x); ax.set_xticklabels([f".mini-{p}" for p in prefixes], rotation=25, ha="right")
-    ax.set_ylabel("marginal tokens per record\n(slope n = 100 → 500)"); ax.legend(ncol=4, loc="upper right"); ax.grid(axis="x", visible=False)
+    ax.set_ylabel(_("marginal tokens per record\n(slope n = 100 → 500)")); ax.legend(ncol=4, loc="upper right"); ax.grid(axis="x", visible=False)
     save(fig, "fig15_marginal_cost")
 
 
