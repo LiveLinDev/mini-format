@@ -1,0 +1,5 @@
+brazo,cortes,recuperados_media,ideal_media,eficiencia_media_pct,recuperados_sobre_ideal_pct,cero_recuperados_pct,cero_ic_inf,cero_ic_sup,incorrectos_sin_aviso_total
+A,1440,3.09,3.22,89.2,96.0,2.0,1.4,2.9,1747
+B,1440,0.0,4.09,0.0,0.0,100.0,99.7,100.0,0
+C,960,0.0,5.38,0.0,0.0,100.0,99.6,100.0,0
+D,1440,4.67,4.88,90.3,95.8,4.7,3.7,5.9,266

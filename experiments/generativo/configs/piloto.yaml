@@ -1,0 +1,51 @@
+# Piloto del arnés V2/V3.
+# Con --adapter simulado valida el arnés de extremo a extremo sin red.
+# Con --adapter real sería un piloto pequeño (ver el dry-run antes de ejecutarlo).
+nombre: piloto
+descripcion: Piloto del arnés (3 tareas de extracción + 1 generativa, 3 modelos de 3 proveedores)
+semilla: 20260914
+idioma: es
+temperatura: 0.7
+max_tokens: 4096
+repeticiones: 6
+
+tareas: [ext-log, ext-cls, ext-tc, gen-card]
+brazos: [A, B, C, D, D+R]
+
+modelos:
+  - proveedor: openai
+    modelo: gpt-4.1-mini
+    estructurado: true
+    perfil_simulado: medio      # solo lo usa el adaptador simulado
+  - proveedor: anthropic
+    modelo: claude-haiku-4-5
+    estructurado: true
+    perfil_simulado: fuerte
+  - proveedor: groq
+    modelo: llama-3.3-70b-versatile
+    estructurado: false         # sin json_schema en este modelo: el brazo C se omite y se registra
+    perfil_simulado: debil
+
+experimentos:
+  v2:
+    activo: true
+  v3b:                          # llamadas con max_tokens bajo
+    activo: true
+    brazos: [A, B, C, D, D+R]
+    repeticiones: 3
+    fraccion_max_tokens: 0.5    # max_tokens = 50 % de los tokens de la salida de referencia del brazo
+  v3a:                          # cortes controlados sobre salidas guardadas de v2 (sin llamadas; lo ejecuta analyze.py)
+    cortes_por_muestra: 20
+    semilla: 7
+    brazos: [A, B, C, D]
+
+reparacion:
+  max_rondas: 1
+  incluir_entrada: false        # true añade el texto de origen a la solicitud de reparación
+  max_tokens_factor: 2.0
+  temperatura: 0.0
+
+estimacion:
+  factor_salida: 1.15           # salida esperada = tokens de la salida de referencia × factor
+  tasa_reparacion_esperada: 0.35
+  fraccion_lineas_reparadas: 0.2
