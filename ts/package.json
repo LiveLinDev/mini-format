@@ -1,0 +1,26 @@
+{
+  "name": "@mini-format/core",
+  "version": "1.0.0-alpha.0",
+  "description": "Biblioteca TypeScript de la notación .mini (SPEC 1.0): parser, serializador, bloque de especificación, registro de familias y lectura en streaming.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "keywords": ["llm", "structured-output", "serialization", "mini", "tokens"],
+  "engines": {
+    "node": ">=22.6"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "types": "./src/index.ts",
+  "files": ["src", "README.md"],
+  "scripts": {
+    "test": "node --experimental-strip-types --no-warnings --test test/*.test.ts",
+    "test:conformance": "node --experimental-strip-types --no-warnings --test test/conformance.test.ts"
+  },
+  "dependencies": {}
+}
