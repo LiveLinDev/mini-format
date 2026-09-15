@@ -1,0 +1,4 @@
+include SPEC.md FORKING.md LICENSE README.md setup.py
+recursive-include forks *.json *.md *.mini
+recursive-include conformance *.json *.md *.py
+recursive-include tests *.py

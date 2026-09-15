@@ -14,7 +14,23 @@ from typing import Dict, Iterator, List, Optional
 from .contract import Contract
 from .errors import E_FORK, MiniError
 
-DEFAULT_FORKS_DIR = Path(__file__).resolve().parent.parent.parent / "forks"
+PACKAGE_FORKS_DIR = Path(__file__).resolve().parent / "forks"
+REPO_FORKS_DIR = Path(__file__).resolve().parent.parent.parent / "forks"
+
+
+def default_forks_dir() -> Path:
+    """Directory of the official forks.
+
+    Installed package (wheel/sdist): the forks travel as package data in
+    ``minifmt/forks``.  Source checkout (``PYTHONPATH=src`` or editable
+    install): ``forks/`` at the repository root, the single source of truth.
+    """
+    if (PACKAGE_FORKS_DIR / "registry.json").is_file():
+        return PACKAGE_FORKS_DIR
+    return REPO_FORKS_DIR
+
+
+DEFAULT_FORKS_DIR = default_forks_dir()
 
 
 class Registry:
@@ -27,6 +43,8 @@ class Registry:
     def load(cls, forks_dir: Path | str = DEFAULT_FORKS_DIR) -> "Registry":
         reg = cls()
         forks_dir = Path(forks_dir)
+        if not forks_dir.is_dir():
+            raise FileNotFoundError(f"forks directory not found: {forks_dir}")
         for cpath in sorted(forks_dir.glob("*/contract.json")):
             c = Contract.load(cpath)
             if c.prefix in reg.contracts:

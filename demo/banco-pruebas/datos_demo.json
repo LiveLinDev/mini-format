@@ -1,0 +1,235 @@
+{
+ "contrato": {
+  "prefix": "rec",
+  "version": 1,
+  "name": "Reclamos de clientes",
+  "records_key": "reclamos",
+  "description": "Un reclamo por línea, extraído de mensajes de clientes.",
+  "header": {
+   "required": [
+    "n"
+   ],
+   "keys": {
+    "l": {
+     "type": "str",
+     "desc": "idioma"
+    }
+   }
+  },
+  "core": [
+   {
+    "name": "id",
+    "type": "str",
+    "unique": true
+   },
+   {
+    "name": "canal",
+    "type": "enum",
+    "values": [
+     "web",
+     "correo",
+     "telefono",
+     "tienda"
+    ]
+   },
+   {
+    "name": "categoria",
+    "type": "enum",
+    "values": [
+     "cobro",
+     "entrega",
+     "producto",
+     "atencion",
+     "otro"
+    ]
+   },
+   {
+    "name": "prioridad",
+    "type": "int",
+    "min": 1,
+    "max": 5
+   },
+   {
+    "name": "monto",
+    "type": "float",
+    "min": 0,
+    "optional": true
+   },
+   {
+    "name": "resumen",
+    "type": "str"
+   }
+  ],
+  "extensions": []
+ },
+ "verdad": [
+  {
+   "id": "R-1001",
+   "canal": "web",
+   "categoria": "cobro",
+   "prioridad": 4,
+   "monto": 129.9,
+   "resumen": "Cobro duplicado de la suscripción mensual"
+  },
+  {
+   "id": "R-1002",
+   "canal": "correo",
+   "categoria": "entrega",
+   "prioridad": 3,
+   "monto": null,
+   "resumen": "El pedido figura entregado pero no llegó"
+  },
+  {
+   "id": "R-1003",
+   "canal": "telefono",
+   "categoria": "producto",
+   "prioridad": 2,
+   "monto": 45.5,
+   "resumen": "Audífonos con falla en el lado izquierdo"
+  },
+  {
+   "id": "R-1004",
+   "canal": "web",
+   "categoria": "cobro",
+   "prioridad": 5,
+   "monto": 980.0,
+   "resumen": "Cargo no reconocido en tarjeta, solicita anulación"
+  },
+  {
+   "id": "R-1005",
+   "canal": "tienda",
+   "categoria": "entrega",
+   "prioridad": 3,
+   "monto": null,
+   "resumen": "Pedido 4471 | llegó incompleto, faltan 2 cajas"
+  },
+  {
+   "id": "R-1006",
+   "canal": "correo",
+   "categoria": "atencion",
+   "prioridad": 2,
+   "monto": null,
+   "resumen": "No recibió respuesta del área de soporte en 5 días"
+  },
+  {
+   "id": "R-1007",
+   "canal": "web",
+   "categoria": "producto",
+   "prioridad": 4,
+   "monto": 1299.0,
+   "resumen": "Laptop llegó con la pantalla rota"
+  },
+  {
+   "id": "R-1008",
+   "canal": "telefono",
+   "categoria": "cobro",
+   "prioridad": 3,
+   "monto": 59.9,
+   "resumen": "Le cobraron envío en una compra con envío gratis"
+  },
+  {
+   "id": "R-1009",
+   "canal": "web",
+   "categoria": "otro",
+   "prioridad": 1,
+   "monto": null,
+   "resumen": "Sugiere agregar pago con billetera digital"
+  },
+  {
+   "id": "R-1010",
+   "canal": "correo",
+   "categoria": "cobro",
+   "prioridad": 4,
+   "monto": 129.9,
+   "resumen": "Reembolso aprobado hace 15 días sin abono"
+  },
+  {
+   "id": "R-1011",
+   "canal": "tienda",
+   "categoria": "producto",
+   "prioridad": 2,
+   "monto": 35.0,
+   "resumen": "Talla distinta a la indicada en la etiqueta"
+  },
+  {
+   "id": "R-1012",
+   "canal": "web",
+   "categoria": "entrega",
+   "prioridad": 5,
+   "monto": null,
+   "resumen": "Entrega programada a otra dirección, urgente"
+  }
+ ],
+ "tokens": {
+  "o200k_base": {
+   "json": 507,
+   "json_indentado": 770,
+   "mini": 302,
+   "bloque": 370
+  },
+  "cl100k_base": {
+   "json": 526,
+   "json_indentado": 790,
+   "mini": 333,
+   "bloque": 398
+  }
+ },
+ "tokens_registro_mini": {
+  "R-1001": 26,
+  "R-1002": 20,
+  "R-1003": 24,
+  "R-1004": 24,
+  "R-1005": 28,
+  "R-1006": 23,
+  "R-1007": 20,
+  "R-1008": 27,
+  "R-1009": 19,
+  "R-1010": 27,
+  "R-1011": 23,
+  "R-1012": 20
+ },
+ "tokens_registro_json": {
+  "R-1001": 44,
+  "R-1002": 40,
+  "R-1003": 42,
+  "R-1004": 44,
+  "R-1005": 47,
+  "R-1006": 43,
+  "R-1007": 40,
+  "R-1008": 45,
+  "R-1009": 39,
+  "R-1010": 45,
+  "R-1011": 43,
+  "R-1012": 40
+ },
+ "escenarios": [
+  {
+   "id": "ok",
+   "titulo": "Respuesta correcta",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":3,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Reembolso aprobado hace 15 días sin abono\"},{\"id\":\"R-1011\",\"canal\":\"tienda\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":35.0,\"resumen\":\"Talla distinta a la indicada en la etiqueta\"},{\"id\":\"R-1012\",\"canal\":\"web\",\"categoria\":\"entrega\",\"prioridad\":5,\"monto\":null,\"resumen\":\"Entrega programada a otra dirección, urgente\"}]}",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 \\| llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente"
+  },
+  {
+   "id": "delim",
+   "titulo": "Texto con el separador",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":3,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Reembolso aprobado hace 15 días sin abono\"},{\"id\":\"R-1011\",\"canal\":\"tienda\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":35.0,\"resumen\":\"Talla distinta a la indicada en la etiqueta\"},{\"id\":\"R-1012\",\"canal\":\"web\",\"categoria\":\"entrega\",\"prioridad\":5,\"monto\":null,\"resumen\":\"Entrega programada a otra dirección, urgente\"}]}",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente"
+  },
+  {
+   "id": "trunc",
+   "titulo": "Respuesta cortada",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":3,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":12",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|12",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 \\| llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|12"
+  },
+  {
+   "id": "inval",
+   "titulo": "Valores fuera del contrato",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"reembolso\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":7,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Reembolso aprobado hace 15 días sin abono\"},{\"id\":\"R-1011\",\"canal\":\"tienda\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":35.0,\"resumen\":\"Talla distinta a la indicada en la etiqueta\"},{\"id\":\"R-1012\",\"canal\":\"web\",\"categoria\":\"entrega\",\"prioridad\":5,\"monto\":null,\"resumen\":\"Entrega programada a otra dirección, urgente\"}]}",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|reembolso|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|7|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|reembolso|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 \\| llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|7|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente"
+  }
+ ]
+}

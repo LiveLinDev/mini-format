@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from . import codec
 from .contract import Contract, Field
-from .errors import (E_ARITY, E_COUNT_MISMATCH, E_HEADER_KEY, E_LIST_ARITY,
+from .errors import (E_ARITY, E_COUNT_MISMATCH, E_ESCAPE, E_HEADER_KEY, E_LIST_ARITY,
                      E_MARKER, E_NO_COUNT, E_NO_HEADER, E_TYPE, E_UNIQUE,
                      E_UNKNOWN_PREFIX, MiniError, MiniValidationError)
 from .values import decode_scalar
@@ -36,6 +36,10 @@ class Document:
     contract: Contract
     errors: List[MiniError] = field(default_factory=list)
     lines: int = 0
+    header_line: int = 0                                     # physical line of the header
+    record_lines: List[int] = field(default_factory=list)   # physical line of each accepted record
+    record_line_count: int = 0                               # significant lines after the header
+    last_line: int = 0                                       # physical line of the last significant line
 
     def to_canonical(self) -> Dict[str, Any]:
         return {"prefix": self.prefix, "header": dict(self.header),
@@ -44,6 +48,66 @@ class Document:
     @property
     def ok(self) -> bool:
         return not self.errors
+
+    # ------------------------------------------------------ diagnostics
+    def invalid_lines(self) -> List[int]:
+        """Physical line numbers (1-based, ascending) of the records that were
+        rejected: exactly the lines a generator must regenerate."""
+        return sorted({e.line for e in self.errors if e.line > self.header_line})
+
+    def header_errors(self) -> List[MiniError]:
+        """Errors of the header line itself (E02, E03, E12, header E06/E07/E09...)."""
+        return [e for e in self.errors if self.header_line and e.line == self.header_line]
+
+    def document_errors(self) -> List[MiniError]:
+        """Document-level errors, reported with line 0 (E01, E04)."""
+        return [e for e in self.errors if e.line == 0]
+
+    @property
+    def missing_records(self) -> int:
+        """Records declared by ``n`` but absent from the text (typical of a
+        truncated generation); 0 when ``n`` is absent or not exceeded."""
+        n = self.header.get("n")
+        if isinstance(n, int) and not isinstance(n, bool) and n > self.record_line_count:
+            return n - self.record_line_count
+        return 0
+
+    @property
+    def truncated(self) -> bool:
+        """True when the document looks cut short: fewer record lines than
+        ``n`` declares, or a last record line with fewer fields than the core
+        or a dangling backslash."""
+        if self.missing_records:
+            return True
+        if not self.record_line_count:
+            return False
+        return any(e.line == self.last_line and (e.code == E_ARITY and "core requires" in e.message
+                                                 or e.code == E_ESCAPE and "dangling" in e.message)
+                   for e in self.errors)
+
+    def diagnostics(self) -> Dict[str, Any]:
+        """JSON-serialisable report for partial recovery and regeneration."""
+        return {
+            "ok": self.ok,
+            "prefix": self.prefix,
+            "declared_n": self.header.get("n"),
+            "record_lines": self.record_line_count,
+            "valid_records": len(self.records),
+            "valid_lines": list(self.record_lines),
+            "invalid_lines": self.invalid_lines(),
+            "missing_records": self.missing_records,
+            "truncated": self.truncated,
+            "errors": [e.to_dict() for e in self.errors],
+        }
+
+
+def _hashable(v: Any) -> Any:
+    """Key used by the uniqueness check (lists/objects are compared by content)."""
+    if isinstance(v, list):
+        return ("__list__",) + tuple(_hashable(x) for x in v)
+    if isinstance(v, dict):
+        return ("__dict__",) + tuple(sorted((k, _hashable(x)) for k, x in v.items()))
+    return v
 
 
 def _physical_lines(text: str) -> List[Tuple[int, str]]:
@@ -60,7 +124,15 @@ def _physical_lines(text: str) -> List[Tuple[int, str]]:
 
 def parse_header(line: str, lineno: int, contract: Contract, strict: bool) -> Tuple[str, Dict[str, Any], List[MiniError]]:
     errs: List[MiniError] = []
-    fields = codec.split_fields(line, contract.list_separator, lineno, strict)
+    try:
+        fields = codec.split_fields(line, contract.list_separator, lineno, strict=True)
+    except MiniError as e:
+        # Report the escape error on the header line and keep going with a
+        # tolerant reading, so that the records can still be validated.
+        errs.append(e)
+        trailing = len(line) - len(line.rstrip(codec.ESCAPE))
+        safe = line[:-1] if trailing % 2 else line  # drop a dangling backslash
+        fields = codec.split_fields(safe, contract.list_separator, lineno, strict=False)
     prefix = codec.text_of(fields[0]) if fields else ""
     header: Dict[str, Any] = {}
     for toks in fields[1:]:
@@ -176,9 +248,12 @@ def parse(text: str, contract: Contract, strict: bool = True) -> Document:
     records: List[Dict[str, Any]] = []
     uniques: Dict[str, Dict[Any, int]] = {f.name: {} for f in contract.fields if f.unique}
     sep = contract.list_separator
+    record_lines: List[int] = []
     for lineno, line in lines[1:]:
         try:
-            toks = codec.split_fields(line, sep, lineno, strict)
+            # Escapes are always validated: a lenient parse returns the records
+            # a strict parse would accept, plus the error list (SPEC §8).
+            toks = codec.split_fields(line, sep, lineno, strict=True)
         except MiniError as e:
             errors.append(e)
             continue
@@ -209,21 +284,26 @@ def parse(text: str, contract: Contract, strict: bool = True) -> Document:
                 rec[f.name] = val
         for name, seen in uniques.items():
             v = rec.get(name)
-            if v is not None:
-                if v in seen:
-                    rec_errs.append(MiniError(E_UNIQUE, lineno, f"duplicate value '{v}' (first seen line {seen[v]})", name))
-                else:
-                    seen[v] = lineno
+            if v is not None and _hashable(v) in seen:
+                rec_errs.append(MiniError(E_UNIQUE, lineno, f"duplicate value '{v}' (first seen line {seen[_hashable(v)]})", name))
         if rec_errs:
             errors.extend(rec_errs)
             continue
+        # only accepted records claim unique values, so a rejected line never
+        # causes a later valid record with the same value to be discarded
+        for name, seen in uniques.items():
+            v = rec.get(name)
+            if v is not None:
+                seen[_hashable(v)] = lineno
         records.append(rec)
+        record_lines.append(lineno)
     n = header.get("n")
     total_records = len(lines) - 1
     if isinstance(n, int) and n != total_records:
         errors.append(MiniError(E_COUNT_MISMATCH, 0, f"header declares n={n} but document has {total_records} record lines"))
     doc = Document(prefix=prefix, version=version, header=header, records=records,
-                   contract=contract, errors=errors, lines=len(lines))
+                   contract=contract, errors=errors, lines=len(lines), header_line=hl,
+                   record_lines=record_lines, record_line_count=total_records, last_line=lines[-1][0])
     if strict and errors:
         raise MiniValidationError(errors)
     return doc

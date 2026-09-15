@@ -1,0 +1,1163 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "truncation",
+  "cases": [
+    {
+      "id": "trunc-last-record-cut",
+      "category": "truncation",
+      "description": "último registro incompleto: se reporta su línea y se conservan los anteriores",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=3\nr1|5|0.5|true|red\nr2|6|0.5|true|green\nr3|7|0.5",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 3
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            },
+            {
+              "id": "r2",
+              "qty": 6,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "green",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E05",
+            "line": 4
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            4
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "trunc-last-record-cut-strict",
+      "category": "truncation",
+      "description": "el mismo documento truncado se rechaza en modo estricto",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=3\nr1|5|0.5|true|red\nr2|6|0.5|true|green\nr3|7|0.5",
+      "expected": {
+        "errors": [
+          {
+            "code": "E05",
+            "line": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "trunc-inside-value",
+      "category": "truncation",
+      "description": "corte en mitad de un valor enum (E10)",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=3\nr1|5|0.5|true|red\nr2|6|0.5|true|green\nr3|7|0.5|false|bl",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 3
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            },
+            {
+              "id": "r2",
+              "qty": 6,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "green",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E10",
+            "line": 4
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            4
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "trunc-missing-lines",
+      "category": "truncation",
+      "description": "faltan líneas completas: E04 y registros faltantes",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=3\nr1|5|0.5|true|red\nr2|6|0.5|true|green",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 3
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            },
+            {
+              "id": "r2",
+              "qty": 6,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "green",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E04",
+            "line": 0
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [],
+          "missing_records": 1
+        }
+      }
+    },
+    {
+      "id": "trunc-cut-and-missing",
+      "category": "truncation",
+      "description": "registro cortado y líneas faltantes",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=5\nr1|5|0.5|true|red\nr2|6|0",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 5
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E05",
+            "line": 3
+          },
+          {
+            "code": "E04",
+            "line": 0
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            3
+          ],
+          "missing_records": 3
+        }
+      }
+    },
+    {
+      "id": "trunc-dangling-escape",
+      "category": "truncation",
+      "description": "corte justo después de una barra invertida (E09)",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=2\nr1|5|0.5|true|red\nr2|5|0.5|true|red|a\\",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E09",
+            "line": 3
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            3
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "trunc-list-count-key",
+      "category": "truncation",
+      "description": "corte dentro de una lista con clave de conteo (E07)",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=2|k=2\nr1|x|1|a|p,q\nr2|x|1|a|p",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 2,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "x"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E07",
+            "line": 3
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            3
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "trunc-open-quote",
+      "category": "truncation",
+      "description": "corte dentro de un elemento entrecomillado (E09)",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=2\na*,b|a*|a|1\n\"a, b",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "one": [
+                "a",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E05",
+            "line": 3
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            3
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "trunc-header-only",
+      "category": "truncation",
+      "description": "solo la cabecera: todos los registros faltan",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=3",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 3
+          },
+          "rows": []
+        },
+        "errors": [
+          {
+            "code": "E04",
+            "line": 0
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [],
+          "missing_records": 3
+        }
+      }
+    },
+    {
+      "id": "trunc-empty-lenient",
+      "category": "truncation",
+      "description": "documento vacío en modo tolerante (E01, sin documento)",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "",
+      "expected": {
+        "errors": [
+          {
+            "code": "E01",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "trunc-a-family",
+      "category": "truncation",
+      "description": "familia a: último ítem cortado tras el tema",
+      "mode": "lenient",
+      "family": "a",
+      "input": "a|n=12|m=IRT3PL|d=20260603|l=es|t=evaluación transversal|bd=1,1,1,1,1,1|cat=0,-3,3,0.3,12,SH|k=4\ni1|L1|Biología|¿Dónde ocurre principalmente la fotosíntesis?|cloroplastos*,núcleo,mitocondria,ribosoma|0.9,-1,0.25|1|biología,0.2,low\ni2|L2|Química|¿Qué representa el pH de una solución?|acidez o basicidad*,masa molecular,temperatura,presión osmótica|1.1,-0.3,0.25|2|química,0.2,medium\ni3|L3|Matemática|Si 3x+6=18, ¿cuál es el valor de x?|4*,6,8,12|1.4,0.2,0.2|3|matemática,0.25,medium\ni4|L4|Historia|¿Qué factor explica mejor la caída del Imperio romano de Occidente?|presiones militares y crisis internas*,un solo terremoto,la invención de la imprenta,la conquista española|1.7,0.8,0.2|4|historia,0.18,high\ni5|L5|Literatura|Evalúa cuál opción interpreta mejor un narrador no confiable.|su relato debe contrastarse con evidencias*,siempre dice la verdad,solo narra en tercera persona,no participa en la trama|2,1.2,0.15|5|literatura,0.15,high\ni6|L6|Computación|¿Qué solución diseñarías para reducir errores en una API?|validación de esquema y pruebas automatizadas*,eliminar logs,usar variables globales,evitar documentación|2.3,1.7,0.15|5|computación,0.15,high\ni7|L1|Física|¿Cuál es la unidad de fuerza en el SI?|newton*,joule,watt,pascal|0.9,-1.2,0.25|1|física,0.2,low\ni8|L2|Geografía|¿Qué describe una cuenca hidrográfica?|territorio drenado por un río*,altura de una montaña,tipo de clima,frontera política|1.1,-0.2,0.25|2|geografía,0.22,medium\ni9|L3|Comunicación|Elige el conector que completa una relación de causa.|porque*,sin embargo,además,por ejemplo|1.4,0.1,0.2|3|comunicación,0.25,medium\ni10|L4|Economía|Analiza qué sucede si sube el precio y baja la demanda.|disminuye la cantidad demandada*,sube la oferta siempre,desaparece el mercado,no cambia el equilibrio|1.7,0.7,0.2|4|economía,0.18,high\ni11|L5|Ética|¿Qué criterio permite evaluar mejor una decisión pública?|impacto\\, justicia y evidencia*,popularidad inmediata,costo únicamente,autoridad del emisor|2,1.3,0.15|5|ética,0.15,high\ni12|L6|Arte",
+      "expected": {
+        "canonical": {
+          "prefix": "a",
+          "header": {
+            "n": 12,
+            "m": "IRT3PL",
+            "d": "20260603",
+            "l": "es",
+            "t": "evaluación transversal",
+            "bd": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "cat": {
+              "theta_init": 0.0,
+              "theta_min": -3.0,
+              "theta_max": 3.0,
+              "se_stop": 0.3,
+              "max_items": 12,
+              "exposure_ctrl": "SH"
+            },
+            "k": 4,
+            "v": 1
+          },
+          "items": [
+            {
+              "id": "i1",
+              "bloom": "L1",
+              "topic": "Biología",
+              "statement": "¿Dónde ocurre principalmente la fotosíntesis?",
+              "options": [
+                "cloroplastos",
+                "núcleo",
+                "mitocondria",
+                "ribosoma"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 0.9,
+                "b": -1.0,
+                "c": 0.25
+              },
+              "difficulty": 1,
+              "cat": {
+                "area": "biología",
+                "exposure_cap": 0.2,
+                "demand": "low"
+              }
+            },
+            {
+              "id": "i2",
+              "bloom": "L2",
+              "topic": "Química",
+              "statement": "¿Qué representa el pH de una solución?",
+              "options": [
+                "acidez o basicidad",
+                "masa molecular",
+                "temperatura",
+                "presión osmótica"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 1.1,
+                "b": -0.3,
+                "c": 0.25
+              },
+              "difficulty": 2,
+              "cat": {
+                "area": "química",
+                "exposure_cap": 0.2,
+                "demand": "medium"
+              }
+            },
+            {
+              "id": "i3",
+              "bloom": "L3",
+              "topic": "Matemática",
+              "statement": "Si 3x+6=18, ¿cuál es el valor de x?",
+              "options": [
+                "4",
+                "6",
+                "8",
+                "12"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 1.4,
+                "b": 0.2,
+                "c": 0.2
+              },
+              "difficulty": 3,
+              "cat": {
+                "area": "matemática",
+                "exposure_cap": 0.25,
+                "demand": "medium"
+              }
+            },
+            {
+              "id": "i4",
+              "bloom": "L4",
+              "topic": "Historia",
+              "statement": "¿Qué factor explica mejor la caída del Imperio romano de Occidente?",
+              "options": [
+                "presiones militares y crisis internas",
+                "un solo terremoto",
+                "la invención de la imprenta",
+                "la conquista española"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 1.7,
+                "b": 0.8,
+                "c": 0.2
+              },
+              "difficulty": 4,
+              "cat": {
+                "area": "historia",
+                "exposure_cap": 0.18,
+                "demand": "high"
+              }
+            },
+            {
+              "id": "i5",
+              "bloom": "L5",
+              "topic": "Literatura",
+              "statement": "Evalúa cuál opción interpreta mejor un narrador no confiable.",
+              "options": [
+                "su relato debe contrastarse con evidencias",
+                "siempre dice la verdad",
+                "solo narra en tercera persona",
+                "no participa en la trama"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 2.0,
+                "b": 1.2,
+                "c": 0.15
+              },
+              "difficulty": 5,
+              "cat": {
+                "area": "literatura",
+                "exposure_cap": 0.15,
+                "demand": "high"
+              }
+            },
+            {
+              "id": "i6",
+              "bloom": "L6",
+              "topic": "Computación",
+              "statement": "¿Qué solución diseñarías para reducir errores en una API?",
+              "options": [
+                "validación de esquema y pruebas automatizadas",
+                "eliminar logs",
+                "usar variables globales",
+                "evitar documentación"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 2.3,
+                "b": 1.7,
+                "c": 0.15
+              },
+              "difficulty": 5,
+              "cat": {
+                "area": "computación",
+                "exposure_cap": 0.15,
+                "demand": "high"
+              }
+            },
+            {
+              "id": "i7",
+              "bloom": "L1",
+              "topic": "Física",
+              "statement": "¿Cuál es la unidad de fuerza en el SI?",
+              "options": [
+                "newton",
+                "joule",
+                "watt",
+                "pascal"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 0.9,
+                "b": -1.2,
+                "c": 0.25
+              },
+              "difficulty": 1,
+              "cat": {
+                "area": "física",
+                "exposure_cap": 0.2,
+                "demand": "low"
+              }
+            },
+            {
+              "id": "i8",
+              "bloom": "L2",
+              "topic": "Geografía",
+              "statement": "¿Qué describe una cuenca hidrográfica?",
+              "options": [
+                "territorio drenado por un río",
+                "altura de una montaña",
+                "tipo de clima",
+                "frontera política"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 1.1,
+                "b": -0.2,
+                "c": 0.25
+              },
+              "difficulty": 2,
+              "cat": {
+                "area": "geografía",
+                "exposure_cap": 0.22,
+                "demand": "medium"
+              }
+            },
+            {
+              "id": "i9",
+              "bloom": "L3",
+              "topic": "Comunicación",
+              "statement": "Elige el conector que completa una relación de causa.",
+              "options": [
+                "porque",
+                "sin embargo",
+                "además",
+                "por ejemplo"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 1.4,
+                "b": 0.1,
+                "c": 0.2
+              },
+              "difficulty": 3,
+              "cat": {
+                "area": "comunicación",
+                "exposure_cap": 0.25,
+                "demand": "medium"
+              }
+            },
+            {
+              "id": "i10",
+              "bloom": "L4",
+              "topic": "Economía",
+              "statement": "Analiza qué sucede si sube el precio y baja la demanda.",
+              "options": [
+                "disminuye la cantidad demandada",
+                "sube la oferta siempre",
+                "desaparece el mercado",
+                "no cambia el equilibrio"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 1.7,
+                "b": 0.7,
+                "c": 0.2
+              },
+              "difficulty": 4,
+              "cat": {
+                "area": "economía",
+                "exposure_cap": 0.18,
+                "demand": "high"
+              }
+            },
+            {
+              "id": "i11",
+              "bloom": "L5",
+              "topic": "Ética",
+              "statement": "¿Qué criterio permite evaluar mejor una decisión pública?",
+              "options": [
+                "impacto, justicia y evidencia",
+                "popularidad inmediata",
+                "costo únicamente",
+                "autoridad del emisor"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 2.0,
+                "b": 1.3,
+                "c": 0.15
+              },
+              "difficulty": 5,
+              "cat": {
+                "area": "ética",
+                "exposure_cap": 0.15,
+                "demand": "high"
+              }
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E05",
+            "line": 13
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            13
+          ],
+          "missing_records": 0
+        }
+      }
+    }
+  ]
+}

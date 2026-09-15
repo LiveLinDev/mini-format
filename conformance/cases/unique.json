@@ -1,0 +1,390 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "unique",
+  "cases": [
+    {
+      "id": "unique-dup",
+      "category": "unique",
+      "description": "valor repetido en campo unique (E11)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=2\nr1|5|0.5|true|red\nr1|6|0.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E11",
+            "line": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "unique-dup-lenient",
+      "category": "unique",
+      "description": "modo tolerante conserva la primera aparición",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=3\nr1|5|0.5|true|red\nr1|6|0.5|true|red\nr2|7|0.5|true|red",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 3
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            },
+            {
+              "id": "r2",
+              "qty": 7,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E11",
+            "line": 3
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            3
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "unique-distinct",
+      "category": "unique",
+      "description": "valores distintos son válidos",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=2\nr1|5|0.5|true|red\nR1|5|0.5|true|red",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            },
+            {
+              "id": "R1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "unique-after-escape",
+      "category": "unique",
+      "description": "la unicidad compara el valor ya decodificado (E11)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=2\na\\|b|5|0.5|true|red\na\\|b|6|0.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E11",
+            "line": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "unique-rejected-line-does-not-claim",
+      "category": "unique",
+      "description": "una línea rechazada no reserva el valor único",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=2\nr1|500|0.5|true|red\nr1|5|0.5|true|red",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E13",
+            "line": 2
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            2
+          ],
+          "missing_records": 0
+        }
+      }
+    }
+  ]
+}

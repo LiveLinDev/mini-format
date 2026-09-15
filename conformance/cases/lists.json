@@ -1,0 +1,1103 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "lists",
+  "cases": [
+    {
+      "id": "list-basic",
+      "category": "lists",
+      "description": "listas de str, int y enum",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1,2|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "x"
+              ],
+              "ns": [
+                1,
+                2
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        },
+        "mini": "ls|n=1|k=2\nr1|x|1,2|a|p,q"
+      }
+    },
+    {
+      "id": "list-empty",
+      "category": "lists",
+      "description": "lista vacía sin mínimo es []",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x||a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "x"
+              ],
+              "ns": [],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-trim-elements",
+      "category": "lists",
+      "description": "espacios alrededor de los elementos se recortan",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1| x , y |1 , 2| a , b |p , q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "x",
+                "y"
+              ],
+              "ns": [
+                1,
+                2
+              ],
+              "es": [
+                "a",
+                "b"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-min",
+      "category": "lists",
+      "description": "lista bajo el mínimo (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1||1|a|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-max",
+      "category": "lists",
+      "description": "lista sobre el máximo (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|a,b,c,d|1|a|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-count-key-less",
+      "category": "lists",
+      "description": "lista con menos elementos que la clave de conteo (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1|a|p",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-count-key-collision",
+      "category": "lists",
+      "description": "coma sin proteger rompe la aridad fijada por k (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1|a|p, y más,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-count-key-escaped",
+      "category": "lists",
+      "description": "coma escapada respeta la aridad de k",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1|a|p\\, y más,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "x"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p, y más",
+                "q"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-int-item-bad",
+      "category": "lists",
+      "description": "elemento entero inválido (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1,dos|a|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-enum-item-bad",
+      "category": "lists",
+      "description": "elemento fuera de la enumeración (E10)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1|a,c|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E10",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-marker-not-allowed",
+      "category": "lists",
+      "description": "marcador * en lista simple (E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x*|1|a|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-escaped-star",
+      "category": "lists",
+      "description": "\\* en lista simple es un asterisco literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x\\*|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "x*"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-star-inside",
+      "category": "lists",
+      "description": "un * que no es el último carácter es literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|a*b|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a*b"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-custom-separator",
+      "category": "lists",
+      "description": "separador ';' definido por el contrato; ',' es literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sm",
+        "records_key": "rows",
+        "list_separator": ";",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str"
+          },
+          {
+            "name": "opts",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "opts",
+              "selected": "ans"
+            }
+          }
+        ]
+      },
+      "input": "sm|n=1\nr1|a, b;c|uno, dos*;tres",
+      "expected": {
+        "canonical": {
+          "prefix": "sm",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a, b",
+                "c"
+              ],
+              "opts": [
+                "uno, dos",
+                "tres"
+              ],
+              "ans": 0
+            }
+          ]
+        },
+        "mini": "sm|n=1\nr1|a, b;c|uno, dos*;tres"
+      }
+    },
+    {
+      "id": "list-custom-separator-escape",
+      "category": "lists",
+      "description": "\\; protege el separador personalizado",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sm",
+        "records_key": "rows",
+        "list_separator": ";",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str"
+          },
+          {
+            "name": "opts",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "opts",
+              "selected": "ans"
+            }
+          }
+        ]
+      },
+      "input": "sm|n=1\nr1|a\\;b|x;y*",
+      "expected": {
+        "canonical": {
+          "prefix": "sm",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a;b"
+              ],
+              "opts": [
+                "x",
+                "y"
+              ],
+              "ans": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-custom-separator-quoted",
+      "category": "lists",
+      "description": "comillas protegen el separador personalizado",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sm",
+        "records_key": "rows",
+        "list_separator": ";",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str"
+          },
+          {
+            "name": "opts",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "opts",
+              "selected": "ans"
+            }
+          }
+        ]
+      },
+      "input": "sm|n=1\nr1|\"a;b\"|\"x;y\"*;z",
+      "expected": {
+        "canonical": {
+          "prefix": "sm",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a;b"
+              ],
+              "opts": [
+                "x;y",
+                "z"
+              ],
+              "ans": 0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

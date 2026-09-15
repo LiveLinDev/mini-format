@@ -1,0 +1,1253 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "quotes",
+  "cases": [
+    {
+      "id": "quote-basic",
+      "category": "quotes",
+      "description": "elemento entre comillas con separador literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"impacto, justicia y evidencia\"*,otra|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "impacto, justicia y evidencia",
+                "otra"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-canonical-is-escaped",
+      "category": "quotes",
+      "description": "el serializador emite la forma escapada del elemento entrecomillado",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": {
+        "prefix": "mk",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "one": [
+              "impacto, justicia y evidencia",
+              "otra"
+            ],
+            "one_sel": 0,
+            "some": [
+              "a"
+            ],
+            "some_sel": [
+              0
+            ],
+            "maybe": [
+              "a"
+            ],
+            "maybe_sel": null,
+            "anyk": [
+              1
+            ],
+            "anyk_sel": []
+          }
+        ]
+      },
+      "expected": {
+        "mini": "mk|n=1\nimpacto\\, justicia y evidencia*,otra|a*|a|1"
+      }
+    },
+    {
+      "id": "quote-marker-inside",
+      "category": "quotes",
+      "description": "el marcador puede ir justo antes de la comilla de cierre",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a, b*\",c|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a, b",
+                "c"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-escaped-star-inside",
+      "category": "quotes",
+      "description": "\\* antes de la comilla de cierre es literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a\\*\",c*|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a*",
+                "c"
+              ],
+              "one_sel": 1,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-star-literal-inside",
+      "category": "quotes",
+      "description": "* en medio de un elemento entrecomillado es literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a*b, c\",d*|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a*b, c",
+                "d"
+              ],
+              "one_sel": 1,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-doubled",
+      "category": "quotes",
+      "description": "\"\" dentro de comillas es una comilla",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"dijo \"\"sí\"\"\"*,no|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "dijo \"sí\"",
+                "no"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-backslash-inside",
+      "category": "quotes",
+      "description": "los escapes siguen activos dentro de comillas",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a\\|b, c\\\\d\"*,e|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a|b, c\\d",
+                "e"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-whitespace-around",
+      "category": "quotes",
+      "description": "espacios alrededor de un elemento entrecomillado se ignoran",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n  \"a, b\"  * , c|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a, b",
+                "c"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-inner-spaces-kept",
+      "category": "quotes",
+      "description": "espacios dentro de las comillas se preservan",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\" a \"*,b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                " a ",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-not-first-literal",
+      "category": "quotes",
+      "description": "una comilla que no es el primer carácter es literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\nel \"mejor\"*,b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "el \"mejor\"",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-empty",
+      "category": "quotes",
+      "description": "elemento entrecomillado vacío",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"\"*,b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-unbalanced",
+      "category": "quotes",
+      "description": "comilla sin cerrar (E09)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a, b*,c|a*|a|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "quote-text-after-close",
+      "category": "quotes",
+      "description": "texto entre la comilla de cierre y el separador (E09)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a\" b*,c|a*|a|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "quote-equivalent-to-escape",
+      "category": "quotes",
+      "description": "comillas y escapes denotan el mismo valor",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=2\n\"x, y\"*,z|a*|a|1\nx\\, y*,z|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "one": [
+                "x, y",
+                "z"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            },
+            {
+              "one": [
+                "x, y",
+                "z"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-in-plain-list",
+      "category": "quotes",
+      "description": "comillas en una lista simple de la familia a",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|\"a, b\",c|1|a|\"p, q\",r",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a, b",
+                "c"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p, q",
+                "r"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
