@@ -1,0 +1,98 @@
+{
+  "nombre": "piloto",
+  "adaptador": "simulado",
+  "simulado": true,
+  "advertencia": "RESULTADOS SIMULADOS: solo validan el arnés; no son resultados del estudio",
+  "config": {
+    "nombre": "piloto",
+    "descripcion": "Piloto del arnés (3 tareas de extracción + 1 generativa, 3 modelos de 3 proveedores)",
+    "semilla": 20260914,
+    "idioma": "es",
+    "temperatura": 0.7,
+    "max_tokens": 4096,
+    "repeticiones": 6,
+    "tareas": [
+      "ext-log",
+      "ext-cls",
+      "ext-tc",
+      "gen-card"
+    ],
+    "brazos": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "D+R"
+    ],
+    "modelos": [
+      {
+        "proveedor": "openai",
+        "modelo": "gpt-4.1-mini",
+        "estructurado": true,
+        "perfil_simulado": "medio"
+      },
+      {
+        "proveedor": "anthropic",
+        "modelo": "claude-haiku-4-5",
+        "estructurado": true,
+        "perfil_simulado": "fuerte"
+      },
+      {
+        "proveedor": "groq",
+        "modelo": "llama-3.3-70b-versatile",
+        "estructurado": false,
+        "perfil_simulado": "debil"
+      }
+    ],
+    "experimentos": {
+      "v2": {
+        "activo": true
+      },
+      "v3b": {
+        "activo": true,
+        "brazos": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "D+R"
+        ],
+        "repeticiones": 3,
+        "fraccion_max_tokens": 0.5
+      },
+      "v3a": {
+        "cortes_por_muestra": 20,
+        "semilla": 7,
+        "brazos": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      }
+    },
+    "reparacion": {
+      "max_rondas": 1,
+      "incluir_entrada": false,
+      "max_tokens_factor": 2.0,
+      "temperatura": 0.0
+    },
+    "estimacion": {
+      "factor_salida": 1.15,
+      "tasa_reparacion_esperada": 0.35,
+      "fraccion_lineas_reparadas": 0.2
+    }
+  },
+  "commit": "0cfa477e3096c273764f04d903d53215a89532b4",
+  "python": "3.9.0",
+  "unidades": 504,
+  "omitidas": [
+    "v2: brazo C omitido para groq:llama-3.3-70b-versatile (sin modo estructurado declarado) en 4 tarea(s)",
+    "v3b: brazo C omitido para groq:llama-3.3-70b-versatile (sin modo estructurado declarado) en 4 tarea(s)"
+  ],
+  "estimacion": {
+    "llamadas": 396,
+    "costo_esperado_usd": 1.067541628425,
+    "costo_maximo_usd": 3.652806636
+  }
+}
