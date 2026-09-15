@@ -1,0 +1,25 @@
+{
+  "_nota": "PRECIOS PROVISIONALES. Ninguno ha sido verificado por el equipo contra la página oficial de precios del proveedor en la fecha de ejecución. Antes de un estudio real: confirmar cada valor, poner verificado=true y anotar fecha_consulta. Unidades: USD por millón de tokens.",
+  "moneda": "USD",
+  "unidad": "por_millon_tokens",
+  "factor_tokenizador": {
+    "_nota": "Supuesto para el dry-run: los tokens de entrada se cuentan con o200k_base (tiktoken) y se multiplican por este factor para aproximar el tokenizador de cada proveedor. Supuestos conservadores, no medidos.",
+    "openai": 1.0,
+    "anthropic": 1.25,
+    "groq": 1.1,
+    "simulado": 1.0
+  },
+  "modelos": {
+    "openai:gpt-4.1-mini": {"entrada": 0.40, "salida": 1.60, "verificado": false, "fuente": "memoria del equipo técnico; confirmar en la página oficial de precios de OpenAI", "fecha_consulta": null},
+    "openai:gpt-4.1": {"entrada": 2.00, "salida": 8.00, "verificado": false, "fuente": "memoria del equipo técnico; confirmar", "fecha_consulta": null},
+    "openai:gpt-4o-mini": {"entrada": 0.15, "salida": 0.60, "verificado": false, "fuente": "memoria del equipo técnico; confirmar", "fecha_consulta": null},
+    "openai:gpt-5-mini": {"entrada": 0.25, "salida": 2.00, "verificado": false, "fuente": "memoria del equipo técnico; confirmar. Modelo de razonamiento: los tokens de razonamiento se facturan como salida", "fecha_consulta": null},
+    "anthropic:claude-haiku-4-5": {"entrada": 1.00, "salida": 5.00, "verificado": false, "fuente": "tabla de referencia de modelos con fecha 2026-06-24; confirmar en la página oficial de precios de Anthropic", "fecha_consulta": null},
+    "anthropic:claude-sonnet-5": {"entrada": 2.00, "salida": 10.00, "verificado": false, "fuente": "tabla de referencia de modelos con fecha 2026-06-24; confirmar. No acepta temperature", "fecha_consulta": null},
+    "anthropic:claude-opus-5": {"entrada": 5.00, "salida": 25.00, "verificado": false, "fuente": "tabla de referencia de modelos con fecha 2026-06-24; confirmar. No acepta temperature; razonamiento activo por defecto", "fecha_consulta": null},
+    "groq:llama-3.3-70b-versatile": {"entrada": 0.59, "salida": 0.79, "verificado": false, "fuente": "memoria del equipo técnico; confirmar en la página oficial de precios de Groq", "fecha_consulta": null},
+    "groq:llama-3.1-8b-instant": {"entrada": 0.05, "salida": 0.08, "verificado": false, "fuente": "memoria del equipo técnico; confirmar", "fecha_consulta": null},
+    "groq:openai/gpt-oss-120b": {"entrada": 0.15, "salida": 0.75, "verificado": false, "fuente": "memoria del equipo técnico; confirmar. Modelo de razonamiento", "fecha_consulta": null},
+    "groq:openai/gpt-oss-20b": {"entrada": 0.10, "salida": 0.50, "verificado": false, "fuente": "memoria del equipo técnico; confirmar. Modelo de razonamiento", "fecha_consulta": null}
+  }
+}

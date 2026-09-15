@@ -1,0 +1,69 @@
+# Matriz PROPUESTA para el estudio real (no ejecutada).
+# 4 modelos de 3 proveedores, 14 tareas de 14 dominios distintos (10 de extracción + 4 generativas), 30 repeticiones por celda.
+# Antes de ejecutar: confirmar modelos y precios (precios.json), correr --dry-run y fijar --max-costo-usd.
+nombre: estudio
+descripcion: Estudio V2/V3 — fiabilidad de generación y recuperación ante truncamiento
+semilla: 20260915
+idioma: es
+temperatura: 0.7
+max_tokens: 8192
+repeticiones: 30
+
+tareas:
+  # extracción (10 dominios)
+  - ext-log     # operaciones / observabilidad
+  - ext-cls     # clasificación de soporte (lista marcada con clave de conteo)
+  - ext-tc      # casos de prueba de software
+  - ext-ner     # anotación de entidades
+  - ext-cat     # catálogo de productos
+  - ext-map     # mapas conceptuales
+  - ext-sum     # segmentos de resumen
+  - ext-us      # historias de usuario
+  - ext-a       # ítems de evaluación (lista marcada + tuplas)
+  - ext-s       # ítems de encuesta
+  # generativas (evaluación contra contrato)
+  - gen-card    # tarjetas de estudio
+  - gen-q       # cuestionario formativo
+  - gen-r       # rúbricas
+  - gen-code    # ejercicios de programación
+brazos: [A, B, C, D, D+R]
+
+modelos:
+  - proveedor: openai
+    modelo: gpt-4.1-mini
+    estructurado: true
+  - proveedor: anthropic
+    modelo: claude-haiku-4-5
+    estructurado: true
+  - proveedor: groq
+    modelo: llama-3.3-70b-versatile
+    estructurado: false          # brazo C omitido para este modelo
+  - proveedor: groq
+    modelo: openai/gpt-oss-120b
+    estructurado: true           # confirmar soporte de json_schema estricto antes de ejecutar
+
+experimentos:
+  v2:
+    activo: true
+  v3b:
+    activo: true
+    brazos: [A, B, C, D, D+R]
+    repeticiones: 10
+    fraccion_max_tokens: 0.5
+  v3a:
+    cortes_por_muestra: 20
+    semilla: 7
+    brazos: [A, B, C, D]
+
+reparacion:
+  max_rondas: 1
+  incluir_entrada: false
+  max_tokens_factor: 2.0
+  temperatura: 0.0
+
+estimacion:
+  factor_salida: 1.15
+  tasa_reparacion_esperada: 0.35
+  fraccion_lineas_reparadas: 0.2
+
+max_fallos_seguidos: 5
