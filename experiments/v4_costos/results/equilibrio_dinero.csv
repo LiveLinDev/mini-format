@@ -1,0 +1,73 @@
+proveedor,modelo,cache,instr_mini,instr_json,precio_entrada_efectivo,precio_salida,razon_entrada_salida,n_eq_mediana,n_eq_min,n_eq_max,n_eq_media
+OpenAI,GPT-5.4,False,mini_spec,json_schema,2.5,15.0,0.166667,1.183955,1.0,2.043478,1.26911
+OpenAI,GPT-5.4,False,mini_spec,json_ejemplo,2.5,15.0,0.166667,2.337179,1.0,3.942029,2.345554
+OpenAI,GPT-5.4,False,mini_spec_ejemplo,json_schema_ejemplo,2.5,15.0,0.166667,1.008658,1.0,1.855072,1.152494
+OpenAI,GPT-5.4,True,mini_spec,json_schema,0.25,15.0,0.016667,1.0,1.0,1.0,1.0
+OpenAI,GPT-5.4,True,mini_spec,json_ejemplo,0.25,15.0,0.016667,1.0,1.0,1.0,1.0
+OpenAI,GPT-5.4,True,mini_spec_ejemplo,json_schema_ejemplo,0.25,15.0,0.016667,1.0,1.0,1.0,1.0
+OpenAI,GPT-5.4 mini,False,mini_spec,json_schema,0.75,4.5,0.166667,1.183955,1.0,2.043478,1.26911
+OpenAI,GPT-5.4 mini,False,mini_spec,json_ejemplo,0.75,4.5,0.166667,2.337179,1.0,3.942029,2.345554
+OpenAI,GPT-5.4 mini,False,mini_spec_ejemplo,json_schema_ejemplo,0.75,4.5,0.166667,1.008658,1.0,1.855072,1.152494
+OpenAI,GPT-5.4 mini,True,mini_spec,json_schema,0.075,4.5,0.016667,1.0,1.0,1.0,1.0
+OpenAI,GPT-5.4 mini,True,mini_spec,json_ejemplo,0.075,4.5,0.016667,1.0,1.0,1.0,1.0
+OpenAI,GPT-5.4 mini,True,mini_spec_ejemplo,json_schema_ejemplo,0.075,4.5,0.016667,1.0,1.0,1.0,1.0
+OpenAI,GPT-5 mini,False,mini_spec,json_schema,0.25,2.0,0.125,1.0,1.0,1.478261,1.062314
+OpenAI,GPT-5 mini,False,mini_spec,json_ejemplo,0.25,2.0,0.125,1.719623,1.0,2.902174,1.749822
+OpenAI,GPT-5 mini,False,mini_spec_ejemplo,json_schema_ejemplo,0.25,2.0,0.125,1.0,1.0,1.336957,1.03067
+OpenAI,GPT-5 mini,True,mini_spec,json_schema,0.025,2.0,0.0125,1.0,1.0,1.0,1.0
+OpenAI,GPT-5 mini,True,mini_spec,json_ejemplo,0.025,2.0,0.0125,1.0,1.0,1.0,1.0
+OpenAI,GPT-5 mini,True,mini_spec_ejemplo,json_schema_ejemplo,0.025,2.0,0.0125,1.0,1.0,1.0,1.0
+Anthropic,Claude Opus 5,False,mini_spec,json_schema,5.0,25.0,0.2,1.447653,1.0,2.495652,1.498094
+Anthropic,Claude Opus 5,False,mini_spec,json_ejemplo,5.0,25.0,0.2,2.829993,1.0,4.773913,2.82214
+Anthropic,Claude Opus 5,False,mini_spec_ejemplo,json_schema_ejemplo,5.0,25.0,0.2,1.227167,1.0,2.269565,1.330422
+Anthropic,Claude Opus 5,True,mini_spec,json_schema,0.5,25.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Opus 5,True,mini_spec,json_ejemplo,0.5,25.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Opus 5,True,mini_spec_ejemplo,json_schema_ejemplo,0.5,25.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Sonnet 5,False,mini_spec,json_schema,2.0,10.0,0.2,1.447653,1.0,2.495652,1.498094
+Anthropic,Claude Sonnet 5,False,mini_spec,json_ejemplo,2.0,10.0,0.2,2.829993,1.0,4.773913,2.82214
+Anthropic,Claude Sonnet 5,False,mini_spec_ejemplo,json_schema_ejemplo,2.0,10.0,0.2,1.227167,1.0,2.269565,1.330422
+Anthropic,Claude Sonnet 5,True,mini_spec,json_schema,0.2,10.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Sonnet 5,True,mini_spec,json_ejemplo,0.2,10.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Sonnet 5,True,mini_spec_ejemplo,json_schema_ejemplo,0.2,10.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Haiku 4.5,False,mini_spec,json_schema,1.0,5.0,0.2,1.447653,1.0,2.495652,1.498094
+Anthropic,Claude Haiku 4.5,False,mini_spec,json_ejemplo,1.0,5.0,0.2,2.829993,1.0,4.773913,2.82214
+Anthropic,Claude Haiku 4.5,False,mini_spec_ejemplo,json_schema_ejemplo,1.0,5.0,0.2,1.227167,1.0,2.269565,1.330422
+Anthropic,Claude Haiku 4.5,True,mini_spec,json_schema,0.1,5.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Haiku 4.5,True,mini_spec,json_ejemplo,0.1,5.0,0.02,1.0,1.0,1.0,1.0
+Anthropic,Claude Haiku 4.5,True,mini_spec_ejemplo,json_schema_ejemplo,0.1,5.0,0.02,1.0,1.0,1.0,1.0
+Google,Gemini 3.5 Flash,False,mini_spec,json_schema,1.5,9.0,0.166667,1.183955,1.0,2.043478,1.26911
+Google,Gemini 3.5 Flash,False,mini_spec,json_ejemplo,1.5,9.0,0.166667,2.337179,1.0,3.942029,2.345554
+Google,Gemini 3.5 Flash,False,mini_spec_ejemplo,json_schema_ejemplo,1.5,9.0,0.166667,1.008658,1.0,1.855072,1.152494
+Google,Gemini 3.5 Flash,True,mini_spec,json_schema,0.15,9.0,0.016667,1.0,1.0,1.0,1.0
+Google,Gemini 3.5 Flash,True,mini_spec,json_ejemplo,0.15,9.0,0.016667,1.0,1.0,1.0,1.0
+Google,Gemini 3.5 Flash,True,mini_spec_ejemplo,json_schema_ejemplo,0.15,9.0,0.016667,1.0,1.0,1.0,1.0
+Google,Gemini 3.1 Pro Preview,False,mini_spec,json_schema,2.0,12.0,0.166667,1.183955,1.0,2.043478,1.26911
+Google,Gemini 3.1 Pro Preview,False,mini_spec,json_ejemplo,2.0,12.0,0.166667,2.337179,1.0,3.942029,2.345554
+Google,Gemini 3.1 Pro Preview,False,mini_spec_ejemplo,json_schema_ejemplo,2.0,12.0,0.166667,1.008658,1.0,1.855072,1.152494
+Google,Gemini 3.1 Pro Preview,True,mini_spec,json_schema,0.2,12.0,0.016667,1.0,1.0,1.0,1.0
+Google,Gemini 3.1 Pro Preview,True,mini_spec,json_ejemplo,0.2,12.0,0.016667,1.0,1.0,1.0,1.0
+Google,Gemini 3.1 Pro Preview,True,mini_spec_ejemplo,json_schema_ejemplo,0.2,12.0,0.016667,1.0,1.0,1.0,1.0
+Google,Gemini 2.5 Flash,False,mini_spec,json_schema,0.3,2.5,0.12,1.0,1.0,1.410435,1.049001
+Google,Gemini 2.5 Flash,False,mini_spec,json_ejemplo,0.3,2.5,0.12,1.645024,1.0,2.777391,1.678334
+Google,Gemini 2.5 Flash,False,mini_spec_ejemplo,json_schema_ejemplo,0.3,2.5,0.12,1.0,1.0,1.274783,1.021532
+Google,Gemini 2.5 Flash,True,mini_spec,json_schema,0.03,2.5,0.012,1.0,1.0,1.0,1.0
+Google,Gemini 2.5 Flash,True,mini_spec,json_ejemplo,0.03,2.5,0.012,1.0,1.0,1.0,1.0
+Google,Gemini 2.5 Flash,True,mini_spec_ejemplo,json_schema_ejemplo,0.03,2.5,0.012,1.0,1.0,1.0,1.0
+Groq,GPT OSS 120B,False,mini_spec,json_schema,0.15,0.6,0.25,1.850518,1.0,3.173913,1.881962
+Groq,GPT OSS 120B,False,mini_spec,json_ejemplo,0.15,0.6,0.25,3.569214,1.065217,6.068182,3.559819
+Groq,GPT OSS 120B,False,mini_spec_ejemplo,json_schema_ejemplo,0.15,0.6,0.25,1.57164,1.0,2.891304,1.636402
+Groq,GPT OSS 120B,True,mini_spec,json_schema,0.15,0.6,0.25,1.850518,1.0,3.173913,1.881962
+Groq,GPT OSS 120B,True,mini_spec,json_ejemplo,0.15,0.6,0.25,3.569214,1.065217,6.068182,3.559819
+Groq,GPT OSS 120B,True,mini_spec_ejemplo,json_schema_ejemplo,0.15,0.6,0.25,1.57164,1.0,2.891304,1.636402
+Groq,GPT OSS 20B,False,mini_spec,json_schema,0.075,0.3,0.25,1.850518,1.0,3.173913,1.881962
+Groq,GPT OSS 20B,False,mini_spec,json_ejemplo,0.075,0.3,0.25,3.569214,1.065217,6.068182,3.559819
+Groq,GPT OSS 20B,False,mini_spec_ejemplo,json_schema_ejemplo,0.075,0.3,0.25,1.57164,1.0,2.891304,1.636402
+Groq,GPT OSS 20B,True,mini_spec,json_schema,0.075,0.3,0.25,1.850518,1.0,3.173913,1.881962
+Groq,GPT OSS 20B,True,mini_spec,json_ejemplo,0.075,0.3,0.25,3.569214,1.065217,6.068182,3.559819
+Groq,GPT OSS 20B,True,mini_spec_ejemplo,json_schema_ejemplo,0.075,0.3,0.25,1.57164,1.0,2.891304,1.636402
+DeepSeek,DeepSeek V4.1 Flash,False,mini_spec,json_schema,0.3,1.2,0.25,1.850518,1.0,3.173913,1.881962
+DeepSeek,DeepSeek V4.1 Flash,False,mini_spec,json_ejemplo,0.3,1.2,0.25,3.569214,1.065217,6.068182,3.559819
+DeepSeek,DeepSeek V4.1 Flash,False,mini_spec_ejemplo,json_schema_ejemplo,0.3,1.2,0.25,1.57164,1.0,2.891304,1.636402
+DeepSeek,DeepSeek V4.1 Flash,True,mini_spec,json_schema,0.006,1.2,0.005,1.0,1.0,1.0,1.0
+DeepSeek,DeepSeek V4.1 Flash,True,mini_spec,json_ejemplo,0.006,1.2,0.005,1.0,1.0,1.0,1.0
+DeepSeek,DeepSeek V4.1 Flash,True,mini_spec_ejemplo,json_schema_ejemplo,0.006,1.2,0.005,1.0,1.0,1.0,1.0

@@ -1,0 +1,19 @@
+.mini FORMAT — family 'cls' v1 (Multi-label text classification outputs)
+Classifier outputs: the label set is written in full and the predicted labels carry *, so both the label space and the prediction are self-describing.
+Rules:
+- Plain UTF-8 text. The FIRST line is the header: 'cls|d=<str>?, l=<str>?, model=<str>?, k=<int>?, n=<int>'. n is mandatory and must equal the exact number of record lines.
+- After the header, ONE line per record and nothing else (no comments, no code fences, no blank lines in between).
+- Each record has these fields in THIS order, separated by '|' (position is the semantics; field names are never written):
+  1. id: str
+  2. text: str
+  3. labels: ','-separated list of str; at least one element carries the suffix * (selected)
+  4. conf: float [0..1]
+  5. rationale: str (optional)
+- If a list element contains the separator ',', enclose the element in double quotes CSV-style ("impact, justice and evidence"; the * marker goes after the closing quote) or escape the separator as '\,'. A literal trailing asterisk is written '\*'.
+- Escapes valid in any value: '\|' for a literal vertical bar, '\\' for a backslash, '\n' for a line break.
+- Numbers unquoted; booleans true/false. Scalar fields are never quoted.
+- An empty field means null (allowed only for optional fields).
+- Record: 5 core fields.
+Valid example:
+cls|n=1|d=20260603|l=en|model=cls-support-2026|k=6
+m1|The quiz froze after question 4, is that a known issue?|question*,feedback,bug*,request,praise,other|0.91|reports a malfunction and asks

@@ -1,0 +1,3 @@
+FORMATO JSON — familia 'cls'
+Devuelve solo un objeto JSON válido (sin bloques de código ni comentarios) con exactamente esta estructura. Ejemplo con 1 registro:
+{"header":{"d":"20260603","l":"en","model":"cls-support-2026","k":6},"messages":[{"id":"m1","text":"The quiz froze after question 4, is that a known issue?","labels":["question","feedback","bug","request","praise","other"],"selected":[0,2],"conf":0.91,"rationale":"reports a malfunction and asks"}]}

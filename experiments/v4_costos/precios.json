@@ -1,0 +1,98 @@
+{
+  "descripcion": "Precios publicados de API por millón de tokens (USD), nivel estándar (sin lote, sin flex, sin prioridad), consultados en las páginas oficiales de cada proveedor. Solo se registran cifras leídas en la página; lo que la página no publica queda en null con su nota.",
+  "unidad": "USD por 1 000 000 de tokens",
+  "fecha_consulta": "2026-09-15",
+  "nota_fecha": "La consulta se hizo en la sesión iniciada el 2026-09-14 y ejecutada pasada la medianoche; la fecha efectiva de lectura de las páginas es 2026-09-15. La página de Google declara 'Last updated 2026-09-11 UTC'.",
+  "nota_tokenizador": "Los recuentos de tokens del experimento usan o200k_base. Son exactos para los modelos que tiktoken 0.13 asigna a o200k_base (gpt-5-*, gpt-4.1-*) y para gpt-oss (o200k_harmony: mismo vocabulario de texto que o200k_base más tokens especiales; codificación idéntica para texto plano, verificado). Para gpt-5.4 y gpt-5.4-mini tiktoken no publica el mapeo (se asume o200k_base). Para Anthropic, Google y DeepSeek los recuentos son una APROXIMACIÓN: cada proveedor usa su propio tokenizador y los tokens facturados pueden diferir (la página de Anthropic indica que Claude 4.7 y posteriores generan aproximadamente 30 % más tokens para el mismo texto que modelos anteriores).",
+  "modelos": [
+    {
+      "proveedor": "OpenAI", "modelo": "GPT-5.4", "id_api": "gpt-5.4",
+      "entrada": 2.50, "entrada_cache": 0.25, "escritura_cache": null, "salida": 15.00,
+      "condicion": "contexto corto (<272K tokens); contexto largo tiene otro precio",
+      "tokenizador": "o200k_base (supuesto; tiktoken no mapea gpt-5.4)", "tokens_exactos": false,
+      "fuente_url": "https://developers.openai.com/api/docs/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "OpenAI", "modelo": "GPT-5.4 mini", "id_api": "gpt-5.4-mini",
+      "entrada": 0.75, "entrada_cache": 0.075, "escritura_cache": null, "salida": 4.50,
+      "condicion": "nivel Standard",
+      "tokenizador": "o200k_base (supuesto; tiktoken no mapea gpt-5.4-mini)", "tokens_exactos": false,
+      "fuente_url": "https://developers.openai.com/api/docs/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "OpenAI", "modelo": "GPT-5 mini", "id_api": "gpt-5-mini",
+      "entrada": 0.25, "entrada_cache": 0.025, "escritura_cache": null, "salida": 2.00,
+      "condicion": "nivel Standard",
+      "tokenizador": "o200k_base (tiktoken: prefijo gpt-5-)", "tokens_exactos": true,
+      "fuente_url": "https://developers.openai.com/api/docs/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Anthropic", "modelo": "Claude Opus 5", "id_api": "claude-opus-5",
+      "entrada": 5.00, "entrada_cache": 0.50, "escritura_cache": 6.25, "salida": 25.00,
+      "condicion": "API de Anthropic, enrutamiento global; escritura de caché de 5 minutos = 1,25 × entrada",
+      "tokenizador": "propio de Anthropic (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://platform.claude.com/docs/en/about-claude/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Anthropic", "modelo": "Claude Sonnet 5", "id_api": "claude-sonnet-5",
+      "entrada": 2.00, "entrada_cache": 0.20, "escritura_cache": 2.50, "salida": 10.00,
+      "condicion": "precio introductorio convertido en estándar según nota de la página",
+      "tokenizador": "propio de Anthropic (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://platform.claude.com/docs/en/about-claude/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Anthropic", "modelo": "Claude Haiku 4.5", "id_api": "claude-haiku-4-5",
+      "entrada": 1.00, "entrada_cache": 0.10, "escritura_cache": 1.25, "salida": 5.00,
+      "condicion": "API de Anthropic, enrutamiento global",
+      "tokenizador": "propio de Anthropic (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://platform.claude.com/docs/en/about-claude/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Google", "modelo": "Gemini 3.5 Flash", "id_api": "gemini-3.5-flash",
+      "entrada": 1.50, "entrada_cache": 0.15, "escritura_cache": null, "salida": 9.00,
+      "condicion": "Paid tier, Standard; la caché explícita cobra además 1,00 USD/1M tokens por hora de almacenamiento (no incluido)",
+      "tokenizador": "propio de Google (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://ai.google.dev/gemini-api/docs/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Google", "modelo": "Gemini 3.1 Pro Preview", "id_api": "gemini-3.1-pro-preview",
+      "entrada": 2.00, "entrada_cache": 0.20, "escritura_cache": null, "salida": 12.00,
+      "condicion": "prompts ≤ 200k tokens; almacenamiento de caché 4,50 USD/1M tokens por hora (no incluido)",
+      "tokenizador": "propio de Google (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://ai.google.dev/gemini-api/docs/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Google", "modelo": "Gemini 2.5 Flash", "id_api": "gemini-2.5-flash",
+      "entrada": 0.30, "entrada_cache": 0.03, "escritura_cache": null, "salida": 2.50,
+      "condicion": "entrada de texto/imagen/video; almacenamiento de caché 1,00 USD/1M tokens por hora (no incluido)",
+      "tokenizador": "propio de Google (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://ai.google.dev/gemini-api/docs/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "Groq", "modelo": "GPT OSS 120B", "id_api": "openai/gpt-oss-120b",
+      "entrada": 0.15, "entrada_cache": null, "escritura_cache": null, "salida": 0.60,
+      "condicion": "tabla de modelos de producción; la página no publica precio de entrada en caché (el escenario con caché usa el precio de entrada normal)",
+      "tokenizador": "o200k_harmony (texto plano idéntico a o200k_base)", "tokens_exactos": true,
+      "fuente_url": "https://console.groq.com/docs/models", "fecha_consulta": "2026-09-15", "verificado": true,
+      "nota": "https://groq.com/pricing no mostró tabla de precios al consultarla; se usó la tabla oficial de modelos de la consola de Groq."
+    },
+    {
+      "proveedor": "Groq", "modelo": "GPT OSS 20B", "id_api": "openai/gpt-oss-20b",
+      "entrada": 0.075, "entrada_cache": null, "escritura_cache": null, "salida": 0.30,
+      "condicion": "tabla de modelos de producción; sin precio de caché publicado",
+      "tokenizador": "o200k_harmony (texto plano idéntico a o200k_base)", "tokens_exactos": true,
+      "fuente_url": "https://console.groq.com/docs/models", "fecha_consulta": "2026-09-15", "verificado": true
+    },
+    {
+      "proveedor": "DeepSeek", "modelo": "DeepSeek V4.1 Flash", "id_api": "deepseek-flash",
+      "entrada": 0.30, "entrada_cache": 0.006, "escritura_cache": null, "salida": 1.20,
+      "condicion": "tarifa de horario pico (01:00-04:00 y 06:00-10:00 UTC, lun-vie); fuera de pico es la mitad",
+      "tokenizador": "propio de DeepSeek (aproximación con o200k_base)", "tokens_exactos": false,
+      "fuente_url": "https://api-docs.deepseek.com/quick_start/pricing", "fecha_consulta": "2026-09-15", "verificado": true
+    }
+  ],
+  "pendientes": [
+    {"proveedor": "Groq", "dato": "precio de entrada en caché", "motivo": "no publicado en la página consultada"},
+    {"proveedor": "Mistral", "dato": "todos", "motivo": "no consultado en esta iteración"}
+  ]
+}
