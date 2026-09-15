@@ -32,7 +32,7 @@ export { decodeScalar, encodeScalar, formatNumber, scalarEqual } from './values.
 export type { Scalar } from './values.ts';
 
 export { parse, detectPrefix, Document, LineEngine } from './parser.ts';
-export type { ParseOptions, CanonicalObject, MiniRecord, Header, Value, LineOutcome } from './parser.ts';
+export type { ParseOptions, CanonicalObject, MiniRecord, Header, Value, LineOutcome, DocumentDiagnostics } from './parser.ts';
 
 export { dumps, encodeField, encodeHeader, encodeRecord } from './serializer.ts';
 

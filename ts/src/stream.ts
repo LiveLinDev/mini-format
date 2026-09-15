@@ -31,7 +31,7 @@ export interface IncompleteRecord {
 }
 
 export interface ReaderOptions {
-  /** false (por defecto): tolerante. true: escapes estrictos y `end()` lanza MiniValidationError si hay errores. */
+  /** false (por defecto): tolerante. true: `end()` lanza MiniValidationError si hay errores. */
   strict?: boolean;
   onHeader?: (info: { prefix: string; header: Header; line: number }) => void;
   onRecord?: (rec: StreamRecord) => void;
@@ -181,7 +181,7 @@ export function createReader(contract: Contract | ContractJSON, opts: ReaderOpti
       const document = engine.finish();
       for (let i = engine.errors.length; i < document.errors.length; i++) if (opts.onError) opts.onError(document.errors[i]);
       const expected = declaredCount(engine.header);
-      const received = engine.recordLines;
+      const received = engine.recordLineCount;
       const missing = expected === null ? 0 : Math.max(0, expected - received);
       const excess = expected === null ? 0 : Math.max(0, received - expected);
       const result: ReaderResult = {
@@ -214,7 +214,7 @@ export function createReader(contract: Contract | ContractJSON, opts: ReaderOpti
     get progress() {
       return {
         expected: declaredCount(engine.header),
-        received: engine.recordLines,
+        received: engine.recordLineCount,
         valid: engine.records.length,
         errors: engine.errors.length,
       };

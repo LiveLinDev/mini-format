@@ -155,12 +155,14 @@ describe('validación (familia a)', () => {
     assert.deepEqual(codes(A_TEXT.replace('|0.9,-1,0.25|', '|0.9,-1|'), A), ['E07']);
   });
 
-  test('E09 escape inválido y barra final; tolerante conserva el texto', () => {
+  test('E09 escape inválido y barra final; tolerante informa E09 y descarta el registro', () => {
     const bad = A_TEXT.replace('|Biología|', '|Bio' + BS + 'xlogía|');
     assert.deepEqual(codes(bad, A), ['E09']);
     const doc = parse(bad, A, { strict: false });
-    assert.equal(doc.errors.length, 0);
-    assert.equal(doc.records[0].topic, 'Bio' + BS + 'xlogía');
+    assert.deepEqual(doc.errors.map(e => [e.code, e.line]), [['E09', 2]]);
+    assert.equal(doc.records.length, 11);
+    assert.equal(doc.records[0].id, 'i2');
+    assert.deepEqual(doc.invalidLines(), [2]);
     assert.deepEqual(codes(A_TEXT.replace(',low' + LF, ',low' + BS + LF), A), ['E09']);
   });
 
@@ -168,8 +170,11 @@ describe('validación (familia a)', () => {
     const bad = A_TEXT.replace('|l=es|', '|l=e' + BS + 'qs|');
     assert.deepEqual(codes(bad, A), ['E09']);
     const doc = parse(bad, A, { strict: false });
+    assert.deepEqual(doc.errors.map(e => [e.code, e.line]), [['E09', 1]]);
     assert.equal(doc.header.l, 'e' + BS + 'qs');
     assert.equal(doc.records.length, 12);
+    assert.equal(doc.headerErrors().length, 1);
+    assert.deepEqual(doc.invalidLines(), []);
     // barra invertida colgante al final de la cabecera: E09 en ambos modos, sin excepción cruda
     const lines = A_TEXT.split(LF);
     const dangling = [lines[0] + BS, ...lines.slice(1)].join(LF);
@@ -181,6 +186,32 @@ describe('validación (familia a)', () => {
 
   test('E12 entrada de cabecera sin =', () => {
     assert.deepEqual(codes(A_TEXT.replace('|l=es|', '|les|'), A), ['E12']);
+  });
+
+  test('una línea rechazada no reserva su valor único', () => {
+    const lines = A_TEXT.trim().split(LF);
+    lines[1] = lines[1].replace('|1|biología', '|7|biología'); // i1 con E13
+    lines[2] = lines[2].replace(/^i2\|/, 'i1|');               // i1 válido en la línea 3
+    const doc = parse(lines.join(LF), A, { strict: false });
+    assert.deepEqual(doc.errors.map(e => [e.code, e.line]), [['E13', 2]]);
+    assert.equal(doc.records[0].id, 'i1');
+    assert.equal(doc.records.length, 11);
+    assert.deepEqual(doc.recordLines.slice(0, 2), [3, 4]);
+    const dup = A_TEXT.replace(LF + 'i2|', LF + 'i1|');
+    assert.deepEqual(parse(dup, A, { strict: false }).errors.map(e => [e.code, e.line]), [['E11', 3]]);
+  });
+
+  test('diagnóstico: líneas inválidas, registros faltantes y truncamiento', () => {
+    const lines = A_TEXT.trim().split(LF);
+    const text = [lines[0], lines[1], lines[2],lines[3].replace('4*', '4'), lines[4].slice(0, 30)].join(LF);
+    const doc = parse(text, A, { strict: false });
+    const d = doc.diagnostics();
+    assert.deepEqual(d.invalid_lines, [4, 5]);
+    assert.equal(d.missing_records, 8);
+    assert.equal(d.truncated, true);
+    assert.deepEqual(d.valid_lines, [2, 3]);
+    assert.equal(d.record_lines, 4);
+    assert.equal(d.declared_n, 12);
   });
 
   test('modo tolerante recupera los registros válidos', () => {

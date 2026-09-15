@@ -24,6 +24,20 @@ export interface CanonicalObject {
   [recordsKey: string]: unknown;
 }
 
+/** Informe de diagnóstico de un documento (mismas claves que Document.diagnostics() de la referencia). */
+export interface DocumentDiagnostics {
+  ok: boolean;
+  prefix: string;
+  declared_n: Value;
+  record_lines: number;
+  valid_records: number;
+  valid_lines: number[];
+  invalid_lines: number[];
+  missing_records: number;
+  truncated: boolean;
+  errors: { code: string; line: number; field: string; message: string }[];
+}
+
 export interface ParseOptions {
   /** true (por defecto): lanza MiniValidationError si hay errores. false: devuelve registros válidos + errores. */
   strict?: boolean;
@@ -39,10 +53,19 @@ export class Document {
   readonly contract: Contract;
   /** Número de líneas significativas (cabecera + registros). */
   readonly lines: number;
+  /** Línea física de la cabecera (0 si no hubo cabecera). */
+  readonly headerLine: number;
+  /** Línea física de cada registro aceptado, en orden. */
+  readonly recordLines: number[];
+  /** Líneas significativas tras la cabecera (válidas o no). */
+  readonly recordLineCount: number;
+  /** Línea física de la última línea significativa. */
+  readonly lastLine: number;
 
   constructor(init: {
     prefix: string; version: number; header: Header; records: MiniRecord[];
     errors: MiniError[]; contract: Contract; lines: number;
+    headerLine?: number; recordLines?: number[]; recordLineCount?: number; lastLine?: number;
   }) {
     this.prefix = init.prefix;
     this.version = init.version;
@@ -51,10 +74,63 @@ export class Document {
     this.errors = init.errors;
     this.contract = init.contract;
     this.lines = init.lines;
+    this.headerLine = init.headerLine ?? 0;
+    this.recordLines = init.recordLines ?? [];
+    this.recordLineCount = init.recordLineCount ?? 0;
+    this.lastLine = init.lastLine ?? 0;
   }
 
   get ok(): boolean {
     return this.errors.length === 0;
+  }
+
+  // ------------------------------------------------------------ diagnóstico
+  /** Líneas físicas (ascendentes, sin la cabecera) de los registros rechazados: las que hay que regenerar. */
+  invalidLines(): number[] {
+    const set = new Set<number>();
+    for (const e of this.errors) if (e.line > this.headerLine) set.add(e.line);
+    return [...set].sort((a, b) => a - b);
+  }
+
+  /** Errores de la propia línea de cabecera. */
+  headerErrors(): MiniError[] {
+    return this.errors.filter(e => this.headerLine > 0 && e.line === this.headerLine);
+  }
+
+  /** Errores de documento (línea 0: E01, E04). */
+  documentErrors(): MiniError[] {
+    return this.errors.filter(e => e.line === 0);
+  }
+
+  /** Registros declarados por `n` que faltan en el texto (0 si `n` falta o no se supera). */
+  get missingRecords(): number {
+    const n = Object.prototype.hasOwnProperty.call(this.header, 'n') ? this.header.n : undefined;
+    return typeof n === 'number' && Number.isInteger(n) && n > this.recordLineCount ? n - this.recordLineCount : 0;
+  }
+
+  /** Parece cortado: faltan líneas según `n`, o la última línea tiene menos campos que el núcleo o una barra colgante. */
+  get truncated(): boolean {
+    if (this.missingRecords) return true;
+    if (!this.recordLineCount) return false;
+    return this.errors.some(e => e.line === this.lastLine
+      && ((e.code === 'E05' && e.message.includes('core requires')) || (e.code === 'E09' && e.message.includes('dangling'))));
+  }
+
+  /** Informe serializable para recuperación parcial y regeneración. */
+  diagnostics(): DocumentDiagnostics {
+    const n = Object.prototype.hasOwnProperty.call(this.header, 'n') ? this.header.n : null;
+    return {
+      ok: this.ok,
+      prefix: this.prefix,
+      declared_n: n === undefined ? null : n,
+      record_lines: this.recordLineCount,
+      valid_records: this.records.length,
+      valid_lines: [...this.recordLines],
+      invalid_lines: this.invalidLines(),
+      missing_records: this.missingRecords,
+      truncated: this.truncated,
+      errors: this.errors.map(e => e.toJSON()),
+    };
   }
 
   /** Objeto canónico `{prefix, header, <records_key>: [...]}` (SPEC §7). */
@@ -97,18 +173,18 @@ export interface HeaderResult {
 export function parseHeader(line: string, lineno: number, c: Contract, strict: boolean): HeaderResult {
   const errs: MiniError[] = [];
   let fields: Tok[][];
+  // Los escapes se validan siempre (también en modo tolerante): un escape inválido en la
+  // cabecera es E09 dentro de la validación y el resto se recupera con una lectura tolerante.
+  void strict;
   try {
-    fields = codec.splitFields(line, c.list_separator, lineno, strict);
+    fields = codec.splitFields(line, c.list_separator, lineno, true);
   } catch (e) {
     if (!(e instanceof MiniError)) throw e;
-    // escape inválido en la cabecera: se informa y se recupera el resto en modo tolerante
-    // (una barra invertida colgante al final se descarta para poder recuperar)
     errs.push(e);
-    try {
-      fields = codec.splitFields(line, c.list_separator, lineno, false);
-    } catch {
-      fields = codec.splitFields(line.slice(0, -1), c.list_separator, lineno, false);
-    }
+    let trailing = 0;
+    while (trailing < line.length && line[line.length - 1 - trailing] === codec.ESCAPE) trailing++;
+    const safe = trailing % 2 ? line.slice(0, -1) : line; // descarta una barra invertida colgante
+    fields = codec.splitFields(safe, c.list_separator, lineno, false);
   }
   const prefix = fields.length ? codec.textOf(fields[0]) : '';
   const header: Header = {};
@@ -243,10 +319,19 @@ export function decodeField(toks: readonly Tok[], f: Field, lineno: number, sep:
   throw new MiniError(E_TYPE, lineno, `unsupported field type ${(f as Field).type}`, f.name);
 }
 
+function sortedJson(v: Value): string {
+  if (Array.isArray(v)) return '[' + v.map(sortedJson).join(',') + ']';
+  if (v && typeof v === 'object') {
+    return '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + sortedJson(v[k])).join(',') + '}';
+  }
+  return JSON.stringify(v);
+}
+
+/** Clave de unicidad: listas y objetos se comparan por contenido. */
 function uniqueKey(v: Value): string {
   if (typeof v === 'number') return 'n:' + String(v);
   if (typeof v === 'string') return 's:' + v;
-  return 'j:' + JSON.stringify(v);
+  return 'j:' + sortedJson(v);
 }
 
 // ---------------------------------------------------------- motor por líneas
@@ -273,6 +358,12 @@ export class LineEngine {
   physical: number = 0;
   /** Líneas significativas vistas (cabecera incluida). */
   significant: number = 0;
+  /** Línea física de la cabecera (0 si aún no hay cabecera). */
+  headerLine: number = 0;
+  /** Línea física de la última línea significativa. */
+  lastLine: number = 0;
+  /** Línea física de cada registro aceptado. */
+  readonly acceptedLines: number[] = [];
   private readonly uniques: Map<string, Map<string, number>> = new Map();
 
   constructor(contract: Contract, strict: boolean) {
@@ -290,7 +381,9 @@ export class LineEngine {
     if (line.endsWith('\r')) line = line.slice(0, -1);
     if (codec.isBlank(line)) return null;
     this.significant += 1;
+    this.lastLine = lineno;
     if (this.header === null) {
+      this.headerLine = lineno;
       this.acceptHeader(line, lineno);
       return null;
     }
@@ -313,7 +406,9 @@ export class LineEngine {
     const sep = c.list_separator;
     let toks: Tok[][];
     try {
-      toks = codec.splitFields(line, sep, lineno, this.strict);
+      // Los escapes se validan siempre: el modo tolerante devuelve los registros que el
+      // estricto aceptaría, más la lista de errores (SPEC §8).
+      toks = codec.splitFields(line, sep, lineno, true);
     } catch (e) {
       if (!(e instanceof MiniError)) throw e;
       this.errors.push(e);
@@ -358,12 +453,9 @@ export class LineEngine {
     for (const [name, seen] of this.uniques) {
       const v = hasOwn(rec, name) ? rec[name] : undefined;
       if (v !== null && v !== undefined) {
-        const k = uniqueKey(v);
-        const first = seen.get(k);
+        const first = seen.get(uniqueKey(v));
         if (first !== undefined) {
           recErrs.push(new MiniError(E_UNIQUE, lineno, `duplicate value '${String(v)}' (first seen line ${first})`, name));
-        } else {
-          seen.set(k, lineno);
         }
       }
     }
@@ -371,12 +463,19 @@ export class LineEngine {
       this.errors.push(...recErrs);
       return { line: lineno, record: null, errors: recErrs };
     }
+    // solo los registros aceptados reservan valores únicos: una línea rechazada nunca
+    // provoca que un registro válido posterior con el mismo valor se descarte
+    for (const [name, seen] of this.uniques) {
+      const v = hasOwn(rec, name) ? rec[name] : undefined;
+      if (v !== null && v !== undefined) seen.set(uniqueKey(v), lineno);
+    }
     this.records.push(rec);
+    this.acceptedLines.push(lineno);
     return { line: lineno, record: rec, errors: [] };
   }
 
-  /** Líneas de registro significativas vistas hasta ahora. */
-  get recordLines(): number {
+  /** Líneas de registro significativas vistas hasta ahora (válidas o no). */
+  get recordLineCount(): number {
     return Math.max(0, this.significant - 1);
   }
 
@@ -389,7 +488,7 @@ export class LineEngine {
     }
     const errors = [...this.errors];
     const n = hasOwn(this.header, 'n') ? this.header.n : undefined;
-    const total = this.recordLines;
+    const total = this.recordLineCount;
     if (typeof n === 'number' && Number.isInteger(n) && n !== total) {
       errors.push(new MiniError(E_COUNT_MISMATCH, 0, `header declares n=${n} but document has ${total} record lines`));
     }
@@ -397,7 +496,8 @@ export class LineEngine {
     const version = typeof v === 'number' && v ? Math.trunc(v) : 1;
     return new Document({
       prefix: this.prefix, version, header: this.header, records: [...this.records], errors,
-      contract: c, lines: this.significant,
+      contract: c, lines: this.significant, headerLine: this.headerLine, recordLines: [...this.acceptedLines],
+      recordLineCount: total, lastLine: this.lastLine,
     });
   }
 }

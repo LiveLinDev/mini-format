@@ -54,6 +54,9 @@ doc.toCanonical();                      // { prefix, header, items: [...] }
 
 const lenient = parse(texto, a, { strict: false });
 lenient.errors;                         // MiniError[] con code, line, field, message
+lenient.invalidLines();                 // líneas rechazadas (las que hay que regenerar)
+lenient.missingRecords;                 // n − líneas de registro (mínimo 0)
+lenient.diagnostics();                  // informe con las mismas claves que la referencia Python
 
 const texto2 = dumps(doc.toCanonical(), a);   // ida y vuelta exacta
 const prompt = specBlock(a, 'es');            // bloque para el prompt de sistema
@@ -98,8 +101,16 @@ npm test
 node --experimental-strip-types --no-warnings --test test/*.test.ts
 ```
 
-La suite de conformidad compartida se lee de `../conformance/` (o de la ruta en
-`MINI_CONFORMANCE_DIR`); si la carpeta no existe, la suite se omite.
+La suite de conformidad compartida se lee de `../conformance/cases/` (o de la ruta en
+`MINI_CONFORMANCE_DIR`); si la carpeta no existe, la suite se omite. El runner
+reproduce la lógica de `conformance/run_python.py`. Única correspondencia de API:
+en modo tolerante la referencia lanza excepción cuando el documento no se puede
+construir (E01); TS devuelve un `Document` sin cabecera con E01, y el runner lo
+trata como «no construido».
+
+Como en la referencia, los escapes se validan también en modo tolerante (E09 y
+el registro se descarta), un escape inválido en la cabecera es E09 dentro de la
+validación y una línea rechazada no reserva su valor `unique`.
 
 ## Decisiones donde `js/mini.js`, la referencia Python y la SPEC difieren
 
@@ -108,7 +119,9 @@ Criterio: si la SPEC decide, se sigue la SPEC; si no, se sigue la referencia Pyt
 | Tema | Python | JS | TS |
 |---|---|---|---|
 | Documento vacío en modo tolerante | lanza siempre | devuelve documento sin `canonical()` | devuelve `Document` con E01 (SPEC §8) |
-| Escape inválido en la cabecera (estricto) | `MiniError` crudo fuera de `parse` | ídem | E09 recogido; el resto de la cabecera se recupera |
+| Escape inválido en la cabecera | E09 dentro de la validación (corregido) | `MiniError` crudo fuera de `parse` | E09 dentro de la validación |
+| Escape inválido en un registro, modo tolerante | E09 y registro descartado (corregido) | conserva el texto literal | E09 y registro descartado |
+| Línea rechazada con valor `unique` | no lo reserva (corregido) | lo reserva | no lo reserva |
 | `\n` final en un entero/flotante (`5\n`) | acepta (`$` de `re` + `int()`) | rechaza | rechaza, E06 (SPEC: `-?[0-9]+`) |
 | Dígitos Unicode en números | acepta (`\d` Unicode) | rechaza | rechaza |
 | `clave\=valor` en cabecera (tolerante) | clave rota | E12 | E12 (primer `=` no escapado, SPEC §3.2) |
