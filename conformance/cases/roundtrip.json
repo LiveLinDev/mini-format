@@ -1,0 +1,4072 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "roundtrip",
+  "cases": [
+    {
+      "id": "fx-a-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'a' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "a",
+      "input": {
+        "prefix": "a",
+        "header": {
+          "n": 12,
+          "m": "IRT3PL",
+          "d": "20260603",
+          "l": "es",
+          "t": "evaluación transversal",
+          "bd": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "cat": {
+            "theta_init": 0.0,
+            "theta_min": -3.0,
+            "theta_max": 3.0,
+            "se_stop": 0.3,
+            "max_items": 12,
+            "exposure_ctrl": "SH"
+          },
+          "k": 4,
+          "v": 1
+        },
+        "items": [
+          {
+            "id": "i1",
+            "bloom": "L1",
+            "topic": "Biología",
+            "statement": "¿Dónde ocurre principalmente la fotosíntesis?",
+            "options": [
+              "cloroplastos",
+              "núcleo",
+              "mitocondria",
+              "ribosoma"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 0.9,
+              "b": -1.0,
+              "c": 0.25
+            },
+            "difficulty": 1,
+            "cat": {
+              "area": "biología",
+              "exposure_cap": 0.2,
+              "demand": "low"
+            }
+          },
+          {
+            "id": "i2",
+            "bloom": "L2",
+            "topic": "Química",
+            "statement": "¿Qué representa el pH de una solución?",
+            "options": [
+              "acidez o basicidad",
+              "masa molecular",
+              "temperatura",
+              "presión osmótica"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.1,
+              "b": -0.3,
+              "c": 0.25
+            },
+            "difficulty": 2,
+            "cat": {
+              "area": "química",
+              "exposure_cap": 0.2,
+              "demand": "medium"
+            }
+          },
+          {
+            "id": "i3",
+            "bloom": "L3",
+            "topic": "Matemática",
+            "statement": "Si 3x+6=18, ¿cuál es el valor de x?",
+            "options": [
+              "4",
+              "6",
+              "8",
+              "12"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.4,
+              "b": 0.2,
+              "c": 0.2
+            },
+            "difficulty": 3,
+            "cat": {
+              "area": "matemática",
+              "exposure_cap": 0.25,
+              "demand": "medium"
+            }
+          },
+          {
+            "id": "i4",
+            "bloom": "L4",
+            "topic": "Historia",
+            "statement": "¿Qué factor explica mejor la caída del Imperio romano de Occidente?",
+            "options": [
+              "presiones militares y crisis internas",
+              "un solo terremoto",
+              "la invención de la imprenta",
+              "la conquista española"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.7,
+              "b": 0.8,
+              "c": 0.2
+            },
+            "difficulty": 4,
+            "cat": {
+              "area": "historia",
+              "exposure_cap": 0.18,
+              "demand": "high"
+            }
+          },
+          {
+            "id": "i5",
+            "bloom": "L5",
+            "topic": "Literatura",
+            "statement": "Evalúa cuál opción interpreta mejor un narrador no confiable.",
+            "options": [
+              "su relato debe contrastarse con evidencias",
+              "siempre dice la verdad",
+              "solo narra en tercera persona",
+              "no participa en la trama"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.0,
+              "b": 1.2,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "literatura",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            }
+          },
+          {
+            "id": "i6",
+            "bloom": "L6",
+            "topic": "Computación",
+            "statement": "¿Qué solución diseñarías para reducir errores en una API?",
+            "options": [
+              "validación de esquema y pruebas automatizadas",
+              "eliminar logs",
+              "usar variables globales",
+              "evitar documentación"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.3,
+              "b": 1.7,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "computación",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            }
+          },
+          {
+            "id": "i7",
+            "bloom": "L1",
+            "topic": "Física",
+            "statement": "¿Cuál es la unidad de fuerza en el SI?",
+            "options": [
+              "newton",
+              "joule",
+              "watt",
+              "pascal"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 0.9,
+              "b": -1.2,
+              "c": 0.25
+            },
+            "difficulty": 1,
+            "cat": {
+              "area": "física",
+              "exposure_cap": 0.2,
+              "demand": "low"
+            }
+          },
+          {
+            "id": "i8",
+            "bloom": "L2",
+            "topic": "Geografía",
+            "statement": "¿Qué describe una cuenca hidrográfica?",
+            "options": [
+              "territorio drenado por un río",
+              "altura de una montaña",
+              "tipo de clima",
+              "frontera política"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.1,
+              "b": -0.2,
+              "c": 0.25
+            },
+            "difficulty": 2,
+            "cat": {
+              "area": "geografía",
+              "exposure_cap": 0.22,
+              "demand": "medium"
+            }
+          },
+          {
+            "id": "i9",
+            "bloom": "L3",
+            "topic": "Comunicación",
+            "statement": "Elige el conector que completa una relación de causa.",
+            "options": [
+              "porque",
+              "sin embargo",
+              "además",
+              "por ejemplo"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.4,
+              "b": 0.1,
+              "c": 0.2
+            },
+            "difficulty": 3,
+            "cat": {
+              "area": "comunicación",
+              "exposure_cap": 0.25,
+              "demand": "medium"
+            }
+          },
+          {
+            "id": "i10",
+            "bloom": "L4",
+            "topic": "Economía",
+            "statement": "Analiza qué sucede si sube el precio y baja la demanda.",
+            "options": [
+              "disminuye la cantidad demandada",
+              "sube la oferta siempre",
+              "desaparece el mercado",
+              "no cambia el equilibrio"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.7,
+              "b": 0.7,
+              "c": 0.2
+            },
+            "difficulty": 4,
+            "cat": {
+              "area": "economía",
+              "exposure_cap": 0.18,
+              "demand": "high"
+            }
+          },
+          {
+            "id": "i11",
+            "bloom": "L5",
+            "topic": "Ética",
+            "statement": "¿Qué criterio permite evaluar mejor una decisión pública?",
+            "options": [
+              "impacto, justicia y evidencia",
+              "popularidad inmediata",
+              "costo únicamente",
+              "autoridad del emisor"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.0,
+              "b": 1.3,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "ética",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            }
+          },
+          {
+            "id": "i12",
+            "bloom": "L6",
+            "topic": "Arte",
+            "statement": "Propón el principio clave para crear una campaña visual coherente.",
+            "options": [
+              "unidad entre mensaje, color y audiencia",
+              "usar todos los colores",
+              "copiar una plantilla",
+              "evitar bocetos"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.3,
+              "b": 1.8,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "arte",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "mini": "a|n=12|m=IRT3PL|d=20260603|l=es|t=evaluación transversal|bd=1,1,1,1,1,1|cat=0,-3,3,0.3,12,SH|k=4\ni1|L1|Biología|¿Dónde ocurre principalmente la fotosíntesis?|cloroplastos*,núcleo,mitocondria,ribosoma|0.9,-1,0.25|1|biología,0.2,low\ni2|L2|Química|¿Qué representa el pH de una solución?|acidez o basicidad*,masa molecular,temperatura,presión osmótica|1.1,-0.3,0.25|2|química,0.2,medium\ni3|L3|Matemática|Si 3x+6=18, ¿cuál es el valor de x?|4*,6,8,12|1.4,0.2,0.2|3|matemática,0.25,medium\ni4|L4|Historia|¿Qué factor explica mejor la caída del Imperio romano de Occidente?|presiones militares y crisis internas*,un solo terremoto,la invención de la imprenta,la conquista española|1.7,0.8,0.2|4|historia,0.18,high\ni5|L5|Literatura|Evalúa cuál opción interpreta mejor un narrador no confiable.|su relato debe contrastarse con evidencias*,siempre dice la verdad,solo narra en tercera persona,no participa en la trama|2,1.2,0.15|5|literatura,0.15,high\ni6|L6|Computación|¿Qué solución diseñarías para reducir errores en una API?|validación de esquema y pruebas automatizadas*,eliminar logs,usar variables globales,evitar documentación|2.3,1.7,0.15|5|computación,0.15,high\ni7|L1|Física|¿Cuál es la unidad de fuerza en el SI?|newton*,joule,watt,pascal|0.9,-1.2,0.25|1|física,0.2,low\ni8|L2|Geografía|¿Qué describe una cuenca hidrográfica?|territorio drenado por un río*,altura de una montaña,tipo de clima,frontera política|1.1,-0.2,0.25|2|geografía,0.22,medium\ni9|L3|Comunicación|Elige el conector que completa una relación de causa.|porque*,sin embargo,además,por ejemplo|1.4,0.1,0.2|3|comunicación,0.25,medium\ni10|L4|Economía|Analiza qué sucede si sube el precio y baja la demanda.|disminuye la cantidad demandada*,sube la oferta siempre,desaparece el mercado,no cambia el equilibrio|1.7,0.7,0.2|4|economía,0.18,high\ni11|L5|Ética|¿Qué criterio permite evaluar mejor una decisión pública?|impacto\\, justicia y evidencia*,popularidad inmediata,costo únicamente,autoridad del emisor|2,1.3,0.15|5|ética,0.15,high\ni12|L6|Arte|Propón el principio clave para crear una campaña visual coherente.|unidad entre mensaje\\, color y audiencia*,usar todos los colores,copiar una plantilla,evitar bocetos|2.3,1.8,0.15|5|arte,0.15,high"
+      }
+    },
+    {
+      "id": "fx-card-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'card' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "card",
+      "input": {
+        "prefix": "card",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "es",
+          "t": "repaso transversal",
+          "src": "clase-64",
+          "v": 1
+        },
+        "cards": [
+          {
+            "id": "c1",
+            "topic": "Biología",
+            "front": "¿Qué organelo realiza la fotosíntesis?",
+            "back": "El cloroplasto, gracias a la clorofila.",
+            "hint": "Pigmento verde",
+            "tags": [
+              "célula",
+              "plantas"
+            ],
+            "bloom": "L1",
+            "ease": 2.5
+          },
+          {
+            "id": "c2",
+            "topic": "Química",
+            "front": "¿Qué mide el pH?",
+            "back": "La acidez o basicidad de una solución (0-14).",
+            "hint": "Iones H+",
+            "tags": [
+              "soluciones",
+              "ácidos"
+            ],
+            "bloom": "L2",
+            "ease": 2.5
+          },
+          {
+            "id": "c3",
+            "topic": "Matemática",
+            "front": "Resuelve 3x+6=18",
+            "back": "x = 4",
+            "hint": null,
+            "tags": [
+              "álgebra"
+            ],
+            "bloom": "L3",
+            "ease": 2.6
+          },
+          {
+            "id": "c4",
+            "topic": "Historia",
+            "front": "Causas de la caída de Roma de Occidente",
+            "back": "Presiones militares externas y crisis internas (económica, política).",
+            "hint": "Multicausal",
+            "tags": [
+              "roma",
+              "antigüedad"
+            ],
+            "bloom": "L4",
+            "ease": 2.3
+          },
+          {
+            "id": "c5",
+            "topic": "Literatura",
+            "front": "¿Qué es un narrador no confiable?",
+            "back": "Un narrador cuya versión debe contrastarse con otras evidencias del texto.",
+            "hint": null,
+            "tags": [
+              "narrativa"
+            ],
+            "bloom": "L5",
+            "ease": 2.4
+          },
+          {
+            "id": "c6",
+            "topic": "Computación",
+            "front": "Dos prácticas para reducir errores en una API",
+            "back": "Validación de esquema y pruebas automatizadas.",
+            "hint": "Verificación temprana",
+            "tags": [
+              "api",
+              "calidad",
+              "testing"
+            ],
+            "bloom": "L6",
+            "ease": 2.5
+          },
+          {
+            "id": "c7",
+            "topic": "Física",
+            "front": "Unidad SI de fuerza",
+            "back": "El newton (N) = kg·m/s².",
+            "hint": null,
+            "tags": [
+              "unidades"
+            ],
+            "bloom": "L1",
+            "ease": 2.7
+          },
+          {
+            "id": "c8",
+            "topic": "Geografía",
+            "front": "Define cuenca hidrográfica",
+            "back": "Territorio cuyas aguas drenan hacia un mismo río o lago.",
+            "hint": "Drenaje",
+            "tags": [
+              "hidrografía"
+            ],
+            "bloom": "L2",
+            "ease": 2.5
+          },
+          {
+            "id": "c9",
+            "topic": "Comunicación",
+            "front": "Conector de causa",
+            "back": "\"Porque\" introduce la causa de un hecho.",
+            "hint": null,
+            "tags": [
+              "conectores",
+              "redacción"
+            ],
+            "bloom": "L3",
+            "ease": 2.6
+          },
+          {
+            "id": "c10",
+            "topic": "Economía",
+            "front": "Sube el precio y baja la demanda: ¿qué pasa?",
+            "back": "Disminuye la cantidad demandada.",
+            "hint": "Ley de la demanda",
+            "tags": [
+              "mercado"
+            ],
+            "bloom": "L4",
+            "ease": 2.4
+          },
+          {
+            "id": "c11",
+            "topic": "Ética",
+            "front": "Criterios para evaluar una decisión pública",
+            "back": "Impacto, justicia y evidencia.",
+            "hint": null,
+            "tags": [
+              "ética",
+              "política"
+            ],
+            "bloom": "L5",
+            "ease": 2.3
+          },
+          {
+            "id": "c12",
+            "topic": "Arte",
+            "front": "Principio de una campaña visual coherente",
+            "back": "Unidad entre mensaje, color y audiencia.",
+            "hint": "Coherencia",
+            "tags": [
+              "diseño",
+              "comunicación"
+            ],
+            "bloom": "L6",
+            "ease": 2.4
+          }
+        ]
+      },
+      "expected": {
+        "mini": "card|n=12|d=20260603|l=es|t=repaso transversal|src=clase-64\nc1|Biología|¿Qué organelo realiza la fotosíntesis?|El cloroplasto, gracias a la clorofila.|Pigmento verde|célula,plantas|L1|2.5\nc2|Química|¿Qué mide el pH?|La acidez o basicidad de una solución (0-14).|Iones H+|soluciones,ácidos|L2|2.5\nc3|Matemática|Resuelve 3x+6=18|x = 4||álgebra|L3|2.6\nc4|Historia|Causas de la caída de Roma de Occidente|Presiones militares externas y crisis internas (económica, política).|Multicausal|roma,antigüedad|L4|2.3\nc5|Literatura|¿Qué es un narrador no confiable?|Un narrador cuya versión debe contrastarse con otras evidencias del texto.||narrativa|L5|2.4\nc6|Computación|Dos prácticas para reducir errores en una API|Validación de esquema y pruebas automatizadas.|Verificación temprana|api,calidad,testing|L6|2.5\nc7|Física|Unidad SI de fuerza|El newton (N) = kg·m/s².||unidades|L1|2.7\nc8|Geografía|Define cuenca hidrográfica|Territorio cuyas aguas drenan hacia un mismo río o lago.|Drenaje|hidrografía|L2|2.5\nc9|Comunicación|Conector de causa|\"Porque\" introduce la causa de un hecho.||conectores,redacción|L3|2.6\nc10|Economía|Sube el precio y baja la demanda: ¿qué pasa?|Disminuye la cantidad demandada.|Ley de la demanda|mercado|L4|2.4\nc11|Ética|Criterios para evaluar una decisión pública|Impacto, justicia y evidencia.||ética,política|L5|2.3\nc12|Arte|Principio de una campaña visual coherente|Unidad entre mensaje, color y audiencia.|Coherencia|diseño,comunicación|L6|2.4"
+      }
+    },
+    {
+      "id": "fx-cat-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'cat' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "cat",
+      "input": {
+        "prefix": "cat",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "store": "campus-shop",
+          "cur": "USD",
+          "v": 1
+        },
+        "products": [
+          {
+            "sku": "SKU-1001",
+            "name": "Wireless headset",
+            "category": "audio",
+            "price": 89.9,
+            "currency": "USD",
+            "stock": 120,
+            "tags": [
+              "bluetooth",
+              "noise-cancelling"
+            ],
+            "rating": 4.5
+          },
+          {
+            "sku": "SKU-1002",
+            "name": "USB-C hub 7-in-1",
+            "category": "accessories",
+            "price": 39.99,
+            "currency": "USD",
+            "stock": 300,
+            "tags": [
+              "usb-c",
+              "hdmi"
+            ],
+            "rating": 4.2
+          },
+          {
+            "sku": "SKU-1003",
+            "name": "Mechanical keyboard",
+            "category": "input",
+            "price": 129.0,
+            "currency": "USD",
+            "stock": 45,
+            "tags": [
+              "mechanical",
+              "rgb",
+              "wired"
+            ],
+            "rating": 4.7
+          },
+          {
+            "sku": "SKU-1004",
+            "name": "27\" 4K monitor",
+            "category": "display",
+            "price": 349.0,
+            "currency": "USD",
+            "stock": 18,
+            "tags": [
+              "4k",
+              "ips"
+            ],
+            "rating": 4.6
+          },
+          {
+            "sku": "SKU-1005",
+            "name": "Laptop stand",
+            "category": "accessories",
+            "price": 25.5,
+            "currency": "USD",
+            "stock": 500,
+            "tags": [
+              "aluminium"
+            ],
+            "rating": 4.1
+          },
+          {
+            "sku": "SKU-1006",
+            "name": "Webcam 1080p",
+            "category": "video",
+            "price": 59.0,
+            "currency": "USD",
+            "stock": 80,
+            "tags": [
+              "1080p",
+              "autofocus"
+            ],
+            "rating": 3.9
+          },
+          {
+            "sku": "SKU-1007",
+            "name": "Micrófono condensador",
+            "category": "audio",
+            "price": 249.0,
+            "currency": "PEN",
+            "stock": 22,
+            "tags": [
+              "usb",
+              "cardioide"
+            ],
+            "rating": 4.4
+          },
+          {
+            "sku": "SKU-1008",
+            "name": "Mouse ergonómico",
+            "category": "input",
+            "price": 119.0,
+            "currency": "PEN",
+            "stock": 64,
+            "tags": [
+              "ergonómico",
+              "inalámbrico"
+            ],
+            "rating": 4.3
+          },
+          {
+            "sku": "SKU-1009",
+            "name": "SSD NVMe 1 TB",
+            "category": "storage",
+            "price": 99.0,
+            "currency": "USD",
+            "stock": 150,
+            "tags": [
+              "nvme",
+              "pcie4"
+            ],
+            "rating": 4.8
+          },
+          {
+            "sku": "SKU-1010",
+            "name": "Router Wi-Fi 6",
+            "category": "network",
+            "price": 79.0,
+            "currency": "USD",
+            "stock": 33,
+            "tags": [
+              "wifi6",
+              "mesh"
+            ],
+            "rating": 4.0
+          },
+          {
+            "sku": "SKU-1011",
+            "name": "Cable HDMI 2.1 2 m",
+            "category": "accessories",
+            "price": 15.9,
+            "currency": "USD",
+            "stock": 900,
+            "tags": [
+              "hdmi",
+              "8k"
+            ],
+            "rating": null
+          },
+          {
+            "sku": "SKU-1012",
+            "name": "Silla de oficina",
+            "category": "furniture",
+            "price": 899.0,
+            "currency": "PEN",
+            "stock": 7,
+            "tags": [
+              "ergonómica",
+              "malla"
+            ],
+            "rating": 4.2
+          }
+        ]
+      },
+      "expected": {
+        "mini": "cat|n=12|d=20260603|store=campus-shop|cur=USD\nSKU-1001|Wireless headset|audio|89.9|USD|120|bluetooth,noise-cancelling|4.5\nSKU-1002|USB-C hub 7-in-1|accessories|39.99|USD|300|usb-c,hdmi|4.2\nSKU-1003|Mechanical keyboard|input|129|USD|45|mechanical,rgb,wired|4.7\nSKU-1004|27\" 4K monitor|display|349|USD|18|4k,ips|4.6\nSKU-1005|Laptop stand|accessories|25.5|USD|500|aluminium|4.1\nSKU-1006|Webcam 1080p|video|59|USD|80|1080p,autofocus|3.9\nSKU-1007|Micrófono condensador|audio|249|PEN|22|usb,cardioide|4.4\nSKU-1008|Mouse ergonómico|input|119|PEN|64|ergonómico,inalámbrico|4.3\nSKU-1009|SSD NVMe 1 TB|storage|99|USD|150|nvme,pcie4|4.8\nSKU-1010|Router Wi-Fi 6|network|79|USD|33|wifi6,mesh|4\nSKU-1011|Cable HDMI 2.1 2 m|accessories|15.9|USD|900|hdmi,8k|\nSKU-1012|Silla de oficina|furniture|899|PEN|7|ergonómica,malla|4.2"
+      }
+    },
+    {
+      "id": "fx-cls-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'cls' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "cls",
+      "input": {
+        "prefix": "cls",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "model": "cls-support-2026",
+          "k": 6,
+          "v": 1
+        },
+        "messages": [
+          {
+            "id": "m1",
+            "text": "The quiz froze after question 4, is that a known issue?",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              0,
+              2
+            ],
+            "conf": 0.91,
+            "rationale": "reports a malfunction and asks"
+          },
+          {
+            "id": "m2",
+            "text": "Great flashcards, they saved my week!",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              4
+            ],
+            "conf": 0.97,
+            "rationale": null
+          },
+          {
+            "id": "m3",
+            "text": "Could you add export to Anki?",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              3
+            ],
+            "conf": 0.94,
+            "rationale": "feature request"
+          },
+          {
+            "id": "m4",
+            "text": "Transcription missed the last ten minutes of the lecture.",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              2
+            ],
+            "conf": 0.9,
+            "rationale": null
+          },
+          {
+            "id": "m5",
+            "text": "How is my level computed?",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              0
+            ],
+            "conf": 0.95,
+            "rationale": null
+          },
+          {
+            "id": "m6",
+            "text": "The map view is confusing but the summaries are excellent.",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              1,
+              4
+            ],
+            "conf": 0.82,
+            "rationale": "mixed sentiment"
+          },
+          {
+            "id": "m7",
+            "text": "Please support PDF slides as input.",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              3
+            ],
+            "conf": 0.93,
+            "rationale": null
+          },
+          {
+            "id": "m8",
+            "text": "Nothing to report.",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              5
+            ],
+            "conf": 0.7,
+            "rationale": null
+          },
+          {
+            "id": "m9",
+            "text": "Why does the same question repeat twice?",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              0,
+              2
+            ],
+            "conf": 0.86,
+            "rationale": "possible exposure-control bug"
+          },
+          {
+            "id": "m10",
+            "text": "Love the adaptive difficulty, keep it up.",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              1,
+              4
+            ],
+            "conf": 0.9,
+            "rationale": null
+          },
+          {
+            "id": "m11",
+            "text": "Credits were deducted twice for one upload.",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              2
+            ],
+            "conf": 0.96,
+            "rationale": "billing bug"
+          },
+          {
+            "id": "m12",
+            "text": "Can I share a class with a friend?",
+            "labels": [
+              "question",
+              "feedback",
+              "bug",
+              "request",
+              "praise",
+              "other"
+            ],
+            "selected": [
+              0,
+              3
+            ],
+            "conf": 0.88,
+            "rationale": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "cls|n=12|d=20260603|l=en|model=cls-support-2026|k=6\nm1|The quiz froze after question 4, is that a known issue?|question*,feedback,bug*,request,praise,other|0.91|reports a malfunction and asks\nm2|Great flashcards, they saved my week!|question,feedback,bug,request,praise*,other|0.97|\nm3|Could you add export to Anki?|question,feedback,bug,request*,praise,other|0.94|feature request\nm4|Transcription missed the last ten minutes of the lecture.|question,feedback,bug*,request,praise,other|0.9|\nm5|How is my level computed?|question*,feedback,bug,request,praise,other|0.95|\nm6|The map view is confusing but the summaries are excellent.|question,feedback*,bug,request,praise*,other|0.82|mixed sentiment\nm7|Please support PDF slides as input.|question,feedback,bug,request*,praise,other|0.93|\nm8|Nothing to report.|question,feedback,bug,request,praise,other*|0.7|\nm9|Why does the same question repeat twice?|question*,feedback,bug*,request,praise,other|0.86|possible exposure-control bug\nm10|Love the adaptive difficulty, keep it up.|question,feedback*,bug,request,praise*,other|0.9|\nm11|Credits were deducted twice for one upload.|question,feedback,bug*,request,praise,other|0.96|billing bug\nm12|Can I share a class with a friend?|question*,feedback,bug,request*,praise,other|0.88|"
+      }
+    },
+    {
+      "id": "fx-code-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'code' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "code",
+      "input": {
+        "prefix": "code",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "t": "Intro programming lab 3",
+          "v": 1
+        },
+        "exercises": [
+          {
+            "id": "c1",
+            "bloom": "L3",
+            "topic": "lists",
+            "statement": "Write a function maximum(xs) that returns the largest number in a non-empty list.",
+            "lang": "python",
+            "tests": [
+              "maximum([2,8,3])==8",
+              "maximum([-1,-5])==-1"
+            ],
+            "expected": "int or float",
+            "hints": [
+              "iterate once",
+              "track the best so far"
+            ]
+          },
+          {
+            "id": "c2",
+            "bloom": "L3",
+            "topic": "strings",
+            "statement": "Write is_palindrome(s) ignoring case and spaces.",
+            "lang": "python",
+            "tests": [
+              "is_palindrome('Anita lava la tina')",
+              "not is_palindrome('hello')"
+            ],
+            "expected": "bool",
+            "hints": [
+              "normalize first"
+            ]
+          },
+          {
+            "id": "c3",
+            "bloom": "L2",
+            "topic": "arithmetic",
+            "statement": "Return the sum of the digits of a positive integer.",
+            "lang": "python",
+            "tests": [
+              "digit_sum(1234)==10",
+              "digit_sum(7)==7"
+            ],
+            "expected": "int",
+            "hints": []
+          },
+          {
+            "id": "c4",
+            "bloom": "L4",
+            "topic": "recursion",
+            "statement": "Implement fib(n) iteratively with O(1) memory.",
+            "lang": "python",
+            "tests": [
+              "fib(10)==55",
+              "fib(0)==0"
+            ],
+            "expected": "int",
+            "hints": [
+              "two variables suffice"
+            ]
+          },
+          {
+            "id": "c5",
+            "bloom": "L3",
+            "topic": "dictionaries",
+            "statement": "Count word frequencies in a text and return a dict.",
+            "lang": "python",
+            "tests": [
+              "word_count('a b a')=={'a':2,'b':1}"
+            ],
+            "expected": "dict",
+            "hints": [
+              "split on whitespace"
+            ]
+          },
+          {
+            "id": "c6",
+            "bloom": "L5",
+            "topic": "sorting",
+            "statement": "Sort a list of (name, score) tuples by score descending, then name.",
+            "lang": "python",
+            "tests": [
+              "rank([('b',1),('a',1),('c',2)])==[('c',2),('a',1),('b',1)]"
+            ],
+            "expected": "list",
+            "hints": [
+              "use a key function"
+            ]
+          },
+          {
+            "id": "c7",
+            "bloom": "L3",
+            "topic": "arrays",
+            "statement": "Return the second largest distinct element of an array.",
+            "lang": "javascript",
+            "tests": [
+              "secondLargest([3,1,3,2])===2"
+            ],
+            "expected": "number",
+            "hints": [
+              "deduplicate first"
+            ]
+          },
+          {
+            "id": "c8",
+            "bloom": "L2",
+            "topic": "conditionals",
+            "statement": "Classify a temperature in Celsius as cold, mild or hot.",
+            "lang": "javascript",
+            "tests": [
+              "classify(5)==='cold'",
+              "classify(30)==='hot'"
+            ],
+            "expected": "string",
+            "hints": []
+          },
+          {
+            "id": "c9",
+            "bloom": "L4",
+            "topic": "regex",
+            "statement": "Validate an email address with a regular expression.",
+            "lang": "javascript",
+            "tests": [
+              "isEmail('a@b.co')===true",
+              "isEmail('a@b')===false"
+            ],
+            "expected": "boolean",
+            "hints": [
+              "require a dot in the domain"
+            ]
+          },
+          {
+            "id": "c10",
+            "bloom": "L5",
+            "topic": "algorithms",
+            "statement": "Implement binary search returning the index or -1.",
+            "lang": "java",
+            "tests": [
+              "binarySearch(new int[]{1,3,5},5)==2",
+              "binarySearch(new int[]{1,3,5},4)==-1"
+            ],
+            "expected": "int",
+            "hints": [
+              "halve the interval"
+            ]
+          },
+          {
+            "id": "c11",
+            "bloom": "L6",
+            "topic": "design",
+            "statement": "Design a Stack class with push, pop and peek using an array.",
+            "lang": "java",
+            "tests": [
+              "new Stack().push(1).pop()==1"
+            ],
+            "expected": "class",
+            "hints": [
+              "track the top index",
+              "throw on empty pop"
+            ]
+          },
+          {
+            "id": "c12",
+            "bloom": "L3",
+            "topic": "sql",
+            "statement": "Return the names of students with an average grade above 14.",
+            "lang": "sql",
+            "tests": [
+              "rows==3"
+            ],
+            "expected": "result set",
+            "hints": [
+              "GROUP BY student",
+              "HAVING AVG(grade)>14"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "mini": "code|n=12|d=20260603|l=en|t=Intro programming lab 3\nc1|L3|lists|Write a function maximum(xs) that returns the largest number in a non-empty list.|python|maximum([2\\,8\\,3])==8,maximum([-1\\,-5])==-1|int or float|iterate once,track the best so far\nc2|L3|strings|Write is_palindrome(s) ignoring case and spaces.|python|is_palindrome('Anita lava la tina'),not is_palindrome('hello')|bool|normalize first\nc3|L2|arithmetic|Return the sum of the digits of a positive integer.|python|digit_sum(1234)==10,digit_sum(7)==7|int|\nc4|L4|recursion|Implement fib(n) iteratively with O(1) memory.|python|fib(10)==55,fib(0)==0|int|two variables suffice\nc5|L3|dictionaries|Count word frequencies in a text and return a dict.|python|word_count('a b a')=={'a':2\\,'b':1}|dict|split on whitespace\nc6|L5|sorting|Sort a list of (name, score) tuples by score descending, then name.|python|rank([('b'\\,1)\\,('a'\\,1)\\,('c'\\,2)])==[('c'\\,2)\\,('a'\\,1)\\,('b'\\,1)]|list|use a key function\nc7|L3|arrays|Return the second largest distinct element of an array.|javascript|secondLargest([3\\,1\\,3\\,2])===2|number|deduplicate first\nc8|L2|conditionals|Classify a temperature in Celsius as cold, mild or hot.|javascript|classify(5)==='cold',classify(30)==='hot'|string|\nc9|L4|regex|Validate an email address with a regular expression.|javascript|isEmail('a@b.co')===true,isEmail('a@b')===false|boolean|require a dot in the domain\nc10|L5|algorithms|Implement binary search returning the index or -1.|java|binarySearch(new int[]{1\\,3\\,5}\\,5)==2,binarySearch(new int[]{1\\,3\\,5}\\,4)==-1|int|halve the interval\nc11|L6|design|Design a Stack class with push, pop and peek using an array.|java|new Stack().push(1).pop()==1|class|track the top index,throw on empty pop\nc12|L3|sql|Return the names of students with an average grade above 14.|sql|rows==3|result set|GROUP BY student,HAVING AVG(grade)>14"
+      }
+    },
+    {
+      "id": "fx-log-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'log' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "log",
+      "input": {
+        "prefix": "log",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "env": "staging",
+          "host": "sima-app-01",
+          "v": 1
+        },
+        "events": [
+          {
+            "ts": "2026-06-03T08:00:01Z",
+            "level": "INFO",
+            "service": "web",
+            "code": "HTTP200",
+            "message": "GET /dashboard served",
+            "tags": [
+              "user:26"
+            ],
+            "trace": "t-1001",
+            "duration_ms": 42
+          },
+          {
+            "ts": "2026-06-03T08:00:05Z",
+            "level": "INFO",
+            "service": "worker",
+            "code": "JOB_START",
+            "message": "LessonJob 64 started stage transcribe",
+            "tags": [
+              "job:64",
+              "stage:transcribe"
+            ],
+            "trace": "t-1002",
+            "duration_ms": null
+          },
+          {
+            "ts": "2026-06-03T08:02:11Z",
+            "level": "WARN",
+            "service": "worker",
+            "code": "ASR_SLOW",
+            "message": "Whisper took longer than budget",
+            "tags": [
+              "job:64"
+            ],
+            "trace": "t-1002",
+            "duration_ms": 126000
+          },
+          {
+            "ts": "2026-06-03T08:02:12Z",
+            "level": "INFO",
+            "service": "worker",
+            "code": "JOB_STAGE",
+            "message": "stage generate started with 16 chunks",
+            "tags": [
+              "job:64",
+              "stage:generate"
+            ],
+            "trace": "t-1002",
+            "duration_ms": null
+          },
+          {
+            "ts": "2026-06-03T08:05:40Z",
+            "level": "ERROR",
+            "service": "llm",
+            "code": "NUL_CHAR",
+            "message": "NUL character in model output; sanitized",
+            "tags": [
+              "job:64",
+              "chunk:7"
+            ],
+            "trace": "t-1002",
+            "duration_ms": null
+          },
+          {
+            "ts": "2026-06-03T08:05:41Z",
+            "level": "INFO",
+            "service": "worker",
+            "code": "MINI_PARSE",
+            "message": "150 records parsed, 22 flagged incoherent",
+            "tags": [
+              "job:64"
+            ],
+            "trace": "t-1002",
+            "duration_ms": 310
+          },
+          {
+            "ts": "2026-06-03T08:06:02Z",
+            "level": "INFO",
+            "service": "verify",
+            "code": "WEB_CTX",
+            "message": "6 queries, 4 results, 2 usable sources",
+            "tags": [
+              "job:64"
+            ],
+            "trace": "t-1002",
+            "duration_ms": 8900
+          },
+          {
+            "ts": "2026-06-03T08:06:30Z",
+            "level": "ERROR",
+            "service": "llm",
+            "code": "CTX_OVERFLOW",
+            "message": "verification prompt exceeds context; truncated",
+            "tags": [
+              "job:64"
+            ],
+            "trace": "t-1002",
+            "duration_ms": null
+          },
+          {
+            "ts": "2026-06-03T08:07:00Z",
+            "level": "INFO",
+            "service": "worker",
+            "code": "JOB_DONE",
+            "message": "LessonJob 64 finished",
+            "tags": [
+              "job:64"
+            ],
+            "trace": "t-1002",
+            "duration_ms": 419000
+          },
+          {
+            "ts": "2026-06-03T08:10:15Z",
+            "level": "WARN",
+            "service": "web",
+            "code": "HTTP404",
+            "message": "GET /clase/999/ not found",
+            "tags": [
+              "user:12"
+            ],
+            "trace": "t-1003",
+            "duration_ms": 5
+          },
+          {
+            "ts": "2026-06-03T08:12:00Z",
+            "level": "CRITICAL",
+            "service": "llm",
+            "code": "ENDPOINT_DOWN",
+            "message": "local API base unreachable; retry scheduled",
+            "tags": [
+              "endpoint:8003"
+            ],
+            "trace": "t-1004",
+            "duration_ms": null
+          },
+          {
+            "ts": "2026-06-03T08:12:30Z",
+            "level": "INFO",
+            "service": "llm",
+            "code": "ENDPOINT_UP",
+            "message": "local API base healthy after retry",
+            "tags": [
+              "endpoint:8003"
+            ],
+            "trace": "t-1004",
+            "duration_ms": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "log|n=12|d=20260603|env=staging|host=sima-app-01\n2026-06-03T08:00:01Z|INFO|web|HTTP200|GET /dashboard served|user:26|t-1001|42\n2026-06-03T08:00:05Z|INFO|worker|JOB_START|LessonJob 64 started stage transcribe|job:64,stage:transcribe|t-1002|\n2026-06-03T08:02:11Z|WARN|worker|ASR_SLOW|Whisper took longer than budget|job:64|t-1002|126000\n2026-06-03T08:02:12Z|INFO|worker|JOB_STAGE|stage generate started with 16 chunks|job:64,stage:generate|t-1002|\n2026-06-03T08:05:40Z|ERROR|llm|NUL_CHAR|NUL character in model output; sanitized|job:64,chunk:7|t-1002|\n2026-06-03T08:05:41Z|INFO|worker|MINI_PARSE|150 records parsed, 22 flagged incoherent|job:64|t-1002|310\n2026-06-03T08:06:02Z|INFO|verify|WEB_CTX|6 queries, 4 results, 2 usable sources|job:64|t-1002|8900\n2026-06-03T08:06:30Z|ERROR|llm|CTX_OVERFLOW|verification prompt exceeds context; truncated|job:64|t-1002|\n2026-06-03T08:07:00Z|INFO|worker|JOB_DONE|LessonJob 64 finished|job:64|t-1002|419000\n2026-06-03T08:10:15Z|WARN|web|HTTP404|GET /clase/999/ not found|user:12|t-1003|5\n2026-06-03T08:12:00Z|CRITICAL|llm|ENDPOINT_DOWN|local API base unreachable; retry scheduled|endpoint:8003|t-1004|\n2026-06-03T08:12:30Z|INFO|llm|ENDPOINT_UP|local API base healthy after retry|endpoint:8003|t-1004|"
+      }
+    },
+    {
+      "id": "fx-map-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'map' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "map",
+      "input": {
+        "prefix": "map",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "es",
+          "t": "Biología celular",
+          "src": "clase-64",
+          "v": 1
+        },
+        "edges": [
+          {
+            "src": "célula",
+            "rel": "has_part",
+            "dst": "núcleo",
+            "weight": 0.9,
+            "evidence": "s2"
+          },
+          {
+            "src": "célula",
+            "rel": "has_part",
+            "dst": "mitocondria",
+            "weight": 0.9,
+            "evidence": "s2"
+          },
+          {
+            "src": "célula",
+            "rel": "has_part",
+            "dst": "membrana plasmática",
+            "weight": 0.85,
+            "evidence": "s3"
+          },
+          {
+            "src": "cloroplasto",
+            "rel": "performs",
+            "dst": "fotosíntesis",
+            "weight": 0.95,
+            "evidence": "s4"
+          },
+          {
+            "src": "fotosíntesis",
+            "rel": "has_part",
+            "dst": "fase luminosa",
+            "weight": 0.9,
+            "evidence": "s4"
+          },
+          {
+            "src": "fotosíntesis",
+            "rel": "has_part",
+            "dst": "ciclo de Calvin",
+            "weight": 0.9,
+            "evidence": "s5"
+          },
+          {
+            "src": "fase luminosa",
+            "rel": "produces",
+            "dst": "ATP",
+            "weight": 0.8,
+            "evidence": "s4"
+          },
+          {
+            "src": "mitocondria",
+            "rel": "performs",
+            "dst": "respiración celular",
+            "weight": 0.95,
+            "evidence": "s6"
+          },
+          {
+            "src": "respiración celular",
+            "rel": "produces",
+            "dst": "ATP",
+            "weight": 0.9,
+            "evidence": "s6"
+          },
+          {
+            "src": "fotosíntesis",
+            "rel": "contrasts",
+            "dst": "respiración celular",
+            "weight": 0.7,
+            "evidence": "s7"
+          },
+          {
+            "src": "ciclo celular",
+            "rel": "has_part",
+            "dst": "mitosis",
+            "weight": 0.85,
+            "evidence": "s8"
+          },
+          {
+            "src": "meiosis",
+            "rel": "causes",
+            "dst": "variabilidad genética",
+            "weight": 0.8,
+            "evidence": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "map|n=12|d=20260603|l=es|t=Biología celular|src=clase-64\ncélula|has_part|núcleo|0.9|s2\ncélula|has_part|mitocondria|0.9|s2\ncélula|has_part|membrana plasmática|0.85|s3\ncloroplasto|performs|fotosíntesis|0.95|s4\nfotosíntesis|has_part|fase luminosa|0.9|s4\nfotosíntesis|has_part|ciclo de Calvin|0.9|s5\nfase luminosa|produces|ATP|0.8|s4\nmitocondria|performs|respiración celular|0.95|s6\nrespiración celular|produces|ATP|0.9|s6\nfotosíntesis|contrasts|respiración celular|0.7|s7\nciclo celular|has_part|mitosis|0.85|s8\nmeiosis|causes|variabilidad genética|0.8|"
+      }
+    },
+    {
+      "id": "fx-ner-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'ner' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "ner",
+      "input": {
+        "prefix": "ner",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "model": "ner-base-2026",
+          "schema": "ontonotes-lite",
+          "v": 1
+        },
+        "entities": [
+          {
+            "doc": "d1",
+            "start": 0,
+            "end": 17,
+            "text": "Whisper",
+            "type": "PRODUCT",
+            "conf": 0.98
+          },
+          {
+            "doc": "d1",
+            "start": 25,
+            "end": 31,
+            "text": "OpenAI",
+            "type": "ORG",
+            "conf": 0.99
+          },
+          {
+            "doc": "d1",
+            "start": 60,
+            "end": 64,
+            "text": "2023",
+            "type": "DATE",
+            "conf": 0.97
+          },
+          {
+            "doc": "d2",
+            "start": 4,
+            "end": 10,
+            "text": "Django",
+            "type": "PRODUCT",
+            "conf": 0.96
+          },
+          {
+            "doc": "d2",
+            "start": 30,
+            "end": 40,
+            "text": "PostgreSQL",
+            "type": "PRODUCT",
+            "conf": 0.95
+          },
+          {
+            "doc": "d3",
+            "start": 0,
+            "end": 4,
+            "text": "Lima",
+            "type": "LOC",
+            "conf": 0.99
+          },
+          {
+            "doc": "d3",
+            "start": 6,
+            "end": 10,
+            "text": "Perú",
+            "type": "LOC",
+            "conf": 0.99
+          },
+          {
+            "doc": "d3",
+            "start": 45,
+            "end": 48,
+            "text": "UPC",
+            "type": "ORG",
+            "conf": 0.93
+          },
+          {
+            "doc": "d4",
+            "start": 12,
+            "end": 30,
+            "text": "Item Response Theory",
+            "type": "CONCEPT",
+            "conf": 0.91
+          },
+          {
+            "doc": "d4",
+            "start": 35,
+            "end": 38,
+            "text": "CAT",
+            "type": "CONCEPT",
+            "conf": 0.88
+          },
+          {
+            "doc": "d5",
+            "start": 0,
+            "end": 12,
+            "text": "Adrián Palma",
+            "type": "PERSON",
+            "conf": 0.97
+          },
+          {
+            "doc": "d5",
+            "start": 17,
+            "end": 31,
+            "text": "Erick Palomino",
+            "type": "PERSON",
+            "conf": 0.97
+          }
+        ]
+      },
+      "expected": {
+        "mini": "ner|n=12|d=20260603|l=en|model=ner-base-2026|schema=ontonotes-lite\nd1|0|17|Whisper|PRODUCT|0.98\nd1|25|31|OpenAI|ORG|0.99\nd1|60|64|2023|DATE|0.97\nd2|4|10|Django|PRODUCT|0.96\nd2|30|40|PostgreSQL|PRODUCT|0.95\nd3|0|4|Lima|LOC|0.99\nd3|6|10|Perú|LOC|0.99\nd3|45|48|UPC|ORG|0.93\nd4|12|30|Item Response Theory|CONCEPT|0.91\nd4|35|38|CAT|CONCEPT|0.88\nd5|0|12|Adrián Palma|PERSON|0.97\nd5|17|31|Erick Palomino|PERSON|0.97"
+      }
+    },
+    {
+      "id": "fx-q-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'q' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "q",
+      "input": {
+        "prefix": "q",
+        "header": {
+          "n": 12,
+          "m": "IRT3PL",
+          "d": "20260603",
+          "l": "es",
+          "t": "cuestionario formativo",
+          "bd": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "cat": {
+            "theta_init": 0.0,
+            "theta_min": -3.0,
+            "theta_max": 3.0,
+            "se_stop": 0.3,
+            "max_items": 12,
+            "exposure_ctrl": "SH"
+          },
+          "k": 4,
+          "v": 1
+        },
+        "items": [
+          {
+            "id": "i1",
+            "bloom": "L1",
+            "topic": "Biología",
+            "statement": "¿Dónde ocurre principalmente la fotosíntesis?",
+            "options": [
+              "cloroplastos",
+              "núcleo",
+              "mitocondria",
+              "ribosoma"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 0.9,
+              "b": -1.0,
+              "c": 0.25
+            },
+            "difficulty": 1,
+            "cat": {
+              "area": "biología",
+              "exposure_cap": 0.2,
+              "demand": "low"
+            },
+            "feedback": "La fotosíntesis ocurre en los cloroplastos, donde está la clorofila.",
+            "hint": "Piensa en el pigmento verde.",
+            "objective": "Identificar organelos vegetales"
+          },
+          {
+            "id": "i2",
+            "bloom": "L2",
+            "topic": "Química",
+            "statement": "¿Qué representa el pH de una solución?",
+            "options": [
+              "acidez o basicidad",
+              "masa molecular",
+              "temperatura",
+              "presión osmótica"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.1,
+              "b": -0.3,
+              "c": 0.25
+            },
+            "difficulty": 2,
+            "cat": {
+              "area": "química",
+              "exposure_cap": 0.2,
+              "demand": "medium"
+            },
+            "feedback": "El pH mide la concentración de iones hidrógeno: acidez o basicidad.",
+            "hint": "Escala de 0 a 14.",
+            "objective": "Interpretar la escala de pH"
+          },
+          {
+            "id": "i3",
+            "bloom": "L3",
+            "topic": "Matemática",
+            "statement": "Si 3x+6=18, ¿cuál es el valor de x?",
+            "options": [
+              "4",
+              "6",
+              "8",
+              "12"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.4,
+              "b": 0.2,
+              "c": 0.2
+            },
+            "difficulty": 3,
+            "cat": {
+              "area": "matemática",
+              "exposure_cap": 0.25,
+              "demand": "medium"
+            },
+            "feedback": "3x = 18 - 6 = 12, por lo tanto x = 4.",
+            "hint": "Despeja el término independiente.",
+            "objective": "Resolver ecuaciones lineales"
+          },
+          {
+            "id": "i4",
+            "bloom": "L4",
+            "topic": "Historia",
+            "statement": "¿Qué factor explica mejor la caída del Imperio romano de Occidente?",
+            "options": [
+              "presiones militares y crisis internas",
+              "un solo terremoto",
+              "la invención de la imprenta",
+              "la conquista española"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.7,
+              "b": 0.8,
+              "c": 0.2
+            },
+            "difficulty": 4,
+            "cat": {
+              "area": "historia",
+              "exposure_cap": 0.18,
+              "demand": "high"
+            },
+            "feedback": "La caída combinó presión externa e inestabilidad interna prolongada.",
+            "hint": "No fue un evento único.",
+            "objective": "Analizar causas multifactoriales"
+          },
+          {
+            "id": "i5",
+            "bloom": "L5",
+            "topic": "Literatura",
+            "statement": "Evalúa cuál opción interpreta mejor un narrador no confiable.",
+            "options": [
+              "su relato debe contrastarse con evidencias",
+              "siempre dice la verdad",
+              "solo narra en tercera persona",
+              "no participa en la trama"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.0,
+              "b": 1.2,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "literatura",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            },
+            "feedback": "Un narrador no confiable exige contrastar su versión con otras evidencias del texto.",
+            "hint": "Sospecha del relato.",
+            "objective": "Evaluar la voz narrativa"
+          },
+          {
+            "id": "i6",
+            "bloom": "L6",
+            "topic": "Computación",
+            "statement": "¿Qué solución diseñarías para reducir errores en una API?",
+            "options": [
+              "validación de esquema y pruebas automatizadas",
+              "eliminar logs",
+              "usar variables globales",
+              "evitar documentación"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.3,
+              "b": 1.7,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "computación",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            },
+            "feedback": "Validar esquemas y automatizar pruebas reduce errores en interfaces de programación.",
+            "hint": "Piensa en verificación temprana.",
+            "objective": "Diseñar controles de calidad"
+          },
+          {
+            "id": "i7",
+            "bloom": "L1",
+            "topic": "Física",
+            "statement": "¿Cuál es la unidad de fuerza en el SI?",
+            "options": [
+              "newton",
+              "joule",
+              "watt",
+              "pascal"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 0.9,
+              "b": -1.2,
+              "c": 0.25
+            },
+            "difficulty": 1,
+            "cat": {
+              "area": "física",
+              "exposure_cap": 0.2,
+              "demand": "low"
+            },
+            "feedback": "El newton (N) es la unidad SI de fuerza.",
+            "hint": "Segunda ley de Newton.",
+            "objective": "Reconocer unidades SI"
+          },
+          {
+            "id": "i8",
+            "bloom": "L2",
+            "topic": "Geografía",
+            "statement": "¿Qué describe una cuenca hidrográfica?",
+            "options": [
+              "territorio drenado por un río",
+              "altura de una montaña",
+              "tipo de clima",
+              "frontera política"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.1,
+              "b": -0.2,
+              "c": 0.25
+            },
+            "difficulty": 2,
+            "cat": {
+              "area": "geografía",
+              "exposure_cap": 0.22,
+              "demand": "medium"
+            },
+            "feedback": "Una cuenca es el territorio cuyas aguas drenan hacia un mismo río.",
+            "hint": "Piensa en el drenaje.",
+            "objective": "Definir unidades hidrográficas"
+          },
+          {
+            "id": "i9",
+            "bloom": "L3",
+            "topic": "Comunicación",
+            "statement": "Elige el conector que completa una relación de causa.",
+            "options": [
+              "porque",
+              "sin embargo",
+              "además",
+              "por ejemplo"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.4,
+              "b": 0.1,
+              "c": 0.2
+            },
+            "difficulty": 3,
+            "cat": {
+              "area": "comunicación",
+              "exposure_cap": 0.25,
+              "demand": "medium"
+            },
+            "feedback": "\"Porque\" introduce la causa de un hecho.",
+            "hint": "Relación causa-efecto.",
+            "objective": "Usar conectores lógicos"
+          },
+          {
+            "id": "i10",
+            "bloom": "L4",
+            "topic": "Economía",
+            "statement": "Analiza qué sucede si sube el precio y baja la demanda.",
+            "options": [
+              "disminuye la cantidad demandada",
+              "sube la oferta siempre",
+              "desaparece el mercado",
+              "no cambia el equilibrio"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 1.7,
+              "b": 0.7,
+              "c": 0.2
+            },
+            "difficulty": 4,
+            "cat": {
+              "area": "economía",
+              "exposure_cap": 0.18,
+              "demand": "high"
+            },
+            "feedback": "Con precio mayor y demanda menor, la cantidad demandada disminuye.",
+            "hint": "Ley de la demanda.",
+            "objective": "Analizar el equilibrio de mercado"
+          },
+          {
+            "id": "i11",
+            "bloom": "L5",
+            "topic": "Ética",
+            "statement": "¿Qué criterio permite evaluar mejor una decisión pública?",
+            "options": [
+              "impacto, justicia y evidencia",
+              "popularidad inmediata",
+              "costo únicamente",
+              "autoridad del emisor"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.0,
+              "b": 1.3,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "ética",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            },
+            "feedback": "Una decisión pública se evalúa por impacto, justicia y evidencia disponible.",
+            "hint": "Criterios múltiples.",
+            "objective": "Evaluar decisiones con criterios éticos"
+          },
+          {
+            "id": "i12",
+            "bloom": "L6",
+            "topic": "Arte",
+            "statement": "Propón el principio clave para crear una campaña visual coherente.",
+            "options": [
+              "unidad entre mensaje, color y audiencia",
+              "usar todos los colores",
+              "copiar una plantilla",
+              "evitar bocetos"
+            ],
+            "correct": 0,
+            "irt": {
+              "a": 2.3,
+              "b": 1.8,
+              "c": 0.15
+            },
+            "difficulty": 5,
+            "cat": {
+              "area": "arte",
+              "exposure_cap": 0.15,
+              "demand": "high"
+            },
+            "feedback": "Una campaña coherente mantiene unidad entre mensaje, color y audiencia.",
+            "hint": "Coherencia visual.",
+            "objective": "Proponer principios de diseño"
+          }
+        ]
+      },
+      "expected": {
+        "mini": "q|n=12|m=IRT3PL|d=20260603|l=es|t=cuestionario formativo|bd=1,1,1,1,1,1|cat=0,-3,3,0.3,12,SH|k=4\ni1|L1|Biología|¿Dónde ocurre principalmente la fotosíntesis?|cloroplastos*,núcleo,mitocondria,ribosoma|0.9,-1,0.25|1|biología,0.2,low|La fotosíntesis ocurre en los cloroplastos, donde está la clorofila.|Piensa en el pigmento verde.|Identificar organelos vegetales\ni2|L2|Química|¿Qué representa el pH de una solución?|acidez o basicidad*,masa molecular,temperatura,presión osmótica|1.1,-0.3,0.25|2|química,0.2,medium|El pH mide la concentración de iones hidrógeno: acidez o basicidad.|Escala de 0 a 14.|Interpretar la escala de pH\ni3|L3|Matemática|Si 3x+6=18, ¿cuál es el valor de x?|4*,6,8,12|1.4,0.2,0.2|3|matemática,0.25,medium|3x = 18 - 6 = 12, por lo tanto x = 4.|Despeja el término independiente.|Resolver ecuaciones lineales\ni4|L4|Historia|¿Qué factor explica mejor la caída del Imperio romano de Occidente?|presiones militares y crisis internas*,un solo terremoto,la invención de la imprenta,la conquista española|1.7,0.8,0.2|4|historia,0.18,high|La caída combinó presión externa e inestabilidad interna prolongada.|No fue un evento único.|Analizar causas multifactoriales\ni5|L5|Literatura|Evalúa cuál opción interpreta mejor un narrador no confiable.|su relato debe contrastarse con evidencias*,siempre dice la verdad,solo narra en tercera persona,no participa en la trama|2,1.2,0.15|5|literatura,0.15,high|Un narrador no confiable exige contrastar su versión con otras evidencias del texto.|Sospecha del relato.|Evaluar la voz narrativa\ni6|L6|Computación|¿Qué solución diseñarías para reducir errores en una API?|validación de esquema y pruebas automatizadas*,eliminar logs,usar variables globales,evitar documentación|2.3,1.7,0.15|5|computación,0.15,high|Validar esquemas y automatizar pruebas reduce errores en interfaces de programación.|Piensa en verificación temprana.|Diseñar controles de calidad\ni7|L1|Física|¿Cuál es la unidad de fuerza en el SI?|newton*,joule,watt,pascal|0.9,-1.2,0.25|1|física,0.2,low|El newton (N) es la unidad SI de fuerza.|Segunda ley de Newton.|Reconocer unidades SI\ni8|L2|Geografía|¿Qué describe una cuenca hidrográfica?|territorio drenado por un río*,altura de una montaña,tipo de clima,frontera política|1.1,-0.2,0.25|2|geografía,0.22,medium|Una cuenca es el territorio cuyas aguas drenan hacia un mismo río.|Piensa en el drenaje.|Definir unidades hidrográficas\ni9|L3|Comunicación|Elige el conector que completa una relación de causa.|porque*,sin embargo,además,por ejemplo|1.4,0.1,0.2|3|comunicación,0.25,medium|\"Porque\" introduce la causa de un hecho.|Relación causa-efecto.|Usar conectores lógicos\ni10|L4|Economía|Analiza qué sucede si sube el precio y baja la demanda.|disminuye la cantidad demandada*,sube la oferta siempre,desaparece el mercado,no cambia el equilibrio|1.7,0.7,0.2|4|economía,0.18,high|Con precio mayor y demanda menor, la cantidad demandada disminuye.|Ley de la demanda.|Analizar el equilibrio de mercado\ni11|L5|Ética|¿Qué criterio permite evaluar mejor una decisión pública?|impacto\\, justicia y evidencia*,popularidad inmediata,costo únicamente,autoridad del emisor|2,1.3,0.15|5|ética,0.15,high|Una decisión pública se evalúa por impacto, justicia y evidencia disponible.|Criterios múltiples.|Evaluar decisiones con criterios éticos\ni12|L6|Arte|Propón el principio clave para crear una campaña visual coherente.|unidad entre mensaje\\, color y audiencia*,usar todos los colores,copiar una plantilla,evitar bocetos|2.3,1.8,0.15|5|arte,0.15,high|Una campaña coherente mantiene unidad entre mensaje, color y audiencia.|Coherencia visual.|Proponer principios de diseño"
+      }
+    },
+    {
+      "id": "fx-r-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'r' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "r",
+      "input": {
+        "prefix": "r",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "t": "Argumentative essay",
+          "k": 4,
+          "scale": "0-3",
+          "v": 1
+        },
+        "criteria": [
+          {
+            "id": "r1",
+            "dimension": "Argument",
+            "criterion": "Thesis clarity",
+            "levels": [
+              "absent or unclear",
+              "stated but vague",
+              "clear and focused",
+              "clear, focused and original"
+            ],
+            "weight": 0.2,
+            "evidence": "Introduction paragraph"
+          },
+          {
+            "id": "r2",
+            "dimension": "Argument",
+            "criterion": "Use of evidence",
+            "levels": [
+              "no evidence",
+              "evidence unrelated to claims",
+              "relevant evidence",
+              "relevant, well-integrated evidence"
+            ],
+            "weight": 0.2,
+            "evidence": "Body paragraphs"
+          },
+          {
+            "id": "r3",
+            "dimension": "Argument",
+            "criterion": "Counterarguments",
+            "levels": [
+              "ignored",
+              "mentioned",
+              "addressed",
+              "addressed and refuted"
+            ],
+            "weight": 0.1,
+            "evidence": "Discussion section"
+          },
+          {
+            "id": "r4",
+            "dimension": "Structure",
+            "criterion": "Organization",
+            "levels": [
+              "disorganized",
+              "partially organized",
+              "logical order",
+              "logical order with transitions"
+            ],
+            "weight": 0.1,
+            "evidence": "Whole essay"
+          },
+          {
+            "id": "r5",
+            "dimension": "Structure",
+            "criterion": "Paragraphing",
+            "levels": [
+              "no paragraphs",
+              "inconsistent",
+              "one idea per paragraph",
+              "purposeful paragraphing"
+            ],
+            "weight": 0.05,
+            "evidence": "Whole essay"
+          },
+          {
+            "id": "r6",
+            "dimension": "Language",
+            "criterion": "Grammar and mechanics",
+            "levels": [
+              "frequent errors",
+              "several errors",
+              "few errors",
+              "error-free"
+            ],
+            "weight": 0.1,
+            "evidence": "Whole essay"
+          },
+          {
+            "id": "r7",
+            "dimension": "Language",
+            "criterion": "Academic register",
+            "levels": [
+              "informal",
+              "mixed",
+              "mostly academic",
+              "consistently academic"
+            ],
+            "weight": 0.05,
+            "evidence": "Whole essay"
+          },
+          {
+            "id": "r8",
+            "dimension": "Sources",
+            "criterion": "Citation accuracy",
+            "levels": [
+              "missing",
+              "inconsistent",
+              "mostly correct",
+              "correct APA/IEEE"
+            ],
+            "weight": 0.1,
+            "evidence": "Reference list"
+          },
+          {
+            "id": "r9",
+            "dimension": "Sources",
+            "criterion": "Source quality",
+            "levels": [
+              "unreliable",
+              "mixed",
+              "reliable",
+              "peer-reviewed and recent"
+            ],
+            "weight": 0.05,
+            "evidence": "Reference list"
+          },
+          {
+            "id": "r10",
+            "dimension": "Critical thinking",
+            "criterion": "Analysis depth",
+            "levels": [
+              "descriptive only",
+              "some analysis",
+              "consistent analysis",
+              "insightful analysis"
+            ],
+            "weight": 0.03,
+            "evidence": "Body paragraphs"
+          },
+          {
+            "id": "r11",
+            "dimension": "Critical thinking",
+            "criterion": "Synthesis",
+            "levels": [
+              "none",
+              "lists ideas",
+              "connects ideas",
+              "builds new insight"
+            ],
+            "weight": 0.01,
+            "evidence": "Conclusion"
+          },
+          {
+            "id": "r12",
+            "dimension": "Presentation",
+            "criterion": "Formatting",
+            "levels": [
+              "not followed",
+              "partially",
+              "mostly",
+              "fully compliant"
+            ],
+            "weight": 0.01,
+            "evidence": "Document"
+          }
+        ]
+      },
+      "expected": {
+        "mini": "r|n=12|d=20260603|l=en|t=Argumentative essay|k=4|scale=0-3\nr1|Argument|Thesis clarity|absent or unclear,stated but vague,clear and focused,clear\\, focused and original|0.2|Introduction paragraph\nr2|Argument|Use of evidence|no evidence,evidence unrelated to claims,relevant evidence,relevant\\, well-integrated evidence|0.2|Body paragraphs\nr3|Argument|Counterarguments|ignored,mentioned,addressed,addressed and refuted|0.1|Discussion section\nr4|Structure|Organization|disorganized,partially organized,logical order,logical order with transitions|0.1|Whole essay\nr5|Structure|Paragraphing|no paragraphs,inconsistent,one idea per paragraph,purposeful paragraphing|0.05|Whole essay\nr6|Language|Grammar and mechanics|frequent errors,several errors,few errors,error-free|0.1|Whole essay\nr7|Language|Academic register|informal,mixed,mostly academic,consistently academic|0.05|Whole essay\nr8|Sources|Citation accuracy|missing,inconsistent,mostly correct,correct APA/IEEE|0.1|Reference list\nr9|Sources|Source quality|unreliable,mixed,reliable,peer-reviewed and recent|0.05|Reference list\nr10|Critical thinking|Analysis depth|descriptive only,some analysis,consistent analysis,insightful analysis|0.03|Body paragraphs\nr11|Critical thinking|Synthesis|none,lists ideas,connects ideas,builds new insight|0.01|Conclusion\nr12|Presentation|Formatting|not followed,partially,mostly,fully compliant|0.01|Document"
+      }
+    },
+    {
+      "id": "fx-s-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 's' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "s",
+      "input": {
+        "prefix": "s",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "t": "Post-pilot satisfaction survey",
+          "k": 2,
+          "v": 1
+        },
+        "items": [
+          {
+            "id": "q1",
+            "construct": "Usefulness",
+            "statement": "The platform helps me review lectures faster.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q2",
+            "construct": "Usefulness",
+            "statement": "Generated quizzes reflect the lecture content.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q3",
+            "construct": "Usefulness",
+            "statement": "I would not use this tool for other courses.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": true
+          },
+          {
+            "id": "q4",
+            "construct": "Ease of use",
+            "statement": "Uploading a lecture is simple.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q5",
+            "construct": "Ease of use",
+            "statement": "I needed help to understand the interface.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": true
+          },
+          {
+            "id": "q6",
+            "construct": "Ease of use",
+            "statement": "The study resources are easy to find.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q7",
+            "construct": "Engagement",
+            "statement": "Adaptive quizzes keep me motivated.",
+            "scale": 7,
+            "anchors": [
+              "never",
+              "always"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q8",
+            "construct": "Engagement",
+            "statement": "I lose interest after a few questions.",
+            "scale": 7,
+            "anchors": [
+              "never",
+              "always"
+            ],
+            "reverse": true
+          },
+          {
+            "id": "q9",
+            "construct": "Engagement",
+            "statement": "I come back to review flashcards.",
+            "scale": 7,
+            "anchors": [
+              "never",
+              "always"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q10",
+            "construct": "Trust",
+            "statement": "The generated content is accurate.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": false
+          },
+          {
+            "id": "q11",
+            "construct": "Trust",
+            "statement": "I double-check the answers with my notes.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": true
+          },
+          {
+            "id": "q12",
+            "construct": "Trust",
+            "statement": "I trust the difficulty level assigned to me.",
+            "scale": 5,
+            "anchors": [
+              "strongly disagree",
+              "strongly agree"
+            ],
+            "reverse": false
+          }
+        ]
+      },
+      "expected": {
+        "mini": "s|n=12|d=20260603|l=en|t=Post-pilot satisfaction survey|k=2\nq1|Usefulness|The platform helps me review lectures faster.|5|strongly disagree,strongly agree|false\nq2|Usefulness|Generated quizzes reflect the lecture content.|5|strongly disagree,strongly agree|false\nq3|Usefulness|I would not use this tool for other courses.|5|strongly disagree,strongly agree|true\nq4|Ease of use|Uploading a lecture is simple.|5|strongly disagree,strongly agree|false\nq5|Ease of use|I needed help to understand the interface.|5|strongly disagree,strongly agree|true\nq6|Ease of use|The study resources are easy to find.|5|strongly disagree,strongly agree|false\nq7|Engagement|Adaptive quizzes keep me motivated.|7|never,always|false\nq8|Engagement|I lose interest after a few questions.|7|never,always|true\nq9|Engagement|I come back to review flashcards.|7|never,always|false\nq10|Trust|The generated content is accurate.|5|strongly disagree,strongly agree|false\nq11|Trust|I double-check the answers with my notes.|5|strongly disagree,strongly agree|true\nq12|Trust|I trust the difficulty level assigned to me.|5|strongly disagree,strongly agree|false"
+      }
+    },
+    {
+      "id": "fx-sum-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'sum' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "sum",
+      "input": {
+        "prefix": "sum",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "es",
+          "t": "Biología celular",
+          "src": "clase-64",
+          "dur": 2520,
+          "v": 1
+        },
+        "segments": [
+          {
+            "id": "s1",
+            "t_start": 0,
+            "t_end": 180,
+            "title": "Introducción a la célula",
+            "summary": "La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.",
+            "keywords": [
+              "célula",
+              "procariota",
+              "eucariota"
+            ],
+            "bloom": "L1"
+          },
+          {
+            "id": "s2",
+            "t_start": 180,
+            "t_end": 420,
+            "title": "Organelos y funciones",
+            "summary": "Mitocondria produce energía; el cloroplasto realiza la fotosíntesis; el núcleo guarda el ADN.",
+            "keywords": [
+              "mitocondria",
+              "cloroplasto",
+              "núcleo"
+            ],
+            "bloom": "L2"
+          },
+          {
+            "id": "s3",
+            "t_start": 420,
+            "t_end": 600,
+            "title": "Membrana plasmática",
+            "summary": "La membrana regula el intercambio de sustancias mediante transporte pasivo y activo.",
+            "keywords": [
+              "membrana",
+              "transporte"
+            ],
+            "bloom": "L2"
+          },
+          {
+            "id": "s4",
+            "t_start": 600,
+            "t_end": 840,
+            "title": "Fotosíntesis: fase luminosa",
+            "summary": "La luz excita la clorofila y se produce ATP y NADPH liberando oxígeno.",
+            "keywords": [
+              "ATP",
+              "NADPH",
+              "clorofila"
+            ],
+            "bloom": "L3"
+          },
+          {
+            "id": "s5",
+            "t_start": 840,
+            "t_end": 1080,
+            "title": "Fotosíntesis: ciclo de Calvin",
+            "summary": "El CO2 se fija en azúcares usando el ATP y NADPH de la fase luminosa.",
+            "keywords": [
+              "Calvin",
+              "CO2",
+              "glucosa"
+            ],
+            "bloom": "L3"
+          },
+          {
+            "id": "s6",
+            "t_start": 1080,
+            "t_end": 1320,
+            "title": "Respiración celular",
+            "summary": "La glucosa se oxida en glucólisis, ciclo de Krebs y cadena de transporte para obtener ATP.",
+            "keywords": [
+              "glucólisis",
+              "Krebs",
+              "ATP"
+            ],
+            "bloom": "L3"
+          },
+          {
+            "id": "s7",
+            "t_start": 1320,
+            "t_end": 1500,
+            "title": "Comparación fotosíntesis y respiración",
+            "summary": "Procesos complementarios: uno almacena energía en glucosa, el otro la libera.",
+            "keywords": [
+              "comparación",
+              "energía"
+            ],
+            "bloom": "L4"
+          },
+          {
+            "id": "s8",
+            "t_start": 1500,
+            "t_end": 1740,
+            "title": "División celular: mitosis",
+            "summary": "La mitosis produce dos células idénticas en profase, metafase, anafase y telofase.",
+            "keywords": [
+              "mitosis",
+              "ciclo celular"
+            ],
+            "bloom": "L2"
+          },
+          {
+            "id": "s9",
+            "t_start": 1740,
+            "t_end": 1980,
+            "title": "Meiosis y variabilidad",
+            "summary": "La meiosis reduce el número cromosómico a la mitad y genera variabilidad genética.",
+            "keywords": [
+              "meiosis",
+              "gametos",
+              "variabilidad"
+            ],
+            "bloom": "L4"
+          },
+          {
+            "id": "s10",
+            "t_start": 1980,
+            "t_end": 2160,
+            "title": "Errores frecuentes",
+            "summary": "Confundir mitosis con meiosis y atribuir la fotosíntesis a la mitocondria.",
+            "keywords": [
+              "errores",
+              "repaso"
+            ],
+            "bloom": "L5"
+          },
+          {
+            "id": "s11",
+            "t_start": 2160,
+            "t_end": 2400,
+            "title": "Aplicaciones biotecnológicas",
+            "summary": "Cultivos celulares y edición genética aprovechan el conocimiento de la célula.",
+            "keywords": [
+              "biotecnología",
+              "CRISPR"
+            ],
+            "bloom": "L6"
+          },
+          {
+            "id": "s12",
+            "t_start": 2400,
+            "t_end": 2520,
+            "title": "Cierre y síntesis",
+            "summary": "Recapitulación de estructuras, procesos energéticos y división celular.",
+            "keywords": [
+              "síntesis"
+            ],
+            "bloom": "L2"
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sum|n=12|d=20260603|l=es|t=Biología celular|src=clase-64|dur=2520\ns1|0|180|Introducción a la célula|La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.|célula,procariota,eucariota|L1\ns2|180|420|Organelos y funciones|Mitocondria produce energía; el cloroplasto realiza la fotosíntesis; el núcleo guarda el ADN.|mitocondria,cloroplasto,núcleo|L2\ns3|420|600|Membrana plasmática|La membrana regula el intercambio de sustancias mediante transporte pasivo y activo.|membrana,transporte|L2\ns4|600|840|Fotosíntesis: fase luminosa|La luz excita la clorofila y se produce ATP y NADPH liberando oxígeno.|ATP,NADPH,clorofila|L3\ns5|840|1080|Fotosíntesis: ciclo de Calvin|El CO2 se fija en azúcares usando el ATP y NADPH de la fase luminosa.|Calvin,CO2,glucosa|L3\ns6|1080|1320|Respiración celular|La glucosa se oxida en glucólisis, ciclo de Krebs y cadena de transporte para obtener ATP.|glucólisis,Krebs,ATP|L3\ns7|1320|1500|Comparación fotosíntesis y respiración|Procesos complementarios: uno almacena energía en glucosa, el otro la libera.|comparación,energía|L4\ns8|1500|1740|División celular: mitosis|La mitosis produce dos células idénticas en profase, metafase, anafase y telofase.|mitosis,ciclo celular|L2\ns9|1740|1980|Meiosis y variabilidad|La meiosis reduce el número cromosómico a la mitad y genera variabilidad genética.|meiosis,gametos,variabilidad|L4\ns10|1980|2160|Errores frecuentes|Confundir mitosis con meiosis y atribuir la fotosíntesis a la mitocondria.|errores,repaso|L5\ns11|2160|2400|Aplicaciones biotecnológicas|Cultivos celulares y edición genética aprovechan el conocimiento de la célula.|biotecnología,CRISPR|L6\ns12|2400|2520|Cierre y síntesis|Recapitulación de estructuras, procesos energéticos y división celular.|síntesis|L2"
+      }
+    },
+    {
+      "id": "fx-tc-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'tc' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "tc",
+      "input": {
+        "prefix": "tc",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "t": "SIMA release 1.2 regression",
+          "proj": "SIMA",
+          "v": 1
+        },
+        "cases": [
+          {
+            "id": "TC-001",
+            "module": "auth",
+            "title": "Login with valid credentials",
+            "precondition": "User registered and active",
+            "steps": [
+              "open /login",
+              "enter valid email and password",
+              "click Sign in"
+            ],
+            "expected": "Dashboard is shown and session cookie is set",
+            "priority": "high",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-002",
+            "module": "auth",
+            "title": "Login with wrong password",
+            "precondition": "User registered",
+            "steps": [
+              "open /login",
+              "enter valid email and wrong password",
+              "click Sign in"
+            ],
+            "expected": "Error message; no session created",
+            "priority": "high",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-003",
+            "module": "auth",
+            "title": "Password reset email",
+            "precondition": "User registered",
+            "steps": [
+              "open /reset",
+              "submit registered email"
+            ],
+            "expected": "Reset email delivered within 60 s",
+            "priority": "medium",
+            "type": "integration",
+            "automated": false
+          },
+          {
+            "id": "TC-004",
+            "module": "courses",
+            "title": "Create course",
+            "precondition": "Logged-in student",
+            "steps": [
+              "open /courses/new",
+              "fill name, period and topics",
+              "save"
+            ],
+            "expected": "Course appears in dashboard",
+            "priority": "high",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-005",
+            "module": "lessons",
+            "title": "Upload audio lecture",
+            "precondition": "Course exists; credits available",
+            "steps": [
+              "open /api/new",
+              "select course and upload 20 MB mp3",
+              "confirm credit estimate"
+            ],
+            "expected": "LessonJob created with status queued",
+            "priority": "high",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-006",
+            "module": "lessons",
+            "title": "Reject unsupported file",
+            "precondition": "Course exists",
+            "steps": [
+              "open /api/new",
+              "upload .exe file"
+            ],
+            "expected": "Validation error; nothing stored",
+            "priority": "medium",
+            "type": "security",
+            "automated": true
+          },
+          {
+            "id": "TC-007",
+            "module": "pipeline",
+            "title": "Transcription completes",
+            "precondition": "Job queued; Whisper available",
+            "steps": [
+              "run worker",
+              "wait for stage transcribe"
+            ],
+            "expected": "Transcript stored; stage advances to generate",
+            "priority": "high",
+            "type": "integration",
+            "automated": true
+          },
+          {
+            "id": "TC-008",
+            "module": "pipeline",
+            "title": ".mini bank parses",
+            "precondition": "Generation stage finished",
+            "steps": [
+              "fetch job output",
+              "run parser"
+            ],
+            "expected": "All records valid; n equals record lines",
+            "priority": "high",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-009",
+            "module": "pipeline",
+            "title": "Incoherent items repaired",
+            "precondition": "Bank with declarative items",
+            "steps": [
+              "run coherence filter",
+              "run repair"
+            ],
+            "expected": "Items repaired or excluded with trace",
+            "priority": "medium",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-010",
+            "module": "quiz",
+            "title": "Adaptive quiz updates theta",
+            "precondition": "Lesson ready; profile exists",
+            "steps": [
+              "start quiz with 6 items",
+              "answer all"
+            ],
+            "expected": "theta and SE updated; XP awarded",
+            "priority": "high",
+            "type": "functional",
+            "automated": true
+          },
+          {
+            "id": "TC-011",
+            "module": "quiz",
+            "title": "Quiz under load",
+            "precondition": "50 concurrent students",
+            "steps": [
+              "start 50 quizzes",
+              "answer concurrently"
+            ],
+            "expected": "p95 latency below 2 s; no errors",
+            "priority": "medium",
+            "type": "performance",
+            "automated": false
+          },
+          {
+            "id": "TC-012",
+            "module": "admin",
+            "title": "Credit ledger consistency",
+            "precondition": "Several jobs processed",
+            "steps": [
+              "open admin ledger",
+              "sum entries"
+            ],
+            "expected": "Ledger total equals profile balance",
+            "priority": "low",
+            "type": "functional",
+            "automated": false
+          }
+        ]
+      },
+      "expected": {
+        "mini": "tc|n=12|d=20260603|l=en|t=SIMA release 1.2 regression|proj=SIMA\nTC-001|auth|Login with valid credentials|User registered and active|open /login,enter valid email and password,click Sign in|Dashboard is shown and session cookie is set|high|functional|true\nTC-002|auth|Login with wrong password|User registered|open /login,enter valid email and wrong password,click Sign in|Error message; no session created|high|functional|true\nTC-003|auth|Password reset email|User registered|open /reset,submit registered email|Reset email delivered within 60 s|medium|integration|false\nTC-004|courses|Create course|Logged-in student|open /courses/new,fill name\\, period and topics,save|Course appears in dashboard|high|functional|true\nTC-005|lessons|Upload audio lecture|Course exists; credits available|open /api/new,select course and upload 20 MB mp3,confirm credit estimate|LessonJob created with status queued|high|functional|true\nTC-006|lessons|Reject unsupported file|Course exists|open /api/new,upload .exe file|Validation error; nothing stored|medium|security|true\nTC-007|pipeline|Transcription completes|Job queued; Whisper available|run worker,wait for stage transcribe|Transcript stored; stage advances to generate|high|integration|true\nTC-008|pipeline|.mini bank parses|Generation stage finished|fetch job output,run parser|All records valid; n equals record lines|high|functional|true\nTC-009|pipeline|Incoherent items repaired|Bank with declarative items|run coherence filter,run repair|Items repaired or excluded with trace|medium|functional|true\nTC-010|quiz|Adaptive quiz updates theta|Lesson ready; profile exists|start quiz with 6 items,answer all|theta and SE updated; XP awarded|high|functional|true\nTC-011|quiz|Quiz under load|50 concurrent students|start 50 quizzes,answer concurrently|p95 latency below 2 s; no errors|medium|performance|false\nTC-012|admin|Credit ledger consistency|Several jobs processed|open admin ledger,sum entries|Ledger total equals profile balance|low|functional|false"
+      }
+    },
+    {
+      "id": "fx-us-dumps",
+      "category": "roundtrip",
+      "description": "canonical.json de 'us' se serializa exactamente como valid.mini",
+      "mode": "dumps",
+      "family": "us",
+      "input": {
+        "prefix": "us",
+        "header": {
+          "n": 12,
+          "d": "20260603",
+          "l": "en",
+          "t": "SIMA backlog",
+          "sprint": "S3",
+          "v": 1
+        },
+        "stories": [
+          {
+            "id": "US-01",
+            "epic": "EP-01",
+            "role": "student",
+            "goal": "upload a recorded lecture",
+            "benefit": "I can study it later in small pieces",
+            "acceptance": [
+              "audio up to 200 MB accepted",
+              "credit estimate shown before confirming"
+            ],
+            "sp": 5,
+            "priority": "must"
+          },
+          {
+            "id": "US-02",
+            "epic": "EP-01",
+            "role": "student",
+            "goal": "paste a transcript instead of audio",
+            "benefit": "I can skip transcription when I already have notes",
+            "acceptance": [
+              "plain text accepted",
+              "same pipeline from generation stage"
+            ],
+            "sp": 3,
+            "priority": "should"
+          },
+          {
+            "id": "US-03",
+            "epic": "EP-02",
+            "role": "student",
+            "goal": "see the generated question bank",
+            "benefit": "I can check what will be asked",
+            "acceptance": [
+              "items listed with Bloom level",
+              "download as JSON"
+            ],
+            "sp": 3,
+            "priority": "must"
+          },
+          {
+            "id": "US-04",
+            "epic": "EP-02",
+            "role": "system",
+            "goal": "generate items in .mini",
+            "benefit": "token cost per bank drops",
+            "acceptance": [
+              "n matches record lines",
+              "parser reports zero errors"
+            ],
+            "sp": 8,
+            "priority": "must"
+          },
+          {
+            "id": "US-05",
+            "epic": "EP-03",
+            "role": "reviewer",
+            "goal": "flag incoherent items",
+            "benefit": "students never see broken questions",
+            "acceptance": [
+              "declarative stems detected",
+              "repair trace stored"
+            ],
+            "sp": 5,
+            "priority": "must"
+          },
+          {
+            "id": "US-06",
+            "epic": "EP-03",
+            "role": "reviewer",
+            "goal": "verify facts against sources",
+            "benefit": "the bank is trustworthy",
+            "acceptance": [
+              "web or EduQG context attached",
+              "report lists weak items"
+            ],
+            "sp": 8,
+            "priority": "should"
+          },
+          {
+            "id": "US-07",
+            "epic": "EP-04",
+            "role": "student",
+            "goal": "keep my progress per course",
+            "benefit": "I know what to review next",
+            "acceptance": [
+              "theta stored per profile",
+              "dashboard shows level"
+            ],
+            "sp": 5,
+            "priority": "must"
+          },
+          {
+            "id": "US-08",
+            "epic": "EP-05",
+            "role": "student",
+            "goal": "take an adaptive quiz",
+            "benefit": "questions match my level",
+            "acceptance": [
+              "next item chosen by information",
+              "stops at SE threshold"
+            ],
+            "sp": 8,
+            "priority": "must"
+          },
+          {
+            "id": "US-09",
+            "epic": "EP-05",
+            "role": "student",
+            "goal": "review flashcards",
+            "benefit": "I retain key concepts",
+            "acceptance": [
+              "cards derived from the bank",
+              "spaced repetition schedule"
+            ],
+            "sp": 5,
+            "priority": "should"
+          },
+          {
+            "id": "US-10",
+            "epic": "EP-05",
+            "role": "student",
+            "goal": "see a concept map",
+            "benefit": "I understand how topics connect",
+            "acceptance": [
+              "edges from the bank",
+              "clickable nodes"
+            ],
+            "sp": 3,
+            "priority": "could"
+          },
+          {
+            "id": "US-11",
+            "epic": "EP-05",
+            "role": "student",
+            "goal": "solve matching and cloze exercises",
+            "benefit": "I practise in different ways",
+            "acceptance": [
+              "two exercise types",
+              "scored instantly"
+            ],
+            "sp": 5,
+            "priority": "could"
+          },
+          {
+            "id": "US-12",
+            "epic": "EP-04",
+            "role": "admin",
+            "goal": "audit credit consumption",
+            "benefit": "billing is transparent",
+            "acceptance": [
+              "ledger per user",
+              "export CSV"
+            ],
+            "sp": 3,
+            "priority": "should"
+          }
+        ]
+      },
+      "expected": {
+        "mini": "us|n=12|d=20260603|l=en|t=SIMA backlog|sprint=S3\nUS-01|EP-01|student|upload a recorded lecture|I can study it later in small pieces|audio up to 200 MB accepted,credit estimate shown before confirming|5|must\nUS-02|EP-01|student|paste a transcript instead of audio|I can skip transcription when I already have notes|plain text accepted,same pipeline from generation stage|3|should\nUS-03|EP-02|student|see the generated question bank|I can check what will be asked|items listed with Bloom level,download as JSON|3|must\nUS-04|EP-02|system|generate items in .mini|token cost per bank drops|n matches record lines,parser reports zero errors|8|must\nUS-05|EP-03|reviewer|flag incoherent items|students never see broken questions|declarative stems detected,repair trace stored|5|must\nUS-06|EP-03|reviewer|verify facts against sources|the bank is trustworthy|web or EduQG context attached,report lists weak items|8|should\nUS-07|EP-04|student|keep my progress per course|I know what to review next|theta stored per profile,dashboard shows level|5|must\nUS-08|EP-05|student|take an adaptive quiz|questions match my level|next item chosen by information,stops at SE threshold|8|must\nUS-09|EP-05|student|review flashcards|I retain key concepts|cards derived from the bank,spaced repetition schedule|5|should\nUS-10|EP-05|student|see a concept map|I understand how topics connect|edges from the bank,clickable nodes|3|could\nUS-11|EP-05|student|solve matching and cloze exercises|I practise in different ways|two exercise types,scored instantly|5|could\nUS-12|EP-04|admin|audit credit consumption|billing is transparent|ledger per user,export CSV|3|should"
+      }
+    },
+    {
+      "id": "dumps-escapes-scalar",
+      "category": "roundtrip",
+      "description": "el serializador escapa | \\ y saltos de línea",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "red",
+            "memo": "a|b\\c\nd, e*",
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sc|n=1\nr1|5|0.5|true|red|a\\|b\\\\c\\nd, e*"
+      }
+    },
+    {
+      "id": "dumps-crlf-normalised",
+      "category": "roundtrip",
+      "description": "CRLF en un valor se serializa como \\n",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "red",
+            "memo": "a\r\nb",
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sc|n=1\nr1|5|0.5|true|red|a\\nb"
+      }
+    },
+    {
+      "id": "dumps-tail-omitted",
+      "category": "roundtrip",
+      "description": "extensiones nulas finales se omiten",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "red",
+            "memo": null,
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sc|n=1\nr1|5|0.5|true|red"
+      }
+    },
+    {
+      "id": "dumps-null-middle-extension",
+      "category": "roundtrip",
+      "description": "extensión nula intermedia queda vacía",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "red",
+            "memo": null,
+            "extra": 3
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sc|n=1\nr1|5|0.5|true|red||3"
+      }
+    },
+    {
+      "id": "dumps-float-format",
+      "category": "roundtrip",
+      "description": "floats integrales sin .0; booleanos true/false",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 2
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 1.0,
+            "flag": false,
+            "color": "red",
+            "memo": null,
+            "extra": null
+          },
+          {
+            "id": "r2",
+            "qty": 5,
+            "ratio": -0.125,
+            "flag": true,
+            "color": "red",
+            "memo": null,
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sc|n=2\nr1|5|1|false|red\nr2|5|-0.125|true|red"
+      }
+    },
+    {
+      "id": "dumps-n-recomputed",
+      "category": "roundtrip",
+      "description": "n se recalcula a partir de los registros",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "n": 99,
+          "v": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "red",
+            "memo": null,
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "mini": "sc|n=1\nr1|5|0.5|true|red"
+      }
+    },
+    {
+      "id": "dumps-list-element-escapes",
+      "category": "roundtrip",
+      "description": "elementos de lista: separador, * final y comilla inicial",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "ls",
+        "header": {
+          "v": 1,
+          "n": 1,
+          "k": 2
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "xs": [
+              "\"a",
+              "b*",
+              "c,d"
+            ],
+            "ns": [],
+            "es": [
+              "b"
+            ],
+            "ks": [
+              "p|q",
+              "r\\s"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "mini": "ls|n=1|k=2\nr1|\\\"a,b\\*,c\\,d||b|p\\|q,r\\\\s"
+      }
+    },
+    {
+      "id": "dumps-header-typed",
+      "category": "roundtrip",
+      "description": "cabecera tipada: n primero, luego claves del contrato y extras",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "hd",
+        "header": {
+          "zz": "extra",
+          "tp": {
+            "a": 1,
+            "b": "x,y"
+          },
+          "src": "s",
+          "ls": [
+            3,
+            4
+          ],
+          "n": 1,
+          "v": 1,
+          "lang": "es"
+        },
+        "rows": [
+          {
+            "id": "x"
+          }
+        ]
+      },
+      "expected": {
+        "mini": "hd|n=1|src=s|ls=3,4|tp=1,x\\,y|lang=es|zz=extra\nx"
+      }
+    },
+    {
+      "id": "dumps-mlist-rules",
+      "category": "roundtrip",
+      "description": "serialización de las cuatro reglas de marcador",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": {
+        "prefix": "mk",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "one": [
+              "a",
+              "b"
+            ],
+            "one_sel": 1,
+            "some": [
+              "a",
+              "b"
+            ],
+            "some_sel": [
+              0,
+              1
+            ],
+            "maybe": [
+              "a"
+            ],
+            "maybe_sel": null,
+            "anyk": [
+              1,
+              2
+            ],
+            "anyk_sel": []
+          }
+        ]
+      },
+      "expected": {
+        "mini": "mk|n=1\na,b*|a*,b*|a|1,2"
+      }
+    },
+    {
+      "id": "dumps-tuple-optional",
+      "category": "roundtrip",
+      "description": "tupla con componente nulo y extensión tupla",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": {
+        "prefix": "tp",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "pt": {
+              "x": 1,
+              "y": 2.5,
+              "tag": null
+            },
+            "span": {
+              "lo": -1,
+              "hi": 1
+            }
+          }
+        ]
+      },
+      "expected": {
+        "mini": "tp|n=1\nr1|1,2.5,|-1,1"
+      }
+    },
+    {
+      "id": "dumps-reject-marker",
+      "category": "roundtrip",
+      "description": "exactly_one sin selección no se puede serializar",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": {
+        "prefix": "mk",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "one": [
+              "a",
+              "b"
+            ],
+            "one_sel": null,
+            "some": [
+              "a"
+            ],
+            "some_sel": [
+              0
+            ],
+            "maybe": [
+              "a"
+            ],
+            "maybe_sel": null,
+            "anyk": [
+              1
+            ],
+            "anyk_sel": []
+          }
+        ]
+      },
+      "expected": {
+        "rejected": true
+      }
+    },
+    {
+      "id": "dumps-reject-index",
+      "category": "roundtrip",
+      "description": "índice seleccionado fuera de rango no se puede serializar",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": {
+        "prefix": "mk",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "one": [
+              "a",
+              "b"
+            ],
+            "one_sel": 5,
+            "some": [
+              "a"
+            ],
+            "some_sel": [
+              0
+            ],
+            "maybe": [
+              "a"
+            ],
+            "maybe_sel": null,
+            "anyk": [
+              1
+            ],
+            "anyk_sel": []
+          }
+        ]
+      },
+      "expected": {
+        "rejected": true
+      }
+    },
+    {
+      "id": "dumps-reject-required-null",
+      "category": "roundtrip",
+      "description": "campo requerido nulo no se puede serializar",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": null,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "red",
+            "memo": null,
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "rejected": true
+      }
+    },
+    {
+      "id": "dumps-reject-enum",
+      "category": "roundtrip",
+      "description": "valor fuera de la enumeración no se puede serializar",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": {
+        "prefix": "sc",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "qty": 5,
+            "ratio": 0.5,
+            "flag": true,
+            "color": "pink",
+            "memo": null,
+            "extra": null
+          }
+        ]
+      },
+      "expected": {
+        "rejected": true
+      }
+    },
+    {
+      "id": "dumps-reject-tuple-component",
+      "category": "roundtrip",
+      "description": "componente requerido de tupla ausente",
+      "mode": "dumps",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": {
+        "prefix": "tp",
+        "header": {
+          "v": 1,
+          "n": 1
+        },
+        "rows": [
+          {
+            "id": "r1",
+            "pt": {
+              "x": 1
+            },
+            "span": null
+          }
+        ]
+      },
+      "expected": {
+        "rejected": true
+      }
+    },
+    {
+      "id": "rt-quoted-to-escaped",
+      "category": "roundtrip",
+      "description": "entrada con comillas: el canónico y su serialización escapada",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n\"a, b\"*,c|\"x\"*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a, b",
+                "c"
+              ],
+              "one_sel": 0,
+              "some": [
+                "x"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        },
+        "mini": "mk|n=1\na\\, b*,c|x*|a|1"
+      }
+    },
+    {
+      "id": "rt-over-escaped-normalised",
+      "category": "roundtrip",
+      "description": "sobre-escapes y espacios se normalizan al serializar",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\n r1 |05|0.50|1|red|a\\, b\\*",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "a, b*",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|a, b*"
+      }
+    }
+  ]
+}

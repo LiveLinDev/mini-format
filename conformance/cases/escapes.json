@@ -1,0 +1,1893 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "escapes",
+  "cases": [
+    {
+      "id": "fx-a-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'a' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "a",
+      "input": "a|n=1|m=IRT3PL|d=20260603|l=es|t=evaluación transversal|bd=1,1,1,1,1,1|cat=0,-3,3,0.3,12,SH|k=4\ni1|L1|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|¿Dónde ocurre principalmente la fotosíntesis?|a\\, b \\| c \\\\ d\\**,núcleo,mitocondria,ribosoma|0.9,-1,0.25|1|biología,0.2,low\n",
+      "expected": {
+        "canonical": {
+          "prefix": "a",
+          "header": {
+            "n": 1,
+            "m": "IRT3PL",
+            "d": "20260603",
+            "l": "es",
+            "t": "evaluación transversal",
+            "bd": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "cat": {
+              "theta_init": 0.0,
+              "theta_min": -3.0,
+              "theta_max": 3.0,
+              "se_stop": 0.3,
+              "max_items": 12,
+              "exposure_ctrl": "SH"
+            },
+            "k": 4,
+            "v": 1
+          },
+          "items": [
+            {
+              "id": "i1",
+              "bloom": "L1",
+              "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "statement": "¿Dónde ocurre principalmente la fotosíntesis?",
+              "options": [
+                "a, b | c \\ d*",
+                "núcleo",
+                "mitocondria",
+                "ribosoma"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 0.9,
+                "b": -1.0,
+                "c": 0.25
+              },
+              "difficulty": 1,
+              "cat": {
+                "area": "biología",
+                "exposure_cap": 0.2,
+                "demand": "low"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-card-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'card' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "card",
+      "input": "card|n=1|d=20260603|l=es|t=repaso transversal|src=clase-64\nc1|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|¿Qué organelo realiza la fotosíntesis?|El cloroplasto, gracias a la clorofila.|Pigmento verde|a\\, b \\| c \\\\ d\\*,plantas|L1|2.5\n",
+      "expected": {
+        "canonical": {
+          "prefix": "card",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "es",
+            "t": "repaso transversal",
+            "src": "clase-64",
+            "v": 1
+          },
+          "cards": [
+            {
+              "id": "c1",
+              "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "front": "¿Qué organelo realiza la fotosíntesis?",
+              "back": "El cloroplasto, gracias a la clorofila.",
+              "hint": "Pigmento verde",
+              "tags": [
+                "a, b | c \\ d*",
+                "plantas"
+              ],
+              "bloom": "L1",
+              "ease": 2.5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-cat-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'cat' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "cat",
+      "input": "cat|n=1|d=20260603|store=campus-shop|cur=USD\nSKU-1001|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|audio|89.9|USD|120|a\\, b \\| c \\\\ d\\*,noise-cancelling|4.5\n",
+      "expected": {
+        "canonical": {
+          "prefix": "cat",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "store": "campus-shop",
+            "cur": "USD",
+            "v": 1
+          },
+          "products": [
+            {
+              "sku": "SKU-1001",
+              "name": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "category": "audio",
+              "price": 89.9,
+              "currency": "USD",
+              "stock": 120,
+              "tags": [
+                "a, b | c \\ d*",
+                "noise-cancelling"
+              ],
+              "rating": 4.5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-cls-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'cls' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "cls",
+      "input": "cls|n=1|d=20260603|l=en|model=cls-support-2026|k=6\nm1|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|a\\, b \\| c \\\\ d\\**,feedback,bug*,request,praise,other|0.91|reports a malfunction and asks\n",
+      "expected": {
+        "canonical": {
+          "prefix": "cls",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "model": "cls-support-2026",
+            "k": 6,
+            "v": 1
+          },
+          "messages": [
+            {
+              "id": "m1",
+              "text": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "labels": [
+                "a, b | c \\ d*",
+                "feedback",
+                "bug",
+                "request",
+                "praise",
+                "other"
+              ],
+              "selected": [
+                0,
+                2
+              ],
+              "conf": 0.91,
+              "rationale": "reports a malfunction and asks"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-code-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'code' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "code",
+      "input": "code|n=1|d=20260603|l=en|t=Intro programming lab 3\nc1|L3|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|Write a function maximum(xs) that returns the largest number in a non-empty list.|python|a\\, b \\| c \\\\ d\\*,maximum([-1\\,-5])==-1|int or float|iterate once,track the best so far\n",
+      "expected": {
+        "canonical": {
+          "prefix": "code",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "t": "Intro programming lab 3",
+            "v": 1
+          },
+          "exercises": [
+            {
+              "id": "c1",
+              "bloom": "L3",
+              "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "statement": "Write a function maximum(xs) that returns the largest number in a non-empty list.",
+              "lang": "python",
+              "tests": [
+                "a, b | c \\ d*",
+                "maximum([-1,-5])==-1"
+              ],
+              "expected": "int or float",
+              "hints": [
+                "iterate once",
+                "track the best so far"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-log-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'log' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "log",
+      "input": "log|n=1|d=20260603|env=staging|host=sima-app-01\n2026-06-03T08:00:01Z|INFO|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|HTTP200|GET /dashboard served|a\\, b \\| c \\\\ d\\*|t-1001|42\n",
+      "expected": {
+        "canonical": {
+          "prefix": "log",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "env": "staging",
+            "host": "sima-app-01",
+            "v": 1
+          },
+          "events": [
+            {
+              "ts": "2026-06-03T08:00:01Z",
+              "level": "INFO",
+              "service": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "code": "HTTP200",
+              "message": "GET /dashboard served",
+              "tags": [
+                "a, b | c \\ d*"
+              ],
+              "trace": "t-1001",
+              "duration_ms": 42
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-map-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'map' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "map",
+      "input": "map|n=1|d=20260603|l=es|t=Biología celular|src=clase-64\npipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|has_part|núcleo|0.9|s2\n",
+      "expected": {
+        "canonical": {
+          "prefix": "map",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "es",
+            "t": "Biología celular",
+            "src": "clase-64",
+            "v": 1
+          },
+          "edges": [
+            {
+              "src": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "rel": "has_part",
+              "dst": "núcleo",
+              "weight": 0.9,
+              "evidence": "s2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-ner-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'ner' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "ner",
+      "input": "ner|n=1|d=20260603|l=en|model=ner-base-2026|schema=ontonotes-lite\npipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|0|17|Whisper|PRODUCT|0.98\n",
+      "expected": {
+        "canonical": {
+          "prefix": "ner",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "model": "ner-base-2026",
+            "schema": "ontonotes-lite",
+            "v": 1
+          },
+          "entities": [
+            {
+              "doc": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "start": 0,
+              "end": 17,
+              "text": "Whisper",
+              "type": "PRODUCT",
+              "conf": 0.98
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-q-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'q' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "q",
+      "input": "q|n=1|m=IRT3PL|d=20260603|l=es|t=cuestionario formativo|bd=1,1,1,1,1,1|cat=0,-3,3,0.3,12,SH|k=4\ni1|L1|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|¿Dónde ocurre principalmente la fotosíntesis?|a\\, b \\| c \\\\ d\\**,núcleo,mitocondria,ribosoma|0.9,-1,0.25|1|biología,0.2,low|La fotosíntesis ocurre en los cloroplastos, donde está la clorofila.|Piensa en el pigmento verde.|Identificar organelos vegetales\n",
+      "expected": {
+        "canonical": {
+          "prefix": "q",
+          "header": {
+            "n": 1,
+            "m": "IRT3PL",
+            "d": "20260603",
+            "l": "es",
+            "t": "cuestionario formativo",
+            "bd": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "cat": {
+              "theta_init": 0.0,
+              "theta_min": -3.0,
+              "theta_max": 3.0,
+              "se_stop": 0.3,
+              "max_items": 12,
+              "exposure_ctrl": "SH"
+            },
+            "k": 4,
+            "v": 1
+          },
+          "items": [
+            {
+              "id": "i1",
+              "bloom": "L1",
+              "topic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "statement": "¿Dónde ocurre principalmente la fotosíntesis?",
+              "options": [
+                "a, b | c \\ d*",
+                "núcleo",
+                "mitocondria",
+                "ribosoma"
+              ],
+              "correct": 0,
+              "irt": {
+                "a": 0.9,
+                "b": -1.0,
+                "c": 0.25
+              },
+              "difficulty": 1,
+              "cat": {
+                "area": "biología",
+                "exposure_cap": 0.2,
+                "demand": "low"
+              },
+              "feedback": "La fotosíntesis ocurre en los cloroplastos, donde está la clorofila.",
+              "hint": "Piensa en el pigmento verde.",
+              "objective": "Identificar organelos vegetales"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-r-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'r' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "r",
+      "input": "r|n=1|d=20260603|l=en|t=Argumentative essay|k=4|scale=0-3\nr1|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|Thesis clarity|a\\, b \\| c \\\\ d\\*,stated but vague,clear and focused,clear\\, focused and original|0.2|Introduction paragraph\n",
+      "expected": {
+        "canonical": {
+          "prefix": "r",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "t": "Argumentative essay",
+            "k": 4,
+            "scale": "0-3",
+            "v": 1
+          },
+          "criteria": [
+            {
+              "id": "r1",
+              "dimension": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "criterion": "Thesis clarity",
+              "levels": [
+                "a, b | c \\ d*",
+                "stated but vague",
+                "clear and focused",
+                "clear, focused and original"
+              ],
+              "weight": 0.2,
+              "evidence": "Introduction paragraph"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-s-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 's' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "s",
+      "input": "s|n=1|d=20260603|l=en|t=Post-pilot satisfaction survey|k=2\nq1|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|The platform helps me review lectures faster.|5|a\\, b \\| c \\\\ d\\*,strongly agree|false\n",
+      "expected": {
+        "canonical": {
+          "prefix": "s",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "t": "Post-pilot satisfaction survey",
+            "k": 2,
+            "v": 1
+          },
+          "items": [
+            {
+              "id": "q1",
+              "construct": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "statement": "The platform helps me review lectures faster.",
+              "scale": 5,
+              "anchors": [
+                "a, b | c \\ d*",
+                "strongly agree"
+              ],
+              "reverse": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-sum-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'sum' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "sum",
+      "input": "sum|n=1|d=20260603|l=es|t=Biología celular|src=clase-64|dur=2520\ns1|0|180|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.|a\\, b \\| c \\\\ d\\*,procariota,eucariota|L1\n",
+      "expected": {
+        "canonical": {
+          "prefix": "sum",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "es",
+            "t": "Biología celular",
+            "src": "clase-64",
+            "dur": 2520,
+            "v": 1
+          },
+          "segments": [
+            {
+              "id": "s1",
+              "t_start": 0,
+              "t_end": 180,
+              "title": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "summary": "La célula es la unidad básica de la vida; se distinguen procariotas y eucariotas.",
+              "keywords": [
+                "a, b | c \\ d*",
+                "procariota",
+                "eucariota"
+              ],
+              "bloom": "L1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-tc-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'tc' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "tc",
+      "input": "tc|n=1|d=20260603|l=en|t=SIMA release 1.2 regression|proj=SIMA\nTC-001|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|Login with valid credentials|User registered and active|a\\, b \\| c \\\\ d\\*,enter valid email and password,click Sign in|Dashboard is shown and session cookie is set|high|functional|true\n",
+      "expected": {
+        "canonical": {
+          "prefix": "tc",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "t": "SIMA release 1.2 regression",
+            "proj": "SIMA",
+            "v": 1
+          },
+          "cases": [
+            {
+              "id": "TC-001",
+              "module": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "title": "Login with valid credentials",
+              "precondition": "User registered and active",
+              "steps": [
+                "a, b | c \\ d*",
+                "enter valid email and password",
+                "click Sign in"
+              ],
+              "expected": "Dashboard is shown and session cookie is set",
+              "priority": "high",
+              "type": "functional",
+              "automated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fx-us-escaping",
+      "category": "escapes",
+      "description": "escaping.mini de 'us' con todos los caracteres reservados",
+      "mode": "strict",
+      "family": "us",
+      "input": "us|n=1|d=20260603|l=en|t=SIMA backlog|sprint=S3\nUS-01|pipe \\| and back\\\\slash, comma, \"quotes\", star* and newline\\nend|student|upload a recorded lecture|I can study it later in small pieces|a\\, b \\| c \\\\ d\\*,credit estimate shown before confirming|5|must\n",
+      "expected": {
+        "canonical": {
+          "prefix": "us",
+          "header": {
+            "n": 1,
+            "d": "20260603",
+            "l": "en",
+            "t": "SIMA backlog",
+            "sprint": "S3",
+            "v": 1
+          },
+          "stories": [
+            {
+              "id": "US-01",
+              "epic": "pipe | and back\\slash, comma, \"quotes\", star* and newline\nend",
+              "role": "student",
+              "goal": "upload a recorded lecture",
+              "benefit": "I can study it later in small pieces",
+              "acceptance": [
+                "a, b | c \\ d*",
+                "credit estimate shown before confirming"
+              ],
+              "sp": 5,
+              "priority": "must"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "esc-pipe",
+      "category": "escapes",
+      "description": "\\| es una barra literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|a\\|b",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "a|b",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|a\\|b"
+      }
+    },
+    {
+      "id": "esc-backslash",
+      "category": "escapes",
+      "description": "\\\\ es una barra invertida literal",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|C:\\\\tmp",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "C:\\tmp",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|C:\\\\tmp"
+      }
+    },
+    {
+      "id": "esc-newline",
+      "category": "escapes",
+      "description": "\\n es un salto de línea dentro del valor",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|l1\\nl2",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "l1\nl2",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|l1\\nl2"
+      }
+    },
+    {
+      "id": "esc-comma-scalar",
+      "category": "escapes",
+      "description": "\\, en un escalar es inocuo (sobre-escape)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|a\\, b",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "a, b",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|a, b"
+      }
+    },
+    {
+      "id": "esc-star-scalar",
+      "category": "escapes",
+      "description": "\\* en un escalar es un asterisco",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|nota\\*",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "nota*",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|nota*"
+      }
+    },
+    {
+      "id": "esc-quote-scalar",
+      "category": "escapes",
+      "description": "\\\" en un escalar es una comilla",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|\\\"hola\\\"",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "\"hola\"",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|\"hola\""
+      }
+    },
+    {
+      "id": "esc-quote-literal-scalar",
+      "category": "escapes",
+      "description": "comillas en un escalar son literales (los escalares no se entrecomillan)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|\"a, b\"",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "\"a, b\"",
+              "extra": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "esc-backslash-then-n",
+      "category": "escapes",
+      "description": "\\\\n es barra invertida seguida de n",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|a\\\\nb",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "a\\nb",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|a\\\\nb"
+      }
+    },
+    {
+      "id": "esc-escaped-space-kept",
+      "category": "escapes",
+      "description": "un espacio tras \\n no se recorta",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|\\n x",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "\n x",
+              "extra": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "esc-all-reserved",
+      "category": "escapes",
+      "description": "todos los reservados en un mismo escalar",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|p\\|b\\\\c,\\*\\\"\\nfin",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": "p|b\\c,*\"\nfin",
+              "extra": null
+            }
+          ]
+        },
+        "mini": "sc|n=1\nr1|5|0.5|true|red|p\\|b\\\\c,*\"\\nfin"
+      }
+    },
+    {
+      "id": "esc-invalid",
+      "category": "escapes",
+      "description": "secuencia de escape inválida (E09)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|a\\tb",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "esc-dangling",
+      "category": "escapes",
+      "description": "barra invertida final (E09)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|abc\\",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "esc-invalid-in-core",
+      "category": "escapes",
+      "description": "escape inválido en un campo del núcleo (E09)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr\\1|5|0.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "esc-invalid-lenient",
+      "category": "escapes",
+      "description": "en modo tolerante el escape inválido se reporta y el registro se descarta",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=2\nr1|5|0.5|true|red|a\\qb\nr2|5|0.5|true|red",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "id": "r2",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E09",
+            "line": 2
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            2
+          ],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "esc-list-comma",
+      "category": "escapes",
+      "description": "\\, dentro de un elemento de lista",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|a\\,b|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a,b"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        },
+        "mini": "ls|n=1|k=2\nr1|a\\,b|1|a|p,q"
+      }
+    },
+    {
+      "id": "esc-list-leading-quote",
+      "category": "escapes",
+      "description": "\\\" al inicio de un elemento evita abrir comillas",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|\\\"a|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "\"a"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        },
+        "mini": "ls|n=1|k=2\nr1|\\\"a|1|a|p,q"
+      }
+    },
+    {
+      "id": "esc-list-pipe-newline",
+      "category": "escapes",
+      "description": "\\| y \\n dentro de elementos de lista",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|a\\|b,c\\nd|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a|b",
+                "c\nd"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "esc-crlf-ignored",
+      "category": "escapes",
+      "description": "CR antes de LF se ignora",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\r\nr1|5|0.5|true|red\r\n",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 5,
+              "ratio": 0.5,
+              "flag": true,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

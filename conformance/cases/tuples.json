@@ -1,0 +1,732 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "tuples",
+  "cases": [
+    {
+      "id": "tuple-basic",
+      "category": "tuples",
+      "description": "tupla a objeto anidado",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,-1.5,izq",
+      "expected": {
+        "canonical": {
+          "prefix": "tp",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "pt": {
+                "x": 3,
+                "y": -1.5,
+                "tag": "izq"
+              },
+              "span": null
+            }
+          ]
+        },
+        "mini": "tp|n=1\nr1|3,-1.5,izq"
+      }
+    },
+    {
+      "id": "tuple-optional-component",
+      "category": "tuples",
+      "description": "componente opcional vacío es null",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2,",
+      "expected": {
+        "canonical": {
+          "prefix": "tp",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "pt": {
+                "x": 3,
+                "y": 2,
+                "tag": null
+              },
+              "span": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tuple-optional-extension",
+      "category": "tuples",
+      "description": "extensión de tipo tupla presente",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2,t|0,9",
+      "expected": {
+        "canonical": {
+          "prefix": "tp",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "pt": {
+                "x": 3,
+                "y": 2,
+                "tag": "t"
+              },
+              "span": {
+                "lo": 0,
+                "hi": 9
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tuple-optional-empty",
+      "category": "tuples",
+      "description": "tupla opcional vacía es null",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2,t|",
+      "expected": {
+        "canonical": {
+          "prefix": "tp",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "pt": {
+                "x": 3,
+                "y": 2,
+                "tag": "t"
+              },
+              "span": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tuple-arity-less",
+      "category": "tuples",
+      "description": "tupla con menos componentes (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuple-arity-more",
+      "category": "tuples",
+      "description": "tupla con más componentes (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2,t,u",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuple-required-empty",
+      "category": "tuples",
+      "description": "tupla requerida vacía (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuple-component-type",
+      "category": "tuples",
+      "description": "componente con tipo inválido (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|tres,2,t",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuple-required-component-empty",
+      "category": "tuples",
+      "description": "componente requerido vacío (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|,2,t",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuple-marker",
+      "category": "tuples",
+      "description": "marcador * dentro de una tupla (E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2,t*",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuple-escaped-comma",
+      "category": "tuples",
+      "description": "coma escapada dentro de un componente de texto",
+      "mode": "strict",
+      "contract": {
+        "prefix": "tp",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "pt",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "x",
+                "type": "int"
+              },
+              {
+                "name": "y",
+                "type": "float"
+              },
+              {
+                "name": "tag",
+                "type": "str",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "lo",
+                "type": "int"
+              },
+              {
+                "name": "hi",
+                "type": "int"
+              }
+            ]
+          }
+        ]
+      },
+      "input": "tp|n=1\nr1|3,2,a\\, b",
+      "expected": {
+        "canonical": {
+          "prefix": "tp",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "pt": {
+                "x": 3,
+                "y": 2,
+                "tag": "a, b"
+              },
+              "span": null
+            }
+          ]
+        },
+        "mini": "tp|n=1\nr1|3,2,a\\, b"
+      }
+    }
+  ]
+}

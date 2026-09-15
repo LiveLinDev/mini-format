@@ -1,0 +1,1476 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "header",
+  "cases": [
+    {
+      "id": "hdr-typed",
+      "category": "header",
+      "description": "claves de cabecera tipadas (lista, tupla, entero) y valor por defecto",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=clase 3|ls=1,2,3|tp=7,siete|k=2\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "clase 3",
+            "ls": [
+              1,
+              2,
+              3
+            ],
+            "tp": {
+              "a": 7,
+              "b": "siete"
+            },
+            "k": 2,
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-unknown-keys",
+      "category": "header",
+      "description": "claves desconocidas se conservan como texto",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|model=m-1|temp=0.2\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "s",
+            "lang": "es",
+            "model": "m-1",
+            "temp": "0.2"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-v-explicit",
+      "category": "header",
+      "description": "v explícito",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|v=2|src=s\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "n": 1,
+            "v": 2,
+            "src": "s",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-eq-in-value",
+      "category": "header",
+      "description": "solo el primer '=' separa clave y valor",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=a=b=c\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "a=b=c",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-whitespace",
+      "category": "header",
+      "description": "espacios alrededor de claves y valores se recortan",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd | n = 1 | src =  s \nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "s",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-escaped-pipe",
+      "category": "header",
+      "description": "\\| en un valor de cabecera",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=a\\|b\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "a|b",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-bom",
+      "category": "header",
+      "description": "BOM inicial se ignora",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "﻿hd|n=1|src=s\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "s",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hdr-blank-lines",
+      "category": "header",
+      "description": "líneas vacías se omiten y los números de línea siguen siendo físicos",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "\n\nhd|n=2|src=s\n\n   \nx\n\ny|sobra\n",
+      "expected": {
+        "errors": [
+          {
+            "code": "E05",
+            "line": 8
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-zero-records",
+      "category": "header",
+      "description": "n=0 sin registros es válido",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=0|src=s",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 0,
+            "src": "s",
+            "lang": "es"
+          },
+          "rows": []
+        }
+      }
+    },
+    {
+      "id": "hdr-e01-empty",
+      "category": "header",
+      "description": "documento vacío (E01)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "",
+      "expected": {
+        "errors": [
+          {
+            "code": "E01",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e01-blank",
+      "category": "header",
+      "description": "documento con solo líneas en blanco (E01)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "\n  \n\t\n",
+      "expected": {
+        "errors": [
+          {
+            "code": "E01",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e02-prefix",
+      "category": "header",
+      "description": "prefijo distinto del contrato (E02)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hx|n=1|src=s\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E02",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e02-case",
+      "category": "header",
+      "description": "el prefijo distingue mayúsculas (E02)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "HD|n=1|src=s\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E02",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e03-no-n",
+      "category": "header",
+      "description": "cabecera sin n (E03)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|src=s\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E03",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e04-more",
+      "category": "header",
+      "description": "más registros que n (E04)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s\nx\ny",
+      "expected": {
+        "errors": [
+          {
+            "code": "E04",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e04-fewer",
+      "category": "header",
+      "description": "menos registros que n (E04)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=3|src=s\nx\ny",
+      "expected": {
+        "errors": [
+          {
+            "code": "E04",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e12-no-eq",
+      "category": "header",
+      "description": "entrada de cabecera sin '=' (E12)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|basura\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-e12-required-missing",
+      "category": "header",
+      "description": "falta una clave requerida (E12)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-list-bad-item",
+      "category": "header",
+      "description": "elemento inválido en lista de cabecera (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|ls=1,x\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-tuple-arity",
+      "category": "header",
+      "description": "tupla de cabecera con aridad incorrecta (E07)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|tp=1\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-escape-invalid",
+      "category": "header",
+      "description": "escape inválido en la cabecera (E09)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=a\\qb\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-count-errors-combined",
+      "category": "header",
+      "description": "errores de cabecera y de conteo se acumulan",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=2|src=s|basura\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          },
+          {
+            "code": "E04",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-lenient-keeps-records",
+      "category": "header",
+      "description": "con errores de cabecera el modo tolerante conserva los registros",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|basura\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    }
+  ]
+}
