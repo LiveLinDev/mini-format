@@ -2,6 +2,7 @@
 
     mini forks                         list registered forks
     mini validate FILE [-p PREFIX]     validate a .mini document (exit 1 on errors)
+    mini diagnose FILE [-p PREFIX]     lenient parse: JSON report of lines to regenerate
     mini to-json FILE [-p PREFIX]      convert .mini -> canonical JSON
     mini from-json FILE -p PREFIX      convert canonical JSON -> .mini
     mini prompt PREFIX [--lang es]     print the transferable specification block
@@ -53,6 +54,19 @@ def cmd_validate(args) -> int:
         return 1
     print(f"OK: prefix={doc.prefix} v{doc.version} records={len(doc.records)} n={doc.header.get('n')}")
     return 0
+
+
+def cmd_diagnose(args) -> int:
+    """Lenient parse; prints a JSON report with the lines to regenerate."""
+    text = Path(args.file).read_text(encoding="utf-8")
+    c = _contract(args, text)
+    try:
+        doc = parse(text, c, strict=False)
+    except MiniValidationError as e:  # empty document
+        print(json.dumps({"ok": False, "errors": [x.to_dict() for x in e.errors]}, ensure_ascii=False, indent=2))
+        return 1
+    print(json.dumps(doc.diagnostics(), ensure_ascii=False, indent=2))
+    return 0 if doc.ok else 1
 
 
 def cmd_to_json(args) -> int:
@@ -189,6 +203,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("forks").set_defaults(fn=cmd_forks)
     p = sub.add_parser("validate"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.set_defaults(fn=cmd_validate)
+    p = sub.add_parser("diagnose"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.set_defaults(fn=cmd_diagnose)
     p = sub.add_parser("to-json"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--lenient", action="store_true"); p.add_argument("--compact", action="store_true"); p.set_defaults(fn=cmd_to_json)
     p = sub.add_parser("from-json"); p.add_argument("file"); p.add_argument("-p", "--prefix", required=True); p.set_defaults(fn=cmd_from_json)
     p = sub.add_parser("prompt"); p.add_argument("prefix"); p.add_argument("--lang", default="en", choices=["en", "es"]); p.add_argument("--no-example", action="store_true"); p.add_argument("--example-records", type=int, default=2); p.set_defaults(fn=cmd_prompt)
