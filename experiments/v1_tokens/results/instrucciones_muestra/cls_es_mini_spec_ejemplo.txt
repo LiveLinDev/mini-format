@@ -1,0 +1,19 @@
+FORMATO .mini — familia 'cls' v1 (Multi-label text classification outputs)
+Classifier outputs: the label set is written in full and the predicted labels carry *, so both the label space and the prediction are self-describing.
+Reglas:
+- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'cls|d=<str>?, l=<str>?, model=<str>?, k=<int>?, n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.
+- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).
+- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):
+  1. id: str
+  2. text: str
+  3. labels: lista de str separada por ','; al menos un elemento lleva el sufijo * (seleccionado)
+  4. conf: float [0..1]
+  5. rationale: str (opcional)
+- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV ("impacto, justicia y evidencia"; el marcador * va después de la comilla de cierre) o escapa el separador como '\,'. Un asterisco final literal se escribe '\*'.
+- Escapes válidos en cualquier valor: '\|' para una barra vertical literal, '\\' para una barra invertida, '\n' para un salto de línea.
+- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.
+- Un campo vacío significa nulo (solo permitido en campos opcionales).
+- Registro: 5 campos núcleo.
+Ejemplo válido:
+cls|n=1|d=20260603|l=en|model=cls-support-2026|k=6
+m1|The quiz froze after question 4, is that a known issue?|question*,feedback,bug*,request,praise,other|0.91|reports a malfunction and asks

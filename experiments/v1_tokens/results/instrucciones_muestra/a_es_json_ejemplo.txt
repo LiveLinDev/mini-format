@@ -1,0 +1,3 @@
+FORMATO JSON — familia 'a'
+Devuelve solo un objeto JSON válido (sin bloques de código ni comentarios) con exactamente esta estructura. Ejemplo con 1 registro:
+{"header":{"m":"IRT3PL","d":"20260603","l":"es","t":"evaluación transversal","bd":[1,1,1,1,1,1],"cat":{"theta_init":0,"theta_min":-3,"theta_max":3,"se_stop":0.3,"max_items":1,"exposure_ctrl":"SH"},"k":4},"items":[{"id":"i1","bloom":"L1","topic":"Biología","statement":"¿Dónde ocurre principalmente la fotosíntesis?","options":["cloroplastos","núcleo","mitocondria","ribosoma"],"correct":0,"irt":{"a":0.9,"b":-1.0,"c":0.25},"difficulty":1,"cat":{"area":"biología","exposure_cap":0.2,"demand":"low"}}]}
