@@ -6,3 +6,6 @@ benchmark/toon_ref/package*.json
 *.egg-info/
 build/
 dist/
+.coverage
+htmlcov/
+.pytest_cache/
