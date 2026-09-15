@@ -1,0 +1,309 @@
+<title>Banco de pruebas .mini</title>
+<meta name="description" content="Demostración del artefacto mini-format: la misma respuesta de un modelo procesada con un prompt propio, con JSON y con la biblioteca .mini.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #F4F6F5; --panel: #FFFFFF; --sunk: #EBEFED; --ink: #16201D; --muted: #56625E; --line: #D3DAD7;
+  --accent: #0E6A60; --accent-soft: #DCEEEA;
+  --ok: #2F7D4F; --ok-soft: #DDEFE3; --bad: #B42318; --bad-soft: #FBE3E0;
+  --lost: #7A6F63; --lost-soft: #ECE7E1; --fix: #2D5BA8; --fix-soft: #E0E9F8;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --cond: "IBM Plex Sans Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101614; --panel: #17201D; --sunk: #0C1210; --ink: #E4ECE9; --muted: #9AA8A3; --line: #2C3834;
+    --accent: #5CC2B3; --accent-soft: #173A35;
+    --ok: #6CC48F; --ok-soft: #173325; --bad: #F2877C; --bad-soft: #3D1C18;
+    --lost: #B8AB9C; --lost-soft: #2E2924; --fix: #86AEF0; --fix-soft: #1B2A45;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101614; --panel: #17201D; --sunk: #0C1210; --ink: #E4ECE9; --muted: #9AA8A3; --line: #2C3834;
+  --accent: #5CC2B3; --accent-soft: #173A35;
+  --ok: #6CC48F; --ok-soft: #173325; --bad: #F2877C; --bad-soft: #3D1C18;
+  --lost: #B8AB9C; --lost-soft: #2E2924; --fix: #86AEF0; --fix-soft: #1B2A45;
+}
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 15px/1.55 var(--sans); padding-inline: 16px; padding-block: 0 64px; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--cond); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: -0.005em; }
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 17px; }
+p { margin: 0; }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+.label { font: 600 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+header.top { padding-block: 36px 24px; display: grid; gap: 14px; border-bottom: 1px solid var(--line); }
+header.top .lede { max-width: 68ch; color: var(--muted); font-size: 16px; }
+header.top .lede strong { color: var(--ink); font-weight: 600; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 4px; }
+.fact { display: flex; gap: 8px; align-items: baseline; font-size: 13px; color: var(--muted); }
+.fact b { font: 500 15px var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+section { padding-block: 32px 8px; display: grid; gap: 18px; }
+.sec-head { display: grid; gap: 6px; max-width: 76ch; }
+.sec-head p { color: var(--muted); }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab { font: 500 14px var(--sans); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.tab:focus-visible, button:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nota-escenario { background: var(--accent-soft); border-radius: 6px; padding: 12px 16px; max-width: 90ch; }
+.nota-escenario b { font-weight: 600; }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .grid3 { grid-template-columns: 1fr; } }
+.col { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-rows: auto auto 1fr auto; min-width: 0; }
+.col.mini { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.col-head { padding: 14px 16px 10px; display: grid; gap: 4px; align-content: start; min-height: 74px; }
+.col-head .sub { font-size: 13px; color: var(--muted); }
+.parser { margin: 0 16px; padding: 7px 10px; background: var(--sunk); border-radius: 4px; font: 12px/1.4 var(--mono); color: var(--muted); overflow-x: auto; white-space: nowrap; }
+.resp { display: grid; gap: 6px; padding: 12px 16px 0; min-width: 0; }
+.resp-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+textarea { width: 100%; min-height: 230px; resize: vertical; font: 12px/1.5 var(--mono); color: var(--ink); background: var(--sunk); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; white-space: pre; overflow: auto; tab-size: 2; }
+.tok { font: 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.res { padding: 14px 16px 16px; display: grid; gap: 10px; border-top: 1px dashed var(--line); margin-top: 12px; }
+.strip { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+.cell { height: 26px; border-radius: 3px; display: grid; place-items: center; font: 500 9.5px var(--mono); }
+.cell.ok { background: var(--ok-soft); color: var(--ok); }
+.cell.silencioso { background: var(--bad); color: var(--panel); }
+.cell.perdido { background: var(--lost-soft); color: var(--lost); outline: 1px dashed var(--lost); outline-offset: -1px; }
+.cell.regenerar { background: var(--fix-soft); color: var(--fix); outline: 1px solid var(--fix); outline-offset: -1px; }
+.counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.count { display: grid; gap: 2px; }
+.count b { font: 500 20px var(--mono); font-variant-numeric: tabular-nums; }
+.count span { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
+.count.silencioso b { color: var(--bad); }
+.count.regenerar b { color: var(--fix); }
+.count.perdido b { color: var(--lost); }
+.count.ok b { color: var(--ok); }
+.diag { font: 12px/1.45 var(--mono); display: grid; gap: 3px; }
+.diag .e { color: var(--fix); }
+.diag .x { color: var(--bad); }
+.diag .q { color: var(--muted); font-family: var(--sans); font-size: 12.5px; }
+.costo { font-size: 13px; color: var(--muted); }
+.costo b { font: 500 13px var(--mono); color: var(--ink); }
+.btn { font: 500 12px var(--sans); background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+.btn:hover { color: var(--ink); border-color: var(--muted); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 12px var(--sans); color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; background: var(--sunk); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.pill { display: inline-block; font: 500 12px var(--mono); padding: 1px 7px; border-radius: 10px; margin-right: 4px; white-space: nowrap; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.silencioso { background: var(--bad-soft); color: var(--bad); }
+.pill.perdido { background: var(--lost-soft); color: var(--lost); }
+.pill.regenerar { background: var(--fix-soft); color: var(--fix); }
+
+details.bloque { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+details.bloque summary { cursor: pointer; padding: 12px 16px; font-weight: 500; }
+details.bloque pre { margin: 0; padding: 0 16px 16px; font: 12px/1.5 var(--mono); white-space: pre-wrap; color: var(--ink); overflow-x: auto; }
+
+.niveles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .niveles { grid-template-columns: 1fr; } }
+.nivel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.nivel .cuando { font: 500 12px var(--mono); color: var(--accent); }
+.nivel ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+.nivel dl { margin: 0; display: grid; gap: 8px; }
+.nivel dt { font-weight: 600; font-size: 13px; }
+.nivel dd { margin: 0; color: var(--muted); font-size: 14px; }
+.limites { border-left: 0; background: var(--sunk); border-radius: 8px; padding: 14px 18px; font-size: 14px; color: var(--muted); max-width: 96ch; }
+.limites b { color: var(--ink); }
+footer { padding-block: 32px 0; font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .cell { transition: background-color .2s ease; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="label">mini-format · demostración del artefacto</span>
+    <h1>Pedir un formato es fácil. Recibirlo bien, no.</h1>
+    <p class="lede">La misma extracción de <strong>12 reclamos de clientes</strong> se procesa de tres formas: con un prompt propio que pide separar con <code>|</code>, con JSON sin modo estructurado y con la <strong>biblioteca .mini</strong>. Las respuestas son editables y el resultado se recalcula con el analizador real de .mini (puerto JavaScript de la especificación 1.0).</p>
+    <div class="facts" id="facts"></div>
+  </header>
+
+  <section aria-labelledby="t-casos">
+    <div class="sec-head">
+      <h2 id="t-casos">Cuatro situaciones de una integración real</h2>
+      <p>Cada casilla de la franja es un reclamo esperado. El color indica qué recibió el sistema.</p>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--ok-soft);outline:1px solid var(--ok)"></i>Correcto</span>
+      <span><i style="background:var(--bad)"></i>Aceptado con datos incorrectos, sin aviso</span>
+      <span><i style="background:var(--lost-soft);outline:1px dashed var(--lost)"></i>Perdido sin aviso</span>
+      <span><i style="background:var(--fix-soft);outline:1px solid var(--fix)"></i>Detectado: se vuelve a pedir</span>
+    </div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <p class="nota-escenario" id="nota"></p>
+    <div class="grid3" id="cols"></div>
+  </section>
+
+  <section aria-labelledby="t-resumen">
+    <div class="sec-head">
+      <h2 id="t-resumen">Resumen de los cuatro casos</h2>
+      <p>Calculado con las respuestas originales de cada caso. Los tokens a regenerar se cuentan con el tokenizador o200k_base.</p>
+    </div>
+    <div class="tablewrap"><table id="resumen"></table></div>
+  </section>
+
+  <section aria-labelledby="t-bloque">
+    <div class="sec-head">
+      <h2 id="t-bloque">La instrucción sale del contrato, no se escribe a mano</h2>
+      <p>El contrato de la familia <code>rec</code> declara campos, tipos, valores permitidos y rangos. Con él la biblioteca genera la instrucción para el modelo y valida la respuesta; ambos lados usan la misma definición.</p>
+    </div>
+    <details class="bloque"><summary>Contrato <code>rec</code> (JSON)</summary><pre id="contrato"></pre></details>
+    <details class="bloque"><summary>Instrucción generada con <code>specBlock(contrato, "es")</code> · <span id="bloque-tok"></span></summary><pre id="bloque"></pre></details>
+  </section>
+
+  <section aria-labelledby="t-demo">
+    <div class="sec-head">
+      <h2 id="t-demo">Cómo se demuestra el problema y la solución</h2>
+      <p>Esta página muestra el mecanismo. La tesis necesita además medir la frecuencia de cada falla con modelos reales y comprobar que terceros integran el componente.</p>
+    </div>
+    <div class="niveles">
+      <article class="nivel">
+        <span class="cuando">S7 · sustentación parcial</span>
+        <h3>1. Demostración controlada</h3>
+        <p>Casos de falla construidos sobre los mismos datos y procesados por tres enfoques.</p>
+        <dl>
+          <dt>Qué prueba</dt><dd>Que el problema está en la recepción: corrupción sin aviso, pérdida por corte y reintentos completos.</dd>
+          <dt>Qué no prueba</dt><dd>Con qué frecuencia ocurre cada falla en producción.</dd>
+        </dl>
+      </article>
+      <article class="nivel">
+        <span class="cuando">S8–S10 · estudios V1–V4</span>
+        <h3>2. Medición con modelos reales</h3>
+        <p>Las mismas tareas ejecutadas con tres brazos: prompt propio, JSON (sin modo y con modo nativo) y .mini con la biblioteca.</p>
+        <ul>
+          <li>≥ 3 modelos de ≥ 2 proveedores, ≥ 10 dominios, ≥ 30 muestras por celda.</li>
+          <li>Textos reales con separadores, comillas y saltos de línea.</li>
+          <li>Límites de salida ajustados para provocar cortes.</li>
+        </ul>
+        <dl>
+          <dt>Métricas</dt><dd>% de registros corruptos sin aviso · registros perdidos por corte · tokens y costo por 1 000 registros · tokens de recuperación.</dd>
+        </dl>
+      </article>
+      <article class="nivel">
+        <span class="cuando">S9–S11 · estudio V6</span>
+        <h3>3. Integración por terceros</h3>
+        <ul>
+          <li>SIMA reemplaza su analizador interno por el paquete publicado.</li>
+          <li>Un segundo sistema de otro dominio integra el componente.</li>
+          <li>≥ 8 participantes de Ingeniería de Sistemas integran esta extracción de reclamos en una API de ejemplo usando solo la documentación.</li>
+        </ul>
+        <dl>
+          <dt>Métricas</dt><dd>Tiempo de integración (meta ≤ 30 min) · tareas completadas · puntaje SUS (meta ≥ 70).</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="limites"><b>Alcance de esta demostración.</b> Las respuestas son ejemplos construidos para reproducir fallas conocidas; no son salidas registradas de un modelo. El brazo JSON no usa validador de esquema ni modo estructurado nativo: un validador detectaría el caso 4, pero no recupera el caso 3. Esas comparaciones se miden en los estudios V2 y V3. La reparación selectiva y los adaptadores de proveedores son componentes a desarrollar; aquí solo se calcula qué registros se volverían a pedir.</p>
+  </section>
+
+  <footer>mini-format · especificación .mini 1.0 · Palma Obispo y Palomino Santa Cruz · UPC, Taller de Proyecto II, 2026</footer>
+</div>
+
+<script>/*MINI_JS*/</script>
+<script>/*LOGICA_JS*/</script>
+<script>
+const D = /*DATOS*/;
+const C = MINI.normalizeContract(D.contrato);
+const ENFOQUES = [
+  { id: 'casero', titulo: 'Prompt propio', sub: '"Responde una línea por reclamo, campos separados por |"', parser: "linea.split('|')" },
+  { id: 'json', titulo: 'JSON sin modo estructurado', sub: 'Se pide un objeto {"reclamos": [...]}', parser: 'JSON.parse(texto).reclamos' },
+  { id: 'mini', titulo: 'Biblioteca .mini', sub: 'Instrucción generada desde el contrato rec', parser: 'MINI.parse(texto, contrato, {strict: false})' },
+];
+const NOTAS = {
+  ok: '<b>Respuesta completa.</b> El modelo cumple lo pedido. Aun así, el reclamo R-1005 contiene «Pedido 4471 | llegó incompleto»: el prompt propio no define cómo escribir una barra dentro de un texto y el sistema guarda un resumen cortado sin enterarse. .mini usa 40 % menos tokens que JSON compacto en esta respuesta.',
+  delim: '<b>El modelo no escapa el separador.</b> En la línea de R-1005 la barra llega sin <code>\\|</code>. .mini no adivina: el registro tiene 7 campos y el contrato admite 6, así que lo rechaza con E05 y conserva los otros 11.',
+  trunc: '<b>La respuesta se corta</b> por el límite de tokens de salida en medio de R-1010. JSON no se puede leer y se repite la llamada completa. El prompt propio guarda R-1010 con monto 12 y sin resumen, y no nota que faltan dos. .mini conserva 9 registros, rechaza el incompleto (E05) y detecta que faltan registros porque la cabecera declaró n=12 (E04).',
+  inval: '<b>Valores fuera del contrato.</b> El modelo inventa la categoría «reembolso» en R-1004 y pone prioridad 7 en R-1008 (rango 1–5). JSON y el prompt propio los aceptan tal cual. .mini los rechaza con E10 y E13 y solo esos dos se vuelven a pedir.',
+};
+const CORTO = { ok: 'correctos', silencioso: 'incorrectos', perdido: 'perdidos', regenerar: 'detectados' };
+const CODIGOS = { E01: 'documento vacío', E02: 'prefijo distinto', E03: 'falta n', E04: 'cantidad distinta a n', E05: 'número de campos incorrecto', E06: 'tipo inválido', E07: 'lista inválida', E08: 'marcador inválido', E09: 'escape inválido', E10: 'valor no permitido', E11: 'valor duplicado', E12: 'cabecera inválida', E13: 'fuera de rango' };
+const ETIQ = { ok: 'correctos', silencioso: 'incorrectos sin aviso', perdido: 'perdidos sin aviso', regenerar: 'detectados, a pedir de nuevo' };
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let actual = 0;
+const textos = D.escenarios.map(s => ({ casero: s.casero, json: s.json, mini: s.mini }));
+
+function facts() {
+  const t = D.tokens.o200k_base, t2 = D.tokens.cl100k_base;
+  const pct = (a, b) => Math.round((1 - a / b) * 100);
+  $('#facts').innerHTML = [
+    ['JSON compacto', t.json + ' tokens'],
+    ['.mini', t.mini + ' tokens'],
+    ['ahorro', pct(t.mini, t.json) + ' % (o200k) · ' + pct(t2.mini, t2.json) + ' % (cl100k)'],
+    ['instrucción .mini', t.bloque + ' tokens de entrada'],
+  ].map(([k, v]) => `<span class="fact">${k} <b>${v}</b></span>`).join('');
+}
+
+function tabs() {
+  $('#tabs').innerHTML = D.escenarios.map((s, i) =>
+    `<button class="tab" role="tab" id="tab-${s.id}" aria-selected="${i === actual}" data-i="${i}">${i + 1}. ${esc(s.titulo)}</button>`).join('');
+  $('#tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { actual = +b.dataset.i; tabs(); columnas(); });
+}
+
+function columnas() {
+  const s = D.escenarios[actual];
+  $('#nota').innerHTML = NOTAS[s.id];
+  $('#cols').innerHTML = ENFOQUES.map(e => `
+    <article class="col ${e.id}">
+      <div class="col-head"><h3>${e.titulo}</h3><span class="sub">${esc(e.sub)}</span></div>
+      <div class="parser" title="Código de lectura">${esc(e.parser)}</div>
+      <div class="resp">
+        <div class="resp-bar"><span class="label">Respuesta del modelo</span><button class="btn" data-reset="${e.id}">Restaurar</button></div>
+        <textarea id="txt-${s.id}-${e.id}" data-e="${e.id}" spellcheck="false" aria-label="Respuesta ${e.titulo}"></textarea>
+      </div>
+      <div class="res" id="res-${e.id}" aria-live="polite"></div>
+    </article>`).join('');
+  ENFOQUES.forEach(e => {
+    const ta = $(`#txt-${s.id}-${e.id}`);
+    ta.value = textos[actual][e.id];
+    ta.oninput = () => { textos[actual][e.id] = ta.value; resultado(e.id); };
+    resultado(e.id);
+  });
+  $('#cols').querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
+    const id = b.dataset.reset; textos[actual][id] = s[id]; $(`#txt-${s.id}-${id}`).value = s[id]; resultado(id);
+  });
+}
+
+function resultado(enfoque) {
+  const texto = textos[actual][enfoque];
+  const r = LOGICA.evaluar(enfoque, texto, D, MINI, C);
+  const strip = D.verdad.map((v, i) => `<span class="cell ${r.estados[i]}" title="${v.id}: ${ETIQ[r.estados[i]]}">${v.id.slice(-2)}</span>`).join('');
+  const counts = ['ok', 'silencioso', 'perdido', 'regenerar'].map(k => `<div class="count ${k}"><b>${r.resumen[k]}</b><span>${ETIQ[k]}</span></div>`).join('');
+  let diag = '';
+  if (r.falloTotal) diag = `<div class="x">✖ ${esc(r.falloTotal)}</div><div class="q">Un error invalida el documento completo.</div>`;
+  else if (r.errores.length) diag = r.errores.map(e => `<div class="e">${e.codigo} ${CODIGOS[e.codigo] || ''} · ${e.linea ? 'línea ' + e.linea : 'documento'}${e.campo ? ' [' + esc(e.campo) + ']' : ''}<br><span class="q">${esc(e.mensaje)}</span></div>`).join('');
+  else if (r.resumen.silencioso || r.resumen.perdido) diag = `<div class="q">Sin errores reportados: el sistema cree que todo está bien.</div>`;
+  else diag = `<div class="q">Sin errores.</div>`;
+  const tok = enfoque === 'casero' ? '' : `<p class="costo">Tokens de salida a pedir de nuevo: <b>${r.regenerarTokens}</b>${r.falloTotal ? ' (respuesta completa)' : ''}</p>`;
+  $('#res-' + enfoque).innerHTML = `<div class="strip">${strip}</div><div class="counts">${counts}</div><div class="diag">${diag}</div>${tok}`;
+}
+
+function resumen() {
+  const fila = s => ENFOQUES.map(e => {
+    const r = LOGICA.evaluar(e.id, s[e.id], D, MINI, C).resumen;
+    const pills = ['ok', 'silencioso', 'perdido', 'regenerar'].filter(k => r[k]).map(k => `<span class="pill ${k}" title="${ETIQ[k]}">${r[k]} ${CORTO[k]}</span>`).join('');
+    const tk = e.id === 'casero' ? '—' : LOGICA.evaluar(e.id, s[e.id], D, MINI, C).regenerarTokens;
+    return `<td>${pills}</td><td class="num">${tk}</td>`;
+  }).join('');
+  $('#resumen').innerHTML = `<thead><tr><th>Caso</th>${ENFOQUES.map(e => `<th>${e.titulo}</th><th>Tokens a regenerar</th>`).join('')}</tr></thead><tbody>` +
+    D.escenarios.map((s, i) => `<tr><td>${i + 1}. ${esc(s.titulo)}</td>${fila(s)}</tr>`).join('') + '</tbody>';
+}
+
+facts(); tabs(); columnas(); resumen();
+$('#contrato').textContent = JSON.stringify(D.contrato, null, 2);
+$('#bloque').textContent = MINI.specBlock(C, 'es');
+$('#bloque-tok').textContent = D.tokens.o200k_base.bloque + ' tokens (o200k_base)';
+</script>

@@ -1,0 +1,910 @@
+<title>Banco de pruebas .mini</title>
+<meta name="description" content="Demostración del artefacto mini-format: la misma respuesta de un modelo procesada con un prompt propio, con JSON y con la biblioteca .mini.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #F4F6F5; --panel: #FFFFFF; --sunk: #EBEFED; --ink: #16201D; --muted: #56625E; --line: #D3DAD7;
+  --accent: #0E6A60; --accent-soft: #DCEEEA;
+  --ok: #2F7D4F; --ok-soft: #DDEFE3; --bad: #B42318; --bad-soft: #FBE3E0;
+  --lost: #7A6F63; --lost-soft: #ECE7E1; --fix: #2D5BA8; --fix-soft: #E0E9F8;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --cond: "IBM Plex Sans Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101614; --panel: #17201D; --sunk: #0C1210; --ink: #E4ECE9; --muted: #9AA8A3; --line: #2C3834;
+    --accent: #5CC2B3; --accent-soft: #173A35;
+    --ok: #6CC48F; --ok-soft: #173325; --bad: #F2877C; --bad-soft: #3D1C18;
+    --lost: #B8AB9C; --lost-soft: #2E2924; --fix: #86AEF0; --fix-soft: #1B2A45;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101614; --panel: #17201D; --sunk: #0C1210; --ink: #E4ECE9; --muted: #9AA8A3; --line: #2C3834;
+  --accent: #5CC2B3; --accent-soft: #173A35;
+  --ok: #6CC48F; --ok-soft: #173325; --bad: #F2877C; --bad-soft: #3D1C18;
+  --lost: #B8AB9C; --lost-soft: #2E2924; --fix: #86AEF0; --fix-soft: #1B2A45;
+}
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 15px/1.55 var(--sans); padding-inline: 16px; padding-block: 0 64px; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--cond); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: -0.005em; }
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 17px; }
+p { margin: 0; }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+.label { font: 600 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+header.top { padding-block: 36px 24px; display: grid; gap: 14px; border-bottom: 1px solid var(--line); }
+header.top .lede { max-width: 68ch; color: var(--muted); font-size: 16px; }
+header.top .lede strong { color: var(--ink); font-weight: 600; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 4px; }
+.fact { display: flex; gap: 8px; align-items: baseline; font-size: 13px; color: var(--muted); }
+.fact b { font: 500 15px var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+section { padding-block: 32px 8px; display: grid; gap: 18px; }
+.sec-head { display: grid; gap: 6px; max-width: 76ch; }
+.sec-head p { color: var(--muted); }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab { font: 500 14px var(--sans); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.tab:focus-visible, button:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nota-escenario { background: var(--accent-soft); border-radius: 6px; padding: 12px 16px; max-width: 90ch; }
+.nota-escenario b { font-weight: 600; }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .grid3 { grid-template-columns: 1fr; } }
+.col { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-rows: auto auto 1fr auto; min-width: 0; }
+.col.mini { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.col-head { padding: 14px 16px 10px; display: grid; gap: 4px; align-content: start; min-height: 74px; }
+.col-head .sub { font-size: 13px; color: var(--muted); }
+.parser { margin: 0 16px; padding: 7px 10px; background: var(--sunk); border-radius: 4px; font: 12px/1.4 var(--mono); color: var(--muted); overflow-x: auto; white-space: nowrap; }
+.resp { display: grid; gap: 6px; padding: 12px 16px 0; min-width: 0; }
+.resp-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+textarea { width: 100%; min-height: 230px; resize: vertical; font: 12px/1.5 var(--mono); color: var(--ink); background: var(--sunk); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; white-space: pre; overflow: auto; tab-size: 2; }
+.tok { font: 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.res { padding: 14px 16px 16px; display: grid; gap: 10px; border-top: 1px dashed var(--line); margin-top: 12px; }
+.strip { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+.cell { height: 26px; border-radius: 3px; display: grid; place-items: center; font: 500 9.5px var(--mono); }
+.cell.ok { background: var(--ok-soft); color: var(--ok); }
+.cell.silencioso { background: var(--bad); color: var(--panel); }
+.cell.perdido { background: var(--lost-soft); color: var(--lost); outline: 1px dashed var(--lost); outline-offset: -1px; }
+.cell.regenerar { background: var(--fix-soft); color: var(--fix); outline: 1px solid var(--fix); outline-offset: -1px; }
+.counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.count { display: grid; gap: 2px; }
+.count b { font: 500 20px var(--mono); font-variant-numeric: tabular-nums; }
+.count span { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
+.count.silencioso b { color: var(--bad); }
+.count.regenerar b { color: var(--fix); }
+.count.perdido b { color: var(--lost); }
+.count.ok b { color: var(--ok); }
+.diag { font: 12px/1.45 var(--mono); display: grid; gap: 3px; }
+.diag .e { color: var(--fix); }
+.diag .x { color: var(--bad); }
+.diag .q { color: var(--muted); font-family: var(--sans); font-size: 12.5px; }
+.costo { font-size: 13px; color: var(--muted); }
+.costo b { font: 500 13px var(--mono); color: var(--ink); }
+.btn { font: 500 12px var(--sans); background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+.btn:hover { color: var(--ink); border-color: var(--muted); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 12px var(--sans); color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; background: var(--sunk); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.pill { display: inline-block; font: 500 12px var(--mono); padding: 1px 7px; border-radius: 10px; margin-right: 4px; white-space: nowrap; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.silencioso { background: var(--bad-soft); color: var(--bad); }
+.pill.perdido { background: var(--lost-soft); color: var(--lost); }
+.pill.regenerar { background: var(--fix-soft); color: var(--fix); }
+
+details.bloque { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+details.bloque summary { cursor: pointer; padding: 12px 16px; font-weight: 500; }
+details.bloque pre { margin: 0; padding: 0 16px 16px; font: 12px/1.5 var(--mono); white-space: pre-wrap; color: var(--ink); overflow-x: auto; }
+
+.niveles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .niveles { grid-template-columns: 1fr; } }
+.nivel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.nivel .cuando { font: 500 12px var(--mono); color: var(--accent); }
+.nivel ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+.nivel dl { margin: 0; display: grid; gap: 8px; }
+.nivel dt { font-weight: 600; font-size: 13px; }
+.nivel dd { margin: 0; color: var(--muted); font-size: 14px; }
+.limites { border-left: 0; background: var(--sunk); border-radius: 8px; padding: 14px 18px; font-size: 14px; color: var(--muted); max-width: 96ch; }
+.limites b { color: var(--ink); }
+footer { padding-block: 32px 0; font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .cell { transition: background-color .2s ease; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="label">mini-format · demostración del artefacto</span>
+    <h1>Pedir un formato es fácil. Recibirlo bien, no.</h1>
+    <p class="lede">La misma extracción de <strong>12 reclamos de clientes</strong> se procesa de tres formas: con un prompt propio que pide separar con <code>|</code>, con JSON sin modo estructurado y con la <strong>biblioteca .mini</strong>. Las respuestas son editables y el resultado se recalcula con el analizador real de .mini (puerto JavaScript de la especificación 1.0).</p>
+    <div class="facts" id="facts"></div>
+  </header>
+
+  <section aria-labelledby="t-casos">
+    <div class="sec-head">
+      <h2 id="t-casos">Cuatro situaciones de una integración real</h2>
+      <p>Cada casilla de la franja es un reclamo esperado. El color indica qué recibió el sistema.</p>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--ok-soft);outline:1px solid var(--ok)"></i>Correcto</span>
+      <span><i style="background:var(--bad)"></i>Aceptado con datos incorrectos, sin aviso</span>
+      <span><i style="background:var(--lost-soft);outline:1px dashed var(--lost)"></i>Perdido sin aviso</span>
+      <span><i style="background:var(--fix-soft);outline:1px solid var(--fix)"></i>Detectado: se vuelve a pedir</span>
+    </div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <p class="nota-escenario" id="nota"></p>
+    <div class="grid3" id="cols"></div>
+  </section>
+
+  <section aria-labelledby="t-resumen">
+    <div class="sec-head">
+      <h2 id="t-resumen">Resumen de los cuatro casos</h2>
+      <p>Calculado con las respuestas originales de cada caso. Los tokens a regenerar se cuentan con el tokenizador o200k_base.</p>
+    </div>
+    <div class="tablewrap"><table id="resumen"></table></div>
+  </section>
+
+  <section aria-labelledby="t-bloque">
+    <div class="sec-head">
+      <h2 id="t-bloque">La instrucción sale del contrato, no se escribe a mano</h2>
+      <p>El contrato de la familia <code>rec</code> declara campos, tipos, valores permitidos y rangos. Con él la biblioteca genera la instrucción para el modelo y valida la respuesta; ambos lados usan la misma definición.</p>
+    </div>
+    <details class="bloque"><summary>Contrato <code>rec</code> (JSON)</summary><pre id="contrato"></pre></details>
+    <details class="bloque"><summary>Instrucción generada con <code>specBlock(contrato, "es")</code> · <span id="bloque-tok"></span></summary><pre id="bloque"></pre></details>
+  </section>
+
+  <section aria-labelledby="t-demo">
+    <div class="sec-head">
+      <h2 id="t-demo">Cómo se demuestra el problema y la solución</h2>
+      <p>Esta página muestra el mecanismo. La tesis necesita además medir la frecuencia de cada falla con modelos reales y comprobar que terceros integran el componente.</p>
+    </div>
+    <div class="niveles">
+      <article class="nivel">
+        <span class="cuando">S7 · sustentación parcial</span>
+        <h3>1. Demostración controlada</h3>
+        <p>Casos de falla construidos sobre los mismos datos y procesados por tres enfoques.</p>
+        <dl>
+          <dt>Qué prueba</dt><dd>Que el problema está en la recepción: corrupción sin aviso, pérdida por corte y reintentos completos.</dd>
+          <dt>Qué no prueba</dt><dd>Con qué frecuencia ocurre cada falla en producción.</dd>
+        </dl>
+      </article>
+      <article class="nivel">
+        <span class="cuando">S8–S10 · estudios V1–V4</span>
+        <h3>2. Medición con modelos reales</h3>
+        <p>Las mismas tareas ejecutadas con tres brazos: prompt propio, JSON (sin modo y con modo nativo) y .mini con la biblioteca.</p>
+        <ul>
+          <li>≥ 3 modelos de ≥ 2 proveedores, ≥ 10 dominios, ≥ 30 muestras por celda.</li>
+          <li>Textos reales con separadores, comillas y saltos de línea.</li>
+          <li>Límites de salida ajustados para provocar cortes.</li>
+        </ul>
+        <dl>
+          <dt>Métricas</dt><dd>% de registros corruptos sin aviso · registros perdidos por corte · tokens y costo por 1 000 registros · tokens de recuperación.</dd>
+        </dl>
+      </article>
+      <article class="nivel">
+        <span class="cuando">S9–S11 · estudio V6</span>
+        <h3>3. Integración por terceros</h3>
+        <ul>
+          <li>SIMA reemplaza su analizador interno por el paquete publicado.</li>
+          <li>Un segundo sistema de otro dominio integra el componente.</li>
+          <li>≥ 8 participantes de Ingeniería de Sistemas integran esta extracción de reclamos en una API de ejemplo usando solo la documentación.</li>
+        </ul>
+        <dl>
+          <dt>Métricas</dt><dd>Tiempo de integración (meta ≤ 30 min) · tareas completadas · puntaje SUS (meta ≥ 70).</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="limites"><b>Alcance de esta demostración.</b> Las respuestas son ejemplos construidos para reproducir fallas conocidas; no son salidas registradas de un modelo. El brazo JSON no usa validador de esquema ni modo estructurado nativo: un validador detectaría el caso 4, pero no recupera el caso 3. Esas comparaciones se miden en los estudios V2 y V3. La reparación selectiva y los adaptadores de proveedores son componentes a desarrollar; aquí solo se calcula qué registros se volverían a pedir.</p>
+  </section>
+
+  <footer>mini-format · especificación .mini 1.0 · Palma Obispo y Palomino Santa Cruz · UPC, Taller de Proyecto II, 2026</footer>
+</div>
+
+<script>/* mini.js — JavaScript port of the .mini reference implementation (spec 1.0).
+ * Exposes a global `MINI` (browser) / module.exports (node) with:
+ *   parse(text, contract, {strict}) -> {prefix, header, records, errors, canonical()}
+ *   dumps(obj, contract)            -> string
+ *   specBlock(contract, lang, example) -> string
+ *   checkFork(child, parent)        -> [errors]
+ *   normalizeContract(json)         -> contract object with defaults applied
+ * MIT License — A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC, 2026)
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.MINI = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  const FIELD_SEP = '|', MARKER = '*', ESC = '\\';
+  const SCALAR = new Set(['str', 'int', 'float', 'bool', 'enum']);
+
+  class MiniError extends Error {
+    constructor(code, line, message, field) { super(message); this.code = code; this.line = line; this.field = field || ''; }
+    toString() { return `${this.code} ${this.line ? 'line ' + this.line : 'document'}${this.field ? ' [' + this.field + ']' : ''}: ${this.message}`; }
+  }
+
+  // ------------------------------------------------------------ contract
+  function normalizeContract(d) {
+    if (!d || !d.prefix) throw new MiniError('E20', 0, "contract requires 'prefix'");
+    const c = {
+      prefix: String(d.prefix), version: d.version || 1, name: d.name || '', description: d.description || '',
+      parent: d.parent || null, list_separator: d.list_separator || ',', records_key: d.records_key || 'records',
+      domain: d.domain || '', headerKeys: {}, core: [], extensions: [],
+    };
+    if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(c.prefix)) throw new MiniError('E20', 0, `bad prefix '${c.prefix}'`);
+    const hdr = d.header || {};
+    const required = new Set([...(hdr.required || ['n']), 'n']);
+    const keys = Object.assign({}, hdr.keys || {});
+    if (!keys.n) keys.n = { type: 'int', desc: 'number of records' };
+    if (!keys.v) keys.v = { type: 'int', default: 1, desc: 'contract version' };
+    for (const k of Object.keys(keys)) {
+      const s = keys[k];
+      c.headerKeys[k] = { name: k, type: s.type || 'str', required: required.has(k), item: s.item || 'str',
+        items: (s.items || []).map(normField), values: s.values || null, default: s.default === undefined ? null : s.default, desc: s.desc || '' };
+    }
+    for (const k of required) if (!c.headerKeys[k]) c.headerKeys[k] = { name: k, type: 'str', required: true, item: 'str', items: [], values: null, default: null, desc: '' };
+    c.core = (d.core || []).map(normField);
+    c.extensions = (d.extensions || []).map(f => Object.assign(normField(f), { optional: true }));
+    if (!c.core.length) throw new MiniError('E20', 0, 'contract requires at least one core field');
+    const names = [...c.core, ...c.extensions].map(f => f.name);
+    if (new Set(names).size !== names.length) throw new MiniError('E20', 0, 'duplicate field names');
+    c.fields = [...c.core, ...c.extensions];
+    c.arity = c.core.length;
+    return c;
+  }
+  function normField(d) {
+    if (!d.name || !d.type) throw new MiniError('E20', 0, 'field requires name and type');
+    const f = { name: d.name, type: d.type, optional: !!d.optional, unique: !!d.unique, values: d.values || null,
+      item: d.item || 'str', item_values: d.item_values || null, min: d.min === undefined ? null : d.min,
+      max: d.max === undefined ? null : d.max, marker: d.marker || 'exactly_one', count_key: d.count_key || null,
+      items: (d.items || []).map(normField), desc: d.desc || '', default: d.default === undefined ? null : d.default };
+    if (f.type === 'mlist') { const j = d.json || {}; f.json_items = j.items || 'items'; f.json_selected = j.selected || (f.marker === 'exactly_one' ? 'correct' : 'selected'); }
+    if (f.type === 'enum' && !f.values) throw new MiniError('E20', 0, `field ${f.name}: enum requires values`);
+    if (f.type === 'tuple' && !f.items.length) throw new MiniError('E20', 0, `field ${f.name}: tuple requires items`);
+    return f;
+  }
+  function fieldSignature(f) {
+    let body;
+    if (f.type === 'enum') body = 'enum{' + f.values.join('|') + '}';
+    else if (f.type === 'list' || f.type === 'mlist') {
+      const it = f.item !== 'enum' ? f.item : '{' + (f.item_values || []).join('|') + '}';
+      body = `${f.type}<${it}>`;
+      if (f.min !== null || f.max !== null) body += `[${f.min === null ? '' : f.min}..${f.max === null ? '' : f.max}]`;
+      if (f.type === 'mlist') body += { exactly_one: '*1', at_least_one: '*1+', at_most_one: '*0..1', any: '*' }[f.marker];
+    } else if (f.type === 'tuple') body = 'tuple(' + f.items.map(c => `${c.name}:${c.type}`).join(',') + ')';
+    else { body = f.type; if (f.min !== null || f.max !== null) body += `[${f.min === null ? '' : f.min}..${f.max === null ? '' : f.max}]`; }
+    return `${f.name}:${body}${f.optional ? '?' : ''}`;
+  }
+  function signature(c) {
+    const core = c.core.map(fieldSignature).join(' | '); const ext = c.extensions.map(fieldSignature).join(' | ');
+    return core + (ext ? ' || ' + ext : '');
+  }
+
+  // --------------------------------------------------------------- codec
+  function tokenize(line, sep, lineno, strict) {
+    const out = []; let i = 0; const n = line.length;
+    while (i < n) {
+      const ch = line[i];
+      if (ch === ESC) {
+        if (i + 1 >= n) throw new MiniError('E09', lineno, 'dangling backslash at end of line');
+        const nx = line[i + 1];
+        if (nx === 'n') out.push(['\n', true]);
+        else if (nx === FIELD_SEP || nx === MARKER || nx === ESC || nx === sep || nx === ',' || nx === '"') out.push([nx, true]);
+        else if (strict) throw new MiniError('E09', lineno, `invalid escape sequence '\\${nx}'`);
+        else { out.push([ESC, true]); out.push([nx, true]); }
+        i += 2;
+      } else { out.push([ch, false]); i += 1; }
+    }
+    return out;
+  }
+  const splitOn = (toks, d) => { const parts = [[]]; for (const t of toks) { if (t[0] === d && !t[1]) parts.push([]); else parts[parts.length - 1].push(t); } return parts; };
+  function stripToks(t) { let a = 0, b = t.length; while (a < b && /\s/.test(t[a][0]) && !t[a][1]) a++; while (b > a && /\s/.test(t[b - 1][0]) && !t[b - 1][1]) b--; return t.slice(a, b); }
+  const textOf = t => t.map(x => x[0]).join('');
+  const splitFields = (line, sep, lineno, strict) => splitOn(tokenize(line, sep, lineno, strict), FIELD_SEP).map(stripToks);
+  function splitList(toks, sep, lineno) {
+    if (!toks.length) return [];
+    const out = []; let i = 0; const n = toks.length; const ws = k => /\s/.test(toks[k][0]) && !toks[k][1];
+    for (;;) {
+      while (i < n && ws(i)) i++;
+      if (i < n && toks[i][0] === '"' && !toks[i][1]) {
+        i++; const buf = []; let closed = false;
+        while (i < n) { const [ch, esc] = toks[i]; if (ch === '"' && !esc) { if (i + 1 < n && toks[i + 1][0] === '"' && !toks[i + 1][1]) { buf.push('"'); i += 2; continue; } closed = true; i++; break; } buf.push(ch); i++; }
+        if (!closed) throw new MiniError('E09', lineno || 0, 'unbalanced double quote in list element');
+        let marked = false;
+        if (buf.length && buf[buf.length - 1] === MARKER && !toks[i - 2][1]) { marked = true; buf.pop(); }
+        while (i < n && ws(i)) i++;
+        if (i < n && toks[i][0] === MARKER && !toks[i][1]) { marked = true; i++; }
+        while (i < n && ws(i)) i++;
+        if (i < n && !(toks[i][0] === sep && !toks[i][1])) throw new MiniError('E09', lineno || 0, 'text after closing quote in list element');
+        out.push([buf.join(''), marked]);
+      } else {
+        let j = i; while (j < n && !(toks[j][0] === sep && !toks[j][1])) j++;
+        let part = stripToks(toks.slice(i, j)); let marked = false;
+        if (part.length && part[part.length - 1][0] === MARKER && !part[part.length - 1][1]) { marked = true; part = stripToks(part.slice(0, -1)); }
+        out.push([textOf(part), marked]); i = j;
+      }
+      if (i >= n) break;
+      i++; if (i >= n) { out.push(['', false]); break; }
+    }
+    return out;
+  }
+  const escapeScalar = v => String(v).split(ESC).join(ESC + ESC).split(FIELD_SEP).join(ESC + FIELD_SEP).replace(/\r\n|\r|\n/g, ESC + 'n');
+  function escapeElement(v, sep) { let s = escapeScalar(v).split(sep).join(ESC + sep); if (s.endsWith(MARKER)) s = s.slice(0, -1) + ESC + MARKER; if (s.startsWith('"')) s = ESC + s; return s; }
+
+  // -------------------------------------------------------------- values
+  const INT_RE = /^[+-]?\d+$/, FLOAT_RE = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
+  function decodeScalar(text, f, lineno, name, asItem) {
+    name = name || f.name;
+    const t = asItem ? f.item : f.type; const values = asItem ? f.item_values : f.values;
+    if (t === 'str') return text;
+    if (t === 'int') { if (!INT_RE.test(text)) throw new MiniError('E06', lineno, `expected int, got '${text}'`, name); const v = parseInt(text, 10); range(v, f, lineno, name, asItem); return v; }
+    if (t === 'float') { if (!FLOAT_RE.test(text)) throw new MiniError('E06', lineno, `expected number, got '${text}'`, name); const v = parseFloat(text); if (!isFinite(v)) throw new MiniError('E06', lineno, 'non-finite number', name); range(v, f, lineno, name, asItem); return v; }
+    if (t === 'bool') { const l = text.trim().toLowerCase(); if (['true', '1', 'yes', 'y', 't'].includes(l)) return true; if (['false', '0', 'no', 'n', 'f'].includes(l)) return false; throw new MiniError('E06', lineno, `expected true/false, got '${text}'`, name); }
+    if (t === 'enum') { if (!values || !values.includes(text)) throw new MiniError('E10', lineno, `'${text}' not in {${(values || []).join('|')}}`, name); return text; }
+    throw new MiniError('E06', lineno, `unsupported type ${t}`, name);
+  }
+  function range(v, f, lineno, name, asItem) { if (asItem) return; if (f.min !== null && v < f.min) throw new MiniError('E13', lineno, `${v} < min ${f.min}`, name); if (f.max !== null && v > f.max) throw new MiniError('E13', lineno, `${v} > max ${f.max}`, name); }
+  function formatNumber(x) { if (typeof x === 'boolean') return x ? 'true' : 'false'; if (Number.isInteger(x) && Math.abs(x) < 1e15) return String(x); return String(x); }
+  function encodeScalar(v, f, asItem) { const t = asItem ? f.item : f.type; if (v === null || v === undefined) return ''; if (t === 'bool') return v ? 'true' : 'false'; if (t === 'int') return String(Math.trunc(Number(v))); if (t === 'float') return formatNumber(Number(v)); return String(v); }
+
+  // -------------------------------------------------------------- parser
+  function physicalLines(text) { if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1); const out = []; text.split('\n').forEach((raw, i) => { const l = raw.replace(/\r$/, ''); if (l.trim() !== '') out.push([i + 1, l]); }); return out; }
+  function parseHeader(line, lineno, c, strict) {
+    const errs = []; const fields = splitFields(line, c.list_separator, lineno, strict);
+    const prefix = fields.length ? textOf(fields[0]) : ''; const header = {};
+    for (const toks of fields.slice(1)) {
+      const txt = textOf(toks); if (!txt) continue;
+      const eq = toks.findIndex(t => t[0] === '=' && !t[1]);
+      if (eq < 0) { errs.push(new MiniError('E12', lineno, `header entry '${txt}' is not key=value`)); continue; }
+      const key = textOf(stripToks(toks.slice(0, eq))); const vt = stripToks(toks.slice(eq + 1)); const hk = c.headerKeys[key];
+      try {
+        if (!hk) header[key] = textOf(vt);
+        else if (hk.type === 'list') header[key] = splitList(vt, c.list_separator, lineno).map(([t]) => decodeScalar(t, hk, lineno, key, true));
+        else if (hk.type === 'tuple') { const parts = splitList(vt, c.list_separator, lineno); if (parts.length !== hk.items.length) throw new MiniError('E07', lineno, `expected ${hk.items.length} components, got ${parts.length}`, key); const o = {}; hk.items.forEach((cmp, i) => { o[cmp.name] = parts[i][0] === '' ? null : decodeScalar(parts[i][0], cmp, lineno, key + '.' + cmp.name); }); header[key] = o; }
+        else header[key] = decodeScalar(textOf(vt), hk, lineno, key);
+      } catch (e) { if (e instanceof MiniError) errs.push(e); else throw e; }
+    }
+    for (const k of Object.keys(c.headerKeys)) { const hk = c.headerKeys[k]; if (!(k in header)) { if (hk.required && k !== 'n') errs.push(new MiniError('E12', lineno, `required header key '${k}' missing`)); else if (hk.default !== null) header[k] = hk.default; } }
+    if (!('n' in header)) errs.push(new MiniError('E03', lineno, 'header must declare n=<record count>'));
+    return { prefix, header, errs };
+  }
+  function decodeField(toks, f, lineno, sep, header) {
+    if (SCALAR.has(f.type)) { const txt = textOf(toks); if (txt === '') { if (f.optional) return f.default; throw new MiniError('E06', lineno, 'required value is empty', f.name); } return decodeScalar(txt, f, lineno); }
+    if (f.type === 'list' || f.type === 'mlist') {
+      const elems = splitList(toks, sep, lineno);
+      if (f.min !== null && elems.length < f.min) throw new MiniError('E07', lineno, `list has ${elems.length} elements, min ${f.min}`, f.name);
+      if (f.max !== null && elems.length > f.max) throw new MiniError('E07', lineno, `list has ${elems.length} elements, max ${f.max}`, f.name);
+      if (f.count_key && header && Number.isInteger(header[f.count_key]) && elems.length !== header[f.count_key]) throw new MiniError('E07', lineno, `list has ${elems.length} elements but header ${f.count_key}=${header[f.count_key]}`, f.name);
+      const items = elems.map(([t]) => decodeScalar(t, f, lineno, f.name, true));
+      if (f.type === 'list') { if (elems.some(e => e[1])) throw new MiniError('E08', lineno, 'marker * not allowed in a plain list', f.name); return items; }
+      const marked = elems.map((e, i) => e[1] ? i : -1).filter(i => i >= 0);
+      if (f.marker === 'exactly_one' && marked.length !== 1) throw new MiniError('E08', lineno, `exactly one element must carry *, found ${marked.length}`, f.name);
+      if (f.marker === 'at_least_one' && marked.length < 1) throw new MiniError('E08', lineno, 'at least one element must carry *', f.name);
+      if (f.marker === 'at_most_one' && marked.length > 1) throw new MiniError('E08', lineno, `at most one element may carry *, found ${marked.length}`, f.name);
+      return { __mlist: true, items, selected: (f.marker === 'exactly_one' || f.marker === 'at_most_one') ? (marked.length ? marked[0] : null) : marked };
+    }
+    if (f.type === 'tuple') {
+      const parts = splitList(toks, sep, lineno); if (!parts.length && f.optional) return null;
+      if (parts.length !== f.items.length) throw new MiniError('E07', lineno, `tuple expects ${f.items.length} components, got ${parts.length}`, f.name);
+      const o = {}; f.items.forEach((cmp, i) => { const [txt, m] = parts[i]; if (m) throw new MiniError('E08', lineno, 'marker * not allowed inside a tuple', f.name); if (txt === '') { if (cmp.optional) { o[cmp.name] = cmp.default; return; } throw new MiniError('E06', lineno, `tuple component '${cmp.name}' is empty`, f.name); } o[cmp.name] = decodeScalar(txt, cmp, lineno, f.name + '.' + cmp.name); });
+      return o;
+    }
+    throw new MiniError('E06', lineno, `unsupported field type ${f.type}`, f.name);
+  }
+  function parse(text, c, opts) {
+    const strict = !(opts && opts.strict === false);
+    const lines = physicalLines(text); const errors = [];
+    if (!lines.length) { const e = [new MiniError('E01', 0, 'empty document: header missing')]; if (strict) { const err = new Error('invalid'); err.errors = e; throw err; } return { prefix: '', header: {}, records: [], errors: e, contract: c }; }
+    const [hl, htext] = lines[0]; const { prefix, header, errs } = parseHeader(htext, hl, c, strict); errors.push(...errs);
+    if (prefix !== c.prefix) errors.push(new MiniError('E02', hl, `header prefix '${prefix}' does not match contract '${c.prefix}'`));
+    const records = []; const uniques = {}; c.fields.forEach(f => { if (f.unique) uniques[f.name] = {}; });
+    for (const [lineno, line] of lines.slice(1)) {
+      let toks; try { toks = splitFields(line, c.list_separator, lineno, strict); } catch (e) { errors.push(e); continue; }
+      const nf = toks.length;
+      if (nf < c.arity) { errors.push(new MiniError('E05', lineno, `record has ${nf} fields, core requires ${c.arity}`)); continue; }
+      if (nf > c.fields.length) { errors.push(new MiniError('E05', lineno, `record has ${nf} fields, contract allows at most ${c.fields.length}`)); continue; }
+      const rec = {}; const recErrs = [];
+      c.fields.forEach((f, i) => {
+        if (i >= nf) { if (f.type === 'mlist') { rec[f.json_items] = null; rec[f.json_selected] = null; } else rec[f.name] = f.default; return; }
+        try { const v = decodeField(toks[i], f, lineno, c.list_separator, header); if (v && v.__mlist) { rec[f.json_items] = v.items; rec[f.json_selected] = v.selected; } else rec[f.name] = v; }
+        catch (e) { if (e instanceof MiniError) recErrs.push(e); else throw e; }
+      });
+      for (const name of Object.keys(uniques)) { const v = rec[name]; if (v !== null && v !== undefined) { if (v in uniques[name]) recErrs.push(new MiniError('E11', lineno, `duplicate value '${v}' (first seen line ${uniques[name][v]})`, name)); else uniques[name][v] = lineno; } }
+      if (recErrs.length) { errors.push(...recErrs); continue; }
+      records.push(rec);
+    }
+    const n = header.n; const total = lines.length - 1;
+    if (Number.isInteger(n) && n !== total) errors.push(new MiniError('E04', 0, `header declares n=${n} but document has ${total} record lines`));
+    const doc = { prefix, version: header.v || 1, header, records, errors, contract: c, lines: lines.length,
+      canonical() { const o = { prefix: this.prefix, header: Object.assign({}, this.header) }; o[c.records_key] = this.records.map(r => Object.assign({}, r)); return o; } };
+    if (strict && errors.length) { const err = new Error(errors.map(String).join('\n')); err.errors = errors; throw err; }
+    return doc;
+  }
+  function detectPrefix(text) { const l = physicalLines(text); if (!l.length) return null; const t = splitFields(l[0][1], ',', 1, false); return t.length ? textOf(t[0]) : null; }
+
+  // ---------------------------------------------------------- serializer
+  function encList(values, f, sep, marked) { const ms = new Set(marked || []); return values.map((v, i) => { let s = escapeElement(encodeScalar(v, f, true), sep); if (ms.has(i)) s += MARKER; return s; }).join(sep); }
+  function encodeField(value, f, sep, rec) {
+    if (f.type === 'mlist' && rec) { const items = rec[f.json_items]; if (items === null || items === undefined) { if (f.optional) return ''; throw new MiniError('E06', 0, 'required marked list is null', f.name); } value = { items, selected: rec[f.json_selected] }; }
+    if (value === null || value === undefined) { if (f.optional) return ''; throw new MiniError('E06', 0, 'required field is null', f.name); }
+    if (SCALAR.has(f.type)) { if (f.type === 'enum' && !f.values.includes(String(value))) throw new MiniError('E06', 0, `'${value}' not in enum`, f.name); return escapeScalar(encodeScalar(value, f)); }
+    if (f.type === 'list') { if (!Array.isArray(value)) throw new MiniError('E06', 0, 'list expected', f.name); return encList(value, f, sep); }
+    if (f.type === 'mlist') {
+      const items = value.items || []; const sel = value.selected; let marked = sel === null || sel === undefined ? [] : (Array.isArray(sel) ? sel.slice().sort((a, b) => a - b) : [sel]);
+      if (f.marker === 'exactly_one' && marked.length !== 1) throw new MiniError('E08', 0, 'exactly one selected element required', f.name);
+      if (f.marker === 'at_least_one' && !marked.length) throw new MiniError('E08', 0, 'at least one selected element required', f.name);
+      if (f.marker === 'at_most_one' && marked.length > 1) throw new MiniError('E08', 0, 'at most one selected element allowed', f.name);
+      for (const m of marked) if (!(m >= 0 && m < items.length)) throw new MiniError('E08', 0, `selected index ${m} out of range`, f.name);
+      return encList(items, f, sep, marked);
+    }
+    if (f.type === 'tuple') { if (typeof value !== 'object') throw new MiniError('E06', 0, 'tuple expects an object', f.name); return f.items.map(cmp => { const v = value[cmp.name]; if (v === null || v === undefined) { if (cmp.optional) return ''; throw new MiniError('E07', 0, `tuple component '${cmp.name}' missing`, f.name); } return escapeElement(encodeScalar(v, cmp), sep); }).join(sep); }
+    throw new MiniError('E06', 0, `unsupported type ${f.type}`, f.name);
+  }
+  function encodeHeader(header, c, n) {
+    const sep = c.list_separator; const parts = [c.prefix]; const hdr = Object.assign({}, header, { n });
+    const ordered = ['n', ...Object.keys(c.headerKeys).filter(k => k in hdr && k !== 'n'), ...Object.keys(hdr).filter(k => !(k in c.headerKeys))];
+    for (const k of ordered) {
+      const v = hdr[k]; if (v === null || v === undefined) continue; const hk = c.headerKeys[k];
+      if (k === 'v' && Number(v) === 1 && hk && hk.default === 1) continue;
+      let txt;
+      if (!hk) txt = escapeScalar(String(v));
+      else if (hk.type === 'list') txt = encList(v, hk, sep);
+      else if (hk.type === 'tuple') txt = hk.items.map(cmp => (v[cmp.name] === null || v[cmp.name] === undefined) ? '' : escapeElement(encodeScalar(v[cmp.name], cmp), sep)).join(sep);
+      else txt = escapeScalar(encodeScalar(v, hk));
+      parts.push(`${k}=${txt}`);
+    }
+    return parts.join(FIELD_SEP);
+  }
+  function encodeRecord(rec, c) {
+    const sep = c.list_separator; const cells = c.core.map(f => encodeField(rec[f.name], f, sep, rec));
+    const ext = c.extensions.map(f => encodeField(rec[f.name], f, sep, rec)); while (ext.length && ext[ext.length - 1] === '') ext.pop();
+    return [...cells, ...ext].join(FIELD_SEP);
+  }
+  function dumps(obj, c) { const records = obj[c.records_key] || obj.records || []; const lines = [encodeHeader(obj.header || {}, c, records.length)]; for (const r of records) lines.push(encodeRecord(r, c)); return lines.join('\n'); }
+
+  // ------------------------------------------------------------- forking
+  function checkFork(child, parent) {
+    const errs = []; const pf = parent.fields, cf = child.fields;
+    if (cf.length < pf.length) { errs.push(new MiniError('E21', 0, `fork '${child.prefix}' drops fields of parent '${parent.prefix}'`)); return errs; }
+    pf.forEach((p, i) => { const k = cf[i]; if (p.name !== k.name || p.type !== k.type) errs.push(new MiniError('E21', 0, `fork '${child.prefix}' changes inherited field #${i + 1}: parent ${fieldSignature(p)} != child ${fieldSignature(k)}`)); if ((p.type === 'list' || p.type === 'mlist') && p.item !== k.item) errs.push(new MiniError('E21', 0, `fork changes item type of '${p.name}'`)); if (p.type === 'tuple' && p.items.map(x => x.name).join() !== k.items.map(x => x.name).join()) errs.push(new MiniError('E21', 0, `fork changes tuple layout of '${p.name}'`)); });
+    if (child.list_separator !== parent.list_separator) errs.push(new MiniError('E21', 0, 'fork changes list_separator of its parent'));
+    for (const k of Object.keys(parent.headerKeys)) if (parent.headerKeys[k].required && !(child.headerKeys[k] && child.headerKeys[k].required)) errs.push(new MiniError('E21', 0, `fork drops required header key '${k}'`));
+    return errs;
+  }
+
+  // ------------------------------------------------------------- prompt
+  function fieldDoc(f, sep, lang) {
+    const es = lang === 'es'; const opt = f.optional ? (es ? ' (opcional)' : ' (optional)') : '';
+    if (f.type === 'enum') return `${f.name}: ${es ? 'uno de' : 'one of'} {${f.values.join('|')}}${opt}`;
+    if (f.type === 'list' || f.type === 'mlist') {
+      const it = f.item !== 'enum' ? f.item : '{' + (f.item_values || []).join('|') + '}';
+      let rng = ''; if (f.min !== null || f.max !== null) rng = es ? `, entre ${f.min || 0} y ${f.max === null ? '∞' : f.max} elementos` : `, ${f.min || 0} to ${f.max === null ? '∞' : f.max} elements`;
+      let base = es ? `${f.name}: lista de ${it} separada por '${sep}'${rng}` : `${f.name}: '${sep}'-separated list of ${it}${rng}`;
+      if (f.type === 'mlist') { const rule = { exactly_one: es ? 'exactamente un' : 'exactly one', at_least_one: es ? 'al menos un' : 'at least one', at_most_one: es ? 'como máximo un' : 'at most one', any: es ? 'cero o más' : 'zero or more' }[f.marker]; base += es ? `; ${rule} elemento lleva el sufijo * (seleccionado)` : `; ${rule} element carries the suffix * (selected)`; }
+      return base + opt;
+    }
+    if (f.type === 'tuple') { const comps = f.items.map(c => `${c.name}:${c.type}`).join(sep); return (es ? `${f.name}: tupla fija '${comps}' separada por '${sep}'` : `${f.name}: fixed tuple '${comps}' separated by '${sep}'`) + opt; }
+    let rng = ''; if (f.min !== null || f.max !== null) rng = ` [${f.min === null ? '' : f.min}..${f.max === null ? '' : f.max}]`;
+    return `${f.name}: ${f.type}${rng}${opt}${f.desc ? ' — ' + f.desc : ''}`;
+  }
+  function specBlock(c, lang, example) {
+    const es = lang === 'es'; const sep = c.list_separator;
+    const hk = Object.keys(c.headerKeys).filter(k => k !== 'v');
+    const hdrDesc = hk.map(k => `${k}=<${c.headerKeys[k].type}>${c.headerKeys[k].required ? '' : '?'}`).join(', ');
+    const core = c.core.map((f, i) => `  ${i + 1}. ${fieldDoc(f, sep, lang)}`).join('\n');
+    const ext = c.extensions.map((f, i) => `  ${c.core.length + i + 1}. ${fieldDoc(f, sep, lang)}`).join('\n');
+    const L = [];
+    if (es) {
+      L.push(`FORMATO .mini — familia '${c.prefix}' v${c.version}${c.name ? ' (' + c.name + ')' : ''}`); if (c.description) L.push(c.description); L.push('Reglas:');
+      L.push(`- Texto plano UTF-8. La PRIMERA línea es la cabecera: '${c.prefix}|${hdrDesc}'. n es obligatorio y debe ser igual al número exacto de líneas de registro.`);
+      L.push('- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).');
+      L.push(`- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):`); L.push(core);
+      if (ext) { L.push('  Campos de extensión (opcionales, solo al final, pueden omitirse):'); L.push(ext); }
+      L.push(`- Si un elemento de lista contiene el separador '${sep}', enciérralo entre comillas dobles al estilo CSV ("impacto${sep} justicia y evidencia"; el marcador * va después de la comilla de cierre) o escapa el separador como '\\${sep}'. Un asterisco final literal se escribe '\\*'.`);
+      L.push(`- Escapes válidos en cualquier valor: '\\|' para una barra vertical literal, '\\\\' para una barra invertida, '\\n' para un salto de línea.`);
+      L.push('- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.'); L.push('- Un campo vacío significa nulo (solo permitido en campos opcionales).');
+      L.push(`- Registro: ${c.arity} campos núcleo${c.extensions.length ? ' + hasta ' + c.extensions.length + ' de extensión' : ''}.`);
+    } else {
+      L.push(`.mini FORMAT — family '${c.prefix}' v${c.version}${c.name ? ' (' + c.name + ')' : ''}`); if (c.description) L.push(c.description); L.push('Rules:');
+      L.push(`- Plain UTF-8 text. The FIRST line is the header: '${c.prefix}|${hdrDesc}'. n is mandatory and must equal the exact number of record lines.`);
+      L.push('- After the header, ONE line per record and nothing else (no comments, no code fences, no blank lines in between).');
+      L.push(`- Each record has these fields in THIS order, separated by '|' (position is the semantics; field names are never written):`); L.push(core);
+      if (ext) { L.push('  Extension fields (optional, tail only, may be omitted):'); L.push(ext); }
+      L.push(`- If a list element contains the separator '${sep}', enclose the element in double quotes CSV-style ("impact${sep} justice and evidence"; the * marker goes after the closing quote) or escape the separator as '\\${sep}'. A literal trailing asterisk is written '\\*'.`);
+      L.push(`- Escapes valid in any value: '\\|' for a literal vertical bar, '\\\\' for a backslash, '\\n' for a line break.`);
+      L.push('- Numbers unquoted; booleans true/false. Scalar fields are never quoted.'); L.push('- An empty field means null (allowed only for optional fields).');
+      L.push(`- Record: ${c.arity} core fields${c.extensions.length ? ' + up to ' + c.extensions.length + ' extension fields' : ''}.`);
+    }
+    if (example) { L.push(es ? 'Ejemplo válido:' : 'Valid example:'); L.push(example); }
+    return L.join('\n');
+  }
+
+  return { MiniError, normalizeContract, fieldSignature, signature, parse, dumps, detectPrefix, checkFork, specBlock, escapeScalar, escapeElement, SPEC_VERSION: '1.0' };
+});
+</script>
+<script>// Evaluación de una respuesta con cada enfoque, comparada contra los datos esperados.
+// Estados por registro: ok | silencioso (aceptado con datos incorrectos) | perdido (sin aviso) | regenerar (detectado)
+(function (root) {
+  const CAMPOS = ['id', 'canal', 'categoria', 'prioridad', 'monto', 'resumen'];
+  const igual = (a, b) => CAMPOS.every(k => (a[k] ?? null) === (b[k] ?? null));
+
+  // Lo que escribe un equipo con un prompt propio: "responde una línea por reclamo separada por |"
+  function parseCasero(texto) {
+    return texto.trim().split('\n').filter(l => l.trim()).map(l => {
+      const [id, canal, categoria, prioridad, monto, resumen] = l.split('|');
+      return { id, canal, categoria, prioridad: parseInt(prioridad, 10), monto: monto ? parseFloat(monto) : null, resumen };
+    });
+  }
+
+  function evaluar(enfoque, texto, D, MINI, C) {
+    const verdad = D.verdad;
+    let aceptados = [], errores = [], falloTotal = null;
+    if (enfoque === 'casero') {
+      aceptados = parseCasero(texto);
+    } else if (enfoque === 'json') {
+      try { aceptados = (JSON.parse(texto).reclamos || []); }
+      catch (e) { falloTotal = 'JSON.parse: ' + e.message; }
+    } else {
+      const doc = MINI.parse(texto, C, { strict: false });
+      aceptados = doc.records;
+      errores = doc.errors.map(e => ({ codigo: e.code, linea: e.line, campo: e.field, mensaje: e.message }));
+    }
+    const porId = {};
+    aceptados.forEach(r => { if (r && r.id !== undefined && !(r.id in porId)) porId[r.id] = r; });
+    const estados = verdad.map(v => {
+      if (falloTotal) return 'regenerar';
+      const r = porId[v.id];
+      if (r) return igual(r, v) ? 'ok' : 'silencioso';
+      return errores.length ? 'regenerar' : 'perdido';
+    });
+    const tabla = enfoque === 'mini' ? D.tokens_registro_mini : D.tokens_registro_json;
+    const regenerarTokens = falloTotal
+      ? D.tokens.o200k_base.json
+      : verdad.reduce((s, v, i) => s + (estados[i] === 'regenerar' ? tabla[v.id] : 0), 0);
+    const cuenta = k => estados.filter(e => e === k).length;
+    return { estados, errores, falloTotal, regenerarTokens,
+      resumen: { ok: cuenta('ok'), silencioso: cuenta('silencioso'), perdido: cuenta('perdido'), regenerar: cuenta('regenerar') } };
+  }
+
+  const api = { evaluar, parseCasero };
+  if (typeof module === 'object' && module.exports) module.exports = api; else root.LOGICA = api;
+})(typeof self !== 'undefined' ? self : this);
+</script>
+<script>
+const D = {
+ "contrato": {
+  "prefix": "rec",
+  "version": 1,
+  "name": "Reclamos de clientes",
+  "records_key": "reclamos",
+  "description": "Un reclamo por línea, extraído de mensajes de clientes.",
+  "header": {
+   "required": [
+    "n"
+   ],
+   "keys": {
+    "l": {
+     "type": "str",
+     "desc": "idioma"
+    }
+   }
+  },
+  "core": [
+   {
+    "name": "id",
+    "type": "str",
+    "unique": true
+   },
+   {
+    "name": "canal",
+    "type": "enum",
+    "values": [
+     "web",
+     "correo",
+     "telefono",
+     "tienda"
+    ]
+   },
+   {
+    "name": "categoria",
+    "type": "enum",
+    "values": [
+     "cobro",
+     "entrega",
+     "producto",
+     "atencion",
+     "otro"
+    ]
+   },
+   {
+    "name": "prioridad",
+    "type": "int",
+    "min": 1,
+    "max": 5
+   },
+   {
+    "name": "monto",
+    "type": "float",
+    "min": 0,
+    "optional": true
+   },
+   {
+    "name": "resumen",
+    "type": "str"
+   }
+  ],
+  "extensions": []
+ },
+ "verdad": [
+  {
+   "id": "R-1001",
+   "canal": "web",
+   "categoria": "cobro",
+   "prioridad": 4,
+   "monto": 129.9,
+   "resumen": "Cobro duplicado de la suscripción mensual"
+  },
+  {
+   "id": "R-1002",
+   "canal": "correo",
+   "categoria": "entrega",
+   "prioridad": 3,
+   "monto": null,
+   "resumen": "El pedido figura entregado pero no llegó"
+  },
+  {
+   "id": "R-1003",
+   "canal": "telefono",
+   "categoria": "producto",
+   "prioridad": 2,
+   "monto": 45.5,
+   "resumen": "Audífonos con falla en el lado izquierdo"
+  },
+  {
+   "id": "R-1004",
+   "canal": "web",
+   "categoria": "cobro",
+   "prioridad": 5,
+   "monto": 980.0,
+   "resumen": "Cargo no reconocido en tarjeta, solicita anulación"
+  },
+  {
+   "id": "R-1005",
+   "canal": "tienda",
+   "categoria": "entrega",
+   "prioridad": 3,
+   "monto": null,
+   "resumen": "Pedido 4471 | llegó incompleto, faltan 2 cajas"
+  },
+  {
+   "id": "R-1006",
+   "canal": "correo",
+   "categoria": "atencion",
+   "prioridad": 2,
+   "monto": null,
+   "resumen": "No recibió respuesta del área de soporte en 5 días"
+  },
+  {
+   "id": "R-1007",
+   "canal": "web",
+   "categoria": "producto",
+   "prioridad": 4,
+   "monto": 1299.0,
+   "resumen": "Laptop llegó con la pantalla rota"
+  },
+  {
+   "id": "R-1008",
+   "canal": "telefono",
+   "categoria": "cobro",
+   "prioridad": 3,
+   "monto": 59.9,
+   "resumen": "Le cobraron envío en una compra con envío gratis"
+  },
+  {
+   "id": "R-1009",
+   "canal": "web",
+   "categoria": "otro",
+   "prioridad": 1,
+   "monto": null,
+   "resumen": "Sugiere agregar pago con billetera digital"
+  },
+  {
+   "id": "R-1010",
+   "canal": "correo",
+   "categoria": "cobro",
+   "prioridad": 4,
+   "monto": 129.9,
+   "resumen": "Reembolso aprobado hace 15 días sin abono"
+  },
+  {
+   "id": "R-1011",
+   "canal": "tienda",
+   "categoria": "producto",
+   "prioridad": 2,
+   "monto": 35.0,
+   "resumen": "Talla distinta a la indicada en la etiqueta"
+  },
+  {
+   "id": "R-1012",
+   "canal": "web",
+   "categoria": "entrega",
+   "prioridad": 5,
+   "monto": null,
+   "resumen": "Entrega programada a otra dirección, urgente"
+  }
+ ],
+ "tokens": {
+  "o200k_base": {
+   "json": 507,
+   "json_indentado": 770,
+   "mini": 302,
+   "bloque": 370
+  },
+  "cl100k_base": {
+   "json": 526,
+   "json_indentado": 790,
+   "mini": 333,
+   "bloque": 398
+  }
+ },
+ "tokens_registro_mini": {
+  "R-1001": 26,
+  "R-1002": 20,
+  "R-1003": 24,
+  "R-1004": 24,
+  "R-1005": 28,
+  "R-1006": 23,
+  "R-1007": 20,
+  "R-1008": 27,
+  "R-1009": 19,
+  "R-1010": 27,
+  "R-1011": 23,
+  "R-1012": 20
+ },
+ "tokens_registro_json": {
+  "R-1001": 44,
+  "R-1002": 40,
+  "R-1003": 42,
+  "R-1004": 44,
+  "R-1005": 47,
+  "R-1006": 43,
+  "R-1007": 40,
+  "R-1008": 45,
+  "R-1009": 39,
+  "R-1010": 45,
+  "R-1011": 43,
+  "R-1012": 40
+ },
+ "escenarios": [
+  {
+   "id": "ok",
+   "titulo": "Respuesta correcta",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":3,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Reembolso aprobado hace 15 días sin abono\"},{\"id\":\"R-1011\",\"canal\":\"tienda\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":35.0,\"resumen\":\"Talla distinta a la indicada en la etiqueta\"},{\"id\":\"R-1012\",\"canal\":\"web\",\"categoria\":\"entrega\",\"prioridad\":5,\"monto\":null,\"resumen\":\"Entrega programada a otra dirección, urgente\"}]}",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 \\| llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente"
+  },
+  {
+   "id": "delim",
+   "titulo": "Texto con el separador",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":3,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Reembolso aprobado hace 15 días sin abono\"},{\"id\":\"R-1011\",\"canal\":\"tienda\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":35.0,\"resumen\":\"Talla distinta a la indicada en la etiqueta\"},{\"id\":\"R-1012\",\"canal\":\"web\",\"categoria\":\"entrega\",\"prioridad\":5,\"monto\":null,\"resumen\":\"Entrega programada a otra dirección, urgente\"}]}",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente"
+  },
+  {
+   "id": "trunc",
+   "titulo": "Respuesta cortada",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":3,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":12",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|12",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|cobro|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 \\| llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|3|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|12"
+  },
+  {
+   "id": "inval",
+   "titulo": "Valores fuera del contrato",
+   "json": "{\"reclamos\":[{\"id\":\"R-1001\",\"canal\":\"web\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Cobro duplicado de la suscripción mensual\"},{\"id\":\"R-1002\",\"canal\":\"correo\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"El pedido figura entregado pero no llegó\"},{\"id\":\"R-1003\",\"canal\":\"telefono\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":45.5,\"resumen\":\"Audífonos con falla en el lado izquierdo\"},{\"id\":\"R-1004\",\"canal\":\"web\",\"categoria\":\"reembolso\",\"prioridad\":5,\"monto\":980.0,\"resumen\":\"Cargo no reconocido en tarjeta, solicita anulación\"},{\"id\":\"R-1005\",\"canal\":\"tienda\",\"categoria\":\"entrega\",\"prioridad\":3,\"monto\":null,\"resumen\":\"Pedido 4471 | llegó incompleto, faltan 2 cajas\"},{\"id\":\"R-1006\",\"canal\":\"correo\",\"categoria\":\"atencion\",\"prioridad\":2,\"monto\":null,\"resumen\":\"No recibió respuesta del área de soporte en 5 días\"},{\"id\":\"R-1007\",\"canal\":\"web\",\"categoria\":\"producto\",\"prioridad\":4,\"monto\":1299.0,\"resumen\":\"Laptop llegó con la pantalla rota\"},{\"id\":\"R-1008\",\"canal\":\"telefono\",\"categoria\":\"cobro\",\"prioridad\":7,\"monto\":59.9,\"resumen\":\"Le cobraron envío en una compra con envío gratis\"},{\"id\":\"R-1009\",\"canal\":\"web\",\"categoria\":\"otro\",\"prioridad\":1,\"monto\":null,\"resumen\":\"Sugiere agregar pago con billetera digital\"},{\"id\":\"R-1010\",\"canal\":\"correo\",\"categoria\":\"cobro\",\"prioridad\":4,\"monto\":129.9,\"resumen\":\"Reembolso aprobado hace 15 días sin abono\"},{\"id\":\"R-1011\",\"canal\":\"tienda\",\"categoria\":\"producto\",\"prioridad\":2,\"monto\":35.0,\"resumen\":\"Talla distinta a la indicada en la etiqueta\"},{\"id\":\"R-1012\",\"canal\":\"web\",\"categoria\":\"entrega\",\"prioridad\":5,\"monto\":null,\"resumen\":\"Entrega programada a otra dirección, urgente\"}]}",
+   "casero": "R-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|reembolso|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 | llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|7|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente",
+   "mini": "rec|n=12|l=es\nR-1001|web|cobro|4|129.9|Cobro duplicado de la suscripción mensual\nR-1002|correo|entrega|3||El pedido figura entregado pero no llegó\nR-1003|telefono|producto|2|45.5|Audífonos con falla en el lado izquierdo\nR-1004|web|reembolso|5|980|Cargo no reconocido en tarjeta, solicita anulación\nR-1005|tienda|entrega|3||Pedido 4471 \\| llegó incompleto, faltan 2 cajas\nR-1006|correo|atencion|2||No recibió respuesta del área de soporte en 5 días\nR-1007|web|producto|4|1299|Laptop llegó con la pantalla rota\nR-1008|telefono|cobro|7|59.9|Le cobraron envío en una compra con envío gratis\nR-1009|web|otro|1||Sugiere agregar pago con billetera digital\nR-1010|correo|cobro|4|129.9|Reembolso aprobado hace 15 días sin abono\nR-1011|tienda|producto|2|35|Talla distinta a la indicada en la etiqueta\nR-1012|web|entrega|5||Entrega programada a otra dirección, urgente"
+  }
+ ]
+};
+const C = MINI.normalizeContract(D.contrato);
+const ENFOQUES = [
+  { id: 'casero', titulo: 'Prompt propio', sub: '"Responde una línea por reclamo, campos separados por |"', parser: "linea.split('|')" },
+  { id: 'json', titulo: 'JSON sin modo estructurado', sub: 'Se pide un objeto {"reclamos": [...]}', parser: 'JSON.parse(texto).reclamos' },
+  { id: 'mini', titulo: 'Biblioteca .mini', sub: 'Instrucción generada desde el contrato rec', parser: 'MINI.parse(texto, contrato, {strict: false})' },
+];
+const NOTAS = {
+  ok: '<b>Respuesta completa.</b> El modelo cumple lo pedido. Aun así, el reclamo R-1005 contiene «Pedido 4471 | llegó incompleto»: el prompt propio no define cómo escribir una barra dentro de un texto y el sistema guarda un resumen cortado sin enterarse. .mini usa 40 % menos tokens que JSON compacto en esta respuesta.',
+  delim: '<b>El modelo no escapa el separador.</b> En la línea de R-1005 la barra llega sin <code>\\|</code>. .mini no adivina: el registro tiene 7 campos y el contrato admite 6, así que lo rechaza con E05 y conserva los otros 11.',
+  trunc: '<b>La respuesta se corta</b> por el límite de tokens de salida en medio de R-1010. JSON no se puede leer y se repite la llamada completa. El prompt propio guarda R-1010 con monto 12 y sin resumen, y no nota que faltan dos. .mini conserva 9 registros, rechaza el incompleto (E05) y detecta que faltan registros porque la cabecera declaró n=12 (E04).',
+  inval: '<b>Valores fuera del contrato.</b> El modelo inventa la categoría «reembolso» en R-1004 y pone prioridad 7 en R-1008 (rango 1–5). JSON y el prompt propio los aceptan tal cual. .mini los rechaza con E10 y E13 y solo esos dos se vuelven a pedir.',
+};
+const CORTO = { ok: 'correctos', silencioso: 'incorrectos', perdido: 'perdidos', regenerar: 'detectados' };
+const CODIGOS = { E01: 'documento vacío', E02: 'prefijo distinto', E03: 'falta n', E04: 'cantidad distinta a n', E05: 'número de campos incorrecto', E06: 'tipo inválido', E07: 'lista inválida', E08: 'marcador inválido', E09: 'escape inválido', E10: 'valor no permitido', E11: 'valor duplicado', E12: 'cabecera inválida', E13: 'fuera de rango' };
+const ETIQ = { ok: 'correctos', silencioso: 'incorrectos sin aviso', perdido: 'perdidos sin aviso', regenerar: 'detectados, a pedir de nuevo' };
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let actual = 0;
+const textos = D.escenarios.map(s => ({ casero: s.casero, json: s.json, mini: s.mini }));
+
+function facts() {
+  const t = D.tokens.o200k_base, t2 = D.tokens.cl100k_base;
+  const pct = (a, b) => Math.round((1 - a / b) * 100);
+  $('#facts').innerHTML = [
+    ['JSON compacto', t.json + ' tokens'],
+    ['.mini', t.mini + ' tokens'],
+    ['ahorro', pct(t.mini, t.json) + ' % (o200k) · ' + pct(t2.mini, t2.json) + ' % (cl100k)'],
+    ['instrucción .mini', t.bloque + ' tokens de entrada'],
+  ].map(([k, v]) => `<span class="fact">${k} <b>${v}</b></span>`).join('');
+}
+
+function tabs() {
+  $('#tabs').innerHTML = D.escenarios.map((s, i) =>
+    `<button class="tab" role="tab" id="tab-${s.id}" aria-selected="${i === actual}" data-i="${i}">${i + 1}. ${esc(s.titulo)}</button>`).join('');
+  $('#tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { actual = +b.dataset.i; tabs(); columnas(); });
+}
+
+function columnas() {
+  const s = D.escenarios[actual];
+  $('#nota').innerHTML = NOTAS[s.id];
+  $('#cols').innerHTML = ENFOQUES.map(e => `
+    <article class="col ${e.id}">
+      <div class="col-head"><h3>${e.titulo}</h3><span class="sub">${esc(e.sub)}</span></div>
+      <div class="parser" title="Código de lectura">${esc(e.parser)}</div>
+      <div class="resp">
+        <div class="resp-bar"><span class="label">Respuesta del modelo</span><button class="btn" data-reset="${e.id}">Restaurar</button></div>
+        <textarea id="txt-${s.id}-${e.id}" data-e="${e.id}" spellcheck="false" aria-label="Respuesta ${e.titulo}"></textarea>
+      </div>
+      <div class="res" id="res-${e.id}" aria-live="polite"></div>
+    </article>`).join('');
+  ENFOQUES.forEach(e => {
+    const ta = $(`#txt-${s.id}-${e.id}`);
+    ta.value = textos[actual][e.id];
+    ta.oninput = () => { textos[actual][e.id] = ta.value; resultado(e.id); };
+    resultado(e.id);
+  });
+  $('#cols').querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
+    const id = b.dataset.reset; textos[actual][id] = s[id]; $(`#txt-${s.id}-${id}`).value = s[id]; resultado(id);
+  });
+}
+
+function resultado(enfoque) {
+  const texto = textos[actual][enfoque];
+  const r = LOGICA.evaluar(enfoque, texto, D, MINI, C);
+  const strip = D.verdad.map((v, i) => `<span class="cell ${r.estados[i]}" title="${v.id}: ${ETIQ[r.estados[i]]}">${v.id.slice(-2)}</span>`).join('');
+  const counts = ['ok', 'silencioso', 'perdido', 'regenerar'].map(k => `<div class="count ${k}"><b>${r.resumen[k]}</b><span>${ETIQ[k]}</span></div>`).join('');
+  let diag = '';
+  if (r.falloTotal) diag = `<div class="x">✖ ${esc(r.falloTotal)}</div><div class="q">Un error invalida el documento completo.</div>`;
+  else if (r.errores.length) diag = r.errores.map(e => `<div class="e">${e.codigo} ${CODIGOS[e.codigo] || ''} · ${e.linea ? 'línea ' + e.linea : 'documento'}${e.campo ? ' [' + esc(e.campo) + ']' : ''}<br><span class="q">${esc(e.mensaje)}</span></div>`).join('');
+  else if (r.resumen.silencioso || r.resumen.perdido) diag = `<div class="q">Sin errores reportados: el sistema cree que todo está bien.</div>`;
+  else diag = `<div class="q">Sin errores.</div>`;
+  const tok = enfoque === 'casero' ? '' : `<p class="costo">Tokens de salida a pedir de nuevo: <b>${r.regenerarTokens}</b>${r.falloTotal ? ' (respuesta completa)' : ''}</p>`;
+  $('#res-' + enfoque).innerHTML = `<div class="strip">${strip}</div><div class="counts">${counts}</div><div class="diag">${diag}</div>${tok}`;
+}
+
+function resumen() {
+  const fila = s => ENFOQUES.map(e => {
+    const r = LOGICA.evaluar(e.id, s[e.id], D, MINI, C).resumen;
+    const pills = ['ok', 'silencioso', 'perdido', 'regenerar'].filter(k => r[k]).map(k => `<span class="pill ${k}" title="${ETIQ[k]}">${r[k]} ${CORTO[k]}</span>`).join('');
+    const tk = e.id === 'casero' ? '—' : LOGICA.evaluar(e.id, s[e.id], D, MINI, C).regenerarTokens;
+    return `<td>${pills}</td><td class="num">${tk}</td>`;
+  }).join('');
+  $('#resumen').innerHTML = `<thead><tr><th>Caso</th>${ENFOQUES.map(e => `<th>${e.titulo}</th><th>Tokens a regenerar</th>`).join('')}</tr></thead><tbody>` +
+    D.escenarios.map((s, i) => `<tr><td>${i + 1}. ${esc(s.titulo)}</td>${fila(s)}</tr>`).join('') + '</tbody>';
+}
+
+facts(); tabs(); columnas(); resumen();
+$('#contrato').textContent = JSON.stringify(D.contrato, null, 2);
+$('#bloque').textContent = MINI.specBlock(C, 'es');
+$('#bloque-tok').textContent = D.tokens.o200k_base.bloque + ' tokens (o200k_base)';
+</script>
