@@ -43,6 +43,10 @@ class MiniError(Exception):
         fld = f" [{self.field}]" if self.field else ""
         return f"{self.code} {where}{fld}: {self.message}"
 
+    def to_dict(self) -> dict:
+        """Plain representation (code, line, field, message) for reports."""
+        return {"code": self.code, "line": self.line, "field": self.field, "message": self.message}
+
 
 @dataclass
 class MiniValidationError(Exception):

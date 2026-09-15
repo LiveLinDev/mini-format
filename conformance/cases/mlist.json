@@ -1,0 +1,814 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "mlist",
+  "cases": [
+    {
+      "id": "mlist-basic",
+      "category": "mlist",
+      "description": "exactly_one da índice; at_least_one lista; at_most_one null; any lista vacía",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na*,b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        },
+        "mini": "mk|n=1\na*,b|a*|a|1"
+      }
+    },
+    {
+      "id": "mlist-selected-index",
+      "category": "mlist",
+      "description": "el índice seleccionado es base 0",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na,b,c*|a*,b,c*|a,b*|1*,2,3*",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a",
+                "b",
+                "c"
+              ],
+              "one_sel": 2,
+              "some": [
+                "a",
+                "b",
+                "c"
+              ],
+              "some_sel": [
+                0,
+                2
+              ],
+              "maybe": [
+                "a",
+                "b"
+              ],
+              "maybe_sel": 1,
+              "anyk": [
+                1,
+                2,
+                3
+              ],
+              "anyk_sel": [
+                0,
+                2
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mlist-exactly-one-none",
+      "category": "mlist",
+      "description": "exactly_one sin marcador (E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na,b|a*|a|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "mlist-exactly-one-two",
+      "category": "mlist",
+      "description": "exactly_one con dos marcadores (E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na*,b*|a*|a|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "mlist-at-least-one-none",
+      "category": "mlist",
+      "description": "at_least_one sin marcador (E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na*,b|a|a|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "mlist-at-most-one-two",
+      "category": "mlist",
+      "description": "at_most_one con dos marcadores (E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na*,b|a*|a*,b*|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "mlist-any-all",
+      "category": "mlist",
+      "description": "any admite todos marcados",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na*,b|a*|a|1*,2*",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1,
+                2
+              ],
+              "anyk_sel": [
+                0,
+                1
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mlist-marker-space",
+      "category": "mlist",
+      "description": "espacios entre el elemento y * se recortan",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na *, b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mlist-escaped-star-not-marker",
+      "category": "mlist",
+      "description": "\\* al final es literal y no marca (E08 si falta el marcador)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na\\*,b|a*|a|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E08",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "mlist-escaped-star-then-marker",
+      "category": "mlist",
+      "description": "\\** = asterisco literal seguido del marcador",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na\\**,b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "a*",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        },
+        "mini": "mk|n=1\na\\**,b|a*|a|1"
+      }
+    },
+    {
+      "id": "mlist-int-item-bad",
+      "category": "mlist",
+      "description": "elemento entero inválido en lista marcada (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\na*,b|a*|a|1,x*",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    }
+  ]
+}

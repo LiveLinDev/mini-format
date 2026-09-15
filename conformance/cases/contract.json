@@ -1,0 +1,309 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "contract",
+  "cases": [
+    {
+      "id": "contract-minimal-valid",
+      "category": "contract",
+      "description": "contrato mínimo válido",
+      "mode": "contract",
+      "input": {
+        "prefix": "ok",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "expected": {
+        "errors": []
+      }
+    },
+    {
+      "id": "contract-no-prefix",
+      "category": "contract",
+      "description": "contrato inválido: falta prefix (E20)",
+      "mode": "contract",
+      "input": {
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-bad-prefix",
+      "category": "contract",
+      "description": "contrato inválido: prefix con caracteres inválidos (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "1x",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-no-core",
+      "category": "contract",
+      "description": "contrato inválido: sin campos núcleo (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": []
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-unknown-type",
+      "category": "contract",
+      "description": "contrato inválido: tipo desconocido (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "id",
+            "type": "date"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-enum-no-values",
+      "category": "contract",
+      "description": "contrato inválido: enum sin values (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "e",
+            "type": "enum"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-bad-marker",
+      "category": "contract",
+      "description": "contrato inválido: regla de marcador desconocida (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "m",
+            "type": "mlist",
+            "marker": "two"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-tuple-no-items",
+      "category": "contract",
+      "description": "contrato inválido: tupla sin componentes (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "t",
+            "type": "tuple"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-tuple-nested",
+      "category": "contract",
+      "description": "contrato inválido: tupla con componente compuesto (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "t",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "l",
+                "type": "list"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-duplicate-field",
+      "category": "contract",
+      "description": "contrato inválido: nombres de campo duplicados (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "id",
+            "type": "int"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-bad-separator",
+      "category": "contract",
+      "description": "contrato inválido: separador de lista reservado (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "list_separator": "|",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-list-composite-item",
+      "category": "contract",
+      "description": "contrato inválido: lista cuyo elemento no es escalar (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "l",
+            "type": "list",
+            "item": "tuple"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-field-no-type",
+      "category": "contract",
+      "description": "contrato inválido: campo sin type (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "id"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    }
+  ]
+}

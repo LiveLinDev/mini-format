@@ -1,0 +1,190 @@
+{
+  "suite": ".mini conformance",
+  "spec": "1.0",
+  "category": "arity",
+  "cases": [
+    {
+      "id": "arity-fewer",
+      "category": "arity",
+      "description": "menos campos que el núcleo (E05)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true",
+      "expected": {
+        "errors": [
+          {
+            "code": "E05",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "arity-more",
+      "category": "arity",
+      "description": "más campos que núcleo + extensiones (E05)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true|red|m|1|sobra",
+      "expected": {
+        "errors": [
+          {
+            "code": "E05",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "arity-escaped-pipe-not-separator",
+      "category": "arity",
+      "description": "una barra escapada no cuenta como separador (E05)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|true\\|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E05",
+            "line": 2
+          }
+        ]
+      }
+    }
+  ]
+}
