@@ -7,26 +7,17 @@ jobs:
       matrix:
         python: ["3.9", "3.12"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with: { python-version: "${{ matrix.python }}" }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with: { node-version: "22" }
       - run: pip install -e . pyyaml tiktoken regex
       - run: mini check-forks
       - run: python -m unittest discover -s tests -v
       - run: node tests/test_js_port.mjs
       - run: python playground/build.py
-  pages:
-    if: github.ref == 'refs/heads/main'
-    needs: test
-    runs-on: ubuntu-latest
-    permissions: { pages: write, id-token: write, contents: read }
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install -e . && python playground/build.py && mkdir -p site && cp playground/index.html site/
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: site }
-      - uses: actions/deploy-pages@v4
+# El sitio (portada, documentación y playground) se publica en
+# https://mini-format.pmoluna.com desde .github/workflows/sitio.yml.
+# El antiguo job `pages` se retiró: GitHub Pages no está disponible para
+# repositorios privados en el plan gratuito de la organización.
