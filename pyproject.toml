@@ -24,7 +24,7 @@ dependencies = []
 [project.optional-dependencies]
 bench = ["tiktoken", "pyyaml", "matplotlib", "regex"]
 dev = ["pytest"]
-release = ["build", "wheel", "markdown"]
+release = ["build", "wheel", "markdown", "setuptools>=61"]
 
 [project.urls]
 Homepage = "https://mini-format.pmoluna.com"
