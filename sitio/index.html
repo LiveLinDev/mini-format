@@ -234,9 +234,29 @@
       </ul>
       <div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>git -C mini-format pull</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
     </div>
-    <figure class="videoslot" data-video="release">
-      <figcaption class="ph"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><b>Ranura de vídeo · qué cambia en 1.1</b>16:9 · media/spec-1-1.mp4 · pendiente de grabar</figcaption>
-    </figure>
+    <div class="demo-video" id="demo-release">
+      <div class="dv-screen">
+        <div class="dv-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-dv-title>SPEC 1.1 · qué cambia</span><span class="dv-time" data-dv-time>0:00 / 0:24</span></div>
+        <pre class="dv-body" data-dv-body></pre>
+        <p class="dv-cap" data-dv-cap></p>
+        <div class="dv-progress" aria-hidden="true"><span data-dv-fill></span></div>
+      </div>
+      <div class="dv-controls">
+        <button type="button" class="dv-btn" data-dv-toggle aria-label="Reproducir el vídeo">
+          <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+        </button>
+        <div class="dv-dots" role="group" aria-label="Saltar a un paso del vídeo">
+          <button type="button" data-dv-goto="0" aria-label="Paso 1: el problema">1</button>
+          <button type="button" data-dv-goto="1" aria-label="Paso 2: la regla">2</button>
+          <button type="button" data-dv-goto="2" aria-label="Paso 3: diagnósticos">3</button>
+          <button type="button" data-dv-goto="3" aria-label="Paso 4: estado">4</button>
+        </div>
+        <button type="button" class="dv-btn" data-dv-restart aria-label="Reiniciar el vídeo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -458,9 +478,29 @@ $ mini check-forks
       <p style="font-size:.92rem;color:rgb(var(--fg-muted));margin-bottom:1.6rem">Se ejecuta entero en tu navegador con el port JavaScript de la referencia. Sin servidor, sin cuenta.</p>
       <a class="btn btn-solid btn-lg" href="/playground/">Abrir el playground</a>
     </div>
-    <figure class="videoslot" data-video="playground">
-      <figcaption class="ph"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><b>Ranura de vídeo · demo en bucle</b>16:9 · media/playground.mp4 · pendiente de grabar</figcaption>
-    </figure>
+    <div class="demo-video" id="demo-playground">
+      <div class="dv-screen">
+        <div class="dv-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-dv-title>Playground · demo en bucle</span><span class="dv-time" data-dv-time>0:00 / 0:24</span></div>
+        <pre class="dv-body" data-dv-body></pre>
+        <p class="dv-cap" data-dv-cap></p>
+        <div class="dv-progress" aria-hidden="true"><span data-dv-fill></span></div>
+      </div>
+      <div class="dv-controls">
+        <button type="button" class="dv-btn" data-dv-toggle aria-label="Reproducir el vídeo">
+          <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+        </button>
+        <div class="dv-dots" role="group" aria-label="Saltar a un paso del vídeo">
+          <button type="button" data-dv-goto="0" aria-label="Paso 1: familias">1</button>
+          <button type="button" data-dv-goto="1" aria-label="Paso 2: editor">2</button>
+          <button type="button" data-dv-goto="2" aria-label="Paso 3: comparar">3</button>
+          <button type="button" data-dv-goto="3" aria-label="Paso 4: contrato">4</button>
+        </div>
+        <button type="button" class="dv-btn" data-dv-restart aria-label="Reiniciar el vídeo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 

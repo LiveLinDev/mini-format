@@ -337,6 +337,207 @@
     } else if (dvAuto) { dvEmpezo = true; dvReproducir(); }
   }
 
+  /* ------------------------------------------------------------------
+     Resto de vídeos de la portada. Misma mecánica que el de
+     integración, como factoría: dvInit(id, escenas, bucle). Con
+     bucle=true el vídeo vuelve a empezar al terminar (playground).
+     ------------------------------------------------------------------ */
+  var DV_RELEASE = [
+    { titulo: "spec-1.1 — el problema", dur: 6000,
+      cap: "1 · Hoy: un lector v1 rechaza un documento v2 con E05.",
+      lineas: [
+        [["p", "$ "], ["", "mini validate items-v2.mini\n"]],
+        [["", "\n"]],
+        [["E", "E05"], ["", " línea 2: 9 campos, máx 8\n"]],
+        [["E", "E05"], ["", " línea 3: 9 campos, máx 8\n"]],
+        [["", "\n"]],
+        [["", "v1 rechaza v2 aunque solo añada\n"]],
+        [["", "campos al final\n"]]
+      ]},
+    { titulo: "spec-1.1 — la regla §11", dur: 7000,
+      cap: "2 · El borrador: ignorar lo añadido al final, avisar y seguir.",
+      lineas: [
+        [["k", "§11 "], ["c", "(borrador): compatibilidad\n"]],
+        [["c", "hacia adelante\n"]],
+        [["", "\n"]],
+        [["", "- ignorar campos excedentes\n"]],
+        [["", "- conservar núcleo y n\n"]],
+        [["", "- informar lo ignorado\n"]],
+        [["", "\n"]],
+        [["s", "E05 solo si faltan campos\n"]]
+      ]},
+    { titulo: "spec-1.1 — diagnósticos", dur: 6000,
+      cap: "3 · Rango exacto: columna inicial y final, no solo la línea.",
+      lineas: [
+        [["c", "hoy:  "], ["", "E10 line 3 [level]\n"]],
+        [["s", "1.1:  "], ["", "E10 line 3 [level] col 11-14\n"]],
+        [["", "\n"]],
+        [["", "10:01:00Z|ALTO|api|timeout\n"]],
+        [["e", "          ^^^^\n"]],
+        [["c", "subrayado exacto en el editor\n"]]
+      ]},
+    { titulo: "spec-1.1 — estado", dur: 5000,
+      cap: "4 · En preparación: nada de esto forma parte de 1.0.",
+      lineas: [
+        [["p", "$ "], ["", "git -C mini-format pull\n"]],
+        [["", "\n"]],
+        [["", "- regla §11: en redacción\n"]],
+        [["", "- conformidad: casos pendientes\n"]],
+        [["", "- PyPI + npm: previstos\n"]],
+        [["", "\n"]],
+        [["c", "nada de esto es 1.0 todavía\n"]]
+      ]}
+  ];
+
+  var DV_PLAYGROUND = [
+    { titulo: "playground — familias", dur: 6000,
+      cap: "1 · Elige una familia y carga su ejemplo en el editor.",
+      lineas: [
+        [["f", "familia: "], ["", "a — ítems de evaluación\n"]],
+        [["", "ejemplo: valid.mini · 12 registros\n"]],
+        [["", "\n"]],
+        [["", "a|n=12|version=1\n"]],
+        [["", "Francia|Paris*|Londres|Roma|…\n"]],
+        [["", "Alemania|Berlin*|Munich|…|…\n"]],
+        [["", "\n"]],
+        [["s", "12 líneas · 0 errores\n"]]
+      ]},
+    { titulo: "playground — editor", dur: 7000,
+      cap: "2 · Inyecta errores y lee el diagnóstico: código, línea y campo.",
+      lineas: [
+        [["p", "> "], ["", "inyectar 3 errores\n"]],
+        [["", "\n"]],
+        [["E", "E04"], ["", " document: n=12, 11 válidos\n"]],
+        [["E", "E05"], ["", " línea 4: 9 campos, máx 8\n"]],
+        [["E", "E09"], ["", " línea 7: escape inválido\n"]],
+        [["", "\n"]],
+        [["c", "líneas a regenerar: [4, 7]\n"]]
+      ]},
+    { titulo: "playground — comparar", dur: 7000,
+      cap: "3 · Compara tokens con el mismo documento (cifras ilustrativas).",
+      lineas: [
+        [["c", "tokens por formato · o200k_base\n"]],
+        [["", "\n"]],
+        [["f", "mini "], ["", "  1204   1,00x  referencia\n"]],
+        [["", "toon   1189   0,99x\n"]],
+        [["", "json   2268   1,88x\n"]],
+        [["", "yaml   2624   2,18x\n"]],
+        [["", "xml    3950   3,28x\n"]]
+      ]},
+    { titulo: "playground — familias", dur: 4000,
+      cap: "4 · Diseña tu familia y descarga el contrato: la demo vuelve a empezar.",
+      lineas: [
+        [["p", "> "], ["", "descargar contract.json\n"]],
+        [["p", "> "], ["", "mini check-forks\n"]],
+        [["", "\n"]],
+        [["s", "5 invariantes: ok\n"]],
+        [["", "\n"]],
+        [["c", "(fin · la demo va en bucle)\n"]]
+      ]}
+  ];
+
+  function dvInit(id, ESCENAS, bucle) {
+    var dv = document.getElementById(id);
+    if (!dv) return;
+    var cuerpo = dv.querySelector("[data-dv-body]"), titulo = dv.querySelector("[data-dv-title]"),
+        tiempo = dv.querySelector("[data-dv-time]"), cap = dv.querySelector("[data-dv-cap]"),
+        fill = dv.querySelector("[data-dv-fill]"), toggle = dv.querySelector("[data-dv-toggle]"),
+        restart = dv.querySelector("[data-dv-restart]"),
+        dots = Array.prototype.slice.call(dv.querySelectorAll("[data-dv-goto]"));
+    var total = ESCENAS.reduce(function (a, s) { return a + s.dur; }, 0);
+    var actual = 0, vistos = 0, t0 = 0, base = 0, lineaT = null, escenaT = null,
+        reloj = null, sonando = false, fin = false;
+
+    function formato(ms) { var s = Math.floor(ms / 1000); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+    function inicio(i) { var a = 0; for (var j = 0; j < i; j++) a += ESCENAS[j].dur; return a; }
+    function transcurrido() { return Math.min(base + (sonando ? Date.now() - t0 : 0), total); }
+    function pintarReloj() {
+      var e = transcurrido();
+      tiempo.textContent = formato(e) + " / " + formato(total);
+      fill.style.width = (100 * e / total).toFixed(1) + "%";
+    }
+    function pintarLinea(frags) {
+      frags.forEach(function (t) {
+        var s = document.createElement("span");
+        if (t[0]) s.className = t[0] === "E" ? "cod" : t[0];
+        s.textContent = t[1];
+        cuerpo.appendChild(s);
+      });
+    }
+    function revelar() {
+      clearTimeout(lineaT);
+      var esc = ESCENAS[actual];
+      var paso = Math.min(650, (esc.dur * 0.55) / Math.max(esc.lineas.length, 1));
+      (function sig() {
+        if (vistos >= esc.lineas.length) return;
+        pintarLinea(esc.lineas[vistos++]);
+        lineaT = setTimeout(sig, paso);
+      })();
+    }
+    function programarAvance() {
+      clearTimeout(escenaT);
+      if (!sonando) return;
+      var espera = Math.max(inicio(actual) + ESCENAS[actual].dur - transcurrido(), 0);
+      escenaT = setTimeout(function () {
+        if (actual + 1 < ESCENAS.length) irA(actual + 1);
+        else if (bucle) irA(0);
+        else terminar();
+      }, espera);
+    }
+    function irA(i) {
+      clearTimeout(lineaT); clearTimeout(escenaT);
+      actual = i; fin = false;
+      var esc = ESCENAS[i];
+      titulo.textContent = esc.titulo;
+      cap.textContent = esc.cap;
+      cuerpo.textContent = "";
+      dots.forEach(function (d, k) { d.setAttribute("aria-current", String(k === i)); });
+      base = inicio(i);
+      if (sonando) t0 = Date.now();
+      else toggle.setAttribute("aria-label", "Reproducir el vídeo");
+      if (sinMovimiento || !sonando) { esc.lineas.forEach(pintarLinea); vistos = esc.lineas.length; }
+      else { vistos = 0; revelar(); }
+      programarAvance();
+      pintarReloj();
+    }
+    function reproducir() {
+      if (fin) { irA(0); cuerpo.textContent = ""; vistos = 0; }
+      sonando = true; t0 = Date.now();
+      dv.dataset.playing = "1";
+      toggle.setAttribute("aria-label", "Pausar el vídeo");
+      if (!sinMovimiento) revelar();
+      programarAvance();
+      clearInterval(reloj); reloj = setInterval(pintarReloj, 150);
+      pintarReloj();
+    }
+    function pausar() {
+      base = transcurrido();
+      sonando = false;
+      delete dv.dataset.playing;
+      toggle.setAttribute("aria-label", "Reproducir el vídeo");
+      clearTimeout(lineaT); clearTimeout(escenaT); clearInterval(reloj);
+      pintarReloj();
+    }
+    function terminar() { pausar(); fin = true; toggle.setAttribute("aria-label", "Volver a reproducir el vídeo"); }
+    toggle.addEventListener("click", function () { if (sonando) pausar(); else reproducir(); });
+    restart.addEventListener("click", function () { var s = sonando; pausar(); irA(0); if (s) { cuerpo.textContent = ""; vistos = 0; reproducir(); } });
+    dots.forEach(function (d) { d.addEventListener("click", function () { irA(Number(d.dataset.dvGoto)); }); });
+    irA(0);
+    var auto = !sinMovimiento, empezo = false, fuera = false;
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) {
+          if (en.isIntersecting) {
+            if (!empezo && auto) { empezo = true; reproducir(); }
+            else if (fuera && auto) { fuera = false; reproducir(); }
+          } else if (sonando) { fuera = true; pausar(); }
+        });
+      }, { threshold: 0.35 }).observe(dv);
+    } else if (auto) { empezo = true; reproducir(); }
+  }
+  dvInit("demo-release", DV_RELEASE, false);
+  dvInit("demo-playground", DV_PLAYGROUND, true);
+
   /* atajo "/" → documentación */
   document.addEventListener("keydown", function (e) {
     if (e.key !== "/" || e.metaKey || e.ctrlKey) return;
