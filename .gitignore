@@ -9,3 +9,8 @@ dist/
 .coverage
 htmlcov/
 .pytest_cache/
+
+# sitio: salidas generadas por sitio/construir.py (se reconstruyen en CI)
+sitio/docs/
+sitio/playground/
+sitio/version.json

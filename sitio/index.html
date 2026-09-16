@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mini-format — contratos verificables para salidas de LLM</title>
+<meta name="description" content="Componente de software que convierte la respuesta de una API de LLM en registros tipados y validados. Hasta 49 % menos tokens que JSON compacto en registros anchos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/base.css">
+<link rel="stylesheet" href="/landing.css">
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<div class="announce">
+  SPEC 1.1 en borrador — compatibilidad hacia adelante y diagnósticos con rango
+  <a href="/docs/spec/cambios/">leer el borrador →</a>
+</div>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/">
+      <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>
+      mini-format
+    </a>
+    <ul class="nav-links">
+      <li><a href="/docs/">Documentación</a></li>
+      <li><a href="/docs/spec/">Especificación</a></li>
+      <li><a href="/docs/errors/">Errores</a></li>
+      <li><a href="/docs/forks/">Familias</a></li>
+      <li><a href="/playground/">Playground</a></li>
+    </ul>
+    <span class="spacer"></span>
+    <a class="search" href="/docs/" aria-label="Ir a la documentación">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Buscar en la documentación <kbd>/</kbd>
+    </a>
+    <a class="icon-link" href="https://github.com/LiveLinDev/mini-format" aria-label="Repositorio en GitHub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg>
+    </a>
+    <a class="btn btn-solid" href="#instalar">Instalar</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="frame hero">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow"><span class="badge">1.0</span> <a href="/docs/spec/cambios/">SPEC 1.1 en borrador →</a></p>
+      <h1>Salidas de LLM que se <span style="color:rgb(var(--accent))">validan</span> solas.</h1>
+      <p class="lead">
+        Declaras el contrato de tu dominio una vez. mini-format genera la instrucción,
+        valida cada línea de la respuesta y devuelve <a href="/docs/quickstart/">registros
+        tipados</a> — o un <a href="/docs/errors/">error con código, línea y campo</a>.
+        Hasta 49 % menos tokens que JSON compacto en registros anchos.
+      </p>
+      <div id="instalar">
+        <p class="install-label">Instalar mini-format 1.0</p>
+        <div class="cmd" data-install="py">
+          <span class="prompt" aria-hidden="true">$</span>
+          <code>git clone https://github.com/LiveLinDev/mini-format &amp;&amp; pip install -e mini-format</code>
+          <button class="copy" type="button" aria-label="Copiar el comando de instalación">
+            <svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>
+          </button>
+        </div>
+        <div class="cmd" data-install="js" hidden>
+          <span class="prompt" aria-hidden="true">$</span>
+          <code>git clone https://github.com/LiveLinDev/mini-format &amp;&amp; cd mini-format/ts &amp;&amp; npm test</code>
+          <button class="copy" type="button" aria-label="Copiar el comando de instalación">
+            <svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>
+          </button>
+        </div>
+        <div class="cmd-row">
+          <div class="seg" role="group" aria-label="Elegir plataforma">
+            <button type="button" data-os="py" aria-pressed="true">Python</button>
+            <button type="button" data-os="js" aria-pressed="false">Node · TypeScript</button>
+          </div>
+          <span class="aside"><a href="/docs/quickstart/">Ver la guía de instalación ↗</a></span>
+        </div>
+        <p class="install-note">Instalación desde el repositorio. La publicación en PyPI y npm está prevista en el plan de tareas; hasta entonces el repositorio es la única fuente.</p>
+        <a class="quickstart" href="/docs/quickstart/">Después sigue la guía de inicio →</a>
+      </div>
+    </div>
+
+    <div class="bench">
+      <div class="bench-tabs" role="tablist" aria-label="Ancho del registro">
+        <button role="tab" aria-selected="false" data-panel="w5">5 campos</button>
+        <button role="tab" aria-selected="true"  data-panel="w20">20 campos</button>
+        <button role="tab" aria-selected="false" data-panel="w50">50 campos</button>
+      </div>
+      <div class="bench-body js-chart" id="w5" role="tabpanel" hidden>
+        <div class="bench-head"><h3>Registro de 5 campos</h3><button class="replay" type="button" data-replay><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>animar</button></div>
+        <p class="unit">1000 registros · coste relativo a mini-format · menos es mejor</p>
+        <p class="howto">Cada barra es lo que cuesta ese formato <b>comparado con mini-format</b>. Más corta, más barata: por debajo de <b>1,00×</b> gasta menos que mini-format; por encima, más.</p>
+        <div class="bar is-loss" style="--w:29.1%"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">0,97×</span></div>
+        <div class="bar is-mini" style="--w:30.0%"><span class="name">mini-format<small>1.0</small><span class="ref">referencia</span></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div>
+        <div class="bar" style="--w:30.9%"><span class="name">TOON<small>datos planos</small></span><span class="track"><span class="fill"></span></span><span class="val">1,03×</span></div>
+        <div class="bar" style="--w:50.5%"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">1,68×</span></div>
+        <div class="bar" style="--w:58.0%"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,93×</span></div>
+        <div class="bar" style="--w:82.6%"><span class="name">JSON<small>indentado</small></span><span class="track"><span class="fill"></span></span><span class="val">2,75×</span></div>
+        <div class="bar" style="--w:100%"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">3,33×</span></div>
+        <div class="axis"><span class="ticks"><span>0×</span><span>1×</span><span>2×</span><span>3×</span></span></div>
+        <div class="note"><span>Ahorro frente a JSON compacto: <b>40,4 %</b>. Con registros estrechos, CSV y TOON van por delante en tamaño. Tokenizador o200k_base · mediana de 5 documentos · datos sintéticos deterministas.</span><a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v5_ancho">reproducir</a></div>
+      </div>
+      <div class="bench-body js-chart" id="w20" role="tabpanel">
+        <div class="bench-head"><h3>Registro de 20 campos</h3><button class="replay" type="button" data-replay><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>animar</button></div>
+        <p class="unit">1000 registros · coste relativo a mini-format · menos es mejor</p>
+        <p class="howto">Cada barra es lo que cuesta ese formato <b>comparado con mini-format</b>. Más corta, más barata: por debajo de <b>1,00×</b> gasta menos que mini-format; por encima, más.</p>
+        <div class="bar is-loss" style="--w:29.3%"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">0,96×</span></div>
+        <div class="bar is-loss" style="--w:30.2%"><span class="name">TOON<small>datos planos</small></span><span class="track"><span class="fill"></span></span><span class="val">0,99×</span></div>
+        <div class="bar is-mini" style="--w:30.5%"><span class="name">mini-format<small>1.0</small><span class="ref">referencia</span></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div>
+        <div class="bar" style="--w:57.3%"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">1,88×</span></div>
+        <div class="bar" style="--w:66.5%"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">2,18×</span></div>
+        <div class="bar" style="--w:82.9%"><span class="name">JSON<small>indentado</small></span><span class="track"><span class="fill"></span></span><span class="val">2,72×</span></div>
+        <div class="bar" style="--w:100%"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">3,28×</span></div>
+        <div class="axis"><span class="ticks"><span>0×</span><span>1×</span><span>2×</span><span>3×</span></span></div>
+        <div class="note"><span>Ahorro frente a JSON compacto: <b>46,7 %</b>. Tokenizador o200k_base · mediana de 5 documentos por celda · datos sintéticos deterministas, semilla 20260915.</span><a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v5_ancho">reproducir</a></div>
+      </div>
+      <div class="bench-body js-chart" id="w50" role="tabpanel" hidden>
+        <div class="bench-head"><h3>Registro de 50 campos</h3><button class="replay" type="button" data-replay><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>animar</button></div>
+        <p class="unit">1000 registros · coste relativo a mini-format · menos es mejor</p>
+        <p class="howto">Cada barra es lo que cuesta ese formato <b>comparado con mini-format</b>. Más corta, más barata: por debajo de <b>1,00×</b> gasta menos que mini-format; por encima, más.</p>
+        <div class="bar is-loss" style="--w:26.3%"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">0,92×</span></div>
+        <div class="bar is-loss" style="--w:26.9%"><span class="name">TOON<small>datos planos</small></span><span class="track"><span class="fill"></span></span><span class="val">0,94×</span></div>
+        <div class="bar is-mini" style="--w:28.6%"><span class="name">mini-format<small>1.0</small><span class="ref">referencia</span></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div>
+        <div class="bar" style="--w:56.3%"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">1,97×</span></div>
+        <div class="bar" style="--w:64.6%"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">2,26×</span></div>
+        <div class="bar" style="--w:82.0%"><span class="name">JSON<small>indentado</small></span><span class="track"><span class="fill"></span></span><span class="val">2,87×</span></div>
+        <div class="bar" style="--w:100%"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">3,50×</span></div>
+        <div class="axis"><span class="ticks"><span>0×</span><span>1×</span><span>2×</span><span>3×</span></span></div>
+        <div class="note"><span>Ahorro frente a JSON compacto: <b>49,3 %</b>, el máximo medido. Frente a los tabulares la distancia crece en su contra.</span><a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v5_ancho">reproducir</a></div>
+      </div>
+      <div class="sr"><table><caption>Coste relativo en tokens frente a mini-format, 1000 registros, tokenizador o200k_base</caption><thead><tr><th>Formato</th><th>5 campos</th><th>20 campos</th><th>50 campos</th></tr></thead><tbody><tr><td>mini-format</td><td>1,00</td><td>1,00</td><td>1,00</td></tr><tr><td>CSV</td><td>0,97</td><td>0,96</td><td>0,92</td></tr><tr><td>TOON</td><td>1,03</td><td>0,99</td><td>0,94</td></tr><tr><td>JSON compacto</td><td>1,68</td><td>1,88</td><td>1,97</td></tr><tr><td>YAML</td><td>1,93</td><td>2,18</td><td>2,26</td></tr><tr><td>JSON indentado</td><td>2,75</td><td>2,72</td><td>2,87</td></tr><tr><td>XML</td><td>3,33</td><td>3,28</td><td>3,50</td></tr></tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<div class="frame"><div class="strip">
+  <p class="lbl">Integrado en</p>
+  <div class="items"><span class="item">SIMA</span><span class="item" data-pending>segundo sistema · por definir</span><span class="item" data-pending>tu proyecto aquí</span></div>
+</div></div>
+
+<!-- ═══════════ CUATRO PIEZAS ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <div class="split-head">
+      <h2 class="rv">Cuatro piezas, diseñadas juntas.<br><span class="dim">Adopta una, o todas.</span></h2>
+      <p class="aside rv"><code>mini validate</code> y <code>parse()</code> entran en un proyecto Python o Node ya existente. No cambias de proveedor de modelo ni de framework.</p>
+    </div>
+    <div class="tools">
+      <article class="tool rv">
+        <span class="burst burst-1" aria-hidden="true">sustituye a<br>JSON Schema</span>
+        <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg></span>
+        <h3>Especificación</h3>
+        <p class="replaces">sustituye a JSON Schema · prompts a mano</p>
+        <p>Gramática EBNF, 15 códigos de error estables y protocolo de extensión. La norma se escribe antes que el código y decide cuando las implementaciones difieren.</p>
+        <div class="cmdlite"><b>$</b> mini prompt log --lang es</div>
+      </article>
+      <article class="tool rv">
+        <span class="burst burst-2" aria-hidden="true">sustituye a<br>parsers ad hoc</span>
+        <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 20h12a2 2 0 0 0 2-2V8"/></svg></span>
+        <h3>Bibliotecas</h3>
+        <p class="replaces">sustituye a regex · json.loads · try/except</p>
+        <p>Python y TypeScript, escritas por separado desde la misma norma. Parser, serializador, modo tolerante, bloque de prompt y lector en streaming.</p>
+        <div class="cmdlite"><b>$</b> pip install -e mini-format</div>
+      </article>
+      <article class="tool rv">
+        <span class="burst burst-3" aria-hidden="true">sustituye a<br>scripts sueltos</span>
+        <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 10 3 2-3 2M13 14h4"/></svg></span>
+        <h3>Herramienta</h3>
+        <p class="replaces">sustituye a jq · scripts de validación</p>
+        <p>Nueve comandos: validar, diagnosticar, convertir en ambos sentidos, generar el prompt, contar tokens, comprobar familias y crear una nueva.</p>
+        <div class="cmdlite"><b>$</b> mini diagnose respuesta.mini</div>
+      </article>
+      <article class="tool rv">
+        <span class="burst burst-4" aria-hidden="true">sustituye a<br>«en mi máquina»</span>
+        <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <h3>Conformidad</h3>
+        <p class="replaces">sustituye a pruebas por implementación</p>
+        <p>303 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 303/303.</p>
+        <div class="cmdlite"><b>$</b> python conformance/run_python.py</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RECORRIDO ═══════════ -->
+<section class="section">
+  <div class="frame g2 walk" id="walk">
+    <div>
+      <p class="eyebrow">Un minuto con mini-format</p>
+      <h2 style="margin-bottom:1.2rem">Del contrato<br>al registro<br>tipado.</h2>
+      <p class="lead" style="margin-bottom:1.75rem">Declarar, instruir, llamar, validar, reparar y usar con la misma herramienta. Cada paso es un comando real; la salida está abreviada. Pulsa uno, o solo mira.</p>
+      <ol class="walk-steps" id="steps">
+        <li class="active"><button type="button" data-step="0"><span class="num">01</span><span><span class="t">Elegir o declarar el contrato</span><span class="cl"><b>$</b> mini forks</span><span class="d">Catorce familias listas. Cada una es un <code>contract.json</code>: datos, no código. Si tu dominio no está, creas la tuya. <a href="/docs/forks/">Familias →</a></span><span class="progress"></span></span></button></li>
+        <li><button type="button" data-step="1"><span class="num">02</span><span><span class="t">Generar la instrucción</span><span class="cl"><b>$</b> mini prompt log --lang es</span><span class="d">El bloque para el prompt de sistema se deriva del contrato. No lo escribes a mano, así que no se desincroniza cuando el contrato cambia. <a href="/docs/cli/">Herramienta →</a></span><span class="progress"></span></span></button></li>
+        <li><button type="button" data-step="2"><span class="num">03</span><span><span class="t">Llamar a la API y leer</span><span class="cl"><b>&gt;&gt;&gt;</b> parse(respuesta, c, strict=False)</span><span class="d">Cualquier proveedor. mini-format no se interpone en la llamada: prepara la entrada y procesa la salida. <a href="/docs/python/">Biblioteca Python →</a></span><span class="progress"></span></span></button></li>
+        <li><button type="button" data-step="3"><span class="num">04</span><span><span class="t">Diagnosticar</span><span class="cl"><b>$</b> mini diagnose respuesta.mini</span><span class="d">Cada error trae código estable, línea y campo. Los códigos son parte de la norma, así que valen igual en Python y en TypeScript. <a href="/docs/errors/">Índice de errores →</a></span><span class="progress"></span></span></button></li>
+        <li><button type="button" data-step="4"><span class="num">05</span><span><span class="t">Reparar solo lo que falló</span><span class="cl"><b>&gt;&gt;&gt;</b> doc.errors · lenient.invalidLines()</span><span class="d">En modo tolerante se conservan los registros válidos y se reintenta solo la línea rechazada, en vez de descartar la respuesta entera. <a href="/docs/typescript/">Biblioteca TypeScript →</a></span><span class="progress"></span></span></button></li>
+        <li><button type="button" data-step="5"><span class="num">06</span><span><span class="t">Usar registros tipados</span><span class="cl"><b>&gt;&gt;&gt;</b> doc.records · doc.to_canonical()</span><span class="d">Objetos del lenguaje anfitrión con los tipos del contrato. Desde aquí es código normal. <a href="/docs/quickstart/">Inicio rápido →</a></span><span class="progress"></span></span></button></li>
+      </ol>
+    </div>
+    <div>
+      <div class="term">
+        <div class="bar-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span id="term-title">~/proyecto — mini</span><span class="counter" id="term-pos">01 / 06</span></div>
+        <pre id="term-out" aria-live="polite"></pre>
+      </div>
+      <div class="term-foot">
+        <span>Salida abreviada de mini-format 1.0, escrita para esta demostración. Pasa el ratón para pausar.</span>
+        <span class="term-ctrls"><button type="button" data-term="prev" aria-label="Paso anterior">‹</button><button type="button" data-term="replay">repetir</button><button type="button" data-term="next" aria-label="Paso siguiente">›</button></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ EN PREPARACIÓN ═══════════ -->
+<section class="section">
+  <div class="frame g2">
+    <div>
+      <p class="eyebrow">En preparación</p>
+      <h2 style="margin-bottom:1.1rem">SPEC 1.1</h2>
+      <p class="lead" style="margin-bottom:1.6rem">Lo que está en borrador y todavía <strong>no</strong> forma parte del componente publicado. Se marca aquí para que nadie lo dé por hecho.</p>
+      <ul style="color:rgb(var(--fg-muted));font-size:.92rem;line-height:1.95;padding-left:1.15rem;margin:0 0 1.9rem">
+        <li><strong>Compatibilidad hacia adelante.</strong> Hoy un lector con contrato v1 rechaza con E05 un documento v2 aunque solo añada campos al final. La regla de §11 se está redactando y cubriendo con casos de conformidad.</li>
+        <li><strong>Diagnósticos con rango exacto</strong> (columna inicial y final), además de la línea y el campo actuales.</li>
+        <li><strong>Publicación en PyPI y npm</strong> con las 14 familias como datos del paquete.</li>
+        <li><strong>Tercer tokenizador</strong> de un modelo abierto en el experimento de tokens.</li>
+      </ul>
+      <div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>git -C mini-format pull</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
+    </div>
+    <figure class="videoslot" data-video="release">
+      <figcaption class="ph"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><b>Ranura de vídeo · qué cambia en 1.1</b>16:9 · media/spec-1-1.mp4 · pendiente de grabar</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════ EN USO ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <div class="g3">
+      <article class="tcard rv">
+        <div class="thumb" data-video="caso-sima"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="ph">ranura de vídeo<br>media/caso-sima.mp4</span><span class="who"><b>Erick Palomino</b><span>Autor · SIMA</span></span></div>
+        <div class="body"><p class="eyebrow">SIMA</p><h3>SIMA genera ítems de evaluación adaptativa con la familia <code>a</code>.</h3><p>Plataforma de microaprendizaje. El modelo devuelve ítems con Bloom, parámetros IRT y metadatos CAT en una línea por ítem; el parser valida y descarta solo los rechazados.</p><a class="btn btn-solid btn-sm" href="/docs/forks/a/">Familia a →</a></div>
+      </article>
+      <article class="tcard rv">
+        <div class="thumb" data-video="caso-2"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="ph">ranura de vídeo<br>media/caso-2.mp4</span><span class="who"><b>Por definir</b><span>Segundo sistema integrador</span></span></div>
+        <div class="body"><p class="eyebrow">Integración 2</p><h3>Segundo caso de integración, por definir.</h3><p>Reservado para un sistema ajeno al equipo que integre la biblioteca. La ranura queda vacía a propósito hasta que exista.</p><a class="btn btn-ghost btn-sm" href="/docs/contribuir/">Contribuir →</a></div>
+      </article>
+      <article class="tcard rv">
+        <div class="thumb" data-video="caso-3"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="ph">ranura de vídeo<br>media/caso-3.mp4</span><span class="who"><b>Por definir</b><span>Tercer caso</span></span></div>
+        <div class="body"><p class="eyebrow">Integración 3</p><h3>Tercer caso, por definir.</h3><p>Misma regla: ningún testimonio se publica sin una integración real detrás.</p><a class="btn btn-ghost btn-sm" href="/docs/contribuir/">Contribuir →</a></div>
+      </article>
+    </div>
+
+    <div class="feature rv">
+      <div class="thumb" data-video="integracion"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="ph">ranura de vídeo<br>media/integracion.mp4</span><span class="who"><b>Adrián Palma</b><span>Autor · mini-format</span></span></div>
+      <div class="body">
+        <p class="eyebrow sq">Integración</p>
+        <h3>Entra en Django, FastAPI, Express, Next.js y lo que ya tengas.</h3>
+        <p>No es un servicio ni un framework: es una biblioteca. Cargas el registro de familias, pides el bloque de prompt con <code>spec_block()</code>, llamas a tu proveedor como siempre y pasas la respuesta por <code>parse()</code>.</p>
+        <div class="codeblock light"><div class="tb"><span>servicios/evaluacion.py</span><span>python</span></div><pre><code><span class="k">from</span> minifmt <span class="k">import</span> Registry, parse, spec_block
+
+reg <span class="p">=</span> Registry<span class="p">.</span><span class="f">load</span><span class="p">()</span>                     <span class="c"># descubre forks/*/contract.json</span>
+c <span class="p">=</span> reg<span class="p">.</span><span class="f">get</span><span class="p">(</span><span class="s">"a"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="f">generar_items</span><span class="p">(</span>tema<span class="p">):</span>
+    respuesta <span class="p">=</span> cliente<span class="p">.</span><span class="f">completar</span><span class="p">(</span>sistema<span class="p">=</span><span class="f">spec_block</span><span class="p">(</span>c<span class="p">,</span> lang<span class="p">=</span><span class="s">"es"</span><span class="p">),</span> usuario<span class="p">=</span>tema<span class="p">)</span>
+    doc <span class="p">=</span> <span class="f">parse</span><span class="p">(</span>respuesta<span class="p">,</span> c<span class="p">,</span> strict<span class="p">=</span><span class="k">False</span><span class="p">)</span>      <span class="c"># tolerante: acumula errores</span>
+    <span class="k">return</span> doc<span class="p">.</span>records<span class="p">,</span> doc<span class="p">.</span>errors                <span class="c"># válidos tipados, rechazados con código</span></code></pre></div>
+        <div class="actions"><a class="btn btn-solid btn-sm" href="/docs/python/">Biblioteca Python →</a><a class="btn btn-ghost btn-sm" href="/docs/typescript/">Biblioteca TypeScript</a><a class="txt" href="/docs/quickstart/">Guía de inicio</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RESULTADO PRINCIPAL ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <div class="split-head">
+      <h2 class="rv">Cuantos más campos,<br><span class="dim">más gana.</span></h2>
+      <p class="aside rv">JSON repite el nombre de cada campo en cada objeto. mini-format lo declara una vez en la cabecera. El coste de los nombres crece como O(W·N) en JSON y como O(W) aquí.</p>
+    </div>
+    <div class="g3">
+      <figure class="chart js-chart"><figcaption>3 campos</figcaption><p class="unit">registro estrecho</p><div class="bar is-mini" style="--w:64.4%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">32,2 %</span></div></figure>
+      <figure class="chart js-chart"><figcaption>20 campos</figcaption><p class="unit">registro típico de negocio</p><div class="bar is-mini" style="--w:93.4%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">46,7 %</span></div></figure>
+      <figure class="chart js-chart"><figcaption>50 campos</figcaption><p class="unit">registro ancho</p><div class="bar is-mini" style="--w:98.6%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">49,3 %</span></div></figure>
+    </div>
+    <p class="fine">Ahorro frente a JSON compacto · escala lineal, origen en 0 %, máximo del eje 50 % · 1000 registros · tokenizador o200k_base · mediana de 5 documentos por celda · datos sintéticos deterministas (semilla 20260915). La curva satura cerca de 32 campos. <a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v5_ancho">reproducir →</a></p>
+  </div>
+</section>
+
+<!-- ═══════════ BENCHMARK COMPLETO ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <div class="split-head">
+      <h2 class="rv">Siete formatos,<br><span class="dim">y los dos que nos ganan.</span></h2>
+      <p class="aside rv">La ventaja en tokens existe frente a formatos que repiten claves. Frente a los tabulares sobre datos planos no la hay, y empeora con el ancho. Se publica igual.</p>
+    </div>
+    <div class="tablewrap"><table class="t">
+      <caption class="sr">Ahorro de tokens de mini-format frente a cada formato, según campos por registro, 1000 registros</caption>
+      <thead><tr><th scope="col">Frente a</th><th scope="col">3 campos</th><th scope="col">12</th><th scope="col">20</th><th scope="col">50</th><th scope="col">Lectura</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">XML</th><td>67,2 %</td><td>69,3 %</td><td>69,5 %</td><td>71,4 %</td><td class="txt">Ventaja máxima, crece con el ancho</td></tr>
+        <tr><th scope="row">JSON indentado</th><td>60,0 %</td><td>62,8 %</td><td>63,2 %</td><td>65,2 %</td><td class="txt">El caso más común en prompts reales</td></tr>
+        <tr><th scope="row">YAML</th><td>46,5 %</td><td>51,8 %</td><td>54,2 %</td><td>55,8 %</td><td class="txt">Ventaja sólida y creciente</td></tr>
+        <tr><th scope="row">JSON compacto</th><td>32,2 %</td><td>44,2 %</td><td>46,7 %</td><td>49,3 %</td><td class="txt">Cifra de referencia del proyecto</td></tr>
+        <tr><th scope="row">TOON (datos planos)</th><td>7,4 %</td><td class="neg">−2,7 %</td><td class="neg">−1,5 %</td><td class="neg">−6,2 %</td><td class="txt">Sobre datos anidados la ventaja es de 42,7 % (V1)</td></tr>
+        <tr><th scope="row">CSV</th><td class="neg">−0,0 %</td><td class="neg">−5,2 %</td><td class="neg">−4,4 %</td><td class="neg">−8,2 %</td><td class="txt"><strong>Pierde.</strong> CSV no tipa ni valida</td></tr>
+      </tbody>
+    </table></div>
+    <p class="fine">Mediana de 5 documentos por celda · 1000 registros · o200k_base · negativo = mini-format consume más. Frente a CSV y TOON la comparación es solo de tamaño: ninguno expresa tipos, enumeraciones ni versiones, ni produce diagnósticos con código y línea. <a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v5_ancho">reproducir →</a> · <a href="/docs/metodologia/">metodología</a></p>
+  </div>
+</section>
+
+<!-- ═══════════ TOKENIZADOR ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <div class="split-head">
+      <h2 class="rv">El mismo documento<br><span class="dim">no cuesta lo mismo en cada modelo.</span></h2>
+      <p class="aside rv">Los separadores no se segmentan igual en todos los vocabularios. Mismos 14 dominios, lote de 10, frente a JSON compacto.</p>
+    </div>
+    <div class="g3">
+      <figure class="chart js-chart"><figcaption>r50k_base</figcaption><p class="unit">vocabulario de 50k</p><div class="bar is-mini" style="--w:88.6%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">30,2 %</span></div><p class="fine">IC95 [26,8 % · 31,5 %] · k=14</p></figure>
+      <figure class="chart js-chart"><figcaption>cl100k_base</figcaption><p class="unit">vocabulario de 100k</p><div class="bar is-mini" style="--w:94.4%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">32,2 %</span></div><p class="fine">IC95 [29,1 % · 33,5 %] · k=14</p></figure>
+      <figure class="chart js-chart"><figcaption>o200k_base</figcaption><p class="unit">vocabulario de 200k</p><div class="bar is-mini" style="--w:100%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">34,1 %</span></div><p class="fine">IC95 [31,5 % · 35,5 %] · k=14</p></figure>
+    </div>
+    <p class="fine">Escala lineal, origen en 0 %, máximo del eje 36 %: la diferencia es real pero pequeña — 3,9 puntos entre el vocabulario más antiguo y el más reciente. Los tres pertenecen a la misma familia; falta medir uno de un modelo abierto. <a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v1_tokens">reproducir →</a></p>
+  </div>
+</section>
+
+<!-- ═══════════ API ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <p class="eyebrow">Interfaz</p>
+    <h2 style="margin-bottom:2.2rem">Todo sale<br><span class="dim">del contrato.</span></h2>
+    <div class="tabs" role="tablist" aria-label="Ejemplos de uso">
+      <button role="tab" aria-selected="true"  data-panel="a-py">Python</button>
+      <button role="tab" aria-selected="false" data-panel="a-ts">TypeScript</button>
+      <button role="tab" aria-selected="false" data-panel="a-stream">Streaming</button>
+      <button role="tab" aria-selected="false" data-panel="a-cli">Herramienta</button>
+      <button role="tab" aria-selected="false" data-panel="a-conf">Conformidad</button>
+      <button role="tab" aria-selected="false" data-panel="a-fork">Extender</button>
+    </div>
+    <div class="codeblock" id="a-py" role="tabpanel"><div class="tb"><span>python</span><span>minifmt 1.0</span></div><pre><code><span class="k">from</span> minifmt <span class="k">import</span> Registry, parse, dumps, spec_block, roundtrip_ok
+
+reg <span class="p">=</span> Registry<span class="p">.</span><span class="f">load</span><span class="p">()</span>                       <span class="c"># descubre forks/*/contract.json</span>
+c <span class="p">=</span> reg<span class="p">.</span><span class="f">get</span><span class="p">(</span><span class="s">"log"</span><span class="p">)</span>
+
+instruccion <span class="p">=</span> <span class="f">spec_block</span><span class="p">(</span>c<span class="p">,</span> lang<span class="p">=</span><span class="s">"es"</span><span class="p">)</span>      <span class="c"># bloque para el prompt de sistema</span>
+doc <span class="p">=</span> <span class="f">parse</span><span class="p">(</span>respuesta<span class="p">,</span> c<span class="p">,</span> strict<span class="p">=</span><span class="k">False</span><span class="p">)</span>     <span class="c"># tolerante: no lanza, acumula</span>
+
+doc<span class="p">.</span>records                                 <span class="c"># registros válidos, ya tipados</span>
+<span class="k">for</span> e <span class="k">in</span> doc<span class="p">.</span>errors<span class="p">:</span>                        <span class="c"># MiniError: code, line, field, message</span>
+    <span class="f">print</span><span class="p">(</span>e<span class="p">)</span>
+
+texto <span class="p">=</span> <span class="f">dumps</span><span class="p">(</span>doc<span class="p">.</span><span class="f">to_canonical</span><span class="p">(),</span> c<span class="p">)</span>          <span class="c"># canónico -> .mini</span>
+<span class="k">assert</span> <span class="f">roundtrip_ok</span><span class="p">(</span>doc<span class="p">.</span><span class="f">to_canonical</span><span class="p">(),</span> c<span class="p">)</span></code></pre></div>
+    <div class="codeblock" id="a-ts" role="tabpanel" hidden><div class="tb"><span>typescript</span><span>@mini-format/core</span></div><pre><code><span class="k">import</span> <span class="p">{</span> Registry, parse, dumps, specBlock <span class="p">}</span> <span class="k">from</span> <span class="s">'./src/index.ts'</span><span class="p">;</span>
+
+<span class="k">const</span> reg <span class="p">=</span> Registry<span class="p">.</span><span class="f">load</span><span class="p">();</span>            <span class="c">// descubre ../forks/*/contract.json</span>
+<span class="k">const</span> c <span class="p">=</span> reg<span class="p">.</span><span class="f">get</span><span class="p">(</span><span class="s">'log'</span><span class="p">);</span>
+
+<span class="k">const</span> lenient <span class="p">=</span> <span class="f">parse</span><span class="p">(</span>texto<span class="p">,</span> c<span class="p">,</span> <span class="p">{</span> strict<span class="p">:</span> <span class="k">false</span> <span class="p">});</span>
+lenient<span class="p">.</span>records<span class="p">;</span>            <span class="c">// registros válidos</span>
+lenient<span class="p">.</span>errors<span class="p">;</span>             <span class="c">// MiniError[] con code, line, field, message</span>
+lenient<span class="p">.</span><span class="f">invalidLines</span><span class="p">();</span>     <span class="c">// líneas rechazadas: las que hay que regenerar</span>
+lenient<span class="p">.</span>missingRecords<span class="p">;</span>     <span class="c">// n − líneas recibidas</span>
+lenient<span class="p">.</span><span class="f">diagnostics</span><span class="p">();</span>      <span class="c">// mismas claves que la referencia Python</span></code></pre></div>
+    <div class="codeblock" id="a-stream" role="tabpanel" hidden><div class="tb"><span>typescript</span><span>stream.ts</span></div><pre><code><span class="k">import</span> <span class="p">{</span> createReader <span class="p">}</span> <span class="k">from</span> <span class="s">'./src/index.ts'</span><span class="p">;</span>
+
+<span class="k">const</span> reader <span class="p">=</span> <span class="f">createReader</span><span class="p">(</span>c<span class="p">,</span> <span class="p">{</span>                  <span class="c">// strict: false por defecto</span>
+  onRecord<span class="p">:</span> <span class="p">({</span> record, line, index <span class="p">})</span> <span class="p">=&gt;</span> <span class="f">mostrar</span><span class="p">(</span>record<span class="p">),</span>
+  onError<span class="p">:</span> <span class="p">(</span>e<span class="p">)</span> <span class="p">=&gt;</span> console<span class="p">.</span><span class="f">warn</span><span class="p">(</span><span class="f">String</span><span class="p">(</span>e<span class="p">)),</span>
+<span class="p">});</span>
+<span class="k">for await</span> <span class="p">(</span><span class="k">const</span> token <span class="k">of</span> respuestaDelModelo<span class="p">)</span> reader<span class="p">.</span><span class="f">push</span><span class="p">(</span>token<span class="p">);</span>
+
+<span class="k">const</span> res <span class="p">=</span> reader<span class="p">.</span><span class="f">end</span><span class="p">();</span>
+res<span class="p">.</span>missing<span class="p">;</span>      <span class="c">// registros que faltan respecto de n</span>
+res<span class="p">.</span>truncated<span class="p">;</span>    <span class="c">// se cortó: incompleto o menos líneas que n</span>
+res<span class="p">.</span>terminated<span class="p">;</span>   <span class="c">// el flujo terminó en salto de línea</span></code></pre></div>
+    <div class="codeblock" id="a-cli" role="tabpanel" hidden><div class="tb"><span>shell</span><span>mini</span></div><pre><code>mini forks                                  <span class="c"># lista las familias</span>
+mini validate respuesta.mini                <span class="c"># estricto: sale con 1 si hay errores</span>
+mini diagnose respuesta.mini                <span class="c"># tolerante: informe JSON con líneas a regenerar</span>
+mini to-json respuesta.mini | jq .          <span class="c"># .mini -> JSON canónico</span>
+mini from-json datos.json --contract log    <span class="c"># JSON canónico -> .mini</span>
+mini prompt log --lang es                   <span class="c"># bloque de especificación para el modelo</span>
+mini tokens respuesta.mini --enc o200k_base <span class="c"># tokens y bytes, con el tokenizador declarado</span>
+mini check-forks                            <span class="c"># invariantes + fixtures de ida y vuelta</span>
+mini new-fork quiz2 --from a --add <span class="s">"nivel:enum{facil|dificil}"</span></code></pre></div>
+    <div class="codeblock" id="a-conf" role="tabpanel" hidden><div class="tb"><span>shell</span><span>conformance/</span></div><pre><code>$ python conformance/run_python.py
+<span class="s">303 casos · 303 pasan · 0 fallan</span>
+
+$ cd ts &amp;&amp; npm test
+<span class="s">conformance.test.ts · 303/303</span>
+
+<span class="c"># las expectativas salen de la norma y de los fixtures publicados,</span>
+<span class="c"># nunca se calculan ejecutando la implementación</span></code></pre></div>
+    <div class="codeblock" id="a-fork" role="tabpanel" hidden><div class="tb"><span>shell</span><span>familias</span></div><pre><code>$ mini new-fork quiz2 --from a --add <span class="s">"feedback:str"</span> <span class="s">"level:enum{easy|hard}"</span>
+$ mini check-forks
+
+<span class="c"># cinco invariantes mantienen toda familia analizable por construcción:</span>
+<span class="c">#  I1 una línea = un registro     I4 campos nuevos solo al final</span>
+<span class="c">#  I2 prefijo y n obligatorios     I5 los fixtures hacen ida y vuelta</span>
+<span class="c">#  I3 el núcleo heredado no cambia (cambio incompatible => prefijo nuevo)</span></code></pre></div>
+  </div>
+</section>
+
+<!-- ═══════════ FAMILIAS ═══════════ -->
+<section class="section section--tint">
+  <div class="frame">
+    <div class="split-head">
+      <h2 class="rv">14 contratos listos,<br><span class="dim">y los tuyos encima.</span></h2>
+      <p class="aside rv">Cada familia conserva el núcleo, añade campos al final y mantiene cinco invariantes verificables. Una familia es un archivo de datos, no código.</p>
+    </div>
+    <div class="forks">
+      <a class="fork" href="/docs/forks/a/"><code>a</code><span>ítems de evaluación: opción múltiple, Bloom, IRT 3PL, CAT</span></a>
+      <a class="fork" href="/docs/forks/q/"><code>q</code><span>quiz formativo: extiende <code>a</code> con feedback, pista y objetivo</span></a>
+      <a class="fork" href="/docs/forks/card/"><code>card</code><span>tarjetas de repaso espaciado</span></a>
+      <a class="fork" href="/docs/forks/sum/"><code>sum</code><span>segmentos de resumen de microlección</span></a>
+      <a class="fork" href="/docs/forks/map/"><code>map</code><span>aristas de mapas conceptuales</span></a>
+      <a class="fork" href="/docs/forks/r/"><code>r</code><span>criterios de rúbrica analítica</span></a>
+      <a class="fork" href="/docs/forks/s/"><code>s</code><span>ítems de encuesta Likert</span></a>
+      <a class="fork" href="/docs/forks/code/"><code>code</code><span>ejercicios de programación con pruebas</span></a>
+      <a class="fork" href="/docs/forks/tc/"><code>tc</code><span>casos de prueba de software</span></a>
+      <a class="fork" href="/docs/forks/us/"><code>us</code><span>historias de usuario con criterios de aceptación</span></a>
+      <a class="fork" href="/docs/forks/log/"><code>log</code><span>eventos e incidentes de servicios</span></a>
+      <a class="fork" href="/docs/forks/ner/"><code>ner</code><span>anotaciones de entidades nombradas</span></a>
+      <a class="fork" href="/docs/forks/cat/"><code>cat</code><span>fichas de catálogo de productos</span></a>
+      <a class="fork" href="/docs/forks/cls/"><code>cls</code><span>clasificación de texto multietiqueta</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PLAYGROUND ═══════════ -->
+<section class="section">
+  <div class="frame g2">
+    <div>
+      <p class="eyebrow">Playground</p>
+      <h2 style="margin-bottom:1.1rem">Contrato, datos<br><span class="dim">y salida a la vez.</span></h2>
+      <ol style="color:rgb(var(--fg-muted));font-size:.92rem;line-height:1.9;padding-left:1.2rem;margin:0 0 1.5rem">
+        <li>Elige una familia o diseña la tuya con el asistente.</li>
+        <li>Pega la respuesta del modelo en el editor: se valida mientras tecleas.</li>
+        <li>Compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON.</li>
+      </ol>
+      <p style="font-size:.92rem;color:rgb(var(--fg-muted));margin-bottom:1.6rem">Se ejecuta entero en tu navegador con el port JavaScript de la referencia. Sin servidor, sin cuenta.</p>
+      <a class="btn btn-solid btn-lg" href="/playground/">Abrir el playground</a>
+    </div>
+    <figure class="videoslot" data-video="playground">
+      <figcaption class="ph"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><b>Ranura de vídeo · demo en bucle</b>16:9 · media/playground.mp4 · pendiente de grabar</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════ COMPARATIVA ═══════════ -->
+<section class="section">
+  <div class="frame">
+    <p class="eyebrow">Comparativa</p>
+    <h2 style="margin-bottom:2.5rem">Qué hace cada formato<br><span class="dim">cuando el emisor es un modelo.</span></h2>
+    <div class="tablewrap" id="cmp"><table class="t">
+      <thead><tr><th scope="col">Capacidad</th><th scope="col">mini-format</th><th scope="col">JSON</th><th scope="col">CSV</th><th scope="col">TOON</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Menos tokens que JSON compacto</th><td class="yes">✓</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><th scope="row">Tipos declarados en el contrato</th><td class="yes">✓</td><td class="no">parcial</td><td class="no">✗</td><td class="no">parcial</td></tr>
+        <tr><th scope="row">Error con código, línea y campo</th><td class="yes">✓</td><td class="no">parcial</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><th scope="row">Códigos de error estables en la norma</th><td class="yes">15</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><th scope="row">Recuperación ante truncamiento</th><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td class="no">parcial</td></tr>
+        <tr data-extra><th scope="row">Reparación selectiva por línea</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Lectura en streaming, registro a registro</th><td class="yes">✓</td><td class="no">parcial</td><td class="yes">✓</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Suite de conformidad publicada</th><td class="yes">303</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Dos implementaciones independientes</th><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">parcial</td></tr>
+        <tr data-extra><th scope="row">Listas con elemento marcado</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Compatibilidad hacia adelante declarada</th><td class="no">1.1</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Anidamiento arbitrario</th><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td></tr>
+        <tr data-extra><th scope="row">Lectura directa sin contrato</th><td class="no">parcial</td><td class="yes">✓</td><td class="no">parcial</td><td class="yes">✓</td></tr>
+        <tr data-extra><th scope="row">Soporte nativo en APIs de proveedores</th><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top:1.1rem"><button class="btn btn-ghost" type="button" id="cmp-toggle" aria-expanded="false" aria-controls="cmp">Mostrar las 14 filas</button></p>
+    <p class="fine">Las cuatro últimas filas son limitaciones reconocidas: la compatibilidad hacia adelante está en borrador (1.1), no hay anidamiento arbitrario (SPEC §12), hace falta el contrato para leer, y ningún proveedor lo genera de forma nativa.</p>
+  </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="section cta">
+  <div class="frame" style="text-align:center">
+    <h2 style="max-width:16ch;margin-inline:auto">Empieza por el contrato.</h2>
+    <p style="max-width:36rem;margin-inline:auto">Clonar, validar el primer documento y comparar tokens en menos de cinco minutos.</p>
+    <div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>mini validate forks/a/fixtures/valid.mini</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
+    <p style="margin-top:1.6rem;font-size:var(--fs-cap)"><a href="/docs/">Documentación</a> · <a href="/docs/spec/">Especificación 1.0</a> · <a href="/docs/errors/">Índice de errores</a> · <a href="/playground/">Playground</a></p>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fgrid">
+      <div><h3>Aprender</h3><ul><li><a href="/docs/">Introducción</a></li><li><a href="/docs/quickstart/">Inicio rápido</a></li><li><a href="/docs/spec/">Especificación 1.0</a></li><li><a href="/docs/errors/">Índice de errores</a></li></ul></div>
+      <div><h3>Componente</h3><ul><li><a href="/docs/python/">Biblioteca Python</a></li><li><a href="/docs/typescript/">Biblioteca TypeScript</a></li><li><a href="/docs/cli/">Herramienta</a></li><li><a href="/docs/conformance/">Conformidad</a></li></ul></div>
+      <div><h3>Evidencia</h3><ul><li><a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v5_ancho">Eje de ancho (V5)</a></li><li><a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v1_tokens">Tokens (V1)</a></li><li><a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v4_costos">Costos (V4)</a></li><li><a href="/docs/metodologia/">Metodología</a></li></ul></div>
+      <div><h3>Proyecto</h3><ul><li><a href="https://github.com/LiveLinDev/mini-format">Repositorio</a></li><li><a href="/playground/">Playground</a></li><li><a href="/docs/licencia/">Licencia MIT</a></li><li><a href="/docs/contribuir/">Contribuir</a></li></ul></div>
+    </div>
+    <div class="colophon">mini-format · Adrián Palma Obispo y Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas, 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.</div>
+  </div>
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>

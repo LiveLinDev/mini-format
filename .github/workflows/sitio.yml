@@ -1,0 +1,94 @@
+name: sitio
+
+# Cada push a main que toque el sitio o su contenido reconstruye y publica
+# https://mini-format.pmoluna.com. Los despliegues solo salen de main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sitio/**"
+      - "SPEC.md"
+      - "README.md"
+      - "FORKING.md"
+      - "CONTRIBUTING.md"
+      - "LICENSE"
+      - "forks/**"
+      - "src/minifmt/**"
+      - "js/mini.js"
+      - "playground/template.html"
+      - "benchmark/toon_ref/toon.bundle.js"
+      - "benchmark/results/summary_12.csv"
+      - "conformance/README.md"
+      - "ts/README.md"
+      - "experiments/README.md"
+      - ".github/workflows/sitio.yml"
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: "desplegar o revertir"
+        default: desplegar
+        type: choice
+        options: [desplegar, revertir]
+
+concurrency:
+  group: sitio-produccion
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment: produccion
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: Construir
+        if: ${{ github.event.inputs.accion != 'revertir' }}
+        run: |
+          pip install -e . markdown
+          mini check-forks
+          python sitio/construir.py
+
+      - name: Llave de despliegue
+        env:
+          LLAVE: ${{ secrets.SITIO_SSH_KEY }}
+          HUELLA: ${{ secrets.SITIO_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$LLAVE" > ~/.ssh/despliegue && chmod 600 ~/.ssh/despliegue
+          printf '%s\n' "$HUELLA" > ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+
+      - name: Publicar
+        if: ${{ github.event.inputs.accion != 'revertir' }}
+        run: |
+          tar czf - -C sitio \
+            --exclude='./construir.py' --exclude='./desplegar.sh' --exclude='./servidor' --exclude='__pycache__' . \
+          | ssh -i ~/.ssh/despliegue -p 2222 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+              erick@162.243.33.172 desplegar
+
+      - name: Revertir
+        if: ${{ github.event.inputs.accion == 'revertir' }}
+        run: ssh -i ~/.ssh/despliegue -p 2222 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes erick@162.243.33.172 revertir
+
+      - name: Verificar
+        run: |
+          sleep 2
+          fallos=0
+          for ruta in / /playground/ /docs/ /docs/spec/ /docs/errors/E06/ /base.css /app.js; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://mini-format.pmoluna.com$ruta")
+            echo "$ruta -> $code"; [ "$code" = 200 ] || fallos=$((fallos+1))
+          done
+          [ "$fallos" -eq 0 ]
+          # el sello debe corresponder a este commit: prueba de que se publicó lo que se construyó
+          publicado=$(curl -s "https://mini-format.pmoluna.com/version.json" | python -c 'import sys,json; print(json.load(sys.stdin)["commit"])')
+          echo "version.json -> $publicado"
+          if [ "${{ github.event.inputs.accion }}" != "revertir" ]; then [ "$publicado" = "$GITHUB_SHA" ]; fi
+
+      - name: Limpiar llave
+        if: always()
+        run: rm -f ~/.ssh/despliegue
