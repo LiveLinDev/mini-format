@@ -197,9 +197,13 @@
     const records = []; const uniques = {}; c.fields.forEach(f => { if (f.unique) uniques[f.name] = {}; });
     for (const [lineno, line] of lines.slice(1)) {
       let toks; try { toks = splitFields(line, c.list_separator, lineno, strict); } catch (e) { errors.push(e); continue; }
-      const nf = toks.length;
+      let nf = toks.length;
       if (nf < c.arity) { errors.push(new MiniError('E05', lineno, `record has ${nf} fields, core requires ${c.arity}`)); continue; }
-      if (nf > c.fields.length) { errors.push(new MiniError('E05', lineno, `record has ${nf} fields, contract allows at most ${c.fields.length}`)); continue; }
+      if (nf > c.fields.length) {
+        const documentVersion = Number(header.v ?? 1);
+        if (documentVersion > c.version) { toks = toks.slice(0, c.fields.length); nf = toks.length; }
+        else { errors.push(new MiniError('E05', lineno, `record has ${nf} fields, contract allows at most ${c.fields.length}`)); continue; }
+      }
       const rec = {}; const recErrs = [];
       c.fields.forEach((f, i) => {
         if (i >= nf) { if (f.type === 'mlist') { rec[f.json_items] = null; rec[f.json_selected] = null; } else rec[f.name] = f.default; return; }

@@ -262,8 +262,15 @@ def parse(text: str, contract: Contract, strict: bool = True) -> Document:
             errors.append(MiniError(E_ARITY, lineno, f"record has {nf} fields, core requires {contract.arity}"))
             continue
         if nf > len(contract.fields):
-            errors.append(MiniError(E_ARITY, lineno, f"record has {nf} fields, contract allows at most {len(contract.fields)}"))
-            continue
+            if version > contract.version:
+                # A newer document may append fields that this contract does not
+                # know yet.  The complete line was already tokenised above, so
+                # malformed escapes in the ignored tail still fail validation.
+                toks = toks[:len(contract.fields)]
+                nf = len(toks)
+            else:
+                errors.append(MiniError(E_ARITY, lineno, f"record has {nf} fields, contract allows at most {len(contract.fields)}"))
+                continue
         rec: Dict[str, Any] = {}
         rec_errs: List[MiniError] = []
         for i, f in enumerate(contract.fields):

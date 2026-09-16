@@ -1,4 +1,6 @@
-include SPEC.md FORKING.md LICENSE README.md setup.py
+include SPEC.md SPEC.es.md FORKING.md FORKING.es.md LICENSE README.md README.es.md setup.py
+include DOMAIN_PROFILE.md DOMAIN_PROFILE.es.md BUILD_GUIDE.md BUILD_GUIDE.es.md CHANGELOG.md
+recursive-include examples *.json *.md
 recursive-include forks *.json *.md *.mini
 recursive-include conformance *.json *.md *.py
 recursive-include tests *.py

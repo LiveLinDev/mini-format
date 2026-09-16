@@ -14,3 +14,13 @@ htmlcov/
 sitio/docs/
 sitio/playground/
 sitio/version.json
+sitio/downloads/
+sitio/source/
+sitio/robots.txt
+sitio/sitemap.xml
+sitio/search-index.json
+ts/dist/
+sitio/en/
+sitio/app.en.js
+.playwright-cli/
+output/

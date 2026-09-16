@@ -19,7 +19,7 @@ from .registry import Registry
 from .serializer import dumps
 from .values import scalar_equal
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 SPEC_VERSION = "1.0"
 
 __all__ = ["Contract", "Field", "MiniError", "MiniValidationError", "Document", "parse",

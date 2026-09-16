@@ -202,3 +202,8 @@ tr[data-extra]{ display:none } .open tr[data-extra]{ display:table-row }
 .dv-dots button:hover{ color:#fff; border-color:rgb(255 255 255 / .5) }
 .dv-dots button[aria-current="true"]{ background:#fff; color:#0e0e11; border-color:#fff; font-weight:700 }
 .g2 .demo-video{ border:1px solid rgb(var(--line)); border-radius:var(--r-lg); overflow:hidden; align-self:start; width:100% }
+/* El vídeo grabado comparte la superficie y los controles del recorrido. */
+.film{margin-top:.8rem;font-size:.78rem;color:rgb(var(--fg-muted))}
+.film summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.film video{width:100%;margin-top:.75rem;border:1px solid rgb(var(--line));border-radius:var(--r-lg);background:rgb(var(--slab))}
+.film p{margin-top:.45rem}

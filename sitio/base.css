@@ -90,6 +90,9 @@ button{ font-family:inherit }
 .nav{ display:flex; align-items:center; gap:1.5rem; height:var(--header-h) }
 .brand{ display:flex; align-items:center; gap:.55rem; text-decoration:none; color:rgb(var(--fg)); font-family:var(--f-display); font-weight:800; font-size:1.3rem; letter-spacing:-.045em }
 .brand .glyph{ width:26px; height:26px; flex:none; color:rgb(var(--accent)) }
+.nav .brand,.nav .lang-toggle,.nav>.btn,.nav .icon-link{flex-shrink:0;white-space:nowrap}
+@media (max-width:1500px){.nav .search{display:none}}
+@media (max-width:520px){.nav{gap:.65rem}.nav .brand{font-size:1.12rem}.nav>.btn{padding:.48rem .65rem}.nav .lang-toggle button{padding:.34rem .55rem}.nav .icon-link{display:none}}
 .nav-links{ display:flex; gap:1.4rem; list-style:none; margin:0; padding:0; font-size:.94rem; font-weight:500 }
 .nav-links a{ color:rgb(var(--fg)); text-decoration:none; opacity:.82 }
 .nav-links a:hover,.nav-links a[aria-current]{ opacity:1 }

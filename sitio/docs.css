@@ -27,6 +27,8 @@
 .prose h3{ font-size:1.2rem; margin-top:2rem; font-weight:700; letter-spacing:-.015em; line-height:1.25 }
 .prose h2 a.anchor,.prose h3 a.anchor{ color:rgb(var(--fg-faint)); text-decoration:none; margin-left:.4rem; opacity:0 }
 .prose h2:hover a.anchor,.prose h3:hover a.anchor{ opacity:1 }
+.prose :is(h1,h2,h3) .headerlink{color:rgb(var(--fg-faint));text-decoration:none;margin-left:.35em;font-size:.65em;opacity:0}
+.prose :is(h1,h2,h3):hover .headerlink,.prose .headerlink:focus-visible{opacity:1}
 .prose p a{ color:rgb(var(--accent-strong)); text-decoration:underline }
 .prose code{ background:rgb(var(--subtle)); border:1px solid rgb(var(--line)); border-radius:var(--r-sm); padding:.05rem .35rem; font-size:.86em }
 .prose pre{ background:rgb(var(--slab)); color:rgb(var(--on-slab)); border-radius:var(--r-lg); padding:1rem 1.1rem; overflow-x:auto; font-size:.84rem; line-height:1.7; letter-spacing:-.03em }
@@ -51,4 +53,4 @@
 .docs-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1.5rem }
 .docs-top .crumbs{ margin-bottom:0; padding-top:.35rem }
 .lang-toggle{ flex:none }
-@media (max-width:520px){ .docs-top{ flex-direction:column-reverse; align-items:stretch } .lang-toggle{ align-self:flex-start } }
+@media (max-width:520px){ .docs-top{ flex-direction:column-reverse; align-items:stretch } .docs-top .lang-toggle{ align-self:flex-start } }

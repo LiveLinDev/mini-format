@@ -1,0 +1,3 @@
+# Optional diagnostic output; the published complete run is results.{json,csv}.
+baseline-results.json
+baseline-results.csv

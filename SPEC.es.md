@@ -140,8 +140,11 @@ La cabecera es `prefix|key=value|key=value…`.
 Un contrato define una lista ordenada de campos **nucleares** seguida de una lista
 ordenada de campos de **extensión**. Un registro MUST contener cada campo nuclear
 (E05) y MAY contener un prefijo de los campos de extensión; las extensiones
-ausentes son null. Un registro MUST NOT contener más campos que los que declara el
-contrato (E05).
+ausentes son null. Si `v` de la cabecera es menor o igual que la versión del
+contrato, el registro MUST NOT contener más campos que los declarados (E05). Si la
+cabecera del mismo prefijo declara un `v` mayor, el parser MUST validar léxicamente
+el registro completo, decodificar el prefijo de campos conocido e ignorar únicamente
+los campos finales desconocidos.
 
 | Tipo | Forma textual | JSON canónico | Notas |
 |---|---|---|---|
@@ -192,7 +195,7 @@ de errores, lo que permite la recuperación parcial de salidas generadas largas.
 | E02 | el prefijo de la cabecera no coincide con el contrato |
 | E03 | la cabecera no trae `n` |
 | E04 | número de líneas de registro ≠ `n` |
-| E05 | el registro tiene menos campos que el núcleo, o más que núcleo + extensiones |
+| E05 | el registro tiene menos campos que el núcleo, o tiene campos excedentes sin declarar una versión de documento posterior a la del contrato |
 | E06 | el valor escalar no coincide con su tipo, o un valor requerido está vacío |
 | E07 | aridad de lista / tupla fuera de `min`/`max`, o ≠ `count_key`, o ≠ tamaño de tupla |
 | E08 | el recuento de marcadores viola la regla de la lista marcada |
@@ -225,13 +228,17 @@ el registro de referencia (`mini check-forks`):
 | I4 | Extensión al final | los campos nuevos se añaden tras los heredados y son opcionales |
 | I5 | Ida y vuelta | la hija incluye fixtures (`valid.mini` ↔ `canonical.json`, `escaping.mini`, casos negativos) que pasan §9 |
 
-Consecuencias. Un parser del padre lee el prefijo heredado de cada registro de la
-hija (despacho por prefijo, luego truncado a la aridad del padre); un parser de la
-hija lee documentos del padre (las extensiones ausentes son null). Reordenar,
-retipificar o eliminar un campo heredado es un cambio incompatible y MUST publicarse
-bajo un **prefijo nuevo**, nunca como una versión nueva del mismo prefijo. El
-crecimiento compatible (añadir extensiones o claves de cabecera opcionales)
-incrementa `v`.
+Consecuencias. Un parser de versión anterior lee documentos posteriores del
+**mismo prefijo** cuando la cabecera declara un `v` mayor: valida la línea completa,
+decodifica los campos que conoce e ignora la cola desconocida. Una bifurcación usa
+otro prefijo: el registro se analiza primero con el contrato hijo elegido por el
+despacho del registro y luego la aplicación MAY proyectar su prefijo heredado al
+esquema del padre; esto no equivale a analizar directamente el documento hijo con
+el contrato padre. El contrato hijo también admite registros sin sus extensiones
+opcionales cuando se emiten bajo el prefijo hijo. Reordenar, retipificar o eliminar
+un campo heredado es un cambio incompatible y MUST publicarse bajo un **prefijo
+nuevo**, nunca como una versión nueva del mismo prefijo. El crecimiento compatible
+(añadir extensiones o claves de cabecera opcionales) incrementa `v`.
 
 Una familia se publica como una carpeta `forks/<prefix>/` con `contract.json`,
 `README.md` y `fixtures/`. El bloque de especificación que un modelo generativo
@@ -260,8 +267,9 @@ necesita para producir la familia se deriva mecánicamente del contrato
 * **Marcador como sufijo.** La selección viaja con su contenido, lo que evita
   desalineaciones índice/contenido durante la generación y permite la verificación local.
 * **Evolución solo por añadido.** La misma disciplina de los protocolos binarios y los
-  esquemas evolucionables (campos nuevos solo al final; los lectores ignoran colas
-  desconocidas) da compatibilidad hacia adelante y hacia atrás sin negociación.
+  esquemas evolucionables (campos nuevos solo al final; los lectores anteriores
+  ignoran la cola únicamente si el mismo prefijo declara un `v` posterior) da
+  compatibilidad hacia adelante y hacia atrás sin negociación adicional.
 
 ## 12. Limitaciones (por diseño)
 

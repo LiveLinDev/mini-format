@@ -179,16 +179,16 @@ class TestForkProtocol(unittest.TestCase):
         d["core"] = d["core"][:-1]
         self.assertTrue(Contract.from_dict(d).check_fork_of(A))
 
-    def test_legacy_parser_reads_forked_documents(self):
-        """I4: a document of fork q (extension tail) is readable by the parent contract
-        when the extensions are stripped — and the child parser reads parent documents."""
+    def test_older_parser_reads_newer_same_prefix_documents(self):
+        """A v1 parser ignores an unknown tail only when the same-prefix header says v2."""
         q = REG.get("q")
-        qtext = (ROOT / "forks/q/fixtures/valid.mini").read_text(encoding="utf-8")
-        # parent parser ignores the tail only when told the arity; the protocol's
-        # dispatch step chooses the contract by prefix, so we emulate it:
-        lines = qtext.strip().split("\n")
-        stripped = "\n".join(["a" + lines[0][1:]] + ["|".join(l.split("|")[:A.arity]) for l in lines[1:]])
-        self.assertEqual(len(parse(stripped, A).records), 12)
+        lines = A_TEXT.strip().split("\n")
+        lines[0] += "|v=2"
+        lines[1] += "|future"
+        doc = parse("\n".join(lines), A)
+        self.assertEqual(len(doc.records), 12)
+        self.assertEqual(doc.header["v"], 2)
+        self.assertNotIn("future", doc.records[0])
         # child parser accepts parent documents (extensions optional)
         atext = "q" + A_TEXT[1:]
         doc = parse(atext, q)

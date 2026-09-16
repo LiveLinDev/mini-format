@@ -9,6 +9,7 @@
     mini tokens FILE [--enc o200k_base] count tokens of any text file
     mini check-forks [DIR]             verify fork invariants + fixtures (CI)
     mini new-fork PREFIX --from PARENT --add name:type ...   scaffold a fork
+    mini build SAMPLE.json [MORE.json] --prefix NAME --out .mini
 """
 from __future__ import annotations
 
@@ -43,6 +44,8 @@ def cmd_forks(args) -> int:
 
 
 def cmd_validate(args) -> int:
+    if getattr(args, "contract", None):
+        return _domain_command(args, "validate")
     text = Path(args.file).read_text(encoding="utf-8")
     c = _contract(args, text)
     try:
@@ -58,6 +61,8 @@ def cmd_validate(args) -> int:
 
 def cmd_diagnose(args) -> int:
     """Lenient parse; prints a JSON report with the lines to regenerate."""
+    if getattr(args, "contract", None):
+        return _domain_command(args, "diagnose")
     text = Path(args.file).read_text(encoding="utf-8")
     c = _contract(args, text)
     try:
@@ -70,6 +75,10 @@ def cmd_diagnose(args) -> int:
 
 
 def cmd_to_json(args) -> int:
+    if getattr(args, "contract", None):
+        if args.lenient:
+            sys.exit("domain profiles require strict decoding; use diagnose or repair")
+        return _domain_command(args, "decode")
     text = Path(args.file).read_text(encoding="utf-8")
     c = _contract(args, text)
     try:
@@ -78,7 +87,11 @@ def cmd_to_json(args) -> int:
         for err in e.errors:
             print(err, file=sys.stderr)
         return 1
-    print(json.dumps(doc.to_canonical(), ensure_ascii=False, indent=None if args.compact else 2))
+    output = json.dumps(doc.to_canonical(), ensure_ascii=False, indent=None if args.compact else 2)
+    if args.out:
+        Path(args.out).write_text(output + "\n", encoding="utf-8")
+    else:
+        print(output)
     if doc.errors:
         for err in doc.errors:
             print(err, file=sys.stderr)
@@ -86,13 +99,25 @@ def cmd_to_json(args) -> int:
 
 
 def cmd_from_json(args) -> int:
+    if getattr(args, "contract", None):
+        return _domain_command(args, "encode")
     obj = json.loads(Path(args.file).read_text(encoding="utf-8"))
     c = _contract(args)
-    print(dumps(obj, c))
+    output = dumps(obj, c)
+    if args.out:
+        Path(args.out).write_text(output + "\n", encoding="utf-8")
+    else:
+        print(output)
     return 0
 
 
 def cmd_prompt(args) -> int:
+    if getattr(args, "contract", None):
+        from .domain import load_contract, make_prompt
+        print(make_prompt(load_contract(args.contract), args.lang))
+        return 0
+    if not args.prefix:
+        sys.exit("pass PREFIX or --contract PATH")
     reg = _reg(args)
     c = reg.get(args.prefix)
     example = None
@@ -197,23 +222,55 @@ def cmd_new_fork(args) -> int:
     return 0
 
 
+def _domain_command(args, command):
+    from .domain import main as domain_main
+    argv = [command, args.file, "--contract", args.contract]
+    if getattr(args, "out", None):
+        argv += ["--out", args.out]
+    if getattr(args, "fix_count", False):
+        argv.append("--fix-count")
+    if command == "decode" and getattr(args, "compact", False):
+        argv.append("--compact")
+    return domain_main(argv)
+
+
+def cmd_build(args):
+    from .domain import _strict_json, build_bundle
+    samples = [_strict_json(Path(name).read_text(encoding="utf-8-sig")) for name in args.samples]
+    path = None
+    if args.records is not None:
+        if args.records and not args.records.startswith("/"):
+            sys.exit("--records must be a JSON Pointer, for example /products")
+        path = [part.replace("~1", "/").replace("~0", "~") for part in args.records[1:].split("/")] if args.records else []
+    contract = build_bundle(samples, args.prefix, args.out, source_names=[Path(name).name for name in args.samples], record_path=path)
+    print(f"Built {args.out}: {contract['profile']}, {contract['sample_documents']} samples, {contract['sample_records']} records, schema={contract['schema_id']}")
+    print(f"Run: python {Path(args.out) / 'parser.py'} decode response.mini")
+    return 0
+
+
+def cmd_repair(args):
+    return _domain_command(args, "repair")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="mini", description=".mini reference tools")
     ap.add_argument("--forks", help="forks directory (default: bundled forks/)")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("forks").set_defaults(fn=cmd_forks)
-    p = sub.add_parser("validate"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.set_defaults(fn=cmd_validate)
-    p = sub.add_parser("diagnose"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.set_defaults(fn=cmd_diagnose)
-    p = sub.add_parser("to-json"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--lenient", action="store_true"); p.add_argument("--compact", action="store_true"); p.set_defaults(fn=cmd_to_json)
-    p = sub.add_parser("from-json"); p.add_argument("file"); p.add_argument("-p", "--prefix", required=True); p.set_defaults(fn=cmd_from_json)
-    p = sub.add_parser("prompt"); p.add_argument("prefix"); p.add_argument("--lang", default="en", choices=["en", "es"]); p.add_argument("--no-example", action="store_true"); p.add_argument("--example-records", type=int, default=2); p.set_defaults(fn=cmd_prompt)
+    p = sub.add_parser("validate"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.set_defaults(fn=cmd_validate)
+    p = sub.add_parser("diagnose"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.set_defaults(fn=cmd_diagnose)
+    p = sub.add_parser("to-json"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.add_argument("--lenient", action="store_true"); p.add_argument("--compact", action="store_true"); p.add_argument("--out"); p.set_defaults(fn=cmd_to_json)
+    p = sub.add_parser("from-json"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.add_argument("--out"); p.set_defaults(fn=cmd_from_json)
+    p = sub.add_parser("prompt"); p.add_argument("prefix", nargs="?"); p.add_argument("--contract"); p.add_argument("--lang", default="en", choices=["en", "es"]); p.add_argument("--no-example", action="store_true"); p.add_argument("--example-records", type=int, default=2); p.set_defaults(fn=cmd_prompt)
     p = sub.add_parser("tokens"); p.add_argument("file"); p.add_argument("--enc", default="o200k_base"); p.set_defaults(fn=cmd_tokens)
     p = sub.add_parser("check-forks"); p.add_argument("dir", nargs="?"); p.set_defaults(fn=cmd_check_forks)
     p = sub.add_parser("new-fork"); p.add_argument("prefix"); p.add_argument("--from", dest="parent"); p.add_argument("--name"); p.add_argument("--add", nargs="*"); p.set_defaults(fn=cmd_new_fork)
+    p = sub.add_parser("build", help="create a standalone domain toolkit from JSON samples"); p.add_argument("samples", nargs="+"); p.add_argument("--prefix", required=True); p.add_argument("--out", default=".mini"); p.add_argument("--records", help="JSON Pointer selecting the record array (auto-detected by default)"); p.set_defaults(fn=cmd_build)
+    p = sub.add_parser("repair", help="repair a generated-domain response without guessing data"); p.add_argument("file"); p.add_argument("--contract", required=True); p.add_argument("--out"); p.add_argument("--fix-count", action="store_true"); p.set_defaults(fn=cmd_repair)
     args = ap.parse_args(argv)
     try:
         return args.fn(args)
-    except MiniError as e:
+    except (MiniError, OSError, ValueError) as e:
         print(e, file=sys.stderr)
         return 2
 

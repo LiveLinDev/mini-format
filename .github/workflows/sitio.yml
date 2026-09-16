@@ -7,6 +7,16 @@ on:
     branches: [main]
     paths:
       - "sitio/**"
+      - "tools/**"
+      - "examples/**"
+      - "pyproject.toml"
+      - "MANIFEST.in"
+      - "setup.py"
+      - "BUILD_GUIDE*.md"
+      - "DOMAIN_PROFILE*.md"
+      - "CHANGELOG.md"
+      - "benchmark/public/**"
+      - "ts/**"
       - "SPEC.md"
       - "SPEC.es.md"
       - "README.md"
@@ -54,12 +64,17 @@ jobs:
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
 
+      - uses: actions/setup-node@v5
+        with: { node-version: "22" }
+
       - name: Construir
         if: ${{ github.event.inputs.accion != 'revertir' }}
         run: |
-          pip install -e . markdown
+          pip install -e ".[release]"
           mini check-forks
           python sitio/construir.py
+          python tools/check_site.py
+          python tools/smoke_release.py --directory sitio/downloads
 
       - name: Llave de despliegue
         env:
@@ -74,7 +89,7 @@ jobs:
         if: ${{ github.event.inputs.accion != 'revertir' }}
         run: |
           tar czf - -C sitio \
-            --exclude='./construir.py' --exclude='./desplegar.sh' --exclude='./servidor' --exclude='__pycache__' . \
+            --exclude='./construir.py' --exclude='./publicar.py' --exclude='./desplegar.sh' --exclude='./servidor' --exclude='__pycache__' . \
           | ssh -i ~/.ssh/despliegue -p 2222 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
               erick@162.243.33.172 desplegar
 

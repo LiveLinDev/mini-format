@@ -40,9 +40,12 @@ function nodeModule<T>(name: string): T {
   return mod as T;
 }
 
-/** Carpeta forks/ del repositorio (relativa a este archivo: ts/src -> ../../forks). */
+/** Familias incluidas en el paquete; durante el desarrollo, las del repositorio. */
 export function defaultForksDir(): string {
   const url = nodeModule<NodeUrl>('node:url');
+  const fs = nodeModule<NodeFs>('node:fs');
+  const packaged = url.fileURLToPath(new URL('../forks/', import.meta.url));
+  if (fs.existsSync(packaged)) return packaged;
   return url.fileURLToPath(new URL('../../forks/', import.meta.url));
 }
 

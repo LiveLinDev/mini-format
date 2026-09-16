@@ -86,7 +86,7 @@ An unexpected implementation failure (unforeseen exception) counts as a failed c
 | `mlist` | the four marker rules (E08) and the canonical form of the selection |
 | `tuples` | arity (E07), optional components, marker forbidden |
 | `optionals` | empty fields, extension tail, empty requireds (E06) |
-| `arity` | fewer or more fields than the contract (E05) |
+| `arity` | fewer fields than the core, or excess fields without a later `v` (E05) |
 | `types` | int, float, bool, enum (E06, E10, E13) |
 | `unique` | E11 and its interaction with lenient mode |
 | `header` | E01, E02, E03, E04, E12, BOM, blank lines, typed and unknown keys |

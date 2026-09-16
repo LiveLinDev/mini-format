@@ -1,0 +1,62 @@
+[
+  {
+    "id": "products",
+    "title": "DummyJSON products",
+    "url": "https://dummyjson.com/products?limit=0",
+    "documentation": "https://dummyjson.com/docs/products",
+    "kind": "public synthetic test data",
+    "records_key": "products",
+    "selection": "All products returned by the public endpoint; no field selection.",
+    "file": "data/products.json",
+    "fetched_at_utc": "2026-09-16T22:00:34.291238+00:00",
+    "sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+    "bytes": 306438,
+    "records": 194,
+    "unique_ids": 194
+  },
+  {
+    "id": "users",
+    "title": "DummyJSON users",
+    "url": "https://dummyjson.com/users?limit=0",
+    "documentation": "https://dummyjson.com/docs/users",
+    "kind": "public synthetic test data; identities and credentials are fictional",
+    "records_key": "users",
+    "selection": "All users returned by the public endpoint; no field selection.",
+    "file": "data/users.json",
+    "fetched_at_utc": "2026-09-16T22:00:35.858707+00:00",
+    "sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+    "bytes": 289146,
+    "records": 208,
+    "unique_ids": 208
+  },
+  {
+    "id": "comments",
+    "title": "JSONPlaceholder comments",
+    "url": "https://jsonplaceholder.typicode.com/comments",
+    "documentation": "https://jsonplaceholder.typicode.com/",
+    "kind": "public synthetic test data",
+    "records_key": null,
+    "selection": "The complete comments collection; no field selection.",
+    "file": "data/comments.json",
+    "fetched_at_utc": "2026-09-16T22:00:36.634555+00:00",
+    "sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+    "bytes": 157745,
+    "records": 500,
+    "unique_ids": 500
+  },
+  {
+    "id": "earthquakes",
+    "title": "USGS earthquake observations",
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+    "documentation": "https://earthquake.usgs.gov/fdsnws/event/1/",
+    "kind": "real historical earthquake observations",
+    "records_key": "features",
+    "selection": "First 1000 events chronologically in January 2025; no magnitude filter or field selection.",
+    "file": "data/earthquakes.json",
+    "fetched_at_utc": "2026-09-16T22:00:39.491236+00:00",
+    "sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+    "bytes": 717757,
+    "records": 1000,
+    "unique_ids": 1000
+  }
+]

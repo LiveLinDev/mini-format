@@ -12,11 +12,20 @@ jobs:
         with: { python-version: "${{ matrix.python }}" }
       - uses: actions/setup-node@v5
         with: { node-version: "22" }
-      - run: pip install -e . pyyaml tiktoken regex
+      - run: pip install -e ".[bench,release]"
       - run: mini check-forks
       - run: python -m unittest discover -s tests -v
       - run: node tests/test_js_port.mjs
+      - run: node --experimental-strip-types --no-warnings --test ts/test/*.test.ts
+      - run: python conformance/run_python.py
       - run: python playground/build.py
+      - name: Build and verify offline distributions
+        if: matrix.python == '3.12'
+        run: |
+          python tools/build_release.py --output dist
+          python tools/smoke_release.py --directory dist
+          python sitio/construir.py
+          python tools/check_site.py
 # El sitio (portada, documentación y playground) se publica en
 # https://mini-format.pmoluna.com desde .github/workflows/sitio.yml.
 # El antiguo job `pages` se retiró: GitHub Pages no está disponible para

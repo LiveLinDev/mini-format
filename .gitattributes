@@ -1,0 +1,7 @@
+* text=auto eol=lf
+# Archived HTTP response bytes are authenticated by sources.json SHA-256.
+benchmark/public/data/*.json -text
+*.mp4 binary
+*.png binary
+*.pdf binary
+*.tiktoken -text

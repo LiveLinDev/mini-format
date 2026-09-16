@@ -1,110 +1,118 @@
-# .mini — forkable, token-efficient notation for LLM structured outputs
+# mini-format
 
-[![spec](https://img.shields.io/badge/spec-1.0-2a78d6)](SPEC.md) [![forks](https://img.shields.io/badge/forks-14-1baf7a)](forks/) [![license](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+Build a compact output format for your JSON domain. Supply representative samples
+once; get a reusable contract, prompts, parser, validator and repair tools. Ask
+your model for `.mini`, then recover your original JSON structure.
 
-`.mini` is a line-oriented, positional notation for the **structured outputs of
-generative language models in closed domains**: one header line that names a
-*contract* and declares the record count, then exactly one record per line with
-fields separated by `|`.
+[Website](https://mini-format.pmoluna.com) · [Documentation](https://mini-format.pmoluna.com/docs/) · [Downloads](https://mini-format.pmoluna.com/downloads/) · [Español](README.es.md)
 
-```
-a|n=2|m=IRT3PL|d=20260603|l=es|t=demo|k=4
-i1|L1|Biología|¿Dónde ocurre la fotosíntesis?|cloroplastos*,núcleo,mitocondria,ribosoma|0.9,-1,0.25|1|biología,0.2,low
-i2|L3|Matemática|Si 3x+6=18, ¿cuál es x?|4*,6,8,12|1.4,0.2,0.2|3|matemática,0.25,medium
-```
+## Download and install
 
-Because sender and receiver share the contract, nothing structural is repeated:
-no keys, braces, brackets, quotes or indentation. On 14 domains the same data
-costs **34 % fewer output tokens than compact JSON** (27–40 %), 37 % fewer than
-TOON applied to the nested object, and 7 % fewer than TOON's best tabular case —
-within a few percent of raw CSV while keeping typed lists, tuples, a selection
-marker, a record count and a validating parser
-([benchmark](benchmark/results/summary_12.csv)).
-
-`.mini` is not one format but a **family**: a new domain gets its own contract
-(`forks/<prefix>/contract.json`) and the reference implementation interprets it —
-parser, serializer, validator, prompt block and fork checker are all derived from
-the contract. Fourteen forks ship in this repository (assessment items, quizzes,
-flashcards, lecture segments, concept maps, rubrics, surveys, programming
-exercises, test cases, user stories, event logs, NER annotations, catalogue rows,
-classification outputs).
-
-## Try it
-
-* **Playground** (no install): open [`playground/index.html`](playground/index.html) — validate documents, convert JSON ↔ .mini, compare token counts against JSON/YAML/XML/CSV and the *official* TOON encoder, and design a fork with the wizard.
-* **Python**
+Download the [complete toolkit](https://mini-format.pmoluna.com/downloads/mini-format-1.1.0.zip)
+and extract it. Python 3.9 or later is required; the wheel installs offline without
+runtime dependencies:
 
 ```bash
-git clone https://github.com/<you>/mini-format && cd mini-format
-pip install -e .                 # or: PYTHONPATH=src
-mini forks                       # list contracts
-mini validate forks/a/fixtures/valid.mini
-mini to-json forks/tc/fixtures/valid.mini | head
-mini prompt log --lang es        # specification block for a generative model
-mini check-forks                 # CI check: invariants + fixtures round-trip
+python -m pip install --no-index mini_format-1.1.0-py3-none-any.whl
+mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini
 ```
+
+Or install directly from the site:
+
+```bash
+python -m pip install https://mini-format.pmoluna.com/downloads/mini_format-1.1.0-py3-none-any.whl
+```
+
+The ZIP contains the Python wheel, a Node package, examples, documentation and the
+MIT license. [SHA-256 checksums](https://mini-format.pmoluna.com/downloads/SHA256SUMS.txt)
+and [source code](https://mini-format.pmoluna.com/downloads/mini-format-1.1.0-source.zip)
+are available on the same site. No GitHub account is required.
+
+## Build once, reuse
+
+`mini build` combines samples to infer field order, types, nested objects, arrays
+and optional values. More representative examples cover more cases in your domain;
+samples cannot guarantee that every possible future value has been observed.
+
+The generated `.mini/` folder includes a contract, English/Spanish prompts, a
+standalone Python parser, validation, diagnostics, repair tools and example
+round-trips. The receiving system can run the parser without installing mini-format.
+
+```bash
+mini from-json examples/phones.json --contract .mini/contract.json --out phones.mini
+mini validate phones.mini --contract .mini/contract.json
+mini to-json phones.mini --contract .mini/contract.json --out phones.roundtrip.json
+mini diagnose phones.mini --contract .mini/contract.json
+```
+
+Put the generated prompt in your model instructions. Repair fixes only unambiguous
+formatting and prepares targeted regeneration for unresolved errors; it never
+invents missing business data. See the [integration guide](BUILD_GUIDE.md).
+
+## Python and TypeScript
+
+Fourteen predefined core families remain available for assessments, flashcards,
+lessons, rubrics, surveys, code exercises, logs, catalogues and other domains.
 
 ```python
 from minifmt import Registry, parse, dumps
-reg = Registry.load()
-doc = parse(text, reg.get("a"))          # -> Document; doc.to_canonical() is plain JSON
-text = dumps(obj, reg.get("a"))          # canonical JSON -> .mini
+contract = Registry.load().get("a")
+document = parse(text, contract)
+canonical_json = document.to_canonical()
 ```
 
-* **JavaScript**: `js/mini.js` is a dependency-free port (browser + node) that passes the same fixtures as the Python implementation (`node tests/test_js_port.mjs`).
-
-## Create a fork
+Node 22.6+ can install the compiled ESM package, including TypeScript source types
+and the same families:
 
 ```bash
-mini new-fork quiz2 --from a --add "feedback:str" "level:enum{easy|hard}"
-# edit forks/quiz2/contract.json, add fixtures/valid.mini + fixtures/canonical.json
+npm install ./mini-format-core-1.1.0.tgz
+```
+
+```javascript
+import { Registry, parse, createReader } from '@mini-format/core';
+const contract = Registry.load().get('a');
+const document = parse(text, contract);
+```
+
+A dependency-free browser port is in `js/mini.js`. The generated domain toolkit
+uses its own standalone runtime and explicit `mini-domain/1` profile. Existing
+core families keep [SPEC 1.0](SPEC.md); see the [domain profile](DOMAIN_PROFILE.md)
+and [forking protocol](FORKING.md).
+
+## Measured efficiency
+
+A shared contract removes repeated field names. Savings depend on record shape,
+escaping, repeated values and tokenizer. The [public benchmark](benchmark/public/README.md)
+compares complete, reversible JSON against compact/pretty JSON, official nested
+and flattened TOON, YAML, XML and CSV, reporting contract/prompt overhead separately.
+The [original 14-domain results](benchmark/results/summary_12.csv) remain a separate
+core-format experiment. Token savings alone do not establish model accuracy,
+lower latency or an advantage for every possible JSON document.
+
+## Development
+
+Extract the source archive, then run:
+
+```bash
+python -m pip install -e ".[bench,release]"
+python -m unittest discover -s tests
+python conformance/run_python.py
+node tests/test_js_port.mjs
+node --experimental-strip-types --test ts/test/*.test.ts
 mini check-forks
+python tools/build_release.py --output dist
+python sitio/construir.py
 ```
 
-Five invariants keep every fork parsable by construction — one line = one
-record; header with prefix and `n`; inherited fields never change; new fields
-only at the tail; fixtures round-trip. See [FORKING.md](FORKING.md) and
-[CONTRIBUTING.md](CONTRIBUTING.md). A fork is **data, not code**: to
-contribute one, open a pull request with a folder under `forks/`.
+Release construction requires Node 22.13+. The core and generated Python parser
+use the standard library. The optional `bench` extra installs exact tokenization
+(`tiktoken` and a local `regex` fallback), YAML and plotting; `release` installs
+build tools. See [contributing](CONTRIBUTING.md) and [changes](CHANGELOG.md).
 
-## Repository layout
+## Research and license
 
-| Path | Content |
-|---|---|
-| `SPEC.md` | Specification 1.0 (grammar, escaping, types, error codes, forking protocol) |
-| `src/minifmt/` | Reference implementation (Python ≥ 3.9, no dependencies) + `mini` CLI |
-| `js/mini.js` | JavaScript port |
-| `forks/` | 14 contracts with fixtures and READMEs; `registry.json` |
-| `benchmark/` | Token benchmark (8 formats × 14 domains × 6 sizes × 2 tokenizers), official TOON encoder bridge, figures |
-| `generative/` | Generative validation protocol, raw model outputs, results |
-| `playground/` | Single-file interactive playground (GitHub Pages ready) |
-| `tests/` | Python and JS conformance tests |
+A. E. J. Palma Obispo and E. J. Palomino Santa Cruz, Universidad Peruana de Ciencias
+Aplicadas, 2026. Advisors: Jorge Luis Mayta Guillermo and Ronald Mejía Tarazona.
 
-## Reproduce the experiments
-
-```bash
-python benchmark/make_forks.py        # regenerate contracts + fixtures (idempotent)
-python benchmark/run_benchmark.py     # tokens.csv, summary_12.csv, roundtrip.csv (≈30 s)
-python generative/run_eval.py         # re-evaluate the archived model outputs
-python generative/extra_experiments.py# ablation, break-even, truncation recovery
-python benchmark/make_figures.py      # figures for the paper
-python -m unittest discover -s tests  # 25 tests incl. 4 000 fuzzed round-trips
-node tests/test_js_port.mjs           # cross-implementation conformance
-```
-
-Token counting uses `tiktoken` when installed and otherwise an exact
-pure-Python BPE over the vendored official `o200k_base` / `cl100k_base` rank
-files (`benchmark/vocab/`, sha256 verified); both reproduce the published
-counts to the token. TOON is encoded with the official reference implementation
-(v4.1.1, spec 4.1) vendored under `benchmark/toon_ref/vendor` and run through
-Node ≥ 22 type stripping — no npm install needed.
-
-## Citation
-
-> A. E. J. Palma Obispo and E. J. Palomino Santa Cruz, ".mini: a forkable, token-efficient notation for structured outputs of generative models," Universidad Peruana de Ciencias Aplicadas, 2026.
-
-Advisors: Fidel Eugenio García Rojas (specialised), Ronald Mejía Tarazona (methodological).
-
-## License
-
-MIT. Vendored third-party material keeps its own license: TOON reference implementation (MIT, Johann Schopplich), tokenizer rank files (MIT, OpenAI / gpt-tokenizer).
+MIT. Tokenizer vocabularies, official TOON 4.1.1 and public datasets retain their
+own licenses and provenance recorded alongside each resource.

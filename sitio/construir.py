@@ -28,6 +28,9 @@ sys.path.insert(0, str(RAIZ / "src"))
 from minifmt import Registry, __version__, SPEC_VERSION  # noqa: E402
 
 REPO = "https://github.com/LiveLinDev/mini-format"
+SITE_URL = "https://mini-format.pmoluna.com"
+DOWNLOAD = "/downloads/mini-format-1.1.0.zip"
+SOURCE = "/downloads/mini-format-1.1.0-source.zip"
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800'
@@ -45,7 +48,7 @@ ERRORES = [
     ("E02", "E_UNKNOWN_PREFIX", "Prefijo distinto del contrato", "El prefijo de la cabecera no coincide con el del contrato con el que se está validando (o no existe en el registro de familias).", "§5"),
     ("E03", "E_NO_COUNT", "Falta `n`", "La cabecera no declara `n`, el número de registros. `n` es obligatorio: permite detectar respuestas truncadas y registros perdidos.", "§5"),
     ("E04", "E_COUNT_MISMATCH", "Número de registros distinto de `n`", "Se declararon `n` registros pero se leyó otra cantidad de líneas válidas. En modo tolerante el documento se construye igual y este error queda registrado; el lector en streaming lo expone como `missing`.", "§5, §9"),
-    ("E05", "E_ARITY", "Aridad del registro fuera de rango", "La línea tiene menos campos que el núcleo del contrato o más que núcleo + extensiones. La regla de compatibilidad hacia adelante (ignorar campos excedentes) está en borrador para SPEC 1.1.", "§6, §10"),
+    ("E05", "E_ARITY", "Aridad del registro fuera de rango", "La línea tiene menos campos que el núcleo o campos excedentes sin una versión superior. Con el mismo prefijo y una cabecera v mayor que la versión del contrato, el lector valida los campos conocidos e ignora únicamente la cola desconocida.", "§6, §10"),
     ("E06", "E_TYPE", "Tipo incorrecto o requerido vacío", "El valor no se puede interpretar con el tipo declarado (`int`, `float`, `bool`…) o un campo requerido llegó vacío.", "§6"),
     ("E07", "E_LIST_ARITY", "Aridad de lista o tupla", "Una lista tiene menos o más elementos de los permitidos, o una tupla no tiene exactamente los declarados.", "§6"),
     ("E08", "E_MARKER", "Regla del marcador violada", "El marcador `*` de elemento seleccionado aparece donde no corresponde, falta cuando es obligatorio, o se repite en una lista de selección única.", "§3.2, §6"),
@@ -63,7 +66,7 @@ ERRORES_EN = [
     ("E02", "E_UNKNOWN_PREFIX", "Prefix differs from the contract", "The header prefix does not match the contract it is validated against (or does not exist in the family registry).", "§5"),
     ("E03", "E_NO_COUNT", "Missing `n`", "The header does not declare `n`, the record count. `n` is mandatory: it detects truncated responses and lost records.", "§5"),
     ("E04", "E_COUNT_MISMATCH", "Record count differs from `n`", "`n` records were declared but another number of valid lines was read. In lenient mode the document is built anyway and this error is recorded; the streaming reader exposes it as `missing`.", "§5, §9"),
-    ("E05", "E_ARITY", "Record arity out of range", "The line has fewer fields than the contract core or more than core + extensions. The forward-compatibility rule (ignoring trailing fields) is drafted for SPEC 1.1.", "§6, §10"),
+    ("E05", "E_ARITY", "Record arity out of range", "The line has fewer fields than the core or extra fields without a higher version. For the same prefix and a header v higher than the contract version, the reader validates known fields and ignores only the unknown trailing fields.", "§6, §10"),
     ("E06", "E_TYPE", "Wrong type or empty required value", "The value cannot be read with the declared type (`int`, `float`, `bool`…) or a required field arrived empty.", "§6"),
     ("E07", "E_LIST_ARITY", "List or tuple arity", "A list has fewer or more elements than allowed, or a tuple does not have exactly the declared ones.", "§6"),
     ("E08", "E_MARKER", "Marker rule violated", "The `*` selected-element marker appears where it must not, is missing where mandatory, or repeats in a single-selection list.", "§3.2, §6"),
@@ -77,15 +80,15 @@ ERRORES_EN = [
 ]
 # --------------------------------------------------------------------------- navegación de docs
 GRUPOS_ES = [
-    ("Empezar", [("docs", "Introducción"), ("docs/quickstart", "Inicio rápido")]),
-    ("Norma", [("docs/spec", "Especificación 1.0"), ("docs/spec/cambios", "Borrador 1.1"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
+    ("Empezar", [("docs", "Introducción"), ("downloads", "Descargas"), ("docs/quickstart", "Inicio rápido"), ("docs/build", "Crear tu toolkit")]),
+    ("Norma", [("docs/spec", "Especificación 1.0"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
     ("Bibliotecas", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Herramienta de línea de comandos"), ("docs/conformance", "Suite de conformidad")]),
     ("Evidencia", [("docs/metodologia", "Metodología y experimentos")]),
     ("Proyecto", [("docs/contribuir", "Contribuir"), ("docs/licencia", "Licencia")]),
 ]
 GRUPOS_EN = [
-    ("Start", [("docs", "Introduction"), ("docs/quickstart", "Quickstart")]),
-    ("Reference", [("docs/spec", "Specification 1.0"), ("docs/spec/cambios", "Draft 1.1"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
+    ("Start", [("docs", "Introduction"), ("downloads", "Downloads"), ("docs/quickstart", "Quickstart"), ("docs/build", "Build your toolkit")]),
+    ("Reference", [("docs/spec", "Specification 1.0"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
     ("Libraries", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Command-line tool"), ("docs/conformance", "Conformance suite")]),
     ("Evidence", [("docs/metodologia", "Methodology and experiments")]),
     ("Project", [("docs/contribuir", "Contributing"), ("docs/licencia", "License")]),
@@ -107,11 +110,13 @@ def prefijar_ids(h: str, pref: str) -> str:
     return h
 
 
-def reescribir_enlaces(h: str) -> str:
+def reescribir_enlaces(h: str, origin_dir: Path = Path(".")) -> str:
     """Enlaces relativos del repositorio -> rutas del sitio o al repositorio."""
     mapa = {"SPEC.md": "/docs/spec/", "FORKING.md": "/docs/forking/", "CONTRIBUTING.md": "/docs/contribuir/",
             "LICENSE": "/docs/licencia/", "README.md": "/docs/", "playground/index.html": "/playground/",
-            "conformance/README.md": "/docs/conformance/", "ts/README.md": "/docs/typescript/"}
+            "conformance/README.md": "/docs/conformance/", "ts/README.md": "/docs/typescript/",
+            "DOMAIN_PROFILE.md": "/docs/profile/", "DOMAIN_PROFILE.es.md": "/docs/profile/",
+            "BUILD_GUIDE.md": "/docs/build/", "BUILD_GUIDE.es.md": "/docs/build/"}
     def sub(m):
         href = m.group(1)
         if href.startswith(("http", "#", "/", "mailto:")):
@@ -121,7 +126,8 @@ def reescribir_enlaces(h: str) -> str:
             return f'href="{mapa[base]}"'
         if base.startswith("forks/") and base.count("/") == 1:
             return f'href="/docs/forks/{base.split("/")[1]}/"'
-        return f'href="{REPO}/blob/main/{href}"'
+        rel = (origin_dir / href.split("#", 1)[0]).as_posix()
+        return f'href="{REPO}/blob/main/{rel}"'
     h = re.sub(r'href="([^"]+)"', sub, h)
     h = re.sub(r'src="(?!http)([^"]+)"', lambda m: f'src="{REPO}/raw/main/{m.group(1)}"', h)
     return h
@@ -139,7 +145,8 @@ def cabecera(activo: str = "") -> str:
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
   <ul class="nav-links">{nav}</ul>
   <span class="spacer"></span>
-  <a class="icon-link" href="{REPO}" aria-label="GitHub repository"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
+  <a class="icon-link" href="{SOURCE}" aria-label="Download source code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
+  <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
   <a class="btn btn-solid" href="/docs/quickstart/">{ambos("Instalar", "Install")}</a>
 </div></header>'''
 
@@ -160,7 +167,7 @@ def pie() -> str:
                                        (f"{REPO}/tree/main/experiments/v1_tokens", "Tokens (V1)", "Tokens (V1)"),
                                        (f"{REPO}/tree/main/experiments/v4_costos", "Costos (V4)", "Costs (V4)"),
                                        ("/docs/metodologia/", "Metodología", "Methodology")])
-    c4 = col("Proyecto", "Project", [(REPO, "Repositorio", "Repository"),
+    c4 = col("Proyecto", "Project", [(SOURCE, "Código fuente", "Source code"),
                                      ("/playground/", "Playground", "Playground"),
                                      ("/docs/licencia/", "Licencia MIT", "MIT License"),
                                      ("/docs/contribuir/", "Contribuir", "Contributing")])
@@ -192,7 +199,7 @@ def pagina_docs(ruta: str, titulo_es: str, titulo_en: str, cuerpo_es: str, cuerp
 <title>{html.escape(titulo_es)} — mini-format</title>{FONTS}<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css"></head>
 <body>{cabecera(ruta)}
 <div class="docs-shell"><aside class="docs-side" aria-label="Docs">{lateral(ruta)}</aside>
-<main class="docs-main" id="contenido"><article class="docs-article"><div class="docs-top">{migas}{conmutador}</div><div class="prose" data-lang-body="es">{aviso_es}{cuerpo_es}</div><div class="prose" data-lang-body="en" hidden>{aviso_en}{cuerpo_en}</div>
+<main class="docs-main" id="contenido"><article class="docs-article"><div class="docs-top">{migas}</div><div class="prose" data-lang-body="es">{aviso_es}{cuerpo_es}</div><div class="prose" data-lang-body="en" hidden>{aviso_en}{cuerpo_en}</div>
 <nav class="pager">{prev}{nxt}</nav></article></main></div>{pie()}<script src="/docs.js"></script></body></html>'''
     destino = SITIO / ruta / "index.html"
     destino.parent.mkdir(parents=True, exist_ok=True)
@@ -200,7 +207,7 @@ def pagina_docs(ruta: str, titulo_es: str, titulo_en: str, cuerpo_es: str, cuerp
 
 
 def md_archivo(rel: str) -> str:
-    return reescribir_enlaces(md((RAIZ / rel).read_text(encoding="utf-8")))
+    return reescribir_enlaces(md((RAIZ / rel).read_text(encoding="utf-8")), Path(rel).parent)
 
 
 def md_par(rel_es: str, rel_en: str) -> tuple[str, str]:
@@ -214,174 +221,24 @@ def construir_docs() -> int:
     es, en = md_par("README.es.md", "README.md")
     pagina_docs("docs", "Introducción", "Introduction", es, en); n += 1
 
-    qi_es = md(f"""
-# Inicio rápido
-
-mini-format {__version__} implementa la especificación `.mini` {SPEC_VERSION}. Los paquetes en PyPI y npm están
-previstos en el plan de tareas; hasta entonces se instala desde el repositorio.
-
-## Python
-
-```bash
-git clone {REPO}
-cd mini-format
-pip install -e .            # o bien: PYTHONPATH=src
-mini forks                  # lista las 14 familias
-mini validate forks/a/fixtures/valid.mini
-mini prompt log --lang es   # bloque de especificación para el modelo
-```
-
-```python
-from minifmt import Registry, parse, dumps, spec_block
-
-reg = Registry.load()                    # descubre forks/*/contract.json
-c = reg.get("log")
-instruccion = spec_block(c, lang="es")   # va en el prompt de sistema
-doc = parse(respuesta, c, strict=False)  # tolerante: acumula errores en doc.errors
-doc.records                              # registros válidos, tipados
-for e in doc.errors:
-    print(e)                             # E10 line 3 [level]: …
-```
-
-## TypeScript
-
-Requiere Node ≥ 22.6. El código corre sin compilar con `--experimental-strip-types`.
-
-```bash
-cd mini-format/ts
-npm test
-```
-
-```ts
-import {{ Registry, parse, specBlock, createReader }} from './src/index.ts';
-const c = Registry.load().get('log');
-const lenient = parse(texto, c, {{ strict: false }});
-lenient.invalidLines();   // líneas que hay que regenerar
-```
-
-## Siguiente paso
-
-Lee la [especificación](/docs/spec/) para entender la cabecera, los tipos y los escapes, o abre el
-[playground](/playground/) para validar y comparar tokens sin instalar nada.
-""")
-    qi_en = md(f"""
-# Quickstart
-
-mini-format {__version__} implements the `.mini` specification {SPEC_VERSION}. PyPI and npm packages are
-planned in the task list; until then it installs from the repository.
-
-## Python
-
-```bash
-git clone {REPO}
-cd mini-format
-pip install -e .            # or: PYTHONPATH=src
-mini forks                  # list the 14 families
-mini validate forks/a/fixtures/valid.mini
-mini prompt log --lang es   # specification block for the model
-```
-
-```python
-from minifmt import Registry, parse, dumps, spec_block
-
-reg = Registry.load()                    # discovers forks/*/contract.json
-c = reg.get("log")
-instruccion = spec_block(c, lang="es")   # goes in the system prompt
-doc = parse(respuesta, c, strict=False)  # lenient: collects errors in doc.errors
-doc.records                              # valid, typed records
-for e in doc.errors:
-    print(e)                             # E10 line 3 [level]: …
-```
-
-## TypeScript
-
-Requires Node ≥ 22.6. The code runs uncompiled with `--experimental-strip-types`.
-
-```bash
-cd mini-format/ts
-npm test
-```
-
-```ts
-import {{ Registry, parse, specBlock, createReader }} from './src/index.ts';
-const c = Registry.load().get('log');
-const lenient = parse(texto, c, {{ strict: false }});
-lenient.invalidLines();   // lines to regenerate
-```
-
-## Next step
-
-Read the [specification](/docs/spec/) to understand headers, types and escapes, or open the
-[playground](/playground/) to validate and compare tokens with nothing installed.
-""")
-    pagina_docs("docs/quickstart", "Inicio rápido", "Quickstart",
-                prefijar_ids(qi_es, "es"), prefijar_ids(qi_en, "en")); n += 1
+    for route, name_es, name_en, stem in [
+        ("downloads", "Descargas", "Downloads", "downloads"),
+        ("docs/quickstart", "Inicio rápido", "Quickstart", "quickstart"),
+        ("docs/build", "Crear tu toolkit", "Build your toolkit", "build"),
+        ("docs/spec/cambios", "Versiones y compatibilidad", "Versions and compatibility", "versions"),
+    ]:
+        es = md((SITIO / "content" / f"{stem}.es.md").read_text(encoding="utf-8"))
+        en = md((SITIO / "content" / f"{stem}.en.md").read_text(encoding="utf-8"))
+        pagina_docs(route, name_es, name_en, prefijar_ids(es, "es"), prefijar_ids(en, "en"))
+        n += 1
 
     es, en = md_par("SPEC.es.md", "SPEC.md")
     pagina_docs("docs/spec", f"Especificación {SPEC_VERSION}", f"Specification {SPEC_VERSION}", es, en,
                 aviso_es='<p class="lang">Traducción informativa al español; el texto normativo es el original en inglés.</p>',
                 aviso_en='<p class="lang">Normative text; the Spanish version is an informative translation.</p>'); n += 1
 
-    cb_es = md("""
-# Borrador de SPEC 1.1
-
-Esta página lista lo que está **en preparación**. Nada de esto forma parte todavía del componente publicado
-(mini-format 1.0, SPEC 1.0), y no debe citarse como implementado.
-
-## 1. Compatibilidad hacia adelante
-
-SPEC 1.0 §11 declara que un lector debe ignorar los campos añadidos al final por una versión posterior del
-contrato. Hoy las dos implementaciones **rechazan con E05** cualquier registro con más campos que
-núcleo + extensiones, también en modo tolerante. El borrador define la regla exacta (qué se ignora, qué se
-conserva en el canónico, cómo se informa) y añade los casos de conformidad correspondientes.
-
-Reproducción del fallo actual: `python pendientes/prueba_compatibilidad_hacia_adelante.py` en el repositorio de la tesis.
-
-## 2. Diagnósticos con rango
-
-`MiniError` trae código, línea, campo y mensaje. El borrador añade columna inicial y final del fragmento
-ofensivo, para que un editor pueda subrayar el rango exacto.
-
-## 3. Publicación de paquetes
-
-`minifmt` en PyPI y `@mini-format/core` en npm, con las 14 familias oficiales incluidas como datos del paquete.
-
-## 4. Experimentos
-
-Tercer tokenizador (de un modelo abierto) en V1; latencia en V4; piloto real de V2/V3 con al menos dos proveedores.
-""")
-    cb_en = md("""
-# SPEC 1.1 draft
-
-This page lists what is **in preparation**. None of it is part of the published component yet
-(mini-format 1.0, SPEC 1.0), and it must not be cited as implemented.
-
-## 1. Forward compatibility
-
-SPEC 1.0 §11 states that a reader must ignore fields appended at the end by a later version of the
-contract. Today both implementations **reject with E05** any record with more fields than
-core + extensions, also in lenient mode. The draft defines the exact rule (what is ignored, what is
-kept in the canonical, how it is reported) and adds the corresponding conformance cases.
-
-Reproduction of the current failure: `python pendientes/prueba_compatibilidad_hacia_adelante.py` in the thesis repository.
-
-## 2. Range diagnostics
-
-`MiniError` carries code, line, field and message. The draft adds the start and end column of the
-offending span, so an editor can underline the exact range.
-
-## 3. Package publishing
-
-`minifmt` on PyPI and `@mini-format/core` on npm, with the 14 official families bundled as package data.
-
-## 4. Experiments
-
-Third tokenizer (from an open model) in V1; latency in V4; real V2/V3 pilot with at least two providers.
-""")
-    pagina_docs("docs/spec/cambios", "Borrador de SPEC 1.1", "SPEC 1.1 draft",
-                prefijar_ids(cb_es, "es"), prefijar_ids(cb_en, "en"),
-                crumbs_es='<a href="/docs/spec/">spec</a> / cambios',
-                crumbs_en='<a href="/docs/spec/">spec</a> / draft'); n += 1
+    es, en = md_par("DOMAIN_PROFILE.es.md", "DOMAIN_PROFILE.md")
+    pagina_docs("docs/profile", "Perfil mini-domain/1", "mini-domain/1 profile", es, en); n += 1
 
     es, en = md_par("FORKING.es.md", "FORKING.md")
     pagina_docs("docs/forking", "Extender: familias", "Extending: forks", es, en); n += 1
@@ -463,7 +320,7 @@ To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
 Son parte del contrato público del formato: un validador escrito en otro lenguaje debe producir los mismos códigos
 para los mismos documentos, y la <a href="/docs/conformance/">suite de conformidad</a> lo comprueba.</p>
 <p>Cada error lleva <strong>código</strong>, <strong>línea</strong> (1-based; 0 para errores de documento), <strong>campo</strong> cuando aplica y un mensaje legible.
-La columna exacta está en <a href="/docs/spec/cambios/">borrador para 1.1</a>.</p>
+El informe identifica la línea y el campo que debe corregirse.</p>
 <table><thead><tr><th>Código</th><th>Condición</th><th>Constante</th><th>SPEC</th></tr></thead><tbody>{filas}</tbody></table>
 """, f"""
 <h1>Error codes</h1>
@@ -471,7 +328,7 @@ La columna exacta está en <a href="/docs/spec/cambios/">borrador para 1.1</a>.<
 They are part of the format's public contract: a validator written in another language must produce the same codes
 for the same documents, and the <a href="/docs/conformance/">conformance suite</a> checks it.</p>
 <p>Each error carries a <strong>code</strong>, a <strong>line</strong> (1-based; 0 for document errors), a <strong>field</strong> when applicable and a readable message.
-The exact column is <a href="/docs/spec/cambios/">drafted for 1.1</a>.</p>
+The report identifies the line and field that need correction.</p>
 <table><thead><tr><th>Code</th><th>Condition</th><th>Constant</th><th>SPEC</th></tr></thead><tbody>{filas_en}</tbody></table>
 """); n += 1
     for i, ((cod, const, t, desc, sec), (_, _, t_en, desc_en, _)) in enumerate(zip(ERRORES, ERRORES_EN)):
@@ -589,8 +446,8 @@ doc.diagnostics()    # report with the lines to regenerate (same as `mini diagno
     cli_es = md("""
 # Herramienta `mini`
 
-Se instala con la biblioteca Python (`pip install -e .`). Todos los comandos aceptan `--forks DIR` para usar
-otro directorio de familias.
+Se instala con el [paquete Python](/docs/quickstart/). La opción global `--forks DIR` se escribe antes del comando para usar
+otro directorio de familias: `mini --forks mis-familias validate respuesta.mini`.
 
 | Comando | Qué hace |
 |---|---|
@@ -598,7 +455,8 @@ otro directorio de familias.
 | `mini validate ARCHIVO` | Validación estricta; sale con 1 si hay errores. |
 | `mini diagnose ARCHIVO` | Validación tolerante; imprime un informe JSON con errores y líneas a regenerar. |
 | `mini to-json ARCHIVO` | `.mini` → JSON canónico. |
-| `mini from-json ARCHIVO --contract PREFIJO` | JSON canónico → `.mini`. |
+| `mini from-json ARCHIVO -p PREFIJO` | JSON canónico → `.mini`. |
+| `mini build MUESTRA.json [OTRAS.json] --prefix PREFIJO --out .mini` | Genera el toolkit de dominio desde muestras JSON. |
 | `mini prompt PREFIJO --lang es` | Bloque de especificación para el prompt del modelo. |
 | `mini tokens ARCHIVO --enc o200k_base` | Tokens y bytes, declarando el tokenizador. |
 | `mini check-forks` | Comprueba los cinco invariantes y la ida y vuelta de los fixtures. |
@@ -615,8 +473,8 @@ mini check-forks
     cli_en = md("""
 # `mini` tool
 
-Installed with the Python library (`pip install -e .`). Every command accepts `--forks DIR` to use
-another family directory.
+Installed with the [Python package](/docs/quickstart/). Put the global `--forks DIR` option before the command to use
+another family directory: `mini --forks my-families validate response.mini`.
 
 | Command | What it does |
 |---|---|
@@ -624,7 +482,8 @@ another family directory.
 | `mini validate FILE` | Strict validation; exits 1 on errors. |
 | `mini diagnose FILE` | Lenient validation; prints a JSON report with errors and lines to regenerate. |
 | `mini to-json FILE` | `.mini` → canonical JSON. |
-| `mini from-json FILE --contract PREFIX` | Canonical JSON → `.mini`. |
+| `mini from-json FILE -p PREFIX` | Canonical JSON → `.mini`. |
+| `mini build SAMPLE.json [OTHERS.json] --prefix PREFIX --out .mini` | Generates the domain toolkit from JSON samples. |
 | `mini prompt PREFIX --lang es` | Specification block for the model prompt. |
 | `mini tokens FILE --enc o200k_base` | Tokens and bytes, declaring the tokenizer. |
 | `mini check-forks` | Checks the five invariants and fixture round-trips. |
@@ -644,11 +503,11 @@ mini check-forks
     es, en = md_par("conformance/README.md", "conformance/README.en.md")
     pagina_docs("docs/conformance", "Suite de conformidad", "Conformance suite", es, en); n += 1
 
-    met_es = md_archivo("experiments/README.md") + md(f"""
+    met_es = md_archivo("benchmark/public/README.es.md") + md_archivo("experiments/README.md") + md(f"""
 ## V5 — ancho del registro
 
 Barre el número de campos por registro (3–50) y el tamaño del lote (1–1000) con datos sintéticos deterministas
-(semilla 20260915) y tres tokenizadores. Es el experimento del que salen las cifras de la portada.
+(semilla 20260915) y tres tokenizadores. Es la referencia histórica del perfil base; la comparación principal de la portada usa el toolkit generado y los conjuntos públicos descritos arriba.
 Script: [`experiments/v5_ancho/correr.py`]({REPO}/tree/main/experiments/v5_ancho).
 
 ## Reglas de integridad
@@ -657,11 +516,11 @@ Script: [`experiments/v5_ancho/correr.py`]({REPO}/tree/main/experiments/v5_ancho
 * Los pilotos simulados no se citan como resultados.
 * Los casos donde mini-format pierde se publican con la misma prominencia que los casos donde gana.
 """)
-    met_en = md_archivo("experiments/README.en.md") + md(f"""
+    met_en = md_archivo("benchmark/public/README.md") + md_archivo("experiments/README.en.md") + md(f"""
 ## V5 — record width
 
 Sweeps the number of fields per record (3–50) and the batch size (1–1000) with deterministic synthetic
-data (seed 20260915) and three tokenizers. It is the experiment behind the front-page figures.
+data (seed 20260915) and three tokenizers. This is the historical base-profile reference; the main front-page comparison uses the generated toolkit and public datasets described above.
 Script: [`experiments/v5_ancho/correr.py`]({REPO}/tree/main/experiments/v5_ancho).
 
 ## Integrity rules
@@ -737,7 +596,7 @@ def construir_playground() -> None:
   </nav>
   <button class="toggle" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
 </div></div>
-<main>
+<main id="contenido">
 <div class="pg-intro"><div><h1>Playground</h1><p>Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.</p></div>
 <p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js · 14 familias</p></div>'''
     tpl = re.sub(r"<header>.*?</header>\s*<main>", cab, tpl, count=1, flags=re.S)
@@ -792,4 +651,8 @@ if __name__ == "__main__":
     n = construir_docs()
     print(f"  docs: {n} páginas")
     construir_playground()
+    from publicar import prepare_public_site
+    prepare_public_site(TRADUCCIONES)
+    import subprocess
+    subprocess.run([sys.executable, str(RAIZ / "tools" / "build_release.py"), "--output", str(SITIO / "downloads")], check=True)
     print("listo")

@@ -1,0 +1,4 @@
+[
+  {"id": "phone-03", "name": "Mar 512", "price": 699, "available": true, "specs": {"ram_gb": 16, "storage_gb": 512}, "colors": [], "description": null},
+  {"id": "phone-04", "name": "Arena 128", "price": 199.99, "available": true, "specs": {"ram_gb": 6, "storage_gb": 128}, "colors": ["white"], "description": "Dual SIM\nTwo years of updates"}
+]

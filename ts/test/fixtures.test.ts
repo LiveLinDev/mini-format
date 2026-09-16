@@ -136,6 +136,8 @@ describe('validación (familia a)', () => {
     lines = A_TEXT.trim().split(LF);
     lines[1] = lines[1] + '|extra';
     assert.deepEqual(codes(lines.join(LF), A), ['E05']);
+    lines[0] += '|v=2';
+    assert.equal(parse(lines.join(LF), A).records.length, 12);
   });
 
   test('E08 reglas del marcador', () => {

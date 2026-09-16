@@ -89,7 +89,7 @@ caso fallido.
 | `mlist` | las cuatro reglas de marcador (E08) y la forma canónica de la selección |
 | `tuples` | aridad (E07), componentes opcionales, marcador prohibido |
 | `optionals` | campos vacíos, cola de extensiones, requeridos vacíos (E06) |
-| `arity` | menos o más campos que el contrato (E05) |
+| `arity` | menos campos que el núcleo, o campos excedentes sin `v` posterior (E05) |
 | `types` | int, float, bool, enum (E06, E10, E13) |
 | `unique` | E11 y su interacción con el modo tolerante |
 | `header` | E01, E02, E03, E04, E12, BOM, líneas en blanco, claves tipadas y desconocidas |

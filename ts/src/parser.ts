@@ -414,16 +414,23 @@ export class LineEngine {
       this.errors.push(e);
       return { line: lineno, record: null, errors: [e] };
     }
-    const nf = toks.length;
+    let nf = toks.length;
     if (nf < c.arity) {
       const e = new MiniError(E_ARITY, lineno, `record has ${nf} fields, core requires ${c.arity}`);
       this.errors.push(e);
       return { line: lineno, record: null, errors: [e] };
     }
     if (nf > c.fields.length) {
-      const e = new MiniError(E_ARITY, lineno, `record has ${nf} fields, contract allows at most ${c.fields.length}`);
-      this.errors.push(e);
-      return { line: lineno, record: null, errors: [e] };
+      const documentVersion = Number(this.header!.v ?? 1);
+      if (documentVersion > c.version) {
+        // splitFields already validated every escape in the unknown tail.
+        toks = toks.slice(0, c.fields.length);
+        nf = toks.length;
+      } else {
+        const e = new MiniError(E_ARITY, lineno, `record has ${nf} fields, contract allows at most ${c.fields.length}`);
+        this.errors.push(e);
+        return { line: lineno, record: null, errors: [e] };
+      }
     }
     const rec: MiniRecord = {};
     const recErrs: MiniError[] = [];

@@ -1,0 +1,4 @@
+[
+  {"id": "phone-01", "name": "Luna 128", "price": 299.5, "available": true, "specs": {"ram_gb": 8, "storage_gb": 128}, "colors": ["black", "blue"]},
+  {"id": "phone-02", "name": "Sol 256", "price": 449, "available": false, "specs": {"ram_gb": 12, "storage_gb": 256}, "colors": ["silver"], "description": "OLED | 6.5 inches"}
+]

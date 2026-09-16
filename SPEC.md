@@ -137,8 +137,11 @@ The header is `prefix|key=value|key=value…`.
 
 A contract defines an ordered list of **core** fields followed by an ordered
 list of **extension** fields. A record MUST contain every core field (E05) and
-MAY contain a prefix of the extension fields; missing extensions are null. A
-record MUST NOT contain more fields than the contract declares (E05).
+MAY contain a prefix of the extension fields; missing extensions are null. If
+the header `v` is less than or equal to the contract version, a record MUST NOT
+contain more fields than the contract declares (E05). If the same-prefix header
+declares a higher `v`, the parser MUST lexically validate the complete record,
+decode the known field prefix, and ignore only unknown trailing fields.
 
 | Type | Text form | Canonical JSON | Notes |
 |---|---|---|---|
@@ -189,7 +192,7 @@ enables partial recovery of long generated outputs.
 | E02 | header prefix does not match the contract |
 | E03 | header lacks `n` |
 | E04 | number of record lines ≠ `n` |
-| E05 | record has fewer fields than the core, or more than core + extensions |
+| E05 | record has fewer fields than the core, or has excess fields without declaring a document version newer than the contract |
 | E06 | scalar value does not match its type, or a required value is empty |
 | E07 | list / tuple arity outside `min`/`max`, or ≠ `count_key`, or ≠ tuple size |
 | E08 | marker count violates the marked-list rule |
@@ -223,13 +226,17 @@ reference registry (`mini check-forks`):
 | I4 | Tail extension | new fields are appended after the inherited ones and are optional |
 | I5 | Round-trip | the child ships fixtures (`valid.mini` ↔ `canonical.json`, `escaping.mini`, negative cases) that pass §9 |
 
-Consequences. A parser of the parent reads the inherited prefix of every child
-record (dispatch by prefix, then truncate to the parent's arity); a parser of
-the child reads parent documents (missing extensions are null). Reordering,
-retyping or removing an inherited field is a breaking change and MUST be
-published under a **new prefix**, never as a new version of the same prefix.
-Compatible growth (appending extensions or optional header keys) increments
-`v`.
+Consequences. An older parser reads later documents of the **same prefix** when
+the header declares a higher `v`: it validates the complete line, decodes the
+fields it knows, and ignores the unknown tail. A fork uses a different prefix:
+the record is first parsed with the child contract chosen by record dispatch,
+after which the application MAY project its inherited prefix to the parent
+schema; this is not direct parsing of the child document with the parent
+contract. The child contract also accepts records without its optional
+extensions when they are emitted under the child prefix. Reordering, retyping
+or removing an inherited field is a breaking change and MUST be published under
+a **new prefix**, never as a new version of the same prefix. Compatible growth
+(appending extensions or optional header keys) increments `v`.
 
 A fork is published as a folder `forks/<prefix>/` containing `contract.json`,
 `README.md` and `fixtures/`. The specification block that a generative model
@@ -258,8 +265,9 @@ needs to produce the fork is derived mechanically from the contract
 * **Marker as suffix.** The selection travels with its content, which avoids
   index/content misalignment during generation and allows local verification.
 * **Append-only evolution.** The same discipline used by binary protocols and
-  evolvable schemas (new fields only at the end; readers ignore unknown tails)
-  gives forward and backward compatibility without negotiation.
+  evolvable schemas (new fields only at the end; older readers ignore the tail
+  only when the same prefix declares a later `v`) gives forward and backward
+  compatibility without additional negotiation.
 
 ## 12. Limitations (by design)
 

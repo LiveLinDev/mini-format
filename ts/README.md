@@ -1,19 +1,49 @@
 # @mini-format/core — biblioteca TypeScript de `.mini`
 
-Implementación TypeScript modular y tipada de la notación `.mini` (SPEC 1.0):
+Versión de software 1.1.0. Implementación TypeScript modular y tipada del núcleo
+`.mini` (SPEC 1.0):
 parser, serializador, bloque de especificación para prompts, registro de familias
 (forks) y una API de lectura en streaming para respuestas de modelos token a token.
 Sin dependencias.
 
+Incluye las catorce familias del núcleo. Los contratos adaptados a muestras JSON
+por `mini build` usan otro perfil, `mini-domain/1`, y el parser Python que se genera
+con ellos; esta biblioteca no interpreta ese perfil. Consulta la
+[guía del constructor](https://mini-format.pmoluna.com/docs/build/) y la
+[especificación del perfil generado](https://mini-format.pmoluna.com/docs/profile/).
+
 Autores: A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC). Licencia MIT.
 
-## Requisitos
+## Instalación del paquete
 
-- Node.js ≥ 22.6 (probado con 22.23). El código se ejecuta directamente con
-  `--experimental-strip-types`; no hace falta compilar.
-- La sintaxis se limita a TypeScript «borrable» (sin `enum`, `namespace` ni
-  parámetros-propiedad; imports con extensión `.ts` explícita), de modo que el
-  mismo código compila con `tsc` cuando se quiera generar `.js` y `.d.ts`.
+Necesitas Node.js ≥ 22.6. Descarga `mini-format-core-1.1.0.tgz` desde Descargas
+o extrae ese archivo del ZIP del toolkit. Instala el archivo local:
+
+```sh
+npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.1.0.tgz
+```
+
+El archivo contiene JavaScript ESM compilado en `dist/`, los contratos de las
+catorce familias y fuentes TypeScript para tipos. Se importa desde
+`@mini-format/core`: no necesita ejecutar TypeScript dentro de `node_modules`,
+usar `--experimental-strip-types` ni conectarse al registro npm.
+
+## Desarrollo desde las fuentes
+
+Las fuentes `ts/src/` usan TypeScript borrable, sin `enum`, `namespace` ni
+parámetros-propiedad, e imports con extensión `.ts`. Node.js ≥ 22.6 puede ejecutar
+estas fuentes con `--experimental-strip-types`; esto es distinto del paquete
+distribuido, que ya contiene JavaScript. Pruebas verificadas con Node.js 22.14.0.
+
+Para generar ESM desde la raíz del repositorio, utiliza Node.js ≥ 22.13:
+
+```sh
+node --no-warnings tools/build_node.mjs
+```
+
+El script elimina tipos y convierte imports relativos `.ts` a `.js` en
+`ts/dist/`. La distribución incluye las fuentes tipadas; este paso no genera
+archivos `.d.ts`.
 
 ## Estructura
 
@@ -43,9 +73,9 @@ ts/
 ## Uso
 
 ```ts
-import { Registry, parse, dumps, specBlock, createReader } from './src/index.ts';
+import { Registry, parse, dumps, specBlock, createReader } from '@mini-format/core';
 
-const reg = Registry.load();            // descubre ../forks/*/contract.json
+const reg = Registry.load();            // carga las familias incluidas en el paquete
 const a = reg.get('a');
 
 const doc = parse(texto, a);            // estricto: lanza MiniValidationError con todos los errores
@@ -64,6 +94,9 @@ const prompt = specBlock(a, 'es');            // bloque para el prompt de sistem
 
 Los contratos pueden pasarse como objeto `contract.json` o ya normalizados
 (`normalizeContract`); todas las funciones aceptan ambos.
+
+Para ejecutar el ejemplo directamente desde `ts/` durante el desarrollo,
+cambia el import por `./src/index.ts` y activa `--experimental-strip-types`.
 
 ### Streaming
 
@@ -92,7 +125,7 @@ Nota: si la última línea no termina en LF y su último campo sigue siendo vál
 (por ejemplo, un texto cortado), el registro es indistinguible de uno completo;
 en ese caso `terminated` es `false` y conviene tratarlo como sospechoso.
 
-## Pruebas
+## Pruebas y tipos
 
 ```
 cd ts
@@ -100,6 +133,17 @@ npm test
 # o bien
 node --experimental-strip-types --no-warnings --test test/*.test.ts
 ```
+
+El chequeo estricto de la API pública y sus módulos importados pasa con
+TypeScript 7.0.2. Desde la raíz del repositorio:
+
+```sh
+npx --yes --package typescript@7.0.2 tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 --allowImportingTsExtensions ts/src/index.ts
+```
+
+Este comando puede descargar el compilador si no está en la caché; la instalación
+y ejecución del `.tgz` no lo requieren. El borrado de tipos de Node no sustituye
+este chequeo.
 
 La suite de conformidad compartida se lee de `../conformance/cases/` (o de la ruta en
 `MINI_CONFORMANCE_DIR`); si la carpeta no existe, la suite se omite. El runner
@@ -135,8 +179,6 @@ Criterio: si la SPEC decide, se sigue la SPEC; si no, se sigue la referencia Pyt
 
 ## Limitaciones
 
-- No hay chequeo de tipos en este entorno (no hay `tsc`); los tipos se escribieron
-  para `strict` pero no se han verificado con el compilador.
 - Enteros fuera de ±2^53 pierden precisión (números de JavaScript).
 - `Registry.load` requiere Node (usa `process.getBuiltinModule`); el resto de la
   biblioteca no depende de Node.

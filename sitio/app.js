@@ -192,9 +192,9 @@
       { titulo: "mi-django — terminal", dur: 5000,
         cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
         lineas: [
-          [["p", "$ "], ["", "pip install -e mini-format\n"]],
-          [["c", "… instalando mini-format 1.0\n"]],
-          [["s", "mini-format 1.0 instalado\n"]],
+          [["p", "$ "], ["", "pip install mini_format-1.1.0-py3-none-any.whl\n"]],
+          [["c", "… instalando mini-format 1.1.0\n"]],
+          [["s", "mini-format 1.1.0 instalado\n"]],
           [["", "\n"]],
           [["p", "$ "], ["", "mini forks\n"]],
           [["f", "a    "], ["", "Assessment items (Bloom + IRT)\n"]],
@@ -343,49 +343,45 @@
      bucle=true el vídeo vuelve a empezar al terminar (playground).
      ------------------------------------------------------------------ */
   var DV_RELEASE = [
-    { titulo: "spec-1.1 — el problema", dur: 6000,
-      cap: "1 · Hoy: un lector v1 rechaza un documento v2 con E05.",
+    { titulo: "mini build — JSON → .mini", dur: 6000,
+      cap: "1 · Reúne muestras representativas de los JSON que necesita tu aplicación.",
       lineas: [
-        [["p", "$ "], ["", "mini validate items-v2.mini\n"]],
+        [["p", "$ "], ["", "mini build phones.json more.json\n"]],
+        [["", "  --prefix phone --out .mini\n"]],
         [["", "\n"]],
-        [["E", "E05"], ["", " línea 2: 9 campos, máx 8\n"]],
-        [["E", "E05"], ["", " línea 3: 9 campos, máx 8\n"]],
-        [["", "\n"]],
-        [["", "v1 rechaza v2 aunque solo añada\n"]],
-        [["", "campos al final\n"]]
+        [["c", "# teléfonos, precios, listas, variantes\n"]],
+        [["s", "Tipos + campos opcionales + estructura\n"]],
+        [["c", "# el contrato se construye una sola vez\n"]]
       ]},
-    { titulo: "spec-1.1 — la regla §11", dur: 7000,
-      cap: "2 · El borrador: ignorar lo añadido al final, avisar y seguir.",
+    { titulo: ".mini/ — toolkit de dominio", dur: 6000,
+      cap: "2 · Contrato, prompts y herramientas ejecutables listos para tu proyecto.",
       lineas: [
-        [["k", "§11 "], ["c", "(borrador): compatibilidad\n"]],
-        [["c", "hacia adelante\n"]],
-        [["", "\n"]],
-        [["", "- ignorar campos excedentes\n"]],
-        [["", "- conservar núcleo y n\n"]],
-        [["", "- informar lo ignorado\n"]],
-        [["", "\n"]],
-        [["s", "E05 solo si faltan campos\n"]]
+        [["f", ".mini/\n"]],
+        [["", "  contract.json  schema.json\n"]],
+        [["", "  prompt.es.md   prompt.en.md\n"]],
+        [["", "  parser.py      validator.py\n"]],
+        [["", "  repair.py      manifest.json\n"]],
+        [["", "  example.json   example.mini\n"]],
+        [["c", "  README.md\n"]]
       ]},
-    { titulo: "spec-1.1 — diagnósticos", dur: 6000,
-      cap: "3 · Rango exacto: columna inicial y final, no solo la línea.",
+    { titulo: ".mini/ — validar y recuperar JSON", dur: 6000,
+      cap: "3 · Usa el prompt con tu modelo y devuelve a tu aplicación el JSON validado.",
       lineas: [
-        [["c", "hoy:  "], ["", "E10 line 3 [level]\n"]],
-        [["s", "1.1:  "], ["", "E10 line 3 [level] col 11-14\n"]],
+        [["c", "# sistema: contenido de prompt.es.md\n"]],
+        [["p", "$ "], ["", "python .mini/validator.py response.mini\n"]],
         [["", "\n"]],
-        [["", "10:01:00Z|ALTO|api|timeout\n"]],
-        [["e", "          ^^^^\n"]],
-        [["c", "subrayado exacto en el editor\n"]]
+        [["p", "$ "], ["", "python .mini/parser.py decode response.mini\n"]],
+        [["c", "# salida: JSON con la estructura original\n"]]
       ]},
-    { titulo: "spec-1.1 — estado", dur: 5000,
-      cap: "4 · En preparación: nada de esto forma parte de 1.0.",
+    { titulo: ".mini/ — detectar y reparar", dur: 6000,
+      cap: "4 · Corrige lo seguro. Conserva el informe para lo que requiere un reintento.",
       lineas: [
-        [["p", "$ "], ["", "git -C mini-format pull\n"]],
+        [["p", "$ "], ["", "python .mini/parser.py diagnose response.mini\n"]],
+        [["p", "$ "], ["", "python .mini/repair.py response.mini\n"]],
+        [["", "  --out corrected.mini\n"]],
         [["", "\n"]],
-        [["", "- regla §11: en redacción\n"]],
-        [["", "- conformidad: casos pendientes\n"]],
-        [["", "- PyPI + npm: previstos\n"]],
-        [["", "\n"]],
-        [["c", "nada de esto es 1.0 todavía\n"]]
+        [["c", "# no inventa valores ni registros ausentes\n"]],
+        [["c", "# --fix-count exige aceptación explícita\n"]]
       ]}
   ];
 
@@ -396,9 +392,9 @@
         [["f", "familia: "], ["", "a — ítems de evaluación\n"]],
         [["", "ejemplo: valid.mini · 12 registros\n"]],
         [["", "\n"]],
-        [["", "a|n=12|version=1\n"]],
-        [["", "Francia|Paris*|Londres|Roma|…\n"]],
-        [["", "Alemania|Berlin*|Munich|…|…\n"]],
+        [["", "a|n=12|m=IRT3PL|…\n"]],
+        [["", "i1|L1|Biología|¿Dónde ocurre…?|…\n"]],
+        [["", "i2|L2|Química|¿Qué representa…?|…\n"]],
         [["", "\n"]],
         [["s", "12 líneas · 0 errores\n"]]
       ]},
@@ -414,15 +410,15 @@
         [["c", "líneas a regenerar: [4, 7]\n"]]
       ]},
     { titulo: "playground — comparar", dur: 7000,
-      cap: "3 · Compara tokens con el mismo documento (cifras ilustrativas).",
+      cap: "3 · Tokens medidos del fixture a de 12 registros con o200k_base.",
       lineas: [
         [["c", "tokens por formato · o200k_base\n"]],
         [["", "\n"]],
-        [["f", "mini "], ["", "  1204   1,00x  referencia\n"]],
-        [["", "toon   1189   0,99x\n"]],
-        [["", "json   2268   1,88x\n"]],
-        [["", "yaml   2624   2,18x\n"]],
-        [["", "xml    3950   3,28x\n"]]
+        [["f", "mini "], ["", "   813   1,00x  referencia\n"]],
+        [["", "toon    928   1,14x  plano\n"]],
+        [["", "json   1314   1,62x\n"]],
+        [["", "yaml   1607   1,98x\n"]],
+        [["", "xml    1859   2,29x\n"]]
       ]},
     { titulo: "playground — familias", dur: 4000,
       cap: "4 · Diseña tu familia y descarga el contrato: la demo vuelve a empezar.",
