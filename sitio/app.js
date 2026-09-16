@@ -180,6 +180,163 @@
     obs.forEach(function (el) { io.observe(el); });
   }
 
+  /* ------------------------------------------------------------------
+     Vídeo de integración. Demo reproducible por escenas con los comandos
+     y la API reales: instalar, instruir + llamar, diagnosticar y usar.
+     Cada escena es una lista de líneas; cada línea, fragmentos [clase,
+     texto] con la misma paleta que el terminal (k s n c p f e + E).
+     ------------------------------------------------------------------ */
+  var dv = document.getElementById("demo-integracion");
+  if (dv) {
+    var ESCENAS = [
+      { titulo: "mi-django — terminal", dur: 5000,
+        cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
+        lineas: [
+          [["p", "$ "], ["", "pip install -e mini-format\n"]],
+          [["c", "… instalando mini-format 1.0\n"]],
+          [["s", "mini-format 1.0 instalado\n"]],
+          [["", "\n"]],
+          [["p", "$ "], ["", "mini forks\n"]],
+          [["f", "a    "], ["", "Assessment items (Bloom + IRT)\n"]],
+          [["f", "log  "], ["", "Service events / incidents\n"]],
+          [["c", "… 14 familias listas\n"]]
+        ]},
+      { titulo: "servicios/evaluacion.py", dur: 8000,
+        cap: "2 · Pide el bloque de prompt, llama a tu proveedor como siempre y valida con parse().",
+        lineas: [
+          [["k", "from "], ["", "minifmt "], ["k", "import "], ["", "Registry, parse\n"]],
+          [["k", "from "], ["", "minifmt "], ["k", "import "], ["", "spec_block\n"]],
+          [["", "\n"]],
+          [["", "reg "], ["p", "= "], ["", "Registry"], ["p", "."], ["f", "load"], ["p", "()\n"]],
+          [["", "c "], ["p", "= "], ["", "reg"], ["p", "."], ["f", "get"], ["p", "("], ["s", '"a"'], ["p", ")\n"]],
+          [["", "\n"]],
+          [["k", "def "], ["f", "generar_items"], ["p", "("], ["", "tema"], ["p", "):\n"]],
+          [["", "    prompt "], ["p", "= "], ["f", "spec_block"], ["p", "("], ["", "c"], ["p", ", "], ["", "lang"], ["p", "="], ["s", '"es"'], ["p", ")\n"]],
+          [["", "    r "], ["p", "= "], ["", "cliente"], ["p", "."], ["f", "completar"], ["p", "("], ["", "prompt, tema"], ["p", ")\n"]],
+          [["", "    doc "], ["p", "= "], ["f", "parse"], ["p", "("], ["", "r, c"], ["p", ", "], ["", "strict"], ["p", "="], ["k", "False"], ["p", ")\n"]],
+          [["k", "    return "], ["", "doc"], ["p", "."], ["", "records, doc"], ["p", "."], ["", "errors\n"]]
+        ]},
+      { titulo: "mi-django — mini diagnose", dur: 7000,
+        cap: "3 · Cada fallo trae código estable, línea y campo. Aquí, E10 en la línea 3.",
+        lineas: [
+          [["p", "$ "], ["", "mini diagnose respuesta.mini\n"]],
+          [["", "log|n=3|env=prod\n"]],
+          [["", "2026-09-15T10:00:00Z|INFO|api|OK\n"]],
+          [["e", "2026-09-15T10:01:00Z|ALTO|api|E_DB\n"]],
+          [["", "2026-09-15T10:02:00Z|WARN|api|LAT\n"]],
+          [["", "\n"]],
+          [["E", "E10"], ["", " line 3 [level]: fuera del enum\n"]],
+          [["E", "E04"], ["", " document: n=3, 2 válidos\n"]]
+        ]},
+      { titulo: "mi-django — python", dur: 6000,
+        cap: "4 · Te quedas con los registros tipados y regeneras solo la línea rechazada.",
+        lineas: [
+          [["p", ">>> "], ["", "doc"], ["p", "."], ["", "records\n"]],
+          [["p", "[{"], ["s", '"level": "INFO"'], ["p", ", "], ["s", '"service": "api"'], ["p", "},\n"]],
+          [["p", " {"], ["s", '"level": "WARN"'], ["p", ", "], ["s", '"service": "api"'], ["p", "}]\n"]],
+          [["", "\n"]],
+          [["p", ">>> "], ["", "doc"], ["p", "."], ["", "errors\n"]],
+          [["E", "E10"], ["", " line 3 [level], "], ["E", "E04"], ["", " document\n"]],
+          [["c", "# regenerar solo la línea 3\n"]]
+        ]}
+    ];
+    var dvCuerpo = dv.querySelector("[data-dv-body]"), dvTitulo = dv.querySelector("[data-dv-title]"),
+        dvTiempo = dv.querySelector("[data-dv-time]"), dvCap = dv.querySelector("[data-dv-cap]"),
+        dvFill = dv.querySelector("[data-dv-fill]"), dvToggle = dv.querySelector("[data-dv-toggle]"),
+        dvRestart = dv.querySelector("[data-dv-restart]"),
+        dvDots = Array.prototype.slice.call(dv.querySelectorAll("[data-dv-goto]"));
+    var dvTotal = ESCENAS.reduce(function (a, s) { return a + s.dur; }, 0);
+    var dvActual = 0, dvVistos = 0, dvT0 = 0, dvBase = 0, dvLineaT = null, dvEscenaT = null,
+        dvReloj = null, dvSonando = false, dvFin = false;
+
+    function dvFormato(ms) { var s = Math.floor(ms / 1000); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+    function dvInicio(i) { var a = 0; for (var j = 0; j < i; j++) a += ESCENAS[j].dur; return a; }
+    function dvTranscurrido() { return Math.min(dvBase + (dvSonando ? Date.now() - dvT0 : 0), dvTotal); }
+    function dvPintarReloj() {
+      var e = dvTranscurrido();
+      dvTiempo.textContent = dvFormato(e) + " / " + dvFormato(dvTotal);
+      dvFill.style.width = (100 * e / dvTotal).toFixed(1) + "%";
+    }
+    function dvPintarLinea(frags) {
+      frags.forEach(function (t) {
+        var s = document.createElement("span");
+        if (t[0]) s.className = t[0] === "E" ? "cod" : t[0];
+        s.textContent = t[1];
+        dvCuerpo.appendChild(s);
+      });
+    }
+    function dvRevelar() {
+      clearTimeout(dvLineaT);
+      var esc = ESCENAS[dvActual];
+      var paso = Math.min(650, (esc.dur * 0.55) / Math.max(esc.lineas.length, 1));
+      (function sig() {
+        if (dvVistos >= esc.lineas.length) return;
+        dvPintarLinea(esc.lineas[dvVistos++]);
+        dvLineaT = setTimeout(sig, paso);
+      })();
+    }
+    function dvProgramarAvance() {
+      clearTimeout(dvEscenaT);
+      if (!dvSonando) return;
+      var espera = Math.max(dvInicio(dvActual) + ESCENAS[dvActual].dur - dvTranscurrido(), 0);
+      dvEscenaT = setTimeout(function () {
+        if (dvActual + 1 < ESCENAS.length) dvIrA(dvActual + 1);
+        else dvTerminar();
+      }, espera);
+    }
+    function dvIrA(i) {
+      clearTimeout(dvLineaT); clearTimeout(dvEscenaT);
+      dvActual = i; dvVistos = 0; dvFin = false;
+      var esc = ESCENAS[i];
+      dvTitulo.textContent = esc.titulo;
+      dvCap.textContent = esc.cap;
+      dvCuerpo.textContent = "";
+      dvDots.forEach(function (d, k) { d.setAttribute("aria-current", String(k === i)); });
+      dvBase = dvInicio(i);
+      if (dvSonando) dvT0 = Date.now();
+      else dvToggle.setAttribute("aria-label", "Reproducir el vídeo");
+      if (sinMovimiento || !dvSonando) { esc.lineas.forEach(dvPintarLinea); dvVistos = esc.lineas.length; }
+      else { dvVistos = 0; dvRevelar(); }
+      dvProgramarAvance();
+      dvPintarReloj();
+    }
+    function dvReproducir() {
+      if (dvFin) { dvIrA(0); dvCuerpo.textContent = ""; dvVistos = 0; }
+      dvSonando = true; dvT0 = Date.now();
+      dv.dataset.playing = "1";
+      dvToggle.setAttribute("aria-label", "Pausar el vídeo");
+      if (!sinMovimiento) dvRevelar();
+      dvProgramarAvance();
+      clearInterval(dvReloj); dvReloj = setInterval(dvPintarReloj, 150);
+      dvPintarReloj();
+    }
+    function dvPausar() {
+      dvBase = dvTranscurrido();
+      dvSonando = false;
+      delete dv.dataset.playing;
+      dvToggle.setAttribute("aria-label", "Reproducir el vídeo");
+      clearTimeout(dvLineaT); clearTimeout(dvEscenaT); clearInterval(dvReloj);
+      dvPintarReloj();
+    }
+    function dvTerminar() { dvPausar(); dvFin = true; dvToggle.setAttribute("aria-label", "Volver a reproducir el vídeo"); }
+    dvToggle.addEventListener("click", function () { if (dvSonando) dvPausar(); else dvReproducir(); });
+    dvRestart.addEventListener("click", function () { var s = dvSonando; dvPausar(); dvIrA(0); if (s) { dvCuerpo.textContent = ""; dvVistos = 0; dvReproducir(); } });
+    dvDots.forEach(function (d) { d.addEventListener("click", function () { dvIrA(Number(d.dataset.dvGoto)); }); });
+    dvIrA(0);
+    // reproducción automática al entrar en pantalla; se pausa al salir
+    var dvAuto = !sinMovimiento, dvEmpezo = false, dvFuera = false;
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) {
+          if (en.isIntersecting) {
+            if (!dvEmpezo && dvAuto) { dvEmpezo = true; dvReproducir(); }
+            else if (dvFuera && dvAuto) { dvFuera = false; dvReproducir(); }
+          } else if (dvSonando) { dvFuera = true; dvPausar(); }
+        });
+      }, { threshold: 0.35 }).observe(dv);
+    } else if (dvAuto) { dvEmpezo = true; dvReproducir(); }
+  }
+
   /* atajo "/" → documentación */
   document.addEventListener("keydown", function (e) {
     if (e.key !== "/" || e.metaKey || e.ctrlKey) return;
