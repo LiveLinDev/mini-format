@@ -8,9 +8,13 @@ on:
     paths:
       - "sitio/**"
       - "SPEC.md"
+      - "SPEC.es.md"
       - "README.md"
+      - "README.es.md"
       - "FORKING.md"
+      - "FORKING.es.md"
       - "CONTRIBUTING.md"
+      - "CONTRIBUTING.es.md"
       - "LICENSE"
       - "forks/**"
       - "src/minifmt/**"
@@ -19,8 +23,11 @@ on:
       - "benchmark/toon_ref/toon.bundle.js"
       - "benchmark/results/summary_12.csv"
       - "conformance/README.md"
+      - "conformance/README.en.md"
       - "ts/README.md"
+      - "ts/README.en.md"
       - "experiments/README.md"
+      - "experiments/README.en.md"
       - ".github/workflows/sitio.yml"
   workflow_dispatch:
     inputs:

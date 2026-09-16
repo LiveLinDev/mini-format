@@ -46,3 +46,9 @@
 .pager{ display:flex; justify-content:space-between; gap:1rem; margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid rgb(var(--line)); font-size:.9rem }
 .pager a{ text-decoration:none; color:rgb(var(--fg-muted)) } .pager a b{ display:block; color:rgb(var(--fg)) }
 .pager a:last-child{ text-align:right }
+
+/* conmutador de idioma ES/EN (usa .seg de base.css) */
+.docs-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1.5rem }
+.docs-top .crumbs{ margin-bottom:0; padding-top:.35rem }
+.lang-toggle{ flex:none }
+@media (max-width:520px){ .docs-top{ flex-direction:column-reverse; align-items:stretch } .lang-toggle{ align-self:flex-start } }

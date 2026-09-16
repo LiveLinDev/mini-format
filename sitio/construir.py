@@ -1,10 +1,16 @@
-"""Construye el sitio de mini-format: documentación (desde los .md del repositorio,
-los contratos de forks/ y los códigos de error del núcleo) y el playground re-vestido
-con el sistema de diseño del sitio.
+"""Construye el sitio de mini-format: documentación bilingüe ES/EN (desde los .md del
+repositorio y sus traducciones .es.md/.en.md, los contratos de forks/ y los códigos
+de error del núcleo) y el playground re-vestido con el sistema de diseño del sitio.
 
     python sitio/construir.py            # escribe sitio/docs/** y sitio/playground/index.html
 
 No toca playground/ ni ningún archivo fuera de sitio/. Requiere `markdown` (pip).
+
+Cada página de documentación incluye los dos idiomas en el mismo HTML y un
+conmutador ES/EN (`sitio/docs.js`, elección persistida en localStorage). Los
+contratos (contract.json) y la licencia MIT se publican tal cual, sin traducir:
+las descripciones de contrato alimentan los bloques de prompt y la licencia es
+un texto legal.
 """
 from __future__ import annotations
 
@@ -27,6 +33,12 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800'
          '&family=Martian+Mono:wght@400;500;600;700&display=swap">')
 
+
+def ambos(es: str, en: str) -> str:
+    """Gemelos de idioma para el chrome compartido: docs.js muestra uno."""
+    return f'<span data-lang="es">{es}</span><span data-lang="en" hidden>{en}</span>'
+
+
 # --------------------------------------------------------------------------- códigos de error
 ERRORES = [
     ("E01", "E_NO_HEADER", "Falta la cabecera", "El documento no empieza con la línea de cabecera `prefijo|n=…`. Sin ella no hay contrato que aplicar: es el único error que impide construir el documento incluso en modo tolerante.", "§5, §8"),
@@ -46,20 +58,53 @@ ERRORES = [
     ("E21", "E_FORK", "Invariante de familia violado", "Una familia rompe alguno de los cinco invariantes: cambia el núcleo heredado, inserta campos fuera de la cola, o sus fixtures no hacen ida y vuelta. Lo comprueba `mini check-forks`.", "§10"),
 ]
 
+ERRORES_EN = [
+    ("E01", "E_NO_HEADER", "Missing header", "The document does not start with the header line `prefix|n=…`. Without it there is no contract to apply: it is the only error that prevents building the document even in lenient mode.", "§5, §8"),
+    ("E02", "E_UNKNOWN_PREFIX", "Prefix differs from the contract", "The header prefix does not match the contract it is validated against (or does not exist in the family registry).", "§5"),
+    ("E03", "E_NO_COUNT", "Missing `n`", "The header does not declare `n`, the record count. `n` is mandatory: it detects truncated responses and lost records.", "§5"),
+    ("E04", "E_COUNT_MISMATCH", "Record count differs from `n`", "`n` records were declared but another number of valid lines was read. In lenient mode the document is built anyway and this error is recorded; the streaming reader exposes it as `missing`.", "§5, §9"),
+    ("E05", "E_ARITY", "Record arity out of range", "The line has fewer fields than the contract core or more than core + extensions. The forward-compatibility rule (ignoring trailing fields) is drafted for SPEC 1.1.", "§6, §10"),
+    ("E06", "E_TYPE", "Wrong type or empty required value", "The value cannot be read with the declared type (`int`, `float`, `bool`…) or a required field arrived empty.", "§6"),
+    ("E07", "E_LIST_ARITY", "List or tuple arity", "A list has fewer or more elements than allowed, or a tuple does not have exactly the declared ones.", "§6"),
+    ("E08", "E_MARKER", "Marker rule violated", "The `*` selected-element marker appears where it must not, is missing where mandatory, or repeats in a single-selection list.", "§3.2, §6"),
+    ("E09", "E_ESCAPE", "Invalid escape", "Unrecognized escape sequence. The valid ones are `\\|`, `\\\\`, `\\n`, `\\,` (inside lists) and `\\*` (inside lists). In lenient mode the record is discarded.", "§3.3"),
+    ("E10", "E_ENUM", "Value outside the enumeration", "The value is not among those allowed by an `enum` field.", "§6"),
+    ("E11", "E_UNIQUE", "Duplicated unique value", "A `unique` field repeats a value already seen in another valid record. A rejected line does not reserve its value.", "§6"),
+    ("E12", "E_HEADER_KEY", "Malformed or missing header entry", "A required header key is missing, or a `key=value` entry is malformed (e.g. without `=`).", "§5"),
+    ("E13", "E_RANGE", "Outside the numeric range", "A number is outside the `min`/`max` declared in the contract.", "§6"),
+    ("E20", "E_CONTRACT", "Invalid contract", "The `contract.json` violates the norm: missing prefix, duplicate names, unknown type, disallowed list separator… It is detected when loading the contract, not when reading documents.", "§10"),
+    ("E21", "E_FORK", "Family invariant violated", "A family breaks one of the five invariants: it changes the inherited core, inserts fields off the tail, or its fixtures do not round-trip. Checked by `mini check-forks`.", "§10"),
+]
 # --------------------------------------------------------------------------- navegación de docs
-GRUPOS = [
+GRUPOS_ES = [
     ("Empezar", [("docs", "Introducción"), ("docs/quickstart", "Inicio rápido")]),
     ("Norma", [("docs/spec", "Especificación 1.0"), ("docs/spec/cambios", "Borrador 1.1"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
     ("Bibliotecas", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Herramienta de línea de comandos"), ("docs/conformance", "Suite de conformidad")]),
     ("Evidencia", [("docs/metodologia", "Metodología y experimentos")]),
     ("Proyecto", [("docs/contribuir", "Contribuir"), ("docs/licencia", "Licencia")]),
 ]
-ORDEN = [ruta for _, items in GRUPOS for ruta, _ in items]
+GRUPOS_EN = [
+    ("Start", [("docs", "Introduction"), ("docs/quickstart", "Quickstart")]),
+    ("Reference", [("docs/spec", "Specification 1.0"), ("docs/spec/cambios", "Draft 1.1"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
+    ("Libraries", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Command-line tool"), ("docs/conformance", "Conformance suite")]),
+    ("Evidence", [("docs/metodologia", "Methodology and experiments")]),
+    ("Project", [("docs/contribuir", "Contributing"), ("docs/licencia", "License")]),
+]
+ORDEN = [ruta for _, items in GRUPOS_ES for ruta, _ in items]
+NOMBRES_ES = {r: t for _, it in GRUPOS_ES for r, t in it}
+NOMBRES_EN = {r: t for _, it in GRUPOS_EN for r, t in it}
 
 
 def md(texto: str) -> str:
     return markdown.markdown(texto, extensions=["tables", "fenced_code", "toc", "sane_lists"],
                              extension_configs={"toc": {"permalink": "#", "permalink_class": "anchor", "permalink_title": "Enlace a esta sección"}})
+
+
+def prefijar_ids(h: str, pref: str) -> str:
+    """Evita ids duplicados entre los dos cuerpos de idioma de una página."""
+    h = re.sub(r'id="([^"]+)"', lambda m: f'id="{pref}-{m.group(1)}"', h)
+    h = re.sub(r'href="#([^"]+)"', lambda m: f'href="#{pref}-{m.group(1)}"', h)
+    return h
 
 
 def reescribir_enlaces(h: str) -> str:
@@ -80,53 +125,75 @@ def reescribir_enlaces(h: str) -> str:
     h = re.sub(r'href="([^"]+)"', sub, h)
     h = re.sub(r'src="(?!http)([^"]+)"', lambda m: f'src="{REPO}/raw/main/{m.group(1)}"', h)
     return h
-
-
 def cabecera(activo: str = "") -> str:
-    def a(ruta, txt):
+    def a(ruta, es, en):
         cur = ' aria-current="page"' if activo.startswith(ruta) else ""
-        return f'<li><a href="/{ruta}/"{cur}>{txt}</a></li>'
-    return f'''<a class="skip" href="#contenido">Saltar al contenido</a>
+        return f'<li><a href="/{ruta}/"{cur}>{ambos(es, en)}</a></li>'
+    nav = "".join([a("docs", "Documentación", "Documentation"),
+                   a("docs/spec", "Especificación", "Specification"),
+                   a("docs/errors", "Errores", "Errors"),
+                   a("docs/forks", "Familias", "Families"),
+                   a("playground", "Playground", "Playground")])
+    return f'''<a class="skip" href="#contenido">{ambos("Saltar al contenido", "Skip to content")}</a>
 <header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
-  <ul class="nav-links">{a("docs","Documentación")}{a("docs/spec","Especificación")}{a("docs/errors","Errores")}{a("docs/forks","Familias")}{a("playground","Playground")}</ul>
+  <ul class="nav-links">{nav}</ul>
   <span class="spacer"></span>
-  <a class="icon-link" href="{REPO}" aria-label="Repositorio en GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
-  <a class="btn btn-solid" href="/docs/quickstart/">Instalar</a>
+  <a class="icon-link" href="{REPO}" aria-label="GitHub repository"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
+  <a class="btn btn-solid" href="/docs/quickstart/">{ambos("Instalar", "Install")}</a>
 </div></header>'''
 
 
-PIE = f'''<footer class="site-footer"><div class="wrap"><div class="fgrid">
-<div><h3>Aprender</h3><ul><li><a href="/docs/">Introducción</a></li><li><a href="/docs/quickstart/">Inicio rápido</a></li><li><a href="/docs/spec/">Especificación 1.0</a></li><li><a href="/docs/errors/">Índice de errores</a></li></ul></div>
-<div><h3>Componente</h3><ul><li><a href="/docs/python/">Biblioteca Python</a></li><li><a href="/docs/typescript/">Biblioteca TypeScript</a></li><li><a href="/docs/cli/">Herramienta</a></li><li><a href="/docs/conformance/">Conformidad</a></li></ul></div>
-<div><h3>Evidencia</h3><ul><li><a href="{REPO}/tree/main/experiments/v5_ancho">Eje de ancho (V5)</a></li><li><a href="{REPO}/tree/main/experiments/v1_tokens">Tokens (V1)</a></li><li><a href="{REPO}/tree/main/experiments/v4_costos">Costos (V4)</a></li><li><a href="/docs/metodologia/">Metodología</a></li></ul></div>
-<div><h3>Proyecto</h3><ul><li><a href="{REPO}">Repositorio</a></li><li><a href="/playground/">Playground</a></li><li><a href="/docs/licencia/">Licencia MIT</a></li><li><a href="/docs/contribuir/">Contribuir</a></li></ul></div>
-</div><div class="colophon">mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo y Erick Palomino Santa Cruz · UPC, 2026.</div></div></footer>'''
+def pie() -> str:
+    def col(es, en, enlaces):
+        items = "".join(f'<li><a href="{h}">{ambos(t_es, t_en)}</a></li>' for h, t_es, t_en in enlaces)
+        return f"<div><h3>{ambos(es, en)}</h3><ul>{items}</ul></div>"
+    c1 = col("Aprender", "Learn", [("/docs/", "Introducción", "Introduction"),
+                                   ("/docs/quickstart/", "Inicio rápido", "Quickstart"),
+                                   ("/docs/spec/", "Especificación 1.0", "Specification 1.0"),
+                                   ("/docs/errors/", "Índice de errores", "Error index")])
+    c2 = col("Componente", "Component", [("/docs/python/", "Biblioteca Python", "Python library"),
+                                         ("/docs/typescript/", "Biblioteca TypeScript", "TypeScript library"),
+                                         ("/docs/cli/", "Herramienta", "Command-line tool"),
+                                         ("/docs/conformance/", "Conformidad", "Conformance")])
+    c3 = col("Evidencia", "Evidence", [(f"{REPO}/tree/main/experiments/v5_ancho", "Eje de ancho (V5)", "Width axis (V5)"),
+                                       (f"{REPO}/tree/main/experiments/v1_tokens", "Tokens (V1)", "Tokens (V1)"),
+                                       (f"{REPO}/tree/main/experiments/v4_costos", "Costos (V4)", "Costs (V4)"),
+                                       ("/docs/metodologia/", "Metodología", "Methodology")])
+    c4 = col("Proyecto", "Project", [(REPO, "Repositorio", "Repository"),
+                                     ("/playground/", "Playground", "Playground"),
+                                     ("/docs/licencia/", "Licencia MIT", "MIT License"),
+                                     ("/docs/contribuir/", "Contribuir", "Contributing")])
+    return f'''<footer class="site-footer"><div class="wrap"><div class="fgrid">{c1}{c2}{c3}{c4}</div><div class="colophon">{ambos(f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo y Erick Palomino Santa Cruz · UPC, 2026.", f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo and Erick Palomino Santa Cruz · UPC, 2026.")}</div></div></footer>'''
 
 
 def lateral(activo: str) -> str:
     out = []
-    for titulo, items in GRUPOS:
-        out.append(f"<h4>{titulo}</h4><ul>")
-        for ruta, txt in items:
-            cur = ' aria-current="page"' if ruta == activo else ""
-            out.append(f'<li><a href="/{ruta}/"{cur}>{txt}</a></li>')
+    for (titulo_es, items_es), (titulo_en, items_en) in zip(GRUPOS_ES, GRUPOS_EN):
+        out.append(f"<h4>{ambos(titulo_es, titulo_en)}</h4><ul>")
+        for (ruta_es, txt_es), (ruta_en, txt_en) in zip(items_es, items_en):
+            assert ruta_es == ruta_en
+            cur = ' aria-current="page"' if ruta_es == activo else ""
+            out.append(f'<li><a href="/{ruta_es}/"{cur}>{ambos(txt_es, txt_en)}</a></li>')
         out.append("</ul>")
     return "".join(out)
-
-
-def pagina_docs(ruta: str, titulo: str, cuerpo: str, lang: str | None = None, crumbs: str = "") -> None:
+def pagina_docs(ruta: str, titulo_es: str, titulo_en: str, cuerpo_es: str, cuerpo_en: str,
+                crumbs_es: str = "", crumbs_en: str = "", aviso_es: str = "", aviso_en: str = "") -> None:
     i = ORDEN.index(ruta) if ruta in ORDEN else -1
-    prev = f'<a href="/{ORDEN[i-1]}/">← anterior<b>{dict((r, t) for _, it in GRUPOS for r, t in it)[ORDEN[i-1]]}</b></a>' if i > 0 else "<span></span>"
-    nxt = f'<a href="/{ORDEN[i+1]}/">siguiente →<b>{dict((r, t) for _, it in GRUPOS for r, t in it)[ORDEN[i+1]]}</b></a>' if 0 <= i < len(ORDEN) - 1 else "<span></span>"
-    aviso = ('<p class="lang">Este documento se publica en inglés porque es el texto normativo del repositorio; '
-             'la traducción no es la fuente de verdad.</p>') if lang == "en" else ""
-    doc = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(titulo)} — mini-format</title>{FONTS}<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css"></head>
+    prev = (f'<a href="/{ORDEN[i-1]}/">{ambos("← anterior", "← previous")}'
+            f"<b>{ambos(NOMBRES_ES[ORDEN[i-1]], NOMBRES_EN[ORDEN[i-1]])}</b></a>" if i > 0 else "<span></span>")
+    nxt = (f'<a href="/{ORDEN[i+1]}/">{ambos("siguiente →", "next →")}'
+           f"<b>{ambos(NOMBRES_ES[ORDEN[i+1]], NOMBRES_EN[ORDEN[i+1]])}</b></a>" if 0 <= i < len(ORDEN) - 1 else "<span></span>")
+    migas = f'<p class="crumbs"><a href="/docs/">docs</a> / {ambos(crumbs_es or html.escape(titulo_es), crumbs_en or html.escape(titulo_en))}</p>'
+    conmutador = ('<div class="seg lang-toggle" role="group" aria-label="Idioma / Language">'
+                  '<button type="button" data-lang-btn="es" aria-pressed="true">Español</button>'
+                  '<button type="button" data-lang-btn="en" aria-pressed="false">English</button></div>')
+    doc = f'''<!doctype html><html lang="es" data-title-es="{html.escape(titulo_es)} — mini-format" data-title-en="{html.escape(titulo_en)} — mini-format"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(titulo_es)} — mini-format</title>{FONTS}<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css"></head>
 <body>{cabecera(ruta)}
-<div class="docs-shell"><aside class="docs-side" aria-label="Documentación">{lateral(ruta)}</aside>
-<main class="docs-main" id="contenido"><article class="docs-article"><p class="crumbs"><a href="/docs/">docs</a> / {crumbs or html.escape(titulo)}</p>{aviso}<div class="prose">{cuerpo}</div>
-<nav class="pager">{prev}{nxt}</nav></article></main></div>{PIE}</body></html>'''
+<div class="docs-shell"><aside class="docs-side" aria-label="Docs">{lateral(ruta)}</aside>
+<main class="docs-main" id="contenido"><article class="docs-article"><div class="docs-top">{migas}{conmutador}</div><div class="prose" data-lang-body="es">{aviso_es}{cuerpo_es}</div><div class="prose" data-lang-body="en" hidden>{aviso_en}{cuerpo_en}</div>
+<nav class="pager">{prev}{nxt}</nav></article></main></div>{pie()}<script src="/docs.js"></script></body></html>'''
     destino = SITIO / ruta / "index.html"
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(doc, encoding="utf-8")
@@ -136,12 +203,18 @@ def md_archivo(rel: str) -> str:
     return reescribir_enlaces(md((RAIZ / rel).read_text(encoding="utf-8")))
 
 
+def md_par(rel_es: str, rel_en: str) -> tuple[str, str]:
+    """Lee el par de fuentes ES/EN y devuelve (html_es, html_en) con ids únicos."""
+    es = prefijar_ids(md_archivo(rel_es), "es")
+    en = prefijar_ids(md_archivo(rel_en), "en")
+    return es, en
 # --------------------------------------------------------------------------- páginas
 def construir_docs() -> int:
     n = 0
-    pagina_docs("docs", "Introducción", md_archivo("README.md"), lang="en"); n += 1
+    es, en = md_par("README.es.md", "README.md")
+    pagina_docs("docs", "Introducción", "Introduction", es, en); n += 1
 
-    pagina_docs("docs/quickstart", "Inicio rápido", md(f"""
+    qi_es = md(f"""
 # Inicio rápido
 
 mini-format {__version__} implementa la especificación `.mini` {SPEC_VERSION}. Los paquetes en PyPI y npm están
@@ -190,11 +263,66 @@ lenient.invalidLines();   // líneas que hay que regenerar
 
 Lee la [especificación](/docs/spec/) para entender la cabecera, los tipos y los escapes, o abre el
 [playground](/playground/) para validar y comparar tokens sin instalar nada.
-""")); n += 1
+""")
+    qi_en = md(f"""
+# Quickstart
 
-    pagina_docs("docs/spec", f"Especificación {SPEC_VERSION}", md_archivo("SPEC.md"), lang="en"); n += 1
+mini-format {__version__} implements the `.mini` specification {SPEC_VERSION}. PyPI and npm packages are
+planned in the task list; until then it installs from the repository.
 
-    pagina_docs("docs/spec/cambios", "Borrador de SPEC 1.1", md("""
+## Python
+
+```bash
+git clone {REPO}
+cd mini-format
+pip install -e .            # or: PYTHONPATH=src
+mini forks                  # list the 14 families
+mini validate forks/a/fixtures/valid.mini
+mini prompt log --lang es   # specification block for the model
+```
+
+```python
+from minifmt import Registry, parse, dumps, spec_block
+
+reg = Registry.load()                    # discovers forks/*/contract.json
+c = reg.get("log")
+instruccion = spec_block(c, lang="es")   # goes in the system prompt
+doc = parse(respuesta, c, strict=False)  # lenient: collects errors in doc.errors
+doc.records                              # valid, typed records
+for e in doc.errors:
+    print(e)                             # E10 line 3 [level]: …
+```
+
+## TypeScript
+
+Requires Node ≥ 22.6. The code runs uncompiled with `--experimental-strip-types`.
+
+```bash
+cd mini-format/ts
+npm test
+```
+
+```ts
+import {{ Registry, parse, specBlock, createReader }} from './src/index.ts';
+const c = Registry.load().get('log');
+const lenient = parse(texto, c, {{ strict: false }});
+lenient.invalidLines();   // lines to regenerate
+```
+
+## Next step
+
+Read the [specification](/docs/spec/) to understand headers, types and escapes, or open the
+[playground](/playground/) to validate and compare tokens with nothing installed.
+""")
+    pagina_docs("docs/quickstart", "Inicio rápido", "Quickstart",
+                prefijar_ids(qi_es, "es"), prefijar_ids(qi_en, "en")); n += 1
+
+    es, en = md_par("SPEC.es.md", "SPEC.md")
+    pagina_docs("docs/spec", f"Especificación {SPEC_VERSION}", f"Specification {SPEC_VERSION}", es, en,
+                aviso_es='<p class="lang">Traducción informativa al español; el texto normativo es el original en inglés.</p>',
+                aviso_en='<p class="lang">Normative text; the Spanish version is an informative translation.</p>'); n += 1
+
+    cb_es = md("""
 # Borrador de SPEC 1.1
 
 Esta página lista lo que está **en preparación**. Nada de esto forma parte todavía del componente publicado
@@ -221,54 +349,115 @@ ofensivo, para que un editor pueda subrayar el rango exacto.
 ## 4. Experimentos
 
 Tercer tokenizador (de un modelo abierto) en V1; latencia en V4; piloto real de V2/V3 con al menos dos proveedores.
-""", ), crumbs='<a href="/docs/spec/">spec</a> / cambios'); n += 1
+""")
+    cb_en = md("""
+# SPEC 1.1 draft
 
-    pagina_docs("docs/forking", "Extender: familias", md_archivo("FORKING.md"), lang="en"); n += 1
+This page lists what is **in preparation**. None of it is part of the published component yet
+(mini-format 1.0, SPEC 1.0), and it must not be cited as implemented.
 
+## 1. Forward compatibility
+
+SPEC 1.0 §11 states that a reader must ignore fields appended at the end by a later version of the
+contract. Today both implementations **reject with E05** any record with more fields than
+core + extensions, also in lenient mode. The draft defines the exact rule (what is ignored, what is
+kept in the canonical, how it is reported) and adds the corresponding conformance cases.
+
+Reproduction of the current failure: `python pendientes/prueba_compatibilidad_hacia_adelante.py` in the thesis repository.
+
+## 2. Range diagnostics
+
+`MiniError` carries code, line, field and message. The draft adds the start and end column of the
+offending span, so an editor can underline the exact range.
+
+## 3. Package publishing
+
+`minifmt` on PyPI and `@mini-format/core` on npm, with the 14 official families bundled as package data.
+
+## 4. Experiments
+
+Third tokenizer (from an open model) in V1; latency in V4; real V2/V3 pilot with at least two providers.
+""")
+    pagina_docs("docs/spec/cambios", "Borrador de SPEC 1.1", "SPEC 1.1 draft",
+                prefijar_ids(cb_es, "es"), prefijar_ids(cb_en, "en"),
+                crumbs_es='<a href="/docs/spec/">spec</a> / cambios',
+                crumbs_en='<a href="/docs/spec/">spec</a> / draft'); n += 1
+
+    es, en = md_par("FORKING.es.md", "FORKING.md")
+    pagina_docs("docs/forking", "Extender: familias", "Extending: forks", es, en); n += 1
     # familias
     reg = Registry.load(RAIZ / "forks")
-    filas = []
-    for c in sorted(reg.contracts.values() if hasattr(reg, "contracts") and isinstance(reg.contracts, dict) else reg, key=lambda c: c.prefix):
-        padre = f"<code>{c.parent}</code>" if c.parent else "—"
-        filas.append(f'<tr><td><a href="/docs/forks/{c.prefix}/"><code>{c.prefix}</code></a></td><td>{html.escape(c.name)}</td><td>{html.escape(c.domain)}</td><td>{len(c.core)}</td><td>{len(c.extensions)}</td><td>{padre}</td></tr>')
-    pagina_docs("docs/forks", "Familias oficiales", f"""
+    contratos = sorted(reg.contracts.values() if hasattr(reg, "contracts") and isinstance(reg.contracts, dict) else reg, key=lambda c: c.prefix)
+    filas_es = "".join(f'<tr><td><a href="/docs/forks/{c.prefix}/"><code>{c.prefix}</code></a></td><td>{html.escape(c.name)}</td><td>{html.escape(c.domain)}</td><td>{len(c.core)}</td><td>{len(c.extensions)}</td><td>{"<code>" + c.parent + "</code>" if c.parent else "—"}</td></tr>' for c in contratos)
+    pagina_docs("docs/forks", "Familias oficiales", "Official families", f"""
 <h1>Familias oficiales</h1>
 <p>Catorce contratos publicados en <code>forks/</code>. Cada familia es un archivo de datos (<code>contract.json</code>) que
 la misma implementación interpreta: parser, serializador, validador y bloque de prompt se derivan de él.
 Para crear la tuya, lee <a href="/docs/forking/">Extender: familias</a>.</p>
-<table><thead><tr><th>Prefijo</th><th>Nombre</th><th>Dominio</th><th>Núcleo</th><th>Ext.</th><th>Padre</th></tr></thead><tbody>{''.join(filas)}</tbody></table>
+<table><thead><tr><th>Prefijo</th><th>Nombre</th><th>Dominio</th><th>Núcleo</th><th>Ext.</th><th>Padre</th></tr></thead><tbody>{filas_es}</tbody></table>
+""", f"""
+<h1>Official families</h1>
+<p>Fourteen contracts published in <code>forks/</code>. Each family is a data file (<code>contract.json</code>)
+that the same implementation interprets: parser, serializer, validator and prompt block are all derived from it.
+To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
+<table><thead><tr><th>Prefix</th><th>Name</th><th>Domain</th><th>Core</th><th>Ext.</th><th>Parent</th></tr></thead><tbody>{filas_es}</tbody></table>
 """); n += 1
+
+    ET = {
+        "es": {"dominio": "Dominio", "version": "Versión", "padre": "Padre", "clave": "Clave de registros",
+               "sep": "Separador de lista", "archivo": "Archivo", "campos": "Campos por posición",
+               "tipo": "Tipo", "desc": "Descripción", "parte": "Parte", "nucleo": "núcleo",
+               "ext": "extensión", "raiz": "— (raíz)", "ejemplo": "Ejemplo válido",
+               "cargalo": 'Cárgalo en el <a href="/playground/">playground</a> o valida con',
+               "notas": "Notas de la familia", "valores": "valores", "migas": "familias"},
+        "en": {"dominio": "Domain", "version": "Version", "padre": "Parent", "clave": "Records key",
+               "sep": "List separator", "archivo": "File", "campos": "Fields by position",
+               "tipo": "Type", "desc": "Description", "parte": "Part", "nucleo": "core",
+               "ext": "extension", "raiz": "— (root)", "ejemplo": "Valid example",
+               "cargalo": 'Load it in the <a href="/playground/">playground</a> or validate with',
+               "notas": "Family notes", "valores": "values", "migas": "families"},
+    }
 
     for c in sorted(reg, key=lambda c: c.prefix):
         p = reg.paths[c.prefix]
-        campos = []
-        for f in list(c.core) + list(c.extensions):
-            d = f.to_dict()
-            extra = []
-            if d.get("values"): extra.append("valores: " + ", ".join(map(str, d["values"])))
-            for k in ("min", "max", "unique", "optional", "items", "arity"):
-                if k in d and d[k] not in (None, False, ""):
-                    extra.append(f"{k}: {d[k]}")
-            ext = " · ".join(extra)
-            campos.append(f"<tr><td><code>{html.escape(f.name)}</code></td><td><code>{html.escape(str(d.get('type','')))}</code></td><td>{html.escape(d.get('desc',''))}{(' <small>(' + html.escape(ext) + ')</small>') if ext else ''}</td><td>{'extensión' if f in c.extensions else 'núcleo'}</td></tr>")
         ejemplo = (p / "fixtures" / "valid.mini").read_text(encoding="utf-8") if (p / "fixtures" / "valid.mini").exists() else ""
-        readme = md_archivo(str((p / "README.md").relative_to(RAIZ))) if (p / "README.md").exists() else ""
-        cuerpo = f"""
+        notas = {}
+        for lang, rel in (("es", "README.es.md"), ("en", "README.md")):
+            f = p / rel
+            notas[lang] = prefijar_ids(md_archivo(str(f.relative_to(RAIZ))), lang) if f.exists() else ""
+        cuerpos = {}
+        for lang in ("es", "en"):
+            t = ET[lang]
+            campos = []
+            for f in list(c.core) + list(c.extensions):
+                d = f.to_dict()
+                extra = []
+                if d.get("values"): extra.append(t["valores"] + ": " + ", ".join(map(str, d["values"])))
+                for k in ("min", "max", "unique", "optional", "items", "arity"):
+                    if k in d and d[k] not in (None, False, ""):
+                        extra.append(f"{k}: {d[k]}")
+                ext = " · ".join(extra)
+                campos.append(f"<tr><td><code>{html.escape(f.name)}</code></td><td><code>{html.escape(str(d.get('type','')))}</code></td><td>{html.escape(d.get('desc',''))}{(' <small>(' + html.escape(ext) + ')</small>') if ext else ''}</td><td>{t['ext'] if f in c.extensions else t['nucleo']}</td></tr>")
+            cuerpos[lang] = f"""
 <h1><code>{c.prefix}</code> — {html.escape(c.name)}</h1>
 <p>{html.escape(c.description)}</p>
-<dl class="errbox"><dt>Dominio</dt><dd>{html.escape(c.domain)}</dd><dt>Versión</dt><dd>{c.version}</dd><dt>Padre</dt><dd>{('<a href="/docs/forks/' + c.parent + '/"><code>' + c.parent + '</code></a>') if c.parent else '— (raíz)'}</dd><dt>Clave de registros</dt><dd><code>{c.records_key}</code></dd><dt>Separador de lista</dt><dd><code>{html.escape(c.list_separator)}</code></dd><dt>Archivo</dt><dd><a href="{REPO}/blob/main/forks/{c.prefix}/contract.json">forks/{c.prefix}/contract.json</a></dd></dl>
-<h2>Campos por posición</h2>
-<table><thead><tr><th>#</th><th>Tipo</th><th>Descripción</th><th>Parte</th></tr></thead><tbody>{''.join(campos)}</tbody></table>
-<h2>Ejemplo válido</h2>
+<dl class="errbox"><dt>{t['dominio']}</dt><dd>{html.escape(c.domain)}</dd><dt>{t['version']}</dt><dd>{c.version}</dd><dt>{t['padre']}</dt><dd>{('<a href="/docs/forks/' + c.parent + '/"><code>' + c.parent + '</code></a>') if c.parent else t['raiz']}</dd><dt>{t['clave']}</dt><dd><code>{c.records_key}</code></dd><dt>{t['sep']}</dt><dd><code>{html.escape(c.list_separator)}</code></dd><dt>{t['archivo']}</dt><dd><a href="{REPO}/blob/main/forks/{c.prefix}/contract.json">forks/{c.prefix}/contract.json</a></dd></dl>
+<h2>{t['campos']}</h2>
+<table><thead><tr><th>#</th><th>{t['tipo']}</th><th>{t['desc']}</th><th>{t['parte']}</th></tr></thead><tbody>{''.join(campos)}</tbody></table>
+<h2>{t['ejemplo']}</h2>
 <pre><code>{html.escape(ejemplo)}</code></pre>
-<p>Cárgalo en el <a href="/playground/">playground</a> o valida con <code>mini validate forks/{c.prefix}/fixtures/valid.mini</code>.</p>
-{('<h2>Notas de la familia</h2>' + readme) if readme else ''}
+<p>{t['cargalo']} <code>mini validate forks/{c.prefix}/fixtures/valid.mini</code>.</p>
+{('<h2>' + t['notas'] + '</h2>' + notas[lang]) if notas[lang] else ''}
 """
-        pagina_docs(f"docs/forks/{c.prefix}", f"Familia {c.prefix}", cuerpo, crumbs=f'<a href="/docs/forks/">familias</a> / {c.prefix}'); n += 1
+        pagina_docs(f"docs/forks/{c.prefix}", f"Familia {c.prefix}", f"Family {c.prefix}",
+                    cuerpos["es"], cuerpos["en"],
+                    crumbs_es=f'<a href="/docs/forks/">familias</a> / {c.prefix}',
+                    crumbs_en=f'<a href="/docs/forks/">families</a> / {c.prefix}'); n += 1
 
     # errores
     filas = "".join(f'<tr><td><a href="/docs/errors/{cod}/"><span class="errcode">{cod}</span></a></td><td>{html.escape(t)}</td><td><code>{const}</code></td><td>{sec}</td></tr>' for cod, const, t, _, sec in ERRORES)
-    pagina_docs("docs/errors", "Códigos de error", f"""
+    filas_en = "".join(f'<tr><td><a href="/docs/errors/{cod}/"><span class="errcode">{cod}</span></a></td><td>{html.escape(t)}</td><td><code>{const}</code></td><td>{sec}</td></tr>' for cod, const, t, _, sec in ERRORES_EN)
+    pagina_docs("docs/errors", "Códigos de error", "Error codes", f"""
 <h1>Códigos de error</h1>
 <p>Quince códigos estables, definidos en <code>src/minifmt/errors.py</code> y reproducidos por la biblioteca TypeScript.
 Son parte del contrato público del formato: un validador escrito en otro lenguaje debe producir los mismos códigos
@@ -276,23 +465,44 @@ para los mismos documentos, y la <a href="/docs/conformance/">suite de conformid
 <p>Cada error lleva <strong>código</strong>, <strong>línea</strong> (1-based; 0 para errores de documento), <strong>campo</strong> cuando aplica y un mensaje legible.
 La columna exacta está en <a href="/docs/spec/cambios/">borrador para 1.1</a>.</p>
 <table><thead><tr><th>Código</th><th>Condición</th><th>Constante</th><th>SPEC</th></tr></thead><tbody>{filas}</tbody></table>
+""", f"""
+<h1>Error codes</h1>
+<p>Fifteen stable codes, defined in <code>src/minifmt/errors.py</code> and reproduced by the TypeScript library.
+They are part of the format's public contract: a validator written in another language must produce the same codes
+for the same documents, and the <a href="/docs/conformance/">conformance suite</a> checks it.</p>
+<p>Each error carries a <strong>code</strong>, a <strong>line</strong> (1-based; 0 for document errors), a <strong>field</strong> when applicable and a readable message.
+The exact column is <a href="/docs/spec/cambios/">drafted for 1.1</a>.</p>
+<table><thead><tr><th>Code</th><th>Condition</th><th>Constant</th><th>SPEC</th></tr></thead><tbody>{filas_en}</tbody></table>
 """); n += 1
-    for i, (cod, const, t, desc, sec) in enumerate(ERRORES):
+    for i, ((cod, const, t, desc, sec), (_, _, t_en, desc_en, _)) in enumerate(zip(ERRORES, ERRORES_EN)):
         prev_ = f'<a href="/docs/errors/{ERRORES[i-1][0]}/">← {ERRORES[i-1][0]}</a>' if i else ""
         nxt_ = f'<a href="/docs/errors/{ERRORES[i+1][0]}/">{ERRORES[i+1][0]} →</a>' if i < len(ERRORES) - 1 else ""
-        cuerpo = f"""
+        tol_es = 'Impide construir el documento' if cod == 'E01' else ('Se detecta al cargar el contrato' if cod in ('E20', 'E21') else 'Se registra y el documento se construye igual')
+        tol_en = 'Prevents building the document' if cod == 'E01' else ('Detected when loading the contract' if cod in ('E20', 'E21') else 'Recorded and the document is built anyway')
+        cuerpo_es = f"""
 <h1><span class="errcode">{cod}</span> {html.escape(t)}</h1>
-<dl class="errbox"><dt>Constante</dt><dd><code>{const}</code></dd><dt>Especificación</dt><dd><a href="/docs/spec/">{sec}</a></dd><dt>Modo tolerante</dt><dd>{'Impide construir el documento' if cod == 'E01' else ('Se detecta al cargar el contrato' if cod in ('E20','E21') else 'Se registra y el documento se construye igual')}</dd></dl>
+<dl class="errbox"><dt>Constante</dt><dd><code>{const}</code></dd><dt>Especificación</dt><dd><a href="/docs/spec/">{sec}</a></dd><dt>Modo tolerante</dt><dd>{tol_es}</dd></dl>
 {md(desc)}
 <h2>Cómo verlo</h2>
 <p>En el <a href="/playground/">playground</a>, pestaña «Editor y validador», el botón «Inyectar 3 errores» provoca E04, E05, E08 y E09 sobre el ejemplo cargado.
 Desde la línea de comandos, <code>mini diagnose archivo.mini</code> imprime un informe JSON con todos los errores y las líneas a regenerar.</p>
 <p style="display:flex;justify-content:space-between">{prev_}<span></span>{nxt_}</p>
 """
-        pagina_docs(f"docs/errors/{cod}", f"{cod} — {t}", cuerpo, crumbs=f'<a href="/docs/errors/">errores</a> / {cod}'); n += 1
-
+        cuerpo_en = f"""
+<h1><span class="errcode">{cod}</span> {html.escape(t_en)}</h1>
+<dl class="errbox"><dt>Constant</dt><dd><code>{const}</code></dd><dt>Specification</dt><dd><a href="/docs/spec/">{sec}</a></dd><dt>Lenient mode</dt><dd>{tol_en}</dd></dl>
+{md(desc_en)}
+<h2>How to see it</h2>
+<p>In the <a href="/playground/">playground</a>, “Editor &amp; validator” tab, the “Inject 3 errors” button triggers E04, E05, E08 and E09 on the loaded example.
+From the command line, <code>mini diagnose archivo.mini</code> prints a JSON report with every error and the lines to regenerate.</p>
+<p style="display:flex;justify-content:space-between">{prev_}<span></span>{nxt_}</p>
+"""
+        pagina_docs(f"docs/errors/{cod}", f"{cod} — {t}", f"{cod} — {t_en}",
+                    prefijar_ids(cuerpo_es, "es"), prefijar_ids(cuerpo_en, "en"),
+                    crumbs_es=f'<a href="/docs/errors/">errores</a> / {cod}',
+                    crumbs_en=f'<a href="/docs/errors/">errors</a> / {cod}'); n += 1
     # bibliotecas
-    pagina_docs("docs/python", "Biblioteca Python", md(f"""
+    py_es = md(f"""
 # Biblioteca Python (`minifmt` {__version__})
 
 Implementación de referencia. Sin dependencias en tiempo de ejecución; `tiktoken` es opcional para contar tokens.
@@ -330,11 +540,53 @@ doc.errors           # lista de MiniError
 doc.record_lines     # línea física de cada registro aceptado
 doc.diagnostics()    # informe con las líneas a regenerar (mismo que `mini diagnose`)
 ```
-""")); n += 1
+""")
+    py_en = md(f"""
+# Python library (`minifmt` {__version__})
 
-    pagina_docs("docs/typescript", "Biblioteca TypeScript", md_archivo("ts/README.md")); n += 1
+Reference implementation. No runtime dependencies; `tiktoken` is optional for token counting.
 
-    pagina_docs("docs/cli", "Herramienta de línea de comandos", md("""
+## Public API
+
+```python
+from minifmt import (Contract, Field, MiniError, MiniValidationError, Document,
+                     parse, dumps, detect_prefix, Registry, spec_block, parser_prompt,
+                     canonical_equal, roundtrip_ok, __version__, SPEC_VERSION)
+```
+
+| Function | What it does |
+|---|---|
+| `Registry.load(dir=…)` | Discovers `forks/*/contract.json`; `reg.get("a")` returns the `Contract`. |
+| `parse(text, contract, strict=True)` | Parses and validates. Strict: raises `MiniValidationError` with every error. Lenient (`strict=False`): returns a `Document` with valid `records` and `errors`. |
+| `Document.to_canonical()` | Canonical JSON: `{{"prefix", "header", "<records_key>": [...]}}`. |
+| `dumps(obj, contract)` | Canonical → `.mini`. |
+| `spec_block(contract, lang="en"|"es")` | Specification block for the model's prompt. |
+| `parser_prompt(contract, fixtures, lang)` | Prompt for a model to write a parser for the family. |
+| `roundtrip_ok(obj, contract)` | `parse(dumps(obj)) == obj` with stable serialization. |
+| `detect_prefix(text)` | Prefix declared in the header, without validating. |
+
+## `MiniError`
+
+Fields: `code`, `line` (1-based, 0 = document), `message`, `field`. `str(e)` yields `E10 line 3 [level]: …`.
+Codes are in the [error index](/docs/errors/).
+
+## Lenient mode
+
+```python
+doc = parse(texto, c, strict=False)
+doc.records          # only the valid ones, with contract types
+doc.errors           # list of MiniError
+doc.record_lines     # physical line of each accepted record
+doc.diagnostics()    # report with the lines to regenerate (same as `mini diagnose`)
+```
+""")
+    pagina_docs("docs/python", "Biblioteca Python", "Python library",
+                prefijar_ids(py_es, "es"), prefijar_ids(py_en, "en")); n += 1
+
+    es, en = md_par("ts/README.md", "ts/README.en.md")
+    pagina_docs("docs/typescript", "Biblioteca TypeScript", "TypeScript library", es, en); n += 1
+
+    cli_es = md("""
 # Herramienta `mini`
 
 Se instala con la biblioteca Python (`pip install -e .`). Todos los comandos aceptan `--forks DIR` para usar
@@ -359,11 +611,40 @@ mini prompt log --lang es > prompt_sistema.txt
 mini new-fork quiz2 --from a --add "feedback:str" "level:enum{easy|hard}"
 mini check-forks
 ```
-""")); n += 1
+""")
+    cli_en = md("""
+# `mini` tool
 
-    pagina_docs("docs/conformance", "Suite de conformidad", md_archivo("conformance/README.md")); n += 1
+Installed with the Python library (`pip install -e .`). Every command accepts `--forks DIR` to use
+another family directory.
 
-    pagina_docs("docs/metodologia", "Metodología y experimentos", md_archivo("experiments/README.md") + md(f"""
+| Command | What it does |
+|---|---|
+| `mini forks` | Lists the registry families. |
+| `mini validate FILE` | Strict validation; exits 1 on errors. |
+| `mini diagnose FILE` | Lenient validation; prints a JSON report with errors and lines to regenerate. |
+| `mini to-json FILE` | `.mini` → canonical JSON. |
+| `mini from-json FILE --contract PREFIX` | Canonical JSON → `.mini`. |
+| `mini prompt PREFIX --lang es` | Specification block for the model prompt. |
+| `mini tokens FILE --enc o200k_base` | Tokens and bytes, declaring the tokenizer. |
+| `mini check-forks` | Checks the five invariants and fixture round-trips. |
+| `mini new-fork PREFIX --from PARENT --add "field:type"` | Creates a new family from another. |
+
+```bash
+mini validate forks/a/fixtures/valid.mini
+mini diagnose respuesta.mini | jq '.errors'
+mini prompt log --lang es > prompt_sistema.txt
+mini new-fork quiz2 --from a --add "feedback:str" "level:enum{easy|hard}"
+mini check-forks
+```
+""")
+    pagina_docs("docs/cli", "Herramienta de línea de comandos", "Command-line tool",
+                prefijar_ids(cli_es, "es"), prefijar_ids(cli_en, "en")); n += 1
+
+    es, en = md_par("conformance/README.md", "conformance/README.en.md")
+    pagina_docs("docs/conformance", "Suite de conformidad", "Conformance suite", es, en); n += 1
+
+    met_es = md_archivo("experiments/README.md") + md(f"""
 ## V5 — ancho del registro
 
 Barre el número de campos por registro (3–50) y el tamaño del lote (1–1000) con datos sintéticos deterministas
@@ -375,14 +656,30 @@ Script: [`experiments/v5_ancho/correr.py`]({REPO}/tree/main/experiments/v5_ancho
 * Ninguna cifra publicada sale de un cálculo que no esté en un script del repositorio con sus datos archivados.
 * Los pilotos simulados no se citan como resultados.
 * Los casos donde mini-format pierde se publican con la misma prominencia que los casos donde gana.
-""")); n += 1
+""")
+    met_en = md_archivo("experiments/README.en.md") + md(f"""
+## V5 — record width
 
-    pagina_docs("docs/contribuir", "Contribuir", md_archivo("CONTRIBUTING.md"), lang="en"); n += 1
+Sweeps the number of fields per record (3–50) and the batch size (1–1000) with deterministic synthetic
+data (seed 20260915) and three tokenizers. It is the experiment behind the front-page figures.
+Script: [`experiments/v5_ancho/correr.py`]({REPO}/tree/main/experiments/v5_ancho).
+
+## Integrity rules
+
+* No published figure comes from a computation missing from a repository script with its archived data.
+* Simulated pilots are not cited as results.
+* Cases where mini-format loses are published with the same prominence as cases where it wins.
+""")
+    pagina_docs("docs/metodologia", "Metodología y experimentos", "Methodology and experiments",
+                prefijar_ids(met_es, "es"), prefijar_ids(met_en, "en")); n += 1
+
+    es, en = md_par("CONTRIBUTING.es.md", "CONTRIBUTING.md")
+    pagina_docs("docs/contribuir", "Contribuir", "Contributing", es, en); n += 1
     lic = html.escape((RAIZ / "LICENSE").read_text(encoding="utf-8"))
-    pagina_docs("docs/licencia", "Licencia", f"<h1>Licencia MIT</h1><pre><code>{lic}</code></pre>"); n += 1
+    pagina_docs("docs/licencia", "Licencia", "License",
+                f"<h1>Licencia MIT</h1><p>Texto legal en inglés.</p><pre><code>{lic}</code></pre>",
+                f"<h1>MIT License</h1><p>Legal text, in English.</p><pre><code>{lic}</code></pre>"); n += 1
     return n
-
-
 # --------------------------------------------------------------------------- playground
 TRADUCCIONES = [
     ('<html lang="en">', '<html lang="es">'),
@@ -445,7 +742,7 @@ def construir_playground() -> None:
 <p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js · 14 familias</p></div>'''
     tpl = re.sub(r"<header>.*?</header>\s*<main>", cab, tpl, count=1, flags=re.S)
     # 3) pie del sitio
-    tpl = re.sub(r"<footer>.*?</footer>", PIE, tpl, count=1, flags=re.S)
+    tpl = re.sub(r"<footer>.*?</footer>", pie(), tpl, count=1, flags=re.S)
     # 4) traducción de las etiquetas visibles de la plantilla
     faltan = []
     for a, b in TRADUCCIONES:
