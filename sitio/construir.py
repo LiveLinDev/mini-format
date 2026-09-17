@@ -81,14 +81,14 @@ ERRORES_EN = [
 # --------------------------------------------------------------------------- navegación de docs
 GRUPOS_ES = [
     ("Empezar", [("docs", "Introducción"), ("downloads", "Descargas"), ("docs/quickstart", "Inicio rápido"), ("docs/build", "Crear tu toolkit")]),
-    ("Norma", [("docs/spec", "Especificación 1.0"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
+    ("Norma", [("docs/spec", "Especificación 1.1"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
     ("Bibliotecas", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Herramienta de línea de comandos"), ("docs/conformance", "Suite de conformidad")]),
     ("Evidencia", [("docs/metodologia", "Metodología y experimentos")]),
     ("Proyecto", [("docs/contribuir", "Contribuir"), ("docs/licencia", "Licencia")]),
 ]
 GRUPOS_EN = [
     ("Start", [("docs", "Introduction"), ("downloads", "Downloads"), ("docs/quickstart", "Quickstart"), ("docs/build", "Build your toolkit")]),
-    ("Reference", [("docs/spec", "Specification 1.0"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
+    ("Reference", [("docs/spec", "Specification 1.1"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
     ("Libraries", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Command-line tool"), ("docs/conformance", "Conformance suite")]),
     ("Evidence", [("docs/metodologia", "Methodology and experiments")]),
     ("Project", [("docs/contribuir", "Contributing"), ("docs/licencia", "License")]),
@@ -157,7 +157,7 @@ def pie() -> str:
         return f"<div><h3>{ambos(es, en)}</h3><ul>{items}</ul></div>"
     c1 = col("Aprender", "Learn", [("/docs/", "Introducción", "Introduction"),
                                    ("/docs/quickstart/", "Inicio rápido", "Quickstart"),
-                                   ("/docs/spec/", "Especificación 1.0", "Specification 1.0"),
+                                   ("/docs/spec/", "Especificación 1.1", "Specification 1.1"),
                                    ("/docs/errors/", "Índice de errores", "Error index")])
     c2 = col("Componente", "Component", [("/docs/python/", "Biblioteca Python", "Python library"),
                                          ("/docs/typescript/", "Biblioteca TypeScript", "TypeScript library"),
@@ -574,8 +574,8 @@ TRADUCCIONES = [
     ("<h2>Structure</h2>", "<h2>Estructura</h2>"), ("<h2 style=\"margin-top:14px\">Escapes</h2>", "<h2 style=\"margin-top:14px\">Escapes</h2>"),
     ("<h2 style=\"margin-top:14px\">Fork invariants</h2>", "<h2 style=\"margin-top:14px\">Invariantes de familia</h2>"), ("<h2>Error codes</h2>", "<h2>Códigos de error</h2>"),
     ("<tr><th>Code</th><th>Condition</th></tr>", "<tr><th>Código</th><th>Condición</th></tr>"),
-    ("Full specification: <code>SPEC.md</code> in the repository. Reference implementation: Python (<code>src/minifmt</code>) and JavaScript (<code>js/mini.js</code>, the engine of this page).",
-     'Especificación completa: <a href="/docs/spec/">/docs/spec/</a>. Índice de errores con una página por código: <a href="/docs/errors/">/docs/errors/</a>. Motor de esta página: <code>js/mini.js</code>, el port JavaScript de la referencia Python.'),
+    ("Full specification: <code>SPEC.md</code> in the repository. Reference implementation: Python (<code>src/minifmt</code>) and TypeScript (<code>ts/src</code>); the engine of this page, <code>js/mini.js</code>, is generated from the TypeScript library and passes the conformance suite.",
+     'Especificación completa: <a href="/docs/spec/">/docs/spec/</a>. Índice de errores con una página por código: <a href="/docs/errors/">/docs/errors/</a>. Motor de esta página: <code>js/mini.js</code>, generado desde la biblioteca TypeScript y verificado con la suite de conformidad.'),
 ]
 
 

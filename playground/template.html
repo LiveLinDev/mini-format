@@ -101,7 +101,7 @@ svg text{fill:var(--ink)}
       <div class="row"><label>Parent <select id="wParent"><option value="">(none — blank contract)</option></select></label><label>List separator <input type="text" id="wSep" value="," size="2" maxlength="1"></label><label>Records key <input type="text" id="wRecKey" value="items" size="10"></label></div>
       <h2 style="margin-top:14px">2 · Fields</h2>
       <div class="fields" id="wFields"></div>
-      <div class="row"><button class="ghost" id="wAdd">+ add field</button><span class="note">types: str, int, float, bool, enum{a|b}, list&lt;str&gt;, mlist&lt;str&gt;, tuple(a:float,b:int)</span></div>
+      <div class="row"><button class="ghost" id="wAdd">+ add field</button><span class="note">types: str, int, float, bool, date, decimal, enum{a|b}, list&lt;str&gt;, mlist&lt;str&gt;, tuple(a:float,b:int)</span></div>
       <h2 style="margin-top:14px">Invariant check</h2><div id="wCheck"></div>
     </div>
     <div class="panel"><h2>3 · Generated contract</h2><pre id="wContract"></pre>
@@ -145,7 +145,7 @@ I3 inherited core never changes      (breaking change ⇒ new prefix)</pre>
       <tr><td>E05</td><td>record arity outside core…core+extensions</td></tr><tr><td>E06</td><td>type mismatch / required empty</td></tr><tr><td>E07</td><td>list or tuple arity</td></tr>
       <tr><td>E08</td><td>marker rule violated</td></tr><tr><td>E09</td><td>bad escape</td></tr><tr><td>E10</td><td>enum violation</td></tr><tr><td>E11</td><td>duplicate unique value</td></tr>
       <tr><td>E12</td><td>header entry malformed/missing</td></tr><tr><td>E13</td><td>numeric range</td></tr><tr><td>E20/E21</td><td>invalid contract / fork invariant</td></tr></table>
-      <p class="note" style="margin-top:12px">Full specification: <code>SPEC.md</code> in the repository. Reference implementation: Python (<code>src/minifmt</code>) and JavaScript (<code>js/mini.js</code>, the engine of this page).</p>
+      <p class="note" style="margin-top:12px">Full specification: <code>SPEC.md</code> in the repository. Reference implementation: Python (<code>src/minifmt</code>) and TypeScript (<code>ts/src</code>); the engine of this page, <code>js/mini.js</code>, is generated from the TypeScript library and passes the conformance suite.</p>
     </div>
   </div>
 </section>
@@ -227,7 +227,7 @@ function renderContractPanels(){ const c = contracts[current]; const f = fork();
 // ---------------------------------------------------------------- formats (compare)
 function flattenDoc(obj, c){
   const hdr = obj.header; const rows = (obj[c.records_key]||[]).map(rec => { const o = {}; for (const f of c.fields) {
-    if (['str','int','float','bool','enum'].includes(f.type)) o[f.name] = rec[f.name] ?? null;
+    if (['str','int','float','bool','enum','date','decimal'].includes(f.type)) o[f.name] = rec[f.name] ?? null;
     else if (f.type==='list') { const v = rec[f.name]||[]; const k = arity(f,hdr); if (k) for (let i=0;i<k;i++) o[`${f.name}_${i+1}`] = v[i] ?? null; else o[f.name] = v.map(s).join(';'); }
     else if (f.type==='mlist') { const v = rec[f.json_items]||[]; const sel = rec[f.json_selected]; const k = arity(f,hdr); if (k) for (let i=0;i<k;i++) o[`${f.json_items}_${i+1}`] = v[i] ?? null; else o[f.json_items] = v.map(s).join(';'); o[f.json_selected] = Array.isArray(sel) ? sel.map(i=>i+1).join(';') : (sel===null||sel===undefined? null : sel+1); }
     else if (f.type==='tuple') { const t = rec[f.name]||{}; for (const cmp of f.items) o[`${f.name}_${cmp.name}`] = t[cmp.name] ?? null; } } return o; });
@@ -241,7 +241,7 @@ function yamlSer(v, ind){ ind = ind||''; if (Array.isArray(v)) { if (!v.length) 
 function yscalar(x){ if (x===null||x===undefined) return 'null'; if (typeof x==='number'||typeof x==='boolean') return String(x); const t=String(x); return /^[\d.+-]|[:#\[\]{},&*!|>'"%@`]|^\s|\s$|^(true|false|null|yes|no)$/i.test(t) ? "'"+t.replace(/'/g,"''")+"'" : t; }
 function xmlSer(obj, c){ const esc = t => s(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); const hdr = obj.header; const L = [`<${c.prefix} ${Object.keys(hdr).filter(k=>typeof hdr[k]!=='object').map(k=>`${k}="${esc(hdr[k])}"`).join(' ')}>`];
   for (const k of Object.keys(hdr)) { const v = hdr[k]; if (Array.isArray(v)) L.push(`  <${k}>${v.map(x=>`<i>${esc(x)}</i>`).join('')}</${k}>`); else if (v && typeof v==='object') L.push(`  <${k} ${Object.keys(v).map(kk=>`${kk}="${esc(v[kk])}"`).join(' ')}/>`); }
-  for (const rec of obj[c.records_key]||[]) { L.push('  <rec>'); for (const f of c.fields) { if (['str','int','float','bool','enum'].includes(f.type)) { if (rec[f.name]!==null && rec[f.name]!==undefined) L.push(`    <${f.name}>${esc(rec[f.name])}</${f.name}>`); }
+  for (const rec of obj[c.records_key]||[]) { L.push('  <rec>'); for (const f of c.fields) { if (['str','int','float','bool','enum','date','decimal'].includes(f.type)) { if (rec[f.name]!==null && rec[f.name]!==undefined) L.push(`    <${f.name}>${esc(rec[f.name])}</${f.name}>`); }
     else if (f.type==='list') L.push(`    <${f.name}>${(rec[f.name]||[]).map(x=>`<i>${esc(x)}</i>`).join('')}</${f.name}>`);
     else if (f.type==='mlist') { const sel = rec[f.json_selected]; const set = new Set(Array.isArray(sel)?sel:(sel===null||sel===undefined?[]:[sel])); L.push(`    <${f.json_items}>${(rec[f.json_items]||[]).map((x,i)=>`<i${set.has(i)?' sel="1"':''}>${esc(x)}</i>`).join('')}</${f.json_items}>`); }
     else if (f.type==='tuple') { const t = rec[f.name]; if (t) L.push(`    <${f.name} ${f.items.filter(cmp=>t[cmp.name]!==null&&t[cmp.name]!==undefined).map(cmp=>`${cmp.name}="${esc(t[cmp.name])}"`).join(' ')}/>`); } } L.push('  </rec>'); }
@@ -283,7 +283,7 @@ function parseType(t){ t = t.trim(); let m;
   if ((m = t.match(/^enum\{(.+)\}$/))) return { type:'enum', values: m[1].split('|') };
   if ((m = t.match(/^(m?list)<(\w+)>(?:\[(\d*)\.\.(\d*)\])?$/))) { const f = { type: m[1], item: m[2] }; if (m[3]) f.min = Number(m[3]); if (m[4]) f.max = Number(m[4]); if (m[1]==='mlist') f.marker='exactly_one'; return f; }
   if ((m = t.match(/^tuple\((.+)\)$/))) return { type:'tuple', items: m[1].split(',').map(p => { const [n,ty] = p.split(':'); return { name: n.trim(), type: (ty||'str').trim() }; }) };
-  if (['str','int','float','bool'].includes(t)) return { type: t }; return null; }
+  if (['str','int','float','bool','date','decimal'].includes(t)) return { type: t }; return null; }
 function wizardInit(){ $('#wParent').onchange = () => { wFields = []; wizardRender(); }; $('#wAdd').onclick = () => { wFields.push({name:'field'+(wFields.length+1), type:'str', optional:false}); wizardRender(); }; ['wPrefix','wName','wSep','wRecKey'].forEach(id => $('#'+id).addEventListener('input', wizardRender)); }
 function buildWizardContract(){
   const parentPrefix = $('#wParent').value; const parent = parentPrefix ? FORKS.find(f=>f.prefix===parentPrefix).contract : null;
@@ -311,7 +311,7 @@ function wizardRender(){
   $('#wContract').textContent = JSON.stringify(d, null, 2);
   if (c) { const ex = exampleFor(c, parent); $('#wExample').textContent = ex; $('#wPrompt').textContent = MINI.specBlock(c, 'en', ex); window.__wizardState = { c, ex }; } else { $('#wExample').textContent = ''; $('#wPrompt').textContent = ''; }
 }
-function sampleValue(f, i){ const t = f.type; if (t==='int') return (f.min ?? 1) + i; if (t==='float') return Number(((f.min ?? 0) + 0.5*(i+1)).toFixed(2)); if (t==='bool') return i%2===0; if (t==='enum') return f.values[i % f.values.length]; if (t==='str') return `${f.name} ${i+1}`; return `${f.name}${i+1}`; }
+function sampleValue(f, i){ const t = f.type; if (t==='int') return (f.min ?? 1) + i; if (t==='float') return Number(((f.min ?? 0) + 0.5*(i+1)).toFixed(2)); if (t==='bool') return i%2===0; if (t==='enum') return f.values[i % f.values.length]; if (t==='date') return `2026-01-${String(i+1).padStart(2,'0')}`; if (t==='decimal') return `${i+1}.50`; if (t==='str') return `${f.name} ${i+1}`; return `${f.name}${i+1}`; }
 function exampleFor(c, parent){
   const base = parent ? FORKS.find(f=>f.prefix===parent.prefix) : null;
   let header = {};
@@ -320,7 +320,7 @@ function exampleFor(c, parent){
   const recs = [];
   for (let i=0;i<2;i++){ const r = {}; if (base) { try { Object.assign(r, MINI.parse(base.example, contracts[parent.prefix]).records[i]); } catch(e){} }
     for (const f of c.fields) { if (base && [...contracts[parent.prefix].fields].some(x=>x.name===f.name)) continue;
-      if (['str','int','float','bool','enum'].includes(f.type)) r[f.name] = sampleValue(f,i);
+      if (['str','int','float','bool','enum','date','decimal'].includes(f.type)) r[f.name] = sampleValue(f,i);
       else if (f.type==='list') { const k = arity(f, header) || 2; r[f.name] = Array.from({length:k}, (_,j)=>sampleValue(Object.assign({},f,{type:f.item}), j)); }
       else if (f.type==='mlist') { const k = arity(f, header) || 3; r[f.json_items] = Array.from({length:k}, (_,j)=>`option ${j+1}`); r[f.json_selected] = (f.marker==='exactly_one'||f.marker==='at_most_one') ? 0 : [0]; }
       else if (f.type==='tuple') r[f.name] = Object.fromEntries(f.items.map(x=>[x.name, sampleValue(x,i)])); } recs.push(r); }

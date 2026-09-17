@@ -1,7 +1,7 @@
 # @mini-format/core — `.mini` TypeScript library
 
 Software release 1.1.0. Modular, typed TypeScript implementation of the `.mini`
-core notation (SPEC 1.0):
+core notation (SPEC 1.1):
 parser, serializer, specification block for prompts, family (fork) registry and a
 streaming read API for token-by-token model responses. No dependencies.
 
@@ -153,26 +153,25 @@ As in the reference, escapes are also validated in lenient mode (E09 and the rec
 is discarded), an invalid escape in the header is E09 inside validation, and a
 rejected line does not reserve its `unique` value.
 
-## Decisions where `js/mini.js`, the Python reference and the SPEC differ
+## Implementations and the playground engine
 
-Criterion: if the SPEC decides, follow the SPEC; otherwise follow the Python reference.
+`js/mini.js`, the engine of the playground, is no longer a hand-written port: since
+1.2.0 it is generated from `ts/src` by `node --no-warnings tools/build_js.mjs` (a
+dependency-free UMD bundle exposing the global `MINI`). `node tests/test_js_port.mjs`
+fails when the committed file is out of date and runs every conformance case against
+it (`node conformance/run_js.mjs` prints the same report per category). The browser
+therefore validates exactly as this library does.
 
-| Topic | Python | JS | TS |
-|---|---|---|---|
-| Empty document in lenient mode | always throws | returns document without `canonical()` | returns `Document` with E01 (SPEC §8) |
-| Invalid escape in the header | E09 inside validation (fixed) | raw `MiniError` outside `parse` | E09 inside validation |
-| Invalid escape in a record, lenient mode | E09 and record discarded (fixed) | keeps the literal text | E09 and record discarded |
-| Rejected line with `unique` value | does not reserve it (fixed) | reserves it | does not reserve it |
-| Trailing `\n` on an int/float (`5\n`) | accepts (`$` of `re` + `int()`) | rejects | rejects, E06 (SPEC: `-?[0-9]+`) |
-| Unicode digits in numbers | accepts (`\d` Unicode) | rejects | rejects |
-| `clave\=valor` in header (lenient) | broken key | E12 | E12 (first unescaped `=`, SPEC §3.2) |
-| Whitespace | `str.isspace()` | JS `\s` | `str.isspace()` |
-| Contract validation (unknown types, separator, marker, tuples) | strict (E20) | lax | strict (E20) |
-| Non-ASCII prefix letters | accepts | rejects | rejects (SPEC §4) |
-| Float formatting (1e21, 1e-7) | expands without exponent when exact | `String(x)` | like Python |
-| `float` signature/spec with `max: 3.0` | `3.0` | `3` | `3` (JSON.parse cannot tell them apart) |
-| List range in `specBlock` with `max: 0` | `∞` | `0` | like Python |
-| `__proto__` keys in header/records | kept | lost | kept |
+Remaining differences between the Python reference and TypeScript (criterion: if the
+SPEC decides, follow the SPEC; otherwise follow the Python reference):
+
+| Topic | Python | TS and `js/mini.js` |
+|---|---|---|
+| Empty document in lenient mode | always throws | returns `Document` with E01 (SPEC §8) |
+| `clave\=valor` in header (lenient) | broken key | E12 (first unescaped `=`, SPEC §3.2) |
+| Non-ASCII prefix letters | accepts | rejects (SPEC §4) |
+| `float` signature/spec with `max: 3.0` | `3.0` | `3` (JSON.parse cannot tell them apart) |
+| Integers outside ±2^53 | exact | lose precision (use `decimal` for exact values) |
 
 ## Limitations
 
