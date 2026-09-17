@@ -1,25 +1,46 @@
 {
   "name": "@mini-format/core",
   "version": "1.1.0",
-  "description": "Biblioteca TypeScript de la notación .mini (SPEC 1.0): parser, serializador, bloque de especificación, registro de familias y lectura en streaming.",
+  "description": "Biblioteca TypeScript de la notación .mini (SPEC 1.0): parser, serializador, bloque de especificación, registro de familias, lectura en streaming, reparación selectiva, contratos desde Zod/JSON Schema y adaptadores de modelos.",
   "type": "module",
   "license": "MIT",
   "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
-  "keywords": ["llm", "structured-output", "serialization", "mini", "tokens"],
+  "keywords": [
+    "llm",
+    "structured-output",
+    "serialization",
+    "mini",
+    "tokens"
+  ],
   "engines": {
     "node": ">=22.6"
   },
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
-  "types": "./src/index.ts",
-  "files": ["src", "dist", "forks", "README.md", "README.en.md", "LICENSE"],
+  "types": "./dist/index.d.ts",
+  "files": [
+    "src",
+    "dist",
+    "forks",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node --experimental-strip-types --no-warnings --test test/*.test.ts",
-    "test:conformance": "node --experimental-strip-types --no-warnings --test test/conformance.test.ts"
+    "test:conformance": "node --experimental-strip-types --no-warnings --test test/conformance.test.ts",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "build": "node --no-warnings ../tools/build_node.mjs dist"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.20.3",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.5"
+  }
 }

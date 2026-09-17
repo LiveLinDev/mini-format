@@ -45,6 +45,25 @@ export type { RegistryIndexEntry } from './registry.ts';
 export { createReader, readRecords } from './stream.ts';
 export type { MiniReader, ReaderOptions, ReaderResult, ReaderProgress, StreamRecord, IncompleteRecord } from './stream.ts';
 
+export { extractDocument, lenientParse, invalidItems, repairRequest, mergeRepair, physicalLines, DROP_MARK } from './repair.ts';
+export type { RepairItem, RepairRequest, RepairRequestOptions, MergeResult } from './repair.ts';
+
+export { fromJsonSchema, fromZod } from './schema.ts';
+export type { JsonSchema, FromSchemaOptions, FromZodOptions, ZodLike } from './schema.ts';
+
+export {
+  AdapterError, MissingKeyError, HttpAdapter, OpenAIAdapter, OpenAIResponsesAdapter, AnthropicAdapter, GroqAdapter, SimulatedAdapter,
+  getAdapter, streamRecords, createModelStream, toOpenAIFormat, redact, redactHeaders,
+  OPENAI_CHAT_URL, OPENAI_RESPONSES_URL, ANTHROPIC_URL, ANTHROPIC_VERSION, GROQ_URL,
+} from './adapters.ts';
+export type {
+  ModelAdapter, ModelStream, GenerateRequest, GenerateResult, ResponseFormat, FetchLike, FetchResponseLike, HttpAdapterOptions,
+  AnthropicAdapterOptions, SimulatedAdapterOptions, ProviderName, StreamRecordsOptions, StreamRecordsResult,
+} from './adapters.ts';
+
+export { parseSSE, textChunks } from './sse.ts';
+export type { SSEEvent, ByteSource } from './sse.ts';
+
 /** Igualdad estructural tolerante a diferencias de representación int/float (SPEC §7). */
 export function canonicalEqual(a: unknown, b: unknown): boolean {
   if (Array.isArray(a) || Array.isArray(b)) {
