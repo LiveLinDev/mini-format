@@ -758,6 +758,31 @@ def spec11_cases() -> None:
             input=obj, rejected=True, errors=[err(code, line)])
 
 
+# Points that SPEC 1.0 left open, the ADR that decides each one and the cases that
+# fix the 1.1 rule (tests/test_conformance.py checks that every id exists).
+SPEC_1_1_RULES: Dict[str, Dict[str, Any]] = {
+    "escape-comma-any-separator": {"adr": "0009", "cases": ["esc-comma-custom-separator", "esc-other-separator-invalid"]},
+    "scalar-lexical-forms": {"adr": "0010", "cases": ["sc-bool-yes", "sc-bool-t", "sc-bool-no", "sc-bool-uppercase", "sc-int-plus",
+                                                      "sc-int-unicode-digits", "sc-float-plus", "sc-float-leading-dot",
+                                                      "sc-float-trailing-dot", "sc-float-nan", "sc-leading-zeros"]},
+    "header-value-type-code": {"adr": "0011", "cases": ["hdr-n-not-int", "hdr-n-empty", "hdr-typed-scalar-bad", "hdr-n-not-int-lenient"]},
+    "header-duplicate-keys": {"adr": "0012", "cases": ["hdr-duplicate-key", "hdr-duplicate-n", "hdr-duplicate-key-lenient"]},
+    "empty-list-elements": {"adr": "0013", "cases": ["list-empty-element-middle", "list-empty-element-trailing", "list-single-empty-string",
+                                                     "list-empty-element-int", "list-empty-element-enum", "dumps-empty-string-elements",
+                                                     "mlist-empty-marked-element"]},
+    "empty-optional-list": {"adr": "0014", "cases": ["opt-list-empty-null", "opt-mlist-empty-null", "opt-list-min-applies-when-present",
+                                                     "dumps-optional-list-empty-array"]},
+    "serializer-error-codes": {"adr": "0015", "cases": ["dumps-error-range", "dumps-error-type", "dumps-error-non-integral",
+                                                        "dumps-error-required-empty-string", "dumps-error-second-record", "dumps-error-unique",
+                                                        "dumps-error-list-arity", "dumps-error-count-key", "dumps-error-header-required",
+                                                        "dumps-error-selection-type", "dumps-reject-marker", "dumps-reject-enum"]},
+    "date-decimal-types": {"adr": "0016", "cases": ["date-decimal-basic", "decimal-normalised", "decimal-exact-digits", "date-decimal-composites",
+                                                    "date-bad-format", "date-not-in-calendar", "date-error-line", "date-range", "decimal-range-max",
+                                                    "hdr-date-bad", "date-lenient", "dumps-date-decimal", "dumps-error-date",
+                                                    "dumps-error-decimal-float", "contract-date-decimal-valid", "contract-date-bad-bound"]},
+}
+
+
 DT = {  # date and decimal (SPEC 1.1 §6)
     "prefix": "dt", "records_key": "rows",
     "header": {"keys": {"d": {"type": "date"}}},

@@ -1,6 +1,6 @@
 # .mini Specification
 
-**Version:** 1.0 · **Date:** 2026-09-01 · **Status:** Stable · **License:** MIT
+**Version:** 1.1 · **Date:** 2026-09-17 · **Status:** Stable; supersedes 1.0 and keeps every 1.0 document valid (§13) · **License:** MIT
 **Authors:** Adrián E. J. Palma Obispo, Erick J. Palomino Santa Cruz (Universidad Peruana de Ciencias Aplicadas)
 
 ---
@@ -30,8 +30,11 @@ The key words MUST, MUST NOT, SHOULD and MAY are to be interpreted as in RFC
 rejects every invalid document with at least one of the error codes of §8, and
 produces the canonical object of §7. A **conforming serializer** produces, for
 every canonical object valid under a contract, a document that the parser maps
-back to an equal object (§9, round-trip). A **conforming fork** satisfies the
-invariants of §10.
+back to an equal object (§9, round-trip), and rejects every object that is not
+valid under the contract with the error code of §9. A **conforming fork**
+satisfies the invariants of §10. The conformance suite (`conformance/`) fixes the
+expected result of each rule; the design decisions behind the rules, with their
+evidence, are recorded in `docs/adr/`.
 
 ## 3. Lexical structure
 
@@ -63,7 +66,8 @@ of a list element is literal.
 | Sequence | Denotes |
 |---|---|
 | `\|` | a literal vertical bar |
-| `\,` (or `\<sep>` for the contract's separator) | a literal list separator |
+| `\,` | a literal comma, whatever the list separator (so a literal list separator when the separator is `,`) |
+| `\<sep>` for the contract's separator | a literal list separator |
 | `\*` | a literal asterisk (needed only when an element would otherwise end in `*`) |
 | `\"` | a literal quotation mark (needed only when an element would otherwise start with `"`) |
 | `\\` | a literal backslash |
@@ -73,8 +77,11 @@ Escape sequences MUST be recognised in every position. A generator MUST escape
 `|`, `\` and line breaks in every value, and MUST protect the list separator
 and a trailing `*` inside list elements, either with the escapes above or with
 quoting (§3.4). Escaping the list separator in a scalar field is unnecessary
-but harmless (over-escaping is idempotent-safe). A backslash followed by any
-other character, or a trailing backslash, is an error (E09).
+but harmless (over-escaping is idempotent-safe). `\,` is valid in every
+contract, also when the list separator is another character (over-escaping a
+comma never breaks a document); `\<sep>` is valid only for the contract's own
+separator, so `\;` in a contract whose separator is `,` is E09. A backslash
+followed by any other character, or a trailing backslash, is an error (E09).
 
 ### 3.4 Quoted list elements
 
@@ -87,6 +94,13 @@ and `\` must still be escaped). An unbalanced quote, or text between the
 closing quote and the next separator, is an error (E09). Quoting and escaping
 are equivalent notations for the same value; the canonical serializer emits
 the escaped form.
+
+An empty list element may be written bare (`a,,b`, or a trailing separator as
+in `a,`) or quoted (`""`); both denote the empty string. A field that holds a
+single bare empty element cannot be told apart from an empty field (§6), so the
+canonical serializer writes every empty-string element as `""`: `[""]` is
+emitted as `""` and parses back to `[""]`. This is the only case in which the
+serializer emits quotes.
 
 ### 3.5 Whitespace
 
@@ -109,8 +123,20 @@ element    ::= ( bare | quoted ) "*"?
 bare       ::= value                               -- must not start with an unescaped '"'
 quoted     ::= '"' ( qchar | '""' | escape )* '"'
 qchar      ::= any Unicode scalar except '"', "|", "\", LF
-escape     ::= "\" ( "|" | SEP | "*" | '"' | "\" | "n" )
+escape     ::= "\" ( "|" | "," | SEP | "*" | '"' | "\" | "n" )
 char       ::= any Unicode scalar except "|", "\", LF
+```
+
+Lexical forms of the scalar types (§6), applied to the value after escapes are
+resolved and surrounding whitespace is trimmed:
+
+```
+int        ::= "-"? DIGIT+
+float      ::= "-"? DIGIT+ ( "." DIGIT+ )? ( ( "e" | "E" ) ( "+" | "-" )? DIGIT+ )?
+bool       ::= "true" | "false" | "1" | "0"
+date       ::= DIGIT DIGIT DIGIT DIGIT "-" DIGIT DIGIT "-" DIGIT DIGIT
+decimal    ::= "-"? DIGIT+ ( "." DIGIT+ )?
+DIGIT      ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"   -- ASCII only
 ```
 
 `SEP` is the contract's list separator. The grammar is regular at the line
@@ -132,6 +158,15 @@ The header is `prefix|key=value|key=value…`.
 * A header key MAY act as a **count key**: a list field whose contract entry
   declares `count_key: "k"` MUST have exactly `k` elements in every record
   (E07). This turns a delimiter collision inside a list into a detectable error.
+* A key MUST NOT appear more than once in the header. Every repeated occurrence
+  is E12; the first occurrence is the one that counts (a lenient parser keeps its
+  value).
+* A value of a typed key that does not match its type is reported on the header
+  line with the code of that violation (E06, E07, E10, E13), as in a record. In
+  particular `n=abc` or an empty `n=` is E06, not E03: E03 means that `n` is
+  absent. When `n` is present but invalid, the record count is not checked (no
+  E04). E12 is reserved for entries without `=`, missing required keys and
+  repeated keys.
 
 ## 6. Records and field types
 
@@ -146,16 +181,37 @@ decode the known field prefix, and ignore only unknown trailing fields.
 | Type | Text form | Canonical JSON | Notes |
 |---|---|---|---|
 | `str` | literal text | string | |
-| `int` | `-?[0-9]+` | integer | optional `min`/`max` (E13) |
-| `float` | JSON number | number | integral values may omit `.0` |
-| `bool` | `true` / `false` | boolean | `1`/`0` accepted on input |
+| `int` | `-?[0-9]+` | integer | optional `min`/`max` (E13); ASCII digits; leading zeros allowed; no `+` |
+| `float` | JSON number | number | integral values may omit `.0`; leading zeros allowed; `+1`, `.5`, `1.`, `NaN`, `Infinity` are E06 |
+| `bool` | `true` / `false` | boolean | `1`/`0` accepted on input; no other form (`yes`, `y`, `t`, `True`) is accepted (E06) |
 | `enum` | one of the declared values | string | E10 otherwise |
+| `date` | `YYYY-MM-DD` | string | an existing day of the proleptic Gregorian calendar, 0001-01-01 to 9999-12-31 (E06); optional `min`/`max` as `"YYYY-MM-DD"` (E13) |
+| `decimal` | `-?[0-9]+(\.[0-9]+)?` | string | exact base-10 number, no exponent (E06); optional `min`/`max` as decimal strings or integers, compared exactly (E13) |
 | `list<T>` | `e1,e2,…` | array | `min`/`max`/`count_key` arity (E07) |
 | `mlist<T>` | `e1*,e2,…` | array **plus** a sibling `selected` key | marker rule: `exactly_one` (default), `at_least_one`, `at_most_one`, `any` (E08) |
 | `tuple(a:T,b:U,…)` | `a,b,…` | object `{a:…, b:…}` | fixed arity (E07); one level of nesting without nesting syntax |
 
-An empty field denotes null and is valid only for optional fields (E06). A
-field declared `unique` MUST NOT repeat its value within a document (E11).
+An empty field denotes null and is valid only for optional fields (E06). This
+holds for every type: an empty optional list, marked list or tuple is null (for a
+marked list, both sibling keys are null). An empty *required* list or marked list
+denotes the empty list, subject to `min` and to the marker rule (E07, E08); an
+empty required tuple is E07. The canonical value of an empty optional list is
+therefore null, never `[]`. A field declared `unique` MUST NOT repeat its value
+within a document (E11).
+
+List and tuple elements are decoded with their item or component type. An
+empty list element is the empty string for `str` items and a type error for any
+other item type (E06; E10 for `enum` items). An empty tuple component is null
+when the component is optional and E06 otherwise.
+
+`date` and `decimal` travel as strings in the canonical object so that no
+implementation converts them through binary floating point or a time zone. The
+canonical `date` is the text itself. The canonical `decimal` removes the leading
+zeros of the integer part and the sign of a zero value and keeps every
+fractional digit, because the scale can be meaningful (`007.50` → `"7.50"`,
+`-0.0` → `"0.0"`). In a contract, the `min`/`max` of a `date` are `"YYYY-MM-DD"`
+strings and those of a `decimal` are decimal strings or integers whose absolute
+value is below 2^53; any other bound makes the contract invalid (E20).
 
 The **marked list** is the idiom that replaces a separate "answer" field: the
 selected element carries a one-character suffix, keeping the selection attached
@@ -173,7 +229,8 @@ A parser MUST produce:
   "<records_key>": [ { "<field>": <value>, ... }, ... ] }
 ```
 
-`records_key` is declared by the contract (e.g. `items`, `cases`). A marked
+`records_key` is declared by the contract (e.g. `items`, `cases`). Values of
+`date` and `decimal` fields are strings (§6). A marked
 list `options` with selection key `correct` yields two sibling keys
 `"options": [...]` and `"correct": <index>`. A tuple yields a nested object.
 Canonical numbers compare numerically (`-1` ≡ `-1.0`).
@@ -193,14 +250,14 @@ enables partial recovery of long generated outputs.
 | E03 | header lacks `n` |
 | E04 | number of record lines ≠ `n` |
 | E05 | record has fewer fields than the core, or has excess fields without declaring a document version newer than the contract |
-| E06 | scalar value does not match its type, or a required value is empty |
+| E06 | scalar value (in a record or a typed header entry) does not match its type (§4, §6), or a required value is empty |
 | E07 | list / tuple arity outside `min`/`max`, or ≠ `count_key`, or ≠ tuple size |
 | E08 | marker count violates the marked-list rule |
 | E09 | invalid escape sequence or trailing backslash |
 | E10 | value not in the enumeration |
 | E11 | duplicate value in a `unique` field |
-| E12 | malformed or missing required header entry |
-| E13 | numeric value outside `min`/`max` |
+| E12 | header entry without `=`, missing required header key, or repeated header key |
+| E13 | numeric, decimal or date value outside `min`/`max` |
 | E20 | the contract itself is invalid |
 | E21 | fork invariant violated |
 
@@ -211,6 +268,18 @@ For every contract *C* and every canonical object *o* valid under *C*:
 *t* emitted by the serializer. This property — not compactness — is the
 acceptance criterion of a `.mini` family: a compression that does not round-trip
 is an abbreviation, not a serialization.
+
+A serializer MUST NOT emit a document that the parser would reject. Given an
+object that is not valid under the contract, it MUST fail with an error that
+carries the code the parser reports for the same violation (§8) and the physical
+line the offending entry would occupy in the output: 1 for the header and
+*i* + 2 for the record at 0-based position *i*. For example, a null or missing
+required value is E06, a value outside the enumeration E10, a value outside
+`min`/`max` E13, a list of the wrong length E07, a selection that breaks the
+marker rule or is not a valid index E08, a repeated `unique` value E11 and a
+missing required header key E12. A serializer MAY accept non-canonical
+equivalents of a valid value (for example `[]` for an empty optional list, which
+it writes as an empty field and which parses back as null).
 
 ## 10. Forking protocol
 
@@ -264,6 +333,11 @@ needs to produce the fork is derived mechanically from the contract
   silent corruption.
 * **Marker as suffix.** The selection travels with its content, which avoids
   index/content misalignment during generation and allows local verification.
+* **Recorded decisions.** Every rule above that involved a choice (positional
+  contract, escapes and quotes, marker, count key, lenient mode, forking,
+  version tail, the clarifications of 1.1 and the `date`/`decimal` types) has an
+  architecture decision record with its context, alternatives and evidence in
+  `docs/adr/`.
 * **Append-only evolution.** The same discipline used by binary protocols and
   evolvable schemas (new fields only at the end; older readers ignore the tail
   only when the same prefix declares a later `v`) gives forward and backward
@@ -280,3 +354,34 @@ standards (e.g. QTI for assessment) remain the target of the canonical object,
 not of the wire format. Token savings are tokenizer- and language-dependent;
 the reference benchmark reports the tokenizer, corpus, serializers and baseline
 of every figure.
+
+## 13. Changes in 1.1
+
+Version 1.1 (2026-09-17) fixes the points that 1.0 left undefined and adds two
+scalar types. Each change has a normative rule above, at least one case in the
+conformance suite and a decision record.
+
+| Point left open by 1.0 | Rule in 1.1 | Section | ADR |
+|---|---|---|---|
+| `\,` when the separator is not `,` | always a literal comma; `\<sep>` only for the contract's separator | §3.3 | 0009 |
+| Booleans other than `true`/`false`/`1`/`0`, integers with `+`, floats such as `.5` or `1.` | rejected (E06); ASCII digits only | §4, §6 | 0010 |
+| Code of an ill-typed header value (`n=abc`) | code of the type violation (E06…), no E03 | §5 | 0011 |
+| Repeated header keys | E12; the first occurrence counts | §5 | 0012 |
+| Empty list elements (`a,,b`, trailing separator) and the round-trip of `[""]` | the empty string; serialized as `""` | §3.4, §6 | 0013 |
+| Empty optional list | null (as for every optional field) | §6 | 0014 |
+| Error code of the serializer for invalid objects | the parser's code and the line the entry would occupy | §9 | 0015 |
+| Dates and exact decimals | new types `date` and `decimal`, canonical JSON strings | §6 | 0016 |
+
+**Compatibility.** A document valid under 1.0 is valid under 1.1 and produces the
+same canonical object. The changes only touch inputs whose result 1.0 did not
+define: forms outside the §6 table that implementations happened to accept
+(`yes`, `+5`, `.5`), headers with a repeated key (whose canonical object 1.0
+did not determine), and the error code reported for documents and objects that
+were already invalid. `\,` with another separator and bare empty elements were
+already accepted, and 1.1 fixes their meaning without rejecting them; an empty
+optional list becomes null, as the 1.0 sentence "an empty field denotes null"
+already stated. The 303 cases of the 1.0 conformance suite remain in the 1.1
+suite with the same expectations; five serializer cases now also state the error
+code, and the invalid-contract case that used `date` as an unknown type now uses
+`datetime`. A 1.0 contract remains a valid 1.1 contract; a contract that uses
+`date` or `decimal` requires a 1.1 implementation.

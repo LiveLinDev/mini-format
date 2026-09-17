@@ -42,6 +42,21 @@ class TestConformanceSuite(unittest.TestCase):
                     self.assertTrue(("family" in c) != ("contract" in c))
                 self.assertTrue(c["expected"])
 
+    def test_every_spec_1_1_rule_has_cases(self):
+        """HU02/HU04: each point left open by SPEC 1.0 has a 1.1 rule, an ADR and cases."""
+        ids = {c["id"] for c in CASES}
+        adr_dir = ROOT / "docs" / "adr"
+        self.assertEqual(len(generate.SPEC_1_1_RULES), 8)
+        for rule, info in generate.SPEC_1_1_RULES.items():
+            with self.subTest(rule=rule):
+                self.assertTrue(info["cases"])
+                self.assertEqual(set(info["cases"]) - ids, set())
+                self.assertEqual(len(list(adr_dir.glob(f"{info['adr']}-*.md"))), 1)
+        spec = (ROOT / "SPEC.md").read_text(encoding="utf-8")
+        self.assertIn("**Version:** 1.1", spec)
+        for f in run_python.CASES_DIR.glob("*.json"):
+            self.assertEqual(json.loads(f.read_text(encoding="utf-8"))["spec"], generate.SPEC_VERSION)
+
     def test_committed_cases_match_generator(self):
         built = generate.build()
         for f in sorted(run_python.CASES_DIR.glob("*.json")):
