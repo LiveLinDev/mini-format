@@ -2,6 +2,17 @@
 
 ## 1.2.0 (sin publicar)
 
+- Offline demonstration (`demo/sin-conexion/demo.py`): contract, generated
+  instruction, streaming read of a real archived model answer, diagnostics,
+  selective repair and typed objects, with network access blocked; checked by
+  `tests/test_demo_sin_conexion.py` (under 3 minutes).
+- CI matrix on Linux, Windows and macOS with Python 3.9 and 3.12; coverage gates
+  of 90 % for Python (including the AI kit tests) and TypeScript lines; the site
+  workflow installs `ts/` development dependencies before building releases.
+- `tools/smoke_release.py` installs the npm package inside its own temporary
+  project, so npm never resolves an unrelated parent `package.json`.
+- JSON Schema and Zod converters map `date` (`format: date`) and `decimal`
+  (`format: decimal` or the `x-mini` annotation) with their bounds.
 - Publish core SPEC 1.1 (2026-09-17, English and Spanish). It fixes the seven
   behaviors SPEC 1.0 left undefined, each with a normative rule, conformance
   cases and a decision record; every document valid under 1.0 keeps its validity
