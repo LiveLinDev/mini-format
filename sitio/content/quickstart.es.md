@@ -54,10 +54,15 @@ from minifmt import Contract, parse, spec_block
 from minifmt.ai import merge_repair, repair_request
 
 contrato = Contract.load("contrato_tk.json")
-instruccion = spec_block(contrato, "es")                 # bloque de formato para el prompt
-documento = parse(respuesta, contrato, strict=False)     # registros válidos y errores con su línea
 
-solicitud = repair_request(respuesta, contrato, "es")    # reenvía solo las líneas inválidas
+# bloque de formato que se añade al prompt del modelo
+instruccion = spec_block(contrato, "es")
+
+# registros válidos y errores con su código y su línea
+documento = parse(respuesta, contrato, strict=False)
+
+# reenvía al modelo solo las líneas inválidas y fusiona la corrección
+solicitud = repair_request(respuesta, contrato, "es")
 fusion = merge_repair(respuesta, correccion, contrato, solicitud)
 ```
 

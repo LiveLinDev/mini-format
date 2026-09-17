@@ -54,10 +54,15 @@ from minifmt import Contract, parse, spec_block
 from minifmt.ai import merge_repair, repair_request
 
 contract = Contract.load("ticket_contract.json")
-instruction = spec_block(contract, "en")                 # format block for the prompt
-document = parse(response, contract, strict=False)       # valid records and errors with their line
 
-request = repair_request(response, contract, "en")       # resend only the invalid lines
+# format block appended to the model prompt
+instruction = spec_block(contract, "en")
+
+# valid records and errors with their code and line
+document = parse(response, contract, strict=False)
+
+# resend only the invalid lines and merge the correction
+request = repair_request(response, contract, "en")
 merged = merge_repair(response, correction, contract, request)
 ```
 
