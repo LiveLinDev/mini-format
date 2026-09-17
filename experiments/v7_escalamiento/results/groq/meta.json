@@ -1,0 +1,41 @@
+{
+  "experimento": "v7_escalamiento",
+  "proveedor": "groq",
+  "modelo": "openai/gpt-oss-20b",
+  "precios": {
+    "entrada": 0.075,
+    "salida": 0.3,
+    "modelo_precio": "GPT OSS 20B",
+    "fuente": "https://console.groq.com/docs/models",
+    "fecha": "2026-09-15"
+  },
+  "tamanos": [
+    10,
+    25,
+    50,
+    100,
+    150,
+    200,
+    300,
+    400
+  ],
+  "formatos": [
+    "mini",
+    "json"
+  ],
+  "semilla": 20260917,
+  "max_tokens": 8192,
+  "temperatura": 0,
+  "entrada": "v2: combinatoria (saludo × problema × producto por categoría × referencia × detalle × cierre)",
+  "combinaciones_entrada": 72091358976,
+  "opciones_modelo": {
+    "reasoning_effort": "low"
+  },
+  "inicio": "2026-09-17T23:50:43+00:00",
+  "fin": "2026-09-17T23:52:40+00:00",
+  "llamadas": 48,
+  "usd_gastado": 0.0032,
+  "detenido_por_presupuesto": false,
+  "limitacion": "Nivel gratuito de Groq: 8 000 tokens por minuto y 1 000 peticiones al día. Los lotes grandes superan el límite por minuto en una sola llamada, así que solo se completaron las celdas pequeñas (11 de 48). Las demás devolvieron HTTP 429.",
+  "celdas_completadas": "json 10/25/50 · mini 10/25"
+}

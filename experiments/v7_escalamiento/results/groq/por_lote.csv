@@ -1,0 +1,6 @@
+formato,lote,llamadas,registros_solicitados,registros_completos,registros_aprovechados,aprovechamiento_pct,llamadas_cortadas,tokens_salida_mediana,tokens_por_registro,ms_mediana,lecturas
+json,10,3,30,30,30,100.0,0,562,56.2,1019,ok
+json,25,1,25,25,25,100.0,0,1086,43.44,1813,ok
+json,50,1,50,50,50,100.0,0,2115,42.3,11570,ok
+mini,10,3,30,30,30,100.0,0,292,29.2,1198,ok
+mini,25,3,75,75,75,100.0,0,635,25.4,1339,ok

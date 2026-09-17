@@ -215,7 +215,11 @@ def main() -> int:
         print("falta la clave del proveedor en el entorno", file=sys.stderr)
         return 2
 
-    adaptador = get_adapter(a.proveedor, modelo)
+    opciones = {}
+    if "gpt-oss" in modelo:
+        # los modelos de razonamiento gastan parte del límite de salida antes de escribir la respuesta
+        opciones["extra_body"] = {"reasoning_effort": "low"}
+    adaptador = get_adapter(a.proveedor, modelo, **opciones)
     candado = threading.Lock()
     gastado = {"usd": 0.0}
     detener = threading.Event()
@@ -263,6 +267,7 @@ def main() -> int:
         "precios": pr, "tamanos": tamanos, "formatos": formatos, "semilla": a.semilla,
         "max_tokens": MAX_TOKENS[a.proveedor], "temperatura": 0,
         "entrada": ENTRADA_VERSION, "combinaciones_entrada": combinaciones(),
+        "opciones_modelo": opciones.get("extra_body", {}),
         "inicio": inicio.isoformat(timespec="seconds"), "fin": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "llamadas": escritas, "usd_gastado": round(gastado["usd"], 4),
         "detenido_por_presupuesto": detener.is_set(),

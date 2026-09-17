@@ -53,6 +53,16 @@ gasto acumulado según los tokens informados lo pasa. Cada llamada se escribe en
 `fsync`, así que relanzar el mismo comando salta lo ya hecho. Las claves se leen solo del entorno; no se
 imprimen ni se guardan en los resultados.
 
+## Proveedores y límites
+
+`deepseek-chat` admite el barrido completo. El **nivel gratuito de Groq no sirve** para este experimento:
+8 000 tokens por minuto y 1 000 peticiones al día, y un lote de 200 registros necesita más de 14 000 tokens
+entre entrada y salida, de modo que las celdas grandes devuelven 429 siempre. En `results/groq` quedan las
+celdas pequeñas que sí se completaron, declaradas como parciales en su `meta.json`.
+
+En los modelos GPT-OSS el arnés fija `reasoning_effort: low`: son modelos de razonamiento y, sin eso, gastan
+parte del límite de salida antes de escribir la respuesta (con un tope bajo devuelven el texto vacío).
+
 ## Resultados
 
 `results/<proveedor>/llamadas.jsonl` (una línea por llamada), `por_lote.csv`, `resumen.csv` y `meta.json`

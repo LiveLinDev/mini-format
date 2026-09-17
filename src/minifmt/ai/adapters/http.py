@@ -18,6 +18,7 @@ log = logging.getLogger("minifmt.ai.http")
 
 Transport = Callable[[str, Mapping[str, str], bytes, float], Tuple[int, bytes]]
 RETRYABLE = {408, 409, 429, 500, 502, 503, 504, 529}
+USER_AGENT = "mini-format/1.2.0 (+https://mini-format.pmoluna.com)"
 
 
 def _httpx_transport(url: str, headers: Mapping[str, str], body: bytes, timeout: float) -> Tuple[int, bytes]:
@@ -51,7 +52,9 @@ def post_json(url: str, headers: Mapping[str, str], payload: Dict[str, Any], *, 
     """POST ``payload`` as JSON; retries retryable statuses with jittered backoff."""
     tp = transport or default_transport()
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    hdrs = {"content-type": "application/json", **headers}
+    # Sin user-agent algunos proveedores (Cloudflare) rechazan la petición con 403/1010.
+    hdrs = {"content-type": "application/json", "user-agent": USER_AGENT,
+            "accept": "application/json", **headers}
     last: Optional[AdapterError] = None
     for attempt in range(retries + 1):
         try:
