@@ -98,10 +98,13 @@ TOON oficial, con el ahorro respecto de JSON compacto; un formato cuya dependenc
 (PyYAML, Node.js o el paquete TOON incluido) no está disponible se informa como no
 disponible.
 
-`js/mini.js` ofrece un port para navegador sin dependencias. El kit de dominio
-generado incluye su propio runtime autónomo y el perfil explícito `mini-domain/1`.
-Las familias existentes conservan [SPEC 1.0](SPEC.es.md). Consulta el
-[perfil de dominio](DOMAIN_PROFILE.es.md) y el [protocolo de familias](FORKING.es.md).
+`js/mini.js` ofrece la biblioteca TypeScript compilada para navegador, sin
+dependencias (generada por `tools/build_js.mjs` y verificada con la suite de
+conformidad). El kit de dominio generado incluye su propio runtime autónomo y el
+perfil explícito `mini-domain/1`. Las familias del núcleo siguen [SPEC 1.1](SPEC.es.md),
+que mantiene válido todo documento 1.0; las decisiones de diseño están en
+[docs/adr](docs/adr/README.md). Consulta el [perfil de dominio](DOMAIN_PROFILE.es.md)
+y el [protocolo de familias](FORKING.es.md).
 
 ## Eficiencia medida
 

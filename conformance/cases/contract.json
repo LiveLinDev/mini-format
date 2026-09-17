@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "contract",
   "cases": [
     {
@@ -94,7 +94,7 @@
         "core": [
           {
             "name": "id",
-            "type": "date"
+            "type": "datetime"
           }
         ]
       },
@@ -293,6 +293,119 @@
         "core": [
           {
             "name": "id"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-date-decimal-valid",
+      "category": "contract",
+      "description": "contrato con date y decimal y sus límites",
+      "mode": "contract",
+      "input": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "errors": []
+      }
+    },
+    {
+      "id": "contract-date-bad-bound",
+      "category": "contract",
+      "description": "límite date que no es una fecha válida (E20)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "d",
+            "type": "date",
+            "min": "2024-02-30"
+          }
+        ]
+      },
+      "expected": {
+        "errors": [
+          {
+            "code": "E20",
+            "line": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "contract-decimal-float-bound",
+      "category": "contract",
+      "description": "límite decimal float no entero (E20: se escribe como string)",
+      "mode": "contract",
+      "input": {
+        "prefix": "x",
+        "core": [
+          {
+            "name": "m",
+            "type": "decimal",
+            "max": 1.5
           }
         ]
       },

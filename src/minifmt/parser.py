@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 from . import codec
-from .contract import Contract, Field
+from .contract import SCALAR_TYPES, Contract, Field
 from .errors import (E_ARITY, E_COUNT_MISMATCH, E_ESCAPE, E_HEADER_KEY, E_LIST_ARITY,
                      E_MARKER, E_NO_COUNT, E_NO_HEADER, E_TYPE, E_UNIQUE,
                      E_UNKNOWN_PREFIX, MiniError, MiniValidationError)
@@ -135,6 +135,7 @@ def parse_header(line: str, lineno: int, contract: Contract, strict: bool) -> Tu
         fields = codec.split_fields(safe, contract.list_separator, lineno, strict=False)
     prefix = codec.text_of(fields[0]) if fields else ""
     header: Dict[str, Any] = {}
+    seen: set = set()  # keys present in the header, even when their value is invalid
     for toks in fields[1:]:
         txt = codec.text_of(toks)
         if not txt:
@@ -146,6 +147,11 @@ def parse_header(line: str, lineno: int, contract: Contract, strict: bool) -> Tu
         eq = next((i for i, (ch, esc) in enumerate(toks) if ch == "=" and not esc), -1)
         key = codec.text_of(codec.strip_toks(toks[:eq]))
         vtoks = codec.strip_toks(toks[eq + 1:])
+        if key in seen:
+            # SPEC 1.1 §5: a repeated key is E12; the first occurrence is kept
+            errs.append(MiniError(E_HEADER_KEY, lineno, f"duplicate header key '{key}'"))
+            continue
+        seen.add(key)
         hk = contract.header_keys.get(key)
         try:
             if hk is None:
@@ -163,19 +169,21 @@ def parse_header(line: str, lineno: int, contract: Contract, strict: bool) -> Tu
         except MiniError as e:
             errs.append(e)
     for key, hk in contract.header_keys.items():
-        if key not in header:
+        if key not in seen:
             if hk.required and key != "n":
                 errs.append(MiniError(E_HEADER_KEY, lineno, f"required header key '{key}' missing"))
             elif hk.default is not None:
                 header[key] = hk.default
-    if "n" not in header:
+    # E03 means that n is absent; a present but ill-typed n was already
+    # reported with the code of its type violation (SPEC 1.1 §5).
+    if "n" not in seen:
         errs.append(MiniError(E_NO_COUNT, lineno, "header must declare n=<record count>"))
     return prefix, header, errs
 
 
 def decode_field(toks: List[codec.Tok], f: Field, lineno: int, sep: str, header: Optional[Dict[str, Any]] = None) -> Any:
     """Decode one field (token list) according to its Field definition."""
-    if f.type in ("str", "int", "float", "bool", "enum"):
+    if f.type in SCALAR_TYPES:
         txt = codec.text_of(toks)
         if txt == "":
             if f.optional:
@@ -183,6 +191,9 @@ def decode_field(toks: List[codec.Tok], f: Field, lineno: int, sep: str, header:
             raise MiniError(E_TYPE, lineno, "required value is empty", f.name)
         return decode_scalar(txt, f, lineno)
     if f.type in ("list", "mlist"):
+        if not toks and f.optional:
+            # SPEC 1.1 §6: an empty field is null for every optional field
+            return MList(f.default, None) if f.type == "mlist" else f.default
         elems = codec.split_list(toks, sep, lineno)
         if not elems and not f.optional and f.min is not None and f.min > 0:
             raise MiniError(E_LIST_ARITY, lineno, "required list is empty", f.name)

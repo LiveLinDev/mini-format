@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "mlist",
   "cases": [
     {
@@ -808,6 +808,92 @@
             "line": 2
           }
         ]
+      }
+    },
+    {
+      "id": "mlist-empty-marked-element",
+      "category": "mlist",
+      "description": "'*' solo es un elemento vacío marcado",
+      "mode": "strict",
+      "contract": {
+        "prefix": "mk",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "one",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "one",
+              "selected": "one_sel"
+            }
+          },
+          {
+            "name": "some",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_least_one",
+            "json": {
+              "items": "some",
+              "selected": "some_sel"
+            }
+          },
+          {
+            "name": "maybe",
+            "type": "mlist",
+            "item": "str",
+            "marker": "at_most_one",
+            "json": {
+              "items": "maybe",
+              "selected": "maybe_sel"
+            }
+          },
+          {
+            "name": "anyk",
+            "type": "mlist",
+            "item": "int",
+            "marker": "any",
+            "json": {
+              "items": "anyk",
+              "selected": "anyk_sel"
+            }
+          }
+        ]
+      },
+      "input": "mk|n=1\n*,b|a*|a|1",
+      "expected": {
+        "canonical": {
+          "prefix": "mk",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "one": [
+                "",
+                "b"
+              ],
+              "one_sel": 0,
+              "some": [
+                "a"
+              ],
+              "some_sel": [
+                0
+              ],
+              "maybe": [
+                "a"
+              ],
+              "maybe_sel": null,
+              "anyk": [
+                1
+              ],
+              "anyk_sel": []
+            }
+          ]
+        },
+        "mini": "mk|n=1\n\"\"*,b|a*|a|1"
       }
     }
   ]

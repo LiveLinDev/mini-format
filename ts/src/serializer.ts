@@ -1,12 +1,16 @@
 /* serializer.ts — objeto canónico + contrato -> texto .mini (SPEC §9).
  * Es estricto a propósito: rechaza valores que no encajan en el contrato para que
  * parse(dumps(obj)) == obj y dumps(parse(t)) == t se cumplan en todo documento válido.
+ * SPEC 1.1 §9: el error ante un objeto inválido es un MiniError con el código que el parser
+ * da a la misma violación y la línea física que ocuparía la entrada (1 = cabecera,
+ * i + 2 = registro i). Todo documento emitido se verifica con un análisis estricto.
  * MIT License — A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC, 2026)
  */
 import * as codec from './codec.ts';
-import { headerKeyAsField, normalizeContract } from './contract.ts';
+import { SCALAR_TYPES, headerKeyAsField, normalizeContract } from './contract.ts';
 import type { Contract, ContractJSON, Field } from './contract.ts';
-import { E_LIST_ARITY, E_MARKER, E_TYPE, MiniError } from './errors.ts';
+import { E_ENUM, E_MARKER, E_TYPE, MiniError, MiniValidationError } from './errors.ts';
+import { parse } from './parser.ts';
 import { encodeScalar } from './values.ts';
 
 type Obj = Record<string, unknown>;
@@ -40,9 +44,9 @@ export function encodeField(value: unknown, f: Field, sep: string, rec?: Obj): s
     if (f.optional) return '';
     throw new MiniError(E_TYPE, 0, 'required field is null', f.name);
   }
-  if (f.type === 'str' || f.type === 'int' || f.type === 'float' || f.type === 'bool' || f.type === 'enum') {
+  if (SCALAR_TYPES.has(f.type)) {
     if (f.type === 'enum' && !(f.values || []).includes(String(value))) {
-      throw new MiniError(E_TYPE, 0, `'${String(value)}' not in enum`, f.name);
+      throw new MiniError(E_ENUM, 0, `'${String(value)}' not in enum`, f.name);
     }
     return codec.escapeScalar(encodeScalar(value, f));
   }
@@ -89,7 +93,7 @@ export function encodeField(value: unknown, f: Field, sep: string, rec?: Obj): s
         const v = get(value as Obj, cmp.name);
         if (isNil(v)) {
           if (cmp.optional) return '';
-          throw new MiniError(E_LIST_ARITY, 0, `tuple component '${cmp.name}' missing`, f.name);
+          throw new MiniError(E_TYPE, 0, `tuple component '${cmp.name}' missing`, f.name);
         }
         return codec.escapeElement(encodeScalar(v, cmp), sep);
       })
@@ -157,7 +161,29 @@ export function dumps(obj: Obj, contract: Contract | ContractJSON): string {
   if (isNil(records)) records = [];
   if (!Array.isArray(records)) throw new MiniError(E_TYPE, 0, `'${c.records_key}' must be an array`);
   const header = (get(obj, 'header') || {}) as Obj;
-  const lines = [encodeHeader(header, c, records.length)];
-  for (const r of records) lines.push(encodeRecord(r as Obj, c));
-  return lines.join('\n');
+  if (typeof header !== 'object' || Array.isArray(header)) throw new MiniError(E_TYPE, 1, 'header must be an object');
+  const n = records.length;
+  const lines = [atLine(() => encodeHeader(header, c, n), 1)];
+  records.forEach((r, i) => {
+    if (!r || typeof r !== 'object' || Array.isArray(r)) throw new MiniError(E_TYPE, i + 2, 'record must be an object');
+    lines.push(atLine(() => encodeRecord(r as Obj, c), i + 2));
+  });
+  const text = lines.join('\n');
+  try {
+    parse(text, c, { strict: true });
+  } catch (e) {
+    if (e instanceof MiniValidationError) throw e.errors[0];
+    throw e;
+  }
+  return text;
+}
+
+/** Ejecuta `encode` y ubica en `lineno` un MiniError sin línea. */
+function atLine(encode: () => string, lineno: number): string {
+  try {
+    return encode();
+  } catch (e) {
+    if (e instanceof MiniError && !e.line) throw new MiniError(e.code, lineno, e.message, e.field);
+    throw e;
+  }
 }

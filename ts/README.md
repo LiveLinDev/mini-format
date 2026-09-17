@@ -1,7 +1,7 @@
 # @mini-format/core — biblioteca TypeScript de `.mini`
 
 Versión de software 1.1.0. Implementación TypeScript modular y tipada del núcleo
-`.mini` (SPEC 1.0):
+`.mini` (SPEC 1.1):
 parser, serializador, bloque de especificación para prompts, registro de familias
 (forks), una API de lectura en streaming para respuestas de modelos token a token,
 reparación selectiva, contratos desde Zod / JSON Schema y adaptadores de modelos
@@ -268,26 +268,25 @@ Como en la referencia, los escapes se validan también en modo tolerante (E09 y
 el registro se descarta), un escape inválido en la cabecera es E09 dentro de la
 validación y una línea rechazada no reserva su valor `unique`.
 
-## Decisiones donde `js/mini.js`, la referencia Python y la SPEC difieren
+## Implementaciones y motor del playground
 
-Criterio: si la SPEC decide, se sigue la SPEC; si no, se sigue la referencia Python.
+`js/mini.js`, el motor del playground, ya no es un port escrito a mano: desde 1.2.0
+se genera desde `ts/src` con `node --no-warnings tools/build_js.mjs` (un paquete UMD
+sin dependencias que expone el global `MINI`). `node tests/test_js_port.mjs` falla si
+el archivo versionado no está al día y ejecuta todos los casos de conformidad contra
+él (`node conformance/run_js.mjs` imprime el mismo informe por categoría). Así, el
+navegador valida exactamente como esta biblioteca.
 
-| Tema | Python | JS | TS |
-|---|---|---|---|
-| Documento vacío en modo tolerante | lanza siempre | devuelve documento sin `canonical()` | devuelve `Document` con E01 (SPEC §8) |
-| Escape inválido en la cabecera | E09 dentro de la validación (corregido) | `MiniError` crudo fuera de `parse` | E09 dentro de la validación |
-| Escape inválido en un registro, modo tolerante | E09 y registro descartado (corregido) | conserva el texto literal | E09 y registro descartado |
-| Línea rechazada con valor `unique` | no lo reserva (corregido) | lo reserva | no lo reserva |
-| `\n` final en un entero/flotante (`5\n`) | acepta (`$` de `re` + `int()`) | rechaza | rechaza, E06 (SPEC: `-?[0-9]+`) |
-| Dígitos Unicode en números | acepta (`\d` Unicode) | rechaza | rechaza |
-| `clave\=valor` en cabecera (tolerante) | clave rota | E12 | E12 (primer `=` no escapado, SPEC §3.2) |
-| Espacio en blanco | `str.isspace()` | `\s` de JS | `str.isspace()` |
-| Validación del contrato (tipos desconocidos, separador, marcador, tuplas) | estricta (E20) | laxa | estricta (E20) |
-| Prefijo con letras no ASCII | acepta | rechaza | rechaza (SPEC §4) |
-| Formato de flotantes (1e21, 1e-7) | expande sin exponente cuando es exacto | `String(x)` | como Python |
-| Firma/spec de `float` con `max: 3.0` | `3.0` | `3` | `3` (JSON.parse no distingue) |
-| Rango de listas en `specBlock` con `max: 0` | `∞` | `0` | como Python |
-| Claves `__proto__` en cabecera/registros | se conservan | se pierden | se conservan |
+Diferencias que quedan entre la referencia Python y TypeScript (criterio: si la SPEC
+decide, se sigue la SPEC; si no, se sigue la referencia Python):
+
+| Tema | Python | TS y `js/mini.js` |
+|---|---|---|
+| Documento vacío en modo tolerante | lanza siempre | devuelve `Document` con E01 (SPEC §8) |
+| `clave\=valor` en cabecera (tolerante) | clave rota | E12 (primer `=` no escapado, SPEC §3.2) |
+| Prefijo con letras no ASCII | acepta | rechaza (SPEC §4) |
+| Firma/spec de `float` con `max: 3.0` | `3.0` | `3` (JSON.parse no distingue) |
+| Enteros fuera de ±2^53 | exactos | pierden precisión (usa `decimal` para valores exactos) |
 
 ## Limitaciones
 

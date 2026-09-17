@@ -169,7 +169,12 @@ def escape_scalar(value: str) -> str:
 
 def escape_element(value: str, sep: str) -> str:
     """Escape a list element: like a scalar, plus the separator, a trailing *
-    and a leading double quote (which would otherwise open a quoted element)."""
+    and a leading double quote (which would otherwise open a quoted element).
+
+    The empty string is written ``""`` (SPEC 1.1 Â§3.4): a bare empty element
+    is indistinguishable from an empty list when it is the only element."""
+    if value == "":
+        return QUOTE + QUOTE
     s = escape_scalar(value).replace(sep, ESCAPE + sep)
     if s.endswith(MARKER):
         s = s[:-1] + ESCAPE + MARKER

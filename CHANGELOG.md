@@ -2,6 +2,37 @@
 
 ## 1.2.0 (sin publicar)
 
+- Publish core SPEC 1.1 (2026-09-17, English and Spanish). It fixes the seven
+  behaviors SPEC 1.0 left undefined, each with a normative rule, conformance
+  cases and a decision record; every document valid under 1.0 keeps its validity
+  and canonical object (SPEC §13):
+  - `\,` is a literal comma with any list separator; `\<sep>` only for the
+    contract's own separator.
+  - Booleans accept only `true`/`false`/`1`/`0`; integers and floats use ASCII
+    digits, no leading `+`, and floats need digits on both sides of the point.
+  - An ill-typed header value reports the code of its type violation (`n=abc`
+    is E06, no longer E06 + E03).
+  - A repeated header key is E12; the first occurrence counts.
+  - Empty list elements are empty strings and are serialized as `""`, so `[""]`
+    round-trips.
+  - An empty optional list or marked list is null.
+  - The serializer rejects invalid objects with the parser's error code and the
+    line the entry would occupy, and verifies every emitted document.
+- Add the `date` (`YYYY-MM-DD`, calendar-checked) and `decimal` (exact, canonical
+  JSON string) scalar types with optional `min`/`max`, in Python, TypeScript,
+  contract validation, prompt blocks and the playground wizard.
+- Conformance suite 1.1: 372 cases (303 from 1.0 kept with the same
+  expectations), `SPEC_1_1_RULES` index and serializer error-code checks in the
+  Python, TypeScript and JavaScript runners.
+- Generate the playground engine `js/mini.js` from the TypeScript library
+  (`tools/build_js.mjs`) instead of maintaining a hand-written port;
+  `tests/test_js_port.mjs` checks that it is up to date and runs every
+  conformance case against it (`conformance/run_js.mjs`).
+- Add architecture decision records in `docs/adr/` (Spanish) for the positional
+  contract, escapes and quotes, marked lists, count keys, lenient mode, forking,
+  version tails, the playground engine, the SPEC 1.1 rules and the new types.
+- Fix the domain toolkit wrappers (`validator.py`, `repair.py`) on Windows builds
+  of Python 3.9, where the built-in `parser` module shadowed the bundled parser.
 - TypeScript library (`@mini-format/core`): strict `tsconfig.json`, `npm run typecheck`
   (TypeScript as a devDependency) and `.d.ts` declarations emitted into `dist/` by
   `tools/build_node.mjs`; `exports.types` now points to `dist/index.d.ts`

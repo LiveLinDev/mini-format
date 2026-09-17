@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "optionals",
   "cases": [
     {
@@ -476,6 +476,179 @@
           {
             "code": "E06",
             "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "opt-list-empty-null",
+      "category": "optionals",
+      "description": "lista opcional vacía es null; lista requerida vacía es []",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ol",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "req",
+            "type": "list",
+            "item": "str"
+          },
+          {
+            "name": "opt",
+            "type": "list",
+            "item": "int",
+            "optional": true,
+            "min": 1
+          }
+        ],
+        "extensions": [
+          {
+            "name": "sel",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "sel",
+              "selected": "sel_i"
+            }
+          },
+          {
+            "name": "tags",
+            "type": "list",
+            "item": "str"
+          }
+        ]
+      },
+      "input": "ol|n=1\nr1|||a*,b",
+      "expected": {
+        "canonical": {
+          "prefix": "ol",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "req": [],
+              "opt": null,
+              "sel": [
+                "a",
+                "b"
+              ],
+              "sel_i": 0,
+              "tags": null
+            }
+          ]
+        },
+        "mini": "ol|n=1\nr1|||a*,b"
+      }
+    },
+    {
+      "id": "opt-mlist-empty-null",
+      "category": "optionals",
+      "description": "lista marcada opcional vacía es null (no E08)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ol",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "req",
+            "type": "list",
+            "item": "str"
+          },
+          {
+            "name": "opt",
+            "type": "list",
+            "item": "int",
+            "optional": true,
+            "min": 1
+          }
+        ],
+        "extensions": [
+          {
+            "name": "sel",
+            "type": "mlist",
+            "item": "str",
+            "marker": "exactly_one",
+            "json": {
+              "items": "sel",
+              "selected": "sel_i"
+            }
+          },
+          {
+            "name": "tags",
+            "type": "list",
+            "item": "str"
+          }
+        ]
+      },
+      "input": "ol|n=1\nr1|x|1||t",
+      "expected": {
+        "canonical": {
+          "prefix": "ol",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "req": [
+                "x"
+              ],
+              "opt": [
+                1
+              ],
+              "sel": null,
+              "sel_i": null,
+              "tags": [
+                "t"
+              ]
+            }
+          ]
+        },
+        "mini": "ol|n=1\nr1|x|1||t"
+      }
+    },
+    {
+      "id": "opt-list-min-applies-when-present",
+      "category": "optionals",
+      "description": "el mínimo de una lista opcional se aplica si no está vacía",
+      "mode": "strict",
+      "contract": {
+        "prefix": "om",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "l",
+            "type": "list",
+            "item": "str",
+            "optional": true,
+            "min": 2
+          }
+        ]
+      },
+      "input": "om|n=2\nr1|\nr2|a",
+      "expected": {
+        "errors": [
+          {
+            "code": "E07",
+            "line": 3
           }
         ]
       }

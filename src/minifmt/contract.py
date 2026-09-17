@@ -18,8 +18,8 @@ Contract JSON (abridged)::
 
 Field types
 -----------
-str, int, float, bool, enum(values), list(item), mlist(item, marker),
-tuple(items).  ``mlist`` is a list in which elements may carry the selection
+str, int, float, bool, enum(values), date, decimal, list(item),
+mlist(item, marker), tuple(items).  ``mlist`` is a list in which elements may carry the selection
 marker ``*``; ``tuple`` is a fixed, named, comma-separated group that maps to
 a JSON object (one level of nesting without nesting syntax).
 """
@@ -32,10 +32,23 @@ from typing import Any, Dict, List, Optional
 
 from .errors import E_CONTRACT, E_FORK, MiniError
 
-SCALAR_TYPES = {"str", "int", "float", "bool", "enum"}
+SCALAR_TYPES = {"str", "int", "float", "bool", "enum", "date", "decimal"}
 COMPOSITE_TYPES = {"list", "mlist", "tuple"}
 ALL_TYPES = SCALAR_TYPES | COMPOSITE_TYPES
 MARKER_MODES = {"exactly_one", "at_least_one", "at_most_one", "any"}
+
+
+def _check_bounds(f: "Field", where: str) -> None:
+    """``min``/``max`` of a date are YYYY-MM-DD strings; of a decimal, decimal
+    strings or integral numbers (SPEC 1.1 §6)."""
+    from .values import decimal_bound, valid_date  # local import: values imports contract
+    for key in ("min", "max"):
+        bound = getattr(f, key)
+        if bound is None:
+            continue
+        ok = (isinstance(bound, str) and valid_date(bound)) if f.type == "date" else decimal_bound(bound) is not None
+        if not ok:
+            raise MiniError(E_CONTRACT, 0, f"field {where}: invalid {key} {bound!r} for type {f.type}")
 
 
 @dataclass
@@ -78,6 +91,8 @@ class Field:
         )
         if t == "enum" and not f.values:
             raise MiniError(E_CONTRACT, 0, f"field {where}: enum requires 'values'")
+        if t in ("date", "decimal"):
+            _check_bounds(f, where)
         if t in ("list", "mlist"):
             if f.item not in SCALAR_TYPES:
                 raise MiniError(E_CONTRACT, 0, f"field {where}: list item type must be scalar")

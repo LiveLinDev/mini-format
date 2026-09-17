@@ -40,7 +40,16 @@ def _field_doc(f: Field, sep: str, lang: str) -> str:
     rng = ""
     if f.min is not None or f.max is not None:
         rng = f" [{'' if f.min is None else f.min}..{'' if f.max is None else f.max}]"
-    return f"{f.name}: {f.type}{rng}" + opt + (f" — {f.desc}" if f.desc else "")
+    return f"{f.name}: {f.type}{rng}" + _format_hint(f.type, es) + opt + (f" — {f.desc}" if f.desc else "")
+
+
+def _format_hint(t: str, es: bool) -> str:
+    """Textual form of the types whose lexical rule is not self-evident (SPEC 1.1 §6)."""
+    if t == "date":
+        return " (AAAA-MM-DD)" if es else " (YYYY-MM-DD)"
+    if t == "decimal":
+        return " (decimal exacto sin exponente, p. ej. 12.50)" if es else " (exact decimal without exponent, e.g. 12.50)"
+    return ""
 
 
 def spec_block(c: Contract, lang: str = "en", example: Optional[str] = None) -> str:

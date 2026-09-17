@@ -16,10 +16,13 @@ estructura incompatible — eso es un prefijo nuevo.
 
 ## Cambios en la implementación
 
-Ambas implementaciones (Python `src/minifmt`, JavaScript `js/mini.js`) deben mantenerse
-de acuerdo: cualquier cambio en las reglas léxicas (`codec.py`) necesita el cambio
-espejo en `mini.js`, una actualización de la spec en `SPEC.md` y un fixture que lo
-ejercite. Los códigos de error son parte del contrato público; no los renumeres.
+Ambas implementaciones (Python `src/minifmt`, TypeScript `ts/src`) deben mantenerse
+de acuerdo: cualquier cambio en las reglas necesita el cambio espejo en la otra
+implementación, una actualización de la spec en `SPEC.md` y `SPEC.es.md`, un caso de
+conformidad en `conformance/generate.py` y, si el cambio es una decisión, un ADR en
+`docs/adr/`. `js/mini.js` (el motor del playground) se genera desde `ts/src` con
+`node --no-warnings tools/build_js.mjs`; no se edita a mano. Los códigos de error son
+parte del contrato público; no los renumeres.
 
 ## Benchmark y validación
 

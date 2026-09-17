@@ -16,10 +16,13 @@ incompatible layout — that is a new prefix.
 
 ## Implementation changes
 
-Both implementations (Python `src/minifmt`, JavaScript `js/mini.js`) must stay
-in agreement: any change to the lexical rules (`codec.py`) needs the mirror
-change in `mini.js`, a spec update in `SPEC.md`, and a fixture that exercises
-it. Error codes are part of the public contract; do not renumber them.
+Both implementations (Python `src/minifmt`, TypeScript `ts/src`) must stay in
+agreement: any change to the rules needs the mirror change in the other
+implementation, a spec update in `SPEC.md` and `SPEC.es.md`, a conformance case
+in `conformance/generate.py` and, when the change is a decision, an ADR in
+`docs/adr/`. `js/mini.js` (the playground engine) is generated from `ts/src` with
+`node --no-warnings tools/build_js.mjs`; never edit it by hand. Error codes are
+part of the public contract; do not renumber them.
 
 ## Benchmark and validation
 

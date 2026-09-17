@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "fixtures",
   "cases": [
     {

@@ -746,6 +746,18 @@ def make_prompt(contract, lang="en", example=None):
     return text
 
 
+# Wrappers load the adjacent parser.py by path: Windows builds of Python 3.9
+# compile in the deprecated ``parser`` module, which shadows ``from parser import``.
+_WRAPPER_IMPORT = (
+    "import importlib.util\nimport sys\nfrom pathlib import Path\n"
+    "_spec = importlib.util.spec_from_file_location(\"_mini_bundle_parser\", Path(__file__).resolve().with_name(\"parser.py\"))\n"
+    "_module = importlib.util.module_from_spec(_spec)\n"
+    "sys.modules[_spec.name] = _module\n"
+    "_spec.loader.exec_module(_module)\n"
+    "main = _module.main\n"
+)
+
+
 def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, record_path=None):
     """Write a portable bundle to a new/empty directory; never overwrite work."""
     destination = Path(out)
@@ -767,8 +779,8 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "prompt.en.md": make_prompt(contract, "en", example),
         "prompt.es.md": make_prompt(contract, "es", example),
         "parser.py": source,
-        "validator.py": '"""Validate a .mini response with the bundled contract."""\nimport sys\nfrom parser import main\nif __name__ == "__main__":\n    raise SystemExit(main(["validate", *sys.argv[1:]]))\n',
-        "repair.py": '"""Repair only unambiguous transport wrappers; never fabricate data."""\nimport sys\nfrom parser import main\nif __name__ == "__main__":\n    raise SystemExit(main(["repair", *sys.argv[1:]]))\n',
+        "validator.py": '"""Validate a .mini response with the bundled contract."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["validate", *sys.argv[1:]]))\n',
+        "repair.py": '"""Repair only unambiguous transport wrappers; never fabricate data."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["repair", *sys.argv[1:]]))\n',
         "example.json": json.dumps(example, ensure_ascii=False, indent=2) + "\n",
         "example.mini": encode(example, contract) + "\n",
         "README.md": f"# {prefix} · .mini domain bundle\n\nProfile `{PROFILE}`. Python 3.9+; standard library only.\n"

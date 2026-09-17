@@ -22,6 +22,7 @@ FORKS = ROOT / "forks"
 CASES_DIR = HERE / "cases"
 
 CASES: Dict[str, List[Dict[str, Any]]] = {}
+SPEC_VERSION = "1.1"
 
 
 def add(category: str, cid: str, description: str, *, mode: str = "strict", input: Any,
@@ -552,16 +553,16 @@ def dumps_cases() -> None:
         mini="tp|n=1\nr1|1,2.5,|-1,1")
     add("roundtrip", "dumps-reject-marker", "exactly_one sin selección no se puede serializar", mode="dumps", contract=MK,
         input=C("mk", {"n": 1}, "rows", [{"one": ["a", "b"], "one_sel": None, "some": ["a"], "some_sel": [0], "maybe": ["a"], "maybe_sel": None, "anyk": [1], "anyk_sel": []}]),
-        rejected=True)
+        rejected=True, errors=[err("E08", 2)])
     add("roundtrip", "dumps-reject-index", "índice seleccionado fuera de rango no se puede serializar", mode="dumps", contract=MK,
         input=C("mk", {"n": 1}, "rows", [{"one": ["a", "b"], "one_sel": 5, "some": ["a"], "some_sel": [0], "maybe": ["a"], "maybe_sel": None, "anyk": [1], "anyk_sel": []}]),
-        rejected=True)
+        rejected=True, errors=[err("E08", 2)])
     add("roundtrip", "dumps-reject-required-null", "campo requerido nulo no se puede serializar", mode="dumps", contract=c,
-        input=C("sc", {"n": 1}, "rows", [sc_rec(qty=None)]), rejected=True)
+        input=C("sc", {"n": 1}, "rows", [sc_rec(qty=None)]), rejected=True, errors=[err("E06", 2)])
     add("roundtrip", "dumps-reject-enum", "valor fuera de la enumeración no se puede serializar", mode="dumps", contract=c,
-        input=C("sc", {"n": 1}, "rows", [sc_rec(color="pink")]), rejected=True)
+        input=C("sc", {"n": 1}, "rows", [sc_rec(color="pink")]), rejected=True, errors=[err("E10", 2)])
     add("roundtrip", "dumps-reject-tuple-component", "componente requerido de tupla ausente", mode="dumps", contract=TP,
-        input=C("tp", {"n": 1}, "rows", [{"id": "r1", "pt": {"x": 1}, "span": None}]), rejected=True)
+        input=C("tp", {"n": 1}, "rows", [{"id": "r1", "pt": {"x": 1}, "span": None}]), rejected=True, errors=[err("E06", 2)])
     # parse -> dumps stability on non-canonical inputs
     add("roundtrip", "rt-quoted-to-escaped", "entrada con comillas: el canónico y su serialización escapada", contract=MK,
         input='mk|n=1\n"a, b"*,c|"x"*|a|1',
@@ -579,7 +580,7 @@ def contract_cases() -> None:
         ("contract-no-prefix", "falta prefix", {"core": [{"name": "id", "type": "str"}]}),
         ("contract-bad-prefix", "prefix con caracteres inválidos", {"prefix": "1x", "core": [{"name": "id", "type": "str"}]}),
         ("contract-no-core", "sin campos núcleo", {"prefix": "x", "core": []}),
-        ("contract-unknown-type", "tipo desconocido", {"prefix": "x", "core": [{"name": "id", "type": "date"}]}),
+        ("contract-unknown-type", "tipo desconocido", {"prefix": "x", "core": [{"name": "id", "type": "datetime"}]}),
         ("contract-enum-no-values", "enum sin values", {"prefix": "x", "core": [{"name": "e", "type": "enum"}]}),
         ("contract-bad-marker", "regla de marcador desconocida", {"prefix": "x", "core": [{"name": "m", "type": "mlist", "marker": "two"}]}),
         ("contract-tuple-no-items", "tupla sin componentes", {"prefix": "x", "core": [{"name": "t", "type": "tuple"}]}),
@@ -631,6 +632,237 @@ def contract_cases() -> None:
     add("fork", "fork-required-header", "fork que conserva los requeridos del padre (n implícito)", mode="fork", contract=child(req_header), parent="a", input=None, errors=[])
 
 
+# =====================================================================
+# 3. SPEC 1.1: rules for the points SPEC 1.0 left open (docs/adr/0009-0015)
+# =====================================================================
+OL = {  # optional lists and marked lists
+    "prefix": "ol", "records_key": "rows",
+    "core": [
+        {"name": "id", "type": "str"},
+        {"name": "req", "type": "list", "item": "str"},
+        {"name": "opt", "type": "list", "item": "int", "optional": True, "min": 1},
+    ],
+    "extensions": [
+        {"name": "sel", "type": "mlist", "item": "str", "marker": "exactly_one", "json": {"items": "sel", "selected": "sel_i"}},
+        {"name": "tags", "type": "list", "item": "str"},
+    ],
+}
+
+
+def spec11_cases() -> None:
+    c = SC
+    base = "sc|n=1\nr1|5|0.5|true|red|"
+
+    # (1) \, is a valid escape whatever the list separator; \<sep> only for the contract's separator
+    add("escapes", "esc-comma-custom-separator", "\\, es un escape válido aunque el separador sea ';' (SPEC 1.1 §3.3)", contract=SM,
+        input="sm|n=1\nr\\,1|a\\,b;c|x*;y",
+        canonical=C("sm", {"n": 1}, "rows", [{"id": "r,1", "xs": ["a,b", "c"], "opts": ["x", "y"], "ans": 0}]),
+        mini="sm|n=1\nr,1|a,b;c|x*;y")
+    add("escapes", "esc-other-separator-invalid", "\\; con el separador por defecto ',' no es un escape (E09)", contract=c,
+        input=base + "a\\;b", errors=[err("E09", 2)])
+
+    # (2) scalar lexical forms: bool true/false/1/0 only; no '+'; floats need digits on both sides
+    for cid, desc, rec, code in [
+        ("sc-bool-yes", "booleano 'yes' (E06)", "r1|5|0.5|yes|red", "E06"),
+        ("sc-bool-t", "booleano 't' (E06)", "r1|5|0.5|t|red", "E06"),
+        ("sc-bool-no", "booleano 'n' (E06)", "r1|5|0.5|n|red", "E06"),
+        ("sc-bool-uppercase", "booleano 'True' distingue mayúsculas (E06)", "r1|5|0.5|True|red", "E06"),
+        ("sc-int-plus", "entero con '+' (E06)", "r1|+5|0.5|true|red", "E06"),
+        ("sc-int-unicode-digits", "dígitos no ASCII en un entero (E06)", "r1|５|0.5|true|red", "E06"),
+        ("sc-float-plus", "float con '+' (E06)", "r1|5|+0.5|true|red", "E06"),
+        ("sc-float-leading-dot", "float '.5' sin parte entera (E06)", "r1|5|.5|true|red", "E06"),
+        ("sc-float-trailing-dot", "float '1.' sin decimales (E06)", "r1|5|1.|true|red", "E06"),
+        ("sc-float-nan", "NaN no es un número (E06)", "r1|5|NaN|true|red", "E06"),
+    ]:
+        add("types", cid, desc, contract=c, input="sc|n=1\n" + rec, errors=[err(code, 2)])
+    add("types", "sc-leading-zeros", "ceros a la izquierda en int y float se aceptan y se normalizan", contract=c,
+        input="sc|n=1\nr1|007|00.5|0|red", canonical=C("sc", {"n": 1}, "rows", [sc_rec(qty=7, flag=False)]))
+
+    # (3) ill-typed header values: code of the type violation, no E03
+    h = HD
+    add("header", "hdr-n-not-int", "n=abc: E06 en la cabecera, sin E03 ni E04 (SPEC 1.1 §5)", contract=h,
+        input="hd|n=abc|src=s\nx", errors=[err("E06", 1)])
+    add("header", "hdr-n-empty", "n vacío: E06 en la cabecera, sin E03", contract=h,
+        input="hd|n=|src=s\nx", errors=[err("E06", 1)])
+    add("header", "hdr-typed-scalar-bad", "clave tipada int con valor inválido (E06)", contract=h,
+        input="hd|n=1|src=s|k=dos\nx", errors=[err("E06", 1)])
+    add("header", "hdr-n-not-int-lenient", "n inválido en modo tolerante: registros conservados y sin registros faltantes", mode="lenient", contract=h,
+        input="hd|n=abc|src=s\nx", canonical={"prefix": "hd", "header": {"v": 1, "src": "s", "lang": "es"}, "rows": [{"id": "x"}]},
+        errors=[err("E06", 1)], diagnostics={"invalid_lines": [], "missing_records": 0})
+
+    # (4) duplicate header keys: E12, first occurrence kept
+    add("header", "hdr-duplicate-key", "clave de cabecera repetida (E12)", contract=h,
+        input="hd|n=1|src=a|src=b\nx", errors=[err("E12", 1)])
+    add("header", "hdr-duplicate-n", "n repetido (E12); se conserva el primero, sin E04", contract=h,
+        input="hd|n=1|src=s|n=2\nx", errors=[err("E12", 1)])
+    add("header", "hdr-duplicate-key-lenient", "modo tolerante: se conserva la primera aparición de la clave", mode="lenient", contract=h,
+        input="hd|n=1|src=s|model=a|model=b\nx",
+        canonical=C("hd", {"n": 1, "src": "s", "lang": "es", "model": "a"}, "rows", [{"id": "x"}]), errors=[err("E12", 1)])
+
+    # (5) empty list elements: a bare empty element is ""; the serializer writes ""
+    L, H = LS, "ls|n=1|k=2"
+
+    def lrec(xs=("x",), ns=(1,), es=("a",), ks=("p", "q")):
+        return {"id": "r1", "xs": list(xs), "ns": list(ns), "es": list(es), "ks": list(ks)}
+
+    add("lists", "list-empty-element-middle", "elemento vacío intermedio es la cadena vacía y se serializa como \"\"", contract=L,
+        input=f"{H}\nr1|a,,b|1|a|p,q", canonical=C("ls", {"n": 1, "k": 2}, "rows", [lrec(xs=("a", "", "b"))]),
+        mini=f'{H}\nr1|a,"",b|1|a|p,q')
+    add("lists", "list-empty-element-trailing", "separador final: último elemento vacío", contract=L,
+        input=f"{H}\nr1|a,|1|a|p,", canonical=C("ls", {"n": 1, "k": 2}, "rows", [lrec(xs=("a", ""), ks=("p", ""))]),
+        mini=f'{H}\nr1|a,""|1|a|p,""')
+    add("lists", "list-single-empty-string", "[\"\"] se escribe \"\" y vuelve a ser [\"\"] (ida y vuelta)", contract=L,
+        input=f'{H}\nr1|""|1|a|p,q', canonical=C("ls", {"n": 1, "k": 2}, "rows", [lrec(xs=("",))]), mini=f'{H}\nr1|""|1|a|p,q')
+    add("lists", "list-empty-element-int", "elemento vacío en lista de enteros (E06)", contract=L,
+        input=f"{H}\nr1|x|1,,2|a|p,q", errors=[err("E06", 2)])
+    add("lists", "list-empty-element-enum", "elemento vacío en lista de enum (E10)", contract=L,
+        input=f"{H}\nr1|x|1|a,|p,q", errors=[err("E10", 2)])
+    add("roundtrip", "dumps-empty-string-elements", "el serializador escribe \"\" para elementos vacíos", mode="dumps", contract=L,
+        input=C("ls", {"n": 1, "k": 2}, "rows", [lrec(xs=("",), ns=(), ks=("", "q"))]), mini=f'{H}\nr1|""||a|"",q')
+    add("mlist", "mlist-empty-marked-element", "'*' solo es un elemento vacío marcado", contract=MK,
+        input="mk|n=1\n*,b|a*|a|1",
+        canonical=C("mk", {"n": 1}, "rows", [{"one": ["", "b"], "one_sel": 0, "some": ["a"], "some_sel": [0], "maybe": ["a"], "maybe_sel": None, "anyk": [1], "anyk_sel": []}]),
+        mini='mk|n=1\n""*,b|a*|a|1')
+
+    # (6) an empty field is null for every optional field, lists and marked lists included
+    def orec(req=(), opt=None, sel=None, sel_i=None, tags=None):
+        return {"id": "r1", "req": list(req), "opt": opt, "sel": sel, "sel_i": sel_i, "tags": tags}
+
+    add("optionals", "opt-list-empty-null", "lista opcional vacía es null; lista requerida vacía es []", contract=OL,
+        input="ol|n=1\nr1|||a*,b", canonical=C("ol", {"n": 1}, "rows", [orec(sel=["a", "b"], sel_i=0)]), mini="ol|n=1\nr1|||a*,b")
+    add("optionals", "opt-mlist-empty-null", "lista marcada opcional vacía es null (no E08)", contract=OL,
+        input="ol|n=1\nr1|x|1||t", canonical=C("ol", {"n": 1}, "rows", [orec(req=("x",), opt=[1], tags=["t"])]), mini="ol|n=1\nr1|x|1||t")
+    add("optionals", "opt-list-min-applies-when-present", "el mínimo de una lista opcional se aplica si no está vacía", contract={
+        "prefix": "om", "records_key": "rows", "core": [{"name": "id", "type": "str"}, {"name": "l", "type": "list", "item": "str", "optional": True, "min": 2}]},
+        input="om|n=2\nr1|\nr2|a", errors=[err("E07", 3)])
+    add("roundtrip", "dumps-optional-list-empty-array", "[] en una lista opcional se escribe vacío (su forma canónica es null)", mode="dumps", contract=OL,
+        input=C("ol", {"n": 1}, "rows", [orec(opt=[], tags=[])]), mini="ol|n=1\nr1||")
+
+    # (7) serializer errors: parser code and the line the entry would occupy
+    MKR = {"one": ["a", "b"], "one_sel": 0, "some": ["a"], "some_sel": [0], "maybe": ["a"], "maybe_sel": None, "anyk": [1], "anyk_sel": []}
+    for cid, desc, contract, obj, code, line in [
+        ("dumps-error-range", "valor fuera de rango (E13)", c, C("sc", {"n": 1}, "rows", [sc_rec(qty=500)]), "E13", 2),
+        ("dumps-error-type", "texto en un campo int (E06)", c, C("sc", {"n": 1}, "rows", [sc_rec(qty="cinco")]), "E06", 2),
+        ("dumps-error-non-integral", "float no entero en un campo int (E06)", c, C("sc", {"n": 1}, "rows", [sc_rec(qty=2.5)]), "E06", 2),
+        ("dumps-error-required-empty-string", "texto requerido vacío (E06)", c, C("sc", {"n": 1}, "rows", [sc_rec(id="")]), "E06", 2),
+        ("dumps-error-second-record", "el error se ubica en la línea del registro (E10 en la línea 3)", c,
+         C("sc", {"n": 2}, "rows", [sc_rec(), sc_rec(id="r2", color="pink")]), "E10", 3),
+        ("dumps-error-unique", "valor único repetido (E11)", c, C("sc", {"n": 2}, "rows", [sc_rec(), sc_rec()]), "E11", 3),
+        ("dumps-error-list-arity", "lista bajo el mínimo (E07)", L, C("ls", {"n": 1, "k": 2}, "rows", [lrec(xs=())]), "E07", 2),
+        ("dumps-error-count-key", "lista distinta de la clave de conteo (E07)", L, C("ls", {"n": 1, "k": 2}, "rows", [lrec(ks=("p",))]), "E07", 2),
+        ("dumps-error-header-required", "falta una clave requerida de cabecera (E12 en la línea 1)", HD,
+         {"prefix": "hd", "header": {"n": 1}, "rows": [{"id": "x"}]}, "E12", 1),
+        ("dumps-error-selection-type", "selección que no es índice (E08)", MK, C("mk", {"n": 1}, "rows", [dict(MKR, one_sel="a")]), "E08", 2),
+    ]:
+        add("roundtrip", cid, f"el serializador rechaza con el código del parser: {desc}", mode="dumps", contract=contract,
+            input=obj, rejected=True, errors=[err(code, line)])
+
+
+# Points that SPEC 1.0 left open, the ADR that decides each one and the cases that
+# fix the 1.1 rule (tests/test_conformance.py checks that every id exists).
+SPEC_1_1_RULES: Dict[str, Dict[str, Any]] = {
+    "escape-comma-any-separator": {"adr": "0009", "cases": ["esc-comma-custom-separator", "esc-other-separator-invalid"]},
+    "scalar-lexical-forms": {"adr": "0010", "cases": ["sc-bool-yes", "sc-bool-t", "sc-bool-no", "sc-bool-uppercase", "sc-int-plus",
+                                                      "sc-int-unicode-digits", "sc-float-plus", "sc-float-leading-dot",
+                                                      "sc-float-trailing-dot", "sc-float-nan", "sc-leading-zeros"]},
+    "header-value-type-code": {"adr": "0011", "cases": ["hdr-n-not-int", "hdr-n-empty", "hdr-typed-scalar-bad", "hdr-n-not-int-lenient"]},
+    "header-duplicate-keys": {"adr": "0012", "cases": ["hdr-duplicate-key", "hdr-duplicate-n", "hdr-duplicate-key-lenient"]},
+    "empty-list-elements": {"adr": "0013", "cases": ["list-empty-element-middle", "list-empty-element-trailing", "list-single-empty-string",
+                                                     "list-empty-element-int", "list-empty-element-enum", "dumps-empty-string-elements",
+                                                     "mlist-empty-marked-element"]},
+    "empty-optional-list": {"adr": "0014", "cases": ["opt-list-empty-null", "opt-mlist-empty-null", "opt-list-min-applies-when-present",
+                                                     "dumps-optional-list-empty-array"]},
+    "serializer-error-codes": {"adr": "0015", "cases": ["dumps-error-range", "dumps-error-type", "dumps-error-non-integral",
+                                                        "dumps-error-required-empty-string", "dumps-error-second-record", "dumps-error-unique",
+                                                        "dumps-error-list-arity", "dumps-error-count-key", "dumps-error-header-required",
+                                                        "dumps-error-selection-type", "dumps-reject-marker", "dumps-reject-enum"]},
+    "date-decimal-types": {"adr": "0016", "cases": ["date-decimal-basic", "decimal-normalised", "decimal-exact-digits", "date-decimal-composites",
+                                                    "date-bad-format", "date-not-in-calendar", "date-error-line", "date-range", "decimal-range-max",
+                                                    "hdr-date-bad", "date-lenient", "dumps-date-decimal", "dumps-error-date",
+                                                    "dumps-error-decimal-float", "contract-date-decimal-valid", "contract-date-bad-bound"]},
+}
+
+
+DT = {  # date and decimal (SPEC 1.1 §6)
+    "prefix": "dt", "records_key": "rows",
+    "header": {"keys": {"d": {"type": "date"}}},
+    "core": [
+        {"name": "id", "type": "str", "unique": True},
+        {"name": "day", "type": "date", "min": "2000-01-01", "max": "2099-12-31"},
+        {"name": "amount", "type": "decimal", "min": 0, "max": "1000.00"},
+    ],
+    "extensions": [
+        {"name": "rate", "type": "decimal"},
+        {"name": "days", "type": "list", "item": "date"},
+        {"name": "span", "type": "tuple", "items": [{"name": "start", "type": "date"}, {"name": "total", "type": "decimal", "optional": True}]},
+    ],
+}
+
+
+def dt_rec(id="r1", day="2024-02-29", amount="12.50", rate=None, days=None, span=None):
+    return {"id": id, "day": day, "amount": amount, "rate": rate, "days": days, "span": span}
+
+
+def date_decimal_cases() -> None:
+    c = DT
+
+    def one(**kw):
+        return C("dt", {"n": 1}, "rows", [dt_rec(**kw)])
+
+    add("types", "date-decimal-basic", "date AAAA-MM-DD y decimal exacto: JSON canónico string", contract=c,
+        input="dt|n=1\nr1|2024-02-29|12.50", canonical=one(), mini="dt|n=1\nr1|2024-02-29|12.50")
+    add("types", "decimal-normalised", "decimal: sin ceros a la izquierda ni signo en cero; conserva la escala", contract=c,
+        input="dt|n=2\nr1|2024-01-01|007.50\nr2|2024-01-01|-0.00|-000.10",
+        canonical=C("dt", {"n": 2}, "rows", [dt_rec(day="2024-01-01", amount="7.50"), dt_rec(id="r2", day="2024-01-01", amount="0.00", rate="-0.10")]),
+        mini="dt|n=2\nr1|2024-01-01|7.50\nr2|2024-01-01|0.00|-0.10")
+    add("types", "decimal-exact-digits", "decimal conserva todos los dígitos (sin redondeo binario)", contract=c,
+        input="dt|n=1\nr1|2024-02-29|999.99999999999999999999|0.1000000000000000055511151231257827",
+        canonical=one(amount="999.99999999999999999999", rate="0.1000000000000000055511151231257827"),
+        mini="dt|n=1\nr1|2024-02-29|999.99999999999999999999|0.1000000000000000055511151231257827")
+    add("types", "date-decimal-composites", "listas y tuplas de date/decimal y clave de cabecera date", contract=c,
+        input="dt|n=1|d=2026-09-17\nr1|2024-02-29|12.50||2024-01-01,2024-12-31|2024-03-01,99.9",
+        canonical=C("dt", {"n": 1, "d": "2026-09-17"}, "rows", [dt_rec(days=["2024-01-01", "2024-12-31"], span={"start": "2024-03-01", "total": "99.9"})]),
+        mini="dt|n=1|d=2026-09-17\nr1|2024-02-29|12.50||2024-01-01,2024-12-31|2024-03-01,99.9")
+    for cid, desc, rec, code in [
+        ("date-bad-format", "fecha que no es AAAA-MM-DD (E06)", "r1|24-02-29|1", "E06"),
+        ("date-slashes", "fecha con barras (E06)", "r1|2024/02/29|1", "E06"),
+        ("date-with-time", "fecha con hora (E06)", "r1|2024-02-29T10:00|1", "E06"),
+        ("date-not-in-calendar", "29 de febrero de un año no bisiesto (E06)", "r1|2023-02-29|1", "E06"),
+        ("date-month-13", "mes 13 (E06)", "r1|2024-13-01|1", "E06"),
+        ("date-year-zero", "año 0000 (E06)", "r1|0000-01-01|1", "E06"),
+        ("date-range", "fecha bajo el mínimo del contrato (E13)", "r1|1999-12-31|1", "E13"),
+        ("decimal-comma", "decimal con coma (E06)", "r1|2024-02-29|1,5", "E06"),
+        ("decimal-exponent", "decimal con exponente (E06)", "r1|2024-02-29|1e3", "E06"),
+        ("decimal-leading-dot", "decimal '.5' (E06)", "r1|2024-02-29|.5", "E06"),
+        ("decimal-plus", "decimal con '+' (E06)", "r1|2024-02-29|+1", "E06"),
+        ("decimal-range-max", "decimal sobre el máximo, comparación exacta (E13)", "r1|2024-02-29|1000.0000000000000000001", "E13"),
+        ("decimal-range-min", "decimal bajo el mínimo (E13)", "r1|2024-02-29|-0.01", "E13"),
+        ("date-list-item-bad", "elemento de lista date inválido (E06)", "r1|2024-02-29|1||2024-01-01,2024-02-30", "E06"),
+        ("decimal-tuple-component-bad", "componente decimal inválido en tupla (E06)", "r1|2024-02-29|1|||2024-01-01,1.2.3", "E06"),
+    ]:
+        add("types", cid, desc, contract=c, input="dt|n=1\n" + rec, errors=[err(code, 2)])
+    add("types", "date-error-line", "fecha inválida: E06 con el número de línea del registro", contract=c,
+        input="dt|n=3\nr1|2024-01-01|1\nr2|2024-31-01|1\nr3|2024-01-03|1", errors=[err("E06", 3)])
+    add("header", "hdr-date-bad", "clave de cabecera date inválida (E06)", contract=c,
+        input="dt|n=1|d=17/09/2026\nr1|2024-02-29|1", errors=[err("E06", 1)])
+    add("types", "date-lenient", "modo tolerante descarta solo el registro con la fecha inválida", mode="lenient", contract=c,
+        input="dt|n=2\nr1|2024-02-30|1\nr2|2024-02-29|12.50",
+        canonical=C("dt", {"n": 2}, "rows", [dt_rec(id="r2")]), errors=[err("E06", 2)],
+        diagnostics={"invalid_lines": [2], "missing_records": 0})
+    add("roundtrip", "dumps-date-decimal", "serialización de date y decimal", mode="dumps", contract=c,
+        input=C("dt", {"n": 1}, "rows", [dt_rec(amount="1000.00", rate="-3", days=[], span={"start": "2000-01-01", "total": None})]),
+        mini="dt|n=1\nr1|2024-02-29|1000.00|-3||2000-01-01,")
+    add("roundtrip", "dumps-error-date", "fecha inexistente no se puede serializar (E06)", mode="dumps", contract=c,
+        input=one(day="2024-02-30"), rejected=True, errors=[err("E06", 2)])
+    add("roundtrip", "dumps-error-decimal-float", "un decimal se entrega como string, no como float binario (E06)", mode="dumps", contract=c,
+        input=one(amount=12.5), rejected=True, errors=[err("E06", 2)])
+    add("contract", "contract-date-decimal-valid", "contrato con date y decimal y sus límites", mode="contract", input=DT, errors=[])
+    add("contract", "contract-date-bad-bound", "límite date que no es una fecha válida (E20)", mode="contract",
+        input={"prefix": "x", "core": [{"name": "d", "type": "date", "min": "2024-02-30"}]}, errors=[err("E20", 0)])
+    add("contract", "contract-decimal-float-bound", "límite decimal float no entero (E20: se escribe como string)", mode="contract",
+        input={"prefix": "x", "core": [{"name": "m", "type": "decimal", "max": 1.5}]}, errors=[err("E20", 0)])
+
+
 def build() -> Dict[str, List[Dict[str, Any]]]:
     CASES.clear()
     fixture_cases()
@@ -644,6 +876,8 @@ def build() -> Dict[str, List[Dict[str, Any]]]:
     truncation_cases()
     dumps_cases()
     contract_cases()
+    spec11_cases()
+    date_decimal_cases()
     return CASES
 
 
@@ -654,7 +888,7 @@ def main() -> None:
         old.unlink()
     total = 0
     for cat in sorted(cases):
-        doc = {"suite": ".mini conformance", "spec": "1.0", "category": cat, "cases": cases[cat]}
+        doc = {"suite": ".mini conformance", "spec": SPEC_VERSION, "category": cat, "cases": cases[cat]}
         with open(CASES_DIR / f"{cat}.json", "w", encoding="utf-8", newline="\n") as fh:
             fh.write(json.dumps(doc, ensure_ascii=False, indent=2) + "\n")
         total += len(cases[cat])

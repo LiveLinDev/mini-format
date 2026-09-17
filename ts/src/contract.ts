@@ -4,14 +4,15 @@
  * MIT License — A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC, 2026)
  */
 import { E_CONTRACT, E_FORK, MiniError } from './errors.ts';
+import { decimalBound, validDate } from './values.ts';
 
 // ------------------------------------------------------------------ tipos
-export type ScalarType = 'str' | 'int' | 'float' | 'bool' | 'enum';
+export type ScalarType = 'str' | 'int' | 'float' | 'bool' | 'enum' | 'date' | 'decimal';
 export type CompositeType = 'list' | 'mlist' | 'tuple';
 export type FieldType = ScalarType | CompositeType;
 export type MarkerMode = 'exactly_one' | 'at_least_one' | 'at_most_one' | 'any';
 
-export const SCALAR_TYPES: ReadonlySet<string> = new Set(['str', 'int', 'float', 'bool', 'enum']);
+export const SCALAR_TYPES: ReadonlySet<string> = new Set(['str', 'int', 'float', 'bool', 'enum', 'date', 'decimal']);
 export const COMPOSITE_TYPES: ReadonlySet<string> = new Set(['list', 'mlist', 'tuple']);
 export const ALL_TYPES: ReadonlySet<string> = new Set([...SCALAR_TYPES, ...COMPOSITE_TYPES]);
 export const MARKER_MODES: ReadonlySet<string> = new Set(['exactly_one', 'at_least_one', 'at_most_one', 'any']);
@@ -25,8 +26,9 @@ export interface FieldJSON {
   values?: string[];
   item?: ScalarType;
   item_values?: string[];
-  min?: number;
-  max?: number;
+  /** Rango numérico o aridad; para `date`, cadena AAAA-MM-DD; para `decimal`, cadena decimal o entero. */
+  min?: number | string;
+  max?: number | string;
   marker?: MarkerMode;
   count_key?: string;
   items?: FieldJSON[];
@@ -72,8 +74,9 @@ export interface Field {
   values: string[] | null;
   item: ScalarType;
   item_values: string[] | null;
-  min: number | null;
-  max: number | null;
+  /** Rango numérico o aridad; cadena en los límites de `date` y (opcionalmente) de `decimal`. */
+  min: number | string | null;
+  max: number | string | null;
   marker: MarkerMode;
   count_key: string | null;
   items: Field[];
@@ -152,6 +155,14 @@ function normField(d: FieldJSON, path: string = ''): Field {
   };
   if (t === 'enum' && !(f.values && f.values.length)) {
     throw new MiniError(E_CONTRACT, 0, `field ${where}: enum requires 'values'`);
+  }
+  if (t === 'date' || t === 'decimal') {
+    // SPEC 1.1 §6: límites de date como AAAA-MM-DD; de decimal, cadena decimal o entero
+    for (const bound of [f.min, f.max]) {
+      if (bound === null) continue;
+      const ok = t === 'date' ? typeof bound === 'string' && validDate(bound) : decimalBound(bound) !== null;
+      if (!ok) throw new MiniError(E_CONTRACT, 0, `field ${where}: invalid bound '${String(bound)}' for type ${t}`);
+    }
   }
   if (t === 'list' || t === 'mlist') {
     if (!SCALAR_TYPES.has(f.item)) throw new MiniError(E_CONTRACT, 0, `field ${where}: list item type must be scalar`);
@@ -269,7 +280,7 @@ export function normalizeContract(d: ContractJSON | Contract): Contract {
 }
 
 // -------------------------------------------------------------- firmas
-function numText(x: number | null): string {
+function numText(x: number | string | null): string {
   return x === null ? '' : String(x);
 }
 
@@ -282,7 +293,7 @@ export function fieldSignature(f: Field): string {
     const it = f.item !== 'enum' ? f.item : '{' + (f.item_values || []).join('|') + '}';
     body = `${f.type}<${it}>`;
     if (f.min !== null || f.max !== null) {
-      body += `[${f.min === null ? '' : Math.trunc(f.min)}..${f.max === null ? '' : Math.trunc(f.max)}]`;
+      body += `[${f.min === null ? '' : Math.trunc(Number(f.min))}..${f.max === null ? '' : Math.trunc(Number(f.max))}]`;
     }
     if (f.type === 'mlist') {
       body += ({ exactly_one: '*1', at_least_one: '*1+', at_most_one: '*0..1', any: '*' } as const)[f.marker];

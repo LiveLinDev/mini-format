@@ -1,4 +1,4 @@
-/* index.ts — API pública de @mini-format/core (biblioteca TypeScript de la notación .mini, SPEC 1.0).
+/* index.ts — API pública de @mini-format/core (biblioteca TypeScript de la notación .mini, SPEC 1.1).
  * MIT License — A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC, 2026)
  */
 import { normalizeContract } from './contract.ts';
@@ -8,7 +8,7 @@ import { dumps } from './serializer.ts';
 import { scalarEqual } from './values.ts';
 
 export const VERSION = '1.1.0';
-export const SPEC_VERSION = '1.0';
+export const SPEC_VERSION = '1.1';
 
 export {
   MiniError, MiniValidationError,

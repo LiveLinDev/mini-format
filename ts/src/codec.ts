@@ -178,8 +178,13 @@ export function escapeScalar(value: string): string {
     .replace(/\r\n|\r|\n/g, ESCAPE + 'n');
 }
 
-/** Escapa un elemento de lista: como un escalar, más el separador, un `*` final y una `"` inicial. */
+/**
+ * Escapa un elemento de lista: como un escalar, más el separador, un `*` final y una `"` inicial.
+ * La cadena vacía se escribe `""` (SPEC 1.1 §3.4): un elemento vacío sin comillas no se
+ * distingue de una lista vacía cuando es el único elemento.
+ */
 export function escapeElement(value: string, sep: string): string {
+  if (String(value) === '') return QUOTE + QUOTE;
   let s = escapeScalar(value).split(sep).join(ESCAPE + sep);
   if (s.endsWith(MARKER)) s = s.slice(0, -1) + ESCAPE + MARKER;
   if (s.startsWith(QUOTE)) s = ESCAPE + s;
