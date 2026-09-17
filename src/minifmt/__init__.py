@@ -20,7 +20,7 @@ from .serializer import dumps
 from .values import scalar_equal
 
 __version__ = "1.1.0"
-SPEC_VERSION = "1.0"
+SPEC_VERSION = "1.1"
 
 __all__ = ["Contract", "Field", "MiniError", "MiniValidationError", "Document", "parse",
            "dumps", "detect_prefix", "Registry", "spec_block", "parser_prompt",

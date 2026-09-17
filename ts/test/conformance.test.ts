@@ -116,7 +116,11 @@ export function runCase(k: ConformanceCase): string | null {
         text = dumps(k.input as Record<string, unknown>, contract);
       } catch (e) {
         if (!(e instanceof MiniError)) throw e;
-        return exp.rejected ? null : `serializer rejected the object: ${e}`;
+        if (!exp.rejected) return `serializer rejected the object: ${e}`;
+        if (exp.errors && !pairs(exp.errors).has(`${e.code}@${Number(e.line)}`)) {
+          return `serializer error: expected ${fmt(pairs(exp.errors))}, got ${e.code}@${e.line}`;
+        }
+        return null;
       }
       if (exp.rejected) return `serializer should reject, produced ${JSON.stringify(text)}`;
       if (text !== exp.mini) return `dumps: expected ${JSON.stringify(exp.mini)}, got ${JSON.stringify(text)}`;

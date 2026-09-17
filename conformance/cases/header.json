@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "header",
   "cases": [
     {
@@ -1467,6 +1467,529 @@
         "errors": [
           {
             "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-n-not-int",
+      "category": "header",
+      "description": "n=abc: E06 en la cabecera, sin E03 ni E04 (SPEC 1.1 §5)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=abc|src=s\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-n-empty",
+      "category": "header",
+      "description": "n vacío: E06 en la cabecera, sin E03",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=|src=s\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-typed-scalar-bad",
+      "category": "header",
+      "description": "clave tipada int con valor inválido (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|k=dos\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-n-not-int-lenient",
+      "category": "header",
+      "description": "n inválido en modo tolerante: registros conservados y sin registros faltantes",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=abc|src=s\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "src": "s",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E06",
+            "line": 1
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [],
+          "missing_records": 0
+        }
+      }
+    },
+    {
+      "id": "hdr-duplicate-key",
+      "category": "header",
+      "description": "clave de cabecera repetida (E12)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=a|src=b\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-duplicate-n",
+      "category": "header",
+      "description": "n repetido (E12); se conserva el primero, sin E04",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|n=2\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-duplicate-key-lenient",
+      "category": "header",
+      "description": "modo tolerante: se conserva la primera aparición de la clave",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|model=a|model=b\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "s",
+            "lang": "es",
+            "model": "a"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-date-bad",
+      "category": "header",
+      "description": "clave de cabecera date inválida (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1|d=17/09/2026\nr1|2024-02-29|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
             "line": 1
           }
         ]

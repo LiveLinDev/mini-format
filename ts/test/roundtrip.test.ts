@@ -147,12 +147,12 @@ describe('ida y vuelta', () => {
     const bad = (patch: Record<string, unknown>, code: string) => {
       assert.throws(() => dumps({ header: {}, items: [{ ...rec, ...patch }] }, a), (e: unknown) => e instanceof MiniError && e.code === code);
     };
-    bad({ bloom: 'L9' }, 'E06');
+    bad({ bloom: 'L9' }, 'E10'); // SPEC 1.1 §9: código del parser
     bad({ id: null }, 'E06');
     bad({ correct: null }, 'E08');
     bad({ correct: 7 }, 'E08');
     bad({ options: null }, 'E06');
-    bad({ irt: { a: 1, b: 2 } }, 'E07');
+    bad({ irt: { a: 1, b: 2 } }, 'E06');
   });
 });
 

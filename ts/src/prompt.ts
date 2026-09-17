@@ -41,7 +41,14 @@ function fieldDoc(f: Field, sep: string, lang: string): string {
   }
   let rng = '';
   if (f.min !== null || f.max !== null) rng = ` [${f.min === null ? '' : f.min}..${f.max === null ? '' : f.max}]`;
-  return `${f.name}: ${f.type}${rng}${opt}${f.desc ? ' — ' + f.desc : ''}`;
+  return `${f.name}: ${f.type}${rng}${formatHint(f.type, es)}${opt}${f.desc ? ' — ' + f.desc : ''}`;
+}
+
+/** Forma textual de los tipos cuya regla léxica no es evidente (SPEC 1.1 §6). */
+function formatHint(t: string, es: boolean): string {
+  if (t === 'date') return es ? ' (AAAA-MM-DD)' : ' (YYYY-MM-DD)';
+  if (t === 'decimal') return es ? ' (decimal exacto sin exponente, p. ej. 12.50)' : ' (exact decimal without exponent, e.g. 12.50)';
+  return '';
 }
 
 /** Bloque de especificación para un prompt de sistema (`lang`: 'en' o 'es'). */

@@ -6,7 +6,7 @@
  */
 import * as codec from './codec.ts';
 import type { Tok } from './codec.ts';
-import { headerKeyAsField, normalizeContract } from './contract.ts';
+import { SCALAR_TYPES, headerKeyAsField, normalizeContract } from './contract.ts';
 import type { Contract, ContractJSON, Field } from './contract.ts';
 import {
   E_ARITY, E_COUNT_MISMATCH, E_HEADER_KEY, E_LIST_ARITY, E_MARKER, E_NO_COUNT, E_NO_HEADER,
@@ -188,6 +188,7 @@ export function parseHeader(line: string, lineno: number, c: Contract, strict: b
   }
   const prefix = fields.length ? codec.textOf(fields[0]) : '';
   const header: Header = {};
+  const seen = new Set<string>(); // claves presentes aunque su valor sea inválido
   for (const toks of fields.slice(1)) {
     const txt = codec.textOf(toks);
     if (!txt) continue;
@@ -199,6 +200,12 @@ export function parseHeader(line: string, lineno: number, c: Contract, strict: b
     }
     const key = codec.textOf(codec.stripToks(toks.slice(0, eq)));
     const vt = codec.stripToks(toks.slice(eq + 1));
+    if (seen.has(key)) {
+      // SPEC 1.1 §5: una clave repetida es E12; se conserva la primera aparición
+      errs.push(new MiniError(E_HEADER_KEY, lineno, `duplicate header key '${key}'`));
+      continue;
+    }
+    seen.add(key);
     const hk = hasOwn(c.headerKeys, key) ? c.headerKeys[key] : undefined;
     try {
       if (!hk) {
@@ -227,12 +234,14 @@ export function parseHeader(line: string, lineno: number, c: Contract, strict: b
   }
   for (const k of Object.keys(c.headerKeys)) {
     const hk = c.headerKeys[k];
-    if (!hasOwn(header, k)) {
+    if (!seen.has(k)) {
       if (hk.required && k !== 'n') errs.push(new MiniError(E_HEADER_KEY, lineno, `required header key '${k}' missing`));
       else if (hk.default !== null) put(header, k, hk.default);
     }
   }
-  if (!hasOwn(header, 'n')) errs.push(new MiniError(E_NO_COUNT, lineno, 'header must declare n=<record count>'));
+  // E03 significa que falta n; un n presente con tipo inválido ya se reportó con el código
+  // de esa violación (SPEC 1.1 §5).
+  if (!seen.has('n')) errs.push(new MiniError(E_NO_COUNT, lineno, 'header must declare n=<record count>'));
   return { prefix, header, errors: errs };
 }
 
@@ -251,7 +260,7 @@ class MList {
 
 /** Decodifica un campo (lista de tokens) según su definición. */
 export function decodeField(toks: readonly Tok[], f: Field, lineno: number, sep: string, header?: Header | null): Value | MList {
-  if (f.type === 'str' || f.type === 'int' || f.type === 'float' || f.type === 'bool' || f.type === 'enum') {
+  if (SCALAR_TYPES.has(f.type)) {
     const txt = codec.textOf(toks);
     if (txt === '') {
       if (f.optional) return f.default as Value;
@@ -260,15 +269,21 @@ export function decodeField(toks: readonly Tok[], f: Field, lineno: number, sep:
     return decodeScalar(txt, f, lineno);
   }
   if (f.type === 'list' || f.type === 'mlist') {
+    if (!toks.length && f.optional) {
+      // SPEC 1.1 §6: un campo vacío es null en todo campo opcional
+      return f.type === 'mlist' ? new MList({ items: f.default as Value[], selected: null }) : f.default as Value;
+    }
     const elems = codec.splitList(toks, sep, lineno);
-    if (!elems.length && !f.optional && f.min !== null && f.min > 0) {
+    const lo = f.min === null ? null : Number(f.min);
+    const hi = f.max === null ? null : Number(f.max);
+    if (!elems.length && !f.optional && lo !== null && lo > 0) {
       throw new MiniError(E_LIST_ARITY, lineno, 'required list is empty', f.name);
     }
-    if (f.min !== null && elems.length < f.min) {
-      throw new MiniError(E_LIST_ARITY, lineno, `list has ${elems.length} elements, min ${Math.trunc(f.min)}`, f.name);
+    if (lo !== null && elems.length < lo) {
+      throw new MiniError(E_LIST_ARITY, lineno, `list has ${elems.length} elements, min ${Math.trunc(lo)}`, f.name);
     }
-    if (f.max !== null && elems.length > f.max) {
-      throw new MiniError(E_LIST_ARITY, lineno, `list has ${elems.length} elements, max ${Math.trunc(f.max)}`, f.name);
+    if (hi !== null && elems.length > hi) {
+      throw new MiniError(E_LIST_ARITY, lineno, `list has ${elems.length} elements, max ${Math.trunc(hi)}`, f.name);
     }
     if (f.count_key && header) {
       const k = hasOwn(header, f.count_key) ? header[f.count_key] : undefined;

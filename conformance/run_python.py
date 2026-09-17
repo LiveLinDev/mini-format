@@ -95,6 +95,8 @@ def run_case(case: Dict[str, Any]) -> Tuple[bool, str]:
                 text = dumps(case["input"], contract)
             except MiniError as e:
                 if exp.get("rejected"):
+                    if "errors" in exp and (e.code, int(e.line)) not in _pairs(exp["errors"]):
+                        return False, f"serializer error: expected {_fmt(_pairs(exp['errors']))}, got {e.code}@{e.line}"
                     return True, "ok"
                 return False, f"serializer rejected the object: {e}"
             if exp.get("rejected"):

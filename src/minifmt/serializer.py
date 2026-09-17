@@ -4,14 +4,20 @@ The serializer is the inverse of the parser.  It is deliberately strict: it
 raises on values that do not fit the contract, so that ``dumps(parse(x)) ==
 x`` and ``parse(dumps(obj)) == obj`` hold for every valid document (the
 round-trip property that distinguishes a serialization from an abbreviation).
+
+SPEC 1.1 Â§9: the error raised for an invalid object is a :class:`MiniError`
+carrying the code the parser reports for the same violation and the physical
+line the offending entry would occupy (1 = header, i + 2 = record i).  Every
+emitted document is verified by a strict parse before it is returned.
 """
 from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List, Optional
 
 from . import codec
-from .contract import Contract, Field
-from .errors import E_LIST_ARITY, E_MARKER, E_TYPE, MiniError
+from .contract import SCALAR_TYPES, Contract, Field
+from .errors import E_ENUM, E_MARKER, E_TYPE, MiniError, MiniValidationError
+from .parser import parse
 from .values import coerce_from_json, encode_scalar
 
 
@@ -39,10 +45,10 @@ def encode_field(value: Any, f: Field, sep: str, rec: Optional[Dict[str, Any]] =
         if f.optional:
             return ""
         raise MiniError(E_TYPE, 0, "required field is null", f.name)
-    if f.type in ("str", "int", "float", "bool", "enum"):
+    if f.type in SCALAR_TYPES:
         v = coerce_from_json(value, f)
         if f.type == "enum" and v not in (f.values or []):
-            raise MiniError(E_TYPE, 0, f"'{v}' not in enum", f.name)
+            raise MiniError(E_ENUM, 0, f"'{v}' not in enum", f.name)
         return codec.escape_scalar(encode_scalar(v, f))
     if f.type == "list":
         if not isinstance(value, (list, tuple)):
@@ -52,14 +58,20 @@ def encode_field(value: Any, f: Field, sep: str, rec: Optional[Dict[str, Any]] =
         if isinstance(value, dict):
             items = value.get(f.json_items, [])
             sel = value.get(f.json_selected)
-        else:  # allow [items, selected] shorthand
+        elif isinstance(value, (list, tuple)) and len(value) == 2:  # [items, selected] shorthand
             items, sel = value
+        else:
+            raise MiniError(E_TYPE, 0, "marked list expected", f.name)
+        if not isinstance(items, (list, tuple)):
+            raise MiniError(E_TYPE, 0, "list expected", f.name)
         if sel is None:
             marked: List[int] = []
-        elif isinstance(sel, int):
+        elif isinstance(sel, int) and not isinstance(sel, bool):
             marked = [sel]
-        else:
+        elif isinstance(sel, (list, tuple)) and all(isinstance(m, int) and not isinstance(m, bool) for m in sel):
             marked = list(sel)
+        else:
+            raise MiniError(E_MARKER, 0, f"invalid selection {sel!r}", f.name)
         if f.marker == "exactly_one" and len(marked) != 1:
             raise MiniError(E_MARKER, 0, "exactly one selected element required", f.name)
         if f.marker == "at_least_one" and not marked:
@@ -80,7 +92,7 @@ def encode_field(value: Any, f: Field, sep: str, rec: Optional[Dict[str, Any]] =
                 if comp.optional:
                     parts.append("")
                     continue
-                raise MiniError(E_LIST_ARITY, 0, f"tuple component '{comp.name}' missing", f.name)
+                raise MiniError(E_TYPE, 0, f"tuple component '{comp.name}' missing", f.name)
             parts.append(codec.escape_element(encode_scalar(coerce_from_json(v, comp), comp), sep))
         return sep.join(parts)
     raise MiniError(E_TYPE, 0, f"unsupported type {f.type}", f.name)  # pragma: no cover
@@ -124,11 +136,35 @@ def encode_record(rec: Dict[str, Any], contract: Contract) -> str:
 
 
 def dumps(obj: Dict[str, Any], contract: Contract) -> str:
-    """Serialise a canonical object ``{"header": {...}, "<records_key>": [...]}``."""
+    """Serialise a canonical object ``{"header": {...}, "<records_key>": [...]}``.
+
+    Raises :class:`MiniError` with the parser's code and the line the invalid
+    entry would occupy when the object is not valid under the contract."""
     records = obj.get(contract.records_key)
     if records is None:
         records = obj.get("records", [])
-    header = obj.get("header", {})
-    lines = [encode_header(header, contract, len(records))]
-    lines.extend(encode_record(r, contract) for r in records)
-    return "\n".join(lines)
+    if not isinstance(records, (list, tuple)):
+        raise MiniError(E_TYPE, 0, f"'{contract.records_key}' must be a list")
+    header = obj.get("header") or {}
+    if not isinstance(header, dict):
+        raise MiniError(E_TYPE, 1, "header must be an object")
+    lines = [_at_line(lambda: encode_header(header, contract, len(records)), 1)]
+    for i, r in enumerate(records):
+        if not isinstance(r, dict):
+            raise MiniError(E_TYPE, i + 2, "record must be an object")
+        lines.append(_at_line(lambda r=r: encode_record(r, contract), i + 2))
+    text = "\n".join(lines)
+    try:
+        parse(text, contract, strict=True)
+    except MiniValidationError as e:
+        raise e.errors[0] from None
+    return text
+
+
+def _at_line(encode, lineno: int) -> str:
+    try:
+        return encode()
+    except MiniError as e:
+        if not e.line:
+            e.line = lineno
+        raise

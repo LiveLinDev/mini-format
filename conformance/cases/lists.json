@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "lists",
   "cases": [
     {
@@ -1097,6 +1097,382 @@
             }
           ]
         }
+      }
+    },
+    {
+      "id": "list-empty-element-middle",
+      "category": "lists",
+      "description": "elemento vacío intermedio es la cadena vacía y se serializa como \"\"",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|a,,b|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a",
+                "",
+                "b"
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        },
+        "mini": "ls|n=1|k=2\nr1|a,\"\",b|1|a|p,q"
+      }
+    },
+    {
+      "id": "list-empty-element-trailing",
+      "category": "lists",
+      "description": "separador final: último elemento vacío",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|a,|1|a|p,",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                "a",
+                ""
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                ""
+              ]
+            }
+          ]
+        },
+        "mini": "ls|n=1|k=2\nr1|a,\"\"|1|a|p,\"\""
+      }
+    },
+    {
+      "id": "list-single-empty-string",
+      "category": "lists",
+      "description": "[\"\"] se escribe \"\" y vuelve a ser [\"\"] (ida y vuelta)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|\"\"|1|a|p,q",
+      "expected": {
+        "canonical": {
+          "prefix": "ls",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "k": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "xs": [
+                ""
+              ],
+              "ns": [
+                1
+              ],
+              "es": [
+                "a"
+              ],
+              "ks": [
+                "p",
+                "q"
+              ]
+            }
+          ]
+        },
+        "mini": "ls|n=1|k=2\nr1|\"\"|1|a|p,q"
+      }
+    },
+    {
+      "id": "list-empty-element-int",
+      "category": "lists",
+      "description": "elemento vacío en lista de enteros (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1,,2|a|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "list-empty-element-enum",
+      "category": "lists",
+      "description": "elemento vacío en lista de enum (E10)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "ls",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n"
+          ],
+          "keys": {
+            "k": {
+              "type": "int"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "xs",
+            "type": "list",
+            "item": "str",
+            "min": 1,
+            "max": 3
+          },
+          {
+            "name": "ns",
+            "type": "list",
+            "item": "int"
+          },
+          {
+            "name": "es",
+            "type": "list",
+            "item": "enum",
+            "item_values": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "name": "ks",
+            "type": "list",
+            "item": "str",
+            "count_key": "k"
+          }
+        ]
+      },
+      "input": "ls|n=1|k=2\nr1|x|1|a,|p,q",
+      "expected": {
+        "errors": [
+          {
+            "code": "E10",
+            "line": 2
+          }
+        ]
       }
     }
   ]

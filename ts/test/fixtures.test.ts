@@ -304,7 +304,7 @@ describe('contratos inválidos (E20)', () => {
     ['sin prefijo', { core: [{ name: 'a', type: 'str' }] } as unknown as ContractJSON],
     ['prefijo inválido', { ...base, prefix: '9x' }],
     ['sin núcleo', { ...base, core: [] }],
-    ['tipo desconocido', { ...base, core: [{ name: 'a', type: 'date' as 'str' }] }],
+    ['tipo desconocido', { ...base, core: [{ name: 'a', type: 'datetime' as 'str' }] }],
     ['enum sin valores', { ...base, core: [{ name: 'a', type: 'enum' }] }],
     ['lista de tuplas', { ...base, core: [{ name: 'a', type: 'list', item: 'tuple' as 'str' }] }],
     ['marcador inválido', { ...base, core: [{ name: 'a', type: 'mlist', marker: 'two' as 'any' }] }],

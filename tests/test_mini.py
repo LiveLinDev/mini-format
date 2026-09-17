@@ -205,6 +205,31 @@ class TestForkProtocol(unittest.TestCase):
         self.assertIsNone(doc.records[0]["hint"])
 
 
+class TestDateDecimal(unittest.TestCase):
+    """SPEC 1.1 §6: date and decimal accept native Python values when serialising."""
+
+    C = Contract.from_dict({"prefix": "dd", "records_key": "rows", "core": [
+        {"name": "day", "type": "date"}, {"name": "amount", "type": "decimal", "min": 0}]})
+
+    def test_native_values_are_serialised_as_canonical_text(self):
+        import datetime
+        import decimal
+        text = dumps({"rows": [{"day": datetime.date(2024, 2, 29), "amount": decimal.Decimal("12.50")},
+                               {"day": "2024-03-01", "amount": 7}]}, self.C)
+        self.assertEqual(text, "dd|n=2\n2024-02-29|12.50\n2024-03-01|7")
+        rows = parse(text, self.C).records
+        self.assertEqual(rows[0], {"day": "2024-02-29", "amount": "12.50"})
+
+    def test_errors_carry_parser_codes_and_lines(self):
+        with self.assertRaises(MiniError) as cm:
+            dumps({"rows": [{"day": "2024-01-01", "amount": "1"}, {"day": "2024-01-02", "amount": "-1"}]}, self.C)
+        self.assertEqual((cm.exception.code, cm.exception.line), (E_RANGE, 3))
+        with self.assertRaises(MiniError) as cm:
+            dumps({"rows": [{"day": "2024-01-01", "amount": 0.1}]}, self.C)
+        self.assertEqual((cm.exception.code, cm.exception.line), (E_TYPE, 2))
+        self.assertEqual(codes("dd|n=1\n2023-02-29|1", self.C), [E_TYPE])
+
+
 class TestTokens(unittest.TestCase):
     def test_reproduces_published_counts(self):
         from minifmt.tokens import get_tokenizer

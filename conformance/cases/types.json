@@ -1,6 +1,6 @@
 {
   "suite": ".mini conformance",
-  "spec": "1.0",
+  "spec": "1.1",
   "category": "types",
   "cases": [
     {
@@ -1131,6 +1131,2266 @@
               "extra": null
             }
           ]
+        }
+      }
+    },
+    {
+      "id": "sc-bool-yes",
+      "category": "types",
+      "description": "booleano 'yes' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|yes|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-bool-t",
+      "category": "types",
+      "description": "booleano 't' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|t|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-bool-no",
+      "category": "types",
+      "description": "booleano 'n' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|n|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-bool-uppercase",
+      "category": "types",
+      "description": "booleano 'True' distingue mayúsculas (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|0.5|True|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-int-plus",
+      "category": "types",
+      "description": "entero con '+' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|+5|0.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-int-unicode-digits",
+      "category": "types",
+      "description": "dígitos no ASCII en un entero (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|５|0.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-float-plus",
+      "category": "types",
+      "description": "float con '+' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|+0.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-float-leading-dot",
+      "category": "types",
+      "description": "float '.5' sin parte entera (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|.5|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-float-trailing-dot",
+      "category": "types",
+      "description": "float '1.' sin decimales (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|1.|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-float-nan",
+      "category": "types",
+      "description": "NaN no es un número (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|5|NaN|true|red",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "sc-leading-zeros",
+      "category": "types",
+      "description": "ceros a la izquierda en int y float se aceptan y se normalizan",
+      "mode": "strict",
+      "contract": {
+        "prefix": "sc",
+        "records_key": "rows",
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "name": "ratio",
+            "type": "float",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "flag",
+            "type": "bool"
+          },
+          {
+            "name": "color",
+            "type": "enum",
+            "values": [
+              "red",
+              "green",
+              "blue"
+            ]
+          }
+        ],
+        "extensions": [
+          {
+            "name": "memo",
+            "type": "str"
+          },
+          {
+            "name": "extra",
+            "type": "int"
+          }
+        ]
+      },
+      "input": "sc|n=1\nr1|007|00.5|0|red",
+      "expected": {
+        "canonical": {
+          "prefix": "sc",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "qty": 7,
+              "ratio": 0.5,
+              "flag": false,
+              "color": "red",
+              "memo": null,
+              "extra": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "date-decimal-basic",
+      "category": "types",
+      "description": "date AAAA-MM-DD y decimal exacto: JSON canónico string",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|12.50",
+      "expected": {
+        "canonical": {
+          "prefix": "dt",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "day": "2024-02-29",
+              "amount": "12.50",
+              "rate": null,
+              "days": null,
+              "span": null
+            }
+          ]
+        },
+        "mini": "dt|n=1\nr1|2024-02-29|12.50"
+      }
+    },
+    {
+      "id": "decimal-normalised",
+      "category": "types",
+      "description": "decimal: sin ceros a la izquierda ni signo en cero; conserva la escala",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=2\nr1|2024-01-01|007.50\nr2|2024-01-01|-0.00|-000.10",
+      "expected": {
+        "canonical": {
+          "prefix": "dt",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "day": "2024-01-01",
+              "amount": "7.50",
+              "rate": null,
+              "days": null,
+              "span": null
+            },
+            {
+              "id": "r2",
+              "day": "2024-01-01",
+              "amount": "0.00",
+              "rate": "-0.10",
+              "days": null,
+              "span": null
+            }
+          ]
+        },
+        "mini": "dt|n=2\nr1|2024-01-01|7.50\nr2|2024-01-01|0.00|-0.10"
+      }
+    },
+    {
+      "id": "decimal-exact-digits",
+      "category": "types",
+      "description": "decimal conserva todos los dígitos (sin redondeo binario)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|999.99999999999999999999|0.1000000000000000055511151231257827",
+      "expected": {
+        "canonical": {
+          "prefix": "dt",
+          "header": {
+            "v": 1,
+            "n": 1
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "day": "2024-02-29",
+              "amount": "999.99999999999999999999",
+              "rate": "0.1000000000000000055511151231257827",
+              "days": null,
+              "span": null
+            }
+          ]
+        },
+        "mini": "dt|n=1\nr1|2024-02-29|999.99999999999999999999|0.1000000000000000055511151231257827"
+      }
+    },
+    {
+      "id": "date-decimal-composites",
+      "category": "types",
+      "description": "listas y tuplas de date/decimal y clave de cabecera date",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1|d=2026-09-17\nr1|2024-02-29|12.50||2024-01-01,2024-12-31|2024-03-01,99.9",
+      "expected": {
+        "canonical": {
+          "prefix": "dt",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "d": "2026-09-17"
+          },
+          "rows": [
+            {
+              "id": "r1",
+              "day": "2024-02-29",
+              "amount": "12.50",
+              "rate": null,
+              "days": [
+                "2024-01-01",
+                "2024-12-31"
+              ],
+              "span": {
+                "start": "2024-03-01",
+                "total": "99.9"
+              }
+            }
+          ]
+        },
+        "mini": "dt|n=1|d=2026-09-17\nr1|2024-02-29|12.50||2024-01-01,2024-12-31|2024-03-01,99.9"
+      }
+    },
+    {
+      "id": "date-bad-format",
+      "category": "types",
+      "description": "fecha que no es AAAA-MM-DD (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|24-02-29|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-slashes",
+      "category": "types",
+      "description": "fecha con barras (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024/02/29|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-with-time",
+      "category": "types",
+      "description": "fecha con hora (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29T10:00|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-not-in-calendar",
+      "category": "types",
+      "description": "29 de febrero de un año no bisiesto (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2023-02-29|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-month-13",
+      "category": "types",
+      "description": "mes 13 (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-13-01|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-year-zero",
+      "category": "types",
+      "description": "año 0000 (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|0000-01-01|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-range",
+      "category": "types",
+      "description": "fecha bajo el mínimo del contrato (E13)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|1999-12-31|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E13",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-comma",
+      "category": "types",
+      "description": "decimal con coma (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|1,5",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-exponent",
+      "category": "types",
+      "description": "decimal con exponente (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|1e3",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-leading-dot",
+      "category": "types",
+      "description": "decimal '.5' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|.5",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-plus",
+      "category": "types",
+      "description": "decimal con '+' (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|+1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-range-max",
+      "category": "types",
+      "description": "decimal sobre el máximo, comparación exacta (E13)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|1000.0000000000000000001",
+      "expected": {
+        "errors": [
+          {
+            "code": "E13",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-range-min",
+      "category": "types",
+      "description": "decimal bajo el mínimo (E13)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|-0.01",
+      "expected": {
+        "errors": [
+          {
+            "code": "E13",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-list-item-bad",
+      "category": "types",
+      "description": "elemento de lista date inválido (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|1||2024-01-01,2024-02-30",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal-tuple-component-bad",
+      "category": "types",
+      "description": "componente decimal inválido en tupla (E06)",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=1\nr1|2024-02-29|1|||2024-01-01,1.2.3",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-error-line",
+      "category": "types",
+      "description": "fecha inválida: E06 con el número de línea del registro",
+      "mode": "strict",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=3\nr1|2024-01-01|1\nr2|2024-31-01|1\nr3|2024-01-03|1",
+      "expected": {
+        "errors": [
+          {
+            "code": "E06",
+            "line": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "date-lenient",
+      "category": "types",
+      "description": "modo tolerante descarta solo el registro con la fecha inválida",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "dt",
+        "records_key": "rows",
+        "header": {
+          "keys": {
+            "d": {
+              "type": "date"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str",
+            "unique": true
+          },
+          {
+            "name": "day",
+            "type": "date",
+            "min": "2000-01-01",
+            "max": "2099-12-31"
+          },
+          {
+            "name": "amount",
+            "type": "decimal",
+            "min": 0,
+            "max": "1000.00"
+          }
+        ],
+        "extensions": [
+          {
+            "name": "rate",
+            "type": "decimal"
+          },
+          {
+            "name": "days",
+            "type": "list",
+            "item": "date"
+          },
+          {
+            "name": "span",
+            "type": "tuple",
+            "items": [
+              {
+                "name": "start",
+                "type": "date"
+              },
+              {
+                "name": "total",
+                "type": "decimal",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      "input": "dt|n=2\nr1|2024-02-30|1\nr2|2024-02-29|12.50",
+      "expected": {
+        "canonical": {
+          "prefix": "dt",
+          "header": {
+            "v": 1,
+            "n": 2
+          },
+          "rows": [
+            {
+              "id": "r2",
+              "day": "2024-02-29",
+              "amount": "12.50",
+              "rate": null,
+              "days": null,
+              "span": null
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E06",
+            "line": 2
+          }
+        ],
+        "diagnostics": {
+          "invalid_lines": [
+            2
+          ],
+          "missing_records": 0
         }
       }
     }

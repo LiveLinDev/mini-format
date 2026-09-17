@@ -400,9 +400,9 @@ class TestContractAndSerializerBranches(unittest.TestCase):
                                                {"name": "l", "type": "list", "min": 1}]})
         doc = parse("o|n=1\nx", c)
         self.assertEqual(doc.records[0], {"id": "x", "m": None, "s": None, "l": None})
-        with self.assertRaises(MiniValidationError) as cm:
-            parse("o|n=1\nx||", c)          # optional list with min: empty list is an arity error
-        self.assertEqual(cm.exception.codes, ["E07"])
+        # SPEC 1.1 Â§6: an empty optional list (or marked list) is null, even with min
+        self.assertEqual(parse("o|n=1\nx||", c).records[0], {"id": "x", "m": None, "s": None, "l": None})
+        self.assertEqual(parse("o|n=1\nx||a,", c).records[0]["l"], ["a", ""])  # bare empty element is ""
         req = Contract.from_dict({"prefix": "r", "core": [{"name": "l", "type": "list", "min": 1}]})
         self.assertEqual(parse("r|n=1\n", req, strict=False).errors[0].code, "E04")
         with self.assertRaises(MiniValidationError) as cm:
