@@ -2,27 +2,44 @@ name: ci
 on: [push, pull_request]
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} · Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python: ["3.9", "3.12"]
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONIOENCODING: utf-8
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with: { python-version: "${{ matrix.python }}" }
       - uses: actions/setup-node@v5
         with: { node-version: "22" }
-      - run: pip install -e ".[bench,release]"
+      - run: pip install -e ".[bench,release,dev]"
       - run: mini check-forks
-      - run: python -m unittest discover -s tests -v
+      - name: Python tests with coverage (minimum 90 %)
+        run: |
+          python -m coverage run --source=minifmt -m pytest -q tests experiments/generativo/tests
+          python -m coverage report --fail-under=90
+      - run: python conformance/run_python.py
       - run: node tests/test_js_port.mjs
       - run: npm ci --prefix ts
       - run: npm run typecheck --prefix ts
-      - run: node --experimental-strip-types --no-warnings --test ts/test/*.test.ts
-      - run: python conformance/run_python.py
+      - name: TypeScript tests with coverage (minimum 90 % of lines)
+        working-directory: ts
+        run: >
+          node --experimental-strip-types --no-warnings --test
+          --experimental-test-coverage --test-coverage-include="src/**"
+          --test-coverage-lines=90 test/*.test.ts
+      - run: node conformance/run_js.mjs
       - run: python playground/build.py
       - name: Build and verify offline distributions
-        if: matrix.python == '3.12'
+        if: matrix.python == '3.12' && matrix.os == 'ubuntu-latest'
         run: |
           python tools/build_release.py --output dist
           python tools/smoke_release.py --directory dist

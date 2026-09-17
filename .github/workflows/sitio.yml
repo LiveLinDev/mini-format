@@ -71,6 +71,7 @@ jobs:
         if: ${{ github.event.inputs.accion != 'revertir' }}
         run: |
           pip install -e ".[release]"
+          npm ci --prefix ts
           mini check-forks
           python sitio/construir.py
           python tools/check_site.py

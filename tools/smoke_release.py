@@ -74,6 +74,9 @@ def main(directory):
         run([python, parser, "validate", "corrected.mini"], work)
 
         npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
+        # Proyecto npm propio: sin él, npm busca un package.json en carpetas superiores
+        # (p. ej. el directorio personal) e instala el paquete allí.
+        (work / "package.json").write_text('{"name": "mini-install-test", "private": true}\n', encoding="utf-8")
         run([npm, "install", "--offline", "--no-audit", "--no-fund", "--ignore-scripts",
              kit / f"mini-format-core-{version}.tgz"], work)
         # Exercise compiled ESM, bundled family lookup, parsing and streaming.

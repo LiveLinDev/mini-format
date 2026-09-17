@@ -23,7 +23,7 @@ dependencies = []
 
 [project.optional-dependencies]
 bench = ["tiktoken", "pyyaml", "matplotlib", "regex"]
-dev = ["pytest"]
+dev = ["pytest", "coverage>=7"]
 release = ["build", "wheel", "markdown", "setuptools>=61"]
 
 [project.urls]
