@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import html
 import json
+import posixpath
 import re
 import sys
 from pathlib import Path
@@ -81,14 +82,14 @@ ERRORES_EN = [
 # --------------------------------------------------------------------------- navegación de docs
 GRUPOS_ES = [
     ("Empezar", [("docs", "Introducción"), ("downloads", "Descargas"), ("docs/quickstart", "Inicio rápido"), ("docs/build", "Crear tu toolkit")]),
-    ("Norma", [("docs/spec", "Especificación 1.1"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
+    ("Norma", [("docs/spec", "Especificación 1.1"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/adr", "Registro de decisiones"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
     ("Bibliotecas", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Herramienta de línea de comandos"), ("docs/conformance", "Suite de conformidad")]),
     ("Evidencia", [("docs/metodologia", "Metodología y experimentos")]),
     ("Proyecto", [("docs/contribuir", "Contribuir"), ("docs/licencia", "Licencia")]),
 ]
 GRUPOS_EN = [
     ("Start", [("docs", "Introduction"), ("downloads", "Downloads"), ("docs/quickstart", "Quickstart"), ("docs/build", "Build your toolkit")]),
-    ("Reference", [("docs/spec", "Specification 1.1"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
+    ("Reference", [("docs/spec", "Specification 1.1"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/adr", "Decision records"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
     ("Libraries", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Command-line tool"), ("docs/conformance", "Conformance suite")]),
     ("Evidence", [("docs/metodologia", "Methodology and experiments")]),
     ("Project", [("docs/contribuir", "Contributing"), ("docs/licencia", "License")]),
@@ -122,8 +123,16 @@ def reescribir_enlaces(h: str, origin_dir: Path = Path(".")) -> str:
         if href.startswith(("http", "#", "/", "mailto:")):
             return m.group(0)
         base = href.split("#")[0]
+        norm = posixpath.normpath((origin_dir / base).as_posix()) if base else base
         if base in mapa:
             return f'href="{mapa[base]}"'
+        if norm in mapa:
+            return f'href="{mapa[norm]}"'
+        adr = re.fullmatch(r"docs/adr/(\d{4})-[^/]+\.md", norm or "")
+        if adr:
+            return f'href="/docs/adr/{adr.group(1)}/"'
+        if norm == "docs/adr/README.md":
+            return 'href="/docs/adr/"'
         if base.startswith("forks/") and base.count("/") == 1:
             return f'href="/docs/forks/{base.split("/")[1]}/"'
         rel = (origin_dir / href.split("#", 1)[0]).as_posix()
@@ -397,6 +406,45 @@ doc.errors           # lista de MiniError
 doc.record_lines     # línea física de cada registro aceptado
 doc.diagnostics()    # informe con las líneas a regenerar (mismo que `mini diagnose`)
 ```
+
+## Lectura en streaming
+
+```python
+from minifmt import read_records, create_reader
+for item in read_records(fragmentos, c):   # str o bytes UTF-8, partidos en cualquier punto
+    procesar(item.record, item.line)        # se emite al cerrarse la línea del registro
+```
+
+`read_records` produce los mismos registros y errores que `parse` y no retiene los registros, por lo que la memoria
+no crece con el tamaño del documento. `create_reader(c)` ofrece `push(fragmento)` y `end()` para integrarlo con la
+respuesta en streaming de un modelo.
+
+## Contratos desde JSON Schema y Pydantic
+
+```python
+from minifmt import from_json_schema, to_json_schema, from_pydantic
+c = from_json_schema(esquema, "tk")         # registros de un nivel (SPEC §12)
+esquema = to_json_schema(c)                 # ida y vuelta sin pérdida mediante anotaciones x-mini
+c = from_pydantic(Modelo, "job")            # pydantic es opcional
+```
+
+Las propiedades requeridas pasan al núcleo y las opcionales a las extensiones; `format: date` produce el tipo `date`.
+Una estructura con más de un nivel de anidación se rechaza con `E20`, citando SPEC §12.
+
+## Reparación selectiva y proveedores
+
+```python
+from minifmt.ai import repair_request, merge_repair
+from minifmt.ai.adapters import get_adapter
+req = repair_request(respuesta, c, "es")    # solo las líneas inválidas, con sus códigos
+if req.needed:
+    modelo = get_adapter("openai", "gpt-5-mini")        # también "anthropic", "groq" o "simulado"
+    reparada = modelo.generate(req.system, req.user, max_tokens=req.max_tokens_hint * 2, temperature=0)
+    fusion = merge_repair(respuesta, reparada["text"], c, req)   # acepta cada corrección solo si es válida
+```
+
+Cambiar de proveedor no modifica el contrato ni el resto de la integración. Una demostración sin conexión del flujo
+completo se ejecuta con `python demo/sin-conexion/demo.py`.
 """)
     py_en = md(f"""
 # Python library (`minifmt` {__version__})
@@ -436,6 +484,44 @@ doc.errors           # list of MiniError
 doc.record_lines     # physical line of each accepted record
 doc.diagnostics()    # report with the lines to regenerate (same as `mini diagnose`)
 ```
+
+## Streaming read
+
+```python
+from minifmt import read_records, create_reader
+for item in read_records(chunks, c):       # str or UTF-8 bytes, split anywhere
+    handle(item.record, item.line)          # emitted when the record's line closes
+```
+
+`read_records` yields the same records and errors as `parse` and does not retain records, so memory does not grow
+with the document. `create_reader(c)` offers `push(chunk)` and `end()` for a model's streaming response.
+
+## Contracts from JSON Schema and Pydantic
+
+```python
+from minifmt import from_json_schema, to_json_schema, from_pydantic
+c = from_json_schema(schema, "tk")          # one-level records (SPEC §12)
+schema = to_json_schema(c)                  # lossless round trip through x-mini annotations
+c = from_pydantic(Model, "job")             # pydantic is optional
+```
+
+Required properties become core fields and optional ones extensions; `format: date` yields the `date` type. Deeper
+nesting is rejected with `E20`, citing SPEC §12.
+
+## Selective repair and providers
+
+```python
+from minifmt.ai import repair_request, merge_repair
+from minifmt.ai.adapters import get_adapter
+req = repair_request(answer, c, "en")       # only the invalid lines, with their codes
+if req.needed:
+    model = get_adapter("openai", "gpt-5-mini")         # also "anthropic", "groq" or "simulated"
+    repaired = model.generate(req.system, req.user, max_tokens=req.max_tokens_hint * 2, temperature=0)
+    merged = merge_repair(answer, repaired["text"], c, req)     # accepts each correction only if valid
+```
+
+Switching providers changes neither the contract nor the rest of the integration. An offline demonstration of the
+whole flow runs with `python demo/sin-conexion/demo.py`.
 """)
     pagina_docs("docs/python", "Biblioteca Python", "Python library",
                 prefijar_ids(py_es, "es"), prefijar_ids(py_en, "en")); n += 1
@@ -461,6 +547,10 @@ otro directorio de familias: `mini --forks mis-familias validate respuesta.mini`
 | `mini tokens ARCHIVO --enc o200k_base` | Tokens y bytes, declarando el tokenizador. |
 | `mini check-forks` | Comprueba los cinco invariantes y la ida y vuelta de los fixtures. |
 | `mini new-fork PREFIJO --from PADRE --add "campo:tipo"` | Crea una familia nueva a partir de otra. |
+| `mini from-schema ESQUEMA.json -p PREFIJO` | JSON Schema (o `--pydantic modulo:Modelo`) → contrato `.mini`. |
+| `mini to-schema PREFIJO` | Contrato → JSON Schema con anotaciones `x-mini`. |
+| `mini bench ARCHIVO --enc o200k_base` | Tokens y bytes en .mini, JSON, YAML, CSV y TOON, con el ahorro frente a JSON compacto. |
+| `mini repair ARCHIVO --contract contract.json` | Reparación segura de una respuesta de un toolkit de dominio, sin inventar datos. |
 
 ```bash
 mini validate forks/a/fixtures/valid.mini
@@ -468,6 +558,7 @@ mini diagnose respuesta.mini | jq '.errors'
 mini prompt log --lang es > prompt_sistema.txt
 mini new-fork quiz2 --from a --add "feedback:str" "level:enum{easy|hard}"
 mini check-forks
+mini bench forks/a/fixtures/valid.mini -p a --format table
 ```
 """)
     cli_en = md("""
@@ -488,6 +579,10 @@ another family directory: `mini --forks my-families validate response.mini`.
 | `mini tokens FILE --enc o200k_base` | Tokens and bytes, declaring the tokenizer. |
 | `mini check-forks` | Checks the five invariants and fixture round-trips. |
 | `mini new-fork PREFIX --from PARENT --add "field:type"` | Creates a new family from another. |
+| `mini from-schema SCHEMA.json -p PREFIX` | JSON Schema (or `--pydantic module:Model`) → `.mini` contract. |
+| `mini to-schema PREFIX` | Contract → JSON Schema with `x-mini` annotations. |
+| `mini bench FILE --enc o200k_base` | Tokens and bytes in .mini, JSON, YAML, CSV and TOON, with the saving versus compact JSON. |
+| `mini repair FILE --contract contract.json` | Safe repair of a domain-toolkit response, without guessing data. |
 
 ```bash
 mini validate forks/a/fixtures/valid.mini
@@ -502,6 +597,19 @@ mini check-forks
 
     es, en = md_par("conformance/README.md", "conformance/README.en.md")
     pagina_docs("docs/conformance", "Suite de conformidad", "Conformance suite", es, en); n += 1
+
+    # registro de decisiones de arquitectura (redactado en español)
+    aviso_adr = "<p><em>Decision records are written in Spanish.</em></p>"
+    cuerpo_adr = md_archivo("docs/adr/README.md")
+    pagina_docs("docs/adr", "Registro de decisiones", "Decision records",
+                prefijar_ids(cuerpo_adr, "es"), prefijar_ids(aviso_adr + cuerpo_adr, "en")); n += 1
+    for adr in sorted((RAIZ / "docs" / "adr").glob("[0-9][0-9][0-9][0-9]-*.md")):
+        num = adr.name[:4]
+        cuerpo_adr = md_archivo(f"docs/adr/{adr.name}")
+        pagina_docs(f"docs/adr/{num}", f"ADR {num}", f"ADR {num}",
+                    prefijar_ids(cuerpo_adr, "es"), prefijar_ids(aviso_adr + cuerpo_adr, "en"),
+                    crumbs_es=f'<a href="/docs/adr/">decisiones</a> / {num}',
+                    crumbs_en=f'<a href="/docs/adr/">decisions</a> / {num}'); n += 1
 
     met_es = md_archivo("benchmark/public/README.es.md") + md_archivo("experiments/README.md") + md(f"""
 ## V5 — ancho del registro
