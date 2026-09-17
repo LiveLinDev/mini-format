@@ -41,6 +41,15 @@ __CABEZA__
   @keyframes mesa-late { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
   @media (prefers-reduced-motion: reduce) { .mesa-estado.activo::before { animation: none; opacity: 1; } }
 
+  .mesa-plan { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: .85rem 1rem; margin-bottom: .8rem;
+               background: rgb(var(--subtle)); font-size: .9rem; }
+  .mesa-plan .cifras { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: .45rem; font-size: var(--fs-cap);
+                       color: rgb(var(--fg-muted)); }
+  .mesa-plan .cifras b { color: rgb(var(--fg)); font-family: var(--f-mono); }
+  .mesa-plan .aviso-saldo { color: rgb(var(--danger)); font-weight: 600; }
+  .mesa-barra { height: 6px; border-radius: 99px; background: rgb(var(--track)); overflow: hidden; margin-top: .6rem; }
+  .mesa-barra i { display: block; height: 100%; background: rgb(var(--accent)); width: 0; transition: width .2s; }
+
   .mesa-aviso { border-radius: var(--r-lg); padding: .7rem .95rem; margin: 0 0 .6rem; font-size: .95rem;
                 border: 1px solid rgb(var(--line)); }
   .mesa-aviso.bien { border-color: rgb(var(--ok) / .35); background: rgb(var(--ok) / .08); color: rgb(var(--ok)); }
@@ -177,6 +186,7 @@ __CABECERA__
       </div>
     </div>
     <button type="button" class="btn btn-solid" id="ejecutar"><span data-lang="es">Crear tickets con IA</span><span data-lang="en" hidden>Create tickets with AI</span></button>
+    <button type="button" class="btn btn-ghost" id="detener" hidden><span data-lang="es">Detener</span><span data-lang="en" hidden>Stop</span></button>
     <button type="button" class="btn btn-ghost" id="reiniciar"><span data-lang="es">Reiniciar</span><span data-lang="en" hidden>Reset</span></button>
     <div class="mesa-clave" id="panelClave" hidden>
       <label class="grupo">
@@ -190,6 +200,23 @@ __CABECERA__
           <button type="button" class="chip" data-limite="2000">2000</button>
           <button type="button" class="chip" data-limite="300">300</button>
           <button type="button" class="chip" data-limite="200">200</button>
+        </span>
+      </label>
+      <label class="grupo">
+        <span class="et"><span data-lang="es">Registros a procesar</span><span data-lang="en" hidden>Records to process</span></span>
+        <span class="mesa-limite">
+          <input type="number" id="registros" min="1" max="1000000" step="10" value="10">
+          <button type="button" class="chip" data-registros="10">10</button>
+          <button type="button" class="chip" data-registros="1000">1 000</button>
+          <button type="button" class="chip" data-registros="20000">20 000</button>
+          <button type="button" class="chip" data-registros="200000">200 000</button>
+        </span>
+      </label>
+      <label class="grupo">
+        <span class="et"><span data-lang="es">Registros por llamada</span><span data-lang="en" hidden>Records per call</span></span>
+        <span class="mesa-limite">
+          <input type="number" id="lote" min="1" max="1000" step="10" value="0">
+          <span class="fina" id="loteAuto"></span>
         </span>
       </label>
       <button type="button" class="btn btn-ghost btn-sm" id="olvidar"><span data-lang="es">Olvidar clave</span><span data-lang="en" hidden>Forget key</span></button>
@@ -206,6 +233,7 @@ __CABECERA__
     </p>
   </section>
 
+  <section id="plan" class="mesa-plan" hidden></section>
   <section id="resultado" hidden aria-live="polite"></section>
 
   <div class="mesa-cajas">
@@ -392,6 +420,23 @@ __PIE__
       v7Costo: "costo de esta corrida",
       v7Saldo: "saldo de tu cuenta",
       v7SaldoTras: "consumido en esta corrida",
+      volPlan: function (n, lote, llamadas) {
+        return n.toLocaleString("es-PE") + " registros en " + llamadas.toLocaleString("es-PE") +
+          " llamadas de " + lote + " registros";
+      },
+      volEstimado: "estimado", volTiempo: "tiempo aproximado", volSaldo: "saldo de tu cuenta",
+      volSinSaldo: "La estimación supera tu saldo: la corrida se detendrá cuando el proveedor rechace las llamadas.",
+      volProgreso: function (hechas, total, reg, apr) {
+        return "llamada " + hechas + " de " + total + " · " + apr.toLocaleString("es-PE") + " de " +
+          reg.toLocaleString("es-PE") + " registros aprovechados";
+      },
+      volFin: function (apr, reg) {
+        return apr.toLocaleString("es-PE") + " de " + reg.toLocaleString("es-PE") + " registros aprovechados.";
+      },
+      volDetenido: "Corrida detenida.",
+      volMuestra: "Se muestran los tickets del último lote.",
+      volAuto: function (lote) { return "auto: " + lote; },
+      volMin: "min", volSeg: "s",
       modoGrabado: "Respuestas grabadas de un modelo: la espera de cada llamada está simulada para que se vean las idas y venidas. La validación y la reparación ocurren aquí, en tu navegador.",
       modoReal: function (p) { return "Llamadas reales a " + p.etiqueta + " (" + p.modelo + ") desde tu navegador, con tu clave. Cada intento consume tokens de tu cuenta."; },
       etClave: function (p) { return "Tu clave de " + p.etiqueta; },
@@ -451,6 +496,23 @@ __PIE__
       v7Costo: "cost of this run",
       v7Saldo: "your account balance",
       v7SaldoTras: "spent in this run",
+      volPlan: function (n, lote, llamadas) {
+        return n.toLocaleString("en-US") + " records in " + llamadas.toLocaleString("en-US") +
+          " calls of " + lote + " records";
+      },
+      volEstimado: "estimated", volTiempo: "approximate time", volSaldo: "your account balance",
+      volSinSaldo: "The estimate exceeds your balance: the run will stop when the provider rejects the calls.",
+      volProgreso: function (hechas, total, reg, apr) {
+        return "call " + hechas + " of " + total + " · " + apr.toLocaleString("en-US") + " of " +
+          reg.toLocaleString("en-US") + " records usable";
+      },
+      volFin: function (apr, reg) {
+        return apr.toLocaleString("en-US") + " of " + reg.toLocaleString("en-US") + " records usable.";
+      },
+      volDetenido: "Run stopped.",
+      volMuestra: "Showing the tickets of the last batch.",
+      volAuto: function (lote) { return "auto: " + lote; },
+      volMin: "min", volSeg: "s",
       modoGrabado: "Recorded model answers: the wait of each call is simulated so the round trips are visible. Validation and repair happen here, in your browser.",
       modoReal: function (p) { return "Real calls to " + p.etiqueta + " (" + p.modelo + ") from your browser, with your key. Every run spends tokens from your account."; },
       etClave: function (p) { return "Your " + p.etiqueta + " key"; },
@@ -602,18 +664,23 @@ __PIE__
     return texto;
   }
 
+  /* En una corrida de volumen la tabla solo muestra el último lote; lo logrado es lo aprovechado. */
+  function logrados(r) {
+    return r.volumen ? r.aprovechados : r.tickets.length;
+  }
+
   function pintar(r) {
     var caja = $("#resultado");
     var aviso = r.error
       ? '<p class="mesa-aviso mal">' + esc(r.error) + "</p>"
-      : '<p class="mesa-aviso bien">' + esc(T.creados(r.tickets.length, r.esperados)) + "</p>";
+      : '<p class="mesa-aviso bien">' + esc(T.creados(logrados(r), r.esperados)) + "</p>";
     if (r.error && !r.tickets.length) aviso += '<p class="mesa-aviso nota">' + esc(T.nada) + "</p>";
     aviso += r.incidencias.map(function (i) { return '<p class="mesa-aviso nota">' + esc(i) + "</p>"; }).join("");
 
     var m = T.metricas;
     var perdidos = r.aprovechados < r.recibidos;
     aviso += '<div class="mesa-metricas">' +
-      '<span class="' + (r.tickets.length === r.esperados ? "bien" : "mal") + '"><b>' + r.tickets.length + "/" + r.esperados + "</b>" + m[0] + "</span>" +
+      '<span class="' + (logrados(r) === r.esperados ? "bien" : "mal") + '"><b>' + num(logrados(r)) + "/" + num(r.esperados) + "</b>" + m[0] + "</span>" +
       "<span><b>" + r.llamadas + "</b>" + m[1] + (r.real && r.ms ? " · " + T.latencia(r.ms) : "") + "</span>" +
       "<span><b>" + r.tokens + "</b>" + m[2] + "</span>" +
       "<span><b>" + r.recibidos + "</b>" + m[3] + "</span>" +
@@ -707,7 +774,8 @@ __PIE__
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) {
         var info = j && (j.balance_infos || [])[0];
-        return info ? parseFloat(info.total_balance) : null;
+        saldoConocido = info ? parseFloat(info.total_balance) : null;
+        return saldoConocido;
       })
       .catch(function () { return null; });
   }
@@ -787,6 +855,167 @@ __PIE__
     }).catch(function (e) { r.error = T.fallaRed(e.message); return r; });
   }
 
+  /* Lectura de un lote: lo que llegó completo y lo que la aplicación puede usar sin volver a pedir. */
+  function leerMini(texto, lote) {
+    var completos = lineasCompletas(texto), ids = {};
+    lote.forEach(function (m) { ids[m.id] = 1; });
+    var doc;
+    try { doc = MINI.parse(texto, CONTRATO, { strict: false }); }
+    catch (e) { return { completos: completos, aprovechados: 0, tickets: [] }; }
+    var validos = doc.records.filter(function (r) { return ids[r.id] && !validar(r); });
+    return { completos: completos, aprovechados: validos.length, tickets: validos.slice(0, 50) };
+  }
+
+  function leerJson(texto, lote) {
+    var completos = objetosCompletos(texto), datos;
+    try { datos = JSON.parse(texto); }
+    catch (e) { return { completos: completos, aprovechados: 0, tickets: [] }; }
+    var tickets = datos.tickets || [];
+    for (var i = 0; i < tickets.length; i++) {
+      // un solo valor fuera del esquema invalida el lote entero: así lo trata json.loads
+      if (validar(tickets[i])) return { completos: completos, aprovechados: 0, tickets: [] };
+    }
+    return { completos: completos, aprovechados: tickets.length, tickets: tickets.slice(0, 50) };
+  }
+
+  /* ---------------------------------------------------------- volumen: N registros por lotes */
+  var ASUNTOS = ["no puede iniciar sesión tras cambiar la contraseña", "no llega el código de verificación por SMS",
+                 "cobro duplicado de la suscripción", "transferencia no reflejada tras tres días",
+                 "la aplicación se cierra al adjuntar un archivo", "error 500 al generar la factura electrónica",
+                 "el buscador ignora palabras con tilde", "cómo exportar el historial de pedidos",
+                 "cambio del correo asociado a la cuenta", "capacitación sobre el módulo de reportes"];
+  var DETALLES = ["Ya reinicié la aplicación.", "Es urgente para hoy.", "Me pasa desde el martes.",
+                  "Tengo capturas del problema.", "Nadie me ha respondido aún.", "Solo ocurre en el celular.",
+                  "Le pasa a todo mi equipo.", "Perdí trabajo por esto."];
+
+  /* mismo generador determinista que experiments/v7_escalamiento: la entrada es reproducible */
+  function azar(semilla) {
+    return function () {
+      semilla |= 0; semilla = (semilla + 0x6D2B79F5) | 0;
+      var x = Math.imul(semilla ^ (semilla >>> 15), 1 | semilla);
+      x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function generar(n, desde) {
+    var r = azar(20260917 + desde), out = [];
+    for (var i = 0; i < n; i++) {
+      var id = "T-" + String(desde + i).padStart(5, "0");
+      out.push({ id: id, mensaje: "Hola, " + ASUNTOS[Math.floor(r() * ASUNTOS.length)] + " " +
+                 DETALLES[Math.floor(r() * DETALLES.length)] });
+    }
+    return out;
+  }
+
+  /* tasas medidas en V7; sirven para estimar antes de gastar */
+  function tasa(formato) {
+    var E = DATOS.escalamiento;
+    if (E && E.volumen && E.volumen[formato]) {
+      return { salida: E.volumen[formato].tokens_por_registro, entrada: E.volumen[formato].entrada_por_registro || 26 };
+    }
+    return formato === "mini" ? { salida: 23.3, entrada: 26 } : { salida: 63.4, entrada: 26 };
+  }
+
+  /* El lote sugerido es el mayor que V7 midió sin perder un solo registro; si no hay medición,
+     se estima con 0,8 × límite de salida ÷ tokens por registro. */
+  function loteSugerido(formato) {
+    var E = DATOS.escalamiento;
+    var medido = E && E.quiebre && E.quiebre[formato] && E.quiebre[formato].maximo_sin_perdida;
+    if (medido) return medido;
+    return Math.max(1, Math.floor(0.8 * 8192 / tasa(formato).salida / 10) * 10);
+  }
+
+  function plan() {
+    var n = Math.max(1, parseInt($("#registros").value, 10) || 10);
+    var manual = parseInt($("#lote").value, 10) || 0;
+    var lote = Math.min(manual > 0 ? manual : loteSugerido(estado.formato), n);
+    return { n: n, lote: lote, llamadas: Math.ceil(n / lote) };
+  }
+
+  function pintarPlan(saldoActual) {
+    var caja = $("#plan");
+    if (estado.proveedor === "grabado") { caja.hidden = true; return; }
+    var p = plan(), tr = tasa(estado.formato), pr = PRECIOS[estado.proveedor] || {};
+    var tokSalida = p.n * tr.salida, tokEntrada = p.n * tr.entrada + p.llamadas * 700;
+    var usd = (tokSalida / 1e6) * (pr.salida || 0) + (tokEntrada / 1e6) * (pr.entrada || 0);
+    var seg = p.llamadas * (p.lote > 100 ? 18 : 10) / 4;
+    var tiempo = seg > 90 ? Math.round(seg / 60) + " " + T.volMin : Math.round(seg) + " " + T.volSeg;
+    var html = "<b>" + T.volPlan(p.n, p.lote, p.llamadas) + "</b>" +
+      '<div class="cifras"><span>' + T.volEstimado + ": <b>" + usd.toFixed(3) + " USD</b> " +
+      (pr.modelo_precio ? "(" + pr.modelo_precio + ")" : "") + "</span>" +
+      "<span>" + Math.round(tokSalida).toLocaleString(ES ? "es-PE" : "en-US") +
+      (ES ? " tokens de salida" : " output tokens") + "</span>" +
+      "<span>" + T.volTiempo + ": <b>" + tiempo + "</b></span>";
+    if (saldoActual !== null && saldoActual !== undefined) {
+      html += "<span>" + T.volSaldo + ": <b>" + saldoActual.toFixed(2) + " USD</b></span>";
+      if (usd > saldoActual) html += '<span class="aviso-saldo">' + T.volSinSaldo + "</span>";
+    }
+    html += "</div>";
+    caja.innerHTML = html;
+    caja.hidden = false;
+  }
+
+  var detener = false;
+  var saldoConocido = null;
+
+  function correrVolumen() {
+    var p = plan(), tr = tasa(estado.formato);
+    var r = { formato: estado.formato === "mini" ? ".mini" : "JSON", esperados: p.n, llamadas: 0, tokens: 0,
+              entrada: 0, ms: 0, incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false,
+              real: true, volumen: true, texto: "" };
+    var lotes = [];
+    for (var i = 0; i < p.llamadas; i++) {
+      var desde = 1 + i * p.lote;
+      lotes.push({ i: i, desde: desde, n: Math.min(p.lote, p.n - i * p.lote) });
+    }
+    var hechas = 0, cortadas = 0;
+    var caja = $("#plan");
+    var barra = document.createElement("div");
+    barra.className = "mesa-barra";
+    barra.innerHTML = "<i></i>";
+    caja.appendChild(barra);
+
+    function uno(l) {
+      if (detener) return Promise.resolve();
+      var lote = generar(l.n, l.desde);
+      return llamar(instruccion(), pedido(lote), 8192).then(function (a) {
+        var lect = estado.formato === "mini" ? leerMini(a.texto, lote) : leerJson(a.texto, lote);
+        hechas++;
+        r.llamadas++;
+        r.tokens += a.tokens; r.entrada += a.entrada || 0; r.ms += a.ms;
+        r.recibidos += lect.completos; r.aprovechados += lect.aprovechados;
+        if (a.cortada) cortadas++;
+        r.texto = a.texto;
+        r.ultimos = lect.tickets || [];
+        estadoTexto(T.volProgreso(hechas, p.llamadas, p.n, r.aprovechados));
+        barra.firstChild.style.width = (100 * hechas / p.llamadas) + "%";
+      }).catch(function (e) {
+        hechas++;
+        r.error = T.fallaRed(e.message);
+        detener = true;
+      });
+    }
+
+    var cola = lotes.slice(), activos = [];
+    function siguiente() {
+      if (!cola.length || detener) return Promise.resolve();
+      return uno(cola.shift()).then(siguiente);
+    }
+    for (var k = 0; k < Math.min(4, lotes.length); k++) activos.push(siguiente());
+    return Promise.all(activos).then(function () {
+      barra.remove();
+      r.cortada = cortadas > 0;
+      r.motivo = cortadas ? T.motivo[estado.formato === "mini" ? "cortada" : "jsonCortada"] :
+                            T.motivo[estado.formato === "mini" ? "ok" : "jsonOk"];
+      if (cortadas) r.incidencias.push(T.cortePorLimite + " (" + cortadas + "/" + r.llamadas + ")");
+      if (detener) r.incidencias.push(T.volDetenido);
+      r.tickets = r.ultimos || [];
+      if (p.llamadas > 1) r.incidencias.push(T.volMuestra);
+      return r;
+    });
+  }
+
   /* --------------------------------------------------------- espera visible */
   function estadoTexto(texto) {
     var el = $("#estado");
@@ -826,14 +1055,21 @@ __PIE__
     }
     ocupado(true);
     estadoTexto(T.esperando);
+    detener = false;
+    var p = plan();
+    $("#detener").hidden = p.llamadas <= 1;
     return saldo().then(function (antes) {
-      var corrida = estado.formato === "mini" ? correrMiniReal() : correrJsonReal();
+      // una sola llamada: el camino didáctico, con reparación; varias: medición de volumen
+      var corrida = p.llamadas > 1 ? correrVolumen()
+                                   : (estado.formato === "mini" ? correrMiniReal() : correrJsonReal());
       return corrida.then(function (r) {
         return saldo().then(function (despues) {
           r.saldo = despues;
           if (antes !== null && despues !== null) r.consumido = Math.max(0, antes - despues);
           ocupado(false);
+          $("#detener").hidden = true;
           pintar(r);
+          pintarPlan(despues);
         });
       });
     });
@@ -852,6 +1088,11 @@ __PIE__
       $("#clave").value = clave();
       $("#clave").placeholder = estado.proveedor === "groq" ? "gsk_\u2026" : "sk-\u2026";
       $("#limite").value = estado.limite;
+      $("#loteAuto").textContent = T.volAuto(loteSugerido(estado.formato));
+      pintarPlan(saldoConocido);
+      if (clave()) saldo().then(function (s) { pintarPlan(s); });
+    } else {
+      $("#plan").hidden = true;
     }
     reiniciar();
   }
@@ -861,6 +1102,10 @@ __PIE__
     if (!b) return;
     estado.formato = b.dataset.formato;
     seleccionar(this, "formato", estado.formato);
+    if (estado.proveedor !== "grabado") {
+      $("#loteAuto").textContent = T.volAuto(loteSugerido(estado.formato));
+      pintarPlan(saldoConocido);
+    }
     reiniciar();
   });
   $("#segEscenario").addEventListener("click", function (e) {
@@ -889,6 +1134,15 @@ __PIE__
     if (!b) return;
     estado.limite = parseInt(b.dataset.limite, 10);
     $("#limite").value = estado.limite;
+  });
+  $("#detener").addEventListener("click", function () { detener = true; estadoTexto(T.volDetenido); });
+  $("#registros").addEventListener("input", function () { pintarPlan(saldoConocido); });
+  $("#lote").addEventListener("input", function () { pintarPlan(saldoConocido); });
+  $("#panelClave").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-registros]");
+    if (!b) return;
+    $("#registros").value = b.dataset.registros;
+    pintarPlan(saldoConocido);
   });
   $("#ejecutar").addEventListener("click", ejecutar);
   $("#reiniciar").addEventListener("click", function () { reiniciar(); });
