@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Provenance: authored by the mini-format authors for the test suite as a representative external record schema of the library-catalogue domain (field names inspired by schema.org/Book); not copied from a third-party file. JSON Schema draft-07, record form.",
+  "title": "Library catalogue book",
+  "description": "One bibliographic record of a university library catalogue.",
+  "type": "object",
+  "properties": {
+    "isbn": {"type": "string", "description": "ISBN-13 without hyphens", "pattern": "^[0-9]{13}$"},
+    "title": {"type": "string", "minLength": 1},
+    "authors": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 8},
+    "year": {"type": "integer", "minimum": 1450, "maximum": 2100},
+    "language": {"type": "string", "enum": ["es", "en", "pt", "fr"]},
+    "available": {"type": "boolean"},
+    "call_number": {"type": "string", "description": "shelf location"},
+    "subjects": {"type": "array", "items": {"type": "string"}, "maxItems": 5}
+  },
+  "required": ["isbn", "title", "authors", "year", "language", "available"],
+  "additionalProperties": false,
+  "examples": [
+    {"isbn": "9786123180256", "title": "Ingeniería de software: un enfoque práctico", "authors": ["Roger S. Pressman", "Bruce R. Maxim"], "year": 2021, "language": "es", "available": true, "call_number": "005.1 P84", "subjects": ["software", "ingeniería"]},
+    {"isbn": "9780262046305", "title": "Introduction to Algorithms, 4th ed.", "authors": ["Thomas H. Cormen", "Charles E. Leiserson", "Ronald L. Rivest", "Clifford Stein"], "year": 2022, "language": "en", "available": false},
+    {"isbn": "9788448156190", "title": "Bases de datos | diseño, implementación", "authors": ["Abraham Silberschatz"], "year": 2014, "language": "es", "available": true, "subjects": ["bases de datos", "SQL, relacional"]}
+  ]
+}

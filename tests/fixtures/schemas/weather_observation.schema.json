@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Provenance: authored by the mini-format authors for the test suite as a representative external record schema of the meteorological-observation domain (variables modelled after surface synoptic reports); not copied from a third-party file. JSON Schema 2020-12, record form with a one-level object (tuple).",
+  "title": "Surface weather observation",
+  "type": "object",
+  "properties": {
+    "station_id": {"type": "string", "description": "WMO station identifier"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "temperature_c": {"type": "number", "minimum": -90, "maximum": 60},
+    "humidity_pct": {"type": "integer", "minimum": 0, "maximum": 100},
+    "wind": {
+      "type": "object",
+      "properties": {
+        "speed_kmh": {"type": "number", "minimum": 0},
+        "direction_deg": {"type": "integer", "minimum": 0, "exclusiveMaximum": 360}
+      },
+      "required": ["speed_kmh"]
+    },
+    "condition": {"enum": ["clear", "cloudy", "rain", "fog", "storm"]},
+    "pressure_hpa": {"type": ["number", "null"], "minimum": 850, "maximum": 1090},
+    "remarks": {"type": "string"}
+  },
+  "required": ["station_id", "observed_at", "temperature_c", "humidity_pct", "wind", "condition", "pressure_hpa"],
+  "examples": [
+    {"station_id": "84628", "observed_at": "2026-09-16T12:00:00Z", "temperature_c": 18.4, "humidity_pct": 81, "wind": {"speed_kmh": 14.8, "direction_deg": 200}, "condition": "cloudy", "pressure_hpa": 1013.2},
+    {"station_id": "84691", "observed_at": "2026-09-16T12:00:00Z", "temperature_c": 22, "humidity_pct": 64, "wind": {"speed_kmh": 0}, "condition": "clear", "pressure_hpa": null, "remarks": "calm; visibility > 10 km"}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Provenance: authored by the mini-format authors for the test suite as a representative external document schema of the IT service-desk domain (fields modelled after common help-desk ticket exports); not copied from a third-party file. JSON Schema draft-07, document form: one array of flat records.",
+  "title": "Service desk ticket export",
+  "type": "object",
+  "properties": {
+    "tickets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ticket_id": {"type": "string"},
+          "subject": {"type": "string", "maxLength": 200},
+          "priority": {"type": "string", "enum": ["low", "normal", "high", "urgent"]},
+          "status": {"type": "string", "enum": ["open", "pending", "solved", "closed"]},
+          "created": {"type": "string", "format": "date-time"},
+          "requester_email": {"type": "string", "format": "email"},
+          "assignee": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+          "labels": {"type": "array", "items": {"type": "string"}, "maxItems": 6, "uniqueItems": true},
+          "satisfaction": {"type": "integer", "minimum": 1, "maximum": 5}
+        },
+        "required": ["ticket_id", "subject", "priority", "status", "created", "requester_email", "assignee"]
+      }
+    }
+  },
+  "required": ["tickets"],
+  "examples": [
+    {"tickets": [
+      {"ticket_id": "INC-10231", "subject": "VPN disconnects every 10 minutes", "priority": "high", "status": "open", "created": "2026-09-14T08:12:00-05:00", "requester_email": "ana.rojas@example.edu", "assignee": "soporte-redes", "labels": ["vpn", "network"]},
+      {"ticket_id": "INC-10232", "subject": "Printer on floor 3: paper jam\nand toner low", "priority": "low", "status": "pending", "created": "2026-09-14T09:40:00-05:00", "requester_email": "luis.p@example.edu", "assignee": null},
+      {"ticket_id": "INC-10233", "subject": "Password reset", "priority": "normal", "status": "solved", "created": "2026-09-15T11:05:00-05:00", "requester_email": "m.quispe@example.edu", "assignee": "mesa-ayuda", "labels": ["account"], "satisfaction": 5}
+    ]}
+  ]
+}

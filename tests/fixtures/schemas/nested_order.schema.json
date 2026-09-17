@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Provenance: authored by the mini-format authors for the test suite as a counter-example: an e-commerce order with an object inside an object (customer.address) and an array of objects (line_items). Its conversion must fail citing SPEC §12.",
+  "title": "E-commerce order",
+  "type": "object",
+  "properties": {
+    "order_id": {"type": "string"},
+    "customer": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "address": {"type": "object", "properties": {"street": {"type": "string"}, "city": {"type": "string"}}, "required": ["city"]}
+      },
+      "required": ["name"]
+    },
+    "line_items": {"type": "array", "items": {"type": "object", "properties": {"sku": {"type": "string"}, "qty": {"type": "integer"}}, "required": ["sku", "qty"]}},
+    "total": {"type": "number"}
+  },
+  "required": ["order_id", "customer", "line_items", "total"]
+}

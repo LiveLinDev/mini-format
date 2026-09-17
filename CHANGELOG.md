@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2.0 (sin publicar)
+
+- Add `minifmt.stream` (`Reader`, `create_reader`, `read_records`): an incremental
+  Python reader equivalent to the TypeScript `createReader`/`readRecords`. It accepts
+  text or UTF-8 bytes split anywhere, emits each record when its line closes, reports
+  header, `n`, truncation and incomplete last line, and yields the same records and
+  errors as `parse()`. Records are not retained by `read_records`, so peak memory is
+  independent of the record count (tested with 200,000 records; 1,000,000 with
+  `MINI_STREAM_MILLION=1`). Unlike the TypeScript generator, a final valid line
+  without LF is also yielded.
+- Add `minifmt.schema` (`from_json_schema`, `to_json_schema`, `from_pydantic`) and the
+  `mini from-schema` / `mini to-schema` commands. Required properties become core
+  fields and optional ones extensions; one-level objects become tuples; deeper
+  nesting is rejected with E20 citing SPEC §12. Contract information absent from
+  JSON Schema is kept in `x-mini` annotations, so contract -> schema -> contract is
+  lossless. Pydantic remains optional.
+- Add `mini bench FILE [-p PREFIX | --contract PATH] [--enc] [--format table|json]`:
+  tokens and bytes for .mini, compact/indented JSON, YAML, flattened CSV and the
+  official TOON encoder (via Node.js), with the saving relative to compact JSON.
+  Missing optional dependencies are reported as unavailable; a missing tokenizer is
+  a clear error. It reproduces the archived o200k_base counts of the benchmark.
+
 ## 1.1.0
 
 - Build domain toolkits from multiple JSON samples, preserving nested structure,

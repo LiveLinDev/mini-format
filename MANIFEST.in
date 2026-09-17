@@ -4,3 +4,4 @@ recursive-include examples *.json *.md
 recursive-include forks *.json *.md *.mini
 recursive-include conformance *.json *.md *.py
 recursive-include tests *.py
+recursive-include tests/fixtures *.json
