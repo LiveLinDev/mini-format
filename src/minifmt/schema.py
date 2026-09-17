@@ -51,7 +51,10 @@ SCHEMA_DIALECT = "https://json-schema.org/draft/2020-12/schema"
 X = "x-mini"
 
 _SCALAR_JSON = {"string": "str", "integer": "int", "number": "float", "boolean": "bool"}
-_JSON_OF = {"str": "string", "int": "integer", "float": "number", "bool": "boolean", "enum": "string"}
+_JSON_OF = {"str": "string", "int": "integer", "float": "number", "bool": "boolean", "enum": "string",
+            "date": "string", "decimal": "string"}
+# SPEC 1.1 §6: forma textual de decimal
+_DECIMAL_PATTERN = r"^-?[0-9]+(\.[0-9]+)?$"
 _ANNOTATIONS = {"title", "description", "default", "examples", "$comment", "readOnly", "writeOnly",
                 "deprecated", "$schema", "$id", "$defs", "definitions", "additionalProperties",
                 "unevaluatedProperties", "type", "enum", "const", "properties", "required", "items",
@@ -162,6 +165,12 @@ def _scalar(ctx: _Ctx, name: str, node: Dict[str, Any], path: str, item: bool = 
             raise _fail(f"{path}: enum of type {kind!r} is not representable")
         out["type"] = "enum"
         out["values"] = values
+    elif kind == "string" and (node.get("format") == "date" or (node.get(X) or {}).get("type") == "date"):
+        out["type"] = "date"
+        ignored = [k for k in ignored if k not in ("format", "pattern", "formatMinimum", "formatMaximum", X)]
+    elif kind == "string" and (node.get("format") == "decimal" or (node.get(X) or {}).get("type") == "decimal"):
+        out["type"] = "decimal"
+        ignored = [k for k in ignored if k not in ("format", "pattern", X)]
     elif kind in _SCALAR_JSON:
         out["type"] = _SCALAR_JSON[kind]
     elif kind in ("array", "object"):
@@ -188,6 +197,17 @@ def _scalar(ctx: _Ctx, name: str, node: Dict[str, Any], path: str, item: bool = 
             out["min"] = lo
         if hi is not None:
             out["max"] = hi
+    elif out["type"] in ("date", "decimal"):
+        ann = node.get(X) or {}
+        lo = ann.get("min", node.get("formatMinimum"))
+        hi = ann.get("max", node.get("formatMaximum"))
+        if item and (lo is not None or hi is not None):
+            ignored.append("formatMinimum/formatMaximum")
+        else:
+            if lo is not None:
+                out["min"] = lo
+            if hi is not None:
+                out["max"] = hi
     else:
         ignored += [k for k in ("minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum") if k in node]
     ctx.unsupported(path, ignored)
@@ -409,6 +429,17 @@ def _scalar_schema(ftype: str, values: Optional[List[str]], lo: Any = None, hi: 
             s["minimum"] = lo
         if hi is not None:
             s["maximum"] = hi
+    elif ftype in ("date", "decimal"):
+        ann: Dict[str, Any] = {"type": ftype}
+        if ftype == "date":
+            s["format"] = "date"
+        else:
+            s["pattern"] = _DECIMAL_PATTERN
+        if lo is not None:
+            ann["min"] = lo
+        if hi is not None:
+            ann["max"] = hi
+        s[X] = ann
     return s
 
 
@@ -448,7 +479,7 @@ def _field_schemas(f: Any, sep_optional: bool) -> List[Tuple[str, Dict[str, Any]
         s["default"] = f.default
     if f.type != "mlist":
         if ann:
-            s[X] = ann
+            s[X] = dict(s.get(X) or {}, **ann)
         return [(f.name, s)]
     ann.update({"type": "mlist", "marker": f.marker, "selected": f.json_selected})
     if f.name != f.json_items:

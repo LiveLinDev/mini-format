@@ -24,7 +24,7 @@ from typing import List, Optional
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from minifmt import Contract, MiniError, Registry, cli, dumps, parse  # noqa: E402
+from minifmt import Contract, MiniError, MiniValidationError, Registry, cli, dumps, parse  # noqa: E402
 from minifmt.schema import from_json_schema, from_pydantic, to_json_schema  # noqa: E402
 
 SCHEMAS = ROOT / "tests" / "fixtures" / "schemas"
@@ -39,7 +39,7 @@ EXTERNAL = {
                                    "status:enum{open|pending|solved|closed} | created:str | requester_email:str | assignee:str? || "
                                    "labels:list<str>[..6]? | satisfaction:int[1..5]?"),
     "job_posting.pydantic.schema.json": ("job", "code:str | title:str | contract:enum{full_time|part_time|internship|temporary} | "
-                                         "remote:bool | salary_min:int[0..]? | skills:list<str>[..10] || city:str? | deadline:str?"),
+                                         "remote:bool | salary_min:int[0..]? | skills:list<str>[..10] || city:str? | deadline:date?"),
     "pharmacy_item.schema.json": ("rx", "sku:str | generic_name:str | form:enum{tablet|capsule|syrup|injection|cream} | strength:str | "
                                   "units_in_stock:int[0..] | unit_price:float | currency:enum{PEN} | prescription_required:bool || "
                                   "storage:enum{room|refrigerated}? | atc_codes:list<str>[..3]?"),
@@ -221,6 +221,36 @@ class TestRoundTrip(unittest.TestCase):
             c = from_json_schema(load(name), prefix)
             again = from_json_schema(to_json_schema(c))
             self.assertEqual(again.to_dict(), c.to_dict(), name)
+
+    def test_date_and_decimal_types(self):
+        """SPEC 1.1: date y decimal se convierten en ambos sentidos sin pérdida."""
+        schema = {
+            "type": "object",
+            "title": "Factura",
+            "properties": {
+                "id": {"type": "integer"},
+                "fecha": {"type": "string", "format": "date", "formatMinimum": "2020-01-01"},
+                "monto": {"type": "string", "format": "decimal"},
+                "pagos": {"type": "array", "items": {"type": "string", "format": "date"}},
+            },
+            "required": ["id", "fecha", "monto", "pagos"],
+        }
+        warnings = []
+        c = from_json_schema(schema, "fac", warnings=warnings)
+        self.assertEqual(warnings, [])
+        self.assertEqual([(f.name, f.type, f.min) for f in c.fields],
+                         [("id", "int", None), ("fecha", "date", "2020-01-01"), ("monto", "decimal", None), ("pagos", "list", None)])
+        self.assertEqual(c.fields[3].item, "date")
+        exported = json.loads(json.dumps(to_json_schema(c)))
+        self.assertEqual(from_json_schema(exported).to_dict(), c.to_dict())
+        doc = parse("fac|n=1\n1|2024-02-29|10.50|2024-01-01,2024-02-01\n", c)
+        self.assertEqual(doc.records[0]["fecha"], "2024-02-29")
+        with self.assertRaises(MiniValidationError) as err:
+            parse("fac|n=1\n1|2024-02-30|10.50|2024-01-01\n", c)
+        self.assertEqual([(x.code, x.line) for x in err.exception.errors], [("E06", 2)])
+        with self.assertRaises(MiniValidationError) as err:
+            parse("fac|n=1\n1|2019-12-31|1|2024-01-01\n", c)
+        self.assertEqual([x.code for x in err.exception.errors], ["E13"])
 
     @unittest.skipIf(jsonschema is None, "jsonschema not installed")
     def test_canonical_fixtures_validate_against_exported_schema(self):

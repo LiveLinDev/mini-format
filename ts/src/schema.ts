@@ -115,8 +115,21 @@ function checkKeywords(ctx: Ctx, s: JsonSchema, path: string, allowed: string[])
 interface Scalar {
   type: ScalarType;
   values?: string[];
-  min?: number;
-  max?: number;
+  min?: number | string;
+  max?: number | string;
+}
+
+/** Límites de date/decimal: formatMinimum/formatMaximum o anotación x-mini (texto). */
+function textBounds(ctx: Ctx, s: JsonSchema, path: string, asItem: boolean, out: Scalar): void {
+  const ann = isObj(s['x-mini']) ? (s['x-mini'] as JsonSchema) : {};
+  const lo = ann.min ?? s.formatMinimum;
+  const hi = ann.max ?? s.formatMaximum;
+  for (const [key, v] of [['min', lo], ['max', hi]] as const) {
+    if (v === undefined) continue;
+    if (typeof v !== 'string' && typeof v !== 'number') fail(path, `invalid ${key} bound`);
+    if (asItem) unsupported(ctx, path, key === 'min' ? 'formatMinimum' : 'formatMaximum');
+    else out[key] = v as string | number;
+  }
 }
 
 /** Escalar JSON Schema -> tipo .mini. `asItem`: elemento de lista (sin rango). */
@@ -132,9 +145,23 @@ function scalar(ctx: Ctx, s: JsonSchema, path: string, asItem: boolean): Scalar 
   const t = types(s);
   if (!t.length) fail(path, 'schema without a type is not representable (e.g. z.any(), z.date(), custom types)');
   switch (t[0]) {
-    case 'string':
+    case 'string': {
+      const ann = isObj(s['x-mini']) ? (s['x-mini'] as JsonSchema) : {};
+      if (s.format === 'date' || ann.type === 'date') {
+        const out: Scalar = { type: 'date' };
+        textBounds(ctx, s, path, asItem, out);
+        checkKeywords(ctx, s, path, ['type', 'format', 'pattern', 'formatMinimum', 'formatMaximum', 'x-mini']);
+        return out;
+      }
+      if (s.format === 'decimal' || ann.type === 'decimal') {
+        const out: Scalar = { type: 'decimal' };
+        textBounds(ctx, s, path, asItem, out);
+        checkKeywords(ctx, s, path, ['type', 'format', 'pattern', 'x-mini']);
+        return out;
+      }
       checkKeywords(ctx, s, path, ['type']);
       return { type: 'str' };
+    }
     case 'boolean':
       checkKeywords(ctx, s, path, ['type']);
       return { type: 'bool' };

@@ -20,8 +20,9 @@ function randText(r: R, maxLen: number): string {
 }
 
 function randNumber(r: R, f: Field, integer: boolean): number {
-  const lo = f.min !== null ? f.min : -1000;
-  const hi = f.max !== null ? f.max : 1000;
+  // min/max son numéricos para int/float (string solo en date/decimal)
+  const lo = f.min !== null ? Number(f.min) : -1000;
+  const hi = f.max !== null ? Number(f.max) : 1000;
   if (integer) return randInt(r, Math.ceil(lo), Math.floor(hi));
   const special = [0.1 + 0.2, 1e-7, 1.5e-5, 123456789.125, 1e16, 1e22, 2.5e-300, -0.00001, 3];
   if (f.min === null && f.max === null && r() < 0.3) return pick(r, special);
@@ -50,8 +51,8 @@ function randRecord(r: R, c: Contract, header: Record<string, unknown>, idx: num
     }
     if (f.type === 'list' || f.type === 'mlist') {
       const k = f.count_key && typeof header[f.count_key] === 'number' ? (header[f.count_key] as number) : null;
-      const lo = f.min !== null ? f.min : 0;
-      const hi = f.max !== null ? f.max : lo + 4;
+      const lo = f.min !== null ? Number(f.min) : 0;
+      const hi = f.max !== null ? Number(f.max) : lo + 4;
       const size = k !== null ? k : randInt(r, f.type === 'mlist' ? Math.max(lo, 1) : lo, hi);
       const items = Array.from({ length: size }, () => randScalar(r, f, true));
       if (f.type === 'list') {
@@ -117,8 +118,8 @@ describe('ida y vuelta', () => {
         // count_key: el valor de la cabecera debe respetar min/max de la lista
         for (const f of c.fields) {
           if (f.count_key && typeof header[f.count_key] === 'number') {
-            const lo = f.min !== null ? f.min : 1;
-            const hi = f.max !== null ? f.max : 6;
+            const lo = f.min !== null ? Number(f.min) : 1;
+            const hi = f.max !== null ? Number(f.max) : 6;
             header[f.count_key] = randInt(r, lo, hi);
           }
         }

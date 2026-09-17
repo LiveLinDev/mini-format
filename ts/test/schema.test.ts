@@ -215,3 +215,27 @@ describe('fromJsonSchema sin Zod', () => {
     assert.throws(() => fromJsonSchema({ type: 'object', properties: { a: { $ref: '#/x' } } }, { prefix: 'ev' }), /not representable/);
   });
 });
+
+describe('fromJsonSchema: tipos date y decimal (SPEC 1.1)', () => {
+  test('format date y decimal se convierten con sus límites', () => {
+    const json = fromJsonSchema({
+      type: 'object',
+      properties: {
+        id: { type: 'integer' },
+        fecha: { type: 'string', format: 'date', formatMinimum: '2020-01-01' },
+        monto: { type: 'string', format: 'decimal', pattern: '^-?[0-9]+(\.[0-9]+)?$' },
+        pagos: { type: 'array', items: { type: 'string', format: 'date' } },
+      },
+      required: ['id', 'fecha', 'monto', 'pagos'],
+    }, { prefix: 'fac' });
+    const c = assertInvariants(json);
+    assert.deepEqual(c.fields.map(f => [f.name, f.type, f.min]), [
+      ['id', 'int', null], ['fecha', 'date', '2020-01-01'], ['monto', 'decimal', null], ['pagos', 'list', null],
+    ]);
+    assert.equal(c.fields[3].item, 'date');
+    const doc = parse('fac|n=1\n1|2024-02-29|10.50|2024-01-01,2024-02-01\n', c);
+    assert.equal(doc.records[0].fecha, '2024-02-29');
+    assert.throws(() => parse('fac|n=1\n1|2024-02-30|10.50|2024-01-01\n', c), (e: unknown) => JSON.stringify(e).includes('E06') || String(e).includes('E06'));
+    assert.throws(() => parse('fac|n=1\n1|2019-12-31|1|2024-01-01\n', c), (e: unknown) => JSON.stringify(e).includes('E13') || String(e).includes('E13'));
+  });
+});
