@@ -100,6 +100,7 @@ __CABEZA__
                      border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .1rem .3rem;
                      display: block; overflow-wrap: anywhere; }
   .mesa-sec table td:first-child, .mesa-sec table th:first-child { white-space: nowrap; }
+  .mesa-sec .rango { color: rgb(var(--fg-faint)); font-size: var(--fs-fine); white-space: nowrap; }
 
   @media (max-width: 62rem) { .mesa-cajas { grid-template-columns: 1fr; } }
 </style>
@@ -316,7 +317,7 @@ __PIE__
       repedido: function (ids) { return "Se volvieron a pedir solo " + ids.join(", ") + ", no los diez."; },
       cortePorLimite: "El proveedor cortó la respuesta al llegar al límite de tokens.",
       latencia: function (ms) { return (ms / 1000).toFixed(1) + " s en el modelo"; },
-      real: ["Lectura", "Límite de tokens", "Tickets", "Llamadas", "Tokens de salida", "Qué pasó"]
+      real: ["Lectura", "Límite de tokens", "Tickets", "Llamadas", "Tokens de salida (mediana)", "Qué pasó"]
     },
     en: {
       creados: function (n, m) { return n + " of " + m + " messages turned into tickets."; },
@@ -351,7 +352,7 @@ __PIE__
       repedido: function (ids) { return "Only " + ids.join(", ") + " were requested again, not all ten."; },
       cortePorLimite: "The provider cut the answer when it hit the token limit.",
       latencia: function (ms) { return (ms / 1000).toFixed(1) + " s in the model"; },
-      real: ["Reading", "Token limit", "Tickets", "Calls", "Output tokens", "What happened"]
+      real: ["Reading", "Token limit", "Tickets", "Calls", "Output tokens (median)", "What happened"]
     }
   }[ES ? "es" : "en"];
 
@@ -532,11 +533,13 @@ __PIE__
       var lectura = c.formato === "mini" ? ".mini" : "JSON";
       var limite = c.limite >= 2000 ? T.sinLimite : c.limite;
       var clase = c.tickets === DATOS.mediciones.mensajes ? "p p-baja" : "p p-alta";
+      var tok = c.tokens + (c.tokens_min ? ' <span class="rango">(' + c.tokens_min + "\u2013" + c.tokens_max +
+        ", n=" + c.n + ")</span>" : "");
       return "<tr><td>" + lectura + "</td><td>" + limite + '</td><td><span class="' + clase + '">' + c.tickets + "/" +
-        DATOS.mediciones.mensajes + "</span></td><td>" + c.llamadas + "</td><td>" + c.tokens + "</td><td>" + esc(c.nota) + "</td></tr>";
+        DATOS.mediciones.mensajes + "</span></td><td>" + c.llamadas + "</td><td>" + tok + "</td><td>" + esc(c.nota) + "</td></tr>";
     }).join("");
     $("#tablaReal").innerHTML = "<table><thead><tr>" + th + "</tr></thead><tbody>" + tr + "</tbody></table>";
-    $("#notaReal").textContent = T.notaReal(r);
+    $("#notaReal").textContent = T.notaReal(r) + (r.nota_dispersion && ES ? " " + r.nota_dispersion : "");
   }
 
   function seleccionar(grupo, atributo, valor) {
