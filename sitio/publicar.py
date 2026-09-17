@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "sitio"
 ORIGIN = "https://mini-format.pmoluna.com"
 REPO = "https://github.com/LiveLinDev/mini-format"
-SOURCE_ZIP = "/downloads/mini-format-1.1.0-source.zip"
+SOURCE_ZIP = "/downloads/mini-format-1.2.0-source.zip"
 ALLOW_ROOTS = {"benchmark", "experiments", "conformance", "forks", "src", "ts", "js", "docs"}
 ALLOW_SUFFIX = {".md", ".json", ".csv", ".py", ".ts", ".js", ".mini", ".txt", ".toml", ".png", ".svg", ".yaml", ".yml"}
 EXCLUDE = {"node_modules", "__pycache__", ".venv", ".git", "vocab", "dist"}
@@ -170,7 +170,7 @@ def localized(text: str, lang: str, path: str) -> str:
     meta += f'<link rel="canonical" href="{canonical}">\n<link rel="alternate" hreflang="es" href="{ORIGIN}{path}">\n<link rel="alternate" hreflang="en" href="{ORIGIN}/en{path}">\n<link rel="alternate" hreflang="x-default" href="{ORIGIN}{path}">\n'
     meta += f'<meta property="og:type" content="website"><meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(desc, quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:locale" content="{"es_ES" if lang == "es" else "en_US"}">\n'
     if path == "/":
-        schema = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.1.0", "license": "https://opensource.org/license/mit", "downloadUrl": ORIGIN + "/downloads/mini-format-1.1.0.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": lang, "description": desc}
+        schema = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.2.0", "license": "https://opensource.org/license/mit", "downloadUrl": ORIGIN + "/downloads/mini-format-1.2.0.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": lang, "description": desc}
         meta += '<script type="application/ld+json">' + json.dumps(schema, ensure_ascii=False) + '</script>\n'
     # Avoid duplicate structured data on repeated builds.
     text = re.sub(r'<script type="application/ld\+json">.*?</script>\s*', "", text, flags=re.S)

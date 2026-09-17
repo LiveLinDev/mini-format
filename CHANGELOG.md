@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.0 (sin publicar)
+## 1.2.0
 
 - Offline demonstration (`demo/sin-conexion/demo.py`): contract, generated
   instruction, streaming read of a real archived model answer, diagnostics,

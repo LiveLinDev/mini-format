@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mini-format"
-version = "1.1.0"
+version = "1.2.0"
 description = "Build domain-specific .mini toolkits from JSON samples: prompts, parsers, validation and repair"
 readme = "README.md"
 requires-python = ">=3.9"

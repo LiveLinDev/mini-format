@@ -1,7 +1,7 @@
 {
   "name": "@mini-format/core",
-  "version": "1.1.0",
-  "description": "Biblioteca TypeScript de la notación .mini (SPEC 1.0): parser, serializador, bloque de especificación, registro de familias, lectura en streaming, reparación selectiva, contratos desde Zod/JSON Schema y adaptadores de modelos.",
+  "version": "1.2.0",
+  "description": "Biblioteca TypeScript de la notación .mini (SPEC 1.1): parser, serializador, bloque de especificación, registro de familias, lectura en streaming, reparación selectiva, contratos desde Zod/JSON Schema y adaptadores de modelos.",
   "type": "module",
   "license": "MIT",
   "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",

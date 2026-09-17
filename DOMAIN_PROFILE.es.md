@@ -2,8 +2,8 @@
 
 [English](DOMAIN_PROFILE.md) · [Guía de integración](BUILD_GUIDE.es.md)
 
-Este documento especifica el perfil JSON generado por la versión 1.1.0 del
-software. No sustituye la [SPEC 1.0 del núcleo](SPEC.es.md). Las familias clásicas
+Este documento especifica el perfil JSON generado por la versión 1.2.0 del
+software. No sustituye la [SPEC 1.1 del núcleo](SPEC.es.md). Las familias clásicas
 y sus pruebas mantienen sintaxis y parsers propios. El perfil generado se procesa
 con el parser de `mini build` o con `minifmt.domain`.
 

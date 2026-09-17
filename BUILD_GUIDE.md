@@ -7,7 +7,7 @@
 Extract the toolkit ZIP from the site's Downloads section. With Python 3.9+:
 
 ```sh
-python -m pip install --no-index mini_format-1.1.0-py3-none-any.whl
+python -m pip install --no-index mini_format-1.2.0-py3-none-any.whl
 mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini
 ```
 
@@ -132,5 +132,5 @@ retry rate and latency in your own integration. Public token benchmarks demonstr
 serialization efficiency, not that every model generates this notation perfectly.
 
 The generated `mini-domain/1` profile is supported by the Python toolkit. The
-separate TypeScript/browser core supports the fourteen SPEC 1.0 families; do not
+separate TypeScript/browser core supports the fourteen SPEC 1.1 families; do not
 pass generated-domain files to that parser. See [profile compatibility](DOMAIN_PROFILE.md).

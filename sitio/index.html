@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/base.css?v=0f4ea55ef2c8789f">
-<link rel="stylesheet" href="/landing.css?v=1b740cc564c61260">
+<link rel="stylesheet" href="/base.css?v=fe2218a8e23cd0c5">
+<link rel="stylesheet" href="/landing.css?v=922e451f95736bb6">
 <link rel="icon" href="/favicon.svg?v=1496ea04e852d75e" type="image/svg+xml">
 <meta name="description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.">
 <link rel="canonical" href="https://mini-format.pmoluna.com/">
@@ -16,7 +16,7 @@
 <link rel="alternate" hreflang="en" href="https://mini-format.pmoluna.com/en/">
 <link rel="alternate" hreflang="x-default" href="https://mini-format.pmoluna.com/">
 <meta property="og:type" content="website"><meta property="og:title" content="mini-format — contratos verificables para salidas de LLM"><meta property="og:description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos."><meta property="og:url" content="https://mini-format.pmoluna.com/"><meta property="og:locale" content="es_ES">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.1.0", "license": "https://opensource.org/license/mit", "downloadUrl": "https://mini-format.pmoluna.com/downloads/mini-format-1.1.0.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": "es", "description": "Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.2.0", "license": "https://opensource.org/license/mit", "downloadUrl": "https://mini-format.pmoluna.com/downloads/mini-format-1.2.0.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": "es", "description": "Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos."}</script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
@@ -44,7 +44,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       Buscar en la documentación <kbd>/</kbd>
     </a>
-    <a class="icon-link" href="/downloads/mini-format-1.1.0-source.zip" aria-label="Descargar código fuente">
+    <a class="icon-link" href="/downloads/mini-format-1.2.0-source.zip" aria-label="Descargar código fuente">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg>
     </a>
     <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
@@ -67,10 +67,10 @@
         reparaciones seguras con un <a href="/docs/errors/">informe verificable</a>.
       </p>
       <div id="instalar">
-        <p class="install-label">Instalar mini-format 1.1.0</p>
+        <p class="install-label">Instalar mini-format 1.2.0</p>
         <div class="cmd" data-install="py">
           <span class="prompt" aria-hidden="true">$</span>
-          <code>pip install https://mini-format.pmoluna.com/downloads/mini_format-1.1.0-py3-none-any.whl</code>
+          <code>pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.0-py3-none-any.whl</code>
           <button class="copy" type="button" aria-label="Copiar el comando de instalación">
             <svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
             <svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>
@@ -78,7 +78,7 @@
         </div>
         <div class="cmd" data-install="js" hidden>
           <span class="prompt" aria-hidden="true">$</span>
-          <code>npm install ./mini-format-core-1.1.0.tgz</code>
+          <code>npm install ./mini-format-core-1.2.0.tgz</code>
           <button class="copy" type="button" aria-label="Copiar el comando de instalación">
             <svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
             <svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>
@@ -92,7 +92,7 @@
           <span class="aside"><a href="/docs/quickstart/">Ver la guía de instalación ↗</a></span>
         </div>
         <p class="install-note">Python 3.9+ · núcleo sin dependencias · código abierto MIT. El ZIP incluye el paquete Python, TypeScript, ejemplos y documentación.</p>
-        <div class="cmd-row"><a class="btn btn-solid" href="/downloads/mini-format-1.1.0.zip" download>Descargar toolkit .zip ↓</a><a class="aside" href="/downloads/mini_format-1.1.0-py3-none-any.whl" download>Paquete Python .whl ↓</a></div>
+        <div class="cmd-row"><a class="btn btn-solid" href="/downloads/mini-format-1.2.0.zip" download>Descargar toolkit .zip ↓</a><a class="aside" href="/downloads/mini_format-1.2.0-py3-none-any.whl" download>Paquete Python .whl ↓</a></div>
         <a class="quickstart" href="/docs/quickstart/">Crear mi primer .mini →</a>
       </div>
     </div>
@@ -315,7 +315,7 @@ c <span class="p">=</span> reg<span class="p">.</span><span class="f">get</span>
       <button role="tab" aria-selected="false" data-panel="a-conf">Conformidad</button>
       <button role="tab" aria-selected="false" data-panel="a-fork">Extender</button>
     </div>
-    <div class="codeblock" id="a-py" role="tabpanel"><div class="tb"><span>python</span><span>minifmt 1.1.0</span></div><pre><code><span class="k">from</span> minifmt <span class="k">import</span> Registry, parse, dumps, spec_block, roundtrip_ok
+    <div class="codeblock" id="a-py" role="tabpanel"><div class="tb"><span>python</span><span>minifmt 1.2.0</span></div><pre><code><span class="k">from</span> minifmt <span class="k">import</span> Registry, parse, dumps, spec_block, roundtrip_ok
 
 reg <span class="p">=</span> Registry<span class="p">.</span><span class="f">load</span><span class="p">()</span>                       <span class="c"># descubre forks/*/contract.json</span>
 c <span class="p">=</span> reg<span class="p">.</span><span class="f">get</span><span class="p">(</span><span class="s">"log"</span><span class="p">)</span>
@@ -480,7 +480,7 @@ $ mini check-forks
     <h2 style="max-width:16ch;margin-inline:auto">Empieza por tus datos.</h2>
     <p style="max-width:36rem;margin-inline:auto">Descarga el toolkit, reúne tus muestras JSON y construye el contrato de tu aplicación.</p>
     <div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>mini build phones.json --prefix phone --out .mini</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
-    <p style="margin-top:1.6rem;font-size:var(--fs-cap)"><a href="/docs/">Documentación</a> · <a href="/docs/spec/">Especificación 1.0</a> · <a href="/docs/errors/">Índice de errores</a> · <a href="/playground/">Playground</a></p>
+    <p style="margin-top:1.6rem;font-size:var(--fs-cap)"><a href="/docs/">Documentación</a> · <a href="/docs/spec/">Especificación 1.1</a> · <a href="/docs/errors/">Índice de errores</a> · <a href="/playground/">Playground</a></p>
   </div>
 </section>
 </main>
@@ -488,15 +488,15 @@ $ mini check-forks
 <footer class="site-footer">
   <div class="wrap">
     <div class="fgrid">
-      <div><h3>Aprender</h3><ul><li><a href="/docs/">Introducción</a></li><li><a href="/docs/quickstart/">Inicio rápido</a></li><li><a href="/docs/spec/">Especificación 1.0</a></li><li><a href="/docs/errors/">Índice de errores</a></li></ul></div>
+      <div><h3>Aprender</h3><ul><li><a href="/docs/">Introducción</a></li><li><a href="/docs/quickstart/">Inicio rápido</a></li><li><a href="/docs/spec/">Especificación 1.1</a></li><li><a href="/docs/errors/">Índice de errores</a></li></ul></div>
       <div><h3>Componente</h3><ul><li><a href="/docs/python/">Biblioteca Python</a></li><li><a href="/docs/typescript/">Biblioteca TypeScript</a></li><li><a href="/docs/cli/">Herramienta</a></li><li><a href="/docs/conformance/">Conformidad</a></li></ul></div>
       <div><h3>Evidencia</h3><ul><li><a href="/source/experiments/v5_ancho/">Eje de ancho (V5)</a></li><li><a href="/source/experiments/v1_tokens/">Tokens (V1)</a></li><li><a href="/source/experiments/v4_costos/">Costos (V4)</a></li><li><a href="/docs/metodologia/">Metodología</a></li></ul></div>
-      <div><h3>Proyecto</h3><ul><li><a href="/downloads/mini-format-1.1.0-source.zip">Código fuente</a></li><li><a href="/playground/">Playground</a></li><li><a href="/docs/licencia/">Licencia MIT</a></li><li><a href="/docs/contribuir/">Contribuir</a></li></ul></div>
+      <div><h3>Proyecto</h3><ul><li><a href="/downloads/mini-format-1.2.0-source.zip">Código fuente</a></li><li><a href="/playground/">Playground</a></li><li><a href="/docs/licencia/">Licencia MIT</a></li><li><a href="/docs/contribuir/">Contribuir</a></li></ul></div>
     </div>
     <div class="colophon">mini-format · Adrián Palma Obispo y Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas, 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.</div>
   </div>
 </footer>
 <script src="/docs.js?v=3f4038252e189a5a"></script>
-<script src="/app.js?v=43f6421b741325ca"></script>
+<script src="/app.js?v=4ad736762ed2d33a"></script>
 </body>
 </html>

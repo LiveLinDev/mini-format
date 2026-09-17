@@ -27,7 +27,7 @@ Un campo que aparece una sola vez puede ser opcional. Que todos los ejemplos ten
 
 ## Dos perfiles explícitos
 
-El **perfil base SPEC 1.0** mantiene las 14 familias y sus parsers Python, JavaScript y TypeScript. El **perfil generado `mini-domain/1`** añade el mapa necesario para conservar estructuras JSON y adaptar la codificación al dominio. Se usa con su `parser.py`, no con un parser del perfil base que desconozca el contrato generado.
+El **perfil base SPEC 1.1** mantiene las 14 familias y sus parsers Python, JavaScript y TypeScript. El **perfil generado `mini-domain/1`** añade el mapa necesario para conservar estructuras JSON y adaptar la codificación al dominio. Se usa con su `parser.py`, no con un parser del perfil base que desconozca el contrato generado.
 
 ## Ciclo de trabajo
 

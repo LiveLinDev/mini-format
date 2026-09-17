@@ -25,6 +25,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = re.search(r'^version = "([^"]+)"', (ROOT / "pyproject.toml").read_text(encoding="utf-8"), re.M).group(1)
+SPEC_VERSION = re.search(r'^SPEC_VERSION = "([^"]+)"', (ROOT / "src/minifmt/__init__.py").read_text(encoding="utf-8"), re.M).group(1)
 DOCS = ("README.md", "README.es.md", "SPEC.md", "SPEC.es.md", "FORKING.md", "FORKING.es.md",
         "CONTRIBUTING.md", "CONTRIBUTING.es.md", "LICENSE", "BUILD_GUIDE.md", "BUILD_GUIDE.es.md",
         "DOMAIN_PROFILE.md", "DOMAIN_PROFILE.es.md", "CHANGELOG.md")
@@ -135,7 +136,7 @@ def build(output: Path) -> dict:
             "Node >=22.6 (offline, no runtime dependencies):\n"
             f"  npm install ./{node_name}\n\n"
             "See BUILD_GUIDE.md / BUILD_GUIDE.es.md. The generated Python parser is standalone.\n"
-            "Software release 1.1.0; core SPEC 1.0; generated domain profile mini-domain/1.\n", encoding="utf-8")
+            f"Software release {VERSION}; core SPEC {SPEC_VERSION}; generated domain profile mini-domain/1.\n", encoding="utf-8")
         zip_name = f"mini-format-{VERSION}.zip"
         source_name = f"mini-format-{VERSION}-source.zip"
         zip_tree(kit, output / zip_name, f"mini-format-{VERSION}")
@@ -146,7 +147,7 @@ def build(output: Path) -> dict:
         zip_tree(clean_source, output / source_name, f"mini-format-{VERSION}")
 
     names = [wheel.name, node_name, zip_name, source_name]
-    manifest = {"version": VERSION, "spec": "1.0", "domain_profile": "mini-domain/1", "files": []}
+    manifest = {"version": VERSION, "spec": SPEC_VERSION, "domain_profile": "mini-domain/1", "files": []}
     for name in names:
         p = output / name
         manifest["files"].append({"name": name, "bytes": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()})

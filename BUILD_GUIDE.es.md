@@ -7,7 +7,7 @@
 Descomprime el ZIP de la sección Descargas. Con Python 3.9 o posterior:
 
 ```sh
-python -m pip install --no-index mini_format-1.1.0-py3-none-any.whl
+python -m pip install --no-index mini_format-1.2.0-py3-none-any.whl
 mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini
 ```
 
@@ -132,5 +132,5 @@ modelo, reintentos y latencia en tu integración. El benchmark público demuestr
 eficiencia de serialización, no generación perfecta por cualquier modelo.
 
 El perfil generado `mini-domain/1` usa el toolkit Python. El núcleo TypeScript y
-el navegador soportan las catorce familias SPEC 1.0; no les pases archivos del
+el navegador soportan las catorce familias SPEC 1.1; no les pases archivos del
 perfil generado. Consulta la [compatibilidad](DOMAIN_PROFILE.es.md).
