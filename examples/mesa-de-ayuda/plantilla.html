@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="es" data-title-es="Mesa de ayuda — mini-format" data-title-en="Help desk — mini-format">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesa de ayuda — mini-format</title>
+__CABEZA__
+<style>
+  .mesa { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
+  .mesa-intro { max-width: 58rem; }
+  .mesa-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
+  .mesa-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .mesa-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  .mesa-mandos { display: flex; flex-wrap: wrap; gap: 1.1rem 1.6rem; align-items: flex-end;
+                 margin: 1.9rem 0 1.2rem; padding: 1.1rem 1.2rem; border: 1px solid rgb(var(--line));
+                 border-radius: var(--r-xl); background: rgb(var(--subtle)); }
+  .mesa-mandos .grupo { display: grid; gap: .4rem; }
+  .mesa-mandos .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; }
+  .mesa-mandos .crece { flex: 1 1 0; }
+  .mesa-mandos .btn { white-space: nowrap; }
+
+  .mesa-aviso { border-radius: var(--r-lg); padding: .7rem .95rem; margin: 0 0 .6rem; font-size: .95rem;
+                border: 1px solid rgb(var(--line)); }
+  .mesa-aviso.bien { border-color: rgb(var(--ok) / .35); background: rgb(var(--ok) / .08); color: rgb(var(--ok)); }
+  .mesa-aviso.mal  { border-color: rgb(var(--danger) / .35); background: rgb(var(--danger) / .08); color: rgb(var(--danger)); }
+  .mesa-aviso.nota { border-color: rgb(var(--warn) / .35); background: rgb(var(--warn) / .08); color: rgb(var(--warn)); }
+
+  .mesa-metricas { display: flex; flex-wrap: wrap; gap: 1.6rem; margin: 1rem 0 0;
+                   font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .mesa-metricas b { display: block; font-family: var(--f-display); font-size: 1.7rem; line-height: 1.1;
+                     letter-spacing: -.02em; color: rgb(var(--fg)); font-weight: 700; }
+  .mesa-metricas .bien b { color: rgb(var(--ok)); }
+  .mesa-metricas .mal b { color: rgb(var(--danger)); }
+
+  .mesa-cajas { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); margin-top: 1rem; }
+  .mesa-caja { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); background: rgb(var(--raised));
+               padding: 1rem 1.1rem; min-width: 0; }
+  .mesa-caja h2 { font-size: .95rem; margin: 0 0 .55rem; display: flex; align-items: center; gap: .5rem; }
+  .mesa-caja h2 .cuenta { background: rgb(var(--accent) / .12); color: rgb(var(--accent)); border-radius: 99px;
+                          font-size: var(--fs-fine); padding: .1rem .5rem; font-weight: 600; }
+  .mesa-caja .porque { color: rgb(var(--fg-muted)); font-size: .88rem; margin: 0 0 .6rem; }
+
+  .mesa pre.salida { margin: 0; padding: .85rem .95rem; background: rgb(var(--slab)); color: rgb(var(--on-slab));
+                     border-radius: var(--r-lg); font-family: var(--f-mono); font-size: .78rem; line-height: 1.55;
+                     white-space: pre-wrap; overflow-wrap: anywhere; max-height: 19rem; overflow: auto; }
+  .mesa pre.salida .corte { color: rgb(var(--danger)); font-weight: 700; white-space: nowrap; }
+  .mesa pre.salida .malo { color: rgb(var(--warn)); text-decoration: underline wavy; }
+
+  .mesa table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+  .mesa th { text-align: left; font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em;
+             color: rgb(var(--fg-muted)); padding: .35rem .45rem; border-bottom: 1px solid rgb(var(--line)); }
+  .mesa td { padding: .4rem .45rem; border-bottom: 1px solid rgb(var(--line)); }
+  .mesa .p { border-radius: 99px; padding: .05rem .45rem; font-size: var(--fs-fine); font-weight: 600; }
+  .mesa .p-alta { background: rgb(var(--danger) / .12); color: rgb(var(--danger)); }
+  .mesa .p-media { background: rgb(var(--warn) / .14); color: rgb(var(--warn)); }
+  .mesa .p-baja { background: rgb(var(--ok) / .12); color: rgb(var(--ok)); }
+
+  .mesa-mensajes { display: grid; gap: .1rem; }
+  .mesa-mensajes div { padding: .45rem 0; border-top: 1px solid rgb(var(--line)); font-size: .86rem; }
+  .mesa-mensajes b { display: block; font-size: var(--fs-fine); color: rgb(var(--fg-muted)); font-family: var(--f-mono); }
+  .mesa-vacio { color: rgb(var(--fg-faint)); font-size: .88rem; }
+
+  .mesa details { margin-top: 1.2rem; border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: .8rem 1rem; }
+  .mesa details summary { cursor: pointer; font-weight: 600; font-size: .92rem; }
+  .mesa details .par { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); margin-top: .8rem; }
+  .mesa details h3 { font-size: .85rem; margin: 0 0 .35rem; color: rgb(var(--fg-muted)); }
+
+  .mesa-sec { margin-top: 2.6rem; }
+  .mesa-sec h2 { font-family: var(--f-display); font-size: 1.35rem; letter-spacing: -.02em; margin: 0 0 .4rem; }
+  .mesa-sec p { color: rgb(var(--fg-muted)); margin: 0 0 .9rem; max-width: 58rem; }
+  .mesa-sec .fina { font-size: var(--fs-cap); color: rgb(var(--fg-faint)); margin-top: .7rem; }
+  .mesa-pasos { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  .mesa-pasos li { list-style: none; border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: .9rem 1rem; }
+  .mesa-pasos ol, .mesa-pasos ul { margin: 0; padding: 0; }
+  .mesa-pasos .n { font-family: var(--f-mono); font-size: var(--fs-fine); color: rgb(var(--accent)); font-weight: 700; }
+  .mesa-pasos p { margin: .3rem 0 .5rem; font-size: .88rem; color: rgb(var(--fg-muted)); }
+  .mesa-pasos code { font-family: var(--f-mono); font-size: .76rem; background: rgb(var(--subtle));
+                     border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .1rem .3rem;
+                     display: block; overflow-wrap: anywhere; }
+  .mesa-sec table td:first-child, .mesa-sec table th:first-child { white-space: nowrap; }
+
+  @media (max-width: 62rem) { .mesa-cajas { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+__CABECERA__
+<main class="wrap mesa" id="contenido">
+
+  <header class="mesa-intro">
+    <p class="eyebrow"><span data-lang="es">Caso de integración</span><span data-lang="en" hidden>Integration case</span></p>
+    <h1><span data-lang="es">Mesa de ayuda: qué pasa cuando la respuesta del modelo sale mal</span><span data-lang="en" hidden>Help desk: what happens when the model's answer goes wrong</span></h1>
+    <p class="lead">
+      <span data-lang="es">Una aplicación de soporte le pide a un LLM que convierta diez mensajes de clientes en tickets. Cambia
+        una sola cosa: cómo se lee la respuesta. Todo corre en tu navegador con <code>js/mini.js</code>, el mismo motor del playground.</span>
+      <span data-lang="en" hidden>A support application asks an LLM to turn ten customer messages into tickets. Only one thing changes:
+        how the answer is read. Everything runs in your browser with <code>js/mini.js</code>, the same engine as the playground.</span>
+    </p>
+  </header>
+
+  <section class="mesa-mandos" aria-label="Controles">
+    <div class="grupo">
+      <span class="et"><span data-lang="es">Cómo lee la respuesta</span><span data-lang="en" hidden>How the answer is read</span></span>
+      <div class="seg" role="group" id="segFormato">
+        <button type="button" data-formato="mini" aria-pressed="true">.mini</button>
+        <button type="button" data-formato="json" aria-pressed="false">JSON</button>
+      </div>
+    </div>
+    <div class="grupo crece">
+      <span class="et"><span data-lang="es">Qué respondió el modelo</span><span data-lang="en" hidden>What the model answered</span></span>
+      <div class="seg" role="group" id="segEscenario">
+        <button type="button" data-escenario="ok" aria-pressed="true"><span data-lang="es">Respuesta correcta</span><span data-lang="en" hidden>Correct answer</span></button>
+        <button type="button" data-escenario="error" aria-pressed="false"><span data-lang="es">Un valor inválido</span><span data-lang="en" hidden>One invalid value</span></button>
+        <button type="button" data-escenario="cortada" aria-pressed="false"><span data-lang="es">Respuesta cortada</span><span data-lang="en" hidden>Truncated answer</span></button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-solid" id="ejecutar"><span data-lang="es">Crear tickets con IA</span><span data-lang="en" hidden>Create tickets with AI</span></button>
+    <button type="button" class="btn btn-ghost" id="reiniciar"><span data-lang="es">Reiniciar</span><span data-lang="en" hidden>Reset</span></button>
+  </section>
+
+  <section id="resultado" hidden aria-live="polite"></section>
+
+  <div class="mesa-cajas">
+    <section class="mesa-caja">
+      <h2><span data-lang="es">Respuesta del modelo</span><span data-lang="en" hidden>The model's answer</span>
+        <span class="cuenta" id="formatoChip">.mini</span></h2>
+      <p class="porque" id="porque"></p>
+      <pre class="salida" id="respuesta"></pre>
+    </section>
+    <section class="mesa-caja">
+      <h2><span data-lang="es">Tickets registrados</span><span data-lang="en" hidden>Registered tickets</span>
+        <span class="cuenta" id="cuentaTickets">0</span></h2>
+      <div id="tablaTickets"></div>
+    </section>
+  </div>
+
+  <details>
+    <summary><span data-lang="es">Lo único que cambia: la instrucción que recibe el modelo</span><span data-lang="en" hidden>The only thing that changes: the instruction the model receives</span></summary>
+    <div class="par">
+      <div>
+        <h3><span data-lang="es">Los diez mensajes que entran</span><span data-lang="en" hidden>The ten incoming messages</span></h3>
+        <div class="mesa-mensajes" id="mensajes"></div>
+      </div>
+      <div>
+        <h3><span data-lang="es">Con .mini — bloque de prompt del contrato</span><span data-lang="en" hidden>With .mini — the contract's prompt block</span></h3>
+        <pre class="salida" id="promptMini"></pre>
+      </div>
+      <div>
+        <h3><span data-lang="es">Con JSON — el JSON Schema del ticket</span><span data-lang="en" hidden>With JSON — the ticket's JSON Schema</span></h3>
+        <pre class="salida" id="promptJson"></pre>
+      </div>
+    </div>
+    <p class="fina" style="margin-top:.8rem">
+      <span data-lang="es">El contrato <code>tk</code> no se escribió a mano: sale del mismo JSON Schema con
+        <code>mini from-schema</code>. La aplicación no cambia de dominio ni de base de datos.</span>
+      <span data-lang="en" hidden>The <code>tk</code> contract was not written by hand: it comes from that same JSON Schema via
+        <code>mini from-schema</code>. The application's domain and database do not change.</span>
+    </p>
+  </details>
+
+  <section class="mesa-sec">
+    <h2><span data-lang="es">Con un modelo real</span><span data-lang="en" hidden>With a real model</span></h2>
+    <p>
+      <span data-lang="es">La simulación de arriba usa respuestas grabadas para que el resultado sea siempre el mismo. Estas
+        cifras son de la misma aplicación llamando al modelo de verdad, con los mismos diez mensajes y temperatura 0.</span>
+      <span data-lang="en" hidden>The simulation above replays recorded answers so the result is always the same. These figures
+        come from the same application calling the real model, with the same ten messages and temperature 0.</span>
+    </p>
+    <div id="tablaReal"></div>
+    <p class="fina" id="notaReal"></p>
+  </section>
+
+  <section class="mesa-sec">
+    <h2><span data-lang="es">Cómo se integra</span><span data-lang="en" hidden>How to integrate it</span></h2>
+    <p>
+      <span data-lang="es">Tres pasos, sin tocar el dominio de la aplicación: el contrato sale del esquema que ya tenías, el
+        prompt sale del contrato y la lectura valida y repara.</span>
+      <span data-lang="en" hidden>Three steps, without touching the application's domain: the contract comes from the schema you
+        already had, the prompt comes from the contract, and reading validates and repairs.</span>
+    </p>
+    <ol class="mesa-pasos">
+      <li>
+        <span class="n">1</span>
+        <p><span data-lang="es">Genera el contrato desde tu JSON Schema.</span><span data-lang="en" hidden>Generate the contract from your JSON Schema.</span></p>
+        <code>mini from-schema ticket.schema.json -p tk --out contrato_tk.json</code>
+      </li>
+      <li>
+        <span class="n">2</span>
+        <p><span data-lang="es">Pide la respuesta con el bloque de prompt del contrato.</span><span data-lang="en" hidden>Ask for the answer using the contract's prompt block.</span></p>
+        <code>spec_block(contrato, "es")</code>
+      </li>
+      <li>
+        <span class="n">3</span>
+        <p><span data-lang="es">Lee en modo tolerante y repara solo lo que falló.</span><span data-lang="en" hidden>Read in lenient mode and repair only what failed.</span></p>
+        <code>parse(texto, contrato, strict=False) · repair_request · merge_repair</code>
+      </li>
+    </ol>
+    <p class="fina">
+      <span data-lang="es">Paso a paso completo en <a href="/docs/quickstart/">el inicio rápido</a> ·
+        índice de errores en <a href="/docs/errors/">/docs/errors/</a> ·
+        prueba tus propios documentos en <a href="/playground/">el playground</a>.</span>
+      <span data-lang="en" hidden>Full walkthrough in <a href="/docs/quickstart/">the quickstart</a> ·
+        error index at <a href="/docs/errors/">/docs/errors/</a> ·
+        try your own documents in <a href="/playground/">the playground</a>.</span>
+    </p>
+  </section>
+
+</main>
+__PIE__
+<script>__MINI_JS__</script>
+<script>const DATOS = __DATOS__;</script>
+<script>
+(function () {
+  "use strict";
+  var ES = document.documentElement.lang !== "en";
+  var CONTRATO = MINI.normalizeContract(DATOS.contrato);
+  var NUCLEO = CONTRATO.core;
+  var ARIDAD = NUCLEO.length;
+  var LINEAS_OK = {};
+  DATOS.grabaciones.mini.ok.split("\n").slice(1).forEach(function (l) {
+    if (l.trim()) LINEAS_OK[l.split("|")[0]] = l;
+  });
+  var TICKETS_OK = {};
+  JSON.parse(DATOS.grabaciones.json.ok).tickets.forEach(function (t) { TICKETS_OK[t.id] = t; });
+
+  var T = {
+    es: {
+      creados: function (n, m) { return n + " de " + m + " mensajes convertidos en tickets."; },
+      nada: "Ningún ticket: la aplicación descarta la respuesta y la vuelve a pedir entera.",
+      linea: function (e) { return "Línea " + e.line + ": " + e.code + " " + (DATOS.errores[e.code] || e.message) + (e.field ? ", campo " + e.field : ""); },
+      reparacion: function (ls) { return ls.length === 1 ? "Reparación: se reenvió solo la línea " + ls[0] + " y se fusionó corregida." : "Reparación: se reenviaron solo las líneas " + ls.join(", ") + " y se fusionaron corregidas."; },
+      faltan: function (ids) { return "Respuesta incompleta: se pide aparte solo " + ids.join(", ") + (ids.length === 1 ? "." : ", sin repetir lo que ya llegó."); },
+      jsonRoto: function (msg) { return "La respuesta del modelo no es JSON válido (" + msg + "). Se descarta completa."; },
+      jsonInvalido: function (msg) { return "Ticket inválido en la respuesta (" + msg + "). Un solo valor fuera del esquema invalida el lote."; },
+      metricas: ["tickets creados", "llamadas al modelo", "tokens de salida", "registros completos recibidos", "de ellos aprovechados sin volver a pedir"],
+      motivo: {
+        ok: "La respuesta llegó completa y cada línea se validó contra el contrato.",
+        error: "Cada línea es un registro independiente: la inválida se reenvía sola y las buenas se conservan.",
+        cortada: "Las líneas completas se conservan aunque el resto se pierda; la partida se repara y lo que falta se pide aparte.",
+        jsonOk: "La respuesta llegó completa y válida, así que se lee de una sola vez.",
+        jsonError: "Un solo valor fuera del esquema invalida el lote: json.loads no dice en qué línea está, así que se descarta todo.",
+        jsonCortada: "El JSON es un único valor: hasta que no llega la llave final, ninguna parte se puede leer."
+      },
+      corte: "◄ aquí termina lo que envió el modelo",
+      sinTickets: "Aún no hay tickets.",
+      cabeceras: ["Ticket", "Prioridad", "Categoría", "Resumen", "Horas"],
+      real: ["Lectura", "Límite de tokens", "Tickets", "Llamadas", "Tokens de salida", "Qué pasó"],
+      notaReal: function (r) { return "Medido el " + r.fecha + " con " + r.modelo + " (" + r.proveedor + "), temperatura 0, " + DATOS.mediciones.mensajes + " mensajes. Los tokens de salida son los que informa el proveedor."; },
+      sinLimite: "sin límite"
+    },
+    en: {
+      creados: function (n, m) { return n + " of " + m + " messages turned into tickets."; },
+      nada: "No tickets: the application discards the answer and asks for it again in full.",
+      linea: function (e) { return "Line " + e.line + ": " + e.code + " " + (DATOS.erroresEn[e.code] || e.message) + (e.field ? ", field " + e.field : ""); },
+      reparacion: function (ls) { return ls.length === 1 ? "Repair: only line " + ls[0] + " was sent back and merged once corrected." : "Repair: only lines " + ls.join(", ") + " were sent back and merged once corrected."; },
+      faltan: function (ids) { return "Incomplete answer: only " + ids.join(", ") + " are requested separately."; },
+      jsonRoto: function (msg) { return "The model's answer is not valid JSON (" + msg + "). It is discarded in full."; },
+      jsonInvalido: function (msg) { return "Invalid ticket in the answer (" + msg + "). A single out-of-schema value invalidates the batch."; },
+      metricas: ["tickets created", "model calls", "output tokens", "complete records received", "usable without asking again"],
+      motivo: {
+        ok: "The answer arrived complete and every line was validated against the contract.",
+        error: "Every line is an independent record: the invalid one is sent back alone and the good ones are kept.",
+        cortada: "Complete lines are kept even when the rest is lost; the partial one is repaired and the missing ones are requested separately.",
+        jsonOk: "The answer arrived complete and valid, so it is read in one go.",
+        jsonError: "A single out-of-schema value invalidates the batch: json.loads does not say which line it is in, so everything is discarded.",
+        jsonCortada: "JSON is a single value: until the closing brace arrives, no part of it can be read."
+      },
+      corte: "◄ this is where the model stopped",
+      sinTickets: "No tickets yet.",
+      cabeceras: ["Ticket", "Priority", "Category", "Summary", "Hours"],
+      real: ["Reading", "Token limit", "Tickets", "Calls", "Output tokens", "What happened"],
+      notaReal: function (r) { return "Measured on " + r.fecha + " with " + r.modelo + " (" + r.proveedor + "), temperature 0, " + DATOS.mediciones.mensajes + " messages. Output tokens are the ones reported by the provider."; },
+      sinLimite: "no limit"
+    }
+  }[ES ? "es" : "en"];
+
+  var estado = { formato: "mini", escenario: "ok" };
+
+  function $(sel) { return document.querySelector(sel); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function medicion(formato, escenario) {
+    var filas = DATOS.mediciones.simulado.combinaciones;
+    for (var i = 0; i < filas.length; i++) {
+      if (filas[i].formato === formato && filas[i].escenario === escenario) return filas[i];
+    }
+    return { tokens: 0, llamadas: 0 };
+  }
+
+  /* Líneas con todos los campos del núcleo presentes: lo que el modelo alcanzó a escribir completo. */
+  function lineasCompletas(texto) {
+    return texto.split("\n").slice(1).filter(function (l) {
+      return l.trim() && l.split("|").length >= ARIDAD;
+    }).length;
+  }
+
+  /* Objetos JSON cerrados dentro del arreglo, aunque el texto esté truncado. */
+  function objetosCompletos(texto) {
+    var prof = 0, enTexto = false, escape = false, n = 0;
+    for (var i = 0; i < texto.length; i++) {
+      var c = texto[i];
+      if (escape) escape = false;
+      else if (c === "\\") escape = true;
+      else if (c === '"') enTexto = !enTexto;
+      else if (!enTexto) {
+        if (c === "{") prof++;
+        else if (c === "}") { prof--; if (prof === 1) n++; }
+      }
+    }
+    return n;
+  }
+
+  function registroDeLinea(linea) {
+    try { return MINI.parse("tk|n=1\n" + linea, CONTRATO, { strict: false }).records[0] || null; }
+    catch (e) { return null; }
+  }
+
+  function correrMini(escenario) {
+    var texto = DATOS.grabaciones.mini[escenario];
+    var r = { formato: ".mini", texto: texto, esperados: DATOS.mensajes.length, llamadas: 1,
+              incidencias: [], tickets: [], recibidos: lineasCompletas(texto), aprovechados: 0,
+              cortada: escenario === "cortada", motivo: T.motivo[escenario] };
+    var doc;
+    try { doc = MINI.parse(texto, CONTRATO, { strict: false }); }
+    catch (e) { r.error = e.message; r.tokens = medicion("mini", escenario).tokens; return r; }
+    var registros = {};
+    doc.records.forEach(function (rec) { registros[rec.id] = rec; });
+    r.aprovechados = doc.records.length;
+
+    var malas = (doc.errors || []).filter(function (e) { return e.line > 1; });
+    if (malas.length) {
+      r.llamadas++;
+      var lineas = texto.split("\n");
+      var reenviadas = [];
+      malas.forEach(function (e) {
+        r.incidencias.push(T.linea(e));
+        reenviadas.push(e.line);
+        var id = (lineas[e.line - 1] || "").split("|")[0];
+        var corregida = LINEAS_OK[id];              // lo que devuelve el modelo al reenviar esa sola línea
+        if (corregida) { var rec = registroDeLinea(corregida); if (rec) registros[id] = rec; }
+      });
+      r.incidencias.push(T.reparacion(reenviadas));
+    }
+
+    var faltan = DATOS.mensajes.filter(function (m) { return !registros[m.id]; });
+    if (faltan.length) {
+      r.llamadas++;
+      r.incidencias.push(T.faltan(faltan.map(function (m) { return m.id; })));
+      faltan.forEach(function (m) {
+        var rec = registroDeLinea(LINEAS_OK[m.id] || "");
+        if (rec) registros[m.id] = rec;
+      });
+    }
+
+    DATOS.mensajes.forEach(function (m) { if (registros[m.id]) r.tickets.push(registros[m.id]); });
+    r.tokens = medicion("mini", escenario).tokens;
+    return r;
+  }
+
+  /* El mismo contrato valida el camino sin .mini: enumeraciones, rangos y campos requeridos. */
+  function validar(t) {
+    for (var i = 0; i < NUCLEO.length; i++) {
+      var f = NUCLEO[i], v = t[f.name];
+      if (v === undefined || v === null || v === "") return f.name + ": " + (ES ? "campo requerido vacío" : "required field is empty");
+      if (f.type === "enum" && (f.values || []).indexOf(v) < 0) return f.name + ": '" + v + "' " + (ES ? "no está entre los valores permitidos" : "is not one of the allowed values");
+      if (f.type === "int") {
+        if (typeof v !== "number" || Math.floor(v) !== v) return f.name + ": '" + v + "' " + (ES ? "no es un entero" : "is not an integer");
+        if (f.min !== null && f.min !== undefined && v < f.min) return f.name + ": " + v + " < " + f.min;
+        if (f.max !== null && f.max !== undefined && v > f.max) return f.name + ": " + v + " > " + f.max;
+      }
+    }
+    return null;
+  }
+
+  function correrJson(escenario) {
+    var texto = DATOS.grabaciones.json[escenario];
+    var motivos = { ok: T.motivo.jsonOk, error: T.motivo.jsonError, cortada: T.motivo.jsonCortada };
+    var r = { formato: "JSON", texto: texto, esperados: DATOS.mensajes.length, llamadas: 1,
+              incidencias: [], tickets: [], recibidos: objetosCompletos(texto), aprovechados: 0,
+              cortada: escenario === "cortada", motivo: motivos[escenario],
+              tokens: medicion("json", escenario).tokens };
+    var datos;
+    try { datos = JSON.parse(texto); }
+    catch (e) { r.error = T.jsonRoto(e.message.slice(0, 80)); return r; }
+    for (var i = 0; i < (datos.tickets || []).length; i++) {
+      var fallo = validar(datos.tickets[i]);
+      if (fallo) { r.error = T.jsonInvalido(fallo); return r; }
+    }
+    r.tickets = datos.tickets || [];
+    r.aprovechados = r.tickets.length;
+    return r;
+  }
+
+  function resaltar(r) {
+    var texto = esc(r.texto);
+    if (r.cortada) texto += '<span class="corte">' + T.corte + "</span>";
+    return texto;
+  }
+
+  function pintar(r) {
+    var caja = $("#resultado");
+    var aviso = r.error
+      ? '<p class="mesa-aviso mal">' + esc(r.error) + "</p>"
+      : '<p class="mesa-aviso bien">' + esc(T.creados(r.tickets.length, r.esperados)) + "</p>";
+    if (r.error && !r.tickets.length) aviso += '<p class="mesa-aviso nota">' + esc(T.nada) + "</p>";
+    aviso += r.incidencias.map(function (i) { return '<p class="mesa-aviso nota">' + esc(i) + "</p>"; }).join("");
+
+    var m = T.metricas;
+    var perdidos = r.aprovechados < r.recibidos;
+    aviso += '<div class="mesa-metricas">' +
+      '<span class="' + (r.tickets.length === r.esperados ? "bien" : "mal") + '"><b>' + r.tickets.length + "/" + r.esperados + "</b>" + m[0] + "</span>" +
+      "<span><b>" + r.llamadas + "</b>" + m[1] + "</span>" +
+      "<span><b>" + r.tokens + "</b>" + m[2] + "</span>" +
+      "<span><b>" + r.recibidos + "</b>" + m[3] + "</span>" +
+      '<span class="' + (perdidos ? "mal" : "bien") + '"><b>' + r.aprovechados + "</b>" + m[4] + "</span>" +
+      "</div>";
+    caja.innerHTML = aviso;
+    caja.hidden = false;
+
+    $("#formatoChip").textContent = r.formato;
+    $("#porque").textContent = r.motivo || "";
+    $("#respuesta").innerHTML = resaltar(r);
+    $("#cuentaTickets").textContent = r.tickets.length;
+    $("#tablaTickets").innerHTML = r.tickets.length ? tabla(r.tickets) : '<p class="mesa-vacio">' + T.sinTickets + "</p>";
+  }
+
+  function tabla(tickets) {
+    var th = T.cabeceras.map(function (h) { return "<th>" + h + "</th>"; }).join("");
+    var tr = tickets.map(function (t) {
+      return "<tr><td>" + esc(t.id) + '</td><td><span class="p p-' + esc(t.prioridad) + '">' + esc(t.prioridad) +
+        "</span></td><td>" + esc(t.categoria) + "</td><td>" + esc(t.resumen) + "</td><td>" + esc(t.horas) + "</td></tr>";
+    }).join("");
+    return "<table><thead><tr>" + th + "</tr></thead><tbody>" + tr + "</tbody></table>";
+  }
+
+  function tablaReal() {
+    var r = DATOS.mediciones.real;
+    var th = T.real.map(function (h) { return "<th>" + h + "</th>"; }).join("");
+    var tr = r.corridas.map(function (c) {
+      var lectura = c.formato === "mini" ? ".mini" : "JSON";
+      var limite = c.limite >= 2000 ? T.sinLimite : c.limite;
+      var clase = c.tickets === DATOS.mediciones.mensajes ? "p p-baja" : "p p-alta";
+      return "<tr><td>" + lectura + "</td><td>" + limite + '</td><td><span class="' + clase + '">' + c.tickets + "/" +
+        DATOS.mediciones.mensajes + "</span></td><td>" + c.llamadas + "</td><td>" + c.tokens + "</td><td>" + esc(c.nota) + "</td></tr>";
+    }).join("");
+    $("#tablaReal").innerHTML = "<table><thead><tr>" + th + "</tr></thead><tbody>" + tr + "</tbody></table>";
+    $("#notaReal").textContent = T.notaReal(r);
+  }
+
+  function seleccionar(grupo, atributo, valor) {
+    grupo.querySelectorAll("button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset[atributo] === valor));
+    });
+  }
+
+  $("#segFormato").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-formato]");
+    if (!b) return;
+    estado.formato = b.dataset.formato;
+    seleccionar(this, "formato", estado.formato);
+    reiniciar();
+  });
+  $("#segEscenario").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-escenario]");
+    if (!b) return;
+    estado.escenario = b.dataset.escenario;
+    seleccionar(this, "escenario", estado.escenario);
+    reiniciar();
+  });
+  $("#ejecutar").addEventListener("click", function () {
+    pintar(estado.formato === "mini" ? correrMini(estado.escenario) : correrJson(estado.escenario));
+  });
+  $("#reiniciar").addEventListener("click", function () { reiniciar(); });
+
+  function reiniciar() {
+    $("#resultado").hidden = true;
+    $("#resultado").innerHTML = "";
+    $("#formatoChip").textContent = estado.formato === "mini" ? ".mini" : "JSON";
+    $("#porque").textContent = "";
+    $("#respuesta").textContent = ES ? "Pulsa «Crear tickets con IA»." : "Press “Create tickets with AI”.";
+    $("#cuentaTickets").textContent = "0";
+    $("#tablaTickets").innerHTML = '<p class="mesa-vacio">' + T.sinTickets + "</p>";
+  }
+
+  $("#promptMini").textContent = ES ? DATOS.prompt.es : DATOS.prompt.en;
+  $("#promptJson").textContent = DATOS.esquema;
+  $("#mensajes").innerHTML = DATOS.mensajes.map(function (m) {
+    return "<div><b>" + esc(m.id) + "</b>" + esc(m.mensaje) + "</div>";
+  }).join("");
+  tablaReal();
+  reiniciar();
+})();
+</script>
+<script src="/docs.js"></script>
+</body>
+</html>

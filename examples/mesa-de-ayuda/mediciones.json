@@ -1,0 +1,29 @@
+{
+  "mensajes": 10,
+  "simulado": {
+    "que_es": "La misma aplicación leyendo las respuestas grabadas de grabaciones/. Sirve para exponer sin red y siempre con el mismo resultado.",
+    "tokenizador": "tiktoken o200k_base (mini tokens)",
+    "fecha": "2026-09-17",
+    "combinaciones": [
+      { "formato": "json", "escenario": "ok", "tickets": 10, "llamadas": 1, "tokens": 349 },
+      { "formato": "json", "escenario": "error", "tickets": 0, "llamadas": 1, "tokens": 349 },
+      { "formato": "json", "escenario": "cortada", "tickets": 0, "llamadas": 1, "tokens": 265 },
+      { "formato": "mini", "escenario": "ok", "tickets": 10, "llamadas": 1, "tokens": 219 },
+      { "formato": "mini", "escenario": "error", "tickets": 10, "llamadas": 2, "tokens": 246 },
+      { "formato": "mini", "escenario": "cortada", "tickets": 10, "llamadas": 3, "tokens": 241 }
+    ]
+  },
+  "real": {
+    "que_es": "La misma aplicación llamando al modelo de verdad con los diez mensajes de mensajes.json, temperatura 0. Los tokens de salida son los que informa el proveedor.",
+    "modelo": "deepseek-chat",
+    "proveedor": "DeepSeek",
+    "fecha": "2026-09-17",
+    "corridas": [
+      { "formato": "json", "limite": 2000, "tickets": 10, "llamadas": 1, "tokens": 619, "nota": "La respuesta cabe entera y se lee de una vez." },
+      { "formato": "mini", "limite": 2000, "tickets": 10, "llamadas": 1, "tokens": 242, "nota": "La respuesta cabe entera y cada línea se valida contra el contrato." },
+      { "formato": "json", "limite": 300, "tickets": 0, "llamadas": 1, "tokens": 300, "nota": "Llegaron cuatro objetos completos; ninguno se pudo usar." },
+      { "formato": "mini", "limite": 300, "tickets": 10, "llamadas": 1, "tokens": 242, "nota": "Con el mismo límite la respuesta en .mini todavía cabe." },
+      { "formato": "mini", "limite": 200, "tickets": 10, "llamadas": 3, "tokens": 252, "nota": "Ocho líneas intactas, se repara la línea partida y se pide un solo ticket." }
+    ]
+  }
+}

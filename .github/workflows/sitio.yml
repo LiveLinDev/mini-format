@@ -102,7 +102,7 @@ jobs:
         run: |
           sleep 2
           fallos=0
-          for ruta in / /playground/ /docs/ /docs/spec/ /docs/errors/E06/ /base.css /app.js; do
+          for ruta in / /playground/ /mesa-de-ayuda/ /en/mesa-de-ayuda/ /docs/ /docs/spec/ /docs/errors/E06/ /base.css /app.js; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "https://mini-format.pmoluna.com$ruta")
             echo "$ruta -> $code"; [ "$code" = 200 ] || fallos=$((fallos+1))
           done

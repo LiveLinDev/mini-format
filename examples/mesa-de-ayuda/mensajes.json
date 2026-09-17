@@ -1,0 +1,42 @@
+[
+  {
+    "id": "T-1041",
+    "mensaje": "Hola, cambié mi contraseña ayer y desde entonces no puedo entrar a mi cuenta. Necesito acceder hoy."
+  },
+  {
+    "id": "T-1042",
+    "mensaje": "En el estado de cuenta de septiembre me cobraron dos veces la suscripción."
+  },
+  {
+    "id": "T-1043",
+    "mensaje": "Cada vez que intento adjuntar un PDF la aplicación se cierra sola."
+  },
+  {
+    "id": "T-1044",
+    "mensaje": "Quisiera saber cómo exportar mi historial de pedidos a Excel."
+  },
+  {
+    "id": "T-1045",
+    "mensaje": "No me llega el código de verificación por SMS para confirmar mi número."
+  },
+  {
+    "id": "T-1046",
+    "mensaje": "Hice una transferencia hace tres días y el pago todavía no aparece."
+  },
+  {
+    "id": "T-1047",
+    "mensaje": "El buscador no muestra resultados cuando escribo palabras con tilde."
+  },
+  {
+    "id": "T-1048",
+    "mensaje": "¿Es posible cambiar el correo electrónico asociado a mi cuenta?"
+  },
+  {
+    "id": "T-1049",
+    "mensaje": "Al generar la factura electrónica aparece un error 500."
+  },
+  {
+    "id": "T-1050",
+    "mensaje": "Nuestro equipo necesita una capacitación sobre el nuevo módulo de reportes."
+  }
+]

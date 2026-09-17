@@ -148,7 +148,8 @@ def cabecera(activo: str = "") -> str:
                    a("docs/spec", "Especificación", "Specification"),
                    a("docs/errors", "Errores", "Errors"),
                    a("docs/forks", "Familias", "Families"),
-                   a("playground", "Playground", "Playground")])
+                   a("playground", "Playground", "Playground"),
+                   a("mesa-de-ayuda", "Demo", "Demo")])
     return f'''<a class="skip" href="#contenido">{ambos("Saltar al contenido", "Skip to content")}</a>
 <header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
@@ -172,7 +173,8 @@ def pie() -> str:
                                          ("/docs/typescript/", "Biblioteca TypeScript", "TypeScript library"),
                                          ("/docs/cli/", "Herramienta", "Command-line tool"),
                                          ("/docs/conformance/", "Conformidad", "Conformance")])
-    c3 = col("Evidencia", "Evidence", [(f"{REPO}/tree/main/experiments/v5_ancho", "Eje de ancho (V5)", "Width axis (V5)"),
+    c3 = col("Evidencia", "Evidence", [("/mesa-de-ayuda/", "Mesa de ayuda (demo)", "Help desk (demo)"),
+                                       (f"{REPO}/tree/main/experiments/v5_ancho", "Eje de ancho (V5)", "Width axis (V5)"),
                                        (f"{REPO}/tree/main/experiments/v1_tokens", "Tokens (V1)", "Tokens (V1)"),
                                        (f"{REPO}/tree/main/experiments/v4_costos", "Costos (V4)", "Costs (V4)"),
                                        ("/docs/metodologia/", "Metodología", "Methodology")])
@@ -745,6 +747,45 @@ def construir_playground() -> None:
     print(f"  playground: {len(out.encode('utf-8'))//1024} KB, {len(forks)} familias, {len(bench)} filas de benchmark")
 
 
+# --------------------------------------------------------------------------- caso de integración
+def construir_mesa() -> None:
+    """Página /mesa-de-ayuda/: el caso de integración corriendo en el navegador con js/mini.js.
+
+    Los datos (esquema, mensajes y respuestas grabadas) están en examples/mesa-de-ayuda/; el contrato
+    no se escribe a mano: se genera aquí con la misma conversión que `mini from-schema`.
+    """
+    from minifmt import from_json_schema, spec_block
+    base = RAIZ / "examples" / "mesa-de-ayuda"
+    esquema = (base / "ticket.schema.json").read_text(encoding="utf-8")
+    contrato = from_json_schema(json.loads(esquema), "tk")
+    grabacion = lambda formato, escenario: (base / "grabaciones" / formato / f"{escenario}.{formato}").read_text(encoding="utf-8")
+    datos = {
+        "contrato": contrato.to_dict(),
+        "esquema": esquema.strip(),
+        "mensajes": json.loads((base / "mensajes.json").read_text(encoding="utf-8")),
+        "grabaciones": {formato: {esc: grabacion(formato, esc) for esc in ("ok", "error", "cortada")}
+                        for formato in ("mini", "json")},
+        "mediciones": json.loads((base / "mediciones.json").read_text(encoding="utf-8")),
+        "prompt": {"es": spec_block(contrato, "es"), "en": spec_block(contrato, "en")},
+        "errores": {codigo: titulo.lower() for codigo, _, titulo, _, _ in ERRORES},
+        "erroresEn": {codigo: titulo.lower() for codigo, _, titulo, _, _ in ERRORES_EN},
+    }
+    safe = lambda js: js.replace("</script", "<\\/script")
+    pagina = (base / "plantilla.html").read_text(encoding="utf-8")
+    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+                         ("__CABECERA__", cabecera("mesa-de-ayuda")),
+                         ("__PIE__", pie()),
+                         ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
+                         ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
+        if marca not in pagina:
+            raise SystemExit(f"plantilla.html: falta la marca {marca}")
+        pagina = pagina.replace(marca, valor, 1)
+    destino = SITIO / "mesa-de-ayuda" / "index.html"
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(pagina, encoding="utf-8")
+    print(f"  mesa de ayuda: {len(pagina.encode('utf-8'))//1024} KB, contrato tk con {len(contrato.core)} campos")
+
+
 def sellar() -> None:
     """version.json: qué commit construyó lo publicado (GITHUB_SHA en CI, 'local' fuera)."""
     import os
@@ -759,6 +800,7 @@ if __name__ == "__main__":
     n = construir_docs()
     print(f"  docs: {n} páginas")
     construir_playground()
+    construir_mesa()
     from publicar import prepare_public_site
     prepare_public_site(TRADUCCIONES)
     import subprocess

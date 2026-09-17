@@ -14,6 +14,7 @@ htmlcov/
 # sitio: salidas generadas por sitio/construir.py (se reconstruyen en CI)
 sitio/docs/
 sitio/playground/
+sitio/mesa-de-ayuda/
 sitio/version.json
 sitio/downloads/
 sitio/source/

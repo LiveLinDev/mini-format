@@ -154,7 +154,7 @@ def localized(text: str, lang: str, path: str) -> str:
         text = re.sub(r'<(span|div)([^>]*data-lang(?:-body)?="es"[^>]*)>', lambda m: f'<{m.group(1)}{m.group(2)} hidden>' if " hidden" not in m.group(2) else m.group(0), text)
         text = re.sub(r'<(span|div)([^>]*data-lang(?:-body)?="en"[^>]*)>', lambda m: f'<{m.group(1)}{m.group(2).replace(" hidden", "")}>', text)
         text = text.replace('data-lang-btn="es" aria-pressed="true"', 'data-lang-btn="es" aria-pressed="false"').replace('data-lang-btn="en" aria-pressed="false"', 'data-lang-btn="en" aria-pressed="true"')
-        text = re.sub(r'href="(/(?:docs(?:/[^"#?]*)?|playground/|downloads/|)(?:[#?][^"]*)?)"', lambda m: 'href="/en' + m.group(1) + '"', text)
+        text = re.sub(r'href="(/(?:docs(?:/[^"#?]*)?|playground/|mesa-de-ayuda/|downloads/|)(?:[#?][^"]*)?)"', lambda m: 'href="/en' + m.group(1) + '"', text)
         text = re.sub(r'src="/app\.js(?:\?[^"]*)?"', 'src="/app.en.js"', text)
         text = text.replace('/assets/workflow.mp4', '/assets/workflow.en.mp4')
     # Every locale has an independently crawlable URL and reciprocal alternates.
@@ -203,7 +203,8 @@ def prepare_public_site(playground_translations=()) -> None:
     javascript = (SITE / "app.js").read_text(encoding="utf-8")
     javascript = re.sub(r"\"(?:[^\"\\]|\\.)*\"|'(?:[^'\\]|\\.)*'", js_translate, javascript)
     (SITE / "app.en.js").write_text(javascript, encoding="utf-8")
-    routes = [SITE / "index.html", *(SITE / "docs").rglob("index.html"), SITE / "downloads" / "index.html", SITE / "playground" / "index.html"]
+    routes = [SITE / "index.html", *(SITE / "docs").rglob("index.html"), SITE / "downloads" / "index.html",
+              SITE / "playground" / "index.html", SITE / "mesa-de-ayuda" / "index.html"]
     sitemap = []
     for path in routes:
         relative = path.relative_to(SITE).as_posix()
