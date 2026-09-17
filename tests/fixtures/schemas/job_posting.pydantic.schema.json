@@ -1,0 +1,34 @@
+{
+  "$comment": "Provenance: authored by the mini-format authors for the test suite; it reproduces the shape that Pydantic v2 model_json_schema() emits for `class Postings(BaseModel): postings: list[JobPosting]` (titles, $defs/$ref for an Enum class, anyOf with null for Optional fields, defaults). Human-resources domain; not copied from a third-party file. Document form.",
+  "$defs": {
+    "Contract": {"enum": ["full_time", "part_time", "internship", "temporary"], "title": "Contract", "type": "string"},
+    "JobPosting": {
+      "properties": {
+        "code": {"title": "Code", "type": "string"},
+        "title": {"title": "Title", "type": "string"},
+        "contract": {"$ref": "#/$defs/Contract"},
+        "remote": {"title": "Remote", "type": "boolean"},
+        "salary_min": {"anyOf": [{"minimum": 0, "type": "integer"}, {"type": "null"}], "title": "Salary Min"},
+        "skills": {"items": {"type": "string"}, "maxItems": 10, "title": "Skills", "type": "array"},
+        "city": {"anyOf": [{"type": "string"}, {"type": "null"}], "default": null, "title": "City"},
+        "deadline": {"anyOf": [{"format": "date", "type": "string"}, {"type": "null"}], "default": null, "title": "Deadline"}
+      },
+      "required": ["code", "title", "contract", "remote", "salary_min", "skills"],
+      "title": "JobPosting",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "postings": {"items": {"$ref": "#/$defs/JobPosting"}, "title": "Postings", "type": "array"}
+  },
+  "required": ["postings"],
+  "title": "Postings",
+  "type": "object",
+  "examples": [
+    {"postings": [
+      {"code": "TI-2026-041", "title": "Backend developer (Python)", "contract": "full_time", "remote": true, "salary_min": 7000, "skills": ["python", "postgresql", "docker"], "city": "Lima"},
+      {"code": "TI-2026-042", "title": "Data analyst intern", "contract": "internship", "remote": false, "salary_min": null, "skills": ["sql", "power bi"], "city": "Arequipa", "deadline": "2026-10-01"},
+      {"code": "TI-2026-043", "title": "QA engineer, mobile", "contract": "temporary", "remote": true, "salary_min": 5200, "skills": ["appium"]}
+    ]}
+  ]
+}

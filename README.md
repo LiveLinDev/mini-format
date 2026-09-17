@@ -74,6 +74,29 @@ const contract = Registry.load().get('a');
 const document = parse(text, contract);
 ```
 
+The Python library also provides an incremental reader, conversion between
+contracts and JSON Schema or Pydantic models, and a token comparison command:
+
+```python
+from minifmt import read_records, from_json_schema, to_json_schema
+for item in read_records(response_chunks, contract):   # str or UTF-8 bytes fragments
+    handle(item.record, item.line)                     # emitted when its line closes
+contract = from_json_schema(schema, "tk")              # one level of nesting (SPEC §12)
+```
+
+```bash
+mini from-schema ticket.schema.json -p tk --out contract.json
+mini from-schema --pydantic models:Postings -p job   # pydantic is optional
+mini to-schema a --out a.schema.json
+mini bench response.mini --enc o200k_base --format table
+```
+
+`read_records` yields the same records and errors as `parse` and does not retain
+records, so its memory use does not grow with the document. `mini bench` reports
+tokens and bytes for .mini, compact and indented JSON, YAML, flattened CSV and
+official TOON, with the saving relative to compact JSON; a format whose dependency
+(PyYAML, Node.js or the vendored TOON bundle) is missing is reported as unavailable.
+
 A dependency-free browser port is in `js/mini.js`. The generated domain toolkit
 uses its own standalone runtime and explicit `mini-domain/1` profile. Existing
 core families keep [SPEC 1.0](SPEC.md); see the [domain profile](DOMAIN_PROFILE.md)

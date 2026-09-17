@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Provenance: authored by the mini-format authors for the test suite as a representative external record schema of the pharmacy-inventory domain (fields modelled after public drug-catalogue listings; illustrative data only); not copied from a third-party file. JSON Schema 2020-12, record form with const, exclusive bounds and a nullable enum.",
+  "title": "Pharmacy inventory item",
+  "type": "object",
+  "properties": {
+    "sku": {"type": "string"},
+    "generic_name": {"type": "string"},
+    "form": {"enum": ["tablet", "capsule", "syrup", "injection", "cream"]},
+    "strength": {"type": "string", "description": "e.g. 500 mg"},
+    "units_in_stock": {"type": "integer", "exclusiveMinimum": -1},
+    "unit_price": {"type": "number", "exclusiveMinimum": 0},
+    "currency": {"const": "PEN"},
+    "prescription_required": {"type": "boolean"},
+    "storage": {"enum": ["room", "refrigerated", null]},
+    "atc_codes": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z][0-9]{2}"}, "maxItems": 3}
+  },
+  "required": ["sku", "generic_name", "form", "strength", "units_in_stock", "unit_price", "currency", "prescription_required"],
+  "examples": [
+    {"sku": "MED-000127", "generic_name": "paracetamol", "form": "tablet", "strength": "500 mg", "units_in_stock": 1200, "unit_price": 0.35, "currency": "PEN", "prescription_required": false, "storage": "room", "atc_codes": ["N02BE01"]},
+    {"sku": "MED-000388", "generic_name": "insulin glargine", "form": "injection", "strength": "100 UI/ml", "units_in_stock": 0, "unit_price": 89.9, "currency": "PEN", "prescription_required": true, "storage": "refrigerated"},
+    {"sku": "MED-000412", "generic_name": "amoxicillin", "form": "syrup", "strength": "250 mg/5 ml", "units_in_stock": 45, "unit_price": 12.5, "currency": "PEN", "prescription_required": true}
+  ]
+}

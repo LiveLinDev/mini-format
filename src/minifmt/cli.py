@@ -10,6 +10,10 @@
     mini check-forks [DIR]             verify fork invariants + fixtures (CI)
     mini new-fork PREFIX --from PARENT --add name:type ...   scaffold a fork
     mini build SAMPLE.json [MORE.json] --prefix NAME --out .mini
+    mini bench FILE [-p PREFIX | --contract PATH] [--enc o200k_base] [--format table|json]
+    mini from-schema SCHEMA.json -p PREFIX [--out contract.json]   JSON Schema -> contract
+    mini from-schema --pydantic module:Model -p PREFIX              Pydantic model -> contract
+    mini to-schema PREFIX|contract.json [--record] [--out FILE]     contract -> JSON Schema
 """
 from __future__ import annotations
 
@@ -252,6 +256,67 @@ def cmd_repair(args):
     return _domain_command(args, "repair")
 
 
+def cmd_bench(args) -> int:
+    from .bench import BenchError, format_table, run_bench
+    try:
+        report = run_bench(args.file, prefix=args.prefix, contract_path=args.contract, enc=args.enc,
+                           forks=getattr(args, "forks", None))
+    except BenchError as e:
+        print(f"mini bench: {e}", file=sys.stderr)
+        return 2
+    except MiniValidationError as e:
+        for err in e.errors:
+            print(err, file=sys.stderr)
+        print(f"mini bench: the document is not valid for its contract ({len(e.errors)} error(s))", file=sys.stderr)
+        return 1
+    if args.format == "json":
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(format_table(report))
+    return 0
+
+
+def _write_or_print(data, out) -> None:
+    text = json.dumps(data, ensure_ascii=False, indent=2)
+    if out:
+        Path(out).write_text(text + "\n", encoding="utf-8")
+        print(f"wrote {out}", file=sys.stderr)
+    else:
+        print(text)
+
+
+def cmd_from_schema(args) -> int:
+    from .schema import from_json_schema, from_pydantic
+    warnings: list = []
+    opts = dict(name=args.name, records_key=args.records_key, strict=args.strict, warnings=warnings)
+    if args.pydantic:
+        import importlib
+        mod, _, attr = args.pydantic.partition(":")
+        if not attr:
+            sys.exit("--pydantic expects module:Model")
+        if str(Path.cwd()) not in sys.path:
+            sys.path.insert(0, str(Path.cwd()))
+        model = getattr(importlib.import_module(mod), attr)
+        contract = from_pydantic(model, args.prefix, **opts)
+    else:
+        if not args.schema:
+            sys.exit("pass SCHEMA.json or --pydantic module:Model")
+        schema = json.loads(Path(args.schema).read_text(encoding="utf-8-sig"))
+        contract = from_json_schema(schema, args.prefix, **opts)
+    for w in warnings:
+        print(f"warning: {w}", file=sys.stderr)
+    _write_or_print(contract.to_dict(), args.out)
+    return 0
+
+
+def cmd_to_schema(args) -> int:
+    from .schema import to_json_schema
+    src = Path(args.source)
+    contract = Contract.load(src) if src.suffix.lower() == ".json" and src.is_file() else _reg(args).get(args.source)
+    _write_or_print(to_json_schema(contract, record_only=args.record), args.out)
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="mini", description=".mini reference tools")
     ap.add_argument("--forks", help="forks directory (default: bundled forks/)")
@@ -267,6 +332,9 @@ def main(argv=None) -> int:
     p = sub.add_parser("new-fork"); p.add_argument("prefix"); p.add_argument("--from", dest="parent"); p.add_argument("--name"); p.add_argument("--add", nargs="*"); p.set_defaults(fn=cmd_new_fork)
     p = sub.add_parser("build", help="create a standalone domain toolkit from JSON samples"); p.add_argument("samples", nargs="+"); p.add_argument("--prefix", required=True); p.add_argument("--out", default=".mini"); p.add_argument("--records", help="JSON Pointer selecting the record array (auto-detected by default)"); p.set_defaults(fn=cmd_build)
     p = sub.add_parser("repair", help="repair a generated-domain response without guessing data"); p.add_argument("file"); p.add_argument("--contract", required=True); p.add_argument("--out"); p.add_argument("--fix-count", action="store_true"); p.set_defaults(fn=cmd_repair)
+    p = sub.add_parser("bench", help="compare tokens of a document across formats"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract", help="domain-profile contract (mini build)"); p.add_argument("--enc", default="o200k_base"); p.add_argument("--format", default="table", choices=["table", "json"]); p.set_defaults(fn=cmd_bench)
+    p = sub.add_parser("from-schema", help="convert a JSON Schema or Pydantic model into a contract"); p.add_argument("schema", nargs="?"); p.add_argument("-p", "--prefix", required=True); p.add_argument("--pydantic", metavar="MODULE:MODEL"); p.add_argument("--name"); p.add_argument("--records-key"); p.add_argument("--strict", action="store_true", help="fail on keywords without contract equivalent"); p.add_argument("--out"); p.set_defaults(fn=cmd_from_schema)
+    p = sub.add_parser("to-schema", help="describe a contract as JSON Schema"); p.add_argument("source", help="registered PREFIX or path to contract.json"); p.add_argument("--record", action="store_true", help="describe one record instead of the canonical document"); p.add_argument("--out"); p.set_defaults(fn=cmd_to_schema)
     args = ap.parse_args(argv)
     try:
         return args.fn(args)

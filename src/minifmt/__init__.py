@@ -16,7 +16,9 @@ from .errors import MiniError, MiniValidationError
 from .parser import Document, detect_prefix, parse
 from .prompt import parser_prompt, spec_block
 from .registry import Registry
+from .schema import from_json_schema, from_pydantic, to_json_schema
 from .serializer import dumps
+from .stream import Reader, ReaderResult, StreamRecord, create_reader, read_records
 from .values import scalar_equal
 
 __version__ = "1.1.0"
@@ -24,7 +26,8 @@ SPEC_VERSION = "1.0"
 
 __all__ = ["Contract", "Field", "MiniError", "MiniValidationError", "Document", "parse",
            "dumps", "detect_prefix", "Registry", "spec_block", "parser_prompt",
-           "canonical_equal", "roundtrip_ok", "__version__", "SPEC_VERSION"]
+           "canonical_equal", "roundtrip_ok", "Reader", "ReaderResult", "StreamRecord", "create_reader",
+           "read_records", "from_json_schema", "to_json_schema", "from_pydantic", "__version__", "SPEC_VERSION"]
 
 
 def canonical_equal(a: Any, b: Any) -> bool:
