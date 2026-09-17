@@ -19,6 +19,27 @@ __CABEZA__
   .mesa-mandos .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; }
   .mesa-mandos .crece { flex: 1 1 0; }
   .mesa-mandos .btn { white-space: nowrap; }
+  .mesa-mandos .btn[disabled] { opacity: .55; cursor: progress; }
+  .mesa-nota { flex: 1 0 100%; margin: 0; font-size: var(--fs-cap); color: rgb(var(--fg-faint)); }
+  .mesa-clave { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: .8rem 1.2rem; align-items: flex-end;
+                padding-top: .9rem; border-top: 1px solid rgb(var(--line)); }
+  .mesa-clave input { font: inherit; font-family: var(--f-mono); font-size: .8rem; padding: .4rem .55rem;
+                      border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--raised));
+                      color: rgb(var(--fg)); }
+  .mesa-clave input#limite { width: 5.5rem; }
+  .mesa-limite { display: flex; align-items: center; gap: .35rem; }
+  .mesa-clave .chip { font: inherit; font-size: var(--fs-fine); font-family: var(--f-mono); cursor: pointer;
+                      padding: .25rem .5rem; border: 1px solid rgb(var(--line)); border-radius: 99px;
+                      background: rgb(var(--raised)); color: rgb(var(--fg-muted)); }
+  .mesa-clave .chip:hover { color: rgb(var(--accent)); border-color: rgb(var(--accent) / .5); }
+  .mesa-mandos .seg button[disabled] { opacity: .4; cursor: not-allowed; }
+  .mesa-estado { display: none; }
+  .mesa-estado.activo { display: inline-flex; align-items: center; gap: .4rem; margin-right: .6rem;
+                        color: rgb(var(--accent)); font-weight: 600; font-family: var(--f-mono); }
+  .mesa-estado.activo::before { content: ""; width: .6rem; height: .6rem; border-radius: 50%;
+                                background: rgb(var(--accent)); animation: mesa-late 1s ease-in-out infinite; }
+  @keyframes mesa-late { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+  @media (prefers-reduced-motion: reduce) { .mesa-estado.activo::before { animation: none; opacity: 1; } }
 
   .mesa-aviso { border-radius: var(--r-lg); padding: .7rem .95rem; margin: 0 0 .6rem; font-size: .95rem;
                 border: 1px solid rgb(var(--line)); }
@@ -92,9 +113,11 @@ __CABECERA__
     <h1><span data-lang="es">Mesa de ayuda: qué pasa cuando la respuesta del modelo sale mal</span><span data-lang="en" hidden>Help desk: what happens when the model's answer goes wrong</span></h1>
     <p class="lead">
       <span data-lang="es">Una aplicación de soporte le pide a un LLM que convierta diez mensajes de clientes en tickets. Cambia
-        una sola cosa: cómo se lee la respuesta. Todo corre en tu navegador con <code>js/mini.js</code>, el mismo motor del playground.</span>
+        una sola cosa: cómo se lee la respuesta. Corre en tu navegador con <code>js/mini.js</code>, el mismo motor del playground,
+        con respuestas grabadas o —si pones tu propia clave— llamando a DeepSeek o Groq de verdad.</span>
       <span data-lang="en" hidden>A support application asks an LLM to turn ten customer messages into tickets. Only one thing changes:
-        how the answer is read. Everything runs in your browser with <code>js/mini.js</code>, the same engine as the playground.</span>
+        how the answer is read. It runs in your browser with <code>js/mini.js</code>, the same engine as the playground,
+        on recorded answers or —with your own key— calling DeepSeek or Groq for real.</span>
     </p>
   </header>
 
@@ -106,7 +129,15 @@ __CABECERA__
         <button type="button" data-formato="json" aria-pressed="false">JSON</button>
       </div>
     </div>
-    <div class="grupo crece">
+    <div class="grupo">
+      <span class="et"><span data-lang="es">Modelo</span><span data-lang="en" hidden>Model</span></span>
+      <div class="seg" role="group" id="segProveedor">
+        <button type="button" data-proveedor="grabado" aria-pressed="true"><span data-lang="es">Grabado</span><span data-lang="en" hidden>Recorded</span></button>
+        <button type="button" data-proveedor="deepseek" aria-pressed="false">DeepSeek</button>
+        <button type="button" data-proveedor="groq" aria-pressed="false">Groq</button>
+      </div>
+    </div>
+    <div class="grupo crece" id="grupoEscenario">
       <span class="et"><span data-lang="es">Qué respondió el modelo</span><span data-lang="en" hidden>What the model answered</span></span>
       <div class="seg" role="group" id="segEscenario">
         <button type="button" data-escenario="ok" aria-pressed="true"><span data-lang="es">Respuesta correcta</span><span data-lang="en" hidden>Correct answer</span></button>
@@ -116,6 +147,32 @@ __CABECERA__
     </div>
     <button type="button" class="btn btn-solid" id="ejecutar"><span data-lang="es">Crear tickets con IA</span><span data-lang="en" hidden>Create tickets with AI</span></button>
     <button type="button" class="btn btn-ghost" id="reiniciar"><span data-lang="es">Reiniciar</span><span data-lang="en" hidden>Reset</span></button>
+    <div class="mesa-clave" id="panelClave" hidden>
+      <label class="grupo">
+        <span class="et" id="etClave"></span>
+        <input type="password" id="clave" autocomplete="off" spellcheck="false" placeholder="sk-…" size="26">
+      </label>
+      <label class="grupo">
+        <span class="et"><span data-lang="es">Límite de tokens</span><span data-lang="en" hidden>Token limit</span></span>
+        <span class="mesa-limite">
+          <input type="number" id="limite" min="60" max="4000" step="20" value="2000">
+          <button type="button" class="chip" data-limite="2000">2000</button>
+          <button type="button" class="chip" data-limite="300">300</button>
+          <button type="button" class="chip" data-limite="200">200</button>
+        </span>
+      </label>
+      <button type="button" class="btn btn-ghost btn-sm" id="olvidar"><span data-lang="es">Olvidar clave</span><span data-lang="en" hidden>Forget key</span></button>
+      <p class="mesa-nota">
+        <span data-lang="es">La clave va solo del navegador al proveedor, nunca a mini-format.pmoluna.com: se guarda en
+          <code>sessionStorage</code> y se borra al cerrar la pestaña. Bajar el límite provoca un corte real.</span>
+        <span data-lang="en" hidden>The key goes from your browser straight to the provider, never to mini-format.pmoluna.com:
+          it is kept in <code>sessionStorage</code> and cleared when the tab closes. Lowering the limit causes a real cut.</span>
+      </p>
+    </div>
+    <p class="mesa-nota">
+      <span class="mesa-estado" id="estado" role="status" aria-live="polite"></span>
+      <span id="notaModo"></span>
+    </p>
   </section>
 
   <section id="resultado" hidden aria-live="polite"></section>
@@ -161,10 +218,12 @@ __CABECERA__
   <section class="mesa-sec">
     <h2><span data-lang="es">Con un modelo real</span><span data-lang="en" hidden>With a real model</span></h2>
     <p>
-      <span data-lang="es">La simulación de arriba usa respuestas grabadas para que el resultado sea siempre el mismo. Estas
-        cifras son de la misma aplicación llamando al modelo de verdad, con los mismos diez mensajes y temperatura 0.</span>
-      <span data-lang="en" hidden>The simulation above replays recorded answers so the result is always the same. These figures
-        come from the same application calling the real model, with the same ten messages and temperature 0.</span>
+      <span data-lang="es">En modo <b>Grabado</b> la simulación de arriba reproduce respuestas guardadas, para que el resultado sea
+        siempre el mismo; eligiendo DeepSeek o Groq con tu clave, esas mismas llamadas salen de verdad. Estas cifras son de la
+        aplicación de escritorio equivalente, con los mismos diez mensajes y temperatura 0.</span>
+      <span data-lang="en" hidden>In <b>Recorded</b> mode the simulation above replays stored answers, so the result is always the same;
+        picking DeepSeek or Groq with your key makes those same calls for real. These figures come from the equivalent desktop
+        application, with the same ten messages and temperature 0.</span>
     </p>
     <div id="tablaReal"></div>
     <p class="fina" id="notaReal"></p>
@@ -244,9 +303,20 @@ __PIE__
       corte: "◄ aquí termina lo que envió el modelo",
       sinTickets: "Aún no hay tickets.",
       cabeceras: ["Ticket", "Prioridad", "Categoría", "Resumen", "Horas"],
-      real: ["Lectura", "Límite de tokens", "Tickets", "Llamadas", "Tokens de salida", "Qué pasó"],
       notaReal: function (r) { return "Medido el " + r.fecha + " con " + r.modelo + " (" + r.proveedor + "), temperatura 0, " + DATOS.mediciones.mensajes + " mensajes. Los tokens de salida son los que informa el proveedor."; },
-      sinLimite: "sin límite"
+      sinLimite: "sin límite",
+      modoGrabado: "Respuestas grabadas de un modelo: la espera de cada llamada está simulada para que se vean las idas y venidas. La validación y la reparación ocurren aquí, en tu navegador.",
+      modoReal: function (p) { return "Llamadas reales a " + p.etiqueta + " (" + p.modelo + ") desde tu navegador, con tu clave. Cada intento consume tokens de tu cuenta."; },
+      etClave: function (p) { return "Tu clave de " + p.etiqueta; },
+      pidiendo: function (i, n) { return n > 1 ? "llamada " + i + " de " + n + "…" : "llamando al modelo…"; },
+      esperando: "esperando al modelo…",
+      faltaClave: function (p) { return "Falta tu clave de " + p.etiqueta + ". Se obtiene en " + p.consola + " y se queda en este navegador."; },
+      fallaRed: function (msg) { return "La llamada al proveedor falló: " + msg; },
+      vacia: "El modelo no escribió ninguna línea: con este límite de tokens no alcanzó ni a empezar.",
+      repedido: function (ids) { return "Se volvieron a pedir solo " + ids.join(", ") + ", no los diez."; },
+      cortePorLimite: "El proveedor cortó la respuesta al llegar al límite de tokens.",
+      latencia: function (ms) { return (ms / 1000).toFixed(1) + " s en el modelo"; },
+      real: ["Lectura", "Límite de tokens", "Tickets", "Llamadas", "Tokens de salida", "Qué pasó"]
     },
     en: {
       creados: function (n, m) { return n + " of " + m + " messages turned into tickets."; },
@@ -268,13 +338,35 @@ __PIE__
       corte: "◄ this is where the model stopped",
       sinTickets: "No tickets yet.",
       cabeceras: ["Ticket", "Priority", "Category", "Summary", "Hours"],
-      real: ["Reading", "Token limit", "Tickets", "Calls", "Output tokens", "What happened"],
       notaReal: function (r) { return "Measured on " + r.fecha + " with " + r.modelo + " (" + r.proveedor + "), temperature 0, " + DATOS.mediciones.mensajes + " messages. Output tokens are the ones reported by the provider."; },
-      sinLimite: "no limit"
+      sinLimite: "no limit",
+      modoGrabado: "Recorded model answers: the wait of each call is simulated so the round trips are visible. Validation and repair happen here, in your browser.",
+      modoReal: function (p) { return "Real calls to " + p.etiqueta + " (" + p.modelo + ") from your browser, with your key. Every run spends tokens from your account."; },
+      etClave: function (p) { return "Your " + p.etiqueta + " key"; },
+      pidiendo: function (i, n) { return n > 1 ? "call " + i + " of " + n + "…" : "calling the model…"; },
+      esperando: "waiting for the model…",
+      faltaClave: function (p) { return "Your " + p.etiqueta + " key is missing. Get one at " + p.consola + "; it stays in this browser."; },
+      fallaRed: function (msg) { return "The provider call failed: " + msg; },
+      vacia: "The model wrote no line at all: with this token limit it did not even start.",
+      repedido: function (ids) { return "Only " + ids.join(", ") + " were requested again, not all ten."; },
+      cortePorLimite: "The provider cut the answer when it hit the token limit.",
+      latencia: function (ms) { return (ms / 1000).toFixed(1) + " s in the model"; },
+      real: ["Reading", "Token limit", "Tickets", "Calls", "Output tokens", "What happened"]
     }
   }[ES ? "es" : "en"];
 
-  var estado = { formato: "mini", escenario: "ok" };
+  var estado = { formato: "mini", escenario: "ok", proveedor: "grabado", limite: 2000 };
+
+  /* Proveedores con API compatible con OpenAI. La clave la escribe quien usa la página y se queda en
+     sessionStorage: nunca viaja a este sitio ni aparece en el código publicado. */
+  var PROVEEDORES = {
+    deepseek: { etiqueta: "DeepSeek", modelo: "deepseek-chat", consola: "platform.deepseek.com",
+                url: "https://api.deepseek.com/chat/completions", limiteKey: "max_tokens" },
+    groq: { etiqueta: "Groq", modelo: "openai/gpt-oss-20b", consola: "console.groq.com",
+            url: "https://api.groq.com/openai/v1/chat/completions", limiteKey: "max_completion_tokens",
+            extra: { reasoning_effort: "low" } }
+  };
+  var CLAVE_KEY = "mini-mesa-clave-";
 
   function $(sel) { return document.querySelector(sel); }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -409,7 +501,7 @@ __PIE__
     var perdidos = r.aprovechados < r.recibidos;
     aviso += '<div class="mesa-metricas">' +
       '<span class="' + (r.tickets.length === r.esperados ? "bien" : "mal") + '"><b>' + r.tickets.length + "/" + r.esperados + "</b>" + m[0] + "</span>" +
-      "<span><b>" + r.llamadas + "</b>" + m[1] + "</span>" +
+      "<span><b>" + r.llamadas + "</b>" + m[1] + (r.real && r.ms ? " · " + T.latencia(r.ms) : "") + "</span>" +
       "<span><b>" + r.tokens + "</b>" + m[2] + "</span>" +
       "<span><b>" + r.recibidos + "</b>" + m[3] + "</span>" +
       '<span class="' + (perdidos ? "mal" : "bien") + '"><b>' + r.aprovechados + "</b>" + m[4] + "</span>" +
@@ -453,6 +545,167 @@ __PIE__
     });
   }
 
+  /* --------------------------------------------------------- llamadas reales con la clave del visitante */
+  function clave() {
+    try { return sessionStorage.getItem(CLAVE_KEY + estado.proveedor) || ""; } catch (e) { return ""; }
+  }
+  function guardarClave(valor) {
+    try {
+      if (valor) sessionStorage.setItem(CLAVE_KEY + estado.proveedor, valor);
+      else sessionStorage.removeItem(CLAVE_KEY + estado.proveedor);
+    } catch (e) { /* sin almacenamiento la clave vive solo en el campo */ }
+  }
+
+  function llamar(sistema, usuario, maxTokens) {
+    var p = PROVEEDORES[estado.proveedor];
+    var cuerpo = { model: p.modelo, temperature: 0,
+                   messages: [{ role: "system", content: sistema }, { role: "user", content: usuario }] };
+    cuerpo[p.limiteKey] = maxTokens;
+    if (p.extra) { for (var k in p.extra) cuerpo[k] = p.extra[k]; }
+    var t0 = performance.now();
+    return fetch(p.url, { method: "POST", body: JSON.stringify(cuerpo),
+                          headers: { "content-type": "application/json", authorization: "Bearer " + clave() } })
+      .then(function (r) {
+        return r.text().then(function (crudo) {
+          if (!r.ok) throw new Error("HTTP " + r.status + " \u00b7 " + crudo.slice(0, 140));
+          var j = JSON.parse(crudo);
+          var eleccion = (j.choices || [{}])[0] || {};
+          return { texto: ((eleccion.message || {}).content) || "",
+                   tokens: (j.usage || {}).completion_tokens || 0,
+                   cortada: eleccion.finish_reason === "length",
+                   ms: performance.now() - t0 };
+        });
+      });
+  }
+
+  function pedido(mensajes) {
+    var cabeza = ES ? "Convierte cada mensaje de cliente en un ticket de soporte:\n"
+                    : "Turn each customer message into a support ticket:\n";
+    return cabeza + mensajes.map(function (m) { return m.id + ": " + m.mensaje; }).join("\n");
+  }
+  function instruccion() {
+    if (estado.formato === "mini") return ES ? DATOS.prompt.es : DATOS.prompt.en;
+    var cabeza = ES ? 'Eres el asistente de una mesa de ayuda. Responde \u00fanicamente con un objeto JSON de la forma {"tickets": [...]}, donde cada ticket cumple este JSON Schema:\n'
+                    : 'You are a help desk assistant. Answer only with a JSON object shaped {"tickets": [...]}, where every ticket satisfies this JSON Schema:\n';
+    return cabeza + DATOS.esquema;
+  }
+
+  function correrMiniReal() {
+    var r = { formato: ".mini", esperados: DATOS.mensajes.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
+              incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false, real: true };
+    var registros = {};
+    return llamar(instruccion(), pedido(DATOS.mensajes), estado.limite).then(function (a) {
+      r.llamadas++; r.tokens += a.tokens; r.ms += a.ms; r.texto = a.texto; r.cortada = a.cortada;
+      r.recibidos = lineasCompletas(a.texto);
+      if (a.cortada) r.incidencias.push(T.cortePorLimite);
+      var doc = null;
+      try { doc = MINI.parse(a.texto, CONTRATO, { strict: false }); } catch (e) { doc = null; }
+      if (!doc) { r.error = T.vacia; r.motivo = T.motivo.cortada; return null; }
+      doc.records.forEach(function (rec) { registros[rec.id] = rec; });
+      r.aprovechados = doc.records.length;
+      r.motivo = r.aprovechados < r.esperados ? T.motivo.cortada : T.motivo.ok;
+      (doc.errors || []).filter(function (e) { return e.line > 1; })
+        .forEach(function (e) { r.incidencias.push(T.linea(e)); });
+      var faltan = DATOS.mensajes.filter(function (m) { return !registros[m.id]; });
+      if (!faltan.length) return null;
+      r.incidencias.push(T.repedido(faltan.map(function (m) { return m.id; })));
+      estadoTexto(T.pidiendo(2, 2));
+      return llamar(instruccion(), pedido(faltan), Math.max(240, estado.limite)).then(function (b) {
+        r.llamadas++; r.tokens += b.tokens; r.ms += b.ms;
+        try {
+          MINI.parse(b.texto, CONTRATO, { strict: false }).records
+            .forEach(function (rec) { registros[rec.id] = rec; });
+        } catch (e) { /* si la segunda llamada tampoco trae registros, se queda lo recuperado */ }
+        return null;
+      });
+    }).then(function () {
+      DATOS.mensajes.forEach(function (m) { if (registros[m.id]) r.tickets.push(registros[m.id]); });
+      if (r.tickets.length && r.error) r.error = null;
+      return r;
+    }).catch(function (e) { r.error = T.fallaRed(e.message); return r; });
+  }
+
+  function correrJsonReal() {
+    var r = { formato: "JSON", esperados: DATOS.mensajes.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
+              incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false, real: true };
+    return llamar(instruccion(), pedido(DATOS.mensajes), estado.limite).then(function (a) {
+      r.llamadas++; r.tokens = a.tokens; r.ms = a.ms; r.texto = a.texto; r.cortada = a.cortada;
+      r.recibidos = objetosCompletos(a.texto);
+      if (a.cortada) r.incidencias.push(T.cortePorLimite);
+      var datos = null;
+      try { datos = JSON.parse(a.texto); }
+      catch (e) { r.error = T.jsonRoto(e.message.slice(0, 80)); r.motivo = T.motivo.jsonCortada; return r; }
+      for (var i = 0; i < (datos.tickets || []).length; i++) {
+        var fallo = validar(datos.tickets[i]);
+        if (fallo) { r.error = T.jsonInvalido(fallo); r.motivo = T.motivo.jsonError; return r; }
+      }
+      r.tickets = datos.tickets || [];
+      r.aprovechados = r.tickets.length;
+      r.motivo = T.motivo.jsonOk;
+      return r;
+    }).catch(function (e) { r.error = T.fallaRed(e.message); return r; });
+  }
+
+  /* --------------------------------------------------------- espera visible */
+  function estadoTexto(texto) {
+    var el = $("#estado");
+    el.textContent = texto || "";
+    el.classList.toggle("activo", !!texto);
+  }
+  function ocupado(si) {
+    $("#ejecutar").disabled = si;
+    $("#reiniciar").disabled = si;
+    if (!si) estadoTexto("");
+  }
+  function espera(ms) { return new Promise(function (listo) { setTimeout(listo, ms); }); }
+
+  /* En modo grabado no hay red: cada llamada se muestra con su pausa para que se vean las idas y venidas. */
+  function pintarConEspera(r) {
+    var pasos = Math.max(1, r.llamadas), i = 0;
+    function paso() {
+      i++;
+      if (i > pasos) { ocupado(false); pintar(r); return Promise.resolve(); }
+      estadoTexto(T.pidiendo(i, pasos));
+      return espera(i === 1 ? 900 : 650).then(paso);
+    }
+    return paso();
+  }
+
+  function ejecutar() {
+    if (estado.proveedor === "grabado") {
+      ocupado(true);
+      return pintarConEspera(estado.formato === "mini" ? correrMini(estado.escenario) : correrJson(estado.escenario));
+    }
+    if (!clave()) {
+      pintar({ formato: estado.formato === "mini" ? ".mini" : "JSON", esperados: DATOS.mensajes.length,
+               llamadas: 0, tokens: 0, recibidos: 0, aprovechados: 0, tickets: [], incidencias: [],
+               error: T.faltaClave(PROVEEDORES[estado.proveedor]), texto: "" });
+      $("#clave").focus();
+      return Promise.resolve();
+    }
+    ocupado(true);
+    estadoTexto(T.esperando);
+    var corrida = estado.formato === "mini" ? correrMiniReal() : correrJsonReal();
+    return corrida.then(function (r) { ocupado(false); pintar(r); });
+  }
+
+  /* --------------------------------------------------------- controles */
+  function modo() {
+    var real = estado.proveedor !== "grabado";
+    var p = PROVEEDORES[estado.proveedor];
+    $("#panelClave").hidden = !real;
+    $("#grupoEscenario").style.opacity = real ? ".45" : "";
+    $("#segEscenario").querySelectorAll("button").forEach(function (b) { b.disabled = real; });
+    $("#notaModo").textContent = real ? T.modoReal(p) : T.modoGrabado;
+    if (real) {
+      $("#etClave").textContent = T.etClave(p);
+      $("#clave").value = clave();
+      $("#clave").placeholder = estado.proveedor === "groq" ? "gsk_\u2026" : "sk-\u2026";
+      $("#limite").value = estado.limite;
+    }
+    reiniciar();
+  }
+
   $("#segFormato").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-formato]");
     if (!b) return;
@@ -462,22 +715,41 @@ __PIE__
   });
   $("#segEscenario").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-escenario]");
-    if (!b) return;
+    if (!b || b.disabled) return;
     estado.escenario = b.dataset.escenario;
     seleccionar(this, "escenario", estado.escenario);
     reiniciar();
   });
-  $("#ejecutar").addEventListener("click", function () {
-    pintar(estado.formato === "mini" ? correrMini(estado.escenario) : correrJson(estado.escenario));
+  $("#segProveedor").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-proveedor]");
+    if (!b) return;
+    estado.proveedor = b.dataset.proveedor;
+    seleccionar(this, "proveedor", estado.proveedor);
+    modo();
   });
+  $("#clave").addEventListener("input", function () { guardarClave(this.value.trim()); });
+  $("#olvidar").addEventListener("click", function () {
+    $("#clave").value = ""; guardarClave(""); $("#clave").focus();
+  });
+  $("#limite").addEventListener("input", function () {
+    estado.limite = Math.max(60, Math.min(4000, parseInt(this.value, 10) || 2000));
+  });
+  $("#panelClave").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-limite]");
+    if (!b) return;
+    estado.limite = parseInt(b.dataset.limite, 10);
+    $("#limite").value = estado.limite;
+  });
+  $("#ejecutar").addEventListener("click", ejecutar);
   $("#reiniciar").addEventListener("click", function () { reiniciar(); });
 
   function reiniciar() {
+    estadoTexto("");
     $("#resultado").hidden = true;
     $("#resultado").innerHTML = "";
     $("#formatoChip").textContent = estado.formato === "mini" ? ".mini" : "JSON";
     $("#porque").textContent = "";
-    $("#respuesta").textContent = ES ? "Pulsa «Crear tickets con IA»." : "Press “Create tickets with AI”.";
+    $("#respuesta").textContent = ES ? "Pulsa \u00abCrear tickets con IA\u00bb." : "Press \u201cCreate tickets with AI\u201d.";
     $("#cuentaTickets").textContent = "0";
     $("#tablaTickets").innerHTML = '<p class="mesa-vacio">' + T.sinTickets + "</p>";
   }
@@ -488,7 +760,7 @@ __PIE__
     return "<div><b>" + esc(m.id) + "</b>" + esc(m.mensaje) + "</div>";
   }).join("");
   tablaReal();
-  reiniciar();
+  modo();
 })();
 </script>
 <script src="/docs.js"></script>
