@@ -38,6 +38,29 @@ To combine samples: `mini build phones.json more-phones.json --prefix phone --ou
 
 The `.mini` directory contains the contract, JSON schema, prompts in both languages, parser, validator, repair tools, examples and manifest. See [Build your toolkit](/docs/build/) for the generated profile and its rules.
 
+## 3b. Does your application already have a JSON Schema?
+
+Then you do not need samples: the contract is generated from the schema in a single command, with no output directory.
+
+```bash
+mini from-schema ticket.schema.json -p tk --out ticket_contract.json
+mini to-schema ticket_contract.json
+```
+
+From a Pydantic model: `mini from-schema --pydantic models:Ticket -p tk --out ticket_contract.json`. The resulting contract follows base profile SPEC 1.1 and is used with the library:
+
+```python
+from minifmt import Contract, parse, spec_block
+from minifmt.ai import merge_repair, repair_request
+
+contract = Contract.load("ticket_contract.json")
+instruction = spec_block(contract, "en")                 # format block for the prompt
+document = parse(response, contract, strict=False)       # valid records and errors with their line
+
+request = repair_request(response, contract, "en")       # resend only the invalid lines
+merged = merge_repair(response, correction, contract, request)
+```
+
 ## 4. Integrate
 
 Use `.mini/prompt.en.md` as your model's format instruction. Save its response as `response.mini`.

@@ -38,6 +38,29 @@ Para combinar muestras: `mini build phones.json more-phones.json --prefix phone 
 
 La carpeta `.mini` contiene el contrato, el esquema JSON, prompts en ambos idiomas, parser, validador, reparación, ejemplos y manifiesto. Lee [Crear tu toolkit](/docs/build/) para conocer el perfil generado y sus reglas.
 
+## 3b. ¿Tu aplicación ya tiene un JSON Schema?
+
+Entonces no necesitas reunir muestras: el contrato se genera desde el esquema en un solo comando, sin carpeta de salida.
+
+```bash
+mini from-schema ticket.schema.json -p tk --out contrato_tk.json
+mini to-schema contrato_tk.json
+```
+
+Con un modelo Pydantic: `mini from-schema --pydantic modelos:Ticket -p tk --out contrato_tk.json`. El contrato resultante sigue el perfil base SPEC 1.1 y se usa con la biblioteca:
+
+```python
+from minifmt import Contract, parse, spec_block
+from minifmt.ai import merge_repair, repair_request
+
+contrato = Contract.load("contrato_tk.json")
+instruccion = spec_block(contrato, "es")                 # bloque de formato para el prompt
+documento = parse(respuesta, contrato, strict=False)     # registros válidos y errores con su línea
+
+solicitud = repair_request(respuesta, contrato, "es")    # reenvía solo las líneas inválidas
+fusion = merge_repair(respuesta, correccion, contrato, solicitud)
+```
+
 ## 4. Integrar
 
 Usa `.mini/prompt.es.md` como instrucción de formato para tu modelo. Guarda su respuesta en `response.mini`.
