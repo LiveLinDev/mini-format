@@ -22,5 +22,6 @@
   "fin": "2026-09-17T22:54:06+00:00",
   "llamadas": 200,
   "usd_gastado": 1.6823,
-  "detenido_por_presupuesto": false
+  "detenido_por_presupuesto": false,
+  "entrada": "v1: 10 asuntos × 8 detalles (80 mensajes distintos, repetidos)"
 }

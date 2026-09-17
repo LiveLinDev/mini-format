@@ -798,11 +798,20 @@ __PIE__
     return cabeza + DATOS.esquema;
   }
 
+  /* Qué mensajes se envían: los diez del caso cuando se piden diez, y los generados en cualquier
+     otro volumen, para que el número que se indica sea siempre el que se procesa. */
+  function mensajesActuales() {
+    if (estado.proveedor === "grabado") return DATOS.mensajes;
+    var n = Math.max(1, parseInt($("#registros").value, 10) || DATOS.mensajes.length);
+    return n === DATOS.mensajes.length ? DATOS.mensajes : generar(n, 1);
+  }
+
   function correrMiniReal() {
-    var r = { formato: ".mini", esperados: DATOS.mensajes.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
+    var MENSAJES = mensajesActuales();
+    var r = { formato: ".mini", esperados: MENSAJES.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
               incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false, real: true };
     var registros = {};
-    return llamar(instruccion(), pedido(DATOS.mensajes), estado.limite).then(function (a) {
+    return llamar(instruccion(), pedido(MENSAJES), estado.limite).then(function (a) {
       r.llamadas++; r.tokens += a.tokens; r.entrada = (r.entrada || 0) + (a.entrada || 0);
       r.ms += a.ms; r.texto = a.texto; r.cortada = a.cortada;
       r.recibidos = lineasCompletas(a.texto);
@@ -815,7 +824,7 @@ __PIE__
       r.motivo = r.aprovechados < r.esperados ? T.motivo.cortada : T.motivo.ok;
       (doc.errors || []).filter(function (e) { return e.line > 1; })
         .forEach(function (e) { r.incidencias.push(T.linea(e)); });
-      var faltan = DATOS.mensajes.filter(function (m) { return !registros[m.id]; });
+      var faltan = MENSAJES.filter(function (m) { return !registros[m.id]; });
       if (!faltan.length) return null;
       r.incidencias.push(T.repedido(faltan.map(function (m) { return m.id; })));
       estadoTexto(T.pidiendo(2, 2));
@@ -828,16 +837,17 @@ __PIE__
         return null;
       });
     }).then(function () {
-      DATOS.mensajes.forEach(function (m) { if (registros[m.id]) r.tickets.push(registros[m.id]); });
+      MENSAJES.forEach(function (m) { if (registros[m.id]) r.tickets.push(registros[m.id]); });
       if (r.tickets.length && r.error) r.error = null;
       return r;
     }).catch(function (e) { r.error = T.fallaRed(e.message); return r; });
   }
 
   function correrJsonReal() {
-    var r = { formato: "JSON", esperados: DATOS.mensajes.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
+    var MENSAJES = mensajesActuales();
+    var r = { formato: "JSON", esperados: MENSAJES.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
               incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false, real: true };
-    return llamar(instruccion(), pedido(DATOS.mensajes), estado.limite).then(function (a) {
+    return llamar(instruccion(), pedido(MENSAJES), estado.limite).then(function (a) {
       r.llamadas++; r.tokens = a.tokens; r.entrada = a.entrada; r.ms = a.ms; r.texto = a.texto; r.cortada = a.cortada;
       r.recibidos = objetosCompletos(a.texto);
       if (a.cortada) r.incidencias.push(T.cortePorLimite);
@@ -879,31 +889,80 @@ __PIE__
   }
 
   /* ---------------------------------------------------------- volumen: N registros por lotes */
-  var ASUNTOS = ["no puede iniciar sesión tras cambiar la contraseña", "no llega el código de verificación por SMS",
-                 "cobro duplicado de la suscripción", "transferencia no reflejada tras tres días",
-                 "la aplicación se cierra al adjuntar un archivo", "error 500 al generar la factura electrónica",
-                 "el buscador ignora palabras con tilde", "cómo exportar el historial de pedidos",
-                 "cambio del correo asociado a la cuenta", "capacitación sobre el módulo de reportes"];
+  /* Entrada sintética: el mismo generador combinatorio de experiments/v7_escalamiento/entrada.py.
+     Mismas listas, mismo orden de sorteos y el mismo mulberry32, así que una semilla produce
+     exactamente los mismos mensajes aquí y en el script. */
+  var SALUDOS = ["Hola,", "Buen día,", "Buenas tardes,", "Estimados,", "Hola, equipo de soporte:",
+                 "Buenas,", "Hola de nuevo,", "Escribo porque"];
+  var PRODUCTOS_POR_CATEGORIA = {
+    acceso: ["el portal web", "la aplicación móvil", "la app de escritorio", "el panel de administración",
+             "el inicio de sesión único", "el chat de atención"],
+    pago: ["la pasarela de pagos", "la facturación electrónica", "el carrito de compras", "el portal web",
+           "la aplicación móvil", "el módulo de cobranzas"],
+    error: ["la aplicación móvil", "el portal web", "la app de escritorio", "el buscador del catálogo",
+            "la exportación a Excel", "la sincronización con el ERP", "la firma digital",
+            "el seguimiento de envíos", "la agenda de citas", "el módulo de reportes"],
+    consulta: ["el módulo de reportes", "la exportación a Excel", "la agenda de citas", "el portal web",
+               "la aplicación móvil", "el catálogo de productos", "el seguimiento de envíos"]
+  };
+  var PROBLEMAS = [
+    ["no puedo entrar a mi cuenta desde que cambié la contraseña en {p}", "acceso"],
+    ["no me llega el código de verificación al usar {p}", "acceso"],
+    ["mi usuario quedó bloqueado tras varios intentos en {p}", "acceso"],
+    ["el acceso con Google dejó de funcionar en {p}", "acceso"],
+    ["me cobraron dos veces la suscripción en {p}", "pago"],
+    ["la transferencia no se refleja en {p}", "pago"],
+    ["el pago con tarjeta fue rechazado sin motivo en {p}", "pago"],
+    ["me devolvieron menos de lo acordado en {p}", "pago"],
+    ["no aparece el comprobante de mi pago en {p}", "pago"],
+    ["{p} se cierra sola al adjuntar un archivo", "error"],
+    ["aparece un error 500 al generar documentos en {p}", "error"],
+    ["{p} ignora las palabras con tilde al buscar", "error"],
+    ["los datos se guardan duplicados en {p}", "error"],
+    ["{p} se queda cargando y nunca termina", "error"],
+    ["la pantalla queda en blanco al abrir {p}", "error"],
+    ["quisiera saber cómo exportar mi historial desde {p}", "consulta"],
+    ["necesito cambiar el correo asociado en {p}", "consulta"],
+    ["pido capacitación para mi equipo sobre {p}", "consulta"],
+    ["quiero saber si {p} permite varios usuarios a la vez", "consulta"],
+    ["cómo solicito una copia de mis datos en {p}", "consulta"]
+  ];
+  var REFERENCIAS = ["(pedido {n})", "(factura F-{n})", "(caso {n})", "(orden {n})", "(contrato {n})", ""];
   var DETALLES = ["Ya reinicié la aplicación.", "Es urgente para hoy.", "Me pasa desde el martes.",
                   "Tengo capturas del problema.", "Nadie me ha respondido aún.", "Solo ocurre en el celular.",
-                  "Le pasa a todo mi equipo.", "Perdí trabajo por esto."];
+                  "Le pasa a todo mi equipo.", "Perdí trabajo por esto.", "Probé con otro navegador y sigue igual.",
+                  "Mi conexión funciona bien.", "Me ocurre desde la última actualización.",
+                  "Es la segunda vez que escribo.", "Un compañero reportó lo mismo.", "Ya limpié la caché."];
+  var CIERRES = ["Agradezco su ayuda.", "Quedo atento.", "Espero su respuesta.", "Gracias de antemano.",
+                 "Necesito una solución pronto.", "", "Por favor confírmenme.", "Gracias."];
 
-  /* mismo generador determinista que experiments/v7_escalamiento: la entrada es reproducible */
   function azar(semilla) {
+    var estado = semilla >>> 0;
     return function () {
-      semilla |= 0; semilla = (semilla + 0x6D2B79F5) | 0;
-      var x = Math.imul(semilla ^ (semilla >>> 15), 1 | semilla);
-      x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
-      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+      estado = (estado + 0x6D2B79F5) >>> 0;
+      var x = estado;
+      x = Math.imul(x ^ (x >>> 15), 1 | x) >>> 0;
+      x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) >>> 0;
+      x = (x ^ (x >>> 14)) >>> 0;
+      return x / 4294967296;
     };
   }
 
   function generar(n, desde) {
     var r = azar(20260917 + desde), out = [];
     for (var i = 0; i < n; i++) {
-      var id = "T-" + String(desde + i).padStart(5, "0");
-      out.push({ id: id, mensaje: "Hola, " + ASUNTOS[Math.floor(r() * ASUNTOS.length)] + " " +
-                 DETALLES[Math.floor(r() * DETALLES.length)] });
+      var saludo = SALUDOS[Math.floor(r() * SALUDOS.length)];
+      var par = PROBLEMAS[Math.floor(r() * PROBLEMAS.length)];
+      var catalogo = PRODUCTOS_POR_CATEGORIA[par[1]];
+      var producto = catalogo[Math.floor(r() * catalogo.length)];
+      var plantilla = REFERENCIAS[Math.floor(r() * REFERENCIAS.length)];
+      var referencia = plantilla.replace("{n}", String(10000 + Math.floor(r() * 89999)));
+      var detalle = DETALLES[Math.floor(r() * DETALLES.length)];
+      var cierre = CIERRES[Math.floor(r() * CIERRES.length)];
+      var cuerpo = par[0].replace("{p}", producto);
+      var partes = [saludo, cuerpo + (referencia ? " " + referencia : "") + ".", detalle, cierre];
+      out.push({ id: "T-" + String(desde + i).padStart(5, "0"),
+                 mensaje: partes.filter(function (x) { return x; }).join(" ") });
     }
     return out;
   }
@@ -1121,6 +1180,7 @@ __PIE__
     estado.proveedor = b.dataset.proveedor;
     seleccionar(this, "proveedor", estado.proveedor);
     modo();
+    pintarMensajes();
   });
   $("#clave").addEventListener("input", function () { guardarClave(this.value.trim()); });
   $("#olvidar").addEventListener("click", function () {
@@ -1136,13 +1196,14 @@ __PIE__
     $("#limite").value = estado.limite;
   });
   $("#detener").addEventListener("click", function () { detener = true; estadoTexto(T.volDetenido); });
-  $("#registros").addEventListener("input", function () { pintarPlan(saldoConocido); });
+  $("#registros").addEventListener("input", function () { pintarPlan(saldoConocido); pintarMensajes(); });
   $("#lote").addEventListener("input", function () { pintarPlan(saldoConocido); });
   $("#panelClave").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-registros]");
     if (!b) return;
     $("#registros").value = b.dataset.registros;
     pintarPlan(saldoConocido);
+    pintarMensajes();
   });
   $("#ejecutar").addEventListener("click", ejecutar);
   $("#reiniciar").addEventListener("click", function () { reiniciar(); });
@@ -1330,9 +1391,17 @@ __PIE__
 
   $("#promptMini").textContent = ES ? DATOS.prompt.es : DATOS.prompt.en;
   $("#promptJson").textContent = DATOS.esquema;
-  $("#mensajes").innerHTML = DATOS.mensajes.map(function (m) {
-    return "<div><b>" + esc(m.id) + "</b>" + esc(m.mensaje) + "</div>";
-  }).join("");
+  function pintarMensajes() {
+    var ms = mensajesActuales();
+    var muestra = ms.slice(0, 10);
+    $("#mensajes").innerHTML = muestra.map(function (m) {
+      return "<div><b>" + esc(m.id) + "</b>" + esc(m.mensaje) + "</div>";
+    }).join("") + (ms.length > muestra.length
+      ? '<div class="mesa-vacio">' + (ES ? "muestra de " + num(ms.length) + " mensajes generados"
+                                         : "sample of " + num(ms.length) + " generated messages") + "</div>"
+      : "");
+  }
+  pintarMensajes();
   tablaReal();
   v7();
   modo();

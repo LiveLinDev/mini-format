@@ -49,31 +49,8 @@ MODELO_POR_DEFECTO = {"deepseek": "deepseek-chat", "groq": "openai/gpt-oss-20b"}
 MAX_TOKENS = {"deepseek": 8192, "groq": 8192}
 
 # ---------------------------------------------------------------- entrada sintética reproducible
-ASUNTOS = [
-    ("no puede iniciar sesión tras cambiar la contraseña", "acceso"),
-    ("no llega el código de verificación por SMS", "acceso"),
-    ("cobro duplicado de la suscripción", "pago"),
-    ("transferencia no reflejada tras tres días", "pago"),
-    ("la aplicación se cierra al adjuntar un archivo", "error"),
-    ("error 500 al generar la factura electrónica", "error"),
-    ("el buscador ignora palabras con tilde", "error"),
-    ("cómo exportar el historial de pedidos", "consulta"),
-    ("cambio del correo asociado a la cuenta", "consulta"),
-    ("capacitación sobre el módulo de reportes", "consulta"),
-]
-DETALLES = ["Ya reinicié la aplicación.", "Es urgente para hoy.", "Me pasa desde el martes.",
-            "Tengo capturas del problema.", "Nadie me ha respondido aún.", "Solo ocurre en el celular.",
-            "Le pasa a todo mi equipo.", "Perdí trabajo por esto."]
-
-
-def mensajes(n: int, desde: int, semilla: int) -> List[Dict[str, str]]:
-    """n mensajes de clientes con id correlativo, deterministas para una semilla."""
-    r = random.Random(semilla + desde)
-    out = []
-    for i in range(n):
-        asunto, _ = ASUNTOS[r.randrange(len(ASUNTOS))]
-        out.append({"id": f"T-{desde + i:05d}", "mensaje": f"Hola, {asunto}. {r.choice(DETALLES)}"})
-    return out
+sys.path.insert(0, str(AQUI))
+from entrada import ENTRADA_VERSION, combinaciones, mensajes  # noqa: E402
 
 
 def pedido(lote: List[Dict[str, str]]) -> str:
@@ -285,6 +262,7 @@ def main() -> int:
         "experimento": "v7_escalamiento", "proveedor": a.proveedor, "modelo": modelo,
         "precios": pr, "tamanos": tamanos, "formatos": formatos, "semilla": a.semilla,
         "max_tokens": MAX_TOKENS[a.proveedor], "temperatura": 0,
+        "entrada": ENTRADA_VERSION, "combinaciones_entrada": combinaciones(),
         "inicio": inicio.isoformat(timespec="seconds"), "fin": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "llamadas": escritas, "usd_gastado": round(gastado["usd"], 4),
         "detenido_por_presupuesto": detener.is_set(),
