@@ -3,8 +3,10 @@
 Versión de software 1.1.0. Implementación TypeScript modular y tipada del núcleo
 `.mini` (SPEC 1.0):
 parser, serializador, bloque de especificación para prompts, registro de familias
-(forks) y una API de lectura en streaming para respuestas de modelos token a token.
-Sin dependencias.
+(forks), una API de lectura en streaming para respuestas de modelos token a token,
+reparación selectiva, contratos desde Zod / JSON Schema y adaptadores de modelos
+intercambiables (OpenAI, Anthropic, Groq, simulado) sobre `fetch`. Sin dependencias
+de ejecución; todo salvo `Registry.load` funciona también en el navegador.
 
 Incluye las catorce familias del núcleo. Los contratos adaptados a muestras JSON
 por `mini build` usan otro perfil, `mini-domain/1`, y el parser Python que se genera
@@ -23,8 +25,9 @@ o extrae ese archivo del ZIP del toolkit. Instala el archivo local:
 npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.1.0.tgz
 ```
 
-El archivo contiene JavaScript ESM compilado en `dist/`, los contratos de las
-catorce familias y fuentes TypeScript para tipos. Se importa desde
+El archivo contiene JavaScript ESM compilado y declaraciones `.d.ts` en `dist/`
+(`exports.types` apunta a `dist/index.d.ts`), los contratos de las catorce familias
+y las fuentes TypeScript. Se importa desde
 `@mini-format/core`: no necesita ejecutar TypeScript dentro de `node_modules`,
 usar `--experimental-strip-types` ni conectarse al registro npm.
 
@@ -42,8 +45,9 @@ node --no-warnings tools/build_node.mjs
 ```
 
 El script elimina tipos y convierte imports relativos `.ts` a `.js` en
-`ts/dist/`. La distribución incluye las fuentes tipadas; este paso no genera
-archivos `.d.ts`.
+`ts/dist/`, y después emite las declaraciones `.d.ts` con el compilador de
+TypeScript instalado en `ts/node_modules` (ejecuta antes `npm ci` en `ts/`).
+`--no-types` genera solo el JavaScript. Desde `ts/`, `npm run build` hace lo mismo.
 
 ## Estructura
 
@@ -60,9 +64,18 @@ ts/
 │   ├── prompt.ts      specBlock(contract, lang)
 │   ├── registry.ts    Registry (desde objetos o desde forks/ con node:fs)
 │   ├── stream.ts      createReader, readRecords
+│   ├── repair.ts      extractDocument, repairRequest, mergeRepair (reparación selectiva)
+│   ├── schema.ts      fromJsonSchema, fromZod
+│   ├── adapters.ts    ModelAdapter, OpenAI/Responses/Anthropic/Groq/Simulated, streamRecords
+│   ├── sse.ts         parseSSE (Server-Sent Events sobre fetch)
 │   └── index.ts       API pública
+├── tsconfig.json      chequeo estricto de src/ (tsconfig.test.json añade test/)
 └── test/
     ├── fixtures.test.ts     paridad con forks/*/fixtures y reglas de validación
+    ├── repair.test.ts       reparación selectiva y paridad con minifmt.ai.repair (fixtures/)
+    ├── schema.test.ts       contratos desde esquemas Zod reales
+    ├── adapters.test.ts     proveedores con fetch simulado y flujos SSE sintéticos (sin red)
+    ├── dist.test.ts         ESM compilado sin APIs de Node y declaraciones .d.ts
     ├── roundtrip.test.ts    parse(dumps(obj)) == obj, codec, formato numérico
     ├── stream.test.ts       fragmentos aleatorios de 1–7 caracteres == parse
     ├── truncation.test.ts   salidas truncadas
@@ -125,25 +138,124 @@ Nota: si la última línea no termina en LF y su último campo sigue siendo vál
 (por ejemplo, un texto cortado), el registro es indistinguible de uno completo;
 en ese caso `terminated` es `false` y conviene tratarlo como sospechoso.
 
+### En el navegador
+
+`dist/` solo importa sus propios módulos relativos (sin `node:`, `require` ni
+`Buffer`), así que puede servirse tal cual e importarse desde una página:
+
+```html
+<script type="module">
+  import { parse } from './mini-format/dist/index.js';
+  const contrato = await (await fetch('./forks/cls/contract.json')).json();
+  const doc = parse(texto, contrato, { strict: false });
+  console.log(doc.records, doc.errors.map(String));
+</script>
+```
+
+Pasa los contratos como objetos (`fetch` + `json()`) o con `Registry.from([...])`:
+`Registry.load`, `loadContract` y `defaultForksDir` leen el disco y requieren Node.
+`test/dist.test.ts` lo verifica cargando `dist` en un contexto `vm` que solo tiene
+`TextEncoder`, `TextDecoder` y `URL`.
+
+### Reparación selectiva
+
+Mismo algoritmo y mismo texto de solicitud que `minifmt.ai.repair` (Python),
+verificado con fixtures de paridad:
+
+```ts
+import { repairRequest, mergeRepair } from '@mini-format/core';
+
+const req = repairRequest(respuestaDelModelo, contrato, 'es');   // solo las líneas inválidas y sus códigos
+if (req.needed) {
+  const fix = await adaptador.generate({ system: req.system, user: req.user, maxTokens: req.maxTokensHint * 2, temperature: 0 });
+  const fusion = mergeRepair(respuestaDelModelo, fix.text, contrato, req);
+  fusion.text; fusion.ok; fusion.replaced; fusion.dropped; fusion.unresolved;
+}
+```
+
+`extractDocument` quita la prosa y las cercas de código previas a la cabecera;
+`mergeRepair` acepta una corrección solo si es válida por sí sola, conserva el orden
+original y nunca reescribe `n` (los registros perdidos siguen visibles como E04).
+
+### Contratos desde Zod o JSON Schema
+
+```ts
+import { z } from 'zod';
+import { fromZod } from '@mini-format/core';
+
+const Ticket = z.object({
+  id: z.string(),
+  prioridad: z.number().int().min(1).max(5),
+  estado: z.enum(['abierto', 'cerrado']),
+  etiquetas: z.array(z.string()).max(4),
+  nota: z.string().optional(),
+});
+const contrato = fromZod(Ticket, { prefix: 'tk', unique: ['id'] });
+```
+
+Zod no es dependencia: `fromZod` llama a `toJSONSchema()` del esquema (Zod v4) o al
+conversor pasado en `options.toJSONSchema`, y luego a `fromJsonSchema`. Solo se
+admiten registros planos (SPEC §12): string, integer (con `minimum`/`maximum`),
+number, boolean, enums/literales de texto, listas de escalares
+(`minItems`/`maxItems`) y campos opcionales, anulables o con valor por defecto. Los
+objetos anidados, listas de objetos, uniones y fechas lanzan `MiniError` E20; las
+restricciones que `.mini` no valida (`pattern`, `format`, `minLength`...) también,
+salvo con `unsupported: 'ignore'` (entonces se informan en `warnings`). Un campo
+vacío se decodifica como `null`: en campos `.optional()` que no son `.nullable()`,
+elimina las claves `null` antes de llamar a `parse` de Zod.
+
+### Adaptadores de modelos
+
+Todos los proveedores implementan la misma interfaz, de modo que reemplazar uno
+no cambia el resto del código:
+
+```ts
+import { AnthropicAdapter, OpenAIAdapter, streamRecords, specBlock } from '@mini-format/core';
+import type { ModelAdapter } from '@mini-format/core';
+
+const adaptador: ModelAdapter = new OpenAIAdapter('gpt-4.1-mini');   // o new AnthropicAdapter('claude-...')
+const solicitud = { system: specBlock(contrato, 'es'), user: 'Clasifica...', maxTokens: 2000, temperature: 0 };
+
+const it = streamRecords(adaptador, contrato, solicitud);   // SSE -> createReader: registros a medida que llegan
+let paso = await it.next();
+for (; !paso.done; paso = await it.next()) mostrar(paso.value.record);
+paso.value.reader;       // ReaderResult (documento, errores, truncated...)
+paso.value.generation;   // { text, inputTokens, outputTokens, stopReason, ... }
+```
+
+| Clase | Endpoint | Clave |
+|---|---|---|
+| `OpenAIAdapter` | Chat Completions `/v1/chat/completions` | `OPENAI_API_KEY` |
+| `OpenAIResponsesAdapter` | Responses `/v1/responses` | `OPENAI_API_KEY` |
+| `AnthropicAdapter` | Messages `/v1/messages` (`browser: true` para llamadas directas desde el navegador) | `ANTHROPIC_API_KEY` |
+| `GroqAdapter` | compatible con OpenAI `/openai/v1/chat/completions` | `GROQ_API_KEY` |
+| `SimulatedAdapter` | sin red: respuestas fijas o calculadas, troceado determinista | ninguna |
+
+`generate(solicitud)` devuelve el resultado completo; `stream(solicitud)` devuelve
+un iterable asíncrono de fragmentos de texto más `result`. Opciones: `apiKey` (si
+no, la variable de entorno, cuando existe `process.env`), `fetch` (inyectable),
+`url`, `retries`, `sleep`, `structured`, `sendTemperature`, `extraBody`, `headers`.
+`responseFormat` (`{type: 'json_schema', name, schema}`) se traduce al modo
+estructurado de cada proveedor. Los mensajes de error están depurados: las claves
+nunca aparecen en ellos. `getAdapter(proveedor, modelo, opciones)` crea adaptadores
+por nombre. `streamRecords` descarta de forma incremental la prosa y las cercas
+iniciales (como `extractDocument`); `extract: false` lo desactiva. En el navegador,
+no expongas claves: usa un proxy propio mediante `url`.
+
 ## Pruebas y tipos
 
 ```
 cd ts
+npm ci             # typescript, zod y @types/node (solo desarrollo)
 npm test
-# o bien
-node --experimental-strip-types --no-warnings --test test/*.test.ts
+npm run typecheck  # tsc con strict: true sobre src/ y test/
 ```
 
-El chequeo estricto de la API pública y sus módulos importados pasa con
-TypeScript 7.0.2. Desde la raíz del repositorio:
-
-```sh
-npx --yes --package typescript@7.0.2 tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 --allowImportingTsExtensions ts/src/index.ts
-```
-
-Este comando puede descargar el compilador si no está en la caché; la instalación
-y ejecución del `.tgz` no lo requieren. El borrado de tipos de Node no sustituye
-este chequeo.
+`npm test` no usa red ni claves: los adaptadores se prueban con un `fetch`
+simulado y flujos SSE sintéticos por proveedor. Sin `npm ci`, se omiten las pruebas
+con Zod y la verificación de `.d.ts`. Los fixtures de paridad de la reparación se
+regeneran desde la referencia Python con
+`PYTHONPATH=src python ts/test/fixtures/gen_repair_parity.py`.
 
 La suite de conformidad compartida se lee de `../conformance/cases/` (o de la ruta en
 `MINI_CONFORMANCE_DIR`); si la carpeta no existe, la suite se omite. El runner
@@ -182,3 +294,6 @@ Criterio: si la SPEC decide, se sigue la SPEC; si no, se sigue la referencia Pyt
 - Enteros fuera de ±2^53 pierden precisión (números de JavaScript).
 - `Registry.load` requiere Node (usa `process.getBuiltinModule`); el resto de la
   biblioteca no depende de Node.
+- `fromZod`/`fromJsonSchema` no generan campos `mlist` ni `tuple`.
+- `SimulatedAdapter` no reproduce los perfiles de fallas del simulador Python:
+  devuelve respuestas fijas o calculadas (para pruebas y demostraciones).
