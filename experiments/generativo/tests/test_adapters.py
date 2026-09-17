@@ -7,7 +7,7 @@ import logging
 import pytest
 
 from minifmt import Registry
-from minifmt.ai.adapters import (AdapterError, AnthropicAdapter, GroqAdapter, MissingKeyError, OpenAIAdapter,
+from minifmt.ai.adapters import (AdapterError, AnthropicAdapter, DeepSeekAdapter, GroqAdapter, MissingKeyError, OpenAIAdapter,
                                  SimTarget, SimulatedAdapter, get_adapter, redact, redact_headers)
 from minifmt.ai.adapters.http import post_json
 
@@ -38,6 +38,7 @@ def test_falta_clave_no_revela_nada(sin_claves):
 def test_fabrica_de_adaptadores():
     assert isinstance(get_adapter("openai", "gpt-4.1-mini"), OpenAIAdapter)
     assert isinstance(get_adapter("groq", "x"), GroqAdapter)
+    assert isinstance(get_adapter("deepseek", "x"), DeepSeekAdapter)
     with pytest.raises(AdapterError):
         get_adapter("desconocido", "x")
     assert CLAVE_FALSA not in repr(get_adapter("anthropic", "m"))
@@ -110,6 +111,30 @@ def test_groq_payload(monkeypatch):
     with pytest.raises(AdapterError):
         ad.generate("s", "u", max_tokens=5, temperature=0, response_format=RF)   # sin modo estructurado declarado
 
+
+# ------------------------------------------------------------------ DeepSeek (HTTP, API de OpenAI)
+def test_deepseek_payload(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", CLAVE_FALSA)
+    visto = {}
+
+    def transporte(url, headers, body, timeout):
+        visto.update(url=url, headers=dict(headers), body=json.loads(body))
+        return 200, json.dumps({"model": "deepseek-chat", "choices": [{"message": {"content": "tk|n=0"}, "finish_reason": "stop"}],
+                                "usage": {"prompt_tokens": 11, "completion_tokens": 3}}).encode()
+
+    ad = DeepSeekAdapter("deepseek-chat", transport=transporte)
+    r = ad.generate("s", "u", max_tokens=64, temperature=0)
+    assert r["provider"] == "deepseek" and r["output_tokens"] == 3
+    assert visto["url"] == "https://api.deepseek.com/chat/completions"
+    assert visto["headers"]["authorization"] == "Bearer " + CLAVE_FALSA
+    # DeepSeek usa max_tokens, no max_completion_tokens
+    assert visto["body"]["max_tokens"] == 64 and "max_completion_tokens" not in visto["body"]
+
+
+def test_deepseek_exige_clave(monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    with pytest.raises(MissingKeyError):
+        DeepSeekAdapter("deepseek-chat", transport=lambda *a: (200, b"{}")).generate("s", "u", max_tokens=8, temperature=0)
 
 # ------------------------------------------------------------------ OpenAI (cliente inyectado)
 class _Resp:

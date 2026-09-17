@@ -1,0 +1,11 @@
+{
+  "metodo": "saldo de la cuenta del proveedor consultado antes y después de la corrida (endpoint /user/balance); se publica solo la diferencia, no el saldo",
+  "proveedor": "DeepSeek",
+  "moneda": "USD",
+  "consumido_usd": 0.78,
+  "registros_procesados": 40000,
+  "tokens_entrada": 1138042,
+  "tokens_salida": 1730641,
+  "estimado_con_precios_publicados_usd": 2.4182,
+  "fecha": "2026-09-17"
+}

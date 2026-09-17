@@ -747,6 +747,96 @@ def construir_playground() -> None:
     print(f"  playground: {len(out.encode('utf-8'))//1024} KB, {len(forks)} familias, {len(bench)} filas de benchmark")
 
 
+def precios_proveedores() -> dict:
+    """Precios publicados por proveedor para estimar el costo de una corrida en el navegador.
+
+    Se toma el modelo que usa la página si está en la tabla; si no, el más barato del proveedor,
+    y se declara como referencia.
+    """
+    archivo = RAIZ / "experiments" / "v4_costos" / "precios.json"
+    if not archivo.exists():
+        return {}
+    modelos = json.loads(archivo.read_text(encoding="utf-8"))["modelos"]
+    quiere = {"deepseek": "deepseek-chat", "groq": "openai/gpt-oss-20b"}
+    out = {}
+    for proveedor, id_api in quiere.items():
+        exactos = [m for m in modelos if m["proveedor"].lower().startswith(proveedor[:4]) and m["id_api"] == id_api]
+        candidatos = exactos or [m for m in modelos if m["proveedor"].lower().startswith(proveedor[:4]) and m["salida"]]
+        if not candidatos:
+            continue
+        m = candidatos[0] if exactos else min(candidatos, key=lambda x: x["salida"])
+        out[proveedor] = {"entrada": m["entrada"], "salida": m["salida"], "fecha": m["fecha_consulta"],
+                          "modelo_precio": m["modelo"] + ("" if exactos else " (referencia)")}
+    return out
+
+# --------------------------------------------------------------------------- V7 · escalamiento por lote
+def datos_escalamiento() -> dict:
+    """Resultados de experiments/v7_escalamiento: barrido, volumen y costo real de la corrida.
+
+    Devuelve {} si el experimento no se ha corrido, y la página omite la sección.
+    """
+    base = RAIZ / "experiments" / "v7_escalamiento" / "results"
+    barrido_dir, volumen_dir = base / "deepseek", base / "deepseek_volumen"
+    if not (barrido_dir / "llamadas.jsonl").exists():
+        return {}
+    import csv as _csv
+
+    meta = json.loads((barrido_dir / "meta.json").read_text(encoding="utf-8"))
+    barrido = []
+    if (barrido_dir / "por_lote.csv").exists():
+        with (barrido_dir / "por_lote.csv").open(encoding="utf-8") as fh:
+            for r in _csv.DictReader(fh):
+                barrido.append({"formato": r["formato"], "lote": int(r["lote"]),
+                                "llamadas": int(r["llamadas"]),
+                                "aprovechamiento": float(r["aprovechamiento_pct"]),
+                                "tokens_por_registro": float(r["tokens_por_registro"]),
+                                "tokens_salida": int(r["tokens_salida_mediana"]),
+                                "cortadas": int(r["llamadas_cortadas"]),
+                                "ms": int(r["ms_mediana"])})
+
+    def agregar(directorio):
+        llamadas = directorio / "llamadas.jsonl"
+        if not llamadas.exists():
+            return {}
+        out = {}
+        for linea in llamadas.read_text(encoding="utf-8").splitlines():
+            if not linea.strip():
+                continue
+            f = json.loads(linea)
+            if f.get("error"):
+                continue
+            d = out.setdefault(f["formato"], {"llamadas": 0, "registros": 0, "aprovechados": 0,
+                                              "tokens_salida": 0, "tokens_entrada": 0, "lote": f["lote"], "ms": 0})
+            d["llamadas"] += 1
+            d["registros"] += f["solicitados"]
+            d["aprovechados"] += f["aprovechados"]
+            d["tokens_salida"] += f["tokens_salida"] or 0
+            d["tokens_entrada"] += f["tokens_entrada"] or 0
+            d["ms"] += f["ms"]
+        return out
+
+    volumen = agregar(volumen_dir)
+    precios = meta.get("precios", {})
+    for fmt, d in volumen.items():
+        d["tokens_por_registro"] = round(d["tokens_salida"] / d["registros"], 2) if d["registros"] else 0
+        d["entrada_por_registro"] = round(d["tokens_entrada"] / d["registros"], 2) if d["registros"] else 0
+        d["usd_estimado"] = round((d["tokens_salida"] / 1e6) * (precios.get("salida") or 0) +
+                                  (d["tokens_entrada"] / 1e6) * (precios.get("entrada") or 0), 4)
+
+    # costo real de la corrida: diferencia de saldo de la cuenta del proveedor (el saldo no se publica)
+    real = {}
+    archivo_real = volumen_dir / "costo_real.json"
+    if archivo_real.exists():
+        real = json.loads(archivo_real.read_text(encoding="utf-8"))
+    quiebre = {}
+    for fmt in sorted({b["formato"] for b in barrido}):
+        buenos = [b["lote"] for b in barrido if b["formato"] == fmt and b["aprovechamiento"] == 100]
+        malos = [b["lote"] for b in barrido if b["formato"] == fmt and b["aprovechamiento"] < 100]
+        quiebre[fmt] = {"maximo_sin_perdida": max(buenos, default=0), "falla_desde": min(malos, default=None)}
+    return {"meta": meta, "barrido": barrido, "volumen": volumen, "quiebre": quiebre,
+            "precios": precios, "real": real}
+
+
 # --------------------------------------------------------------------------- caso de integración
 def construir_mesa() -> None:
     """Página /mesa-de-ayuda/: el caso de integración corriendo en el navegador con js/mini.js.
@@ -769,6 +859,8 @@ def construir_mesa() -> None:
         "prompt": {"es": spec_block(contrato, "es"), "en": spec_block(contrato, "en")},
         "errores": {codigo: titulo.lower() for codigo, _, titulo, _, _ in ERRORES},
         "erroresEn": {codigo: titulo.lower() for codigo, _, titulo, _, _ in ERRORES_EN},
+        "escalamiento": datos_escalamiento(),
+        "precios": precios_proveedores(),
     }
     safe = lambda js: js.replace("</script", "<\\/script")
     pagina = (base / "plantilla.html").read_text(encoding="utf-8")
@@ -783,7 +875,10 @@ def construir_mesa() -> None:
     destino = SITIO / "mesa-de-ayuda" / "index.html"
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(pagina, encoding="utf-8")
-    print(f"  mesa de ayuda: {len(pagina.encode('utf-8'))//1024} KB, contrato tk con {len(contrato.core)} campos")
+    esc = datos.get("escalamiento") or {}
+    print(f"  mesa de ayuda: {len(pagina.encode('utf-8'))//1024} KB, contrato tk con {len(contrato.core)} campos"
+          + (f", V7 con {len(esc['barrido'])} celdas y volumen de "
+             f"{sum(v['registros'] for v in esc['volumen'].values()):,} registros" if esc else ", sin datos de V7"))
 
 
 def sellar() -> None:

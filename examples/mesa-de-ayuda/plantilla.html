@@ -102,6 +102,36 @@ __CABEZA__
   .mesa-sec table td:first-child, .mesa-sec table th:first-child { white-space: nowrap; }
   .mesa-sec .rango { color: rgb(var(--fg-faint)); font-size: var(--fs-fine); white-space: nowrap; }
 
+  /* --- V7 escalamiento: series validadas con el verificador de paleta (claro y oscuro) --- */
+  :root { --serie-mini: #5E4BFF; --serie-json: #B45309; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --serie-mini: #7A6BF0; --serie-json: #BC8A33; } }
+  :root[data-theme="dark"] { --serie-mini: #7A6BF0; --serie-json: #BC8A33; }
+  .v7-tiles { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); margin: 1.2rem 0; }
+  .v7-tile { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: .9rem 1rem; background: rgb(var(--raised)); }
+  .v7-tile .et { font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .05em; color: rgb(var(--fg-muted)); font-weight: 600; }
+  .v7-tile .dato { font-family: var(--f-display); font-size: 1.85rem; line-height: 1.15; letter-spacing: -.02em; margin: .25rem 0 .1rem; }
+  .v7-tile .pie { font-size: var(--fs-cap); color: rgb(var(--fg-faint)); }
+  .v7-tile .mini { color: var(--serie-mini); font-weight: 700; }
+  .v7-tile .json { color: var(--serie-json); font-weight: 700; }
+  .v7-figura { margin: 1.4rem 0 0; }
+  .v7-figura figcaption { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); margin-bottom: .5rem; }
+  .v7-leyenda { display: flex; gap: 1.1rem; flex-wrap: wrap; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); margin-bottom: .4rem; }
+  .v7-leyenda span { display: inline-flex; align-items: center; gap: .35rem; }
+  .v7-leyenda i { width: .75rem; height: .75rem; border-radius: 2px; display: inline-block; }
+  .v7-lienzo { position: relative; }
+  .v7-lienzo svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .v7-eje { stroke: rgb(var(--line)); stroke-width: 1; }
+  .v7-rejilla { stroke: rgb(var(--line)); stroke-width: 1; stroke-dasharray: 2 4; }
+  .v7-rotulo { fill: rgb(var(--fg-faint)); font-size: 11px; font-family: var(--f-body); }
+  .v7-serie { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .v7-punto { stroke: rgb(var(--raised)); stroke-width: 2; }
+  .v7-nombre { font-size: 12px; font-weight: 700; font-family: var(--f-body); }
+  .v7-globo { position: absolute; pointer-events: none; background: rgb(var(--slab)); color: rgb(var(--on-slab));
+              border-radius: var(--r-lg); padding: .5rem .6rem; font-size: .76rem; line-height: 1.45;
+              font-family: var(--f-mono); white-space: nowrap; opacity: 0; transition: opacity .12s; }
+  .v7-globo b { color: rgb(var(--on-slab)); }
+  .v7-cursor { stroke: rgb(var(--fg-faint)); stroke-width: 1; stroke-dasharray: 3 3; }
+
   @media (max-width: 62rem) { .mesa-cajas { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -230,6 +260,38 @@ __CABECERA__
     <p class="fina" id="notaReal"></p>
   </section>
 
+  <section class="mesa-sec" id="escalamiento" hidden>
+    <h2><span data-lang="es">Cuánto aguanta una respuesta, y cuánto cuesta</span><span data-lang="en" hidden>How much fits in one answer, and what it costs</span></h2>
+    <p>
+      <span data-lang="es">Un modelo tiene un límite de tokens de salida, así que un lote grande no cabe. Estas cifras son de
+        <b id="v7Modelo"></b> con lotes de 10 a 400 registros: hasta dónde llega cada formato, qué se puede aprovechar
+        cuando la respuesta se corta y cuánto cuesta procesar el volumen.</span>
+      <span data-lang="en" hidden>A model has an output-token limit, so a large batch does not fit. These figures come from
+        <b id="v7ModeloEn"></b> with batches of 10 to 400 records: how far each format gets, what can be salvaged when the
+        answer is cut, and what processing the volume costs.</span>
+    </p>
+
+    <div class="v7-tiles" id="v7Tiles"></div>
+
+    <figure class="v7-figura">
+      <figcaption>
+        <span data-lang="es">Registros aprovechados sin volver a pedir nada, según cuántos se piden en una sola llamada.</span>
+        <span data-lang="en" hidden>Records usable without asking again, by how many are requested in a single call.</span>
+      </figcaption>
+      <div class="v7-leyenda" id="v7Leyenda"></div>
+      <div class="v7-lienzo" id="v7Lienzo"></div>
+    </figure>
+
+    <details>
+      <summary><span data-lang="es">Tabla de datos del barrido</span><span data-lang="en" hidden>Sweep data table</span></summary>
+      <div id="v7Tabla" style="margin-top:.7rem"></div>
+    </details>
+
+    <div id="v7Volumen" style="margin-top:1.4rem"></div>
+
+    <p class="fina" id="v7Metodo"></p>
+  </section>
+
   <section class="mesa-sec">
     <h2><span data-lang="es">Cómo se integra</span><span data-lang="en" hidden>How to integrate it</span></h2>
     <p>
@@ -306,6 +368,30 @@ __PIE__
       cabeceras: ["Ticket", "Prioridad", "Categoría", "Resumen", "Horas"],
       notaReal: function (r) { return "Medido el " + r.fecha + " con " + r.modelo + " (" + r.proveedor + "), temperatura 0, " + DATOS.mediciones.mensajes + " mensajes. Los tokens de salida son los que informa el proveedor."; },
       sinLimite: "sin límite",
+      v7Tiles: {
+        tokens: "Tokens de salida por registro", ahorro: "menos con .mini",
+        lote: "Registros por llamada sin perder ninguno", corte: "a partir de ahí la respuesta se corta",
+        volumen: "Costo de 20 000 registros", estimado: "estimado con los precios publicados",
+        real: "Consumido de la clave", realPie: "diferencia de saldo de la cuenta al procesar"
+      },
+      v7Cab: ["Registros por llamada", "Formato", "Llamadas", "Tokens por registro", "Aprovechados", "Respuestas cortadas"],
+      v7Quiebre: function (q) {
+        var j = q.json || {}, m = q.mini || {};
+        return "JSON deja de aprovecharse desde " + j.falla_desde + " registros por llamada (máximo sin pérdida: " +
+          j.maximo_sin_perdida + "); .mini aguanta " + m.maximo_sin_perdida +
+          " y desde " + m.falla_desde + " conserva solo las líneas completas.";
+      },
+      v7Volumen: "Volumen procesado",
+      v7VolCab: ["Formato", "Lote", "Llamadas", "Registros", "Aprovechados", "Tokens de salida", "Tokens por registro", "Costo estimado"],
+      v7Metodo: function (m, p) {
+        return "Modelo " + m.modelo + " (" + m.proveedor + "), temperatura 0, límite de salida " + m.max_tokens +
+          " tokens, entrada sintética con semilla " + m.semilla + ". Precios de " + p.modelo_precio + ": " +
+          p.entrada + " de entrada y " + p.salida + " de salida por millón de tokens (" + p.fecha + "). " +
+          "Datos y método: experiments/v7_escalamiento.";
+      },
+      v7Costo: "costo de esta corrida",
+      v7Saldo: "saldo de tu cuenta",
+      v7SaldoTras: "consumido en esta corrida",
       modoGrabado: "Respuestas grabadas de un modelo: la espera de cada llamada está simulada para que se vean las idas y venidas. La validación y la reparación ocurren aquí, en tu navegador.",
       modoReal: function (p) { return "Llamadas reales a " + p.etiqueta + " (" + p.modelo + ") desde tu navegador, con tu clave. Cada intento consume tokens de tu cuenta."; },
       etClave: function (p) { return "Tu clave de " + p.etiqueta; },
@@ -341,6 +427,30 @@ __PIE__
       cabeceras: ["Ticket", "Priority", "Category", "Summary", "Hours"],
       notaReal: function (r) { return "Measured on " + r.fecha + " with " + r.modelo + " (" + r.proveedor + "), temperature 0, " + DATOS.mediciones.mensajes + " messages. Output tokens are the ones reported by the provider."; },
       sinLimite: "no limit",
+      v7Tiles: {
+        tokens: "Output tokens per record", ahorro: "less with .mini",
+        lote: "Records per call with none lost", corte: "beyond that the answer is cut",
+        volumen: "Cost of 20,000 records", estimado: "estimated with published prices",
+        real: "Spent from the key", realPie: "account balance difference while processing"
+      },
+      v7Cab: ["Records per call", "Format", "Calls", "Tokens per record", "Usable", "Cut answers"],
+      v7Quiebre: function (q) {
+        var j = q.json || {}, m = q.mini || {};
+        return "JSON stops being usable from " + j.falla_desde + " records per call (largest lossless batch: " +
+          j.maximo_sin_perdida + "); .mini holds " + m.maximo_sin_perdida + " and from " + m.falla_desde +
+          " keeps only the complete lines.";
+      },
+      v7Volumen: "Processed volume",
+      v7VolCab: ["Format", "Batch", "Calls", "Records", "Usable", "Output tokens", "Tokens per record", "Estimated cost"],
+      v7Metodo: function (m, p) {
+        return "Model " + m.modelo + " (" + m.proveedor + "), temperature 0, output limit " + m.max_tokens +
+          " tokens, synthetic input with seed " + m.semilla + ". Prices for " + p.modelo_precio + ": " +
+          p.entrada + " input and " + p.salida + " output per million tokens (" + p.fecha + "). " +
+          "Data and method: experiments/v7_escalamiento.";
+      },
+      v7Costo: "cost of this run",
+      v7Saldo: "your account balance",
+      v7SaldoTras: "spent in this run",
       modoGrabado: "Recorded model answers: the wait of each call is simulated so the round trips are visible. Validation and repair happen here, in your browser.",
       modoReal: function (p) { return "Real calls to " + p.etiqueta + " (" + p.modelo + ") from your browser, with your key. Every run spends tokens from your account."; },
       etClave: function (p) { return "Your " + p.etiqueta + " key"; },
@@ -362,11 +472,13 @@ __PIE__
      sessionStorage: nunca viaja a este sitio ni aparece en el código publicado. */
   var PROVEEDORES = {
     deepseek: { etiqueta: "DeepSeek", modelo: "deepseek-chat", consola: "platform.deepseek.com",
-                url: "https://api.deepseek.com/chat/completions", limiteKey: "max_tokens" },
+                url: "https://api.deepseek.com/chat/completions", limiteKey: "max_tokens",
+                saldo: "https://api.deepseek.com/user/balance" },
     groq: { etiqueta: "Groq", modelo: "openai/gpt-oss-20b", consola: "console.groq.com",
             url: "https://api.groq.com/openai/v1/chat/completions", limiteKey: "max_completion_tokens",
             extra: { reasoning_effort: "low" } }
   };
+  var PRECIOS = DATOS.precios || {};
   var CLAVE_KEY = "mini-mesa-clave-";
 
   function $(sel) { return document.querySelector(sel); }
@@ -505,8 +617,12 @@ __PIE__
       "<span><b>" + r.llamadas + "</b>" + m[1] + (r.real && r.ms ? " · " + T.latencia(r.ms) : "") + "</span>" +
       "<span><b>" + r.tokens + "</b>" + m[2] + "</span>" +
       "<span><b>" + r.recibidos + "</b>" + m[3] + "</span>" +
-      '<span class="' + (perdidos ? "mal" : "bien") + '"><b>' + r.aprovechados + "</b>" + m[4] + "</span>" +
-      "</div>";
+      '<span class="' + (perdidos ? "mal" : "bien") + '"><b>' + r.aprovechados + "</b>" + m[4] + "</span>";
+    var usd = r.real ? costoEstimado(r.entrada, r.tokens) : null;
+    if (usd !== null) aviso += "<span><b>" + usd.toFixed(5) + " USD</b>" + T.v7Costo + "</span>";
+    if (r.consumido !== undefined) aviso += "<span><b>" + r.consumido.toFixed(3) + " USD</b>" + T.v7SaldoTras + "</span>";
+    if (r.saldo !== null && r.saldo !== undefined) aviso += "<span><b>" + r.saldo.toFixed(2) + " USD</b>" + T.v7Saldo + "</span>";
+    aviso += "</div>";
     caja.innerHTML = aviso;
     caja.hidden = false;
 
@@ -575,10 +691,31 @@ __PIE__
           var eleccion = (j.choices || [{}])[0] || {};
           return { texto: ((eleccion.message || {}).content) || "",
                    tokens: (j.usage || {}).completion_tokens || 0,
+                   entrada: (j.usage || {}).prompt_tokens || 0,
                    cortada: eleccion.finish_reason === "length",
                    ms: performance.now() - t0 };
         });
       });
+  }
+
+  /* Saldo de la cuenta del proveedor: el consumo real de la clave, no una estimación.
+     Solo DeepSeek publica un endpoint de saldo; con Groq se muestra únicamente el costo estimado. */
+  function saldo() {
+    var p = PROVEEDORES[estado.proveedor];
+    if (!p || !p.saldo || !clave()) return Promise.resolve(null);
+    return fetch(p.saldo, { headers: { authorization: "Bearer " + clave() } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        var info = j && (j.balance_infos || [])[0];
+        return info ? parseFloat(info.total_balance) : null;
+      })
+      .catch(function () { return null; });
+  }
+
+  function costoEstimado(entrada, salidaTok) {
+    var pr = PRECIOS[estado.proveedor];
+    if (!pr) return null;
+    return ((entrada || 0) / 1e6) * (pr.entrada || 0) + ((salidaTok || 0) / 1e6) * (pr.salida || 0);
   }
 
   function pedido(mensajes) {
@@ -598,7 +735,8 @@ __PIE__
               incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false, real: true };
     var registros = {};
     return llamar(instruccion(), pedido(DATOS.mensajes), estado.limite).then(function (a) {
-      r.llamadas++; r.tokens += a.tokens; r.ms += a.ms; r.texto = a.texto; r.cortada = a.cortada;
+      r.llamadas++; r.tokens += a.tokens; r.entrada = (r.entrada || 0) + (a.entrada || 0);
+      r.ms += a.ms; r.texto = a.texto; r.cortada = a.cortada;
       r.recibidos = lineasCompletas(a.texto);
       if (a.cortada) r.incidencias.push(T.cortePorLimite);
       var doc = null;
@@ -614,7 +752,7 @@ __PIE__
       r.incidencias.push(T.repedido(faltan.map(function (m) { return m.id; })));
       estadoTexto(T.pidiendo(2, 2));
       return llamar(instruccion(), pedido(faltan), Math.max(240, estado.limite)).then(function (b) {
-        r.llamadas++; r.tokens += b.tokens; r.ms += b.ms;
+        r.llamadas++; r.tokens += b.tokens; r.entrada = (r.entrada || 0) + (b.entrada || 0); r.ms += b.ms;
         try {
           MINI.parse(b.texto, CONTRATO, { strict: false }).records
             .forEach(function (rec) { registros[rec.id] = rec; });
@@ -632,7 +770,7 @@ __PIE__
     var r = { formato: "JSON", esperados: DATOS.mensajes.length, llamadas: 0, tokens: 0, ms: 0, texto: "",
               incidencias: [], tickets: [], recibidos: 0, aprovechados: 0, cortada: false, real: true };
     return llamar(instruccion(), pedido(DATOS.mensajes), estado.limite).then(function (a) {
-      r.llamadas++; r.tokens = a.tokens; r.ms = a.ms; r.texto = a.texto; r.cortada = a.cortada;
+      r.llamadas++; r.tokens = a.tokens; r.entrada = a.entrada; r.ms = a.ms; r.texto = a.texto; r.cortada = a.cortada;
       r.recibidos = objetosCompletos(a.texto);
       if (a.cortada) r.incidencias.push(T.cortePorLimite);
       var datos = null;
@@ -688,8 +826,17 @@ __PIE__
     }
     ocupado(true);
     estadoTexto(T.esperando);
-    var corrida = estado.formato === "mini" ? correrMiniReal() : correrJsonReal();
-    return corrida.then(function (r) { ocupado(false); pintar(r); });
+    return saldo().then(function (antes) {
+      var corrida = estado.formato === "mini" ? correrMiniReal() : correrJsonReal();
+      return corrida.then(function (r) {
+        return saldo().then(function (despues) {
+          r.saldo = despues;
+          if (antes !== null && despues !== null) r.consumido = Math.max(0, antes - despues);
+          ocupado(false);
+          pintar(r);
+        });
+      });
+    });
   }
 
   /* --------------------------------------------------------- controles */
@@ -757,12 +904,183 @@ __PIE__
     $("#tablaTickets").innerHTML = '<p class="mesa-vacio">' + T.sinTickets + "</p>";
   }
 
+  /* ---------------------------------------------------------- V7 · escalamiento por lote */
+  /* Orden fijo de series. JSON va discontinuo: en los lotes donde ambos valen 100 % las líneas
+     coinciden, y el patrón evita que una tape a la otra (codificación secundaria, no solo color). */
+  var SERIES = [{ k: "mini", nombre: ".mini", color: "var(--serie-mini)", trazo: "" },
+                { k: "json", nombre: "JSON", color: "var(--serie-json)", trazo: "6 4" }];
+  var ORDEN_DIBUJO = ["json", "mini"];
+
+  function num(x, dec) {
+    return (typeof x === "number" ? x : 0).toLocaleString(ES ? "es-PE" : "en-US",
+      { minimumFractionDigits: dec || 0, maximumFractionDigits: dec || 0 });
+  }
+
+  function v7Grafico(barrido, lotes) {
+    var W = 720, H = 300, mt = 14, mr = 58, mb = 36, ml = 42;
+    var ax = function (i) { return ml + (lotes.length > 1 ? i * (W - ml - mr) / (lotes.length - 1) : 0); };
+    var ay = function (v) { return mt + (100 - v) * (H - mt - mb) / 100; };
+    var svg = ['<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' +
+      (ES ? "Registros aprovechados según el tamaño del lote" : "Usable records by batch size") + '">'];
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      svg.push('<line class="v7-rejilla" x1="' + ml + '" x2="' + (W - mr) + '" y1="' + ay(v) + '" y2="' + ay(v) + '"/>');
+      svg.push('<text class="v7-rotulo" x="' + (ml - 8) + '" y="' + (ay(v) + 4) + '" text-anchor="end">' + v + "%</text>");
+    });
+    svg.push('<line class="v7-eje" x1="' + ml + '" x2="' + (W - mr) + '" y1="' + ay(0) + '" y2="' + ay(0) + '"/>');
+    lotes.forEach(function (L, i) {
+      svg.push('<text class="v7-rotulo" x="' + ax(i) + '" y="' + (H - mb + 18) + '" text-anchor="middle">' + L + "</text>");
+    });
+    svg.push('<text class="v7-rotulo" x="' + (W - mr) + '" y="' + (H - 4) + '" text-anchor="end">' +
+      (ES ? "registros por llamada" : "records per call") + "</text>");
+    ORDEN_DIBUJO.forEach(function (clave) {
+      var s = SERIES.filter(function (x) { return x.k === clave; })[0];
+      var puntos = lotes.map(function (L, i) {
+        var c = barrido.filter(function (b) { return b.formato === s.k && b.lote === L; })[0];
+        return c ? { x: ax(i), y: ay(c.aprovechamiento), c: c } : null;
+      }).filter(Boolean);
+      if (!puntos.length) return;
+      svg.push('<path class="v7-serie" stroke="' + s.color + '" stroke-dasharray="' + s.trazo + '" d="M' +
+        puntos.map(function (p) { return p.x.toFixed(1) + " " + p.y.toFixed(1); }).join("L") + '"/>');
+      puntos.forEach(function (p) {
+        svg.push('<circle class="v7-punto" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) +
+          '" r="4.5" fill="' + s.color + '"/>');
+      });
+      var ult = puntos[puntos.length - 1];
+      svg.push('<text class="v7-nombre" x="' + (ult.x + 10) + '" y="' + (ult.y + 4) + '" fill="' + s.color + '">' +
+        s.nombre + "</text>");
+    });
+    svg.push('<line class="v7-cursor" id="v7Cursor" x1="0" x2="0" y1="' + mt + '" y2="' + ay(0) + '" style="opacity:0"/>');
+    svg.push('<rect id="v7Zona" x="' + ml + '" y="' + mt + '" width="' + (W - ml - mr) + '" height="' + (ay(0) - mt) +
+      '" fill="transparent"/>');
+    svg.push("</svg>");
+    return { html: svg.join(""), ax: ax, W: W };
+  }
+
+  function v7() {
+    var E = DATOS.escalamiento;
+    if (!E || !E.barrido || !E.barrido.length) return;
+    var sec = $("#escalamiento");
+    sec.hidden = false;
+    var lotes = [];
+    E.barrido.forEach(function (b) { if (lotes.indexOf(b.lote) < 0) lotes.push(b.lote); });
+    lotes.sort(function (a, b) { return a - b; });
+
+    $("#v7Modelo").textContent = E.meta.modelo;
+    if ($("#v7ModeloEn")) $("#v7ModeloEn").textContent = E.meta.modelo;
+
+    /* --- tiles --- */
+    var vol = E.volumen || {};
+    var OBJETIVO = 20000;
+    var tpr = {}, usd = {};
+    SERIES.forEach(function (s) {
+      var v = vol[s.k];
+      var celdas = E.barrido.filter(function (b) { return b.formato === s.k && b.aprovechamiento === 100; });
+      tpr[s.k] = v ? v.tokens_por_registro : (celdas.length ? celdas[celdas.length - 1].tokens_por_registro : 0);
+      // costo normalizado a OBJETIVO registros con las tasas medidas: comparable aunque una corrida sea parcial
+      usd[s.k] = v && E.precios ? (OBJETIVO * v.tokens_por_registro / 1e6) * (E.precios.salida || 0) +
+                                  (OBJETIVO * (v.entrada_por_registro || 0) / 1e6) * (E.precios.entrada || 0) : null;
+    });
+    var ahorro = tpr.json ? Math.round(100 * (1 - tpr.mini / tpr.json)) : 0;
+    var q = E.quiebre || {};
+    var tiles = [
+      '<div class="v7-tile"><div class="et">' + T.v7Tiles.tokens + '</div><div class="dato">' +
+        '<span class="mini">' + num(tpr.mini, 1) + '</span> · <span class="json">' + num(tpr.json, 1) + '</span></div>' +
+        '<div class="pie">.mini · JSON</div></div>',
+      '<div class="v7-tile"><div class="et">' + T.v7Tiles.ahorro.toUpperCase() + '</div><div class="dato">' + ahorro +
+        ' %</div><div class="pie">' + (ES ? "en tokens de salida por registro" : "of output tokens per record") + '</div></div>',
+      '<div class="v7-tile"><div class="et">' + T.v7Tiles.lote + '</div><div class="dato">' +
+        '<span class="mini">' + ((q.mini || {}).maximo_sin_perdida || "—") + '</span> · <span class="json">' +
+        ((q.json || {}).maximo_sin_perdida || "—") + '</span></div><div class="pie">' + T.v7Tiles.corte + '</div></div>'
+    ];
+    if (usd.mini !== null && usd.json !== null) {
+      tiles.push('<div class="v7-tile"><div class="et">' + T.v7Tiles.volumen + '</div><div class="dato">' +
+        '<span class="mini">' + num(usd.mini, 2) + '</span> · <span class="json">' + num(usd.json, 2) +
+        '</span></div><div class="pie">USD · ' + T.v7Tiles.estimado + '</div></div>');
+    }
+    if (E.real && E.real.consumido_usd !== undefined) {
+      tiles.push('<div class="v7-tile"><div class="et">' + T.v7Tiles.real + '</div><div class="dato">' +
+        num(E.real.consumido_usd, 2) + ' USD</div><div class="pie">' + T.v7Tiles.realPie + " " +
+        num(E.real.registros_procesados) + " " + (ES ? "registros; estimado " : "records; estimated ") +
+        num(E.real.estimado_con_precios_publicados_usd, 2) + " USD</div></div>");
+    }
+    $("#v7Tiles").innerHTML = tiles.join("");
+
+    /* --- leyenda y gráfico --- */
+    $("#v7Leyenda").innerHTML = SERIES.map(function (s) {
+      var muestra = s.trazo
+        ? '<i style="background:repeating-linear-gradient(90deg,' + s.color + ' 0 4px,transparent 4px 7px);height:3px;border-radius:0"></i>'
+        : '<i style="background:' + s.color + ';height:3px;border-radius:0"></i>';
+      return "<span>" + muestra + s.nombre + "</span>";
+    }).join("") + '<span>' + T.v7Quiebre(q) + "</span>";
+    var g = v7Grafico(E.barrido, lotes);
+    var lienzo = $("#v7Lienzo");
+    lienzo.innerHTML = g.html + '<div class="v7-globo" id="v7Globo"></div>';
+    var zona = document.getElementById("v7Zona"), cursor = document.getElementById("v7Cursor"),
+        globo = document.getElementById("v7Globo"), svgEl = lienzo.querySelector("svg");
+    function mover(ev) {
+      var caja = svgEl.getBoundingClientRect();
+      var x = (ev.clientX - caja.left) * g.W / caja.width;
+      var i = 0, mejor = Infinity;
+      lotes.forEach(function (L, k) { var d = Math.abs(g.ax(k) - x); if (d < mejor) { mejor = d; i = k; } });
+      cursor.setAttribute("x1", g.ax(i)); cursor.setAttribute("x2", g.ax(i));
+      cursor.style.opacity = 1;
+      var L = lotes[i];
+      var filas = SERIES.map(function (s) {
+        var c = E.barrido.filter(function (b) { return b.formato === s.k && b.lote === L; })[0];
+        if (!c) return "";
+        return "<b>" + s.nombre + "</b> " + num(c.aprovechamiento, 1) + " % · " + num(c.tokens_por_registro, 1) +
+          (ES ? " tok/reg" : " tok/rec") + (c.cortadas ? (ES ? " · cortada" : " · cut") : "");
+      }).join("<br>");
+      globo.innerHTML = "<b>" + L + (ES ? " registros por llamada" : " records per call") + "</b><br>" + filas;
+      globo.style.opacity = 1;
+      var px = g.ax(i) * caja.width / g.W;
+      globo.style.left = Math.min(Math.max(px - globo.offsetWidth / 2, 0), caja.width - globo.offsetWidth) + "px";
+      globo.style.top = "6px";
+    }
+    zona.addEventListener("mousemove", mover);
+    zona.addEventListener("mouseleave", function () { globo.style.opacity = 0; cursor.style.opacity = 0; });
+
+    /* --- tabla del barrido --- */
+    var th = T.v7Cab.map(function (h) { return "<th>" + h + "</th>"; }).join("");
+    var tr = lotes.map(function (L) {
+      return SERIES.map(function (s) {
+        var c = E.barrido.filter(function (b) { return b.formato === s.k && b.lote === L; })[0];
+        if (!c) return "";
+        var clase = c.aprovechamiento === 100 ? "p p-baja" : "p p-alta";
+        return "<tr><td>" + L + "</td><td>" + s.nombre + "</td><td>" + c.llamadas + "</td><td>" +
+          num(c.tokens_por_registro, 1) + '</td><td><span class="' + clase + '">' + num(c.aprovechamiento, 1) +
+          " %</span></td><td>" + c.cortadas + "/" + c.llamadas + "</td></tr>";
+      }).join("");
+    }).join("");
+    $("#v7Tabla").innerHTML = "<table><thead><tr>" + th + "</tr></thead><tbody>" + tr + "</tbody></table>";
+
+    /* --- volumen procesado --- */
+    if (Object.keys(vol).length) {
+      var vth = T.v7VolCab.map(function (h) { return "<th>" + h + "</th>"; }).join("");
+      var vtr = SERIES.map(function (s) {
+        var v = vol[s.k];
+        if (!v) return "";
+        var clase = v.aprovechados === v.registros ? "p p-baja" : "p p-alta";
+        return "<tr><td>" + s.nombre + "</td><td>" + v.lote + "</td><td>" + num(v.llamadas) + "</td><td>" +
+          num(v.registros) + '</td><td><span class="' + clase + '">' + num(v.aprovechados) + "</span></td><td>" +
+          num(v.tokens_salida) + "</td><td>" + num(v.tokens_por_registro, 1) + "</td><td>" +
+          num(v.usd_estimado, 3) + " USD</td></tr>";
+      }).join("");
+      $("#v7Volumen").innerHTML = "<h3 style=\"font-size:.95rem;margin:0 0 .5rem\">" + T.v7Volumen +
+        "</h3><table><thead><tr>" + vth + "</tr></thead><tbody>" + vtr + "</tbody></table>";
+    }
+    $("#v7Metodo").innerHTML = esc(T.v7Metodo(E.meta, E.precios)).replace(
+      "experiments/v7_escalamiento",
+      '<a href="https://github.com/LiveLinDev/mini-format/tree/main/experiments/v7_escalamiento">experiments/v7_escalamiento</a>');
+  }
+
   $("#promptMini").textContent = ES ? DATOS.prompt.es : DATOS.prompt.en;
   $("#promptJson").textContent = DATOS.esquema;
   $("#mensajes").innerHTML = DATOS.mensajes.map(function (m) {
     return "<div><b>" + esc(m.id) + "</b>" + esc(m.mensaje) + "</div>";
   }).join("");
   tablaReal();
+  v7();
   modo();
 })();
 </script>

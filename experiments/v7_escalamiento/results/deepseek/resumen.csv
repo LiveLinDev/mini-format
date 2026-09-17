@@ -1,0 +1,3 @@
+formato,llamadas,registros,tokens_salida_por_registro,tokens_entrada_por_registro,usd_por_20000_registros_salida,usd_por_20000_registros_total,lote_maximo_sin_perdida
+json,24,3705,63.52,34.37,1.5246,1.7308,100
+mini,24,3705,23.26,30.04,0.5582,0.7385,300

@@ -37,6 +37,7 @@ on:
       - "ts/README.md"
       - "ts/README.en.md"
       - "experiments/README.md"
+      - "experiments/v7_escalamiento/**"
       - "experiments/README.en.md"
       - ".github/workflows/sitio.yml"
   workflow_dispatch:

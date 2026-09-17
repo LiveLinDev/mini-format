@@ -1,0 +1,17 @@
+formato,lote,llamadas,registros_solicitados,registros_completos,registros_aprovechados,aprovechamiento_pct,llamadas_cortadas,tokens_salida_mediana,tokens_por_registro,ms_mediana,lecturas
+json,10,3,30,30,30,100.0,0,638,63.8,2465,ok
+json,25,3,75,75,75,100.0,0,1593,63.72,5009,ok
+json,50,3,150,150,150,100.0,0,3161,63.22,8621,ok
+json,100,3,300,300,300,100.0,0,6339,63.39,16101,ok
+json,150,3,450,391,0,0.0,3,8192,54.61,20081,json ilegible (Unterminated string starting at)
+json,200,3,600,393,0,0.0,3,8192,40.96,20286,json ilegible (Unterminated string starting at)
+json,300,3,900,405,0,0.0,3,8192,27.31,20388,json ilegible (Expecting property name enclosed in double quotes);json ilegible (Unterminated string starting at)
+json,400,3,1200,387,0,0.0,3,8192,20.48,21527,json ilegible (Unterminated string starting at)
+mini,10,3,30,30,30,100.0,0,239,23.9,1950,ok
+mini,25,3,75,75,75,100.0,0,587,23.48,2517,ok
+mini,50,3,150,150,150,100.0,0,1155,23.1,3996,ok
+mini,100,3,300,300,300,100.0,0,2302,23.02,6590,ok
+mini,150,3,450,450,450,100.0,0,3482,23.21,9505,ok
+mini,200,3,600,600,600,100.0,0,4664,23.32,12471,ok
+mini,300,3,900,841,840,93.3,2,8192,27.31,21351,ok;parcial
+mini,400,3,1200,1061,1061,88.4,3,8192,20.48,20941,parcial

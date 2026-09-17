@@ -54,7 +54,8 @@ def source_link(rel: str) -> str:
     if len(parts) > 1 and parts[0] not in ALLOW_ROOTS:
         return SOURCE_ZIP
     if parts and parts[0] == "experiments":
-        permitted = {"README.md", "README.en.md", "comun.py", "v1_tokens", "v4_costos", "v5_ancho"}
+        permitted = {"README.md", "README.en.md", "comun.py", "v1_tokens", "v4_costos", "v5_ancho",
+                     "v7_escalamiento"}
         if len(parts) < 2 or parts[1] not in permitted:
             return SOURCE_ZIP
     if path.is_file() and path.suffix not in ALLOW_SUFFIX and path.name != "LICENSE":

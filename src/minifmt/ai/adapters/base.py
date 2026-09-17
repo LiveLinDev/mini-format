@@ -27,7 +27,7 @@ import time
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Mapping, Optional
 
-KEY_ENV_VARS = ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY")
+KEY_ENV_VARS = ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "DEEPSEEK_API_KEY")
 SENSITIVE_HEADERS = {"authorization", "x-api-key", "api-key", "proxy-authorization", "cookie"}
 _KEY_PATTERNS = [
     re.compile(r"sk-[A-Za-z0-9_\-]{8,}"),
