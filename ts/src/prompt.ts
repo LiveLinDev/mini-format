@@ -18,8 +18,8 @@ function fieldDoc(f: Field, sep: string, lang: string): string {
     const it = f.item !== 'enum' ? f.item : '{' + (f.item_values || []).join('|') + '}';
     let rng = '';
     if (f.min !== null || f.max !== null) {
-      const lo = Math.trunc(f.min || 0);
-      const hi = f.max ? String(Math.trunc(f.max)) : '∞';
+      const lo = Math.trunc(Number(f.min || 0));
+      const hi = f.max ? String(Math.trunc(Number(f.max))) : '∞';
       rng = es ? `, entre ${lo} y ${hi} elementos` : `, ${lo} to ${hi} elements`;
     }
     let base = es ? `${f.name}: lista de ${it} separada por '${sep}'${rng}` : `${f.name}: '${sep}'-separated list of ${it}${rng}`;

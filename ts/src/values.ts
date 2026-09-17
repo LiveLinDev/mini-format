@@ -78,8 +78,8 @@ function checkRange(v: number | string, f: Field, lineno: number, name: string):
     return;
   }
   // int/float se comparan numéricamente; las fechas AAAA-MM-DD como cadenas
-  if (f.min !== null && v < f.min) throw new MiniError(E_RANGE, lineno, `${v} < min ${f.min}`, name);
-  if (f.max !== null && v > f.max) throw new MiniError(E_RANGE, lineno, `${v} > max ${f.max}`, name);
+  if (f.min !== null && (v as number) < (f.min as number)) throw new MiniError(E_RANGE, lineno, `${v} < min ${f.min}`, name);
+  if (f.max !== null && (v as number) > (f.max as number)) throw new MiniError(E_RANGE, lineno, `${v} > max ${f.max}`, name);
 }
 
 /**
