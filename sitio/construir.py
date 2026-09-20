@@ -149,7 +149,8 @@ def cabecera(activo: str = "") -> str:
                    a("docs/errors", "Errores", "Errors"),
                    a("docs/forks", "Familias", "Families"),
                    a("playground", "Playground", "Playground"),
-                   a("mesa-de-ayuda", "Demo", "Demo")])
+                   a("mesa-de-ayuda", "Demo", "Demo"),
+                   a("ejemplo", "Ejemplo", "Example")])
     return f'''<a class="skip" href="#contenido">{ambos("Saltar al contenido", "Skip to content")}</a>
 <header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
@@ -881,6 +882,28 @@ def construir_mesa() -> None:
              f"{sum(v['registros'] for v in esc['volumen'].values()):,} registros" if esc else ", sin datos de V7"))
 
 
+def construir_ejemplo() -> None:
+    """Página /ejemplo/: el mismo lote de tickets en .mini y en JSON, con tokens y corte simulado."""
+    sys.path.insert(0, str(SITIO))
+    from ejemplo_lote import datos_ejemplo
+    datos = datos_ejemplo()
+    pagina = (RAIZ / "examples" / "ejemplo-lote" / "plantilla.html").read_text(encoding="utf-8")
+    safe = lambda js: js.replace("</script", "<\/script")
+    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+                         ("__CABECERA__", cabecera("ejemplo")),
+                         ("__PIE__", pie()),
+                         ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
+        if marca not in pagina:
+            raise SystemExit(f"plantilla del ejemplo: falta la marca {marca}")
+        pagina = pagina.replace(marca, valor, 1)
+    destino = SITIO / "ejemplo" / "index.html"
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(pagina, encoding="utf-8")
+    grande = datos["lotes"][-1]
+    print(f"  ejemplo a escala: lotes de {', '.join(str(l['n']) for l in datos['lotes'])} registros; "
+          f"{grande['n']} registros = {grande['tokens']['mini']} tokens en .mini y {grande['tokens']['json']} en JSON")
+
+
 def sellar() -> None:
     """version.json: qué commit construyó lo publicado (GITHUB_SHA en CI, 'local' fuera)."""
     import os
@@ -896,6 +919,7 @@ if __name__ == "__main__":
     print(f"  docs: {n} páginas")
     construir_playground()
     construir_mesa()
+    construir_ejemplo()
     from publicar import prepare_public_site
     prepare_public_site(TRADUCCIONES)
     import subprocess

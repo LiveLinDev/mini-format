@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es" data-title-es="Ejemplo a escala — mini-format" data-title-en="Example at scale — mini-format">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ejemplo a escala — mini-format</title>
+__CABEZA__
+<style>
+  .ej { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
+  .ej-intro { max-width: 58rem; }
+  .ej-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
+  .ej-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .ej-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  .ej-mandos { display: flex; flex-wrap: wrap; gap: 1.1rem 1.8rem; align-items: flex-end; margin: 1.9rem 0 1.4rem;
+               padding: 1.1rem 1.2rem; border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); background: rgb(var(--subtle)); }
+  .ej-mandos .grupo { display: grid; gap: .4rem; }
+  .ej-mandos .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; }
+
+  .ej-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 1rem; margin: 0 0 1.6rem; }
+  .ej-cifra { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: .9rem 1rem; background: rgb(var(--raised)); }
+  .ej-cifra .v { font-family: var(--f-mono); font-size: 1.5rem; font-weight: 700; display: block; line-height: 1.2; }
+  .ej-cifra .k { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .ej-cifra.destaca { border-color: rgb(var(--accent) / .5); }
+  .ej-cifra.destaca .v { color: rgb(var(--accent)); }
+
+  .ej-columnas { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1.2rem; margin-bottom: 1.8rem; }
+  .ej-panel { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); overflow: hidden; background: rgb(var(--raised)); }
+  .ej-panel header { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem;
+                     padding: .75rem 1rem; border-bottom: 1px solid rgb(var(--line)); }
+  .ej-panel h2 { margin: 0; font-size: var(--fs-cap); text-transform: uppercase; letter-spacing: .06em; }
+  .ej-panel .tok { font-family: var(--f-mono); font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .ej-panel pre { margin: 0; padding: .85rem 1rem; overflow-x: auto; font-size: .78rem; line-height: 1.55; max-height: 21rem; }
+  .ej-panel .mas { margin: 0; padding: .55rem 1rem .8rem; font-size: var(--fs-fine); color: rgb(var(--fg-faint)); }
+
+  .ej-corte { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: 1.1rem 1.2rem; background: rgb(var(--subtle)); margin-bottom: 1.6rem; }
+  .ej-corte h2 { margin: 0 0 .3rem; font-size: var(--fs-h6); }
+  .ej-corte .sub { margin: 0 0 1rem; color: rgb(var(--fg-muted)); font-size: var(--fs-cap); }
+  .ej-corte .pares { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+  .ej-res { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .85rem 1rem; background: rgb(var(--raised)); }
+  .ej-res .fmt { font-family: var(--f-mono); font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .ej-res .n { font-family: var(--f-mono); font-size: 1.6rem; font-weight: 700; display: block; }
+  .ej-res.mal .n { color: rgb(var(--danger, 220 38 38)); }
+  .ej-res.bien .n { color: rgb(var(--ok, 16 122 87)); }
+  .ej-res p { margin: .3rem 0 0; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .ej-nota { font-size: var(--fs-cap); color: rgb(var(--fg-faint)); max-width: 58rem; }
+  .ej-nota code { font-size: .78rem; }
+</style>
+</head>
+<body>
+__CABECERA__
+<main id="contenido" class="wrap ej">
+  <section class="ej-intro">
+    <p class="eyebrow"><span data-lang="es">Ejemplo a escala</span><span data-lang="en" hidden>Example at scale</span></p>
+    <h1><span data-lang="es">El mismo lote de tickets, en los dos formatos</span><span data-lang="en" hidden>The same batch of tickets, in both formats</span></h1>
+    <p class="lead">
+      <span data-lang="es">Un lote de tickets de soporte, generado con el mismo generador del experimento de escalamiento.
+        Elige cuántos registros quieres ver y compara el documento en <code>.mini</code> y en JSON: tokens, ahorro y qué
+        queda utilizable si el modelo corta la respuesta al llegar a su límite. Todo se calculó al publicar el sitio con el
+        tokenizador o200k_base; no se llama a ningún modelo.</span>
+      <span data-lang="en" hidden>A batch of support tickets, produced by the same generator used in the scaling experiment.
+        Choose how many records to see and compare the document in <code>.mini</code> and in JSON: tokens, savings and what
+        remains usable if the model truncates its answer at the output limit. Everything was computed when the site was
+        published, with the o200k_base tokenizer; no model is called.</span>
+    </p>
+  </section>
+
+  <div class="ej-mandos">
+    <div class="grupo">
+      <span class="et"><span data-lang="es">Registros del lote</span><span data-lang="en" hidden>Records in the batch</span></span>
+      <div class="seg" role="group" id="sel-n"></div>
+    </div>
+    <div class="grupo">
+      <span class="et"><span data-lang="es">Límite de salida del modelo</span><span data-lang="en" hidden>Model output limit</span></span>
+      <div class="seg" role="group" id="sel-limite"></div>
+    </div>
+  </div>
+
+  <div class="ej-cifras" id="cifras"></div>
+
+  <div class="ej-columnas">
+    <article class="ej-panel">
+      <header><h2>.mini</h2><span class="tok" id="tok-mini"></span></header>
+      <pre id="txt-mini"></pre>
+      <p class="mas" id="mas-mini"></p>
+    </article>
+    <article class="ej-panel">
+      <header><h2>JSON</h2><span class="tok" id="tok-json"></span></header>
+      <pre id="txt-json"></pre>
+      <p class="mas" id="mas-json"></p>
+    </article>
+  </div>
+
+  <section class="ej-corte">
+    <h2 id="corte-titulo"></h2>
+    <p class="sub" id="corte-sub"></p>
+    <div class="pares" id="corte-pares"></div>
+  </section>
+
+  <p class="ej-nota" id="nota"></p>
+</main>
+__PIE__
+<script>
+const DATOS = __DATOS__;
+(function () {
+  const es = () => document.documentElement.lang !== "en";
+  const T = {
+    tokensMini: ["Tokens en .mini", "Tokens in .mini"],
+    tokensJson: ["Tokens en JSON compacto", "Tokens in compact JSON"],
+    tokensJsonInd: ["Tokens en JSON indentado", "Tokens in indented JSON"],
+    ahorro: ["menos con .mini que en JSON compacto", "fewer with .mini than compact JSON"],
+    porRegistro: ["Tokens por registro (.mini · JSON)", "Tokens per record (.mini · JSON)"],
+    mas: (n) => es() ? "… y " + n.toLocaleString("es") + " registros más en el documento completo."
+                     : "… and " + n.toLocaleString("en") + " more records in the full document.",
+    corteTitulo: (l) => es() ? "Si el modelo corta la respuesta en " + l.toLocaleString("es") + " tokens"
+                             : "If the model truncates the answer at " + l.toLocaleString("en") + " tokens",
+    compacto: ["tokens compacto", "tokens compact"],
+    indentado: ["indentado", "indented"],
+    indentadaNota: ["La muestra está indentada, como suele escribirla el modelo; el conteo compacto es el mínimo posible.",
+                    "The sample is indented, the way models usually write it; the compact count is the best case."],
+    corteSub: ["Registros que llegan completos y registros que la aplicación puede usar sin volver a pedirlos.",
+               "Records that arrive complete and records the application can use without asking again."],
+    cabe: ["La respuesta cabe entera dentro del límite.", "The whole answer fits within the limit."],
+    completos: ["completos recibidos", "complete records received"],
+    aprovechables: ["utilizables", "usable"],
+    miniOk: ["Cada línea es un registro: las completas se conservan y las que falten se piden aparte.",
+             "Each line is a record: complete ones are kept and the missing ones are requested separately."],
+    jsonMal: ["El documento queda sin cerrar: json.loads falla y se pierde el lote entero.",
+              "The document is left unclosed: json.loads fails and the whole batch is lost."],
+    nota: (d, l) => (es()
+      ? "Lote generado con el generador combinatorio del experimento V7 (semilla " + d.semilla + ", " +
+        d.combinaciones.toLocaleString("es") + " mensajes distintos posibles). Tokens contados con " + d.tokenizador +
+        ". Contrato tk con los campos " + d.campos.join(", ") + ", generado desde el mismo JSON Schema de la demostración."
+      : "Batch produced by the combinatorial generator of experiment V7 (seed " + d.semilla + ", " +
+        d.combinaciones.toLocaleString("en") + " distinct possible messages). Tokens counted with " + d.tokenizador +
+        ". Contract tk with fields " + d.campos.join(", ") + ", generated from the same JSON Schema as the demo."),
+  };
+  const t = (k) => Array.isArray(T[k]) ? T[k][es() ? 0 : 1] : T[k];
+  const num = (v) => v.toLocaleString(es() ? "es" : "en");
+
+  let n = DATOS.tamanos[1], limite = DATOS.limites[1];
+  const lote = () => DATOS.lotes.find((l) => l.n === n);
+
+  function segmentado(id, valores, actual, alCambiar) {
+    const cont = document.getElementById(id);
+    cont.innerHTML = "";
+    valores.forEach((v) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = num(v);
+      b.setAttribute("aria-pressed", String(v === actual));
+      b.addEventListener("click", () => { alCambiar(v); pintar(); });
+      cont.appendChild(b);
+    });
+  }
+
+  function cifra(valor, clave, destaca) {
+    return '<div class="ej-cifra' + (destaca ? " destaca" : "") + '"><span class="v">' + valor +
+           '</span><span class="k">' + clave + "</span></div>";
+  }
+
+  function pintar() {
+    const l = lote();
+    segmentado("sel-n", DATOS.tamanos, n, (v) => { n = v; });
+    segmentado("sel-limite", DATOS.limites, limite, (v) => { limite = v; });
+
+    document.getElementById("cifras").innerHTML =
+      cifra(num(l.tokens.mini), t("tokensMini")) +
+      cifra(num(l.tokens.json), t("tokensJson")) +
+      cifra(num(l.tokens.json_indentado), t("tokensJsonInd")) +
+      cifra(l.ahorro.json + " %", t("ahorro"), true) +
+      cifra(l.por_registro.mini + " · " + l.por_registro.json, t("porRegistro"));
+
+    document.getElementById("txt-mini").textContent = l.muestra.mini;
+    document.getElementById("txt-json").textContent = l.muestra.json;
+    document.getElementById("tok-mini").textContent = num(l.tokens.mini) + " tokens";
+    document.getElementById("tok-json").textContent = num(l.tokens.json) + " " + t("compacto") + " · " +
+      num(l.tokens.json_indentado) + " " + t("indentado");
+    const restantes = l.n - DATOS.muestra;
+    document.getElementById("mas-mini").textContent = T.mas(restantes);
+    document.getElementById("mas-json").textContent = T.mas(restantes) + " " + t("indentadaNota");
+
+    const corte = l.cortes.find((c) => c.limite === limite);
+    document.getElementById("corte-titulo").textContent = T.corteTitulo(limite);
+    document.getElementById("corte-sub").textContent = t("corteSub");
+    document.getElementById("corte-pares").innerHTML = ["mini", "json"].map((f) => {
+      const r = corte[f];
+      const clase = r.aprovechables > 0 ? "bien" : "mal";
+      const detalle = r.cabe ? t("cabe") : (f === "mini" ? t("miniOk") : t("jsonMal"));
+      return '<div class="ej-res ' + clase + '"><span class="fmt">' + (f === "mini" ? ".mini" : "JSON") + '</span>' +
+             '<span class="n">' + num(r.aprovechables) + " / " + num(l.n) + "</span>" +
+             "<p>" + num(r.completos) + " " + t("completos") + " · " + num(r.aprovechables) + " " +
+             t("aprovechables") + ". " + detalle + "</p></div>";
+    }).join("");
+
+    document.getElementById("nota").textContent = T.nota(DATOS, limite);
+  }
+
+  pintar();
+  document.addEventListener("minilang", pintar);
+  new MutationObserver(pintar).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+})();
+</script>
+</body>
+</html>

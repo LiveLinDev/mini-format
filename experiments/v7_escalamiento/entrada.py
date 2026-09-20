@@ -88,7 +88,11 @@ def mulberry32(semilla: int):
 
 
 def mensajes(n: int, desde: int = 1, semilla: int = SEMILLA) -> List[Dict[str, str]]:
-    """n mensajes de clientes con id correlativo; la misma semilla da siempre los mismos textos."""
+    """n mensajes de clientes con id correlativo; la misma semilla da siempre los mismos textos.
+
+    Cada mensaje trae además la categoría del problema y el asunto sin saludo ni cierre, de modo que
+    otras piezas (por ejemplo la página de ejemplo del sitio) puedan derivar un lote coherente.
+    """
     r = mulberry32(semilla + desde)
     out = []
     for i in range(n):
@@ -103,7 +107,8 @@ def mensajes(n: int, desde: int = 1, semilla: int = SEMILLA) -> List[Dict[str, s
         cuerpo = problema.replace("{p}", producto)
         texto = " ".join(x for x in [saludo, cuerpo + (" " + referencia if referencia else "") + ".",
                                      detalle, cierre] if x)
-        out.append({"id": f"T-{desde + i:05d}", "mensaje": texto})
+        out.append({"id": f"T-{desde + i:05d}", "mensaje": texto, "categoria": categoria,
+                    "asunto": cuerpo.replace("{p}", producto)})
     return out
 
 
