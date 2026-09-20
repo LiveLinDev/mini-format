@@ -145,7 +145,14 @@ const DATOS = __DATOS__;
   const usd = (v, d) => v.toLocaleString(es() ? "es" : "en", { minimumFractionDigits: d, maximumFractionDigits: d });
   const parUsd = (a, b) => { const d = Math.max(a, b) < 1 ? 3 : 2; return usd(a, d) + " · " + usd(b, d); };
 
-  let n = DATOS.tamanos[1], limite = DATOS.limites[1];
+  // el tamaño y el límite se pueden fijar desde el enlace: /ejemplo/?n=100000&limite=8192
+  const pedido = new URLSearchParams(location.search);
+  const elegir = (clave, valores, porDefecto) => {
+    const v = Number(pedido.get(clave));
+    return valores.includes(v) ? v : porDefecto;
+  };
+  let n = elegir("n", DATOS.tamanos, DATOS.tamanos[3] || DATOS.tamanos[DATOS.tamanos.length - 1]);
+  let limite = elegir("limite", DATOS.limites, DATOS.limites[DATOS.limites.length - 1]);
   const lote = () => DATOS.lotes.find((l) => l.n === n);
 
   function segmentado(id, valores, actual, alCambiar) {
