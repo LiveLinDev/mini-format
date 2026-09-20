@@ -21,8 +21,8 @@ from typing import Any, Dict, List
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "experiments" / "v7_escalamiento"))
 
-TAMANOS = (50, 200, 1000)
-LIMITES = (1000, 2000, 4000)      # límites de tokens de salida que se simulan
+TAMANOS = (200, 1000, 5000, 20000, 100000)
+LIMITES = (2000, 4096, 8192)       # límites de salida habituales de los modelos
 PRIORIDADES = ("alta", "media", "baja")
 MUESTRA = 8                        # registros que se muestran en pantalla
 
@@ -71,12 +71,13 @@ def _legible_json(texto: str) -> bool:
         return False
 
 
-def datos_ejemplo() -> Dict[str, Any]:
+def datos_ejemplo(precios: Dict[str, Any] | None = None) -> Dict[str, Any]:
     import entrada
     from minifmt import dumps, from_json_schema
     from minifmt.tokens import get_tokenizer
 
     tk = get_tokenizer("o200k_base")
+    precio = (precios or {}).get("groq") or {"salida": 0.3, "modelo_precio": "GPT OSS 20B", "fecha": "2026-09-15"}
     esquema = json.loads((RAIZ / "examples" / "mesa-de-ayuda" / "ticket.schema.json").read_text(encoding="utf-8"))
     contrato = from_json_schema(esquema, "tk")
 
@@ -115,6 +116,7 @@ def datos_ejemplo() -> Dict[str, Any]:
             "bytes": {k: len(v.encode("utf-8")) for k, v in textos.items()},
             "por_registro": {k: round(v / n, 1) for k, v in tokens.items()},
             "ahorro": {k: round(100 * (tokens[k] - tokens["mini"]) / tokens[k], 1) for k in ("json", "json_indentado")},
+            "costo": {k: round(v * precio["salida"] / 1_000_000, 4) for k, v in tokens.items()},
             "muestra": {
                 "mini": "\n".join(lineas_mini[:MUESTRA + 1]),
                 "json": json.dumps({"tickets": tickets[:MUESTRA]}, ensure_ascii=False, indent=2),
@@ -123,6 +125,7 @@ def datos_ejemplo() -> Dict[str, Any]:
         })
 
     return {"lotes": lotes, "tamanos": list(TAMANOS), "limites": list(LIMITES), "muestra": MUESTRA,
+            "precio": precio,
             "semilla": entrada.SEMILLA, "entrada": entrada.ENTRADA_VERSION,
             "combinaciones": entrada.combinaciones(), "contrato": contrato.to_dict(),
             "campos": [f.name for f in contrato.fields], "tokenizador": "o200k_base"}
@@ -139,8 +142,12 @@ def datos_publicados() -> Dict[str, Any]:
 
 
 def _prefijo(texto: str, limite: int, tk) -> str:
-    """El trozo más largo del texto que cabe en el límite de tokens (búsqueda binaria, sin decodificar)."""
-    bajo, alto = 0, len(texto)
+    """El trozo más largo del texto que cabe en el límite de tokens (búsqueda binaria, sin decodificar).
+
+    La búsqueda se acota a los primeros caracteres que podrían contener esos tokens, para que el costo
+    no dependa del tamaño del lote (un token nunca ocupa más de doce caracteres en estos documentos).
+    """
+    bajo, alto = 0, min(len(texto), limite * 12)
     while bajo < alto:
         medio = (bajo + alto + 1) // 2
         if tk.count(texto[:medio]) <= limite:
@@ -152,6 +159,8 @@ def _prefijo(texto: str, limite: int, tk) -> str:
 
 if __name__ == "__main__":
     ARCHIVO.parent.mkdir(parents=True, exist_ok=True)
-    datos = datos_ejemplo()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from construir import precios_proveedores
+    datos = datos_ejemplo(precios_proveedores())
     ARCHIVO.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"escrito {ARCHIVO} · lotes de {', '.join(str(l['n']) for l in datos['lotes'])} registros")

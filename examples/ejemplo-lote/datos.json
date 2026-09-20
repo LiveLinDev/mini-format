@@ -1,73 +1,6 @@
 {
  "lotes": [
   {
-   "n": 50,
-   "tokens": {
-    "mini": 1287,
-    "json": 1937,
-    "json_indentado": 2887
-   },
-   "bytes": {
-    "mini": 4301,
-    "json": 7157,
-    "json_indentado": 9665
-   },
-   "por_registro": {
-    "mini": 25.7,
-    "json": 38.7,
-    "json_indentado": 57.7
-   },
-   "ahorro": {
-    "json": 33.6,
-    "json_indentado": 55.4
-   },
-   "muestra": {
-    "mini": "tk|n=50\nT-00001|alta|pago|La transferencia no se refleja en la facturación electrónica|5\nT-00002|baja|pago|El pago con tarjeta fue rechazado sin motivo en el portal web|1\nT-00003|alta|consulta|Quiero saber si la agenda de citas permite varios usuarios a la vez|2\nT-00004|media|acceso|El acceso con Google dejó de funcionar en el inicio de sesión único|5\nT-00005|alta|acceso|No me llega el código de verificación al usar la aplicación móvil|6\nT-00006|alta|error|La pantalla queda en blanco al abrir la agenda de citas|7\nT-00007|alta|error|La app de escritorio ignora las palabras con tilde al buscar|7\nT-00008|alta|error|La firma digital ignora las palabras con tilde al buscar|6",
-    "json": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-00001\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"La transferencia no se refleja en la facturación electrónica\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00002\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"El pago con tarjeta fue rechazado sin motivo en el portal web\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-00003\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Quiero saber si la agenda de citas permite varios usuarios a la vez\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-00004\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"El acceso con Google dejó de funcionar en el inicio de sesión único\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00005\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No me llega el código de verificación al usar la aplicación móvil\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-00006\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La pantalla queda en blanco al abrir la agenda de citas\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00007\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La app de escritorio ignora las palabras con tilde al buscar\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00008\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La firma digital ignora las palabras con tilde al buscar\",\n      \"horas\": 6\n    }\n  ]\n}"
-   },
-   "cortes": [
-    {
-     "limite": 1000,
-     "mini": {
-      "cabe": false,
-      "completos": 38,
-      "aprovechables": 38
-     },
-     "json": {
-      "cabe": false,
-      "completos": 26,
-      "aprovechables": 0
-     }
-    },
-    {
-     "limite": 2000,
-     "mini": {
-      "cabe": true,
-      "completos": 50,
-      "aprovechables": 50
-     },
-     "json": {
-      "cabe": true,
-      "completos": 50,
-      "aprovechables": 50
-     }
-    },
-    {
-     "limite": 4000,
-     "mini": {
-      "cabe": true,
-      "completos": 50,
-      "aprovechables": 50
-     },
-     "json": {
-      "cabe": true,
-      "completos": 50,
-      "aprovechables": 50
-     }
-    }
-   ]
-  },
-  {
    "n": 200,
    "tokens": {
     "mini": 5181,
@@ -88,24 +21,16 @@
     "json": 33.4,
     "json_indentado": 55.2
    },
+   "costo": {
+    "mini": 0.0016,
+    "json": 0.0023,
+    "json_indentado": 0.0035
+   },
    "muestra": {
     "mini": "tk|n=200\nT-00001|alta|pago|La transferencia no se refleja en la facturación electrónica|5\nT-00002|baja|pago|El pago con tarjeta fue rechazado sin motivo en el portal web|1\nT-00003|alta|consulta|Quiero saber si la agenda de citas permite varios usuarios a la vez|2\nT-00004|media|acceso|El acceso con Google dejó de funcionar en el inicio de sesión único|5\nT-00005|alta|acceso|No me llega el código de verificación al usar la aplicación móvil|6\nT-00006|alta|error|La pantalla queda en blanco al abrir la agenda de citas|7\nT-00007|alta|error|La app de escritorio ignora las palabras con tilde al buscar|7\nT-00008|alta|error|La firma digital ignora las palabras con tilde al buscar|6",
     "json": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-00001\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"La transferencia no se refleja en la facturación electrónica\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00002\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"El pago con tarjeta fue rechazado sin motivo en el portal web\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-00003\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Quiero saber si la agenda de citas permite varios usuarios a la vez\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-00004\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"El acceso con Google dejó de funcionar en el inicio de sesión único\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00005\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No me llega el código de verificación al usar la aplicación móvil\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-00006\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La pantalla queda en blanco al abrir la agenda de citas\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00007\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La app de escritorio ignora las palabras con tilde al buscar\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00008\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La firma digital ignora las palabras con tilde al buscar\",\n      \"horas\": 6\n    }\n  ]\n}"
    },
    "cortes": [
-    {
-     "limite": 1000,
-     "mini": {
-      "cabe": false,
-      "completos": 38,
-      "aprovechables": 38
-     },
-     "json": {
-      "cabe": false,
-      "completos": 26,
-      "aprovechables": 0
-     }
-    },
     {
      "limite": 2000,
      "mini": {
@@ -120,16 +45,29 @@
      }
     },
     {
-     "limite": 4000,
+     "limite": 4096,
      "mini": {
       "cabe": false,
-      "completos": 154,
-      "aprovechables": 154
+      "completos": 157,
+      "aprovechables": 157
      },
      "json": {
       "cabe": false,
-      "completos": 103,
+      "completos": 105,
       "aprovechables": 0
+     }
+    },
+    {
+     "limite": 8192,
+     "mini": {
+      "cabe": true,
+      "completos": 200,
+      "aprovechables": 200
+     },
+     "json": {
+      "cabe": true,
+      "completos": 200,
+      "aprovechables": 200
      }
     }
    ]
@@ -155,24 +93,16 @@
     "json": 33.5,
     "json_indentado": 55.3
    },
+   "costo": {
+    "mini": 0.0077,
+    "json": 0.0116,
+    "json_indentado": 0.0173
+   },
    "muestra": {
     "mini": "tk|n=1000\nT-00001|alta|pago|La transferencia no se refleja en la facturación electrónica|5\nT-00002|baja|pago|El pago con tarjeta fue rechazado sin motivo en el portal web|1\nT-00003|alta|consulta|Quiero saber si la agenda de citas permite varios usuarios a la vez|2\nT-00004|media|acceso|El acceso con Google dejó de funcionar en el inicio de sesión único|5\nT-00005|alta|acceso|No me llega el código de verificación al usar la aplicación móvil|6\nT-00006|alta|error|La pantalla queda en blanco al abrir la agenda de citas|7\nT-00007|alta|error|La app de escritorio ignora las palabras con tilde al buscar|7\nT-00008|alta|error|La firma digital ignora las palabras con tilde al buscar|6",
     "json": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-00001\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"La transferencia no se refleja en la facturación electrónica\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00002\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"El pago con tarjeta fue rechazado sin motivo en el portal web\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-00003\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Quiero saber si la agenda de citas permite varios usuarios a la vez\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-00004\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"El acceso con Google dejó de funcionar en el inicio de sesión único\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00005\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No me llega el código de verificación al usar la aplicación móvil\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-00006\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La pantalla queda en blanco al abrir la agenda de citas\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00007\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La app de escritorio ignora las palabras con tilde al buscar\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00008\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La firma digital ignora las palabras con tilde al buscar\",\n      \"horas\": 6\n    }\n  ]\n}"
    },
    "cortes": [
-    {
-     "limite": 1000,
-     "mini": {
-      "cabe": false,
-      "completos": 38,
-      "aprovechables": 38
-     },
-     "json": {
-      "cabe": false,
-      "completos": 26,
-      "aprovechables": 0
-     }
-    },
     {
      "limite": 2000,
      "mini": {
@@ -187,15 +117,244 @@
      }
     },
     {
-     "limite": 4000,
+     "limite": 4096,
      "mini": {
       "cabe": false,
-      "completos": 153,
-      "aprovechables": 153
+      "completos": 157,
+      "aprovechables": 157
      },
      "json": {
       "cabe": false,
-      "completos": 103,
+      "completos": 105,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 8192,
+     "mini": {
+      "cabe": false,
+      "completos": 316,
+      "aprovechables": 316
+     },
+     "json": {
+      "cabe": false,
+      "completos": 210,
+      "aprovechables": 0
+     }
+    }
+   ]
+  },
+  {
+   "n": 5000,
+   "tokens": {
+    "mini": 129188,
+    "json": 194187,
+    "json_indentado": 288846
+   },
+   "bytes": {
+    "mini": 433098,
+    "json": 718102,
+    "json_indentado": 968110
+   },
+   "por_registro": {
+    "mini": 25.8,
+    "json": 38.8,
+    "json_indentado": 57.8
+   },
+   "ahorro": {
+    "json": 33.5,
+    "json_indentado": 55.3
+   },
+   "costo": {
+    "mini": 0.0388,
+    "json": 0.0583,
+    "json_indentado": 0.0867
+   },
+   "muestra": {
+    "mini": "tk|n=5000\nT-00001|alta|pago|La transferencia no se refleja en la facturación electrónica|5\nT-00002|baja|pago|El pago con tarjeta fue rechazado sin motivo en el portal web|1\nT-00003|alta|consulta|Quiero saber si la agenda de citas permite varios usuarios a la vez|2\nT-00004|media|acceso|El acceso con Google dejó de funcionar en el inicio de sesión único|5\nT-00005|alta|acceso|No me llega el código de verificación al usar la aplicación móvil|6\nT-00006|alta|error|La pantalla queda en blanco al abrir la agenda de citas|7\nT-00007|alta|error|La app de escritorio ignora las palabras con tilde al buscar|7\nT-00008|alta|error|La firma digital ignora las palabras con tilde al buscar|6",
+    "json": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-00001\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"La transferencia no se refleja en la facturación electrónica\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00002\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"El pago con tarjeta fue rechazado sin motivo en el portal web\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-00003\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Quiero saber si la agenda de citas permite varios usuarios a la vez\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-00004\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"El acceso con Google dejó de funcionar en el inicio de sesión único\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00005\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No me llega el código de verificación al usar la aplicación móvil\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-00006\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La pantalla queda en blanco al abrir la agenda de citas\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00007\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La app de escritorio ignora las palabras con tilde al buscar\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00008\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La firma digital ignora las palabras con tilde al buscar\",\n      \"horas\": 6\n    }\n  ]\n}"
+   },
+   "cortes": [
+    {
+     "limite": 2000,
+     "mini": {
+      "cabe": false,
+      "completos": 77,
+      "aprovechables": 77
+     },
+     "json": {
+      "cabe": false,
+      "completos": 51,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 4096,
+     "mini": {
+      "cabe": false,
+      "completos": 157,
+      "aprovechables": 157
+     },
+     "json": {
+      "cabe": false,
+      "completos": 105,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 8192,
+     "mini": {
+      "cabe": false,
+      "completos": 316,
+      "aprovechables": 316
+     },
+     "json": {
+      "cabe": false,
+      "completos": 210,
+      "aprovechables": 0
+     }
+    }
+   ]
+  },
+  {
+   "n": 20000,
+   "tokens": {
+    "mini": 516294,
+    "json": 776293,
+    "json_indentado": 1155014
+   },
+   "bytes": {
+    "mini": 1729713,
+    "json": 2869716,
+    "json_indentado": 3869724
+   },
+   "por_registro": {
+    "mini": 25.8,
+    "json": 38.8,
+    "json_indentado": 57.8
+   },
+   "ahorro": {
+    "json": 33.5,
+    "json_indentado": 55.3
+   },
+   "costo": {
+    "mini": 0.1549,
+    "json": 0.2329,
+    "json_indentado": 0.3465
+   },
+   "muestra": {
+    "mini": "tk|n=20000\nT-00001|alta|pago|La transferencia no se refleja en la facturación electrónica|5\nT-00002|baja|pago|El pago con tarjeta fue rechazado sin motivo en el portal web|1\nT-00003|alta|consulta|Quiero saber si la agenda de citas permite varios usuarios a la vez|2\nT-00004|media|acceso|El acceso con Google dejó de funcionar en el inicio de sesión único|5\nT-00005|alta|acceso|No me llega el código de verificación al usar la aplicación móvil|6\nT-00006|alta|error|La pantalla queda en blanco al abrir la agenda de citas|7\nT-00007|alta|error|La app de escritorio ignora las palabras con tilde al buscar|7\nT-00008|alta|error|La firma digital ignora las palabras con tilde al buscar|6",
+    "json": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-00001\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"La transferencia no se refleja en la facturación electrónica\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00002\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"El pago con tarjeta fue rechazado sin motivo en el portal web\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-00003\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Quiero saber si la agenda de citas permite varios usuarios a la vez\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-00004\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"El acceso con Google dejó de funcionar en el inicio de sesión único\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00005\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No me llega el código de verificación al usar la aplicación móvil\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-00006\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La pantalla queda en blanco al abrir la agenda de citas\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00007\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La app de escritorio ignora las palabras con tilde al buscar\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00008\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La firma digital ignora las palabras con tilde al buscar\",\n      \"horas\": 6\n    }\n  ]\n}"
+   },
+   "cortes": [
+    {
+     "limite": 2000,
+     "mini": {
+      "cabe": false,
+      "completos": 77,
+      "aprovechables": 77
+     },
+     "json": {
+      "cabe": false,
+      "completos": 51,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 4096,
+     "mini": {
+      "cabe": false,
+      "completos": 157,
+      "aprovechables": 157
+     },
+     "json": {
+      "cabe": false,
+      "completos": 105,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 8192,
+     "mini": {
+      "cabe": false,
+      "completos": 316,
+      "aprovechables": 316
+     },
+     "json": {
+      "cabe": false,
+      "completos": 210,
+      "aprovechables": 0
+     }
+    }
+   ]
+  },
+  {
+   "n": 100000,
+   "tokens": {
+    "mini": 2580897,
+    "json": 3880896,
+    "json_indentado": 5774359
+   },
+   "bytes": {
+    "mini": 8645271,
+    "json": 14345273,
+    "json_indentado": 19345281
+   },
+   "por_registro": {
+    "mini": 25.8,
+    "json": 38.8,
+    "json_indentado": 57.7
+   },
+   "ahorro": {
+    "json": 33.5,
+    "json_indentado": 55.3
+   },
+   "costo": {
+    "mini": 0.7743,
+    "json": 1.1643,
+    "json_indentado": 1.7323
+   },
+   "muestra": {
+    "mini": "tk|n=100000\nT-00001|alta|pago|La transferencia no se refleja en la facturación electrónica|5\nT-00002|baja|pago|El pago con tarjeta fue rechazado sin motivo en el portal web|1\nT-00003|alta|consulta|Quiero saber si la agenda de citas permite varios usuarios a la vez|2\nT-00004|media|acceso|El acceso con Google dejó de funcionar en el inicio de sesión único|5\nT-00005|alta|acceso|No me llega el código de verificación al usar la aplicación móvil|6\nT-00006|alta|error|La pantalla queda en blanco al abrir la agenda de citas|7\nT-00007|alta|error|La app de escritorio ignora las palabras con tilde al buscar|7\nT-00008|alta|error|La firma digital ignora las palabras con tilde al buscar|6",
+    "json": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-00001\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"La transferencia no se refleja en la facturación electrónica\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00002\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"El pago con tarjeta fue rechazado sin motivo en el portal web\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-00003\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Quiero saber si la agenda de citas permite varios usuarios a la vez\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-00004\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"El acceso con Google dejó de funcionar en el inicio de sesión único\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-00005\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No me llega el código de verificación al usar la aplicación móvil\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-00006\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La pantalla queda en blanco al abrir la agenda de citas\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00007\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La app de escritorio ignora las palabras con tilde al buscar\",\n      \"horas\": 7\n    },\n    {\n      \"id\": \"T-00008\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La firma digital ignora las palabras con tilde al buscar\",\n      \"horas\": 6\n    }\n  ]\n}"
+   },
+   "cortes": [
+    {
+     "limite": 2000,
+     "mini": {
+      "cabe": false,
+      "completos": 77,
+      "aprovechables": 77
+     },
+     "json": {
+      "cabe": false,
+      "completos": 51,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 4096,
+     "mini": {
+      "cabe": false,
+      "completos": 157,
+      "aprovechables": 157
+     },
+     "json": {
+      "cabe": false,
+      "completos": 105,
+      "aprovechables": 0
+     }
+    },
+    {
+     "limite": 8192,
+     "mini": {
+      "cabe": false,
+      "completos": 316,
+      "aprovechables": 316
+     },
+     "json": {
+      "cabe": false,
+      "completos": 210,
       "aprovechables": 0
      }
     }
@@ -203,16 +362,24 @@
   }
  ],
  "tamanos": [
-  50,
   200,
-  1000
+  1000,
+  5000,
+  20000,
+  100000
  ],
  "limites": [
-  1000,
   2000,
-  4000
+  4096,
+  8192
  ],
  "muestra": 8,
+ "precio": {
+  "entrada": 0.075,
+  "salida": 0.3,
+  "fecha": "2026-09-15",
+  "modelo_precio": "GPT OSS 20B"
+ },
  "semilla": 20260917,
  "entrada": "v2: combinatoria (saludo × problema × producto por categoría × referencia × detalle × cierre)",
  "combinaciones": 72091358976,
