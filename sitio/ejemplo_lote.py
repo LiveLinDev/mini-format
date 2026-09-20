@@ -4,6 +4,12 @@
 El lote se genera con el mismo generador combinatorio del experimento V7, de modo que los textos
 son los mismos en el sitio y en el experimento. Los tokens se cuentan con el tokenizador o200k_base
 (el mismo de los benchmarks), sin llamar a ningún modelo.
+
+El cálculo se archiva en examples/ejemplo-lote/datos.json para que la construcción del sitio no
+dependa de tener instalado el tokenizador rápido. Para rehacerlo:
+
+    python -m pip install tiktoken
+    python sitio/ejemplo_lote.py
 """
 from __future__ import annotations
 
@@ -122,6 +128,16 @@ def datos_ejemplo() -> Dict[str, Any]:
             "campos": [f.name for f in contrato.fields], "tokenizador": "o200k_base"}
 
 
+ARCHIVO = RAIZ / "examples" / "ejemplo-lote" / "datos.json"
+
+
+def datos_publicados() -> Dict[str, Any]:
+    """Los datos archivados; si no existen, se calculan (requiere el tokenizador)."""
+    if ARCHIVO.exists():
+        return json.loads(ARCHIVO.read_text(encoding="utf-8"))
+    return datos_ejemplo()
+
+
 def _prefijo(texto: str, limite: int, tk) -> str:
     """El trozo más largo del texto que cabe en el límite de tokens (búsqueda binaria, sin decodificar)."""
     bajo, alto = 0, len(texto)
@@ -132,3 +148,10 @@ def _prefijo(texto: str, limite: int, tk) -> str:
         else:
             alto = medio - 1
     return texto[:bajo]
+
+
+if __name__ == "__main__":
+    ARCHIVO.parent.mkdir(parents=True, exist_ok=True)
+    datos = datos_ejemplo()
+    ARCHIVO.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"escrito {ARCHIVO} · lotes de {', '.join(str(l['n']) for l in datos['lotes'])} registros")

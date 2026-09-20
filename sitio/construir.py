@@ -885,8 +885,8 @@ def construir_mesa() -> None:
 def construir_ejemplo() -> None:
     """Página /ejemplo/: el mismo lote de tickets en .mini y en JSON, con tokens y corte simulado."""
     sys.path.insert(0, str(SITIO))
-    from ejemplo_lote import datos_ejemplo
-    datos = datos_ejemplo()
+    from ejemplo_lote import datos_publicados
+    datos = datos_publicados()
     pagina = (RAIZ / "examples" / "ejemplo-lote" / "plantilla.html").read_text(encoding="utf-8")
     safe = lambda js: js.replace("</script", "<\/script")
     for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
