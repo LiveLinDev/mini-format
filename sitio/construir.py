@@ -889,7 +889,7 @@ def construir_ejemplo() -> None:
     from ejemplo_lote import datos_publicados
     datos = datos_publicados()
     pagina = (RAIZ / "examples" / "ejemplo-lote" / "plantilla.html").read_text(encoding="utf-8")
-    safe = lambda js: js.replace("</script", "<\/script")
+    safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
                          ("__CABECERA__", cabecera("ejemplo")),
                          ("__PIE__", pie()),
@@ -933,7 +933,7 @@ def construir_taller() -> None:
     """Página /taller/: del JSON Schema al JSON validado en cinco pasos, con el motor js/mini.js en el navegador."""
     tickets = json.loads((RAIZ / "examples" / "mesa-de-ayuda" / "ticket.schema.json").read_text(encoding="utf-8"))
     datos = {"ejemplos": {"tickets": {"prefijo": "tk", "esquema": tickets}, **EJEMPLOS_TALLER}}
-    safe = lambda js: js.replace("</script", "<\/script")
+    safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     pagina = (RAIZ / "examples" / "taller" / "plantilla.html").read_text(encoding="utf-8")
     for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
                          ("__CABECERA__", cabecera("taller")),
