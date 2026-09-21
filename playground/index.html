@@ -2115,6 +2115,695 @@ const { Document, LineEngine } = __m["parser"];
     return { createReader, readRecords };
   })();
 
+  // ---------------------------------------------------------------- repair.ts
+  __m["repair"] = (function () {
+    const { splitFields } = __m["codec"];
+    const { normalizeContract } = __m["contract"];
+    const { E_HEADER_KEY, E_NO_COUNT, E_NO_HEADER, E_UNKNOWN_PREFIX, MiniError, MiniValidationError } = __m["errors"];
+    const { Document, parse } = __m["parser"];
+    const { specBlock } = __m["prompt"];
+
+    const HEADER_CODES                      = new Set([E_NO_HEADER, E_UNKNOWN_PREFIX, E_NO_COUNT, E_HEADER_KEY]);
+    /** Marca de eliminación en una respuesta de reparación. */
+    const DROP_MARK = '-';
+    const FENCE = /^\s*(```|~~~)/;
+
+    const PY_WS = '\t\n\v\f\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000';
+    const PY_WS_EDGES = new RegExp(`^[${PY_WS}]+|[${PY_WS}]+$`, 'g');
+
+    /** Blancos que elimina str.strip() de la referencia (ASCII y Unicode habituales). */
+    function pyStrip(s        )         {
+      return s.replace(PY_WS_EDGES, '');
+    }
+
+    function stripNewlines(s        )         {
+      return s.replace(/^\n+|\n+$/g, '');
+    }
+
+    /** Líneas físicas no vacías como pares [número 1-based, texto sin CR final]. */
+    function physicalLines(text        )                     {
+      let t = text;
+      if (t.charCodeAt(0) === 0xfeff) t = t.slice(1);
+      const out                     = [];
+      t.split('\n').forEach((raw, i) => {
+        const line = raw.replace(/\r+$/, '');
+        if (pyStrip(line) !== '') out.push([i + 1, line]);
+      });
+      return out;
+    }
+
+    // ------------------------------------------------------------ localización
+    /**
+     * Devuelve el documento .mini contenido en una respuesta del modelo.
+     * Quita la prosa inicial y las cercas de código: el documento empieza en la primera línea
+     * que comienza por `<prefix>|` (o es el prefijo solo). Si la cabecera estaba dentro de una
+     * cerca, se descarta lo que sigue a la cerca de cierre. La prosa final sin cerca se conserva
+     * para que se informe como línea inválida. Sin cabecera, devuelve el texto sin cercas.
+     */
+    function extractDocument(text                           , contract                         )         {
+      if (text === null || text === undefined) return '';
+      const lines = String(text).split('\r\n').join('\n').split('\n');
+      const pref = normalizeContract(contract).prefix;
+      let start = -1;
+      for (let i = 0; i < lines.length; i++) {
+        const s = pyStrip(lines[i]).replace(/^﻿+/, '');
+        if (s === pref || s.startsWith(pref + '|')) {
+          start = i;
+          break;
+        }
+      }
+      if (start < 0) return stripNewlines(lines.filter(ln => !FENCE.test(ln)).join('\n'));
+      const inFence = lines.slice(0, start).some(ln => FENCE.test(ln));
+      let body = lines.slice(start);
+      if (inFence) {
+        const j = body.findIndex(ln => FENCE.test(ln));
+        if (j >= 0) body = body.slice(0, j);
+      } else {
+        body = body.filter(ln => !FENCE.test(ln));
+      }
+      return stripNewlines(body.join('\n'));
+    }
+
+    /** Análisis tolerante que nunca lanza: [documento | null, errores]. Sin cabecera, el documento es null. */
+    function lenientParse(text        , contract                         )                                 {
+      try {
+        const doc = parse(text, contract, { strict: false });
+        if (doc.headerLine === 0 && doc.errors.some(e => e.code === E_NO_HEADER)) return [null, [...doc.errors]];
+        return [doc, [...doc.errors]];
+      } catch (e) {
+        if (e instanceof MiniValidationError) return [null, [...e.errors]];
+        if (e instanceof MiniError) return [null, [e]];
+        throw e;
+      }
+    }
+
+    // ------------------------------------------------------------ solicitud
+    /** Una línea (o varios fragmentos de un mismo registro) a reparar. */
+                                 
+                                                                                    
+                   
+                                                                                                   
+                   
+                          
+                        
+                                                        
+                      
+     
+
+                                    
+                     
+                   
+                          
+                                                                        
+                       
+                     
+                            
+                                  
+                               
+                                                                
+                               
+     
+
+                                           
+                                                                                         
+                              
+                                                                                                               
+                            
+                                       
+                               
+     
+
+    function codepoints(s        )         {
+      let n = 0;
+      for (const _ of s) n++;
+      return n;
+    }
+
+    function fieldCount(text        , c          )                {
+      try {
+        return splitFields(text.split('\n').join(' '), c.list_separator, 0, false).length;
+      } catch (e) {
+        if (e instanceof MiniError) return null;
+        throw e;
+      }
+    }
+
+    /** Líneas físicas inválidas de un documento (ya extraído), con sus errores. */
+    function invalidItems(document        , contract                         )               {
+      const c = normalizeContract(contract);
+      const phys = physicalLines(document);
+      if (!phys.length) return [];
+      const byLine = new Map                     ();
+      const [, errors] = lenientParse(document, c);
+      for (const e of errors) {
+        if (e.line > 0) {
+          const list = byLine.get(e.line);
+          if (list) list.push(e);
+          else byLine.set(e.line, [e]);
+        }
+      }
+      const headerLine = phys[0][0];
+      const items               = [];
+      let prevIdx = -2;
+      phys.forEach(([lineno, text], idx) => {
+        const errs = byLine.get(lineno);
+        if (!errs) return;
+        const item             = { line: lineno, text, errors: errs, isHeader: lineno === headerLine, lines: [lineno] };
+        // un salto de línea sin escapar dentro de un valor parte un registro en fragmentos cortos
+        if (items.length && prevIdx === idx - 1 && !item.isHeader && !items[items.length - 1].isHeader) {
+          const last = items[items.length - 1];
+          const nLast = fieldCount(last.text, c);
+          const nThis = fieldCount(text, c);
+          if (nLast !== null && nThis !== null && nLast < c.arity && nThis < c.arity
+            && c.arity <= nLast + nThis - 1 && nLast + nThis - 1 <= c.fields.length) {
+            last.text = last.text + '\n' + text;
+            last.errors.push(...item.errors);
+            last.lines.push(lineno);
+            prevIdx = idx;
+            return;
+          }
+        }
+        items.push(item);
+        prevIdx = idx;
+      });
+      return items;
+    }
+
+    function fmtError(e           )         {
+      const fld = e.field ? ` [${e.field}]` : '';
+      return `${e.code}${fld}: ${e.message}`;
+    }
+
+    function makeRequest(init                                         )                {
+      return Object.defineProperties(init, {
+        needed: { get(                   ) { return this.items.length > 0; }, enumerable: true },
+        lines: { get(                   ) { return this.items.flatMap(it => it.lines); }, enumerable: true },
+      })                 ;
+    }
+
+    /**
+     * Construye la solicitud de reparación selectiva de un documento generado.
+     * `document` puede ser la respuesta cruda del modelo: pasa antes por extractDocument
+     * y los números de línea se refieren a ese resultado.
+     */
+    function repairRequest(
+      document        , contract                         , lang         = 'es', opts                       = {},
+    )                {
+      const c = normalizeContract(contract);
+      const docText = extractDocument(document, c);
+      let items = invalidItems(docText, c);
+      if (opts.maxItems !== undefined && opts.maxItems !== null) items = items.slice(0, Math.max(0, opts.maxItems));
+      const phys = physicalLines(docText);
+      const headerText = phys.length ? phys[0][1] : `${c.prefix}|n=0`;
+      const es = lang === 'es';
+      const spec = opts.includeSpec === false ? '' : specBlock(c, lang);
+      let sys = es
+        ? 'Eres un corrector de documentos .mini. Corriges únicamente las líneas que se te indican, conservando su contenido y respetando el formato.'
+        : 'You repair .mini documents. You fix only the lines you are given, keeping their content and following the format.';
+      if (spec) sys += '\n\n' + spec;
+      const L           = [];
+      const k = items.length;
+      if (es) {
+        L.push(`Un documento .mini de la familia '${c.prefix}' tiene ${k} línea(s) inválida(s). Corrige SOLO esas líneas.`);
+        L.push(`Cabecera del documento (contexto): ${headerText}`);
+        L.push('Líneas inválidas (número de línea, contenido y errores del validador):');
+      } else {
+        L.push(`A .mini document of family '${c.prefix}' has ${k} invalid line(s). Fix ONLY those lines.`);
+        L.push(`Document header (context): ${headerText}`);
+        L.push('Invalid lines (line number, content and validator errors):');
+      }
+      for (const it of items) {
+        const tag = it.isHeader ? (es ? ' cabecera' : ' header') : '';
+        if (it.lines.length > 1) {
+          L.push(`[L${it.lines[0]}-L${it.lines[it.lines.length - 1]}] ` + (es
+            ? '(fragmentos de un mismo registro partido por un salto de línea sin escapar; devuelve UNA sola línea)'
+            : '(fragments of one record split by an unescaped line break; return ONE line)'));
+          const frags = it.text.split('\n');
+          const m = Math.min(frags.length, it.lines.length);
+          for (let i = 0; i < m; i++) L.push(`    L${it.lines[i]}: ${frags[i]}`);
+        } else {
+          L.push(`[L${it.line}${tag}] ${it.text}`);
+        }
+        for (const e of it.errors) L.push(`    - ${fmtError(e)}`);
+      }
+      if (opts.context) {
+        L.push('');
+        L.push(es ? 'Texto de origen (para recuperar valores):' : 'Source text (to recover values):');
+        L.push(opts.context);
+      }
+      L.push('');
+      if (es) {
+        L.push(`Responde solo con un documento .mini: primera línea '${c.prefix}|n=${k}', seguida de `
+          + `exactamente ${k} línea(s), una corrección por cada línea inválida y en el mismo orden. `
+          + 'Si una línea corregida es la cabecera, escribe la cabecera completa. Si una línea no es un '
+          + `registro (texto explicativo), escribe solo '${DROP_MARK}'. No repitas las líneas válidas ni `
+          + 'añadas explicaciones ni bloques de código.');
+      } else {
+        L.push(`Answer with a .mini document only: first line '${c.prefix}|n=${k}', followed by exactly `
+          + `${k} line(s), one correction per invalid line, in the same order. If a corrected line is the `
+          + 'header, write the full header. If a line is not a record (explanatory text), write only '
+          + `'${DROP_MARK}'. Do not repeat valid lines, add explanations or code fences.`);
+      }
+      const chars = items.reduce((acc, it) => acc + codepoints(it.text), 0);
+      const hint = Math.max(64, Math.trunc(chars / 2.5) + 16 * (k + 1));
+      return makeRequest({ system: sys, user: L.join('\n'), items, document: docText, prefix: c.prefix, maxTokensHint: hint });
+    }
+
+    // ------------------------------------------------------------ fusión
+                                  
+                                 
+                   
+                                                                                    
+                                
+                                               
+                          
+                                                          
+                         
+                                                                             
+                        
+                                                     
+                           
+                                                            
+                      
+                                   
+                  
+     
+
+    function answerLines(repairedText        , c          )                       {
+      const notes           = [];
+      const body = extractDocument(repairedText || '', c);
+      const phys = physicalLines(body);
+      if (!phys.length) return [[], ['empty repair answer']];
+      const first = pyStrip(phys[0][1]);
+      let lines          ;
+      if (first === c.prefix || first.startsWith(c.prefix + '|')) {
+        lines = phys.slice(1).map(([, t]) => t);
+        const m = /\|\s*n\s*=\s*(\d+)/.exec(first);
+        if (m && parseInt(m[1], 10) !== lines.length) {
+          notes.push(`repair header declares n=${m[1]} but has ${lines.length} lines`);
+        }
+      } else {
+        notes.push('repair answer has no header; lines taken in order');
+        lines = phys.map(([, t]) => t);
+      }
+      return [lines, notes];
+    }
+
+    const ascending = (a        , b        )         => a - b;
+
+    /**
+     * Inserta las líneas corregidas de una respuesta de reparación en el documento original.
+     * Cada corrección se acepta solo si es válida por sí sola bajo el contrato (validada con la
+     * cabecera original, o con la corregida si la cabecera formaba parte de la solicitud). Las
+     * correcciones rechazadas dejan la línea original, de modo que nunca se pierde información.
+     */
+    function mergeRepair(
+      originalDoc        , repairedText        , contract                         , request                       ,
+    )              {
+      const c = normalizeContract(contract);
+      const docText = request ? request.document : extractDocument(originalDoc, c);
+      const items = request ? request.items : invalidItems(docText, c);
+      const phys = physicalLines(docText);
+      const [answer, notes] = answerLines(repairedText, c);
+      if (answer.length !== items.length) notes.push(`expected ${items.length} corrected lines, got ${answer.length}`);
+      const content = new Map                (phys);
+      const order = phys.map(([ln]) => ln);
+      const headerLine = order.length ? order[0] : null;
+      const replaced           = [];
+      const dropped           = [];
+      const unresolved           = [];
+      const pairs                         = items.slice(0, answer.length).map((it, i) => [it, answer[i]]);
+
+      // primero la cabecera, para validar las correcciones de registros contra ella
+      for (const [it, next] of pairs) {
+        if (!it.isHeader) continue;
+        const cand = pyStrip(next);
+        if (cand.startsWith(c.prefix + '|') || cand === c.prefix) {
+          const [probe, errs] = lenientParse(cand, c);
+          if (probe !== null && !errs.some(e => HEADER_CODES.has(e.code))) {
+            content.set(it.line, cand);
+            replaced.push(it.line);
+            continue;
+          }
+        }
+        unresolved.push(it.line);
+      }
+      const fallbackHeader = `${c.prefix}|n=0`;
+      const headerText = headerLine !== null ? (content.get(headerLine) ?? fallbackHeader) : fallbackHeader;
+      const invalidLines = new Set(items.flatMap(it => it.lines));
+      const seen = new Set        ();
+      for (const ln of order) {
+        if (!invalidLines.has(ln) && ln !== headerLine) seen.add(pyStrip(content.get(ln)          ));
+      }
+      for (const [it, next] of pairs) {
+        if (it.isHeader) continue;
+        const cand = pyStrip(next);
+        if (cand === DROP_MARK) {
+          dropped.push(...it.lines);
+          for (const ln of it.lines) content.delete(ln);
+          continue;
+        }
+        if (seen.has(cand)) {
+          // el mismo registro se devolvió dos veces (o ya existe): se conserva una sola copia
+          notes.push(`line ${it.line}: correction duplicates another record; dropped`);
+          dropped.push(...it.lines);
+          for (const ln of it.lines) content.delete(ln);
+          continue;
+        }
+        const [probe, errs] = lenientParse(headerText + '\n' + cand, c);
+        // el documento de prueba tiene la n de la cabecera original: se ignora el conteo
+        const lineErrs = errs.filter(e => e.line > 1 || (e.line === 0 && e.code !== 'E04'));
+        if (probe !== null && probe.records.length === 1 && !lineErrs.length && !cand.includes('\n')) {
+          content.set(it.line, cand);
+          for (const ln of it.lines.slice(1)) content.delete(ln);
+          replaced.push(...it.lines);
+          seen.add(cand);
+        } else {
+          unresolved.push(...it.lines);
+        }
+      }
+      for (const it of items.slice(answer.length)) unresolved.push(...it.lines);
+      const merged = order.filter(ln => content.has(ln)).map(ln => content.get(ln)          ).join('\n');
+      const [doc, errors] = lenientParse(merged, c);
+      return {
+        text: merged,
+        document: doc,
+        errors,
+        replaced: replaced.sort(ascending),
+        dropped: dropped.sort(ascending),
+        unresolved: [...new Set(unresolved)].sort(ascending),
+        notes,
+        ok: doc !== null && errors.length === 0,
+      };
+    }
+    return { DROP_MARK, physicalLines, extractDocument, lenientParse, invalidItems, repairRequest, mergeRepair };
+  })();
+
+  // ---------------------------------------------------------------- schema.ts
+  __m["schema"] = (function () {
+    const { normalizeContract } = __m["contract"];
+    const { E_CONTRACT, MiniError } = __m["errors"];
+
+    /** Subconjunto de JSON Schema que se inspecciona. */
+                                                            
+
+                                        
+                                                 
+                     
+                       
+                    
+                           
+                      
+                           
+                              
+                                             
+                        
+                                                              
+                                                                             
+         
+                                                                                                   
+                                                                                     
+                                                                                 
+         
+                                       
+                                                                                     
+                          
+     
+
+    /** Palabras clave sin efecto sobre la validación. */
+    const ANNOTATIONS = new Set([
+      '$schema', '$id', '$comment', 'title', 'description', 'examples', 'default', 'deprecated', 'readOnly', 'writeOnly',
+    ]);
+    const SAFE_MIN = -9007199254740991;
+    const SAFE_MAX = 9007199254740991;
+
+    function fail(path        , message        )        {
+      throw new MiniError(E_CONTRACT, 0, `${path}: ${message}`, path);
+    }
+
+    function isObj(v         )                  {
+      return !!v && typeof v === 'object' && !Array.isArray(v);
+    }
+
+    function types(s            )           {
+      if (Array.isArray(s.type)) return s.type.map(String);
+      if (typeof s.type === 'string') return [s.type];
+      return [];
+    }
+
+                   
+                              
+                         
+     
+
+    /** Restricción que .mini no valida: error o aviso según la opción. */
+    function unsupported(ctx     , path        , keyword        )       {
+      const msg = `${path}: keyword '${keyword}' cannot be validated by .mini`;
+      if (ctx.opts.unsupported === 'ignore') ctx.warnings.push(msg);
+      else throw new MiniError(E_CONTRACT, 0, msg + " (use unsupported: 'ignore' to drop it)", path);
+    }
+
+    /** Separa la variante nula: {type:[X,'null']}, anyOf/oneOf [X, {type:'null'}], enum con null. */
+    function splitNullable(s            , path        )                                            {
+      for (const key of ['anyOf', 'oneOf']         ) {
+        if (!Array.isArray(s[key])) continue;
+        const variants = (s[key]             ).filter(isObj);
+        const nonNull = variants.filter(v => !(types(v).length === 1 && types(v)[0] === 'null'));
+        if (nonNull.length !== 1 || variants.length !== (s[key]             ).length) {
+          fail(path, `${key} with several non-null variants is not representable (SPEC §12)`);
+        }
+        const rest             = { ...s };
+        delete rest[key];
+        return { schema: { ...nonNull[0], ...rest }, nullable: variants.length > nonNull.length };
+      }
+      const t = types(s);
+      let schema = s;
+      let nullable = false;
+      if (t.includes('null')) {
+        nullable = true;
+        const others = t.filter(x => x !== 'null');
+        if (others.length > 1) fail(path, `union type [${t.join(', ')}] is not representable (SPEC §12)`);
+        schema = { ...s, type: others[0] };
+      } else if (t.length > 1) {
+        fail(path, `union type [${t.join(', ')}] is not representable (SPEC §12)`);
+      }
+      if (Array.isArray(schema.enum) && schema.enum.includes(null)) {
+        nullable = true;
+        schema = { ...schema, enum: schema.enum.filter(v => v !== null) };
+      }
+      return { schema, nullable };
+    }
+
+    function checkKeywords(ctx     , s            , path        , allowed          )       {
+      for (const k of Object.keys(s)) {
+        if (ANNOTATIONS.has(k) || allowed.includes(k)) continue;
+        if (k === 'properties' || k === 'items' || k === '$ref' || k === 'allOf' || k === 'not' || k === 'if'
+          || k === 'patternProperties' || k === 'prefixItems') {
+          fail(path, `keyword '${k}' is not representable in a flat .mini record (SPEC §12)`);
+        }
+        unsupported(ctx, path, k);
+      }
+    }
+
+                      
+                       
+                        
+                            
+                            
+     
+
+    /** Límites de date/decimal: formatMinimum/formatMaximum o anotación x-mini (texto). */
+    function textBounds(ctx     , s            , path        , asItem         , out        )       {
+      const ann = isObj(s['x-mini']) ? (s['x-mini']              ) : {};
+      const lo = ann.min ?? s.formatMinimum;
+      const hi = ann.max ?? s.formatMaximum;
+      for (const [key, v] of [['min', lo], ['max', hi]]         ) {
+        if (v === undefined) continue;
+        if (typeof v !== 'string' && typeof v !== 'number') fail(path, `invalid ${key} bound`);
+        if (asItem) unsupported(ctx, path, key === 'min' ? 'formatMinimum' : 'formatMaximum');
+        else out[key] = v                   ;
+      }
+    }
+
+    /** Escalar JSON Schema -> tipo .mini. `asItem`: elemento de lista (sin rango). */
+    function scalar(ctx     , s            , path        , asItem         )         {
+      if (Array.isArray(s.enum) || s.const !== undefined) {
+        const values = Array.isArray(s.enum) ? s.enum : [s.const];
+        if (!values.length || !values.every(v => typeof v === 'string')) {
+          fail(path, 'only string enums are representable');
+        }
+        checkKeywords(ctx, s, path, ['type', 'enum', 'const']);
+        return { type: 'enum', values: [...new Set(values            )] };
+      }
+      const t = types(s);
+      if (!t.length) fail(path, 'schema without a type is not representable (e.g. z.any(), z.date(), custom types)');
+      switch (t[0]) {
+        case 'string': {
+          const ann = isObj(s['x-mini']) ? (s['x-mini']              ) : {};
+          if (s.format === 'date' || ann.type === 'date') {
+            const out         = { type: 'date' };
+            textBounds(ctx, s, path, asItem, out);
+            checkKeywords(ctx, s, path, ['type', 'format', 'pattern', 'formatMinimum', 'formatMaximum', 'x-mini']);
+            return out;
+          }
+          if (s.format === 'decimal' || ann.type === 'decimal') {
+            const out         = { type: 'decimal' };
+            textBounds(ctx, s, path, asItem, out);
+            checkKeywords(ctx, s, path, ['type', 'format', 'pattern', 'x-mini']);
+            return out;
+          }
+          checkKeywords(ctx, s, path, ['type']);
+          return { type: 'str' };
+        }
+        case 'boolean':
+          checkKeywords(ctx, s, path, ['type']);
+          return { type: 'bool' };
+        case 'integer':
+        case 'number': {
+          const isInt = t[0] === 'integer';
+          const out         = { type: isInt ? 'int' : 'float' };
+          let min = typeof s.minimum === 'number' ? s.minimum : undefined;
+          let max = typeof s.maximum === 'number' ? s.maximum : undefined;
+          if (typeof s.exclusiveMinimum === 'number') {
+            if (isInt) min = Math.max(min ?? -Infinity, Math.floor(s.exclusiveMinimum) + 1);
+            else unsupported(ctx, path, 'exclusiveMinimum');
+          }
+          if (typeof s.exclusiveMaximum === 'number') {
+            if (isInt) max = Math.min(max ?? Infinity, Math.ceil(s.exclusiveMaximum) - 1);
+            else unsupported(ctx, path, 'exclusiveMaximum');
+          }
+          if (isInt && min === SAFE_MIN) min = undefined;
+          if (isInt && max === SAFE_MAX) max = undefined;
+          checkKeywords(ctx, s, path, ['type', 'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum']);
+          if (asItem) {
+            if (min !== undefined) unsupported(ctx, path, 'minimum');
+            if (max !== undefined) unsupported(ctx, path, 'maximum');
+          } else {
+            if (min !== undefined) out.min = min;
+            if (max !== undefined) out.max = max;
+          }
+          return out;
+        }
+        case 'object':
+          return fail(path, 'nested object is not representable; use a second family or flatten it (SPEC §12)');
+        case 'array':
+          return fail(path, 'nested array is not representable (SPEC §12)');
+        default:
+          return fail(path, `type '${t[0]}' is not representable`);
+      }
+    }
+
+    function field(ctx     , name        , raw         , required         )            {
+      const path = name;
+      if (!isObj(raw)) fail(path, 'boolean or empty schemas are not representable');
+      const { schema: s, nullable } = splitNullable(raw, path);
+      const f            = { name, type: 'str' };
+      const t = types(s);
+      if (t[0] === 'array') {
+        const itemsRaw = s.items;
+        if (!isObj(itemsRaw)) fail(path, 'arrays require a single item schema');
+        const { schema: item, nullable: itemNull } = splitNullable(itemsRaw, `${path}[]`);
+        if (itemNull) fail(`${path}[]`, 'null list elements are not representable');
+        const sc = scalar(ctx, item, `${path}[]`, true);
+        checkKeywords(ctx, s, path, ['type', 'items', 'minItems', 'maxItems']);
+        f.type = 'list';
+        f.item = sc.type;
+        if (sc.values) f.item_values = sc.values;
+        if (typeof s.minItems === 'number') f.min = s.minItems;
+        if (typeof s.maxItems === 'number') f.max = s.maxItems;
+      } else {
+        const sc = scalar(ctx, s, path, false);
+        f.type = sc.type;
+        if (sc.values) f.values = sc.values;
+        if (sc.min !== undefined) f.min = sc.min;
+        if (sc.max !== undefined) f.max = sc.max;
+      }
+      const hasDefault = Object.prototype.hasOwnProperty.call(raw, 'default') || Object.prototype.hasOwnProperty.call(s, 'default');
+      if (!required || nullable || hasDefault) f.optional = true;
+      if (hasDefault) f.default = (Object.prototype.hasOwnProperty.call(raw, 'default') ? raw : s).default;
+      const desc = typeof raw.description === 'string' ? raw.description : typeof s.description === 'string' ? s.description : '';
+      if (desc) f.desc = desc;
+      if (ctx.opts.unique && ctx.opts.unique.includes(name)) f.unique = true;
+      return f;
+    }
+
+    /**
+     * Convierte un JSON Schema de registro plano en un contrato .mini (ContractJSON).
+     * Acepta el esquema de un registro (`type: object`) o de una lista de registros
+     * (`type: array` con `items` objeto). El orden de los campos es el de `properties`.
+     * Lanza MiniError E20 ante estructuras o restricciones no representables.
+     */
+    function fromJsonSchema(schema            , opts                   )               {
+      if (!opts || typeof opts.prefix !== 'string') throw new MiniError(E_CONTRACT, 0, "fromJsonSchema requires options.prefix");
+      const ctx      = { opts, warnings: opts.warnings ?? [] };
+      let root          = schema;
+      if (isObj(root) && types(root)[0] === 'array' && isObj(root.items)) root = root.items;
+      if (!isObj(root) || types(root)[0] !== 'object' || !isObj(root.properties)) {
+        throw new MiniError(E_CONTRACT, 0, 'root schema must be an object with properties (or an array of such objects)');
+      }
+      const props = root.properties;
+      const required = new Set(Array.isArray(root.required) ? root.required.map(String) : []);
+      const extra = root.additionalProperties;
+      if (extra !== undefined && extra !== false) unsupported(ctx, '<root>', 'additionalProperties');
+      for (const k of Object.keys(root)) {
+        if (!ANNOTATIONS.has(k) && !['type', 'properties', 'required', 'additionalProperties'].includes(k)) {
+          unsupported(ctx, '<root>', k);
+        }
+      }
+      const names = Object.keys(props);
+      if (!names.length) throw new MiniError(E_CONTRACT, 0, 'record schema has no properties');
+      const core = names.map(n => field(ctx, n, props[n], required.has(n)));
+      for (const u of opts.unique ?? []) {
+        if (!names.includes(u)) throw new MiniError(E_CONTRACT, 0, `unique field '${u}' is not a property`);
+      }
+      const out               = {
+        prefix: opts.prefix,
+        version: opts.version ?? 1,
+        name: opts.name ?? (typeof root.title === 'string' ? root.title : ''),
+        description: opts.description ?? (typeof root.description === 'string' ? root.description : ''),
+        parent: null,
+        list_separator: opts.list_separator ?? ',',
+        records_key: opts.records_key ?? 'records',
+        domain: opts.domain ?? '',
+        header: opts.header ?? { required: ['n'], keys: {} },
+        core,
+        extensions: [],
+      };
+      normalizeContract(out); // valida el resultado (E20)
+      return out;
+    }
+
+    /** Esquema Zod v4 (tipado estructural: no se importa zod). */
+                              
+                                                                   
+     
+
+                                                               
+         
+                                                                                               
+                                                                                           
+         
+                                                                                  
+     
+
+    /**
+     * Convierte un esquema Zod de objeto plano en un contrato .mini.
+     * Usa la vista de entrada (io: 'input') porque el contrato valida lo que produce el modelo.
+     */
+    function fromZod(schema         , opts                )               {
+      const params = { io: 'input', unrepresentable: 'any', target: 'draft-2020-12' };
+      let json         ;
+      if (opts && typeof opts.toJSONSchema === 'function') json = opts.toJSONSchema(schema         , params);
+      else if (schema && typeof schema.toJSONSchema === 'function') json = schema.toJSONSchema(params);
+      else {
+        throw new MiniError(E_CONTRACT, 0, 'schema has no toJSONSchema(); pass options.toJSONSchema (e.g. z.toJSONSchema)');
+      }
+      if (!isObj(json)) throw new MiniError(E_CONTRACT, 0, 'toJSONSchema did not return an object');
+      return fromJsonSchema(json, opts);
+    }
+    return { fromJsonSchema, fromZod };
+  })();
+
   return Object.freeze({
     E_NO_HEADER: __m["errors"].E_NO_HEADER,
     E_UNKNOWN_PREFIX: __m["errors"].E_UNKNOWN_PREFIX,
@@ -2182,6 +2871,15 @@ const { Document, LineEngine } = __m["parser"];
     specBlock: __m["prompt"].specBlock,
     createReader: __m["stream"].createReader,
     readRecords: __m["stream"].readRecords,
+    DROP_MARK: __m["repair"].DROP_MARK,
+    physicalLines: __m["repair"].physicalLines,
+    extractDocument: __m["repair"].extractDocument,
+    lenientParse: __m["repair"].lenientParse,
+    invalidItems: __m["repair"].invalidItems,
+    repairRequest: __m["repair"].repairRequest,
+    mergeRepair: __m["repair"].mergeRepair,
+    fromJsonSchema: __m["schema"].fromJsonSchema,
+    fromZod: __m["schema"].fromZod,
     VERSION: "1.2.1",
     SPEC_VERSION: "1.1",
   });

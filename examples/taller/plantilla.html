@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="es" data-title-es="Taller de integración — mini-format" data-title-en="Integration workshop — mini-format">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taller de integración — mini-format</title>
+__CABEZA__
+<style>
+  .tl { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
+  .tl-intro { max-width: 60rem; }
+  .tl-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
+  .tl-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .tl-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  .tl-pasos { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.8rem 0 1.2rem; padding: 0; list-style: none; }
+  .tl-pasos button { font: inherit; font-size: var(--fs-cap); display: inline-flex; align-items: center; gap: .5rem; cursor: pointer;
+                     padding: .5rem .85rem; border: 1px solid rgb(var(--line)); border-radius: 99px;
+                     background: rgb(var(--raised)); color: rgb(var(--fg-muted)); }
+  .tl-pasos button .num { display: inline-grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 50%;
+                          font-weight: 700; font-size: .75rem; background: rgb(var(--subtle)); color: rgb(var(--fg)); }
+  .tl-pasos button[aria-current="step"] { border-color: rgb(var(--accent)); color: rgb(var(--fg)); font-weight: 600; }
+  .tl-pasos button[aria-current="step"] .num { background: rgb(var(--accent)); color: #fff; }
+  .tl-pasos button.hecho .num { background: rgb(16 122 87); color: #fff; }
+
+  .tl-panel { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: clamp(1rem, 3vw, 1.5rem);
+              background: rgb(var(--raised)); }
+  .tl-panel h2 { margin: 0 0 .3rem; font-size: var(--fs-h5); }
+  .tl-panel .sub { margin: 0 0 1rem; color: rgb(var(--fg-muted)); font-size: var(--fs-cap); max-width: 60rem; }
+  .tl-fila { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .8rem 0; }
+  .tl-fila .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; margin-right: .2rem; }
+  .tl textarea, .tl input[type="text"] { width: 100%; font: inherit; font-family: var(--f-mono); font-size: .8rem; line-height: 1.5;
+                  padding: .7rem .8rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle));
+                  color: rgb(var(--fg)); resize: vertical; }
+  .tl input[type="text"] { width: 7rem; }
+  .tl textarea { min-height: 13rem; }
+  .tl pre { margin: 0; padding: .8rem 1rem; border-radius: var(--r); background: rgb(var(--subtle)); overflow: auto;
+            font-size: .78rem; line-height: 1.55; max-height: 24rem; white-space: pre-wrap; word-break: break-word; }
+  .tl .btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .tl-chip { font: inherit; font-size: var(--fs-cap); cursor: pointer; padding: .35rem .7rem; border-radius: 99px;
+             border: 1px solid rgb(var(--line)); background: rgb(var(--raised)); color: rgb(var(--fg-muted)); }
+  .tl-chip:hover { color: rgb(var(--accent)); border-color: rgb(var(--accent) / .5); }
+
+  .tl-aviso { margin: .8rem 0; padding: .7rem .9rem; border-radius: var(--r); font-size: var(--fs-cap); }
+  .tl-aviso.bien { background: rgb(16 122 87 / .1); color: rgb(16 122 87); }
+  .tl-aviso.mal { background: rgb(220 38 38 / .1); color: rgb(185 28 28); }
+  .tl-aviso.info { background: rgb(var(--accent) / .08); color: rgb(var(--fg)); }
+
+  .tl-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .8rem; margin: 1rem 0; }
+  .tl-cifra { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .7rem .85rem; }
+  .tl-cifra .v { display: block; font-family: var(--f-mono); font-size: 1.35rem; font-weight: 700; }
+  .tl-cifra .k { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); }
+  .tl-cifra.bien .v { color: rgb(16 122 87); } .tl-cifra.mal .v { color: rgb(185 28 28); }
+
+  .tl table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  .tl th, .tl td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid rgb(var(--line)); vertical-align: top; }
+  .tl th { font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em; color: rgb(var(--fg-muted)); }
+  .tl td code { font-size: .78rem; }
+  .tl .tabla { overflow-x: auto; }
+  .tl .error-cod { font-family: var(--f-mono); font-weight: 700; color: rgb(185 28 28); }
+  .tl-nav { display: flex; justify-content: space-between; gap: .6rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .tl-nota { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); margin-top: 1rem; }
+  [hidden] { display: none !important; }
+  /* en pantallas angostas nada debe forzar desplazamiento horizontal */
+  .tl, .tl * { box-sizing: border-box; }
+  .tl { max-width: 100%; overflow-wrap: anywhere; }
+  .tl-panel, .tl-intro { min-width: 0; }
+  .tl-nota code { white-space: normal; word-break: break-all; }
+  @media (max-width: 560px) {
+    .tl-nav .btn { flex: 1 1 auto; }
+    .tl-fila .btn { width: 100%; }
+    .tl input[type="text"] { width: 100%; }
+  }
+</style>
+</head>
+<body>
+__CABECERA__
+<main id="contenido" class="wrap tl">
+  <section class="tl-intro">
+    <p class="eyebrow"><span data-lang="es">Taller de integración</span><span data-lang="en" hidden>Integration workshop</span></p>
+    <h1><span data-lang="es">De tu JSON Schema a respuestas validadas, en cinco pasos</span>
+        <span data-lang="en" hidden>From your JSON Schema to validated answers, in five steps</span></h1>
+    <p class="lead"><span data-lang="es">Todo ocurre en tu navegador con el motor de mini-format: generas el contrato, obtienes la instrucción para el
+      modelo, validas su respuesta, reparas solo lo que falló y descargas el JSON final. Tu trabajo se guarda en este navegador.</span>
+      <span data-lang="en" hidden>Everything runs in your browser with the mini-format engine: generate the contract, get the instruction for the
+      model, validate its answer, repair only what failed and download the final JSON. Your work is saved in this browser.</span></p>
+  </section>
+
+  <ol class="tl-pasos" id="pasos"></ol>
+
+  <!-- 1 · Esquema -->
+  <section class="tl-panel" data-paso="1">
+    <h2><span data-lang="es">1 · Tu esquema</span><span data-lang="en" hidden>1 · Your schema</span></h2>
+    <p class="sub"><span data-lang="es">Pega el JSON Schema de un registro de tu sistema, sube un archivo o parte de un ejemplo.</span>
+      <span data-lang="en" hidden>Paste the JSON Schema of one record of your system, upload a file or start from an example.</span></p>
+    <div class="tl-fila">
+      <span class="et"><span data-lang="es">Ejemplos:</span><span data-lang="en" hidden>Examples:</span></span>
+      <button type="button" class="tl-chip" data-ejemplo="tickets"><span data-lang="es">Tickets de soporte</span><span data-lang="en" hidden>Support tickets</span></button>
+      <button type="button" class="tl-chip" data-ejemplo="productos"><span data-lang="es">Productos</span><span data-lang="en" hidden>Products</span></button>
+      <button type="button" class="tl-chip" data-ejemplo="pedidos"><span data-lang="es">Pedidos</span><span data-lang="en" hidden>Orders</span></button>
+      <label class="tl-chip" for="archivo"><span data-lang="es">Subir archivo .json</span><span data-lang="en" hidden>Upload .json file</span></label>
+      <input type="file" id="archivo" accept=".json,application/json" hidden>
+    </div>
+    <textarea id="esquema" spellcheck="false" aria-label="JSON Schema"></textarea>
+    <div class="tl-fila">
+      <label class="et" for="prefijo"><span data-lang="es">Prefijo del contrato</span><span data-lang="en" hidden>Contract prefix</span></label>
+      <input type="text" id="prefijo" value="tk" maxlength="12" spellcheck="false">
+      <button type="button" class="btn btn-solid" id="generar"><span data-lang="es">Generar contrato</span><span data-lang="en" hidden>Generate contract</span></button>
+    </div>
+    <div id="res-contrato"></div>
+  </section>
+
+  <!-- 2 · Instrucción -->
+  <section class="tl-panel" data-paso="2" hidden>
+    <h2><span data-lang="es">2 · Instrucción para el modelo</span><span data-lang="en" hidden>2 · Instruction for the model</span></h2>
+    <p class="sub"><span data-lang="es">Se genera desde el contrato: no se escribe a mano. Pégala como mensaje de sistema en tu llamada al LLM.</span>
+      <span data-lang="en" hidden>It is generated from the contract, not written by hand. Paste it as the system message of your LLM call.</span></p>
+    <div class="tl-fila">
+      <span class="et"><span data-lang="es">Idioma de la instrucción:</span><span data-lang="en" hidden>Instruction language:</span></span>
+      <button type="button" class="tl-chip" data-idioma="es">Español</button>
+      <button type="button" class="tl-chip" data-idioma="en">English</button>
+      <button type="button" class="btn" id="copiar-instruccion"><span data-lang="es">Copiar instrucción</span><span data-lang="en" hidden>Copy instruction</span></button>
+    </div>
+    <pre id="instruccion"></pre>
+  </section>
+
+  <!-- 3 · Respuesta -->
+  <section class="tl-panel" data-paso="3" hidden>
+    <h2><span data-lang="es">3 · Respuesta del modelo</span><span data-lang="en" hidden>3 · The model's answer</span></h2>
+    <p class="sub"><span data-lang="es">Pega lo que respondió el modelo, o usa una respuesta de ejemplo generada desde tu contrato.</span>
+      <span data-lang="en" hidden>Paste what the model answered, or use a sample answer generated from your contract.</span></p>
+    <div class="tl-fila">
+      <span class="et"><span data-lang="es">Respuestas de ejemplo:</span><span data-lang="en" hidden>Sample answers:</span></span>
+      <button type="button" class="tl-chip" data-muestra="ok"><span data-lang="es">Correcta</span><span data-lang="en" hidden>Correct</span></button>
+      <button type="button" class="tl-chip" data-muestra="error"><span data-lang="es">Con un valor inválido</span><span data-lang="en" hidden>With an invalid value</span></button>
+      <button type="button" class="tl-chip" data-muestra="cortada"><span data-lang="es">Cortada por el límite</span><span data-lang="en" hidden>Cut by the limit</span></button>
+    </div>
+    <textarea id="respuesta" spellcheck="false" aria-label="Respuesta del modelo"></textarea>
+    <div class="tl-fila">
+      <button type="button" class="btn btn-solid" id="validar"><span data-lang="es">Validar respuesta</span><span data-lang="en" hidden>Validate answer</span></button>
+    </div>
+    <div id="res-validacion"></div>
+  </section>
+
+  <!-- 4 · Reparación -->
+  <section class="tl-panel" data-paso="4" hidden>
+    <h2><span data-lang="es">4 · Reparar solo lo que falló</span><span data-lang="en" hidden>4 · Repair only what failed</span></h2>
+    <p class="sub"><span data-lang="es">Las líneas válidas se conservan. Al modelo se le reenvían solo las inválidas, y los registros que faltan se piden aparte.</span>
+      <span data-lang="en" hidden>Valid lines are kept. Only the invalid ones are sent back to the model, and missing records are requested separately.</span></p>
+    <div id="res-solicitud"></div>
+    <div id="bloque-correccion" hidden>
+      <div class="tl-fila">
+        <span class="et"><span data-lang="es">Corrección que devolvió el modelo:</span><span data-lang="en" hidden>Correction returned by the model:</span></span>
+        <button type="button" class="tl-chip" id="correccion-ejemplo"><span data-lang="es">Usar corrección de ejemplo</span><span data-lang="en" hidden>Use sample correction</span></button>
+        <button type="button" class="tl-chip" id="correccion-mala"><span data-lang="es">Usar corrección todavía inválida</span><span data-lang="en" hidden>Use a still invalid correction</span></button>
+      </div>
+      <textarea id="correccion" spellcheck="false" aria-label="Corrección" style="min-height:7rem"></textarea>
+      <div class="tl-fila">
+        <button type="button" class="btn btn-solid" id="fusionar"><span data-lang="es">Fusionar corrección</span><span data-lang="en" hidden>Merge correction</span></button>
+      </div>
+    </div>
+    <div id="res-fusion"></div>
+  </section>
+
+  <!-- 5 · Resultado -->
+  <section class="tl-panel" data-paso="5" hidden>
+    <h2><span data-lang="es">5 · Resultado para tu aplicación</span><span data-lang="en" hidden>5 · Result for your application</span></h2>
+    <p class="sub"><span data-lang="es">El JSON con los registros validados, listo para guardar, y lo que costó en tokens frente a pedirlo en JSON.</span>
+      <span data-lang="en" hidden>The JSON with the validated records, ready to store, and its token cost compared with asking for JSON.</span></p>
+    <div class="tl-fila">
+      <button type="button" class="btn btn-solid" id="descargar-json"><span data-lang="es">Descargar JSON</span><span data-lang="en" hidden>Download JSON</span></button>
+      <button type="button" class="btn" id="copiar-json"><span data-lang="es">Copiar JSON</span><span data-lang="en" hidden>Copy JSON</span></button>
+    </div>
+    <div id="res-tokens"></div>
+    <pre id="json-final"></pre>
+  </section>
+
+  <div class="tl-nav">
+    <button type="button" class="btn" id="anterior"><span data-lang="es">← Anterior</span><span data-lang="en" hidden>← Back</span></button>
+    <button type="button" class="btn" id="reiniciar"><span data-lang="es">Reiniciar taller</span><span data-lang="en" hidden>Reset workshop</span></button>
+    <button type="button" class="btn btn-solid" id="siguiente"><span data-lang="es">Siguiente →</span><span data-lang="en" hidden>Next →</span></button>
+  </div>
+  <p class="tl-nota" id="nota"></p>
+</main>
+__PIE__
+<script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@3.0.1/dist/o200k_base.js" onerror="window.__tokFail=true"></script>
+<script>__MINI_JS__</script>
+<script>const DATOS = __DATOS__;</script>
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const es = () => document.documentElement.lang !== "en";
+  const t = (par) => par[es() ? 0 : 1];
+  const CLAVE = "mini-taller";
+  const EXPLICA = {
+    E01: ["no hay cabecera: la respuesta no trae ningún documento", "no header: the answer has no document"],
+    E04: ["la cabecera anuncia más registros de los que llegaron", "the header announces more records than arrived"],
+    E05: ["el registro tiene otra cantidad de campos (llegó cortado)", "the record has a different number of fields (it was cut)"],
+    E06: ["el valor no es del tipo que pide el contrato", "the value is not of the contract's type"],
+    E10: ["el valor no está entre los permitidos", "the value is not among the allowed ones"],
+    E13: ["el número está fuera del rango permitido", "the number is out of the allowed range"],
+  };
+  const escapar = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const num = (v) => v.toLocaleString(es() ? "es" : "en");
+
+  // ------------------------------------------------------------ estado (se guarda en este navegador)
+  let estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
+  let contrato = null, correcto = "";
+  try { Object.assign(estado, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {} };
+
+  // ------------------------------------------------------------ pasos
+  const NOMBRES = [["Esquema", "Schema"], ["Instrucción", "Instruction"], ["Respuesta", "Answer"], ["Reparación", "Repair"], ["Resultado", "Result"]];
+  function pintarPasos() {
+    $("#pasos").innerHTML = NOMBRES.map((n, i) => {
+      const p = i + 1, actual = p === estado.paso, hecho = p < estado.paso;
+      return '<li><button type="button" data-ir="' + p + '"' + (actual ? ' aria-current="step"' : "") +
+        (hecho ? ' class="hecho"' : "") + (p > 1 && !contrato ? " disabled" : "") + '><span class="num">' + (hecho ? "✓" : p) +
+        "</span>" + t(n) + "</button></li>";
+    }).join("");
+    $$("#pasos [data-ir]").forEach((b) => b.addEventListener("click", () => ir(Number(b.dataset.ir))));
+    $$("[data-paso]").forEach((s) => { s.hidden = Number(s.dataset.paso) !== estado.paso; });
+    $("#anterior").disabled = estado.paso === 1;
+    $("#siguiente").disabled = estado.paso === 5 || !contrato;
+  }
+  function ir(p, desplazar = true) {
+    if (p > 1 && !contrato) return;
+    estado.paso = Math.max(1, Math.min(5, p)); guardar();
+    if (estado.paso === 2) pintarInstruccion();
+    if (estado.paso === 4) pintarSolicitud();
+    if (estado.paso === 5) pintarResultado();
+    pintarPasos();
+    if (desplazar) window.scrollTo({ top: $("#pasos").offsetTop - 80, behavior: "smooth" });
+  }
+
+  // ------------------------------------------------------------ 1 · esquema → contrato
+  function cargarEjemplo(nombre) {
+    const e = DATOS.ejemplos[nombre];
+    $("#esquema").value = JSON.stringify(e.esquema, null, 2);
+    $("#prefijo").value = e.prefijo;
+    generar();
+  }
+  function describirCampo(f) {
+    if (f.values) return (es() ? "valores permitidos: " : "allowed values: ") + f.values.join(", ");
+    if (f.min !== undefined || f.max !== undefined) return (es() ? "entre " : "between ") + (f.min ?? "−∞") + (es() ? " y " : " and ") + (f.max ?? "∞");
+    if (f.type === "date") return es() ? "fecha AAAA-MM-DD" : "date YYYY-MM-DD";
+    return "";
+  }
+  function generar() {
+    const caja = $("#res-contrato");
+    estado.esquema = $("#esquema").value; estado.prefijo = $("#prefijo").value.trim() || "tk";
+    try {
+      contrato = MINI.fromJsonSchema(JSON.parse(estado.esquema), { prefix: estado.prefijo });
+    } catch (e) {
+      contrato = null;
+      caja.innerHTML = '<p class="tl-aviso mal">' + escapar(t(["No se pudo generar el contrato: ", "The contract could not be generated: "]) + (e.message || e)) + "</p>";
+      guardar(); pintarPasos(); return;
+    }
+    correcto = muestra("ok");
+    caja.innerHTML =
+      '<p class="tl-aviso bien">' + t(["Contrato generado: cada registro será una línea con estos ", "Contract generated: each record will be one line with these "]) +
+      contrato.core.length + t([" valores, en este orden.", " values, in this order."]) + "</p>" +
+      '<div class="tabla"><table><thead><tr><th>#</th><th>' + t(["Campo", "Field"]) + "</th><th>" + t(["Tipo", "Type"]) + "</th><th>" +
+      t(["Regla", "Rule"]) + "</th></tr></thead><tbody>" +
+      contrato.core.map((f, i) => "<tr><td>" + (i + 1) + "</td><td><code>" + escapar(f.name) + "</code></td><td>" + escapar(f.type) +
+        "</td><td>" + escapar(describirCampo(f)) + "</td></tr>").join("") + "</tbody></table></div>" +
+      '<div class="tl-fila"><button type="button" class="btn" id="descargar-contrato">' + t(["Descargar contract.json", "Download contract.json"]) +
+      '</button><button type="button" class="btn" id="copiar-comando">' + t(["Copiar el comando equivalente", "Copy the equivalent command"]) + "</button></div>" +
+      '<p class="tl-nota">' + t(["Firma: ", "Signature: "]) + "<code>" + escapar(MINI.signature(MINI.normalizeContract(contrato))) + "</code></p>";
+    $("#descargar-contrato").addEventListener("click", () => descargar("contract.json", JSON.stringify(contrato, null, 2)));
+    $("#copiar-comando").addEventListener("click", (ev) => copiar("mini from-schema esquema.json -p " + estado.prefijo + " --out contrato_" + estado.prefijo + ".json", ev.target));
+    guardar(); pintarPasos();
+  }
+
+  // ------------------------------------------------------------ respuestas de ejemplo generadas desde el contrato
+  const TEXTOS = ["Solicitud de acceso al portal", "Cobro duplicado en la factura", "La aplicación se cierra al abrir", "Consulta sobre el reporte mensual",
+                  "Cambio de correo de la cuenta", "Error al exportar a Excel", "Transferencia sin reflejar", "Pedido con dirección incorrecta",
+                  "Producto sin stock en la tienda", "Actualización de datos del cliente"];
+  const PRODUCTOS = ["Lámpara de escritorio", "Audífonos inalámbricos", "Polo de algodón", "Café tostado 500 g", "Silla ergonómica",
+                   "Teclado mecánico", "Chaqueta impermeable", "Arroz integral 1 kg", "Organizador de cajones", "Monitor de 24 pulgadas"];
+  const CLIENTES = ["Ana Torres", "Luis Quispe", "María Rojas", "Jorge Huamán", "Lucía Flores", "Carlos Díaz", "Rosa Mendoza",
+                    "Pedro Salas", "Elena Castro", "Diego Vargas"];
+  function texto(f, i) {
+    if (f.name === "id" || /id$/i.test(f.name)) return estado.prefijo.toUpperCase() + "-" + String(1001 + i);
+    if (/nombre|producto|titulo/i.test(f.name)) return PRODUCTOS[i % PRODUCTOS.length];
+    if (/cliente|usuario|persona/i.test(f.name)) return CLIENTES[i % CLIENTES.length];
+    return TEXTOS[i % TEXTOS.length];
+  }
+  // campo que se rompe en los ejemplos con error: el primero con valores o rango verificables
+  const campoFragil = () => Math.max(0, contrato.core.findIndex((f) => ["enum", "int", "date"].includes(f.type)));
+  const valorInvalido = (f) => f.type === "enum" ? "valor_inventado" : f.type === "date" ? "2026-13-40" : "mucho";
+
+  function valor(f, i) {
+    const ok = (v) => Math.max(f.min ?? -Infinity, Math.min(f.max ?? Infinity, v));
+    switch (f.type) {
+      case "enum": return f.values[i % f.values.length];
+      case "int": return ok(Math.round((f.min ?? 1) + ((i * 3) % Math.max(1, Math.min(40, (f.max ?? 40) - (f.min ?? 1) + 1)))));
+      case "float": return Number(ok((f.min ?? 0) + 9.9 + i * 7.25).toFixed(2));
+      case "decimal": return (19.9 + i * 5).toFixed(2);
+      case "bool": return i % 3 !== 0;
+      case "date": return "2026-09-" + String((i % 28) + 1).padStart(2, "0");
+      default: return texto(f, i);
+    }
+  }
+  function muestra(tipo) {
+    const n = 10;
+    const objs = Array.from({ length: n }, (_, i) => Object.fromEntries(contrato.core.map((f) => [f.name, valor(f, i)])));
+    const texto = MINI.dumps({ header: {}, [contrato.records_key || "records"]: objs }, contrato);
+    if (tipo === "ok") return texto;
+    const lineas = texto.replace(/\n$/, "").split("\n");
+    if (tipo === "error") {
+      const k = campoFragil();
+      const partes = lineas[3].split("|");
+      partes[k] = valorInvalido(contrato.core[k]);
+      lineas[3] = partes.join("|");
+      return lineas.join("\n") + "\n";
+    }
+    const corte = Math.floor(texto.length * 0.72);
+    return texto.slice(0, corte);
+  }
+
+  // ------------------------------------------------------------ 2 · instrucción
+  function pintarInstruccion() {
+    $("#instruccion").textContent = MINI.specBlock(contrato, estado.idioma);
+    $$("[data-idioma]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.idioma === estado.idioma)));
+  }
+
+  // ------------------------------------------------------------ 3 · validación
+  function leer(texto) {
+    try { return MINI.parse(texto, contrato, { strict: false }); } catch (e) { return { vacio: true, errors: e.errors || [{ code: "E01", line: 0 }], records: [], header: {} }; }
+  }
+  function validar() {
+    estado.respuesta = $("#respuesta").value; estado.correccion = ""; estado.fusionado = ""; estado.faltantesPedidos = false; guardar();
+    const d = leer(estado.respuesta), caja = $("#res-validacion");
+    const anunciados = (d.header && d.header.n) || d.records.length;
+    const invalidas = [...new Set(d.errors.filter((e) => e.line).map((e) => e.line))];
+    const faltan = Math.max(0, anunciados - d.records.length - invalidas.length);
+    const cortada = /E05/.test(d.errors.map((e) => e.code).join()) && !estado.respuesta.endsWith("\n");
+    const cifra = (v, k, c) => '<div class="tl-cifra ' + (c || "") + '"><span class="v">' + v + '</span><span class="k">' + k + "</span></div>";
+    let html = d.errors.length === 0
+      ? '<p class="tl-aviso bien">' + t(["Respuesta válida: ", "Valid answer: "]) + d.records.length + t([" registros cumplen el contrato.", " records meet the contract."]) + "</p>"
+      : '<p class="tl-aviso mal">' + t(["La respuesta tiene problemas, pero no se pierde: los registros válidos se conservan.", "The answer has problems, but it is not lost: valid records are kept."]) + "</p>";
+    html += '<div class="tl-cifras">' + cifra(anunciados, t(["anunciados en la cabecera", "announced in the header"])) +
+      cifra(d.records.length, t(["válidos", "valid"]), "bien") + cifra(invalidas.length, t(["líneas con error", "lines with errors"]), invalidas.length ? "mal" : "") +
+      cifra(faltan, t(["registros que faltan", "missing records"]), faltan ? "mal" : "") + cifra(cortada ? t(["sí", "yes"]) : "no", t(["¿respuesta cortada?", "answer cut?"])) + "</div>";
+    if (d.errors.length) {
+      const lineas = estado.respuesta.split("\n");
+      html += '<div class="tabla"><table><thead><tr><th>' + t(["Línea", "Line"]) + "</th><th>" + t(["Código", "Code"]) + "</th><th>" +
+        t(["Campo", "Field"]) + "</th><th>" + t(["Qué pasó", "What happened"]) + "</th><th>" + t(["Contenido", "Content"]) + "</th></tr></thead><tbody>" +
+        d.errors.map((e) => "<tr><td>" + (e.line || "—") + '</td><td class="error-cod">' + e.code + "</td><td>" + escapar(e.field || "—") + "</td><td>" +
+          escapar(EXPLICA[e.code] ? t(EXPLICA[e.code]) : e.message) + "</td><td><code>" + escapar((e.line ? lineas[e.line - 1] || "" : "").slice(0, 90)) +
+          "</code></td></tr>").join("") + "</tbody></table></div>";
+    }
+    if (d.records.length) {
+      html += "<h3 style='font-size:var(--fs-cap);margin:1.2rem 0 .4rem'>" + t(["Registros válidos (con sus tipos)", "Valid records (typed)"]) + "</h3>" +
+        '<div class="tabla"><table><thead><tr>' + contrato.core.map((f) => "<th>" + escapar(f.name) + "</th>").join("") + "</tr></thead><tbody>" +
+        d.records.slice(0, 12).map((r) => "<tr>" + contrato.core.map((f) => "<td>" + escapar(r[f.name]) + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>";
+    }
+    html += '<div class="tl-fila"><button type="button" class="btn btn-solid" id="ir-reparar">' +
+      (d.errors.length ? t(["Reparar lo que falló →", "Repair what failed →"]) : t(["Ver el resultado →", "See the result →"])) + "</button></div>";
+    caja.innerHTML = html;
+    $("#ir-reparar").addEventListener("click", () => ir(d.errors.length ? 4 : 5));
+  }
+
+  // ------------------------------------------------------------ 4 · reparación
+  let solicitud = null;
+  function textoActual() { return estado.fusionado || estado.respuesta; }
+  function pintarSolicitud() {
+    const texto = textoActual(), d = leer(texto), caja = $("#res-solicitud");
+    solicitud = null;
+    if (d.vacio) { caja.innerHTML = '<p class="tl-aviso mal">' + t(["La respuesta no trae un documento: hay que pedirla de nuevo.", "The answer has no document: ask again."]) + "</p>"; $("#bloque-correccion").hidden = true; return; }
+    solicitud = MINI.repairRequest(texto, contrato, estado.idioma, { includeSpec: false });
+    const anunciados = d.header.n || d.records.length;
+    const faltan = Math.max(0, anunciados - d.records.length - new Set(solicitud.lines).size);
+    let html = "";
+    if (solicitud.needed) {
+      html += '<p class="tl-aviso info">' + t(["Se reenvían al modelo solo las líneas ", "Only lines "]) + "<strong>" + solicitud.lines.join(", ") + "</strong>" +
+        t([" de " + anunciados + "; las " + d.records.length + " válidas no se vuelven a pagar.", " of " + anunciados + " are sent back; the " + d.records.length + " valid ones are not paid again."]) + "</p>" +
+        '<div class="tl-fila"><button type="button" class="btn" id="copiar-solicitud">' + t(["Copiar la solicitud de reparación", "Copy the repair request"]) + "</button></div>" +
+        "<pre>" + escapar(solicitud.user) + "</pre>";
+    } else {
+      html += '<p class="tl-aviso bien">' + t(["No hay líneas inválidas que reparar.", "There are no invalid lines to repair."]) + "</p>";
+    }
+    if (faltan > 0 && !estado.faltantesPedidos) {
+      html += '<p class="tl-aviso info">' + t(["Faltan ", "There are "]) + faltan + t([" registros: se piden aparte, sin repetir los que ya llegaron.", " missing records: they are requested separately, without repeating the ones that arrived."]) +
+        '</p><div class="tl-fila"><button type="button" class="btn" id="pedir-faltantes">' + t(["Pedir solo los que faltan (ejemplo)", "Request only the missing ones (sample)"]) + "</button></div>";
+    }
+    caja.innerHTML = html;
+    $("#bloque-correccion").hidden = !solicitud.needed;
+    $("#correccion").value = estado.correccion || "";
+    if ($("#copiar-solicitud")) $("#copiar-solicitud").addEventListener("click", (ev) => copiar(solicitud.user, ev.target));
+    if ($("#pedir-faltantes")) $("#pedir-faltantes").addEventListener("click", pedirFaltantes);
+  }
+  function lineasCorrectas(numeros) {
+    const buenas = correcto.replace(/\n$/, "").split("\n");
+    return numeros.map((n) => buenas[n - 1]).filter(Boolean);
+  }
+  function correccionEjemplo(mala) {
+    const ls = lineasCorrectas(solicitud.lines);
+    const k = campoFragil();
+    const cuerpo = mala ? ls.map((l, i) => i === 0 ? l.split("|").map((v, j) => j === k ? valorInvalido(contrato.core[k]) : v).join("|") : l) : ls;
+    $("#correccion").value = estado.prefijo + "|n=" + cuerpo.length + "\n" + cuerpo.join("\n") + "\n";
+  }
+  function fusionar() {
+    estado.correccion = $("#correccion").value;
+    const antes = textoActual();
+    const r = MINI.mergeRepair(antes, estado.correccion, contrato, solicitud);
+    const aceptadas = r.replaced || [], pendientes = r.unresolved || [];
+    let html = aceptadas.length ? '<p class="tl-aviso bien">' + t(["Correcciones aceptadas en las líneas ", "Corrections accepted in lines "]) + aceptadas.join(", ") + ".</p>" : "";
+    if (pendientes.length) html += '<p class="tl-aviso mal">' + t(["Rechazadas porque siguen sin cumplir el contrato: líneas ", "Rejected because they still break the contract: lines "]) + pendientes.join(", ") + ".</p>";
+    if (aceptadas.length) { estado.fusionado = r.text; }
+    guardar();
+    const validos = r.document ? r.document.records.length : 0;
+    html += '<p class="tl-aviso info">' + t(["Registros válidos ahora: ", "Valid records now: "]) + validos + ".</p>" +
+      '<div class="tl-fila"><button type="button" class="btn btn-solid" id="ir-resultado">' + t(["Ver el resultado →", "See the result →"]) + "</button></div>";
+    $("#res-fusion").innerHTML = html;
+    $("#ir-resultado").addEventListener("click", () => ir(5));
+    if (aceptadas.length) pintarSolicitud();
+  }
+  function pedirFaltantes() {
+    const d = leer(textoActual());
+    const tienen = new Set(d.records.map((r) => JSON.stringify(r)));
+    const buenas = correcto.replace(/\n$/, "").split("\n").slice(1);
+    const validos = d.records.map((r) => r);
+    const faltantes = buenas.filter((l) => !tienen.has(JSON.stringify(leer(estado.prefijo + "|n=1\n" + l + "\n").records[0] || {})));
+    const completos = MINI.dumps({ header: {}, [contrato.records_key || "records"]: validos }, contrato).replace(/\n$/, "").split("\n").slice(1);
+    const todas = completos.concat(faltantes);
+    estado.fusionado = estado.prefijo + "|n=" + todas.length + "\n" + todas.join("\n") + "\n";
+    estado.faltantesPedidos = true; guardar();
+    $("#res-fusion").innerHTML = '<p class="tl-aviso bien">' + t(["Se pidieron solo ", "Only "]) + faltantes.length +
+      t([" registros; el lote queda completo con ", " records were requested; the batch is complete with "]) + todas.length + t([" registros.", " records."]) +
+      '</p><div class="tl-fila"><button type="button" class="btn btn-solid" id="ir-resultado">' + t(["Ver el resultado →", "See the result →"]) + "</button></div>";
+    $("#ir-resultado").addEventListener("click", () => ir(5));
+    pintarSolicitud();
+  }
+
+  // ------------------------------------------------------------ 5 · resultado y tokens
+  const contar = (s) => (window.GPTTokenizer_o200k_base && window.GPTTokenizer_o200k_base.encode)
+    ? window.GPTTokenizer_o200k_base.encode(s).length : Math.round(new TextEncoder().encode(s).length / 3.6);
+  function pintarResultado() {
+    const texto = textoActual(), d = leer(texto);
+    const registros = d.records || [];
+    const json = JSON.stringify({ [contrato.records_key || "records"]: registros }, null, 2);
+    $("#json-final").textContent = json;
+    const mini = MINI.dumps({ header: {}, [contrato.records_key || "records"]: registros }, contrato);
+    const compacto = JSON.stringify({ [contrato.records_key || "records"]: registros });
+    const tm = contar(mini), tc = contar(compacto), ti = contar(json);
+    const exacto = !!(window.GPTTokenizer_o200k_base && window.GPTTokenizer_o200k_base.encode);
+    const cifra = (v, k, c) => '<div class="tl-cifra ' + (c || "") + '"><span class="v">' + v + '</span><span class="k">' + k + "</span></div>";
+    $("#res-tokens").innerHTML = '<div class="tl-cifras">' + cifra(registros.length, t(["registros validados", "validated records"]), "bien") +
+      cifra(num(tm), t(["tokens en .mini", "tokens in .mini"]), "bien") + cifra(num(tc), t(["tokens en JSON compacto", "tokens in compact JSON"])) +
+      cifra(num(ti), t(["tokens en JSON indentado", "tokens in indented JSON"])) +
+      cifra(tc ? Math.round(100 * (tc - tm) / tc) + " %" : "—", t(["menos que JSON compacto", "fewer than compact JSON"]), "bien") + "</div>" +
+      '<p class="tl-nota">' + (exacto ? t(["Tokens contados con o200k_base (el tokenizador de GPT-4o).", "Tokens counted with o200k_base (GPT-4o tokenizer)."])
+                                    : t(["Tokens estimados (≈ bytes/3,6): no se pudo cargar el tokenizador exacto.", "Estimated tokens (≈ bytes/3.6): the exact tokenizer could not be loaded."])) + "</p>";
+  }
+
+  // ------------------------------------------------------------ utilidades
+  function descargar(nombre, contenido) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([contenido], { type: "application/json" }));
+    a.download = nombre; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  function copiar(texto, boton) {
+    const listo = () => { const o = boton.innerHTML; boton.textContent = t(["¡Copiado!", "Copied!"]); setTimeout(() => { boton.innerHTML = o; }, 1400); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(listo, listo); else listo();
+  }
+
+  // ------------------------------------------------------------ eventos
+  $$("[data-ejemplo]").forEach((b) => b.addEventListener("click", () => cargarEjemplo(b.dataset.ejemplo)));
+  $("#archivo").addEventListener("change", (ev) => {
+    const f = ev.target.files[0]; if (!f) return;
+    f.text().then((txt) => { $("#esquema").value = txt; generar(); });
+  });
+  $("#generar").addEventListener("click", generar);
+  $$("[data-idioma]").forEach((b) => b.addEventListener("click", () => { estado.idioma = b.dataset.idioma; guardar(); pintarInstruccion(); }));
+  $("#copiar-instruccion").addEventListener("click", (ev) => copiar($("#instruccion").textContent, ev.currentTarget));
+  $$("[data-muestra]").forEach((b) => b.addEventListener("click", () => { $("#respuesta").value = muestra(b.dataset.muestra); validar(); }));
+  $("#validar").addEventListener("click", validar);
+  $("#correccion-ejemplo").addEventListener("click", () => correccionEjemplo(false));
+  $("#correccion-mala").addEventListener("click", () => correccionEjemplo(true));
+  $("#fusionar").addEventListener("click", fusionar);
+  $("#descargar-json").addEventListener("click", () => descargar("resultado.json", $("#json-final").textContent));
+  $("#copiar-json").addEventListener("click", (ev) => copiar($("#json-final").textContent, ev.currentTarget));
+  $("#anterior").addEventListener("click", () => ir(estado.paso - 1));
+  $("#siguiente").addEventListener("click", () => ir(estado.paso + 1));
+  $("#reiniciar").addEventListener("click", () => {
+    try { localStorage.removeItem(CLAVE); } catch (e) {}
+    estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
+    contrato = null; $("#res-contrato").innerHTML = ""; $("#res-validacion").innerHTML = ""; $("#res-fusion").innerHTML = ""; $("#respuesta").value = "";
+    cargarEjemplo("tickets"); ir(1);
+  });
+  new MutationObserver(() => { pintarPasos(); if (contrato) generar(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+  // ------------------------------------------------------------ arranque: se retoma lo guardado
+  $("#nota").textContent = t(["Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), el mismo de la biblioteca TypeScript. Nada sale de tu navegador.",
+                              "Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), the same as the TypeScript library. Nothing leaves your browser."]);
+  if (estado.esquema) { $("#esquema").value = estado.esquema; $("#prefijo").value = estado.prefijo; generar(); } else { cargarEjemplo("tickets"); }
+  $("#respuesta").value = estado.respuesta || "";
+  if (contrato && estado.respuesta) validar();
+  const pedido = Number(new URLSearchParams(location.search).get("paso"));
+  ir(pedido >= 1 && pedido <= 5 ? pedido : estado.paso, false);
+})();
+</script>
+<script src="/docs.js"></script>
+</body>
+</html>

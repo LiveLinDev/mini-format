@@ -150,6 +150,7 @@ def cabecera(activo: str = "") -> str:
                    a("docs/forks", "Familias", "Families"),
                    a("playground", "Playground", "Playground"),
                    a("mesa-de-ayuda", "Demo", "Demo"),
+                   a("taller", "Taller", "Workshop"),
                    a("ejemplo", "Ejemplo", "Example")])
     return f'''<a class="skip" href="#contenido">{ambos("Saltar al contenido", "Skip to content")}</a>
 <header class="site-header"><div class="wrap nav">
@@ -904,6 +905,50 @@ def construir_ejemplo() -> None:
           f"{grande['n']} registros = {grande['tokens']['mini']} tokens en .mini y {grande['tokens']['json']} en JSON")
 
 
+EJEMPLOS_TALLER = {
+    "productos": {"prefijo": "pr", "esquema": {
+        "title": "Productos del catálogo", "type": "object",
+        "properties": {
+            "id": {"type": "string", "description": "código del producto"},
+            "nombre": {"type": "string"},
+            "categoria": {"type": "string", "enum": ["hogar", "tecnología", "ropa", "alimentos"]},
+            "precio": {"type": "number", "minimum": 0},
+            "stock": {"type": "integer", "minimum": 0, "maximum": 5000},
+            "disponible": {"type": "boolean"}},
+        "required": ["id", "nombre", "categoria", "precio", "stock", "disponible"]}},
+    "pedidos": {"prefijo": "pd", "esquema": {
+        "title": "Pedidos de clientes", "type": "object",
+        "properties": {
+            "id": {"type": "string", "description": "número de pedido"},
+            "cliente": {"type": "string"},
+            "fecha": {"type": "string", "format": "date"},
+            "estado": {"type": "string", "enum": ["pendiente", "enviado", "entregado", "cancelado"]},
+            "total": {"type": "number", "minimum": 0},
+            "unidades": {"type": "integer", "minimum": 1, "maximum": 99}},
+        "required": ["id", "cliente", "fecha", "estado", "total", "unidades"]}},
+}
+
+
+def construir_taller() -> None:
+    """Página /taller/: del JSON Schema al JSON validado en cinco pasos, con el motor js/mini.js en el navegador."""
+    tickets = json.loads((RAIZ / "examples" / "mesa-de-ayuda" / "ticket.schema.json").read_text(encoding="utf-8"))
+    datos = {"ejemplos": {"tickets": {"prefijo": "tk", "esquema": tickets}, **EJEMPLOS_TALLER}}
+    safe = lambda js: js.replace("</script", "<\/script")
+    pagina = (RAIZ / "examples" / "taller" / "plantilla.html").read_text(encoding="utf-8")
+    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+                         ("__CABECERA__", cabecera("taller")),
+                         ("__PIE__", pie()),
+                         ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
+                         ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
+        if marca not in pagina:
+            raise SystemExit(f"plantilla del taller: falta la marca {marca}")
+        pagina = pagina.replace(marca, valor, 1)
+    destino = SITIO / "taller" / "index.html"
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(pagina, encoding="utf-8")
+    print(f"  taller de integración: {len(pagina.encode('utf-8')) // 1024} KB, {len(datos['ejemplos'])} esquemas de ejemplo")
+
+
 def sellar() -> None:
     """version.json: qué commit construyó lo publicado (GITHUB_SHA en CI, 'local' fuera)."""
     import os
@@ -920,6 +965,7 @@ if __name__ == "__main__":
     construir_playground()
     construir_mesa()
     construir_ejemplo()
+    construir_taller()
     from publicar import prepare_public_site
     prepare_public_site(TRADUCCIONES)
     import subprocess

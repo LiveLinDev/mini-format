@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(ROOT, 'ts', 'src');
 export const OUTPUT = path.join(ROOT, 'js', 'mini.js');
-const ENTRY = ['errors', 'values', 'codec', 'contract', 'parser', 'serializer', 'prompt', 'stream'];
+const ENTRY = ['errors', 'values', 'codec', 'contract', 'parser', 'serializer', 'prompt', 'stream', 'repair', 'schema'];
 
 const IMPORT_RE = /^\s*import\s+([^;]*?)\s+from\s+['"]\.\/([\w-]+)\.ts['"];?/gm;
 const EXPORT_RE = /^export\s+((?:async\s+)?(?:function\*?|class|const|let|var))\s+([A-Za-z_$][\w$]*)/gm;
