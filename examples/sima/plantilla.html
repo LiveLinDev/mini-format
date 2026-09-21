@@ -278,7 +278,9 @@ __PIE__
     E02: ["la primera línea no es la cabecera del contrato", "the first line is not the contract header"],
     E03: ["la cabecera no declara el número de registros", "the header does not declare the record count"],
     E05: ["la línea tiene otra cantidad de campos (llegó cortada o mal separada)", "the line has a different number of fields (cut or badly separated)"],
+    E06: ["un valor no es del tipo que exige el contrato (por ejemplo, texto donde va un número)", "a value is not of the type the contract requires (for example, text where a number goes)"],
     E07: ["la pregunta no tiene el número de opciones que exige el contrato", "the question does not have the number of options the contract requires"],
+    E13: ["un número está fuera del rango permitido (por ejemplo, dificultad fuera de 1 a 5)", "a number is out of the allowed range (for example, difficulty outside 1 to 5)"],
     E08: ["la pregunta no tiene marcada la respuesta correcta", "the question has no correct answer marked"],
     E10: ["valor fuera de los permitidos", "value outside the allowed ones"],
     E11: ["identificador repetido", "repeated identifier"],
@@ -509,24 +511,37 @@ __PIE__
       else $("#vivo-procesar").disabled = !vivo.conectado;
     } catch (x) { vivo.temporizador = setTimeout(seguir, 4000); }
   }
+  function pintarConservando(selector, html) {
+    // la página se redibuja cada pocos segundos: se conservan abiertos los detalles que la persona abrió y su desplazamiento
+    const caja = $(selector), abiertos = {};
+    caja.querySelectorAll("details[data-clave]").forEach((x) => {
+      if (x.open) { const pre = x.querySelector("pre"); abiertos[x.dataset.clave] = pre ? pre.scrollTop : 0; }
+    });
+    caja.innerHTML = html;
+    caja.querySelectorAll("details[data-clave]").forEach((x) => {
+      if (x.dataset.clave in abiertos) { x.open = true; const pre = x.querySelector("pre"); if (pre) pre.scrollTop = abiertos[x.dataset.clave]; }
+    });
+  }
   function pintarVivo(d) {
     const L = d.lectura || {}, r = L.resumen || {}, bloques = L.bloques || [];
     const total = L.total_bloques || (d.terminado ? bloques.length : 0);
     const pct = d.terminado ? 100 : (total ? Math.round(100 * bloques.length / total) : 3);
-    $("#vivo-avance").innerHTML = '<div class="sm-progreso"><div style="width:' + pct + '%"></div></div>' +
+    pintarConservando("#vivo-avance", '<div class="sm-progreso"><div style="width:' + pct + '%"></div></div>' +
       '<p class="sm-nota"><b>' + escapar(d.etapa || d.estado) + "</b> · " + (total ? bloques.length + " / " + total + t([" bloques · ", " blocks · "]) : "") +
       d.segundos + " s · " + num(d.palabras) + t([" palabras", " words"]) + "</p>" +
-      "<details><summary>" + t(["Registro de SIMA", "SIMA log"]) + "</summary><pre>" + escapar((d.registro || []).join("\n")) + "</pre></details>" +
-      (d.error ? '<p class="sm-aviso mal">' + escapar(d.error) + "</p>" : "");
-    $("#vivo-bloques").innerHTML = bloques.length ? '<div class="tabla"><table><thead><tr><th>' + t(["Bloque", "Block"]) + "</th><th>" +
+      '<details data-clave="registro"><summary>' + t(["Registro de SIMA", "SIMA log"]) + "</summary><pre>" + escapar((d.registro || []).join("\n")) + "</pre></details>" +
+      (d.error ? '<p class="sm-aviso mal">' + escapar(d.error) + "</p>" : ""));
+    pintarConservando("#vivo-bloques", bloques.length ? '<div class="tabla"><table><thead><tr><th>' + t(["Bloque", "Block"]) + "</th><th>" +
       t(["Pedidas", "Requested"]) + "</th><th>" + t(["Válidas al llegar", "Valid on arrival"]) + "</th><th>" + t(["Rechazadas (código · línea)", "Rejected (code · line)"]) +
       "</th><th>" + t(["Reparadas", "Repaired"]) + "</th><th>" + t(["Lector anterior", "Previous reader"]) + "</th><th>" + t(["Respuesta del modelo", "Model answer"]) +
       "</th></tr></thead><tbody>" + bloques.map((b, i) => "<tr><td>" + (i + 1) + "</td><td>" + b.pedidos + "</td><td>" + b.recibidos + "</td><td>" +
-        (b.lineas_invalidas.length ? b.lineas_invalidas.map((e) => '<span class="cod">' + e[1] + "</span> · " + e[0]).join("<br>") : "—") + "</td><td>" +
+        (b.lineas_invalidas.length ? b.lineas_invalidas.map((e) => '<span class="cod" title="' + escapar(t(EXPLICA[e[1]] || ["", ""])) + '">' + e[1] + "</span> · " +
+          t(["línea ", "line "]) + e[0] + (e[2] ? " · <code>" + escapar(e[2]) + "</code>" : "") +
+          (EXPLICA[e[1]] ? '<br><span class="sm-nota">' + escapar(t(EXPLICA[e[1]])) + "</span>" : "")).join("<br>") : "—") + "</td><td>" +
         b.reparados.length + (b.recuperados ? " + " + b.recuperados + t([" pedidas aparte", " requested separately"]) : "") + "</td><td>" +
         b.legado_aceptados + t([" aceptadas", " accepted"]) + (b.legado_invalidos ? ', <span class="cod">' + b.legado_invalidos + t([" inválidas", " invalid"]) + "</span>" : "") +
-        "</td><td><details><summary>" + t(["ver", "show"]) + "</summary><pre>" + escapar(b.respuesta || "") + "</pre></details></td></tr>").join("") +
-      "</tbody></table></div>" : "";
+        '</td><td><details data-clave="bloque-' + i + '"><summary>' + t(["ver", "show"]) + "</summary><pre>" + escapar(b.respuesta || "") + "</pre></details></td></tr>").join("") +
+      "</tbody></table></div>" : "");
     if (!d.terminado) { $("#vivo-resultado").innerHTML = ""; return; }
     const k = r.tokens || {};
     $("#vivo-resultado").innerHTML = '<div class="sm-cifras">' + cifra(r.pedidos ?? "—", t(["preguntas pedidas", "questions requested"])) +
@@ -619,7 +634,7 @@ __PIE__
     $("#comparar-estado").innerHTML = '<p class="sm-nota"><b>' + escapar(d.proveedor + " " + d.modelo) + "</b> · " + d.items +
       t([" preguntas pedidas en cada formato · fragmento de ", " questions requested in each format · fragment of "]) + num(d.palabras) +
       t([" palabras · límite de salida ", " words · output limit "]) + num(d.limite_salida) + " tokens · " + (d.terminado ? Math.max((d.mini || {}).segundos || 0, (d.json || {}).segundos || 0) : d.segundos) + " s</p>";
-    $("#comparar-vivo").innerHTML = FORMATOS.map(([f, nombre]) => {
+    pintarConservando("#comparar-vivo", FORMATOS.map(([f, nombre]) => {
       const x = d[f] || {}, listo = x.estado === "listo";
       const estado = x.estado === "error" ? t(["error: ", "error: "]) + escapar(x.error || "") :
         listo ? (x.corte ? t(["cortada por el límite", "cut by the limit"]) : t(["completa", "complete"])) : t(["generando…", "generating…"]);
@@ -629,8 +644,8 @@ __PIE__
         (listo ? '<p class="' + (x.validas ? "sm-aviso bien" : "sm-aviso mal") + '">' + x.validas + t([" de ", " of "]) + d.items +
           t([" preguntas utilizables", " usable questions"]) + (x.error ? " · " + escapar(x.error) : "") +
           (x.rechazadas && x.rechazadas.length ? " · " + x.rechazadas.map((e) => '<span class="cod">' + e[1] + "</span> " + t(["línea ", "line "]) + e[0]).join(", ") : "") + "</p>" : "") +
-        "<details><summary>" + t(["Ver la respuesta", "Show the answer"]) + "</summary><pre>" + escapar(x.respuesta || "") + "</pre></details></div>";
-    }).join("");
+        '<details data-clave="respuesta-' + f + '"><summary>' + t(["Ver la respuesta", "Show the answer"]) + "</summary><pre>" + escapar(x.respuesta || "") + "</pre></details></div>";
+    }).join(""));
     if (!d.terminado || !(d.mini || {}).estado || d.mini.estado !== "listo" || !d.json || d.json.estado !== "listo") { $("#comparar-graficas").innerHTML = ""; return; }
     const m = d.mini, j = d.json, usd = (v) => "$" + v.toFixed(4);
     const porPregunta = (x) => x.validas ? 1000 * x.costo_usd / x.validas : null;   // USD por 1 000 preguntas utilizables
