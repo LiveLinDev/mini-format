@@ -72,6 +72,9 @@ __CABEZA__
   .sm-opciones button.no { border-color: rgb(185 28 28); background: rgb(220 38 38 / .08); }
   .sm-opciones button[disabled] { cursor: default; }
   .sm-linea { margin-top: .8rem; }
+  .sm-guia { margin: .4rem 0; padding-left: 1.2rem; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .sm textarea { width: 100%; box-sizing: border-box; min-height: 11rem; font-family: var(--f-mono); font-size: .78rem; line-height: 1.5;
+                 padding: .7rem .8rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle)); color: rgb(var(--fg)); }
   .sm img { max-width: 100%; height: auto; border: 1px solid rgb(var(--line)); border-radius: var(--r-lg); display: block; }
   .sm-nota { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); margin-top: .8rem; }
   .sm table { width: 100%; border-collapse: collapse; font-size: .8rem; }
@@ -116,12 +119,10 @@ __CABECERA__
 
   <section class="sm-panel">
     <h2><span data-lang="es">2 · Costo: el mismo banco en .mini y en JSON</span><span data-lang="en" hidden>2 · Cost: the same bank in .mini and in JSON</span></h2>
-    <p class="sub"><span data-lang="es">Tokens de salida de las preguntas generadas en esta clase, escritas en .mini y convertidas a JSON con los mismos datos. La línea roja es el
-      límite de salida por llamada configurado en SIMA.</span>
-      <span data-lang="en" hidden>Output tokens of the questions generated in this lecture, written in .mini and converted to JSON with the same data. The red line is the
-      per-call output limit configured in SIMA.</span></p>
+    <p class="sub"><span data-lang="es">Tokens de salida de las preguntas generadas en esta clase, escritas en .mini y convertidas a JSON con los mismos datos. </span>
+      <span data-lang="en" hidden>Output tokens of the questions generated in this lecture, written in .mini and converted to JSON with the same data. </span></p>
     <div class="sm-barras" id="barras"></div>
-    <p class="sm-leyenda"><i></i><span id="leyenda-limite"></span></p>
+    <p class="sm-leyenda"><span id="leyenda-limite"></span></p>
     <div id="conclusion-tokens"></div>
   </section>
 
@@ -136,8 +137,23 @@ __CABECERA__
       <button type="button" class="sm-chip" data-respuesta="deepseek-chat">DeepSeek Chat</button>
       <button type="button" class="sm-chip" data-respuesta="qwen-groq">Qwen 3 (Groq)</button>
       <button type="button" class="sm-chip" data-respuesta="deepseek-v4-flash">DeepSeek V4 Flash</button>
+      <button type="button" class="sm-chip" data-respuesta="vivo"><span data-lang="es">Tu respuesta, en vivo</span><span data-lang="en" hidden>Your answer, live</span></button>
     </div>
     <div id="respuesta-desc"></div>
+    <div id="vivo" hidden>
+      <ol class="sm-guia">
+        <li><span data-lang="es">Copia el prompt real que SIMA envía al modelo para el primer bloque de la clase.</span>
+            <span data-lang="en" hidden>Copy the real prompt SIMA sends to the model for the first block of the lecture.</span></li>
+        <li><span data-lang="es">Pégalo en un chat de IA y copia su respuesta completa.</span><span data-lang="en" hidden>Paste it into an AI chat and copy its whole answer.</span></li>
+        <li><span data-lang="es">Pégala abajo: los dos lectores la procesan al instante.</span><span data-lang="en" hidden>Paste it below: both readers process it instantly.</span></li>
+      </ol>
+      <div class="sm-fila">
+        <button type="button" class="btn btn-solid" id="copiar-prompt"><span data-lang="es">Copiar el prompt de SIMA</span><span data-lang="en" hidden>Copy SIMA's prompt</span></button>
+        <a class="btn" href="https://chat.deepseek.com/" target="_blank" rel="noopener"><span data-lang="es">Abrir DeepSeek</span><span data-lang="en" hidden>Open DeepSeek</span> ↗</a>
+        <a class="btn" href="https://chatgpt.com/" target="_blank" rel="noopener"><span data-lang="es">Abrir ChatGPT</span><span data-lang="en" hidden>Open ChatGPT</span> ↗</a>
+      </div>
+      <textarea id="texto-vivo" spellcheck="false" aria-label="Respuesta del modelo" placeholder="a|m=IRT3PL|..."></textarea>
+    </div>
     <details><summary><span data-lang="es">Ver la respuesta tal como llegó</span><span data-lang="en" hidden>Show the answer as it arrived</span></summary>
       <pre id="respuesta-texto"></pre></details>
     <div class="sm-dos">
@@ -191,6 +207,7 @@ __PIE__
     E02: ["la primera línea no es la cabecera del contrato", "the first line is not the contract header"],
     E03: ["la cabecera no declara el número de registros", "the header does not declare the record count"],
     E05: ["la línea tiene otra cantidad de campos (llegó cortada o mal separada)", "the line has a different number of fields (cut or badly separated)"],
+    E07: ["la pregunta no tiene el número de opciones que exige el contrato", "the question does not have the number of options the contract requires"],
     E08: ["la pregunta no tiene marcada la respuesta correcta", "the question has no correct answer marked"],
     E10: ["valor fuera de los permitidos", "value outside the allowed ones"],
     E11: ["identificador repetido", "repeated identifier"],
@@ -243,31 +260,33 @@ __PIE__
 
   // ------------------------------------------------------------ 1 · clase
   function pintarClase() {
-    const c = DATOS.clase, r = DATOS.corridas.minifmt;
-    $("#clase-sub").textContent = t(["Clase «" + c.titulo + "», procesada el " + DATOS.fecha + " con " + c.modelo + " en " + c.llamadas +
-      " llamadas (" + c.reparto.join(", ") + " ítems).", "Lecture “" + c.titulo + "”, processed on " + DATOS.fecha + " with " + c.modelo + " in " +
-      c.llamadas + " calls (" + c.reparto.join(", ") + " items)."]);
+    const c = DATOS.clase, r = DATOS.corrida;
+    $("#clase-sub").textContent = t(["Clase «" + c.titulo + "», procesada en SIMA el " + DATOS.fecha + " con " + c.modelo + ": " + c.llamadas_generacion +
+      " llamadas de generación y " + (c.llamadas - c.llamadas_generacion) + " de reparación, en " + c.segundos + " segundos.",
+      "Lecture “" + c.titulo + "”, processed in SIMA on " + DATOS.fecha + " with " + c.modelo + ": " + c.llamadas_generacion +
+      " generation calls and " + (c.llamadas - c.llamadas_generacion) + " repair calls, in " + c.segundos + " seconds."]);
     $("#cifras-clase").innerHTML = cifra(num(c.palabras), t(["palabras de la clase", "words in the lecture"])) +
-      cifra(c.items_pedidos, t(["ítems pedidos al modelo", "items requested"])) +
-      cifra(r.finales, t(["ítems válidos tras la validación", "valid items after validation"]), "bien") +
+      cifra(c.items_pedidos, t(["preguntas pedidas al modelo", "questions requested"])) +
+      cifra(r.finales, t(["válidas tras validar y reparar", "valid after validation and repair"]), "bien") +
+      cifra(r.reparados, t(["líneas reparadas (solo esas se reenviaron)", "lines repaired (only those were resent)"]), r.reparados ? "mal" : "") +
       cifra(r.items_finales, t(["preguntas en el banco final", "questions in the final bank"]), "bien");
     $("#extracto").innerHTML = c.extracto.map((p) => "<p>" + escapar(p) + "</p>").join("");
   }
 
   // ------------------------------------------------------------ 2 · tokens
   function pintarTokens() {
-    const k = DATOS.tokens, lim = DATOS.clase.limite_salida, max = Math.max(k.json, lim) * 1.05;
+    const k = DATOS.tokens, max = k.json * 1.02;
     const fila = (nombre, v, cls) => '<div class="sm-barra ' + cls + '"><span>' + nombre + '</span><div class="pista"><div class="relleno" style="width:' +
-      (100 * v / max).toFixed(1) + '%"></div><div class="limite" style="left:' + (100 * lim / max).toFixed(1) + '%"></div></div><span class="n">' + num(v) + "</span></div>";
+      (100 * v / max).toFixed(1) + '%"></div></div><span class="n">' + num(v) + "</span></div>";
     $("#barras").innerHTML = fila(".mini", k.mini, "mini") + fila(t(["JSON compacto", "Compact JSON"]), k.json_compacto, "") + fila(t(["JSON con sangría", "Indented JSON"]), k.json, "");
-    $("#leyenda-limite").textContent = t(["límite de salida por llamada en SIMA: " + num(lim) + " tokens · tokenizador " + k.tokenizador,
-                                          "SIMA's per-call output limit: " + num(lim) + " tokens · tokenizer " + k.tokenizador]);
+    $("#leyenda-limite").textContent = t(["tokens de salida del banco completo · tokenizador " + k.tokenizador, "output tokens of the whole bank · tokenizer " + k.tokenizador]);
     const menos = (a) => Math.round(100 * (1 - k.mini / a));
+    const n = DATOS.banco.split("\n").length - 1;
     $("#conclusion-tokens").innerHTML = '<p class="sm-aviso bien">' + t([
-      "El banco en .mini ocupa " + menos(k.json_compacto) + " % menos tokens que el JSON compacto y " + menos(k.json) + " % menos que el JSON con sangría. " +
-      "Los " + DATOS.clase.items_pedidos + " ítems en .mini caben dentro del límite de una llamada; en JSON lo superan y la respuesta se cortaría.",
-      "The bank in .mini takes " + menos(k.json_compacto) + "% fewer tokens than compact JSON and " + menos(k.json) + "% fewer than indented JSON. " +
-      "The " + DATOS.clase.items_pedidos + " items in .mini fit within one call's limit; in JSON they exceed it and the answer would be cut."]) + "</p>";
+      "Las " + n + " preguntas de esta clase ocupan " + num(k.mini) + " tokens en .mini frente a " + num(k.json_compacto) + " en JSON compacto: " +
+      num(k.json_compacto - k.mini) + " tokens de salida menos por clase (" + menos(k.json_compacto) + " %), y " + menos(k.json) + " % menos que el JSON con sangría.",
+      "The " + n + " questions of this lecture take " + num(k.mini) + " tokens in .mini versus " + num(k.json_compacto) + " in compact JSON: " +
+      num(k.json_compacto - k.mini) + " fewer output tokens per lecture (" + menos(k.json_compacto) + "%), and " + menos(k.json) + "% fewer than indented JSON."]) + "</p>";
   }
 
   // ------------------------------------------------------------ 3 · respuestas reales
@@ -281,10 +300,16 @@ __PIE__
   };
   let actual = "qwen-groq";
   function pintarRespuesta() {
-    const r = DATOS.respuestas[actual];
+    const vivo = actual === "vivo";
+    const r = vivo ? { modelo: t(["Tu respuesta", "Your answer"]), texto: $("#texto-vivo").value } : DATOS.respuestas[actual];
     $$("[data-respuesta]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.respuesta === actual)));
-    $("#respuesta-desc").innerHTML = '<p class="sm-aviso info"><b>' + escapar(r.modelo) + "</b> · " + t(DESCRIPCION[actual]) + "</p>";
+    $("#vivo").hidden = !vivo;
+    $("#respuesta-desc").innerHTML = vivo
+      ? '<p class="sm-aviso info">' + t(["Prueba en vivo: la respuesta la genera el modelo que elijas, en este momento. Nada se envía a ningún servidor; la lectura ocurre en este navegador.",
+          "Live test: the answer is generated by the model you choose, right now. Nothing is sent to any server; reading happens in this browser."]) + "</p>"
+      : '<p class="sm-aviso info"><b>' + escapar(r.modelo) + "</b> · " + t(DESCRIPCION[actual]) + "</p>";
     $("#respuesta-texto").textContent = r.texto;
+    if (vivo && !r.texto.trim()) { $("#res-legado").innerHTML = ""; $("#res-mini").innerHTML = '<p class="sm-nota">' + t(["Esperando la respuesta…", "Waiting for the answer…"]) + "</p>"; return; }
 
     const L = legado(r.texto);
     $("#res-legado").innerHTML = '<div class="sm-cifras">' + cifra(L.aceptados, t(["preguntas aceptadas", "questions accepted"]), L.aceptados ? "" : "mal") +
@@ -335,14 +360,18 @@ __PIE__
 
   // ------------------------------------------------------------ 5 · corridas en SIMA
   function pintarCorridas() {
-    const m = DATOS.corridas.minifmt, l = DATOS.corridas.legado;
-    const fila = (k, a, b) => "<tr><td>" + k + "</td><td>" + a + "</td><td>" + b + "</td></tr>";
-    $("#corridas").innerHTML = "<thead><tr><th>" + t(["Clase completa en SIMA (" + DATOS.clase.modelo + ")", "Full lecture in SIMA (" + DATOS.clase.modelo + ")"]) +
-      "</th><th>" + t(["Lector anterior", "Previous reader"]) + "</th><th>mini-format</th></tr></thead><tbody>" +
-      fila(t(["Ítems pedidos", "Items requested"]), l.pedidos, m.pedidos) +
-      fila(t(["Ítems válidos de la generación", "Valid items from generation"]), l.finales, m.finales) +
-      fila(t(["Llamadas de generación", "Generation calls"]), l.llamadas, m.llamadas) +
-      fila(t(["Preguntas en el banco final", "Questions in the final bank"]), l.items_finales, m.items_finales) + "</tbody>";
+    const r = DATOS.corrida, c = DATOS.clase, k = DATOS.tokens;
+    const e07 = r.errores.filter((e) => e[1] === "E07").length;
+    const fila = (a, b, d) => "<tr><td>" + a + "</td><td>" + b + "</td><td>" + d + "</td></tr>";
+    $("#corridas").innerHTML = "<thead><tr><th>" + t(["Esta clase en SIMA (" + c.modelo + ")", "This lecture in SIMA (" + c.modelo + ")"]) +
+      "</th><th>" + t(["Lector anterior, mismas respuestas", "Previous reader, same answers"]) + "</th><th>mini-format</th></tr></thead><tbody>" +
+      fila(t(["Preguntas pedidas", "Questions requested"]), r.pedidos, r.pedidos) +
+      fila(t(["Aceptadas de la primera respuesta", "Accepted from the first answer"]), r.legado_aceptados, r.recibidos) +
+      fila(t(["Preguntas con número de opciones inválido (E07)", "Questions with an invalid number of options (E07)"]),
+           t([e07 + ", aceptadas sin aviso", e07 + ", accepted without notice"]), t([e07 + " rechazadas y reparadas", e07 + " rejected and repaired"])) +
+      fila(t(["Llamadas al modelo", "Model calls"]), c.llamadas_generacion, r.llamadas + t([" (" + r.reparados + " de reparación de una línea)", " (" + r.reparados + " one-line repairs)"])) +
+      fila(t(["Tokens de salida del banco", "Output tokens of the bank"]), num(k.json_compacto) + t([" si se pidiera en JSON", " if requested in JSON"]), num(k.mini)) +
+      fila(t(["Preguntas en el banco final", "Questions in the final bank"]), "—", r.items_finales + t([" (tras los filtros de calidad de SIMA)", " (after SIMA's quality filters)"])) + "</tbody>";
   }
 
   function pintarTodo() { pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
@@ -354,7 +383,12 @@ __PIE__
   $("#ver-linea").addEventListener("click", (ev) => { verLinea = !verLinea; ev.currentTarget.setAttribute("aria-pressed", String(verLinea)); pintarPregunta(); });
   new MutationObserver(pintarTodo).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
   const pedido = new URLSearchParams(location.search).get("respuesta");
-  if (DATOS.respuestas[pedido]) actual = pedido;
+  if (DATOS.respuestas[pedido] || pedido === "vivo") actual = pedido;
+  $("#texto-vivo").addEventListener("input", pintarRespuesta);
+  $("#copiar-prompt").addEventListener("click", (ev) => {
+    const b = ev.currentTarget, o = b.innerHTML, listo = () => { b.textContent = t(["¡Copiado!", "Copied!"]); setTimeout(() => { b.innerHTML = o; }, 1400); };
+    if (navigator.clipboard) navigator.clipboard.writeText(DATOS.prompt_sima).then(listo, listo); else listo();
+  });
   pintarTodo();
 })();
 </script>
