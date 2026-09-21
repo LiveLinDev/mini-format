@@ -907,7 +907,16 @@ def construir_ejemplo() -> None:
 
 
 EJEMPLOS_TALLER = {
-    "productos": {"prefijo": "pr", "esquema": {
+    "productos": {"prefijo": "pr", "tarea": (
+        "Registra estos productos del inventario. Inventa un código corto para cada uno y responde solo con el documento .mini.\n"
+        "- Lámpara de escritorio LED, hogar, cuesta 59.90, quedan 34 y está a la venta.\n"
+        "- Audífonos inalámbricos, tecnología, 149.00, sin stock por ahora.\n"
+        "- Polo de algodón talla M, ropa, 35.00, 210 unidades disponibles.\n"
+        "- Café tostado de 500 g, alimentos, 28.50, 96 en almacén.\n"
+        "- Silla ergonómica, hogar, 499.00, 7 unidades, disponible.\n"
+        "- Teclado mecánico, tecnología, 189.90, 18 unidades.\n"
+        "- Chaqueta impermeable, ropa, 159.00, retirada de la venta, quedan 3.\n"
+        "- Arroz integral de 1 kg, alimentos, 6.40, 1200 unidades."), "esquema": {
         "title": "Productos del catálogo", "type": "object",
         "properties": {
             "id": {"type": "string", "description": "código del producto"},
@@ -917,7 +926,16 @@ EJEMPLOS_TALLER = {
             "stock": {"type": "integer", "minimum": 0, "maximum": 5000},
             "disponible": {"type": "boolean"}},
         "required": ["id", "nombre", "categoria", "precio", "stock", "disponible"]}},
-    "pedidos": {"prefijo": "pd", "esquema": {
+    "pedidos": {"prefijo": "pd", "tarea": (
+        "Registra estos pedidos recibidos por correo. Usa el número de pedido como id y responde solo con el documento .mini.\n"
+        "- PD-5001: Ana Torres pidió 2 unidades el 2026-09-14 por 89.90; ya fue enviado.\n"
+        "- PD-5002: Luis Quispe, 1 unidad, 2026-09-15, total 249.00, pendiente de envío.\n"
+        "- PD-5003: María Rojas compró 3 unidades el 2026-09-15 por 45.50 y ya lo recibió.\n"
+        "- PD-5004: Jorge Huamán canceló su pedido de 1 unidad del 2026-09-16 (total 120.00).\n"
+        "- PD-5005: Lucía Flores, 4 unidades, 2026-09-17, 310.75, enviado.\n"
+        "- PD-5006: Carlos Díaz, 1 unidad, 2026-09-18, 15.00, pendiente.\n"
+        "- PD-5007: Rosa Mendoza, 2 unidades, 2026-09-18, 64.00, entregado.\n"
+        "- PD-5008: Pedro Salas, 6 unidades, 2026-09-19, 540.00, pendiente."), "esquema": {
         "title": "Pedidos de clientes", "type": "object",
         "properties": {
             "id": {"type": "string", "description": "número de pedido"},
@@ -933,7 +951,10 @@ EJEMPLOS_TALLER = {
 def construir_taller() -> None:
     """Página /taller/: del JSON Schema al JSON validado en cinco pasos, con el motor js/mini.js en el navegador."""
     tickets = json.loads((RAIZ / "examples" / "mesa-de-ayuda" / "ticket.schema.json").read_text(encoding="utf-8"))
-    datos = {"ejemplos": {"tickets": {"prefijo": "tk", "esquema": tickets}, **EJEMPLOS_TALLER}}
+    mensajes = json.loads((RAIZ / "examples" / "mesa-de-ayuda" / "mensajes.json").read_text(encoding="utf-8"))
+    tarea = ("Convierte cada mensaje de cliente en un ticket de soporte. Usa el id del mensaje como id del ticket y "
+             "responde solo con el documento .mini.\n" + "\n".join(f"- {m['id']}: {m['mensaje']}" for m in mensajes))
+    datos = {"ejemplos": {"tickets": {"prefijo": "tk", "esquema": tickets, "tarea": tarea}, **EJEMPLOS_TALLER}}
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     pagina = (RAIZ / "examples" / "taller" / "plantilla.html").read_text(encoding="utf-8")
     for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),

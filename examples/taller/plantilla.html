@@ -57,6 +57,9 @@ __CABEZA__
   .tl td code { font-size: .78rem; }
   .tl .tabla { overflow-x: auto; }
   .tl .error-cod { font-family: var(--f-mono); font-weight: 700; color: rgb(185 28 28); }
+  .tl-sub3 { font-size: 1rem; margin: 1.4rem 0 .3rem; }
+  .tl-guia { margin: .4rem 0 0; padding-left: 1.2rem; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
+  .tl-guia li { margin: .15rem 0; }
   .tl-nav { display: flex; justify-content: space-between; gap: .6rem; margin-top: 1.2rem; flex-wrap: wrap; }
   .tl-nota { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); margin-top: 1rem; }
   [hidden] { display: none !important; }
@@ -121,13 +124,31 @@ __CABECERA__
       <button type="button" class="btn" id="copiar-instruccion"><span data-lang="es">Copiar instrucción</span><span data-lang="en" hidden>Copy instruction</span></button>
     </div>
     <pre id="instruccion"></pre>
+    <h3 class="tl-sub3"><span data-lang="es">Probar con un modelo real, sin programar</span><span data-lang="en" hidden>Try it with a real model, no code</span></h3>
+    <p class="sub"><span data-lang="es">Estos son los datos que el modelo debe convertir en registros. «Copiar prompt completo» junta la instrucción y los datos:
+      pégalo en un chat de IA, copia lo que responda y pégalo en el paso 3.</span>
+      <span data-lang="en" hidden>These are the data the model must turn into records. “Copy full prompt” joins the instruction and the data:
+      paste it into an AI chat, copy what it answers and paste it in step 3.</span></p>
+    <textarea id="tarea" spellcheck="false" aria-label="Datos para el modelo" style="min-height:9rem"></textarea>
+    <div class="tl-fila">
+      <button type="button" class="btn btn-solid" id="copiar-prompt"><span data-lang="es">Copiar prompt completo</span><span data-lang="en" hidden>Copy full prompt</span></button>
+      <a class="btn" href="https://chat.deepseek.com/" target="_blank" rel="noopener"><span data-lang="es">Abrir DeepSeek</span><span data-lang="en" hidden>Open DeepSeek</span> ↗</a>
+      <a class="btn" href="https://chatgpt.com/" target="_blank" rel="noopener"><span data-lang="es">Abrir ChatGPT</span><span data-lang="en" hidden>Open ChatGPT</span> ↗</a>
+    </div>
+    <ol class="tl-guia">
+      <li><span data-lang="es">Pulsa «Copiar prompt completo» y pégalo en el chat.</span><span data-lang="en" hidden>Press “Copy full prompt” and paste it in the chat.</span></li>
+      <li><span data-lang="es">Copia la respuesta completa del chat, aunque traiga texto alrededor.</span><span data-lang="en" hidden>Copy the chat's whole answer, even if it has text around it.</span></li>
+      <li><span data-lang="es">Pégala en el paso 3 y pulsa «Validar respuesta».</span><span data-lang="en" hidden>Paste it in step 3 and press “Validate answer”.</span></li>
+    </ol>
   </section>
 
   <!-- 3 · Respuesta -->
   <section class="tl-panel" data-paso="3" hidden>
     <h2><span data-lang="es">3 · Respuesta del modelo</span><span data-lang="en" hidden>3 · The model's answer</span></h2>
-    <p class="sub"><span data-lang="es">Pega lo que respondió el modelo, o usa una respuesta de ejemplo generada desde tu contrato.</span>
-      <span data-lang="en" hidden>Paste what the model answered, or use a sample answer generated from your contract.</span></p>
+    <p class="sub"><span data-lang="es">Pega lo que respondió el chat con el prompt del paso 2, o usa una respuesta de ejemplo generada desde tu contrato
+      (las de ejemplo muestran un valor inválido o un corte sin depender del modelo).</span>
+      <span data-lang="en" hidden>Paste what the chat answered to the step 2 prompt, or use a sample answer generated from your contract
+      (the samples show an invalid value or a cut without depending on the model).</span></p>
     <div class="tl-fila">
       <span class="et"><span data-lang="es">Respuestas de ejemplo:</span><span data-lang="en" hidden>Sample answers:</span></span>
       <button type="button" class="tl-chip" data-muestra="ok"><span data-lang="es">Correcta</span><span data-lang="en" hidden>Correct</span></button>
@@ -205,7 +226,7 @@ __PIE__
   const num = (v) => v.toLocaleString(es() ? "es" : "en");
 
   // ------------------------------------------------------------ estado (se guarda en este navegador)
-  let estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
+  let estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", tarea: "", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
   let contrato = null, correcto = "";
   try { Object.assign(estado, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
   const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {} };
@@ -239,6 +260,8 @@ __PIE__
     const e = DATOS.ejemplos[nombre];
     $("#esquema").value = JSON.stringify(e.esquema, null, 2);
     $("#prefijo").value = e.prefijo;
+    estado.tarea = e.tarea || "";
+    $("#tarea").value = estado.tarea;
     generar();
   }
   function describirCampo(f) {
@@ -321,7 +344,12 @@ __PIE__
   }
 
   // ------------------------------------------------------------ 2 · instrucción
+  function tareaGenerica() {
+    return es() ? "Genera 10 registros de ejemplo realistas para un sistema que use este contrato. Responde solo con el documento .mini."
+                : "Generate 10 realistic sample records for a system that uses this contract. Answer only with the .mini document.";
+  }
   function pintarInstruccion() {
+    if (!$("#tarea").value.trim()) $("#tarea").value = estado.tarea || tareaGenerica();
     $("#instruccion").textContent = MINI.specBlock(contrato, estado.idioma);
     $$("[data-idioma]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.idioma === estado.idioma)));
   }
@@ -495,6 +523,9 @@ __PIE__
   $("#validar").addEventListener("click", validar);
   $("#correccion-ejemplo").addEventListener("click", () => correccionEjemplo(false));
   $("#correccion-mala").addEventListener("click", () => correccionEjemplo(true));
+  $("#tarea").addEventListener("input", () => { estado.tarea = $("#tarea").value; guardar(); });
+  $("#copiar-prompt").addEventListener("click", (ev) =>
+    copiar(MINI.specBlock(contrato, estado.idioma) + "\n\n" + ($("#tarea").value.trim() || tareaGenerica()), ev.currentTarget));
   $("#fusionar").addEventListener("click", fusionar);
   $("#descargar-json").addEventListener("click", () => descargar("resultado.json", $("#json-final").textContent));
   $("#copiar-json").addEventListener("click", (ev) => copiar($("#json-final").textContent, ev.currentTarget));
@@ -502,8 +533,8 @@ __PIE__
   $("#siguiente").addEventListener("click", () => ir(estado.paso + 1));
   $("#reiniciar").addEventListener("click", () => {
     try { localStorage.removeItem(CLAVE); } catch (e) {}
-    estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
-    contrato = null; $("#res-contrato").innerHTML = ""; $("#res-validacion").innerHTML = ""; $("#res-fusion").innerHTML = ""; $("#respuesta").value = "";
+    estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", tarea: "", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
+    contrato = null; $("#tarea").value = ""; $("#res-contrato").innerHTML = ""; $("#res-validacion").innerHTML = ""; $("#res-fusion").innerHTML = ""; $("#respuesta").value = "";
     cargarEjemplo("tickets"); ir(1);
   });
   new MutationObserver(() => { pintarPasos(); if (contrato) generar(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
@@ -511,7 +542,8 @@ __PIE__
   // ------------------------------------------------------------ arranque: se retoma lo guardado
   $("#nota").textContent = t(["Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), el mismo de la biblioteca TypeScript. Nada sale de tu navegador.",
                               "Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), the same as the TypeScript library. Nothing leaves your browser."]);
-  if (estado.esquema) { $("#esquema").value = estado.esquema; $("#prefijo").value = estado.prefijo; generar(); } else { cargarEjemplo("tickets"); }
+  if (estado.esquema) { $("#esquema").value = estado.esquema; $("#prefijo").value = estado.prefijo; $("#tarea").value = estado.tarea || ""; generar(); }
+  else { cargarEjemplo("tickets"); }
   $("#respuesta").value = estado.respuesta || "";
   if (contrato && estado.respuesta) validar();
   // enlaces de demostración: /taller/?ejemplo=productos&muestra=error&paso=3
