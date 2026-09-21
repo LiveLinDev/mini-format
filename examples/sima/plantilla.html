@@ -447,8 +447,8 @@ __PIE__
       e.textContent = t(["SIMA conectado · ", "SIMA connected · "]) + d.proveedor + " " + d.modelo + " · " + t(["lector ", "reader "]) + d.lector;
     } catch (x) {
       vivo.conectado = false; e.className = "sm-estado mal";
-      e.textContent = t(["SIMA no responde en esa dirección. En el equipo de la demostración se inicia con .\\demo_mini.ps1",
-                         "SIMA does not answer at that address. On the demo machine it is started with .\\demo_mini.ps1"]);
+      e.textContent = t(["Sin conexión con SIMA. Comprueba que SIMA esté corriendo (.\\demo_mini.ps1) y, si el navegador pregunta por acceso a dispositivos de la red local, pulsa «Permitir» y luego «Conectar».",
+                         "No connection to SIMA. Check that SIMA is running (.\\demo_mini.ps1) and, if the browser asks for access to local network devices, press “Allow” and then “Connect”."]);
     }
     $("#vivo-procesar").disabled = !vivo.conectado;
   }
