@@ -152,9 +152,8 @@ __CABECERA__
     <div id="vivo-resultado"></div>
   </section>
 
-  <p class="sm-nota" style="margin-top:1.6rem"><span data-lang="es">Las secciones siguientes muestran la ejecución registrada el 21 de septiembre de 2026 con la misma clase; cuando se procesa una clase en vivo, las secciones 2 y 4 pasan a mostrar sus resultados.</span>
-    <span data-lang="en" hidden>The following sections show the run recorded on 21 September 2026 with the same lecture; when a lecture is processed live, sections 2 and 4 switch to its results.</span></p>
-
+  <p class="sm-aviso info" id="aviso-registro" style="margin-top:1.6rem"></p>
+  <div id="registrado">
   <section class="sm-panel">
     <h2><span data-lang="es">1 · La clase procesada</span><span data-lang="en" hidden>1 · The processed lecture</span></h2>
     <p class="sub" id="clase-sub"></p>
@@ -233,6 +232,7 @@ __CABECERA__
       <span data-lang="en" hidden>Reproduction: SIMA branch <code>integracion-mini-format</code>, <code>.\demo_mini.ps1</code> (DeepSeek, local SQLite database).
       <code>SIMA_LECTOR=legado</code> runs the previous reader.</span></p>
   </section>
+  </div>
   <p class="sm-nota" id="nota"></p>
 </main>
 __PIE__
@@ -306,6 +306,7 @@ __PIE__
 
   // ------------------------------------------------------------ 1 · clase
   function pintarClase() {
+    if (vivo.fase === "vivo") return;   // la sección muestra la clase procesada en vivo
     const c = DATOS.clase, r = DATOS.corrida;
     $("#clase-sub").textContent = t(["Clase «" + c.titulo + "», procesada en SIMA el " + DATOS.fecha + " con " + c.modelo + ": " + c.llamadas_generacion +
       " llamadas de generación y " + (c.llamadas - c.llamadas_generacion) + " de reparación, en " + c.segundos + " segundos.",
@@ -456,6 +457,7 @@ __PIE__
       return;
     }
     $("#vivo-procesar").disabled = true;
+    vivo.fase = "procesando"; $("#registrado").hidden = true; avisoRegistro();
     $("#vivo-bloques").innerHTML = ""; $("#vivo-resultado").innerHTML = "";
     $("#vivo-avance").innerHTML = '<p class="sm-nota">' + t(["Enviando la clase a SIMA…", "Sending the lecture to SIMA…"]) + "</p>";
     try {
@@ -520,6 +522,28 @@ __PIE__
       banco = { records: d.preguntas };
       lineasBanco = d.preguntas.map((p) => MINI.dumps({ header: {}, [C.records_key || "records"]: [p] }, C).split("\n")[1] || "");
       idx = 0; pintarPregunta(); pintarTokens();
+      $("#clase-sub").textContent = t(["Clase «" + d.titulo + "», procesada ahora en SIMA: " + (r.bloques || 0) + " bloques y " +
+        (r.llamadas || 0) + " llamadas al modelo en " + d.segundos + " segundos.", "Lecture “" + d.titulo + "”, just processed in SIMA: " +
+        (r.bloques || 0) + " blocks and " + (r.llamadas || 0) + " model calls in " + d.segundos + " seconds."]);
+      $("#cifras-clase").innerHTML = cifra(num(d.palabras), t(["palabras de la clase", "words in the lecture"])) +
+        cifra(r.pedidos ?? "—", t(["preguntas pedidas al modelo", "questions requested"])) +
+        cifra(r.finales ?? "—", t(["válidas tras validar y reparar", "valid after validation and repair"]), "bien") +
+        cifra(r.reparados ?? 0, t(["líneas reparadas (solo esas se reenviaron)", "lines repaired (only those were resent)"]), r.reparados ? "mal" : "") +
+        cifra(r.items_finales ?? d.preguntas.length, t(["preguntas en el banco final", "questions in the final bank"]), "bien");
+    }
+    if (vivo.fase === "procesando") { vivo.fase = "vivo"; $("#registrado").hidden = false; avisoRegistro(); }
+  }
+  function avisoRegistro() {
+    const a = $("#aviso-registro");
+    if (vivo.fase === "procesando") {
+      a.textContent = t(["SIMA está procesando la clase; los resultados aparecerán aquí cuando termine.",
+                         "SIMA is processing the lecture; the results will appear here when it finishes."]);
+    } else if (vivo.fase === "vivo") {
+      a.textContent = t(["Las secciones 1, 2 y 4 muestran la clase recién procesada en SIMA. Las secciones 3 y 5 conservan respuestas registradas de otros modelos y el panel de SIMA.",
+                         "Sections 1, 2 and 4 show the lecture just processed in SIMA. Sections 3 and 5 keep recorded answers from other models and the SIMA panel."]);
+    } else {
+      a.textContent = t(["Las secciones siguientes muestran una ejecución registrada el 21 de septiembre de 2026. Al procesar una clase en vivo, se reemplazan por sus resultados.",
+                         "The following sections show a run recorded on 21 September 2026. When a lecture is processed live, they are replaced by its results."]);
     }
   }
   $$("[data-clase]").forEach((b) => b.addEventListener("click", () => cargarClase(b.dataset.clase)));
@@ -527,7 +551,7 @@ __PIE__
   $("#vivo-conectar").addEventListener("click", conectar);
   $("#vivo-procesar").addEventListener("click", procesar);
 
-  function pintarTodo() { pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
+  function pintarTodo() { avisoRegistro(); pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
     $("#nota").textContent = t(["Datos: llamadas reales a DeepSeek y Groq del " + DATOS.fecha + ". Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ").",
                                 "Data: real calls to DeepSeek and Groq on " + DATOS.fecha + ". Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ")."]); }
   $$("[data-respuesta]").forEach((b) => b.addEventListener("click", () => { actual = b.dataset.respuesta; pintarRespuesta(); }));
