@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es" data-title-es="Caso SIMA — mini-format" data-title-en="SIMA case — mini-format">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caso SIMA — mini-format</title>
+__CABEZA__
+<style>
+  .sm { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
+  .sm-intro { max-width: 62rem; }
+  .sm-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
+  .sm-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .sm .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  .sm-flujo { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .6rem; margin: 1.8rem 0; padding: 0; list-style: none; counter-reset: paso; }
+  .sm-flujo li { border: 1px solid rgb(var(--line)); border-radius: var(--r-lg); padding: .75rem .85rem; background: rgb(var(--raised)); counter-increment: paso; }
+  .sm-flujo li::before { content: counter(paso); display: inline-grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%;
+                         background: rgb(var(--subtle)); font-size: .75rem; font-weight: 700; margin-bottom: .35rem; }
+  .sm-flujo li.clave { border-color: rgb(var(--accent)); }
+  .sm-flujo li.clave::before { background: rgb(var(--accent)); color: #fff; }
+  .sm-flujo b { display: block; font-size: .92rem; }
+  .sm-flujo span { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); }
+
+  .sm-panel { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: clamp(1rem, 3vw, 1.5rem); background: rgb(var(--raised)); margin-top: 1.4rem; }
+  .sm-panel h2 { margin: 0 0 .3rem; font-size: var(--fs-h5); }
+  .sm-panel .sub { margin: 0 0 1rem; color: rgb(var(--fg-muted)); font-size: var(--fs-cap); max-width: 62rem; }
+
+  .sm-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .8rem; margin: 1rem 0; }
+  .sm-cifra { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .7rem .85rem; }
+  .sm-cifra .v { display: block; font-family: var(--f-mono); font-size: 1.35rem; font-weight: 700; }
+  .sm-cifra .k { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); }
+  .sm-cifra.bien .v { color: rgb(16 122 87); } .sm-cifra.mal .v { color: rgb(185 28 28); }
+
+  .sm-barras { display: grid; gap: .7rem; margin: 1rem 0 .4rem; }
+  .sm-barra { display: grid; grid-template-columns: 9.5rem 1fr 5.5rem; gap: .7rem; align-items: center; font-size: var(--fs-cap); }
+  .sm-barra .pista { position: relative; height: 1.5rem; background: rgb(var(--subtle)); border-radius: 6px; overflow: visible; }
+  .sm-barra .relleno { position: absolute; inset: 0 auto 0 0; border-radius: 6px; background: rgb(var(--fg-muted) / .45); }
+  .sm-barra.mini .relleno { background: rgb(var(--accent)); }
+  .sm-barra .limite { position: absolute; top: -.35rem; bottom: -.35rem; width: 2px; background: rgb(185 28 28); }
+  .sm-barra .n { font-family: var(--f-mono); font-weight: 700; text-align: right; }
+  .sm-leyenda { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); }
+  .sm-leyenda i { display: inline-block; width: 10px; height: 10px; background: rgb(185 28 28); margin-right: .3rem; vertical-align: -1px; }
+
+  .sm-fila { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .8rem 0; }
+  .sm-fila .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; }
+  .sm-chip { font: inherit; font-size: var(--fs-cap); cursor: pointer; padding: .4rem .75rem; border-radius: 99px;
+             border: 1px solid rgb(var(--line)); background: rgb(var(--raised)); color: rgb(var(--fg-muted)); }
+  .sm-chip[aria-pressed="true"] { border-color: rgb(var(--accent)); color: rgb(var(--fg)); font-weight: 600; }
+  .sm pre { margin: 0; padding: .8rem 1rem; border-radius: var(--r); background: rgb(var(--subtle)); overflow: auto;
+            font-size: .74rem; line-height: 1.55; max-height: 20rem; white-space: pre-wrap; word-break: break-word; }
+  .sm-dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .sm-lector { border: 1px solid rgb(var(--line)); border-radius: var(--r-lg); padding: .9rem 1rem; }
+  .sm-lector h3 { margin: 0 0 .5rem; font-size: 1rem; }
+  .sm-lector.mf { border-color: rgb(var(--accent) / .6); }
+  .sm-lector ul { margin: .5rem 0 0; padding-left: 1.1rem; font-size: var(--fs-cap); }
+  .sm-lector li { margin: .2rem 0; }
+  .sm-aviso { margin: .8rem 0; padding: .7rem .9rem; border-radius: var(--r); font-size: var(--fs-cap); }
+  .sm-aviso.bien { background: rgb(16 122 87 / .1); color: rgb(16 122 87); }
+  .sm-aviso.mal { background: rgb(220 38 38 / .1); color: rgb(185 28 28); }
+  .sm-aviso.info { background: rgb(var(--accent) / .08); color: rgb(var(--fg)); }
+  .sm .cod { font-family: var(--f-mono); font-weight: 700; color: rgb(185 28 28); }
+
+  .sm-pregunta { border: 1px solid rgb(var(--line)); border-radius: var(--r-lg); padding: 1.1rem 1.2rem; max-width: 46rem; }
+  .sm-pregunta .meta { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .6rem; }
+  .sm-pregunta .meta span { font-size: var(--fs-fine); font-family: var(--f-mono); padding: .15rem .5rem; border-radius: 99px; background: rgb(var(--subtle)); }
+  .sm-pregunta p { font-size: 1.05rem; font-weight: 600; margin: 0 0 .9rem; }
+  .sm-opciones { display: grid; gap: .5rem; }
+  .sm-opciones button { font: inherit; text-align: left; cursor: pointer; padding: .65rem .85rem; border-radius: var(--r);
+                        border: 1px solid rgb(var(--line)); background: rgb(var(--raised)); color: rgb(var(--fg)); }
+  .sm-opciones button:hover:not([disabled]) { border-color: rgb(var(--accent)); }
+  .sm-opciones button.ok { border-color: rgb(16 122 87); background: rgb(16 122 87 / .1); }
+  .sm-opciones button.no { border-color: rgb(185 28 28); background: rgb(220 38 38 / .08); }
+  .sm-opciones button[disabled] { cursor: default; }
+  .sm-linea { margin-top: .8rem; }
+  .sm img { max-width: 100%; height: auto; border: 1px solid rgb(var(--line)); border-radius: var(--r-lg); display: block; }
+  .sm-nota { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); margin-top: .8rem; }
+  .sm table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  .sm th, .sm td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid rgb(var(--line)); vertical-align: top; }
+  .sm th { font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em; color: rgb(var(--fg-muted)); }
+  .sm .tabla { overflow-x: auto; }
+  @media (max-width: 640px) {
+    .sm-barra { grid-template-columns: 6.5rem 1fr 4rem; }
+    .sm-pregunta { padding: .9rem; }
+  }
+</style>
+</head>
+<body>
+__CABECERA__
+<main id="contenido" class="wrap sm">
+  <section class="sm-intro">
+    <p class="eyebrow"><span data-lang="es">Caso de integración</span><span data-lang="en" hidden>Integration case</span></p>
+    <h1><span data-lang="es">SIMA: mini-format dentro de un sistema real</span><span data-lang="en" hidden>SIMA: mini-format inside a real system</span></h1>
+    <p class="lead"><span data-lang="es">SIMA convierte una clase en un banco de preguntas para estudio adaptativo. Un modelo de lenguaje genera las preguntas en
+      notación .mini y mini-format valida cada una contra el contrato de ítems antes de que llegue al estudiante. Los datos de esta página provienen
+      de una clase real procesada con DeepSeek; la validación se ejecuta en este navegador con el motor de mini-format.</span>
+      <span data-lang="en" hidden>SIMA turns a lecture into a question bank for adaptive study. A language model generates the questions in .mini
+      notation and mini-format validates each one against the item contract before it reaches the student. The data on this page come from a real
+      lecture processed with DeepSeek; validation runs in this browser with the mini-format engine.</span></p>
+  </section>
+
+  <ol class="sm-flujo" aria-label="Flujo de SIMA">
+    <li><b><span data-lang="es">Clase</span><span data-lang="en" hidden>Lecture</span></b><span data-lang="es">texto o audio transcrito</span><span data-lang="en" hidden>text or transcribed audio</span></li>
+    <li><b><span data-lang="es">Generación</span><span data-lang="en" hidden>Generation</span></b><span data-lang="es">el modelo escribe los ítems en .mini</span><span data-lang="en" hidden>the model writes the items in .mini</span></li>
+    <li class="clave"><b><span data-lang="es">Validación</span><span data-lang="en" hidden>Validation</span></b><span data-lang="es">mini-format, contrato <code>a</code></span><span data-lang="en" hidden>mini-format, contract <code>a</code></span></li>
+    <li><b><span data-lang="es">Verificación</span><span data-lang="en" hidden>Verification</span></b><span data-lang="es">revisión y correcciones validadas</span><span data-lang="en" hidden>review and validated corrections</span></li>
+    <li><b><span data-lang="es">Banco adaptativo</span><span data-lang="en" hidden>Adaptive bank</span></b><span data-lang="es">preguntas con Bloom e IRT</span><span data-lang="en" hidden>questions with Bloom and IRT</span></li>
+  </ol>
+
+  <section class="sm-panel">
+    <h2><span data-lang="es">1 · La clase procesada</span><span data-lang="en" hidden>1 · The processed lecture</span></h2>
+    <p class="sub" id="clase-sub"></p>
+    <div class="sm-cifras" id="cifras-clase"></div>
+    <details><summary><span data-lang="es">Ver el inicio del texto de la clase</span><span data-lang="en" hidden>Show the beginning of the lecture text</span></summary>
+      <div id="extracto" class="sm-nota"></div></details>
+  </section>
+
+  <section class="sm-panel">
+    <h2><span data-lang="es">2 · Costo: el mismo banco en .mini y en JSON</span><span data-lang="en" hidden>2 · Cost: the same bank in .mini and in JSON</span></h2>
+    <p class="sub"><span data-lang="es">Tokens de salida de las preguntas generadas en esta clase, escritas en .mini y convertidas a JSON con los mismos datos. La línea roja es el
+      límite de salida por llamada configurado en SIMA.</span>
+      <span data-lang="en" hidden>Output tokens of the questions generated in this lecture, written in .mini and converted to JSON with the same data. The red line is the
+      per-call output limit configured in SIMA.</span></p>
+    <div class="sm-barras" id="barras"></div>
+    <p class="sm-leyenda"><i></i><span id="leyenda-limite"></span></p>
+    <div id="conclusion-tokens"></div>
+  </section>
+
+  <section class="sm-panel">
+    <h2><span data-lang="es">3 · Qué respondió el modelo y cómo se leyó</span><span data-lang="en" hidden>3 · What the model answered and how it was read</span></h2>
+    <p class="sub"><span data-lang="es">Tres respuestas reales a la misma instrucción de SIMA. A la izquierda, lo que hace el lector que SIMA tenía antes; a la derecha, mini-format
+      con el contrato de ítems. Ambos se ejecutan aquí sobre el mismo texto.</span>
+      <span data-lang="en" hidden>Three real answers to the same SIMA instruction. On the left, what the reader SIMA used before does; on the right, mini-format with the
+      item contract. Both run here on the same text.</span></p>
+    <div class="sm-fila" role="group" aria-label="Respuestas">
+      <span class="et"><span data-lang="es">Respuesta:</span><span data-lang="en" hidden>Answer:</span></span>
+      <button type="button" class="sm-chip" data-respuesta="deepseek-chat">DeepSeek Chat</button>
+      <button type="button" class="sm-chip" data-respuesta="qwen-groq">Qwen 3 (Groq)</button>
+      <button type="button" class="sm-chip" data-respuesta="deepseek-v4-flash">DeepSeek V4 Flash</button>
+    </div>
+    <div id="respuesta-desc"></div>
+    <details><summary><span data-lang="es">Ver la respuesta tal como llegó</span><span data-lang="en" hidden>Show the answer as it arrived</span></summary>
+      <pre id="respuesta-texto"></pre></details>
+    <div class="sm-dos">
+      <div class="sm-lector"><h3><span data-lang="es">Lector anterior de SIMA</span><span data-lang="en" hidden>SIMA's previous reader</span></h3><div id="res-legado"></div></div>
+      <div class="sm-lector mf"><h3>mini-format</h3><div id="res-mini"></div></div>
+    </div>
+  </section>
+
+  <section class="sm-panel">
+    <h2><span data-lang="es">4 · El banco de preguntas</span><span data-lang="en" hidden>4 · The question bank</span></h2>
+    <p class="sub"><span data-lang="es">Las preguntas validadas de esta clase, tal como las estudia un alumno en SIMA. Cada una lleva su nivel de Bloom y sus parámetros IRT.</span>
+      <span data-lang="en" hidden>The validated questions of this lecture, as a student studies them in SIMA. Each one carries its Bloom level and IRT parameters.</span></p>
+    <div class="sm-pregunta" id="pregunta" aria-live="polite"></div>
+    <div class="sm-fila">
+      <button type="button" class="btn" id="anterior">← <span data-lang="es">Anterior</span><span data-lang="en" hidden>Previous</span></button>
+      <button type="button" class="btn btn-solid" id="siguiente"><span data-lang="es">Siguiente</span><span data-lang="en" hidden>Next</span> →</button>
+      <button type="button" class="sm-chip" id="ver-linea" aria-pressed="false"><span data-lang="es">Ver la línea .mini</span><span data-lang="en" hidden>Show the .mini line</span></button>
+    </div>
+  </section>
+
+  <section class="sm-panel">
+    <h2><span data-lang="es">5 · Dentro de SIMA</span><span data-lang="en" hidden>5 · Inside SIMA</span></h2>
+    <p class="sub"><span data-lang="es">Panel de la clase en SIMA: compara, sobre las mismas respuestas del modelo, el lector anterior y mini-format, e incluye las
+      correcciones del verificador aceptadas y rechazadas.</span>
+      <span data-lang="en" hidden>Lecture panel in SIMA: it compares, on the same model answers, the previous reader and mini-format, and includes the verifier
+      corrections that were accepted and rejected.</span></p>
+    <img src="/sima/panel.png" alt="Panel «Lectura de las respuestas del modelo» de una clase en SIMA" width="1100" height="860" loading="lazy">
+    <div class="tabla" style="margin-top:1rem"><table id="corridas"></table></div>
+    <p class="sm-nota"><span data-lang="es">Reproducción: rama <code>integracion-mini-format</code> de SIMA, <code>.\demo_mini.ps1</code> (DeepSeek, base SQLite local).
+      <code>SIMA_LECTOR=legado</code> ejecuta el lector anterior.</span>
+      <span data-lang="en" hidden>Reproduction: SIMA branch <code>integracion-mini-format</code>, <code>.\demo_mini.ps1</code> (DeepSeek, local SQLite database).
+      <code>SIMA_LECTOR=legado</code> runs the previous reader.</span></p>
+  </section>
+  <p class="sm-nota" id="nota"></p>
+</main>
+__PIE__
+<script>__MINI_JS__</script>
+<script>const DATOS = __DATOS__;</script>
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const es = () => document.documentElement.lang !== "en";
+  const t = (par) => par[es() ? 0 : 1];
+  const num = (v) => v.toLocaleString(es() ? "es" : "en");
+  const escapar = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const C = DATOS.contrato;
+  const cifra = (v, k, c) => '<div class="sm-cifra ' + (c || "") + '"><span class="v">' + v + '</span><span class="k">' + k + "</span></div>";
+  const EXPLICA = {
+    E02: ["la primera línea no es la cabecera del contrato", "the first line is not the contract header"],
+    E03: ["la cabecera no declara el número de registros", "the header does not declare the record count"],
+    E05: ["la línea tiene otra cantidad de campos (llegó cortada o mal separada)", "the line has a different number of fields (cut or badly separated)"],
+    E08: ["la pregunta no tiene marcada la respuesta correcta", "the question has no correct answer marked"],
+    E10: ["valor fuera de los permitidos", "value outside the allowed ones"],
+    E11: ["identificador repetido", "repeated identifier"],
+  };
+
+  // ------------------------------------------------------------ lector anterior de SIMA (learning/parse_mini.py)
+  function legado(texto) {
+    let aceptados = 0, sinMarca = 0, descartadas = 0;
+    for (const bruta of (texto || "").trim().split(/\r?\n/)) {
+      const l = bruta.trim();
+      if (!l || l.startsWith("a|") || !(l.startsWith("i") && l.includes("|"))) continue;
+      const p = l.split("|");
+      if (p.length < 8) { descartadas++; continue; }
+      const opciones = p.length === 8 ? p[4].split(",") : p.slice(4, -3);
+      const irt = (p.length === 8 ? p[5] : p[p.length - 3]).split(",").map(Number);
+      const dif = parseInt(p.length === 8 ? p[6] : p[p.length - 2], 10);
+      if (irt.length < 3 || irt.slice(0, 3).some((x) => Number.isNaN(x)) || Number.isNaN(dif)) { descartadas++; continue; }
+      aceptados++;
+      if (!opciones.some((o) => o.trim().endsWith("*"))) sinMarca++;
+    }
+    return { aceptados, sinMarca, descartadas };
+  }
+
+  // ------------------------------------------------------------ mini-format tal como lo usa SIMA (learning/services/lectura_mini.py)
+  const REGISTRO = /^[`>*\s-]*(i\d+)\s*([|:])\s*(.*)$/;
+  function preparar(texto) {
+    let cabecera = null; const registros = []; const aj = { normalizados: 0, prosa: 0, borradores: 0, sinCabecera: false };
+    for (const linea of MINI.extractDocument(texto || "", C).split(/\r?\n/)) {
+      const l = linea.trim().replace(/^`+|`+$/g, "").trim();
+      if (!l) continue;
+      if (cabecera === null && l.startsWith(C.prefix + "|")) { cabecera = l; continue; }
+      const m = REGISTRO.exec(l);
+      if (m) { if (m[2] === ":") aj.normalizados++; registros.push(m[1] + "|" + m[3]); } else aj.prosa++;
+    }
+    const vistos = new Set(), unicos = [];
+    for (let i = registros.length - 1; i >= 0; i--) { const k = registros[i].split("|", 1)[0]; if (!vistos.has(k)) { vistos.add(k); unicos.unshift(registros[i]); } }
+    aj.borradores = registros.length - unicos.length;
+    if (cabecera === null) { aj.sinCabecera = true; cabecera = C.prefix + "|n=" + unicos.length; }
+    else cabecera = /\|n=[^|]*/.test(cabecera) ? cabecera.replace(/\|n=[^|]*/, "|n=" + unicos.length) : cabecera + "|n=" + unicos.length;
+    return { doc: [cabecera, ...unicos].join("\n"), aj };
+  }
+  function leerMini(texto) {
+    const { doc, aj } = preparar(texto);
+    let d;
+    try { d = MINI.parse(doc, C, { strict: false }); } catch (e) { d = { records: [], errors: e.errors || [] }; }
+    const ultima = doc.split("\n").length;
+    const cortada = ultima > 1 && d.errors.some((e) => e.code === "E05" && e.line === ultima);
+    return { d, aj, cortada, lineas: doc.split("\n") };
+  }
+
+  // ------------------------------------------------------------ 1 · clase
+  function pintarClase() {
+    const c = DATOS.clase, r = DATOS.corridas.minifmt;
+    $("#clase-sub").textContent = t(["Clase «" + c.titulo + "», procesada el " + DATOS.fecha + " con " + c.modelo + " en " + c.llamadas +
+      " llamadas (" + c.reparto.join(", ") + " ítems).", "Lecture “" + c.titulo + "”, processed on " + DATOS.fecha + " with " + c.modelo + " in " +
+      c.llamadas + " calls (" + c.reparto.join(", ") + " items)."]);
+    $("#cifras-clase").innerHTML = cifra(num(c.palabras), t(["palabras de la clase", "words in the lecture"])) +
+      cifra(c.items_pedidos, t(["ítems pedidos al modelo", "items requested"])) +
+      cifra(r.finales, t(["ítems válidos tras la validación", "valid items after validation"]), "bien") +
+      cifra(r.items_finales, t(["preguntas en el banco final", "questions in the final bank"]), "bien");
+    $("#extracto").innerHTML = c.extracto.map((p) => "<p>" + escapar(p) + "</p>").join("");
+  }
+
+  // ------------------------------------------------------------ 2 · tokens
+  function pintarTokens() {
+    const k = DATOS.tokens, lim = DATOS.clase.limite_salida, max = Math.max(k.json, lim) * 1.05;
+    const fila = (nombre, v, cls) => '<div class="sm-barra ' + cls + '"><span>' + nombre + '</span><div class="pista"><div class="relleno" style="width:' +
+      (100 * v / max).toFixed(1) + '%"></div><div class="limite" style="left:' + (100 * lim / max).toFixed(1) + '%"></div></div><span class="n">' + num(v) + "</span></div>";
+    $("#barras").innerHTML = fila(".mini", k.mini, "mini") + fila(t(["JSON compacto", "Compact JSON"]), k.json_compacto, "") + fila(t(["JSON con sangría", "Indented JSON"]), k.json, "");
+    $("#leyenda-limite").textContent = t(["límite de salida por llamada en SIMA: " + num(lim) + " tokens · tokenizador " + k.tokenizador,
+                                          "SIMA's per-call output limit: " + num(lim) + " tokens · tokenizer " + k.tokenizador]);
+    const menos = (a) => Math.round(100 * (1 - k.mini / a));
+    $("#conclusion-tokens").innerHTML = '<p class="sm-aviso bien">' + t([
+      "El banco en .mini ocupa " + menos(k.json_compacto) + " % menos tokens que el JSON compacto y " + menos(k.json) + " % menos que el JSON con sangría. " +
+      "Los " + DATOS.clase.items_pedidos + " ítems en .mini caben dentro del límite de una llamada; en JSON lo superan y la respuesta se cortaría.",
+      "The bank in .mini takes " + menos(k.json_compacto) + "% fewer tokens than compact JSON and " + menos(k.json) + "% fewer than indented JSON. " +
+      "The " + DATOS.clase.items_pedidos + " items in .mini fit within one call's limit; in JSON they exceed it and the answer would be cut."]) + "</p>";
+  }
+
+  // ------------------------------------------------------------ 3 · respuestas reales
+  const DESCRIPCION = {
+    "deepseek-chat": ["Respuesta limpia: cabecera, doce ítems y ninguna línea fuera del formato. Ambos lectores obtienen lo mismo; mini-format además lo certifica.",
+                      "Clean answer: header, twelve items and no line outside the format. Both readers get the same; mini-format also certifies it."],
+    "qwen-groq": ["Dos preguntas llegaron sin la respuesta correcta marcada. El lector anterior las acepta y marca la primera opción como correcta; mini-format las rechaza con E08 y pide corregir solo esas dos líneas.",
+                  "Two questions arrived without the correct answer marked. The previous reader accepts them and marks the first option as correct; mini-format rejects them with E08 and asks to fix only those two lines."],
+    "deepseek-v4-flash": ["El modelo escribió su razonamiento antes de los ítems, omitió la cabecera, usó «i1:» en lugar de «i1|» y se cortó en el último ítem. El lector anterior no obtiene ninguna pregunta; mini-format separa el razonamiento, conserva los ítems completos y señala el cortado.",
+                          "The model wrote its reasoning before the items, omitted the header, used “i1:” instead of “i1|” and was cut on the last item. The previous reader obtains no question; mini-format separates the reasoning, keeps the complete items and flags the cut one."],
+  };
+  let actual = "qwen-groq";
+  function pintarRespuesta() {
+    const r = DATOS.respuestas[actual];
+    $$("[data-respuesta]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.respuesta === actual)));
+    $("#respuesta-desc").innerHTML = '<p class="sm-aviso info"><b>' + escapar(r.modelo) + "</b> · " + t(DESCRIPCION[actual]) + "</p>";
+    $("#respuesta-texto").textContent = r.texto;
+
+    const L = legado(r.texto);
+    $("#res-legado").innerHTML = '<div class="sm-cifras">' + cifra(L.aceptados, t(["preguntas aceptadas", "questions accepted"]), L.aceptados ? "" : "mal") +
+      cifra(L.sinMarca, t(["con la primera opción marcada como correcta sin aviso", "with the first option marked correct without notice"]), L.sinMarca ? "mal" : "") +
+      cifra(L.descartadas, t(["líneas de ítem descartadas sin aviso", "item lines dropped without notice"]), L.descartadas ? "mal" : "") + "</div>" +
+      '<p class="sm-nota">' + t(["No informa qué línea falló ni por qué.", "It does not report which line failed or why."]) + "</p>";
+
+    const M = leerMini(r.texto), d = M.d;
+    const errores = d.errors.filter((e) => e.line && e.line > 1);
+    const ajustes = [];
+    if (M.aj.prosa) ajustes.push(t(["líneas de razonamiento separadas: ", "reasoning lines set aside: "]) + M.aj.prosa);
+    if (M.aj.sinCabecera) ajustes.push(t(["la respuesta no traía cabecera", "the answer had no header"]));
+    if (M.aj.normalizados) ajustes.push(t(["ítems escritos como «i1:» normalizados: ", "items written as “i1:” normalized: "]) + M.aj.normalizados);
+    if (M.aj.borradores) ajustes.push(t(["borradores descartados: ", "drafts discarded: "]) + M.aj.borradores);
+    $("#res-mini").innerHTML = '<div class="sm-cifras">' + cifra(d.records.length, t(["preguntas válidas", "valid questions"]), "bien") +
+      cifra(errores.length, t(["líneas rechazadas, con código y línea", "lines rejected, with code and line"]), errores.length ? "mal" : "") +
+      cifra(M.cortada ? t(["sí", "yes"]) : "no", t(["¿respuesta cortada?", "answer cut?"])) + "</div>" +
+      (errores.length ? "<ul>" + errores.slice(0, 6).map((e) => "<li><span class=\"cod\">" + e.code + "</span> · " + t(["línea ", "line "]) + e.line + " · " +
+        escapar(t(EXPLICA[e.code] || [e.message, e.message])) + "</li>").join("") + "</ul>" : "") +
+      (ajustes.length ? '<p class="sm-nota">' + escapar(ajustes.join(" · ")) + "</p>" : "") +
+      '<p class="sm-nota">' + t([errores.length ? "SIMA reenvía al modelo solo las líneas rechazadas y pide aparte los ítems que falten; cada corrección se valida antes de aceptarla."
+        : "No hay nada que reparar: los ítems pasan directo al banco.",
+        errores.length ? "SIMA sends back to the model only the rejected lines and requests the missing items separately; each correction is validated before it is accepted."
+        : "Nothing to repair: the items go straight to the bank."]) + "</p>";
+  }
+
+  // ------------------------------------------------------------ 4 · banco de preguntas
+  const banco = MINI.parse(DATOS.banco, C, { strict: false });
+  const lineasBanco = DATOS.banco.split("\n").slice(1);
+  let idx = 0, verLinea = false;
+  function pintarPregunta() {
+    const r = banco.records[idx];
+    const opciones = r.options.map((o, i) => '<button type="button" data-op="' + i + '">' + String.fromCharCode(65 + i) + ". " + escapar(o) + "</button>").join("");
+    $("#pregunta").innerHTML = '<div class="meta"><span>' + (idx + 1) + " / " + banco.records.length + "</span><span>Bloom " + escapar(r.bloom) +
+      "</span><span>" + escapar(r.topic) + "</span><span>IRT b = " + r.irt.b + "</span></div><p>" + escapar(r.statement) + '</p><div class="sm-opciones">' +
+      opciones + '</div><div id="retro"></div>' + (verLinea ? '<pre class="sm-linea">' + escapar(lineasBanco[idx] || "") + "</pre>" : "");
+    $$("[data-op]").forEach((b) => b.addEventListener("click", () => {
+      const elegida = Number(b.dataset.op);
+      $$("[data-op]").forEach((x) => { x.disabled = true; if (Number(x.dataset.op) === r.correct) x.classList.add("ok"); });
+      if (elegida !== r.correct) b.classList.add("no");
+      $("#retro").innerHTML = '<p class="sm-aviso ' + (elegida === r.correct ? "bien" : "mal") + '">' +
+        t(elegida === r.correct ? ["Correcto.", "Correct."] : ["Incorrecto: la respuesta es la " + String.fromCharCode(65 + r.correct) + ".",
+          "Incorrect: the answer is " + String.fromCharCode(65 + r.correct) + "."]) + "</p>";
+    }));
+    $("#anterior").disabled = idx === 0;
+    $("#siguiente").disabled = idx === banco.records.length - 1;
+  }
+
+  // ------------------------------------------------------------ 5 · corridas en SIMA
+  function pintarCorridas() {
+    const m = DATOS.corridas.minifmt, l = DATOS.corridas.legado;
+    const fila = (k, a, b) => "<tr><td>" + k + "</td><td>" + a + "</td><td>" + b + "</td></tr>";
+    $("#corridas").innerHTML = "<thead><tr><th>" + t(["Clase completa en SIMA (" + DATOS.clase.modelo + ")", "Full lecture in SIMA (" + DATOS.clase.modelo + ")"]) +
+      "</th><th>" + t(["Lector anterior", "Previous reader"]) + "</th><th>mini-format</th></tr></thead><tbody>" +
+      fila(t(["Ítems pedidos", "Items requested"]), l.pedidos, m.pedidos) +
+      fila(t(["Ítems válidos de la generación", "Valid items from generation"]), l.finales, m.finales) +
+      fila(t(["Llamadas de generación", "Generation calls"]), l.llamadas, m.llamadas) +
+      fila(t(["Preguntas en el banco final", "Questions in the final bank"]), l.items_finales, m.items_finales) + "</tbody>";
+  }
+
+  function pintarTodo() { pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
+    $("#nota").textContent = t(["Datos: llamadas reales a DeepSeek y Groq del " + DATOS.fecha + ". Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ").",
+                                "Data: real calls to DeepSeek and Groq on " + DATOS.fecha + ". Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ")."]); }
+  $$("[data-respuesta]").forEach((b) => b.addEventListener("click", () => { actual = b.dataset.respuesta; pintarRespuesta(); }));
+  $("#anterior").addEventListener("click", () => { idx = Math.max(0, idx - 1); pintarPregunta(); });
+  $("#siguiente").addEventListener("click", () => { idx = Math.min(banco.records.length - 1, idx + 1); pintarPregunta(); });
+  $("#ver-linea").addEventListener("click", (ev) => { verLinea = !verLinea; ev.currentTarget.setAttribute("aria-pressed", String(verLinea)); pintarPregunta(); });
+  new MutationObserver(pintarTodo).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  const pedido = new URLSearchParams(location.search).get("respuesta");
+  if (DATOS.respuestas[pedido]) actual = pedido;
+  pintarTodo();
+})();
+</script>
+<script src="/docs.js"></script>
+</body>
+</html>

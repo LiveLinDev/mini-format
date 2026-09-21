@@ -151,7 +151,8 @@ def cabecera(activo: str = "") -> str:
                    a("playground", "Playground", "Playground"),
                    a("mesa-de-ayuda", "Demo", "Demo"),
                    a("taller", "Taller", "Workshop"),
-                   a("ejemplo", "Ejemplo", "Example")])
+                   a("ejemplo", "Ejemplo", "Example"),
+                   a("sima", "SIMA", "SIMA")])
     return f'''<a class="skip" href="#contenido">{ambos("Saltar al contenido", "Skip to content")}</a>
 <header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
@@ -949,6 +950,30 @@ def construir_taller() -> None:
     print(f"  taller de integración: {len(pagina.encode('utf-8')) // 1024} KB, {len(datos['ejemplos'])} esquemas de ejemplo")
 
 
+def construir_sima() -> None:
+    """Página /sima/: el caso de integración en SIMA con datos archivados de llamadas reales (examples/sima/datos.json)."""
+    import shutil
+    origen = RAIZ / "examples" / "sima"
+    datos = json.loads((origen / "datos.json").read_text(encoding="utf-8"))
+    safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
+    pagina = (origen / "plantilla.html").read_text(encoding="utf-8")
+    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+                         ("__CABECERA__", cabecera("sima")),
+                         ("__PIE__", pie()),
+                         ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
+                         ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
+        if marca not in pagina:
+            raise SystemExit(f"plantilla de SIMA: falta la marca {marca}")
+        pagina = pagina.replace(marca, valor, 1)
+    destino = SITIO / "sima" / "index.html"
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(pagina, encoding="utf-8")
+    shutil.copyfile(origen / "panel.png", destino.parent / "panel.png")
+    k = datos["tokens"]
+    print(f"  caso SIMA: {len(pagina.encode('utf-8')) // 1024} KB, banco de {datos['clase']['items_pedidos']} ítems = "
+          f"{k['mini']} tokens en .mini y {k['json_compacto']} en JSON compacto")
+
+
 def sellar() -> None:
     """version.json: qué commit construyó lo publicado (GITHUB_SHA en CI, 'local' fuera)."""
     import os
@@ -966,6 +991,7 @@ if __name__ == "__main__":
     construir_mesa()
     construir_ejemplo()
     construir_taller()
+    construir_sima()
     from publicar import prepare_public_site
     prepare_public_site(TRADUCCIONES)
     import subprocess
