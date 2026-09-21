@@ -85,6 +85,9 @@ __CABEZA__
   .sm-progreso div { height: 100%; background: rgb(var(--accent)); transition: width .4s; }
   .sm-envivo { border-color: rgb(var(--accent) / .6); }
   #vivo-bloques pre { max-height: 14rem; font-size: .7rem; }
+  .sm-graficas { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1rem 1.6rem; margin-top: 1rem; }
+  .sm-grafica h3 { font-size: .9rem; margin: 0 0 .3rem; }
+  .sm-grafica .sm-barra { grid-template-columns: 4rem 1fr 6.5rem; }
   .sm-guia { margin: .4rem 0; padding-left: 1.2rem; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
   .sm textarea { width: 100%; box-sizing: border-box; min-height: 11rem; font-family: var(--f-mono); font-size: .78rem; line-height: 1.5;
                  padding: .7rem .8rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle)); color: rgb(var(--fg)); }
@@ -150,6 +153,28 @@ __CABECERA__
     <div id="vivo-avance"></div>
     <div id="vivo-bloques"></div>
     <div id="vivo-resultado"></div>
+  </section>
+
+  <section class="sm-panel sm-envivo" id="comparar">
+    <h2><span data-lang="es">JSON frente a .mini, en vivo</span><span data-lang="en" hidden>JSON versus .mini, live</span></h2>
+    <p class="sub"><span data-lang="es">SIMA toma el primer bloque de la clase y lo pide al modelo dos veces a la vez, con el mismo prompt de generación: una en .mini
+      y otra en JSON (solo cambia la sección de formato). Se comparan los tokens que informa el proveedor, el costo, el tiempo, las preguntas
+      que cumplen el contrato y si la respuesta se cortó por el límite de salida de SIMA.</span>
+      <span data-lang="en" hidden>SIMA takes the first block of the lecture and asks the model for it twice at the same time, with the same generation prompt:
+      once in .mini and once in JSON (only the format section changes). It compares the tokens reported by the provider, the cost, the time,
+      the questions that meet the contract and whether the answer was cut by SIMA's output limit.</span></p>
+    <div class="sm-fila">
+      <span class="et"><span data-lang="es">Preguntas por pedir:</span><span data-lang="en" hidden>Questions to request:</span></span>
+      <button type="button" class="sm-chip" data-items="12">12</button>
+      <button type="button" class="sm-chip" data-items="25">25</button>
+      <button type="button" class="sm-chip" data-items="40" aria-pressed="true">40</button>
+      <button type="button" class="btn btn-solid" id="comparar-iniciar" disabled><span data-lang="es">Comparar en SIMA</span><span data-lang="en" hidden>Compare in SIMA</span></button>
+    </div>
+    <p class="sm-nota"><span data-lang="es">Usa la clase cargada arriba en «SIMA en vivo». Con 40 preguntas, el JSON suele superar el límite de salida de SIMA.</span>
+      <span data-lang="en" hidden>It uses the lecture loaded above in “SIMA live”. With 40 questions, JSON usually exceeds SIMA's output limit.</span></p>
+    <div id="comparar-estado"></div>
+    <div class="sm-dos" id="comparar-vivo"></div>
+    <div id="comparar-graficas"></div>
   </section>
 
   <p class="sm-aviso info" id="aviso-registro" style="margin-top:1.6rem"></p>
@@ -450,6 +475,7 @@ __PIE__
                          "No connection to SIMA at that address. With a local SIMA (.\\demo_mini.ps1 and ?sima=http://127.0.0.1:8010), if the browser asks for local network access, press “Allow” and then “Connect”."]);
     }
     $("#vivo-procesar").disabled = !vivo.conectado;
+    $("#comparar-iniciar").disabled = !vivo.conectado;
   }
   async function procesar() {
     if (palabras() < 150) {
@@ -551,6 +577,92 @@ __PIE__
   $("#vivo-conectar").addEventListener("click", conectar);
   $("#vivo-procesar").addEventListener("click", procesar);
 
+  // ------------------------------------------------------------ JSON frente a .mini, en vivo (dos llamadas reales desde SIMA)
+  const cmp = { id: null, items: 40, temporizador: null };
+  const FORMATOS = [["mini", ".mini"], ["json", "JSON"]];
+  function barras(titulo, filas, opciones) {
+    // filas: [[nombre, valor, clase, texto]]; opciones: {maximo, limite, leyenda}
+    const max = (Math.max(opciones.maximo || 0, opciones.limite || 0, ...filas.map((f) => f[1] || 0)) || 1) * 1.05;
+    return '<div class="sm-grafica"><h3>' + titulo + '</h3><div class="sm-barras">' + filas.map((f) =>
+      '<div class="sm-barra ' + f[2] + '"><span>' + f[0] + '</span><div class="pista"><div class="relleno" style="width:' +
+      (100 * f[1] / max).toFixed(1) + '%"></div>' + (opciones.limite ? '<div class="limite" style="left:' + (100 * opciones.limite / max).toFixed(1) +
+      '%"></div>' : "") + '</div><span class="n">' + f[3] + "</span></div>").join("") + "</div>" +
+      (opciones.leyenda ? '<p class="sm-leyenda">' + (opciones.limite ? "<i></i>" : "") + opciones.leyenda + "</p>" : "") + "</div>";
+  }
+  async function comparar() {
+    const texto = $("#vivo-texto").value;
+    $("#comparar-iniciar").disabled = true;
+    $("#comparar-graficas").innerHTML = ""; $("#comparar-vivo").innerHTML = "";
+    $("#comparar-estado").innerHTML = '<p class="sm-nota">' + t(["Enviando a SIMA…", "Sending to SIMA…"]) + "</p>";
+    try {
+      const r = await fetch(urlBase() + "/api/mini/comparar/", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ texto, items: cmp.items }) });
+      const d = await r.json();
+      if (!r.ok && !(r.status === 409 && d.id)) throw new Error(d.error || String(r.status));
+      cmp.id = d.id; seguirComparacion();
+    } catch (x) {
+      $("#comparar-estado").innerHTML = '<p class="sm-aviso mal">' + escapar(t(["SIMA no aceptó la comparación: ", "SIMA did not accept the comparison: "]) + (x.message || x)) + "</p>";
+      $("#comparar-iniciar").disabled = !vivo.conectado;
+    }
+  }
+  async function seguirComparacion() {
+    clearTimeout(cmp.temporizador);
+    try {
+      const d = await (await fetch(urlBase() + "/api/mini/comparar/" + cmp.id + "/")).json();
+      pintarComparacion(d);
+      if (!d.terminado) cmp.temporizador = setTimeout(seguirComparacion, 1000);
+      else $("#comparar-iniciar").disabled = !vivo.conectado;
+    } catch (x) { cmp.temporizador = setTimeout(seguirComparacion, 3000); }
+  }
+  function pintarComparacion(d) {
+    const maxCar = Math.max(1, ...FORMATOS.map(([f]) => (d[f] || {}).caracteres || 0));
+    $("#comparar-estado").innerHTML = '<p class="sm-nota"><b>' + escapar(d.proveedor + " " + d.modelo) + "</b> · " + d.items +
+      t([" preguntas pedidas en cada formato · fragmento de ", " questions requested in each format · fragment of "]) + num(d.palabras) +
+      t([" palabras · límite de salida ", " words · output limit "]) + num(d.limite_salida) + " tokens · " + (d.terminado ? Math.max((d.mini || {}).segundos || 0, (d.json || {}).segundos || 0) : d.segundos) + " s</p>";
+    $("#comparar-vivo").innerHTML = FORMATOS.map(([f, nombre]) => {
+      const x = d[f] || {}, listo = x.estado === "listo";
+      const estado = x.estado === "error" ? t(["error: ", "error: "]) + escapar(x.error || "") :
+        listo ? (x.corte ? t(["cortada por el límite", "cut by the limit"]) : t(["completa", "complete"])) : t(["generando…", "generating…"]);
+      return '<div class="sm-lector' + (f === "mini" ? " mf" : "") + '"><h3>' + nombre + "</h3>" +
+        '<div class="sm-progreso"><div style="width:' + (100 * (x.caracteres || 0) / maxCar).toFixed(1) + '%"></div></div>' +
+        '<p class="sm-nota">' + num(x.caracteres || 0) + t([" caracteres · ", " characters · "]) + (x.segundos || 0) + " s · " + estado + "</p>" +
+        (listo ? '<p class="' + (x.validas ? "sm-aviso bien" : "sm-aviso mal") + '">' + x.validas + t([" de ", " of "]) + d.items +
+          t([" preguntas utilizables", " usable questions"]) + (x.error ? " · " + escapar(x.error) : "") +
+          (x.rechazadas && x.rechazadas.length ? " · " + x.rechazadas.map((e) => '<span class="cod">' + e[1] + "</span> " + t(["línea ", "line "]) + e[0]).join(", ") : "") + "</p>" : "") +
+        "<details><summary>" + t(["Ver la respuesta", "Show the answer"]) + "</summary><pre>" + escapar(x.respuesta || "") + "</pre></details></div>";
+    }).join("");
+    if (!d.terminado || !(d.mini || {}).estado || d.mini.estado !== "listo" || !d.json || d.json.estado !== "listo") { $("#comparar-graficas").innerHTML = ""; return; }
+    const m = d.mini, j = d.json, usd = (v) => "$" + v.toFixed(4);
+    const porPregunta = (x) => x.validas ? 1000 * x.costo_usd / x.validas : null;   // USD por 1 000 preguntas utilizables
+    $("#comparar-graficas").innerHTML = '<div class="sm-graficas">' +
+      barras(t(["Tokens de salida (informados por el proveedor)", "Output tokens (reported by the provider)"]), [
+        [".mini", m.tokens_salida, "mini", num(m.tokens_salida)], ["JSON", j.tokens_salida, "", num(j.tokens_salida) + (j.corte ? " ✂" : "")]],
+        { limite: d.limite_salida, leyenda: t(["límite de salida de SIMA: " + num(d.limite_salida) + " tokens", "SIMA output limit: " + num(d.limite_salida) + " tokens"]) }) +
+      barras(t(["Preguntas utilizables", "Usable questions"]), [
+        [".mini", m.validas, "mini", m.validas + " / " + d.items], ["JSON", j.validas, "", j.validas + " / " + d.items]], { maximo: d.items }) +
+      barras(t(["Costo de la llamada (USD)", "Cost of the call (USD)"]), [
+        [".mini", m.costo_usd, "mini", usd(m.costo_usd)], ["JSON", j.costo_usd, "", usd(j.costo_usd)]],
+        { leyenda: t(["precio de referencia por millón de tokens: entrada $" + d.precio.entrada + " · salida $" + d.precio.salida,
+                     "reference price per million tokens: input $" + d.precio.entrada + " · output $" + d.precio.salida]) }) +
+      barras(t(["Tiempo de respuesta (s)", "Response time (s)"]), [
+        [".mini", m.segundos, "mini", m.segundos + " s"], ["JSON", j.segundos, "", j.segundos + " s"]], {}) +
+      "</div>";
+    const ahorro = j.tokens_salida ? Math.round(100 * (1 - m.tokens_salida / j.tokens_salida)) : 0;
+    const cpm = porPregunta(m), cpj = porPregunta(j);
+    $("#comparar-graficas").innerHTML += '<p class="sm-aviso ' + (j.validas < m.validas ? "mal" : "bien") + '">' + (j.corte && !j.validas
+      ? t(["La respuesta en JSON alcanzó el límite de salida y quedó incompleta: el JSON no se puede leer y se pierden las " + d.items +
+           " preguntas pagadas. En .mini, " + m.validas + " preguntas se usaron directamente" + (m.validas < d.items ? " y solo las inválidas se reenviarían." : "."),
+           "The JSON answer reached the output limit and was left incomplete: it cannot be parsed and all " + d.items + " paid questions are lost. In .mini, " +
+           m.validas + " questions were used directly" + (m.validas < d.items ? " and only the invalid ones would be resent." : ".")])
+      : t([".mini usó " + ahorro + " % menos tokens de salida que JSON para las mismas preguntas" + (cpm && cpj ? "; costo por 1 000 preguntas utilizables: $" + cpm.toFixed(2) + " frente a $" + cpj.toFixed(2) + "." : "."),
+           ".mini used " + ahorro + "% fewer output tokens than JSON for the same questions" + (cpm && cpj ? "; cost per 1,000 usable questions: $" + cpm.toFixed(2) + " versus $" + cpj.toFixed(2) + "." : ".")])) + "</p>";
+  }
+  $$("[data-items]").forEach((b) => b.addEventListener("click", () => {
+    cmp.items = Number(b.dataset.items);
+    $$("[data-items]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  }));
+  $("#comparar-iniciar").addEventListener("click", comparar);
+
   function pintarTodo() { avisoRegistro(); pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
     $("#nota").textContent = t(["Datos: llamadas reales a DeepSeek y Groq del " + DATOS.fecha + ". Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ").",
                                 "Data: real calls to DeepSeek and Groq on " + DATOS.fecha + ". Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ")."]); }
@@ -572,6 +684,9 @@ __PIE__
   if (pedidaSima) $("#vivo-url").value = pedidaSima;
   cargarClase("bioenergetica");
   conectar();
+  // ?comparacion=<id> vuelve a mostrar una comparación ya hecha en SIMA
+  const pedidaCmp = Number(new URLSearchParams(location.search).get("comparacion"));
+  if (pedidaCmp) { cmp.id = pedidaCmp; seguirComparacion(); document.querySelector("#comparar").scrollIntoView(); }
 })();
 </script>
 <script src="/docs.js"></script>
