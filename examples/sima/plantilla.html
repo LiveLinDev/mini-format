@@ -124,16 +124,16 @@ __CABECERA__
 
   <section class="sm-panel sm-envivo" id="en-vivo">
     <h2><span data-lang="es">SIMA en vivo</span><span data-lang="en" hidden>SIMA live</span></h2>
-    <p class="sub"><span data-lang="es">Esta sección llama a SIMA. La clase se envía a SIMA, SIMA la procesa en ese momento con DeepSeek y mini-format, y aquí se ve
+    <p class="sub"><span data-lang="es">Esta sección llama a SIMA en su servidor (sima.pmoluna.com). La clase se envía a SIMA, SIMA la procesa en ese momento con DeepSeek y mini-format, y aquí se ve
       cada bloque cuando termina: lo que respondió el modelo, lo que se rechazó con su código, lo que se reparó y las preguntas finales.
       La clave del modelo permanece en SIMA; esta página nunca la recibe.</span>
-      <span data-lang="en" hidden>This section calls SIMA. The lecture is sent to SIMA, SIMA processes it right away with DeepSeek and mini-format, and each block is
+      <span data-lang="en" hidden>This section calls SIMA on its server (sima.pmoluna.com). The lecture is sent to SIMA, SIMA processes it right away with DeepSeek and mini-format, and each block is
       shown here as it finishes: what the model answered, what was rejected with its code, what was repaired and the final questions.
       The model key stays in SIMA; this page never receives it.</span></p>
     <div class="sm-fila">
       <span id="vivo-estado" class="sm-estado">…</span>
       <label class="et" for="vivo-url"><span data-lang="es">Dirección de SIMA</span><span data-lang="en" hidden>SIMA address</span></label>
-      <input type="text" id="vivo-url" value="http://127.0.0.1:8010" spellcheck="false" aria-label="Dirección de SIMA">
+      <input type="text" id="vivo-url" value="https://sima.pmoluna.com" spellcheck="false" aria-label="Dirección de SIMA">
       <button type="button" class="btn" id="vivo-conectar"><span data-lang="es">Conectar</span><span data-lang="en" hidden>Connect</span></button>
     </div>
     <div class="sm-fila">
@@ -422,7 +422,6 @@ __PIE__
 
   // ------------------------------------------------------------ SIMA en vivo: la página llama a la API de SIMA
   const vivo = { id: null, temporizador: null, tokens: null, conectado: false, cargado: null };
-  const CLAVE_URL = "mini-sima-url";
   const urlBase = () => ($("#vivo-url").value || "").trim().replace(/\/+$/, "");
   function palabras() {
     const n = $("#vivo-texto").value.trim().split(/\s+/).filter(Boolean).length;
@@ -438,7 +437,6 @@ __PIE__
   async function conectar() {
     const e = $("#vivo-estado");
     e.className = "sm-estado"; e.textContent = t(["Conectando…", "Connecting…"]);
-    try { localStorage.setItem(CLAVE_URL, urlBase()); } catch (x) {}
     try {
       const r = await fetch(urlBase() + "/api/mini/estado/", { mode: "cors" });
       if (!r.ok) throw new Error(String(r.status));
@@ -447,8 +445,8 @@ __PIE__
       e.textContent = t(["SIMA conectado · ", "SIMA connected · "]) + d.proveedor + " " + d.modelo + " · " + t(["lector ", "reader "]) + d.lector;
     } catch (x) {
       vivo.conectado = false; e.className = "sm-estado mal";
-      e.textContent = t(["Sin conexión con SIMA. Comprueba que SIMA esté corriendo (.\\demo_mini.ps1) y, si el navegador pregunta por acceso a dispositivos de la red local, pulsa «Permitir» y luego «Conectar».",
-                         "No connection to SIMA. Check that SIMA is running (.\\demo_mini.ps1) and, if the browser asks for access to local network devices, press “Allow” and then “Connect”."]);
+      e.textContent = t(["Sin conexión con SIMA en esa dirección. Con un SIMA local (.\\demo_mini.ps1 y ?sima=http://127.0.0.1:8010), si el navegador pregunta por acceso a la red local, pulsa «Permitir» y luego «Conectar».",
+                         "No connection to SIMA at that address. With a local SIMA (.\\demo_mini.ps1 and ?sima=http://127.0.0.1:8010), if the browser asks for local network access, press “Allow” and then “Connect”."]);
     }
     $("#vivo-procesar").disabled = !vivo.conectado;
   }
@@ -545,10 +543,9 @@ __PIE__
     if (navigator.clipboard) navigator.clipboard.writeText(DATOS.prompt_sima).then(listo, listo); else listo();
   });
   pintarTodo();
-  let guardada = "";
-  try { guardada = localStorage.getItem(CLAVE_URL) || ""; } catch (x) {}
+  // ?sima=http://127.0.0.1:8010 apunta a un SIMA local (demo_mini.ps1); por defecto, SIMA en producción
   const pedidaSima = new URLSearchParams(location.search).get("sima");
-  if (pedidaSima || guardada) $("#vivo-url").value = pedidaSima || guardada;
+  if (pedidaSima) $("#vivo-url").value = pedidaSima;
   cargarClase("bioenergetica");
   conectar();
 })();
