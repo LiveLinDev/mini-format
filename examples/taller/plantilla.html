@@ -514,7 +514,11 @@ __PIE__
   if (estado.esquema) { $("#esquema").value = estado.esquema; $("#prefijo").value = estado.prefijo; generar(); } else { cargarEjemplo("tickets"); }
   $("#respuesta").value = estado.respuesta || "";
   if (contrato && estado.respuesta) validar();
-  const pedido = Number(new URLSearchParams(location.search).get("paso"));
+  // enlaces de demostración: /taller/?ejemplo=productos&muestra=error&paso=3
+  const params = new URLSearchParams(location.search);
+  if (DATOS.ejemplos[params.get("ejemplo")]) cargarEjemplo(params.get("ejemplo"));
+  if (["ok", "error", "cortada"].includes(params.get("muestra")) && contrato) { $("#respuesta").value = muestra(params.get("muestra")); validar(); }
+  const pedido = Number(params.get("paso"));
   ir(pedido >= 1 && pedido <= 5 ? pedido : estado.paso, false);
 })();
 </script>
