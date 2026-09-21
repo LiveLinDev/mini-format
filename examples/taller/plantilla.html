@@ -328,7 +328,14 @@ __PIE__
 
   // ------------------------------------------------------------ 3 · validación
   function leer(texto) {
-    try { return MINI.parse(texto, contrato, { strict: false }); } catch (e) { return { vacio: true, errors: e.errors || [{ code: "E01", line: 0 }], records: [], header: {} }; }
+    // como la biblioteca: se ignora la prosa o el bloque de código que el modelo pone alrededor del documento
+    const doc = MINI.extractDocument(texto || "", contrato);
+    try {
+      const d = MINI.parse(doc, contrato, { strict: false });
+      d.extraido = doc.trim() !== (texto || "").trim();
+      if (!doc.trim() || d.errors.some((e) => e.code === "E01")) d.vacio = true;
+      return d;
+    } catch (e) { return { vacio: true, errors: e.errors || [{ code: "E01", line: 0 }], records: [], header: {} }; }
   }
   function validar() {
     estado.respuesta = $("#respuesta").value; estado.correccion = ""; estado.fusionado = ""; estado.faltantesPedidos = false; guardar();
@@ -338,14 +345,21 @@ __PIE__
     const faltan = Math.max(0, anunciados - d.records.length - invalidas.length);
     const cortada = /E05/.test(d.errors.map((e) => e.code).join()) && !estado.respuesta.endsWith("\n");
     const cifra = (v, k, c) => '<div class="tl-cifra ' + (c || "") + '"><span class="v">' + v + '</span><span class="k">' + k + "</span></div>";
-    let html = d.errors.length === 0
+    if (d.vacio) {
+      caja.innerHTML = '<p class="tl-aviso mal">' + t(["El modelo no devolvió ningún documento (E01): no hay registros que conservar. Hay que pedir la respuesta de nuevo.",
+        "The model returned no document (E01): there are no records to keep. The answer must be requested again."]) + "</p>";
+      return;
+    }
+    let html = d.extraido ? '<p class="tl-aviso info">' + t(["Se ignoró el texto que el modelo escribió alrededor del documento.",
+      "The text the model wrote around the document was ignored."]) + "</p>" : "";
+    html += d.errors.length === 0
       ? '<p class="tl-aviso bien">' + t(["Respuesta válida: ", "Valid answer: "]) + d.records.length + t([" registros cumplen el contrato.", " records meet the contract."]) + "</p>"
       : '<p class="tl-aviso mal">' + t(["La respuesta tiene problemas, pero no se pierde: los registros válidos se conservan.", "The answer has problems, but it is not lost: valid records are kept."]) + "</p>";
     html += '<div class="tl-cifras">' + cifra(anunciados, t(["anunciados en la cabecera", "announced in the header"])) +
       cifra(d.records.length, t(["válidos", "valid"]), "bien") + cifra(invalidas.length, t(["líneas con error", "lines with errors"]), invalidas.length ? "mal" : "") +
       cifra(faltan, t(["registros que faltan", "missing records"]), faltan ? "mal" : "") + cifra(cortada ? t(["sí", "yes"]) : "no", t(["¿respuesta cortada?", "answer cut?"])) + "</div>";
     if (d.errors.length) {
-      const lineas = estado.respuesta.split("\n");
+      const lineas = MINI.extractDocument(estado.respuesta, contrato).split("\n");
       html += '<div class="tabla"><table><thead><tr><th>' + t(["Línea", "Line"]) + "</th><th>" + t(["Código", "Code"]) + "</th><th>" +
         t(["Campo", "Field"]) + "</th><th>" + t(["Qué pasó", "What happened"]) + "</th><th>" + t(["Contenido", "Content"]) + "</th></tr></thead><tbody>" +
         d.errors.map((e) => "<tr><td>" + (e.line || "—") + '</td><td class="error-cod">' + e.code + "</td><td>" + escapar(e.field || "—") + "</td><td>" +
