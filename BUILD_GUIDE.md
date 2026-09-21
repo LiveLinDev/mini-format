@@ -7,7 +7,7 @@
 Extract the toolkit ZIP from the site's Downloads section. With Python 3.9+:
 
 ```sh
-python -m pip install --no-index mini_format-1.2.0-py3-none-any.whl
+python -m pip install --no-index mini_format-1.2.1-py3-none-any.whl
 mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini
 ```
 

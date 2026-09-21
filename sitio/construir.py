@@ -30,8 +30,8 @@ from minifmt import Registry, __version__, SPEC_VERSION  # noqa: E402
 
 REPO = "https://github.com/LiveLinDev/mini-format"
 SITE_URL = "https://mini-format.pmoluna.com"
-DOWNLOAD = "/downloads/mini-format-1.2.0.zip"
-SOURCE = "/downloads/mini-format-1.2.0-source.zip"
+DOWNLOAD = "/downloads/mini-format-1.2.1.zip"
+SOURCE = "/downloads/mini-format-1.2.1-source.zip"
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800'

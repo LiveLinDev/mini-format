@@ -192,9 +192,9 @@
       { titulo: "mi-django — terminal", dur: 5000,
         cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
         lineas: [
-          [["p", "$ "], ["", "pip install mini_format-1.2.0-py3-none-any.whl\n"]],
-          [["c", "… instalando mini-format 1.2.0\n"]],
-          [["s", "mini-format 1.2.0 instalado\n"]],
+          [["p", "$ "], ["", "pip install mini_format-1.2.1-py3-none-any.whl\n"]],
+          [["c", "… instalando mini-format 1.2.1\n"]],
+          [["s", "mini-format 1.2.1 instalado\n"]],
           [["", "\n"]],
           [["p", "$ "], ["", "mini forks\n"]],
           [["f", "a    "], ["", "Assessment items (Bloom + IRT)\n"]],

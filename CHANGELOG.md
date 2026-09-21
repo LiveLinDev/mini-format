@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+- `--contract` accepts the base-profile contract written by `mini from-schema`, not only the generated
+  `mini-domain/1` toolkits: `validate`, `diagnose`, `to-json`, `from-json` and `prompt` read it with the core
+  parser, so the contract produced by the CLI can be used by the same CLI
+  (`mini validate respuesta.mini --contract contrato_tk.json`). Toolkit contracts keep their own commands.
+
 ## 1.2.0
 
 - Offline demonstration (`demo/sin-conexion/demo.py`): contract, generated

@@ -1,5 +1,5 @@
 /* mini.js — motor JavaScript de .mini para el navegador (playground) y CommonJS.
- * ARCHIVO GENERADO por tools/build_js.mjs desde ts/src (@mini-format/core 1.2.0, SPEC 1.1).
+ * ARCHIVO GENERADO por tools/build_js.mjs desde ts/src (@mini-format/core 1.2.1, SPEC 1.1).
  * No se edita a mano: se modifica ts/src y se ejecuta `node --no-warnings tools/build_js.mjs`.
  * tests/test_js_port.mjs comprueba que está al día y ejecuta toda la suite de conformidad contra él.
  * Expone el global `MINI` (navegador) o `module.exports` (Node) con la API de la biblioteca:
@@ -33,17 +33,17 @@
     const E_RANGE = 'E13';
     const E_CONTRACT = 'E20';
     const E_FORK = 'E21';
-
+    
                            
                                                                              
                                                       
-
+    
     /** Un error de validación: código, línea física 1-based (0 = documento) y campo. */
     class MiniError extends Error {
                code           ;
                line        ;
                field        ;
-
+    
       constructor(code           , line        , message        , field         ) {
         super(message);
         this.name = 'MiniError';
@@ -51,28 +51,28 @@
         this.line = line;
         this.field = field || '';
       }
-
+    
                toString()         {
         const where = this.line ? `line ${this.line}` : 'document';
         const fld = this.field ? ` [${this.field}]` : '';
         return `${this.code} ${where}${fld}: ${this.message}`;
       }
-
+    
       toJSON()                                                                    {
         return { code: this.code, line: this.line, field: this.field, message: this.message };
       }
     }
-
+    
     /** Lanzado por el análisis estricto cuando se recogió uno o más errores. */
     class MiniValidationError extends Error {
                errors             ;
-
+    
       constructor(errors             ) {
         super(errors.map(String).join('\n'));
         this.name = 'MiniValidationError';
         this.errors = errors;
       }
-
+    
       get codes()              {
         return this.errors.map(e => e.code);
       }
@@ -1724,12 +1724,9 @@
 
   // ---------------------------------------------------------------- stream.ts
   __m["stream"] = (function () {
-    const { isBlank } = __m["codec"];
-    const { normalizeContract } = __m["contract"];
-    const { MiniError, MiniValidationError } = __m["errors"];
-    const { Document, LineEngine } = __m["parser"];
+    const { isBlank } = __m["codec"];const { normalizeContract } = __m["contract"];const { MiniError, MiniValidationError } = __m["errors"];const { Document, LineEngine } = __m["parser"];
                                                           
-
+    
     /** Registro emitido en cuanto su línea se cierra con LF. */
                                    
                          
@@ -1738,7 +1735,7 @@
                                                                          
                     
      
-
+    
     /** Última línea recibida sin LF final que no pudo validarse (típico de una salida truncada). */
                                        
                    
@@ -1749,7 +1746,7 @@
                         
                           
      
-
+    
                                     
                                                                                                     
                        
@@ -1757,7 +1754,7 @@
                                              
                                          
      
-
+    
                                    
                          
                             
@@ -1780,14 +1777,14 @@
                                         
                         
      
-
+    
                                      
                               
                        
                     
                      
      
-
+    
                                  
                                                                                                                                
                                                        
@@ -1803,7 +1800,7 @@
                                         
                               
      
-
+    
     function countFieldsApprox(line        )         {
       let n = 1;
       for (let i = 0; i < line.length; i++) {
@@ -1812,13 +1809,13 @@
       }
       return n;
     }
-
+    
     function declaredCount(header               )                {
       if (!header || !Object.prototype.hasOwnProperty.call(header, 'n')) return null;
       const n = header.n;
       return typeof n === 'number' && Number.isInteger(n) ? n : null;
     }
-
+    
     /** Crea un lector incremental para `contract`. */
     function createReader(contract                         , opts                = {})             {
       const c = normalizeContract(contract);
@@ -1829,12 +1826,12 @@
       let ended = false;
       let decoder                     = null;
       let reportedErrors = 0;
-
+    
       const flushErrors = ()       => {
         if (opts.onError) for (; reportedErrors < engine.errors.length; reportedErrors++) opts.onError(engine.errors[reportedErrors]);
         else reportedErrors = engine.errors.length;
       };
-
+    
       const feedLine = (raw        , out                )       => {
         const hadHeader = engine.header !== null;
         const outcome = engine.feed(raw);
@@ -1848,13 +1845,13 @@
         }
         flushErrors();
       };
-
+    
       const toText = (chunk                     )         => {
         if (typeof chunk === 'string') return chunk;
         if (!decoder) decoder = new TextDecoder('utf-8');
         return decoder.decode(chunk, { stream: true });
       };
-
+    
       const reader             = {
         push(chunk                     )                 {
           if (ended) throw new Error('mini reader already ended');
@@ -1873,7 +1870,7 @@
           scanFrom = buffer.length;
           return out;
         },
-
+    
         end(chunk                      )               {
           if (ended) throw new Error('mini reader already ended');
           if (chunk !== undefined) reader.push(chunk);
@@ -1923,7 +1920,7 @@
           }
           return result;
         },
-
+    
         get contract() { return c; },
         get prefix() { return engine.prefix; },
         get header() { return engine.header; },
@@ -1942,7 +1939,7 @@
       };
       return reader;
     }
-
+    
     /**
      * Consume un iterable (síncrono o asíncrono) de fragmentos y produce los registros
      * a medida que se completan. Devuelve el ReaderResult final como valor de retorno del generador.
@@ -2028,7 +2025,7 @@
     specBlock: __m["prompt"].specBlock,
     createReader: __m["stream"].createReader,
     readRecords: __m["stream"].readRecords,
-    VERSION: "1.2.0",
+    VERSION: "1.2.1",
     SPEC_VERSION: "1.1",
   });
 });

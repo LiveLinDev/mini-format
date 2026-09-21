@@ -32,7 +32,32 @@ def _reg(args) -> Registry:
     return Registry.load(getattr(args, "forks", None) or DEFAULT_FORKS_DIR)
 
 
+def _contract_file(args) -> Contract | None:
+    """Core contract passed with --contract; None if absent or if it belongs to the mini-domain/1 profile.
+
+    `mini from-schema` writes base-profile contracts, so every command that accepts --contract must be able to
+    read them back; domain-profile contracts keep going through the toolkit commands.
+    """
+    path = getattr(args, "contract", None)
+    if not path:
+        return None
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        sys.exit(f"cannot read contract {path}: {e}")
+    if isinstance(data, dict) and str(data.get("profile", "")).startswith("mini-domain/"):
+        return None
+    return Contract.from_dict(data)
+
+
+def _is_domain(args) -> bool:
+    return bool(getattr(args, "contract", None)) and _contract_file(args) is None
+
+
 def _contract(args, text: str | None = None) -> Contract:
+    core = _contract_file(args)
+    if core is not None:
+        return core
     reg = _reg(args)
     prefix = getattr(args, "prefix", None) or (detect_prefix(text) if text else None)
     if not prefix:
@@ -48,7 +73,7 @@ def cmd_forks(args) -> int:
 
 
 def cmd_validate(args) -> int:
-    if getattr(args, "contract", None):
+    if _is_domain(args):
         return _domain_command(args, "validate")
     text = Path(args.file).read_text(encoding="utf-8")
     c = _contract(args, text)
@@ -65,7 +90,7 @@ def cmd_validate(args) -> int:
 
 def cmd_diagnose(args) -> int:
     """Lenient parse; prints a JSON report with the lines to regenerate."""
-    if getattr(args, "contract", None):
+    if _is_domain(args):
         return _domain_command(args, "diagnose")
     text = Path(args.file).read_text(encoding="utf-8")
     c = _contract(args, text)
@@ -79,7 +104,7 @@ def cmd_diagnose(args) -> int:
 
 
 def cmd_to_json(args) -> int:
-    if getattr(args, "contract", None):
+    if _is_domain(args):
         if args.lenient:
             sys.exit("domain profiles require strict decoding; use diagnose or repair")
         return _domain_command(args, "decode")
@@ -103,7 +128,7 @@ def cmd_to_json(args) -> int:
 
 
 def cmd_from_json(args) -> int:
-    if getattr(args, "contract", None):
+    if _is_domain(args):
         return _domain_command(args, "encode")
     obj = json.loads(Path(args.file).read_text(encoding="utf-8"))
     c = _contract(args)
@@ -116,9 +141,13 @@ def cmd_from_json(args) -> int:
 
 
 def cmd_prompt(args) -> int:
-    if getattr(args, "contract", None):
+    if _is_domain(args):
         from .domain import load_contract, make_prompt
         print(make_prompt(load_contract(args.contract), args.lang))
+        return 0
+    core = _contract_file(args)
+    if core is not None:
+        print(spec_block(core, args.lang))
         return 0
     if not args.prefix:
         sys.exit("pass PREFIX or --contract PATH")

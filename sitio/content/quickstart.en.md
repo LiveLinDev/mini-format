@@ -4,16 +4,16 @@ Build your domain toolkit once. Then add its prompt to your AI workflow and conv
 
 ## 1. Install
 
-[Download toolkit 1.2.0 (.zip)](/downloads/mini-format-1.2.0.zip) · [Python package (.whl)](/downloads/mini_format-1.2.0-py3-none-any.whl) · [Source code (.zip)](/downloads/mini-format-1.2.0-source.zip)
+[Download toolkit 1.2.1 (.zip)](/downloads/mini-format-1.2.1.zip) · [Python package (.whl)](/downloads/mini_format-1.2.1-py3-none-any.whl) · [Source code (.zip)](/downloads/mini-format-1.2.1-source.zip)
 
 Requires Python 3.9 or later. The core and generated toolkit use the standard library.
 
 ```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.0-py3-none-any.whl
+pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.1-py3-none-any.whl
 mini --help
 ```
 
-To install offline, download and extract the ZIP, then run `pip install` on the included `.whl` file. With Node 22.6 or later, install the base-profile package: `npm install ./mini-format-core-1.2.0.tgz`. You can also [download it separately](/downloads/mini-format-core-1.2.0.tgz). The generated domain toolkit is Python; the TypeScript and JavaScript libraries implement the base profile.
+To install offline, download and extract the ZIP, then run `pip install` on the included `.whl` file. With Node 22.6 or later, install the base-profile package: `npm install ./mini-format-core-1.2.1.tgz`. You can also [download it separately](/downloads/mini-format-core-1.2.1.tgz). The generated domain toolkit is Python; the TypeScript and JavaScript libraries implement the base profile.
 
 ## 2. Gather JSON examples
 
@@ -45,6 +45,9 @@ Then you do not need samples: the contract is generated from the schema in a sin
 ```bash
 mini from-schema ticket.schema.json -p tk --out ticket_contract.json
 mini to-schema ticket_contract.json
+mini prompt --contract ticket_contract.json --lang en
+mini validate response.mini --contract ticket_contract.json
+mini diagnose response.mini --contract ticket_contract.json
 ```
 
 From a Pydantic model: `mini from-schema --pydantic models:Ticket -p tk --out ticket_contract.json`. The resulting contract follows base profile SPEC 1.1 and is used with the library:

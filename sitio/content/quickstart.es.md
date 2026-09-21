@@ -4,16 +4,16 @@ Construye una vez el toolkit de tu dominio. Después, coloca su prompt en tu flu
 
 ## 1. Instalar
 
-[Descargar toolkit 1.2.0 (.zip)](/downloads/mini-format-1.2.0.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.0-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.0-source.zip)
+[Descargar toolkit 1.2.1 (.zip)](/downloads/mini-format-1.2.1.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.1-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.1-source.zip)
 
 Requiere Python 3.9 o posterior. El núcleo y el toolkit generado usan la biblioteca estándar.
 
 ```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.0-py3-none-any.whl
+pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.1-py3-none-any.whl
 mini --help
 ```
 
-Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.0.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.0.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
+Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.1.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.1.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
 
 ## 2. Reunir ejemplos de tu JSON
 
@@ -45,6 +45,9 @@ Entonces no necesitas reunir muestras: el contrato se genera desde el esquema en
 ```bash
 mini from-schema ticket.schema.json -p tk --out contrato_tk.json
 mini to-schema contrato_tk.json
+mini prompt --contract contrato_tk.json --lang es
+mini validate respuesta.mini --contract contrato_tk.json
+mini diagnose respuesta.mini --contract contrato_tk.json
 ```
 
 Con un modelo Pydantic: `mini from-schema --pydantic modelos:Ticket -p tk --out contrato_tk.json`. El contrato resultante sigue el perfil base SPEC 1.1 y se usa con la biblioteca:
