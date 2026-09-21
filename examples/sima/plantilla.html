@@ -72,6 +72,19 @@ __CABEZA__
   .sm-opciones button.no { border-color: rgb(185 28 28); background: rgb(220 38 38 / .08); }
   .sm-opciones button[disabled] { cursor: default; }
   .sm-linea { margin-top: .8rem; }
+  .sm-estado { font-size: var(--fs-cap); font-weight: 600; padding: .35rem .7rem; border-radius: 99px; background: rgb(var(--subtle)); }
+  .sm-estado.ok { background: rgb(16 122 87 / .12); color: rgb(16 122 87); }
+  .sm-estado.mal { background: rgb(220 38 38 / .1); color: rgb(185 28 28); }
+  .sm input[type="text"] { font: inherit; font-size: .85rem; padding: .45rem .6rem; border: 1px solid rgb(var(--line)); border-radius: var(--r);
+                           background: rgb(var(--subtle)); color: rgb(var(--fg)); min-width: 0; }
+  #vivo-url { width: 15rem; max-width: 100%; font-family: var(--f-mono); }
+  .sm, .sm * { box-sizing: border-box; }
+  .sm { max-width: 100%; overflow-wrap: anywhere; }
+  .sm-titulo { width: 100%; box-sizing: border-box; margin-bottom: .5rem; font-weight: 600; }
+  .sm-progreso { height: .6rem; border-radius: 99px; background: rgb(var(--subtle)); overflow: hidden; margin: .8rem 0 .3rem; }
+  .sm-progreso div { height: 100%; background: rgb(var(--accent)); transition: width .4s; }
+  .sm-envivo { border-color: rgb(var(--accent) / .6); }
+  #vivo-bloques pre { max-height: 14rem; font-size: .7rem; }
   .sm-guia { margin: .4rem 0; padding-left: 1.2rem; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
   .sm textarea { width: 100%; box-sizing: border-box; min-height: 11rem; font-family: var(--f-mono); font-size: .78rem; line-height: 1.5;
                  padding: .7rem .8rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle)); color: rgb(var(--fg)); }
@@ -108,6 +121,39 @@ __CABECERA__
     <li><b><span data-lang="es">Verificación</span><span data-lang="en" hidden>Verification</span></b><span data-lang="es">revisión y correcciones validadas</span><span data-lang="en" hidden>review and validated corrections</span></li>
     <li><b><span data-lang="es">Banco adaptativo</span><span data-lang="en" hidden>Adaptive bank</span></b><span data-lang="es">preguntas con Bloom e IRT</span><span data-lang="en" hidden>questions with Bloom and IRT</span></li>
   </ol>
+
+  <section class="sm-panel sm-envivo" id="en-vivo">
+    <h2><span data-lang="es">SIMA en vivo</span><span data-lang="en" hidden>SIMA live</span></h2>
+    <p class="sub"><span data-lang="es">Esta sección llama a SIMA. La clase se envía a SIMA, SIMA la procesa en ese momento con DeepSeek y mini-format, y aquí se ve
+      cada bloque cuando termina: lo que respondió el modelo, lo que se rechazó con su código, lo que se reparó y las preguntas finales.
+      La clave del modelo permanece en SIMA; esta página nunca la recibe.</span>
+      <span data-lang="en" hidden>This section calls SIMA. The lecture is sent to SIMA, SIMA processes it right away with DeepSeek and mini-format, and each block is
+      shown here as it finishes: what the model answered, what was rejected with its code, what was repaired and the final questions.
+      The model key stays in SIMA; this page never receives it.</span></p>
+    <div class="sm-fila">
+      <span id="vivo-estado" class="sm-estado">…</span>
+      <label class="et" for="vivo-url"><span data-lang="es">Dirección de SIMA</span><span data-lang="en" hidden>SIMA address</span></label>
+      <input type="text" id="vivo-url" value="http://127.0.0.1:8010" spellcheck="false" aria-label="Dirección de SIMA">
+      <button type="button" class="btn" id="vivo-conectar"><span data-lang="es">Conectar</span><span data-lang="en" hidden>Connect</span></button>
+    </div>
+    <div class="sm-fila">
+      <span class="et"><span data-lang="es">Clase:</span><span data-lang="en" hidden>Lecture:</span></span>
+      <button type="button" class="sm-chip" data-clase="bioenergetica"><span data-lang="es">Bioenergética (11 725 palabras)</span><span data-lang="en" hidden>Bioenergetics (11,725 words)</span></button>
+      <button type="button" class="sm-chip" data-clase="fotosintesis"><span data-lang="es">Fotosíntesis (2 856 palabras)</span><span data-lang="en" hidden>Photosynthesis (2,856 words)</span></button>
+      <span class="sm-nota" id="vivo-palabras"></span>
+    </div>
+    <input type="text" id="vivo-titulo" class="sm-titulo" aria-label="Título de la clase">
+    <textarea id="vivo-texto" spellcheck="false" aria-label="Texto de la clase" style="min-height:9rem"></textarea>
+    <div class="sm-fila">
+      <button type="button" class="btn btn-solid" id="vivo-procesar" disabled><span data-lang="es">Procesar en SIMA</span><span data-lang="en" hidden>Process in SIMA</span></button>
+    </div>
+    <div id="vivo-avance"></div>
+    <div id="vivo-bloques"></div>
+    <div id="vivo-resultado"></div>
+  </section>
+
+  <p class="sm-nota" style="margin-top:1.6rem"><span data-lang="es">Las secciones siguientes muestran la ejecución registrada el 21 de septiembre de 2026 con la misma clase; cuando se procesa una clase en vivo, las secciones 2 y 4 pasan a mostrar sus resultados.</span>
+    <span data-lang="en" hidden>The following sections show the run recorded on 21 September 2026 with the same lecture; when a lecture is processed live, sections 2 and 4 switch to its results.</span></p>
 
   <section class="sm-panel">
     <h2><span data-lang="es">1 · La clase procesada</span><span data-lang="en" hidden>1 · The processed lecture</span></h2>
@@ -275,13 +321,13 @@ __PIE__
 
   // ------------------------------------------------------------ 2 · tokens
   function pintarTokens() {
-    const k = DATOS.tokens, max = k.json * 1.02;
+    const k = vivo.tokens || DATOS.tokens, max = k.json * 1.02;
     const fila = (nombre, v, cls) => '<div class="sm-barra ' + cls + '"><span>' + nombre + '</span><div class="pista"><div class="relleno" style="width:' +
       (100 * v / max).toFixed(1) + '%"></div></div><span class="n">' + num(v) + "</span></div>";
     $("#barras").innerHTML = fila(".mini", k.mini, "mini") + fila(t(["JSON compacto", "Compact JSON"]), k.json_compacto, "") + fila(t(["JSON con sangría", "Indented JSON"]), k.json, "");
     $("#leyenda-limite").textContent = t(["tokens de salida del banco completo · tokenizador " + k.tokenizador, "output tokens of the whole bank · tokenizer " + k.tokenizador]);
     const menos = (a) => Math.round(100 * (1 - k.mini / a));
-    const n = DATOS.banco.split("\n").length - 1;
+    const n = vivo.generadas || (DATOS.banco.split("\n").length - 1);
     $("#conclusion-tokens").innerHTML = '<p class="sm-aviso bien">' + t([
       "Las " + n + " preguntas de esta clase ocupan " + num(k.mini) + " tokens en .mini frente a " + num(k.json_compacto) + " en JSON compacto: " +
       num(k.json_compacto - k.mini) + " tokens de salida menos por clase (" + menos(k.json_compacto) + " %), y " + menos(k.json) + " % menos que el JSON con sangría.",
@@ -337,8 +383,8 @@ __PIE__
   }
 
   // ------------------------------------------------------------ 4 · banco de preguntas
-  const banco = MINI.parse(DATOS.banco, C, { strict: false });
-  const lineasBanco = DATOS.banco.split("\n").slice(1);
+  let banco = MINI.parse(DATOS.banco, C, { strict: false });
+  let lineasBanco = DATOS.banco.split("\n").slice(1);
   let idx = 0, verLinea = false;
   function pintarPregunta() {
     const r = banco.records[idx];
@@ -374,6 +420,115 @@ __PIE__
       fila(t(["Preguntas en el banco final", "Questions in the final bank"]), "—", r.items_finales + t([" (tras los filtros de calidad de SIMA)", " (after SIMA's quality filters)"])) + "</tbody>";
   }
 
+  // ------------------------------------------------------------ SIMA en vivo: la página llama a la API de SIMA
+  const vivo = { id: null, temporizador: null, tokens: null, conectado: false, cargado: null };
+  const CLAVE_URL = "mini-sima-url";
+  const urlBase = () => ($("#vivo-url").value || "").trim().replace(/\/+$/, "");
+  function palabras() {
+    const n = $("#vivo-texto").value.trim().split(/\s+/).filter(Boolean).length;
+    $("#vivo-palabras").textContent = num(n) + t([" palabras", " words"]);
+    return n;
+  }
+  function cargarClase(k) {
+    const c = DATOS.clases[k];
+    $("#vivo-titulo").value = c.titulo; $("#vivo-texto").value = c.texto;
+    $$("[data-clase]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.clase === k)));
+    palabras();
+  }
+  async function conectar() {
+    const e = $("#vivo-estado");
+    e.className = "sm-estado"; e.textContent = t(["Conectando…", "Connecting…"]);
+    try { localStorage.setItem(CLAVE_URL, urlBase()); } catch (x) {}
+    try {
+      const r = await fetch(urlBase() + "/api/mini/estado/", { mode: "cors" });
+      if (!r.ok) throw new Error(String(r.status));
+      const d = await r.json();
+      vivo.conectado = true; e.className = "sm-estado ok";
+      e.textContent = t(["SIMA conectado · ", "SIMA connected · "]) + d.proveedor + " " + d.modelo + " · " + t(["lector ", "reader "]) + d.lector;
+    } catch (x) {
+      vivo.conectado = false; e.className = "sm-estado mal";
+      e.textContent = t(["SIMA no responde en esa dirección. En el equipo de la demostración se inicia con .\\demo_mini.ps1",
+                         "SIMA does not answer at that address. On the demo machine it is started with .\\demo_mini.ps1"]);
+    }
+    $("#vivo-procesar").disabled = !vivo.conectado;
+  }
+  async function procesar() {
+    if (palabras() < 150) {
+      $("#vivo-avance").innerHTML = '<p class="sm-aviso mal">' + t(["La clase necesita al menos 150 palabras.", "The lecture needs at least 150 words."]) + "</p>";
+      return;
+    }
+    $("#vivo-procesar").disabled = true;
+    $("#vivo-bloques").innerHTML = ""; $("#vivo-resultado").innerHTML = "";
+    $("#vivo-avance").innerHTML = '<p class="sm-nota">' + t(["Enviando la clase a SIMA…", "Sending the lecture to SIMA…"]) + "</p>";
+    try {
+      const r = await fetch(urlBase() + "/api/mini/clase/", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titulo: $("#vivo-titulo").value, texto: $("#vivo-texto").value }),
+      });
+      const d = await r.json();
+      if (!r.ok && !(r.status === 409 && d.id)) throw new Error(d.error || String(r.status));
+      vivo.id = d.id;
+      seguir();
+    } catch (x) {
+      $("#vivo-avance").innerHTML = '<p class="sm-aviso mal">' + escapar(t(["SIMA no aceptó la clase: ", "SIMA did not accept the lecture: "]) + (x.message || x)) + "</p>";
+      $("#vivo-procesar").disabled = !vivo.conectado;
+    }
+  }
+  async function seguir() {
+    clearTimeout(vivo.temporizador);
+    try {
+      const d = await (await fetch(urlBase() + "/api/mini/clase/" + vivo.id + "/")).json();
+      pintarVivo(d);
+      if (!d.terminado) vivo.temporizador = setTimeout(seguir, 2000);
+      else $("#vivo-procesar").disabled = !vivo.conectado;
+    } catch (x) { vivo.temporizador = setTimeout(seguir, 4000); }
+  }
+  function pintarVivo(d) {
+    const L = d.lectura || {}, r = L.resumen || {}, bloques = L.bloques || [];
+    const total = L.total_bloques || (d.terminado ? bloques.length : 0);
+    const pct = d.terminado ? 100 : (total ? Math.round(100 * bloques.length / total) : 3);
+    $("#vivo-avance").innerHTML = '<div class="sm-progreso"><div style="width:' + pct + '%"></div></div>' +
+      '<p class="sm-nota"><b>' + escapar(d.etapa || d.estado) + "</b> · " + (total ? bloques.length + " / " + total + t([" bloques · ", " blocks · "]) : "") +
+      d.segundos + " s · " + num(d.palabras) + t([" palabras", " words"]) + "</p>" +
+      "<details><summary>" + t(["Registro de SIMA", "SIMA log"]) + "</summary><pre>" + escapar((d.registro || []).join("\n")) + "</pre></details>" +
+      (d.error ? '<p class="sm-aviso mal">' + escapar(d.error) + "</p>" : "");
+    $("#vivo-bloques").innerHTML = bloques.length ? '<div class="tabla"><table><thead><tr><th>' + t(["Bloque", "Block"]) + "</th><th>" +
+      t(["Pedidas", "Requested"]) + "</th><th>" + t(["Válidas al llegar", "Valid on arrival"]) + "</th><th>" + t(["Rechazadas (código · línea)", "Rejected (code · line)"]) +
+      "</th><th>" + t(["Reparadas", "Repaired"]) + "</th><th>" + t(["Lector anterior", "Previous reader"]) + "</th><th>" + t(["Respuesta del modelo", "Model answer"]) +
+      "</th></tr></thead><tbody>" + bloques.map((b, i) => "<tr><td>" + (i + 1) + "</td><td>" + b.pedidos + "</td><td>" + b.recibidos + "</td><td>" +
+        (b.lineas_invalidas.length ? b.lineas_invalidas.map((e) => '<span class="cod">' + e[1] + "</span> · " + e[0]).join("<br>") : "—") + "</td><td>" +
+        b.reparados.length + (b.recuperados ? " + " + b.recuperados + t([" pedidas aparte", " requested separately"]) : "") + "</td><td>" +
+        b.legado_aceptados + t([" aceptadas", " accepted"]) + (b.legado_invalidos ? ', <span class="cod">' + b.legado_invalidos + t([" inválidas", " invalid"]) + "</span>" : "") +
+        "</td><td><details><summary>" + t(["ver", "show"]) + "</summary><pre>" + escapar(b.respuesta || "") + "</pre></details></td></tr>").join("") +
+      "</tbody></table></div>" : "";
+    if (!d.terminado) { $("#vivo-resultado").innerHTML = ""; return; }
+    const k = r.tokens || {};
+    $("#vivo-resultado").innerHTML = '<div class="sm-cifras">' + cifra(r.pedidos ?? "—", t(["preguntas pedidas", "questions requested"])) +
+      cifra(r.finales ?? "—", t(["válidas tras validar y reparar", "valid after validation and repair"]), "bien") +
+      cifra(r.invalidos ?? 0, t(["líneas rechazadas por el contrato", "lines rejected by the contract"]), r.invalidos ? "mal" : "") +
+      cifra(r.llamadas ?? "—", t(["llamadas al modelo", "model calls"])) +
+      cifra(r.items_finales ?? d.preguntas.length, t(["preguntas en el banco final", "questions in the final bank"]), "bien") +
+      cifra(d.segundos + " s", t(["tiempo total en SIMA", "total time in SIMA"])) + "</div>" +
+      (k.mini ? '<p class="sm-aviso bien">' + t(["Tokens de salida del banco: " + num(k.mini) + " en .mini frente a " + num(k.json_compacto) + " en JSON compacto (" +
+        Math.round(100 * (1 - k.mini / k.json_compacto)) + " % menos).", "Output tokens of the bank: " + num(k.mini) + " in .mini versus " + num(k.json_compacto) +
+        " in compact JSON (" + Math.round(100 * (1 - k.mini / k.json_compacto)) + "% fewer)."]) + "</p>" : "") +
+      (r.legado_invalidos ? '<p class="sm-aviso mal">' + t(["Con las mismas respuestas, el lector anterior de SIMA habría aceptado " + r.legado_invalidos +
+        (r.legado_invalidos === 1 ? " pregunta que no cumple el contrato." : " preguntas que no cumplen el contrato."), "With the same answers, SIMA's previous reader would have accepted " + r.legado_invalidos +
+        (r.legado_invalidos === 1 ? " question that does not meet the contract." : " questions that do not meet the contract.")]) + "</p>" : "") +
+      (d.error ? "" : '<div class="sm-fila"><a class="btn btn-solid" href="#pregunta">' + t(["Estudiar las preguntas generadas", "Study the generated questions"]) + "</a></div>");
+    if (d.preguntas.length && vivo.cargado !== d.id) {
+      // las secciones de costo y de preguntas pasan a mostrar la clase procesada en vivo
+      vivo.cargado = d.id; vivo.tokens = k.mini ? k : null; vivo.generadas = r.items_generados || r.finales;
+      banco = { records: d.preguntas };
+      lineasBanco = d.preguntas.map((p) => MINI.dumps({ header: {}, [C.records_key || "records"]: [p] }, C).split("\n")[1] || "");
+      idx = 0; pintarPregunta(); pintarTokens();
+    }
+  }
+  $$("[data-clase]").forEach((b) => b.addEventListener("click", () => cargarClase(b.dataset.clase)));
+  $("#vivo-texto").addEventListener("input", palabras);
+  $("#vivo-conectar").addEventListener("click", conectar);
+  $("#vivo-procesar").addEventListener("click", procesar);
+
   function pintarTodo() { pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
     $("#nota").textContent = t(["Datos: llamadas reales a DeepSeek y Groq del " + DATOS.fecha + ". Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ").",
                                 "Data: real calls to DeepSeek and Groq on " + DATOS.fecha + ". Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ")."]); }
@@ -390,6 +545,12 @@ __PIE__
     if (navigator.clipboard) navigator.clipboard.writeText(DATOS.prompt_sima).then(listo, listo); else listo();
   });
   pintarTodo();
+  let guardada = "";
+  try { guardada = localStorage.getItem(CLAVE_URL) || ""; } catch (x) {}
+  const pedidaSima = new URLSearchParams(location.search).get("sima");
+  if (pedidaSima || guardada) $("#vivo-url").value = pedidaSima || guardada;
+  cargarClase("bioenergetica");
+  conectar();
 })();
 </script>
 <script src="/docs.js"></script>
