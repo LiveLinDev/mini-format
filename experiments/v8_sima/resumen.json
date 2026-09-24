@@ -1,0 +1,111 @@
+{
+ "comparaciones": {
+  "12": {
+   "corridas": 2,
+   "salida_mini": [
+    1061,
+    1037
+   ],
+   "salida_json": [
+    1655,
+    1623
+   ],
+   "entrada_mini": [
+    5123,
+    5123
+   ],
+   "entrada_json": [
+    5288,
+    5288
+   ],
+   "validas_mini": [
+    12,
+    12
+   ],
+   "validas_json": [
+    12,
+    12
+   ],
+   "corte_json": [
+    false,
+    false
+   ],
+   "ahorro_salida_pct": [
+    35.9,
+    36.1
+   ],
+   "segundos_mini": [
+    17.3,
+    15.9
+   ],
+   "segundos_json": [
+    18.2,
+    17.5
+   ]
+  },
+  "40": {
+   "corridas": 1,
+   "salida_mini": [
+    3489
+   ],
+   "salida_json": [
+    4000
+   ],
+   "entrada_mini": [
+    5123
+   ],
+   "entrada_json": [
+    5288
+   ],
+   "validas_mini": [
+    38
+   ],
+   "validas_json": [
+    0
+   ],
+   "corte_json": [
+    true
+   ],
+   "ahorro_salida_pct": [
+    12.8
+   ],
+   "segundos_mini": [
+    26.9
+   ],
+   "segundos_json": [
+    27.0
+   ]
+  }
+ },
+ "clases": {
+  "corridas": 5,
+  "items_pedidos": 350,
+  "validos_al_llegar": 343,
+  "lineas_invalidas": 7,
+  "lineas_reparadas": 5,
+  "validos_finales": 350,
+  "llamadas": 38,
+  "invalidos_aceptados_por_lector_anterior": 7,
+  "tokens_banco_mini": [
+   2786,
+   10277,
+   10019,
+   2796,
+   2927
+  ],
+  "tokens_banco_json_compacto": [
+   4082,
+   15108,
+   14901,
+   4094,
+   4219
+  ],
+  "ahorro_banco_pct": [
+   31.7,
+   32.0,
+   32.8,
+   31.7,
+   30.6
+  ]
+ }
+}

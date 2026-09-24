@@ -268,3 +268,8 @@ Figuras: `v4_costos/figures/fig1_costo_1000_registros.png`, `fig2_ahorro_anual_1
   como tercer tokenizador, pero es de 2019 y no representa los vocabularios de 128 mil a
   200 mil tokens de los modelos actuales.
 * Precio de caché de Groq (no publicado) y precios de Mistral (no consultados).
+
+## V8 · Integración en SIMA
+
+`v8_sima/` guarda las ejecuciones reales de la integración en SIMA con `deepseek-chat` (21-sep-2026): la comparación
+pareada .mini frente a JSON con el mismo prompt y cinco clases completas. Ver `v8_sima/README.md`.
