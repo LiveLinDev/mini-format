@@ -32,6 +32,7 @@ DOCS = ("README.md", "README.es.md", "SPEC.md", "SPEC.es.md", "FORKING.md", "FOR
 SOURCE_DIRS = ("src", "forks", "ts/src", "ts/test", "js", "tests", "conformance", "examples",
                "benchmark/public", "benchmark/toon_ref", "benchmark/vocab", "benchmark/results",
                "experiments/v1_tokens", "experiments/v4_costos", "experiments/v5_ancho",
+               "experiments/v7_escalamiento", "experiments/v8_sima", "generative",
                "playground", "sitio/content", "sitio/assets")
 SOURCE_FILES = ("benchmark/formats.py", "benchmark/domains.py", "benchmark/run_benchmark.py",
                 "benchmark/make_forks.py", "benchmark/make_figures.py",
