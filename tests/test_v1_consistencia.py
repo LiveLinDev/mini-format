@@ -84,6 +84,14 @@ class CorridasV1Test(unittest.TestCase):
                 self.assertEqual((t["paquete"], t["backend"], t["tipo"]), ("tiktoken", "tiktoken", "exacto_local"))
                 self.assertTrue(t["version"])
 
+    def test_el_toon_vendored_lleva_hash_real_y_version_declarada(self):
+        esperado = P.toon_info()
+        for k in ("linea_base_n12", "serie_n", "publicos"):
+            t = self.man[k]["parametros"]["toon"]
+            self.assertEqual(t["sha256_arbol_lf"], esperado["sha256_arbol_lf"], k)
+            self.assertEqual((t["version_declarada"], t["spec_declarada"]), ("4.1.1", "4.1"))
+            self.assertIn("declarada", t["la_version_es_declarada"])
+
     def test_el_codigo_ejecutado_esta_identificado(self):
         for k, m in self.man.items():
             self.assertTrue(m["codigo"]["commit"], k)
@@ -236,6 +244,8 @@ class CorridasV1Test(unittest.TestCase):
             self.assertIn(_f2(c["valor_recalculado_pct"]) + " %", md)
             for campo in ("unidad", "estadistico", "denominador", "conjunto", "tokenizador", "archivos"):
                 self.assertTrue(c[campo], f"{c['cifra_citada']}: falta {campo}")
+        self.assertIn("DummyJSON products y users, JSONPlaceholder comments, USGS earthquakes", cif["34,99 %"]["conjunto"])
+        self.assertIn("1.902 objetos únicos", md)
         self.assertFalse(cif["33,8 %"]["replicacion_de_base"])
         self.assertTrue(cif["34,8 %"]["replicacion_de_base"])
 

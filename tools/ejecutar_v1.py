@@ -418,6 +418,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # ---------------------------------------------------------- manifiestos
     ev_crit = crit["evaluacion"]
     resumen_tok = ev_crit["primario"]["resumen_por_tokenizador"]
+    toon = P.toon_info()
     comunes = dict(codigo=codigo, entorno=entorno, tokenizadores=fichas, gasto_usd=0,
                    estado_ejecucion=estado,
                    limitaciones=[
@@ -439,7 +440,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
               "celdas_linea_base_v1_run": v1["celdas_linea_base"], "celdas_linea_base_que_no_coinciden_con_summary_12": v1["celdas_linea_base_que_no_coinciden_con_summary_12"],
               "n12_filas_tres_tokenizadores": len(n12), "reversibilidad_n12": _contar_rev(rev12)}
     guardar("linea_base_n12", base_res["archivos"] + v1["archivos_linea_base"], conjuntos=conj_dom, contratos=contratos,
-            parametros={"n": 12, "protocolo": "ciclo (benchmark) y ciclo+muestreo (serie)", "semilla_muestreo": C.SEMILLA, "sin_red": True, "sin_api": True},
+            parametros={"n": 12, "protocolo": "ciclo (benchmark) y ciclo+muestreo (serie)", "semilla_muestreo": C.SEMILLA, "sin_red": True, "sin_api": True, "toon": toon},
             resumen=res_lb, resultado="no_evaluable",
             notas="Reproduce la línea base de 12 registros x 14 dominios y la compara fila a fila con lo archivado. r50k_base no estaba archivado para n=12: se mide ahora.")
 
@@ -456,14 +457,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     resultado = ev_crit["primario"]["veredicto"]  # "no_evaluable" si el alcance no es completo
     guardar("serie_n", serie["archivos"] + crit["archivos"] + v1["archivos_serie"], conjuntos=conj_dom, contratos=contratos,
             parametros={"tamanos": sorted({int(f['n']) for f in serie["filas"]}), "variantes": ["muestreo", "ciclo"], "semilla_muestreo": C.SEMILLA,
-                        "bootstrap": {"B": 2000 if a.rapido else 10000, "semilla": 20260914, "nivel": "dominio"}, "sin_red": True, "sin_api": True},
+                        "bootstrap": {"B": 2000 if a.rapido else 10000, "semilla": 20260914, "nivel": "dominio"}, "sin_red": True, "sin_api": True, "toon": toon},
             resumen=res_se, criterio=criterio_manifiesto, resultado=resultado,
             notas="Veredicto según la interpretación primaria fijada el 2026-09-30 ANTES del análisis y SUJETA A APROBACIÓN del asesor; las lecturas alternativas están en criterio_v1_resultado.json.")
 
     res_pu = {"comparacion_con_archivado": pub["comparacion"], "tiempos_s": pub["tiempos_s"], "ahorro": pub["filas_ahorro"]}
     guardar("publicos", pub["archivos"], conjuntos=conj_pub, contratos=[],
             parametros={"tokenizadores": [f["nombre"] for f in fichas if f["nombre"] in {x["tokenizador"] for x in pub["filas_ahorro"]}],
-                        "contrato_mini": "inferido del snapshot completo (mini-domain/1): medición de serialización, no de generalización", "sin_red": True, "sin_api": True},
+                        "contrato_mini": "inferido del snapshot completo (mini-domain/1): medición de serialización, no de generalización", "sin_red": True, "sin_api": True, "toon": toon},
             resumen=res_pu, resultado="no_evaluable",
             notas="Los 4 snapshots se verifican contra su SHA-256 de sources.json antes de medir (run.py aborta si difiere). Con 4 conjuntos no se evalúa el criterio de 14 dominios.")
 

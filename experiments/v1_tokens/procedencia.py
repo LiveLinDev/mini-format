@@ -91,6 +91,19 @@ def publicos_info() -> List[Dict[str, Any]]:
     return out
 
 
+def toon_info() -> Dict[str, Any]:
+    """TOON oficial vendored: versión DECLARADA (escrita a mano en run.py) y hash del árbol real."""
+    base = ROOT / "benchmark" / "toon_ref" / "vendor" / "toon"
+    h = hashlib.sha256()
+    archivos = sorted(p for p in base.rglob("*") if p.is_file())
+    for p in archivos:
+        contenido = p.read_bytes().replace(bytes([13, 10]), bytes([10]))
+        h.update(p.relative_to(base).as_posix().encode("utf-8") + bytes([0]) + hashlib.sha256(contenido).digest())
+    return {"implementacion": "TOON oficial vendored (benchmark/toon_ref/vendor/toon)", "version_declarada": "4.1.1", "spec_declarada": "4.1",
+            "la_version_es_declarada": "el árbol vendored no trae archivo de versión ni hash de commit; la versión está escrita a mano en benchmark/public/run.py",
+            "archivos": len(archivos), "sha256_arbol_lf": h.hexdigest()}
+
+
 def conjuntos_manifiesto(incluir_dominios: bool = True, incluir_publicos: bool = True) -> List[Dict[str, Any]]:
     """Lista ``conjuntos`` del manifiesto mini-format/corrida/1."""
     c: List[Dict[str, Any]] = []

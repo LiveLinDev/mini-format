@@ -168,7 +168,7 @@ def cifras(summary_12_csv: Path, tokens_benchmark_csv: Path, ahorro_resumen_csv:
         "unidad": "ahorro de tokens de .mini frente a JSON compacto, %",
         "estadistico": "agregado por suma (1 - Σ tokens .mini / Σ tokens JSON compacto) sobre los 4 snapshots",
         "conjunto": "4 snapshots públicos con SHA-256 (DummyJSON products y users, JSONPlaceholder comments, USGS earthquakes): "
-                    f"{pub['summary']['records']:,}".replace(",", ".") + " objetos únicos, sin repetición",
+                    + f"{pub['summary']['records']:,}".replace(",", ".") + " objetos únicos, sin repetición",
         "replicacion_de_base": False,
         "tokenizador": pub["tokenizer"],
         "generador_mini": "minifmt.domain (mini-domain/1), contrato inferido del snapshot completo",
