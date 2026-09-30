@@ -110,13 +110,15 @@ def hashes_diseno(cfg: Dict[str, Any], ctx: Any, unidades: Sequence[Any], no_apl
     for m in cfg.get("modelos", []):
         t = tarifas.obtener(m["proveedor"], m["modelo"]) if tarifas is not None else None
         tarifas_usadas[f"{m['proveedor']}:{m['modelo']}"] = (t.resumen() if t else {"estado": "ausente"})
+    limites = {u.id: u.max_tokens for u in unidades}
     diseno = {"config": cfg_sin_presupuesto, "prompts": prompts, "contratos": contratos, "conjuntos": conjuntos,
-              "celdas": sorted(orden_ids), "no_aplicables": sorted(x["id"] for x in no_aplicables),
+              "celdas": sorted(orden_ids), "limites": limites, "no_aplicables": sorted(x["id"] for x in no_aplicables),
               "codigo_arnes": codigo, "nucleo": nucleo}
     return {"config_sha256": sha256_texto(json_estable(cfg_sin_presupuesto)),
             "prompts_sha256": sha256_texto(json_estable(prompts)), "prompts": prompts,
             "contratos": contratos, "conjuntos": conjuntos,
             "celdas_sha256": sha256_texto(json_estable(sorted(orden_ids))),
+            "limites_sha256": sha256_texto(json_estable(limites)),
             "orden_sha256": sha256_texto(json_estable(orden_ids)),
             "codigo_arnes_sha256": codigo, "nucleo_minifmt_sha256": nucleo,
             "tarifas": {"archivo": getattr(tarifas, "origen", None), "sha256": getattr(tarifas, "sha256", None),

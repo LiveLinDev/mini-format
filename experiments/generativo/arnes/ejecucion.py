@@ -525,7 +525,9 @@ class Ejecutor:
         """
         ad = self.adaptador(u.proveedor, u.modelo)
         tarifa = self.tarifas.obtener(u.proveedor, u.modelo)
-        peor = costo_peor_caso(tarifa, self._cota_tokens_entrada(u.proveedor, system, user), max_tokens)
+        # la cota solo se calcula cuando se usa (proyección o modo real): tokenizar cada prompt no es gratis
+        peor = (costo_peor_caso(tarifa, self._cota_tokens_entrada(u.proveedor, system, user), max_tokens)
+                if (self.proyecta or self.modo == "real") else None)
         proveedor_usage = "simulado" if self.modo == "simulado" else u.proveedor
         reintentos = int(self.ctl.get("reintentos_por_llamada", 2))
         intentos: List[Dict[str, Any]] = []
@@ -623,6 +625,7 @@ class Ejecutor:
     def _contadores(self, en: "Enumeracion", res: Optional[Dict[str, Any]], limite: Optional[int]) -> Tuple[Dict[str, int], List[Dict[str, Any]]]:
         """Recuento de celdas por estado y lista de celdas faltantes con su motivo."""
         res = res or {}
+        inicial = bool(res.get("inicial"))
         faltantes: List[Dict[str, Any]] = [dict(estado="no_aplicable", id=x["id"], motivo=x["motivo"]) for x in en.no_aplicables]
         c = {k: 0 for k in ESTADOS_CELDA}
         c["no_aplicable"] = len(en.no_aplicables)
@@ -637,6 +640,8 @@ class Ejecutor:
                               and self.almacen.bases.get(u.id_brazo(B.base_de(u.brazo)), {}).get("text") is None)
             if base_sin_texto and not res.get("interrumpido"):
                 estado, motivo = "bloqueado", "su celda base no tiene respuesta (se reintentará con ella)"
+            elif inicial:
+                estado, motivo = "pendiente", "aún no ejecutada"
             elif res.get("abortado"):
                 estado, motivo = "bloqueado", str(res["abortado"])
             elif res.get("interrumpido"):
@@ -654,7 +659,7 @@ class Ejecutor:
         """Ejecuta las celdas y persiste ``estado_estudio.json`` y ``celdas_faltantes.jsonl`` (también si se interrumpe o aborta)."""
         estado_obj = estado_obj or EstadoEstudio(self.almacen.dir)
         inicio = _ahora()
-        c0, f0 = self._contadores(en, {"interrumpido": None, "abortado": None}, None)
+        c0, f0 = self._contadores(en, {"inicial": True}, None)
         estado_obj.escribir(estado="en_curso", motivo="", fecha_inicio=inicio, fecha=_ahora(), contadores=c0,
                             gasto=self.libro.resumen(), orden_semilla=en.orden_semilla, modo=self.modo,
                             interrupcion=None, faltantes=f0)

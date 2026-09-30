@@ -477,3 +477,26 @@ def test_plan_y_manifiesto_quedan_escritos(tmp_path):
     assert set(h) >= {"config_sha256", "prompts_sha256", "contratos", "conjuntos", "orden_sha256", "diseno_sha256", "codigo_arnes_sha256"}
     assert all(len(c["sha256"]) == 64 for c in h["contratos"] + h["conjuntos"]) and h["conjuntos"][0]["sintetico"] is True
     assert man["condiciones_ejecucion"]["red"] == "simulada" and man["orden"]["semilla"] == man["orden"]["semilla"]
+
+
+def test_adaptadores_reales_se_crean_sin_reintentos_propios_y_sin_red():
+    """Los reintentos los hace el arnés (cada uno se proyecta y se registra): los de los adaptadores quedan en 0."""
+    for prov in ("openai", "anthropic", "groq", "deepseek"):
+        ad = X.crear_adaptador({"proveedor": prov, "modelo": "m", "estructurado": True}, "real", None, 1)
+        assert getattr(ad, "_max_retries", getattr(ad, "retries", None)) == 0, prov
+
+
+def test_usage_deepseek_y_groq_compatibles():
+    r = {"raw": {"usage": {"prompt_tokens": 900, "completion_tokens": 100, "prompt_cache_hit_tokens": 600,
+                           "prompt_cache_miss_tokens": 300}}}
+    u = usage_de_respuesta("deepseek", r)
+    assert (u["entrada_sin_cache"], u["entrada_cache_lectura"], u["salida"]) == (300, 600, 100)
+    g = usage_de_respuesta("groq", {"raw": {"usage": {"prompt_tokens": 50, "completion_tokens": 10, "queue_time": 0.1}}})
+    assert (g["entrada_sin_cache"], g["entrada_cache_lectura"], g["razonamiento"]) == (50, 0, None)
+
+
+def test_estado_inicial_no_dice_error_reintentable(tmp_path):
+    cfg = cfg_base(brazos=["A"], repeticiones=1)
+    cfg, ctx, en, ej, ad = montar(tmp_path, cfg)
+    c, falt = ej._contadores(en, {"inicial": True}, None)
+    assert c["pendiente"] == len(en.unidades) and all(f["motivo"] == "aún no ejecutada" for f in falt)
