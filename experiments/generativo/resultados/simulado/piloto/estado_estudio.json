@@ -1,0 +1,24 @@
+{
+  "estado": "completo",
+  "motivo": "",
+  "adaptador": "simulado",
+  "inicio_utc": "2026-09-30T19:35:23+00:00",
+  "actualizado_utc": "2026-09-30T19:35:27+00:00",
+  "celdas": {
+    "hecha": 792,
+    "pendiente": 0,
+    "bloqueado": 0,
+    "no_aplicable": 72,
+    "error_tecnico": 0
+  },
+  "gasto": {
+    "gastado_usd": "0",
+    "incierto_usd": "0",
+    "llamadas": 607,
+    "llamadas_huerfanas": 0,
+    "tope_usd": null
+  },
+  "orden_semilla": 3820194968,
+  "reanudaciones": 0,
+  "interrupcion": null
+}

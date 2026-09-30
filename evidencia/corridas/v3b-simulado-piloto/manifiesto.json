@@ -1,0 +1,281 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "f6266308c488580d873c0d5837564950d05cc5dd",
+    "rama": "stream/arnes",
+    "snapshot_sha256": null
+  },
+  "comando": "python experiments/generativo/run.py ejecutar --config configs/piloto.yaml --adapter simulado --emitir-evidencia",
+  "conjuntos": [
+    {
+      "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)",
+      "nombre": "cls/canonical.json",
+      "ruta": "forks/cls/fixtures/canonical.json",
+      "sha256": "0be01ae9640d9bf02a169916b1fb90bac279be88868f171ddfc81c459c88a466",
+      "sintetico": true
+    },
+    {
+      "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)",
+      "nombre": "log/canonical.json",
+      "ruta": "forks/log/fixtures/canonical.json",
+      "sha256": "df1e6be8a74b47d1ce2bc6440488cdcda76ec1e801894f1510549b24d986b76a",
+      "sintetico": true
+    },
+    {
+      "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)",
+      "nombre": "tc/canonical.json",
+      "ruta": "forks/tc/fixtures/canonical.json",
+      "sha256": "8971f5c6ddcb0926640624f00081e41d59624c4cee6655aa84b3ef4db2a4786f",
+      "sintetico": true
+    },
+    {
+      "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)",
+      "nombre": "card/canonical.json",
+      "ruta": "forks/card/fixtures/canonical.json",
+      "sha256": "64ba99c26aee30c88e5d0e796adb3f497a43c32fdad6bc12bd1e1c488113135f",
+      "sintetico": true
+    }
+  ],
+  "conteos": {
+    "registros_recibidos": 326,
+    "registros_reparados": null,
+    "registros_solicitados": 1452,
+    "registros_validos": 326,
+    "registros_validos_finales": null
+  },
+  "contratos": [
+    {
+      "prefijo": "cls",
+      "ruta": "forks/cls/contract.json",
+      "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629"
+    },
+    {
+      "prefijo": "log",
+      "ruta": "forks/log/contract.json",
+      "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28"
+    },
+    {
+      "prefijo": "tc",
+      "ruta": "forks/tc/contract.json",
+      "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736"
+    },
+    {
+      "prefijo": "card",
+      "ruta": "forks/card/contract.json",
+      "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7"
+    }
+  ],
+  "criterio": null,
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V3b",
+  "fecha_utc": "2026-09-30T19:35:34Z",
+  "gasto_usd": 0.0,
+  "intento": null,
+  "limitaciones": [
+    "Procedencia simulado: las tasas de falla, los tokens y las latencias son supuestos del simulador; valida el arnés, no dice nada de modelos reales.",
+    "Costo: sin tarifa verificada es «tarifa no verificada» (vacío); no se usa ningún precio supuesto.",
+    "El diseño completo del estudio NO se ha ejecutado ni está autorizado (presupuesto sin autorizar).",
+    "Política y fracción del límite de salida PROVISIONALES: se fijan con el piloto real. Es distinto de V3a (cortar un texto existente), que vive en experiments/truncamiento."
+  ],
+  "modelo": null,
+  "notas": "registros_validos_finales queda null: depende del brazo (ver resumen_brazos.csv) y no se puede sumar entre brazos sin contar dos veces una solicitud y su reparación. ",
+  "parametros": {
+    "adaptador": "simulado",
+    "brazos": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "A+1",
+      "B+1",
+      "C+1",
+      "D+1"
+    ],
+    "experimento": "v3b",
+    "idioma": "es",
+    "modelos": [
+      "openai:gpt-4.1-mini",
+      "anthropic:claude-haiku-4-5",
+      "groq:llama-3.3-70b-versatile"
+    ],
+    "orden_semilla": 3820194968,
+    "repeticiones": 6,
+    "semilla": 20260914,
+    "temperatura": 0.7,
+    "v3b": {
+      "activo": true,
+      "brazos": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "A+1",
+        "B+1",
+        "C+1",
+        "D+1"
+      ],
+      "fraccion_max_tokens": 0.5,
+      "politica_limite": "comun_por_tarea",
+      "repeticiones": 3
+    }
+  },
+  "pareja": null,
+  "procedencia": "simulado",
+  "prompts": [
+    {
+      "id": "ext-cls/A",
+      "sha256": "9fa5d4883262c3eaec9ec294eac53be24806ac728fa3b19ebf28584652ec3950"
+    },
+    {
+      "id": "ext-cls/B",
+      "sha256": "c6a04b1cd629dcfc59fda6fd5fef3807b854dc3a31a9c1579d97e0b7842bbb6e"
+    },
+    {
+      "id": "ext-cls/C",
+      "sha256": "a368a3447ae14c456250b26bab5a3e1be85e43c2e43506dba2cd2875b40b481b"
+    },
+    {
+      "id": "ext-cls/D",
+      "sha256": "f0204404180f85cedf7dd2fdfdad0ec3d29bbac7e5b583c23a541b693426fcbf"
+    },
+    {
+      "id": "ext-log/A",
+      "sha256": "72f1764768a53324775b9db47dd0384e4b960b4f855fe1c7b3a887c82db35257"
+    },
+    {
+      "id": "ext-log/B",
+      "sha256": "b04c453ccdfc58b6002103bf6923f4aea18bce053ac4ef2ab4029eef81eb10a3"
+    },
+    {
+      "id": "ext-log/C",
+      "sha256": "6378da7272e36f74e4a8e4c93a04d0acb7f36eb025e67e4d90b67ec6d0343b0b"
+    },
+    {
+      "id": "ext-log/D",
+      "sha256": "04bc1fda24152ce205822db4bc172ca255e07873b769763043626ad9d136cdae"
+    },
+    {
+      "id": "ext-tc/A",
+      "sha256": "eafddfed30afaacfe13ead5cf0516ffefa301efd0a62de29de36a3f7c42f60a8"
+    },
+    {
+      "id": "ext-tc/B",
+      "sha256": "9054e7cb9644be1f5b44ab2512564a008d6b1bad4550ba8c9fb9d8883b01583b"
+    },
+    {
+      "id": "ext-tc/C",
+      "sha256": "218bf043aee5ed8f56eb65ccd67d568ae8e6f0cd90fd0484b9b6ef524f8748b5"
+    },
+    {
+      "id": "ext-tc/D",
+      "sha256": "d39156d332028cd8aee1fb6099ac478e061b67b2a471b32b2456d31a43f41c07"
+    },
+    {
+      "id": "gen-card/A",
+      "sha256": "3227d0c7f7bcedc2d1564b5e5f88e233e44d68c406d3a68f759fa31be1212356"
+    },
+    {
+      "id": "gen-card/B",
+      "sha256": "e88457ccd4bf7cbc80d5f94d1252a8a881ed6490f2f021a2afbf0b1761e62f1c"
+    },
+    {
+      "id": "gen-card/C",
+      "sha256": "a99c7ac180aa00a768191f3aa441a8af7196dfaeb98e786ae19c0420d25a0794"
+    },
+    {
+      "id": "gen-card/D",
+      "sha256": "0438eb2e16351897e01ed719554ee5a441a8a3e22ee13236a993b2594576d9cf"
+    }
+  ],
+  "resultado": "no_evaluable",
+  "resultados": [
+    {
+      "bytes": 5449,
+      "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazos.csv",
+      "sha256": "39ddb228aaae4d22211afdaa88029cfece64d13a07a844f079396f504d729750"
+    },
+    {
+      "bytes": 13799,
+      "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazo_modelo.csv",
+      "sha256": "a9e184217d264213d1a17b3b075188b8f6010bc09ecce3aae8bf9598a4777bf9"
+    },
+    {
+      "bytes": 1107,
+      "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_reparacion.csv",
+      "sha256": "cfc6a7a86dde7563d97c07219a9293388b6e730545cce9eb4464428008eb78cb"
+    },
+    {
+      "bytes": 684,
+      "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_desenlaces.csv",
+      "sha256": "7dc22384198e2f3f464b0d5391790da28af4d04332f6ba3d04ec100c506a3b15"
+    },
+    {
+      "bytes": 124650,
+      "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_muestras.jsonl",
+      "sha256": "e1fde8169e0d9510dbb61817dd50b56c5d96c5b59ed93525a99ff30853187551"
+    },
+    {
+      "bytes": 263552,
+      "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_solicitudes.jsonl",
+      "sha256": "5a9a41fd75a623887c8e6a8a08ddbc5ceea7faba2e4f56368277a5674c017514"
+    }
+  ],
+  "resumen": {
+    "celdas": {
+      "bloqueado": 0,
+      "error_tecnico": 0,
+      "hecha": 792,
+      "no_aplicable": 72,
+      "pendiente": 0
+    },
+    "muestras": 264,
+    "validez_final_pct_por_brazo_y_tipo": {
+      "extraccion/A": 0.0,
+      "extraccion/A+1": 34.34,
+      "extraccion/B": 0.0,
+      "extraccion/B+1": 36.36,
+      "extraccion/C": 0.0,
+      "extraccion/C+1": 36.36,
+      "extraccion/D": 82.83,
+      "extraccion/D+1": 86.53,
+      "generativa/A": 0.0,
+      "generativa/A+1": 35.35,
+      "generativa/B": 0.0,
+      "generativa/B+1": 35.35,
+      "generativa/C": 0.0,
+      "generativa/C+1": 0.0,
+      "generativa/D": 80.81,
+      "generativa/D+1": 84.85
+    }
+  },
+  "run_id": "v3b-simulado-piloto",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "nombre": "o200k_base",
+      "paquete": "tiktoken",
+      "tipo": "aproximacion",
+      "version": "0.14.0",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    }
+  ]
+}

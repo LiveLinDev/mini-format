@@ -1,0 +1,13 @@
+experimento,comparacion,descripcion,pares,misma_respuesta,validez_x_pct,validez_y_pct,diferencia_pp,ic_solicitud_inf,ic_solicitud_sup,ic_documento_inf,ic_documento_sup,exploratoria
+v2,D − B,formato: JSON con contrato frente a .mini,72,False,74.62,92.17,17.55,7.7,26.77,15.28,20.45,True
+v2,D − C,formato: JSON nativo frente a .mini,48,False,99.43,96.4,-3.03,-4.92,-1.52,-4.55,-1.52,True
+v2,D − A,formato: JSON mínimo frente a .mini,72,False,65.15,92.17,27.02,17.93,35.98,16.29,34.22,True
+v2,D+1 − B+1,formato con reparación en ambos: JSON con contrato frente a .mini,72,False,88.38,96.97,8.59,1.52,16.04,6.31,10.86,True
+v2,D+1 − C+1,formato con reparación en ambos: JSON nativo frente a .mini,48,False,99.43,99.43,0.0,-0.95,0.95,-0.57,0.57,True
+v2,D+1 − A+1,formato con reparación en ambos: JSON mínimo frente a .mini,72,False,81.57,96.97,15.4,7.95,23.36,8.46,20.58,True
+v2,B − A,contrato en el prompt: A frente a B,72,False,65.15,74.62,9.47,-3.28,22.1,-4.29,19.07,True
+v2,C − B,restricción nativa: B frente a C,48,False,77.65,99.43,21.78,11.74,33.33,12.31,29.92,True
+v2,A+1 − A,estrategia: reparar JSON mínimo,72,True,65.15,81.57,16.41,10.23,23.86,12.75,19.95,True
+v2,B+1 − B,estrategia: reparar JSON con contrato,72,True,74.62,88.38,13.76,6.69,21.84,8.96,16.67,True
+v2,C+1 − C,estrategia: reparar JSON nativo,48,True,99.43,99.43,0.0,0.0,0.0,0.0,0.0,True
+v2,D+1 − D,estrategia: reparar .mini,72,True,92.17,96.97,4.8,3.41,6.31,3.79,6.06,True

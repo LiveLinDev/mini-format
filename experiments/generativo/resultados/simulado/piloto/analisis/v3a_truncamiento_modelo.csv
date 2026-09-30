@@ -1,0 +1,12 @@
+brazo,modelo,cortes,muestras,recuperados_media,ideal_media,cortes_sin_ideal,eficiencia_media_pct,recuperados_sobre_ideal_pct,cero_recuperados_pct,cero_ic_inf,cero_ic_sup,incorrectos_sin_aviso_total
+A,anthropic:claude-haiku-4-5,480,24,0.0,4.64,60,0.0,0.0,100.0,100.0,100.0,0
+A,groq:llama-3.3-70b-versatile,480,24,0.0,2.59,204,0.0,0.0,100.0,100.0,100.0,0
+A,openai:gpt-4.1-mini,480,24,0.02,3.56,141,0.3,0.6,99.8,99.4,100.0,0
+B,anthropic:claude-haiku-4-5,480,24,0.0,5.07,40,0.0,0.0,100.0,100.0,100.0,0
+B,groq:llama-3.3-70b-versatile,480,24,0.0,3.67,121,0.0,0.0,100.0,100.0,100.0,0
+B,openai:gpt-4.1-mini,480,24,0.0,3.58,160,0.0,0.0,100.0,100.0,100.0,0
+C,anthropic:claude-haiku-4-5,480,24,0.0,5.35,0,0.0,0.0,100.0,100.0,100.0,0
+C,openai:gpt-4.1-mini,480,24,0.0,5.34,1,0.0,0.0,100.0,100.0,100.0,0
+D,anthropic:claude-haiku-4-5,480,24,5.24,5.46,0,90.9,95.9,4.8,2.7,7.1,10
+D,groq:llama-3.3-70b-versatile,480,24,4.03,4.23,9,89.8,95.3,5.0,2.5,7.7,89
+D,openai:gpt-4.1-mini,480,24,4.73,4.91,1,91.9,96.3,4.2,2.3,6.2,94

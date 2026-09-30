@@ -1,0 +1,17 @@
+experimento,tipo_tarea,brazo,muestras,desenlace_ok,desenlace_formato_invalido,desenlace_vacia,desenlace_truncada,desenlace_negativa,desenlace_error_tecnico
+v2,extraccion,A,54,40,14,0,0,0,0
+v2,extraccion,A+1,54,40,14,0,0,0,0
+v2,extraccion,B,54,41,13,0,0,0,0
+v2,extraccion,B+1,54,41,13,0,0,0,0
+v2,extraccion,C,36,36,0,0,0,0,0
+v2,extraccion,C+1,36,36,0,0,0,0,0
+v2,extraccion,D,54,25,29,0,0,0,0
+v2,extraccion,D+1,54,25,29,0,0,0,0
+v2,generativa,A,18,12,6,0,0,0,0
+v2,generativa,A+1,18,12,6,0,0,0,0
+v2,generativa,B,18,15,3,0,0,0,0
+v2,generativa,B+1,18,15,3,0,0,0,0
+v2,generativa,C,12,12,0,0,0,0,0
+v2,generativa,C+1,12,12,0,0,0,0,0
+v2,generativa,D,18,10,8,0,0,0,0
+v2,generativa,D+1,18,10,8,0,0,0,0

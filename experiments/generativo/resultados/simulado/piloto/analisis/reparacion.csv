@@ -1,0 +1,17 @@
+experimento,tipo_tarea,brazo_base,brazo_reparado,pares,muestras_reparadas,llamadas_reparacion,registros_validos_ganados,registros_correctos_ganados,cambio_incorrectos_sin_aviso,muestras_con_cambio_adverso,registros_adversos,lineas_no_recuperadas,validos_sobrescritos,identidades_duplicadas_finales,identidades_inventadas,correcciones_rechazadas_identidad,reparaciones_auditadas,exactas_base,exactas_reparadas,tokens_reparacion_total,tokens_por_registro_ganado,salida_reparacion_vs_generacion_pct,costo_reparacion_usd
+v2,extraccion,A,A+1,54,26,26,89,88,-31,0,0,13,0,0,0,4,26,16,29,13105,147.2,5.89,
+v2,extraccion,B,B+1,54,17,17,96,96,-12,0,0,3,0,0,0,1,17,23,34,11165,116.3,3.21,
+v2,extraccion,C,C+1,36,0,0,0,0,0,0,0,0,,,,,0,29,29,0,,0.0,0.0
+v2,extraccion,D,D+1,54,28,28,31,31,0,0,0,6,0,0,0,,28,25,34,22001,709.7,7.2,
+v2,generativa,A,A+1,18,11,11,41,41,-15,0,0,5,0,0,0,0,11,4,10,6715,163.8,10.28,
+v2,generativa,B,B+1,18,5,5,13,13,-4,0,0,2,0,0,0,0,5,11,13,3048,234.5,2.25,
+v2,generativa,C,C+1,12,0,0,0,0,0,0,0,0,,,,,0,12,12,0,,0.0,0.0
+v2,generativa,D,D+1,18,8,8,7,7,0,0,0,3,0,0,0,,8,11,15,6619,945.6,6.11,
+v3b,extraccion,A,A+1,27,27,27,102,101,1,0,0,32,0,0,0,3,27,0,0,9828,96.4,5.87,
+v3b,extraccion,B,B+1,27,27,27,108,108,0,0,0,27,0,0,0,0,27,0,0,14961,138.5,4.45,
+v3b,extraccion,C,C+1,18,13,13,72,71,1,0,0,13,0,0,0,0,13,0,0,6219,86.4,0.75,
+v3b,extraccion,D,D+1,27,23,23,11,11,0,0,0,27,0,0,0,,23,3,6,17949,1631.7,12.14,
+v3b,generativa,A,A+1,9,9,9,35,35,0,0,0,11,0,0,0,0,9,0,0,3593,102.7,9.26,
+v3b,generativa,B,B+1,9,9,9,35,35,0,0,0,10,0,0,0,1,9,0,0,5198,148.5,4.76,
+v3b,generativa,C,C+1,6,0,0,0,0,0,0,0,0,,,,,0,0,0,0,,0.0,0.0
+v3b,generativa,D,D+1,9,8,8,4,4,0,0,0,8,0,0,0,,8,0,0,6536,1634.0,12.62,
