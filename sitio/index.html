@@ -22,7 +22,7 @@
 <a class="skip" href="#main">Saltar al contenido</a>
 
 <div class="announce">
-  mini-format 1.1 — crea tu toolkit desde tus muestras JSON
+  mini-format 1.2.1 · SPEC 1.1 — crea tu toolkit desde tus muestras JSON
   <a href="/docs/quickstart/">empezar →</a>
 </div>
 
@@ -59,7 +59,7 @@
 <section class="frame hero">
   <div class="hero-grid">
     <div>
-      <p class="eyebrow"><span class="badge">1.1</span> <a href="/docs/quickstart/">Tu JSON. Tu contrato. Tu .mini. →</a></p>
+      <p class="eyebrow"><span class="badge">1.2.1</span> <a href="/docs/quickstart/">Tu JSON. Tu contrato. Tu .mini. →</a></p>
       <h1>Salidas de LLM que se <span style="color:rgb(var(--accent))">validan</span> solas.</h1>
       <p class="lead">
         Entrega muestras JSON de tu dominio. mini-format construye tu contrato,
@@ -144,7 +144,7 @@
         <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
         <h3>Conformidad</h3>
         <p class="replaces">sustituye a pruebas por implementación</p>
-        <p>303 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 303/303.</p>
+        <p>372 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 372/372.</p>
         <div class="cmdlite"><b>$</b> python conformance/run_python.py</div>
       </article>
     </div>
@@ -363,10 +363,10 @@ mini tokens respuesta.mini --enc o200k_base <span class="c"># tokens y bytes, co
 mini check-forks                            <span class="c"># invariantes + fixtures de ida y vuelta</span>
 mini new-fork quiz2 --from a --add <span class="s">"nivel:enum{facil|dificil}"</span></code></pre></div>
     <div class="codeblock" id="a-conf" role="tabpanel" hidden><div class="tb"><span>shell</span><span>conformance/</span></div><pre><code>$ python conformance/run_python.py
-<span class="s">303 casos · 303 pasan · 0 fallan</span>
+<span class="s">372 casos · 372 pasan · 0 fallan</span>
 
 $ cd ts &amp;&amp; npm test
-<span class="s">conformance.test.ts · 303/303</span>
+<span class="s">conformance.test.ts · 372/372</span>
 
 <span class="c"># las expectativas salen de la norma y de los fixtures publicados,</span>
 <span class="c"># nunca se calculan ejecutando la implementación</span></code></pre></div>
@@ -461,7 +461,7 @@ $ mini check-forks
         <tr><th scope="row">Recuperación ante truncamiento</th><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td class="no">parcial</td></tr>
         <tr data-extra><th scope="row">Reparación selectiva por línea</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
         <tr data-extra><th scope="row">Lectura en streaming, registro a registro</th><td class="yes">✓</td><td class="no">parcial</td><td class="yes">✓</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Suite de conformidad publicada</th><td class="yes">303</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Suite de conformidad publicada</th><td class="yes">372</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
         <tr data-extra><th scope="row">Dos implementaciones independientes</th><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">parcial</td></tr>
         <tr data-extra><th scope="row">Listas con elemento marcado</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
         <tr data-extra><th scope="row">Compatibilidad hacia adelante declarada</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>

@@ -7,15 +7,25 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "sitio"
+sys.path.insert(0, str(SITE))
+import cifras  # noqa: E402
+
+FAMILIAS = cifras.calcular(ROOT)["familias"]
 ORIGIN = "https://mini-format.pmoluna.com"
 REPO = "https://github.com/LiveLinDev/mini-format"
-SOURCE_ZIP = "/downloads/mini-format-1.2.1-source.zip"
+VERSION = re.search(r'^version = "([^"]+)"', (ROOT / "pyproject.toml").read_text(encoding="utf-8"), re.M).group(1)
+SOURCE_ZIP = f"/downloads/mini-format-{VERSION}-source.zip"
+# Páginas bilingües EN LÍNEA (los dos idiomas en el mismo HTML, docs.js conmuta sin cambiar de URL).
+# No tienen copia /en/: entran en el sitemap con su URL única, sin hreflang ni `data-localized-routes`.
+# Los módulos añaden las suyas con registrar_en_linea() (ver sitio/modulos.py).
+RUTAS_EN_LINEA: set[str] = {"taller", "sima", "ejemplo", "validacion", "economia"}
 ALLOW_ROOTS = {"benchmark", "experiments", "conformance", "forks", "src", "ts", "js", "docs"}
 ALLOW_SUFFIX = {".md", ".json", ".csv", ".py", ".ts", ".js", ".mini", ".txt", ".toml", ".png", ".svg", ".yaml", ".yml"}
 EXCLUDE = {"node_modules", "__pycache__", ".venv", ".git", "vocab", "dist"}
@@ -171,7 +181,7 @@ def localized(text: str, lang: str, path: str) -> str:
     meta += f'<link rel="canonical" href="{canonical}">\n<link rel="alternate" hreflang="es" href="{ORIGIN}{path}">\n<link rel="alternate" hreflang="en" href="{ORIGIN}/en{path}">\n<link rel="alternate" hreflang="x-default" href="{ORIGIN}{path}">\n'
     meta += f'<meta property="og:type" content="website"><meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(desc, quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:locale" content="{"es_ES" if lang == "es" else "en_US"}">\n'
     if path == "/":
-        schema = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.2.1", "license": "https://opensource.org/license/mit", "downloadUrl": ORIGIN + "/downloads/mini-format-1.2.1.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": lang, "description": desc}
+        schema = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": VERSION, "license": "https://opensource.org/license/mit", "downloadUrl": ORIGIN + f"/downloads/mini-format-{VERSION}.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": lang, "description": desc}
         meta += '<script type="application/ld+json">' + json.dumps(schema, ensure_ascii=False) + '</script>\n'
     # Avoid duplicate structured data on repeated builds.
     text = re.sub(r'<script type="application/ld\+json">.*?</script>\s*', "", text, flags=re.S)
@@ -223,7 +233,7 @@ def prepare_public_site(playground_translations=()) -> None:
             english = content
             for source, translated in playground_translations:
                 english = english.replace(translated, source)
-            for source, translated in {"Familias": "Families", "Editor y validador": "Editor and validator", "Comparar formatos": "Compare formats", "Asistente de familias": "Family wizard", "Chuleta de la norma": "Specification cheatsheet", "Cambiar tema": "Toggle theme", "Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.": "Validate documents, convert JSON ↔ .mini, compare tokens with JSON, YAML, XML, CSV and the official TOON encoder, and design your own family. Everything runs in your browser.", "motor: js/mini.js · 14 familias": "engine: js/mini.js · 14 families"}.items():
+            for source, translated in {"Familias": "Families", "Editor y validador": "Editor and validator", "Comparar formatos": "Compare formats", "Asistente de familias": "Family wizard", "Chuleta de la norma": "Specification cheatsheet", "Cambiar tema": "Toggle theme", "Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.": "Validate documents, convert JSON ↔ .mini, compare tokens with JSON, YAML, XML, CSV and the official TOON encoder, and design your own family. Everything runs in your browser.", f"motor: js/mini.js · {FAMILIAS} familias": f"engine: js/mini.js · {FAMILIAS} families"}.items():
                 english = english.replace(source, translated)
         else:
             english = content

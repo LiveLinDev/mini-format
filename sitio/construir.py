@@ -26,7 +26,9 @@ import markdown
 RAIZ = Path(__file__).resolve().parents[1]
 SITIO = RAIZ / "sitio"
 sys.path.insert(0, str(RAIZ / "src"))
+sys.path.insert(0, str(SITIO))
 from minifmt import Registry, __version__, SPEC_VERSION  # noqa: E402
+import cifras  # noqa: E402
 
 REPO = "https://github.com/LiveLinDev/mini-format"
 SITE_URL = "https://mini-format.pmoluna.com"
@@ -97,6 +99,26 @@ GRUPOS_EN = [
 ORDEN = [ruta for _, items in GRUPOS_ES for ruta, _ in items]
 NOMBRES_ES = {r: t for _, it in GRUPOS_ES for r, t in it}
 NOMBRES_EN = {r: t for _, it in GRUPOS_EN for r, t in it}
+
+
+CIFRAS = cifras.calcular()
+
+
+def cuenta(n: int, palabras: dict, idioma: str) -> str:
+    """«Catorce» / «Fourteen» si hay palabra para el número; si no, la cifra."""
+    return palabras.get(f"palabra_{idioma}") or str(n)
+
+
+def aviso_conformidad() -> tuple[str, str]:
+    """Total de la suite vigente (calculado de conformance/cases/*.json) para /docs/conformance/."""
+    c = CIFRAS
+    es = (f'<p class="lang">La suite de la especificación {c["version_spec"]} tiene <strong>{c["casos_conformidad"]} casos</strong> '
+          f'({c["casos_suite_1_0"]} heredados de la suite 1.0, que se conservan, y {c["casos_nuevos_1_1"]} nuevos) repartidos en '
+          f'{c["archivos_conformidad"]} categorías.</p>')
+    en = (f'<p class="lang">The suite for specification {c["version_spec"]} has <strong>{c["casos_conformidad"]} cases</strong> '
+          f'({c["casos_suite_1_0"]} inherited from suite 1.0, which are kept, and {c["casos_nuevos_1_1"]} new) across '
+          f'{c["archivos_conformidad"]} categories.</p>')
+    return es, en
 
 
 def md(texto: str) -> str:
@@ -262,13 +284,13 @@ def construir_docs() -> int:
     filas_es = "".join(f'<tr><td><a href="/docs/forks/{c.prefix}/"><code>{c.prefix}</code></a></td><td>{html.escape(c.name)}</td><td>{html.escape(c.domain)}</td><td>{len(c.core)}</td><td>{len(c.extensions)}</td><td>{"<code>" + c.parent + "</code>" if c.parent else "—"}</td></tr>' for c in contratos)
     pagina_docs("docs/forks", "Familias oficiales", "Official families", f"""
 <h1>Familias oficiales</h1>
-<p>Catorce contratos publicados en <code>forks/</code>. Cada familia es un archivo de datos (<code>contract.json</code>) que
+<p>{cuenta(CIFRAS["familias"], CIFRAS, "familias_es")} contratos publicados en <code>forks/</code>. Cada familia es un archivo de datos (<code>contract.json</code>) que
 la misma implementación interpreta: parser, serializador, validador y bloque de prompt se derivan de él.
 Para crear la tuya, lee <a href="/docs/forking/">Extender: familias</a>.</p>
 <table><thead><tr><th>Prefijo</th><th>Nombre</th><th>Dominio</th><th>Núcleo</th><th>Ext.</th><th>Padre</th></tr></thead><tbody>{filas_es}</tbody></table>
 """, f"""
 <h1>Official families</h1>
-<p>Fourteen contracts published in <code>forks/</code>. Each family is a data file (<code>contract.json</code>)
+<p>{cuenta(CIFRAS["familias"], CIFRAS, "familias_en")} contracts published in <code>forks/</code>. Each family is a data file (<code>contract.json</code>)
 that the same implementation interprets: parser, serializer, validator and prompt block are all derived from it.
 To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
 <table><thead><tr><th>Prefix</th><th>Name</th><th>Domain</th><th>Core</th><th>Ext.</th><th>Parent</th></tr></thead><tbody>{filas_es}</tbody></table>
@@ -330,7 +352,7 @@ To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
     filas_en = "".join(f'<tr><td><a href="/docs/errors/{cod}/"><span class="errcode">{cod}</span></a></td><td>{html.escape(t)}</td><td><code>{const}</code></td><td>{sec}</td></tr>' for cod, const, t, _, sec in ERRORES_EN)
     pagina_docs("docs/errors", "Códigos de error", "Error codes", f"""
 <h1>Códigos de error</h1>
-<p>Quince códigos estables, definidos en <code>src/minifmt/errors.py</code> y reproducidos por la biblioteca TypeScript.
+<p>{cuenta(CIFRAS["codigos_error"], CIFRAS, "codigos_es")} códigos estables, definidos en <code>src/minifmt/errors.py</code> y reproducidos por la biblioteca TypeScript.
 Son parte del contrato público del formato: un validador escrito en otro lenguaje debe producir los mismos códigos
 para los mismos documentos, y la <a href="/docs/conformance/">suite de conformidad</a> lo comprueba.</p>
 <p>Cada error lleva <strong>código</strong>, <strong>línea</strong> (1-based; 0 para errores de documento), <strong>campo</strong> cuando aplica y un mensaje legible.
@@ -338,7 +360,7 @@ El informe identifica la línea y el campo que debe corregirse.</p>
 <table><thead><tr><th>Código</th><th>Condición</th><th>Constante</th><th>SPEC</th></tr></thead><tbody>{filas}</tbody></table>
 """, f"""
 <h1>Error codes</h1>
-<p>Fifteen stable codes, defined in <code>src/minifmt/errors.py</code> and reproduced by the TypeScript library.
+<p>{cuenta(CIFRAS["codigos_error"], CIFRAS, "codigos_en")} stable codes, defined in <code>src/minifmt/errors.py</code> and reproduced by the TypeScript library.
 They are part of the format's public contract: a validator written in another language must produce the same codes
 for the same documents, and the <a href="/docs/conformance/">conformance suite</a> checks it.</p>
 <p>Each error carries a <strong>code</strong>, a <strong>line</strong> (1-based; 0 for document errors), a <strong>field</strong> when applicable and a readable message.
@@ -601,7 +623,8 @@ mini check-forks
                 prefijar_ids(cli_es, "es"), prefijar_ids(cli_en, "en")); n += 1
 
     es, en = md_par("conformance/README.md", "conformance/README.en.md")
-    pagina_docs("docs/conformance", "Suite de conformidad", "Conformance suite", es, en); n += 1
+    aviso_es, aviso_en = aviso_conformidad()
+    pagina_docs("docs/conformance", "Suite de conformidad", "Conformance suite", es, en, aviso_es=aviso_es, aviso_en=aviso_en); n += 1
 
     # registro de decisiones de arquitectura (redactado en español)
     aviso_adr = "<p><em>Decision records are written in Spanish.</em></p>"
@@ -711,7 +734,7 @@ def construir_playground() -> None:
 </div></div>
 <main id="contenido">
 <div class="pg-intro"><div><h1>Playground</h1><p>Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.</p></div>
-<p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js · 14 familias</p></div>'''
+<p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js · ''' + str(CIFRAS["familias"]) + ''' familias</p></div>'''
     tpl = re.sub(r"<header>.*?</header>\s*<main>", cab, tpl, count=1, flags=re.S)
     # 3) pie del sitio
     tpl = re.sub(r"<footer>.*?</footer>", pie(), tpl, count=1, flags=re.S)
