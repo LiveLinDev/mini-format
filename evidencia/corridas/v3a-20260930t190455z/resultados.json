@@ -1,0 +1,1133 @@
+{
+  "condiciones": [
+    {
+      "etiqueta": "JSON compacto estricto (json.loads)",
+      "formato": "json",
+      "nombre": "json_estricto",
+      "primaria": false,
+      "propia": false,
+      "variante": false
+    },
+    {
+      "etiqueta": "JSON parcial (jiter, modo on)",
+      "formato": "json",
+      "nombre": "json_parcial_jiter",
+      "primaria": false,
+      "propia": false,
+      "variante": false
+    },
+    {
+      "etiqueta": "JSON Lines",
+      "formato": "jsonl",
+      "nombre": "jsonl",
+      "primaria": false,
+      "propia": false,
+      "variante": false
+    },
+    {
+      "etiqueta": ".mini tolerante (minifmt)",
+      "formato": "mini",
+      "nombre": "mini_tolerante",
+      "primaria": true,
+      "propia": false,
+      "variante": false
+    },
+    {
+      "etiqueta": "JSON, objetos completos (implementación propia)",
+      "formato": "json",
+      "nombre": "json_objetos_completos",
+      "primaria": false,
+      "propia": true,
+      "variante": false
+    },
+    {
+      "etiqueta": ".mini tolerante, sin última línea sin LF",
+      "formato": "mini",
+      "nombre": "mini_tolerante_sin_cola",
+      "primaria": false,
+      "propia": false,
+      "variante": true
+    }
+  ],
+  "cortes_por_documento": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "criterio_primario": {
+    "aprobacion_asesor": "pendiente",
+    "condicion": "mini_tolerante",
+    "estadistico": "suma(recuperados)/suma(disponibles) sobre cortes con disponibles>0, k=1..20, todos los documentos",
+    "extremo_inferior_supera_umbral": true,
+    "ic95_inf": 1.0,
+    "ic95_sup": 1.0,
+    "minimo_por_documento": {
+      "documento": "a",
+      "minimo": 1.0
+    },
+    "n_cortes_excluidos_disponibles_cero": 0,
+    "n_cortes_total": 360,
+    "n_documentos": 18,
+    "punto": 1.0,
+    "solo_truncados": {
+      "ic95_inf": 1.0,
+      "ic95_sup": 1.0,
+      "n_cortes": 228,
+      "n_cortes_excluidos_disponibles_cero": 0,
+      "punto": 1.0
+    },
+    "umbral": 0.9,
+    "veredicto_regla_fijada": "cumple"
+  },
+  "esquema": "mini-format/v3a-resultados/1",
+  "exclusiones": [],
+  "protocolo": {
+    "ruta": "experiments/truncamiento/PROTOCOLO.md",
+    "sha256": "5afb29e01af232b68e6ce91f11d35403b563ff624fdf723c14a9709cd07217a2"
+  },
+  "resumen_lectores": [
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_estricto",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.508722,
+        "ic95_sup": 0.511389,
+        "media": 0.51,
+        "n_documentos": 18
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "todos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 0.096899
+      },
+      "n_cortes": 360,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 342,
+      "n_documentos": 18,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 342,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 0.097773,
+        "ic95_sup": 0.098285,
+        "n_documentos": 18,
+        "punto": 0.098039,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 0.0,
+        "ic95_sup": 0.0,
+        "n_cortes": 342,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 18,
+        "punto": 0.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.05,
+        "ic95_sup": 0.05,
+        "media": 0.05,
+        "n_documentos": 18
+      },
+      "registros_disponibles": 9180,
+      "registros_emitidos": 900,
+      "registros_recuperados": 900
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_estricto",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.508143,
+        "ic95_sup": 0.510143,
+        "media": 0.509143,
+        "n_documentos": 14
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "dominios_sinteticos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "cls",
+        "minimo": 0.097466
+      },
+      "n_cortes": 280,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 266,
+      "n_documentos": 14,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 266,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 0.098012,
+        "ic95_sup": 0.098398,
+        "n_documentos": 14,
+        "punto": 0.098204,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 0.0,
+        "ic95_sup": 0.0,
+        "n_cortes": 266,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 14,
+        "punto": 0.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.05,
+        "ic95_sup": 0.05,
+        "media": 0.05,
+        "n_documentos": 14
+      },
+      "registros_disponibles": 7128,
+      "registros_emitidos": 700,
+      "registros_recuperados": 700
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_estricto",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.50925,
+        "ic95_sup": 0.516,
+        "media": 0.513,
+        "n_documentos": 4
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "snapshots",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 0.096899
+      },
+      "n_cortes": 80,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 76,
+      "n_documentos": 4,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 76,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 0.096899,
+        "ic95_sup": 0.098184,
+        "n_documentos": 4,
+        "punto": 0.097466,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 0.0,
+        "ic95_sup": 0.0,
+        "n_cortes": 76,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 4,
+        "punto": 0.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.05,
+        "ic95_sup": 0.05,
+        "media": 0.05,
+        "n_documentos": 4
+      },
+      "registros_disponibles": 2052,
+      "registros_emitidos": 200,
+      "registros_recuperados": 200
+    },
+    {
+      "completados_heuristicamente": 6,
+      "condicion": "json_parcial_jiter",
+      "cortes_con_espurios": 336,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.508722,
+        "ic95_sup": 0.511389,
+        "media": 0.51,
+        "n_documentos": 18
+      },
+      "duplicados": 0,
+      "espurios": 336,
+      "estrato": "todos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.933333,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 360,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 342,
+      "n_documentos": 18,
+      "precision": {
+        "ic95_inf": 0.963996,
+        "ic95_sup": 0.964177,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 18,
+        "punto": 0.964083,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 342,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.508722,
+        "ic95_sup": 0.511389,
+        "media": 0.51,
+        "n_documentos": 18
+      },
+      "registros_disponibles": 9180,
+      "registros_emitidos": 9522,
+      "registros_recuperados": 9180
+    },
+    {
+      "completados_heuristicamente": 6,
+      "condicion": "json_parcial_jiter",
+      "cortes_con_espurios": 260,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.508143,
+        "ic95_sup": 0.510143,
+        "media": 0.509143,
+        "n_documentos": 14
+      },
+      "duplicados": 0,
+      "espurios": 260,
+      "estrato": "dominios_sinteticos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.928571,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 280,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 266,
+      "n_documentos": 14,
+      "precision": {
+        "ic95_inf": 0.963957,
+        "ic95_sup": 0.964093,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 14,
+        "punto": 0.964025,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 266,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.508143,
+        "ic95_sup": 0.510143,
+        "media": 0.509143,
+        "n_documentos": 14
+      },
+      "registros_disponibles": 7128,
+      "registros_emitidos": 7394,
+      "registros_recuperados": 7128
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_parcial_jiter",
+      "cortes_con_espurios": 76,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.50925,
+        "ic95_sup": 0.516,
+        "media": 0.513,
+        "n_documentos": 4
+      },
+      "duplicados": 0,
+      "espurios": 76,
+      "estrato": "snapshots",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.95,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 1.0
+      },
+      "n_cortes": 80,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 76,
+      "n_documentos": 4,
+      "precision": {
+        "ic95_inf": 0.964032,
+        "ic95_sup": 0.964486,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 4,
+        "punto": 0.964286,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 76,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.50925,
+        "ic95_sup": 0.516,
+        "media": 0.513,
+        "n_documentos": 4
+      },
+      "registros_disponibles": 2052,
+      "registros_emitidos": 2128,
+      "registros_recuperados": 2052
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "jsonl",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.499556,
+        "ic95_sup": 0.504556,
+        "media": 0.502056,
+        "n_documentos": 18
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "todos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 360,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 360,
+      "n_documentos": 18,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 360,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.499444,
+        "ic95_sup": 0.504444,
+        "media": 0.502056,
+        "n_documentos": 18
+      },
+      "registros_disponibles": 9037,
+      "registros_emitidos": 9037,
+      "registros_recuperados": 9037
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "jsonl",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.497643,
+        "ic95_sup": 0.502571,
+        "media": 0.500214,
+        "n_documentos": 14
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "dominios_sinteticos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 280,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 280,
+      "n_documentos": 14,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 280,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.497643,
+        "ic95_sup": 0.502571,
+        "media": 0.500214,
+        "n_documentos": 14
+      },
+      "registros_disponibles": 7003,
+      "registros_emitidos": 7003,
+      "registros_recuperados": 7003
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "jsonl",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.50625,
+        "ic95_sup": 0.5105,
+        "media": 0.5085,
+        "n_documentos": 4
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "snapshots",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 1.0
+      },
+      "n_cortes": 80,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 80,
+      "n_documentos": 4,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 80,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.50625,
+        "ic95_sup": 0.5105,
+        "media": 0.5085,
+        "n_documentos": 4
+      },
+      "registros_disponibles": 2034,
+      "registros_emitidos": 2034,
+      "registros_recuperados": 2034
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "mini_tolerante",
+      "cortes_con_espurios": 25,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.666056,
+        "ic95_sup": 0.696167,
+        "media": 0.682111,
+        "n_documentos": 18
+      },
+      "duplicados": 0,
+      "espurios": 25,
+      "estrato": "todos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.069444,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 360,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 228,
+      "n_documentos": 18,
+      "precision": {
+        "ic95_inf": 0.996087,
+        "ic95_sup": 0.999357,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 18,
+        "punto": 0.997968,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 228,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.666722,
+        "ic95_sup": 0.69689,
+        "media": 0.682111,
+        "n_documentos": 18
+      },
+      "registros_disponibles": 12278,
+      "registros_emitidos": 12303,
+      "registros_recuperados": 12278
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "mini_tolerante",
+      "cortes_con_espurios": 13,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.675357,
+        "ic95_sup": 0.695857,
+        "media": 0.685714,
+        "n_documentos": 14
+      },
+      "duplicados": 0,
+      "espurios": 13,
+      "estrato": "dominios_sinteticos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.046429,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 280,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 176,
+      "n_documentos": 14,
+      "precision": {
+        "ic95_inf": 0.997484,
+        "ic95_sup": 0.999586,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 14,
+        "punto": 0.998648,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 176,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.675357,
+        "ic95_sup": 0.695859,
+        "media": 0.685714,
+        "n_documentos": 14
+      },
+      "registros_disponibles": 9600,
+      "registros_emitidos": 9613,
+      "registros_recuperados": 9600
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "mini_tolerante",
+      "cortes_con_espurios": 12,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.6145,
+        "ic95_sup": 0.724,
+        "media": 0.6695,
+        "n_documentos": 4
+      },
+      "duplicados": 0,
+      "espurios": 12,
+      "estrato": "snapshots",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.15,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 1.0
+      },
+      "n_cortes": 80,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 52,
+      "n_documentos": 4,
+      "precision": {
+        "ic95_inf": 0.987942,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 4,
+        "punto": 0.995539,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 52,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.6145,
+        "ic95_sup": 0.724,
+        "media": 0.6695,
+        "n_documentos": 4
+      },
+      "registros_disponibles": 2678,
+      "registros_emitidos": 2690,
+      "registros_recuperados": 2678
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_objetos_completos",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.508722,
+        "ic95_sup": 0.511389,
+        "media": 0.51,
+        "n_documentos": 18
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "todos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 360,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 342,
+      "n_documentos": 18,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 342,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.508722,
+        "ic95_sup": 0.511389,
+        "media": 0.51,
+        "n_documentos": 18
+      },
+      "registros_disponibles": 9180,
+      "registros_emitidos": 9180,
+      "registros_recuperados": 9180
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_objetos_completos",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.508143,
+        "ic95_sup": 0.510143,
+        "media": 0.509143,
+        "n_documentos": 14
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "dominios_sinteticos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "a",
+        "minimo": 1.0
+      },
+      "n_cortes": 280,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 266,
+      "n_documentos": 14,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 266,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.508143,
+        "ic95_sup": 0.510143,
+        "media": 0.509143,
+        "n_documentos": 14
+      },
+      "registros_disponibles": 7128,
+      "registros_emitidos": 7128,
+      "registros_recuperados": 7128
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "json_objetos_completos",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.50925,
+        "ic95_sup": 0.516,
+        "media": 0.513,
+        "n_documentos": 4
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "snapshots",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 1.0
+      },
+      "n_cortes": 80,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 76,
+      "n_documentos": 4,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 76,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.50925,
+        "ic95_sup": 0.516,
+        "media": 0.513,
+        "n_documentos": 4
+      },
+      "registros_disponibles": 2052,
+      "registros_emitidos": 2052,
+      "registros_recuperados": 2052
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "mini_tolerante_sin_cola",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.666556,
+        "ic95_sup": 0.696333,
+        "media": 0.682111,
+        "n_documentos": 18
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "todos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "card",
+        "minimo": 0.998503
+      },
+      "n_cortes": 360,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 228,
+      "n_documentos": 18,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 18,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 0.999272,
+        "ic95_sup": 0.999839,
+        "n_documentos": 18,
+        "punto": 0.999593,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 0.998394,
+        "ic95_sup": 0.999663,
+        "n_cortes": 228,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 18,
+        "punto": 0.999119,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.66611,
+        "ic95_sup": 0.696111,
+        "media": 0.681833,
+        "n_documentos": 18
+      },
+      "registros_disponibles": 12278,
+      "registros_emitidos": 12273,
+      "registros_recuperados": 12273
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "mini_tolerante_sin_cola",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.675357,
+        "ic95_sup": 0.696,
+        "media": 0.685714,
+        "n_documentos": 14
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "dominios_sinteticos",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "card",
+        "minimo": 0.998503
+      },
+      "n_cortes": 280,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 176,
+      "n_documentos": 14,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 14,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 0.999087,
+        "ic95_sup": 0.999792,
+        "n_documentos": 14,
+        "punto": 0.999479,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 0.997972,
+        "ic95_sup": 0.99956,
+        "n_cortes": 176,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 14,
+        "punto": 0.998864,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.675071,
+        "ic95_sup": 0.695214,
+        "media": 0.685357,
+        "n_documentos": 14
+      },
+      "registros_disponibles": 9600,
+      "registros_emitidos": 9595,
+      "registros_recuperados": 9595
+    },
+    {
+      "completados_heuristicamente": 0,
+      "condicion": "mini_tolerante_sin_cola",
+      "cortes_con_espurios": 0,
+      "disponibles_sobre_solicitados": {
+        "ic95_inf": 0.6145,
+        "ic95_sup": 0.724,
+        "media": 0.6695,
+        "n_documentos": 4
+      },
+      "duplicados": 0,
+      "espurios": 0,
+      "estrato": "snapshots",
+      "fallos_lector": 0,
+      "fraccion_cortes_con_espurios": 0.0,
+      "minimo_por_documento": {
+        "documento": "comments",
+        "minimo": 1.0
+      },
+      "n_cortes": 80,
+      "n_cortes_disponibles_cero": 0,
+      "n_cortes_truncados": 52,
+      "n_documentos": 4,
+      "precision": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes_sin_emitidos_null": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recall_disponibles_solo_truncados": {
+        "ic95_inf": 1.0,
+        "ic95_sup": 1.0,
+        "n_cortes": 52,
+        "n_cortes_disponibles_cero": 0,
+        "n_documentos": 4,
+        "punto": 1.0,
+        "replicas_descartadas": 0
+      },
+      "recuperados_sobre_solicitados": {
+        "ic95_inf": 0.6145,
+        "ic95_sup": 0.724,
+        "media": 0.6695,
+        "n_documentos": 4
+      },
+      "registros_disponibles": 2678,
+      "registros_emitidos": 2678,
+      "registros_recuperados": 2678
+    }
+  ]
+}

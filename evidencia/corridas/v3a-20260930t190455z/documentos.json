@@ -1,0 +1,607 @@
+{
+  "documentos": [
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/a.json",
+      "bytes_por_formato": {
+        "json": 16845,
+        "jsonl": 16836,
+        "mini": 9211
+      },
+      "clave_registros": "items",
+      "documento": "a",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/a/contract.json",
+        "contrato_sha256": "446fc7d35c0ac4779e0284d96903d31ae1f6b6365238474a1a43d6b68935ff89",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "63e6abc11b98353acda7e03ae16651737bc44984fdee382ad36de7a38d79f859",
+      "sha256_texto_por_formato": {
+        "json": "63e6abc11b98353acda7e03ae16651737bc44984fdee382ad36de7a38d79f859",
+        "jsonl": "41c15552261d80f9a477a454686b2428d0f131cb42237f0fa1f64f49092b7c35",
+        "mini": "1955b96d57090cdd70b445ffb110105165119be98844f2c54d10ba5f8d7fa009"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 5216,
+        "jsonl": 5263,
+        "mini": 3200
+      },
+      "tokens_ref_json_o200k": 5216
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/card.json",
+      "bytes_por_formato": {
+        "json": 9944,
+        "jsonl": 9935,
+        "mini": 6045
+      },
+      "clave_registros": "cards",
+      "documento": "card",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/card/contract.json",
+        "contrato_sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "a8c040229380c887719d1ee1665a2ac45464bd3f22922f1be917b9f7b66cef45",
+      "sha256_texto_por_formato": {
+        "json": "a8c040229380c887719d1ee1665a2ac45464bd3f22922f1be917b9f7b66cef45",
+        "jsonl": "3d7d14eabf98841b35523d4e488fabdcffd9c957d4625c12fce71f89ee65235e",
+        "mini": "e73887293e470cf77b71a084a8fb84be06a762f879a6614b63486bb44117f5bb"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 3026,
+        "jsonl": 3072,
+        "mini": 2075
+      },
+      "tokens_ref_json_o200k": 3026
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/cat.json",
+      "bytes_por_formato": {
+        "json": 7508,
+        "jsonl": 7496,
+        "mini": 3236
+      },
+      "clave_registros": "products",
+      "documento": "cat",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/cat/contract.json",
+        "contrato_sha256": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "15bb7dd3f1a69c9b8233df239c38c2938843581c3c2c265c7614e09907cd80d9",
+      "sha256_texto_por_formato": {
+        "json": "15bb7dd3f1a69c9b8233df239c38c2938843581c3c2c265c7614e09907cd80d9",
+        "jsonl": "cfe2c6b791c20d92ca71ff1728fb85dc3404f1a3f1aeae0d399bcbe884472cbd",
+        "mini": "90597f75a9f4d553ee8d8edcf3d3ab2ce3fec23040a12b4301b5ec6f52193f82"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 2455,
+        "jsonl": 2501,
+        "mini": 1516
+      },
+      "tokens_ref_json_o200k": 2455
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/cls.json",
+      "bytes_por_formato": {
+        "json": 9121,
+        "jsonl": 9109,
+        "mini": 5211
+      },
+      "clave_registros": "messages",
+      "documento": "cls",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/cls/contract.json",
+        "contrato_sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "805570dec1fbe11551e665538c6b13abd694ee5cdeceb7f6593f6d020025f72a",
+      "sha256_texto_por_formato": {
+        "json": "805570dec1fbe11551e665538c6b13abd694ee5cdeceb7f6593f6d020025f72a",
+        "jsonl": "63a36e34a4b3ca3fc275f29d659c39635c8245f085f89a0ce59b0e6275befd03",
+        "mini": "31622561efd4ff8d46b5966b012309c9932cf9043397db39cb142509a842fa5e"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 2480,
+        "jsonl": 2526,
+        "mini": 1523
+      },
+      "tokens_ref_json_o200k": 2480
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/code.json",
+      "bytes_por_formato": {
+        "json": 12015,
+        "jsonl": 12002,
+        "mini": 7568
+      },
+      "clave_registros": "exercises",
+      "documento": "code",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/code/contract.json",
+        "contrato_sha256": "ca63bf2f894b8761bd4ef14a212b0308cdc85c08295bcc6028ca455ca239d162",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "be1d29b216bd24bf3621ac0e2e8c4c78d01eb4534ebfdafa80067baa2ef42f64",
+      "sha256_texto_por_formato": {
+        "json": "be1d29b216bd24bf3621ac0e2e8c4c78d01eb4534ebfdafa80067baa2ef42f64",
+        "jsonl": "c4bb4ecae3759affc416154a1e41937d0ba5c35e736bbb932dd63f02a24f3b72",
+        "mini": "ba66307c9a2c756b714569b8015e81431533654c1a31965fd2549b1b0c7a08b5"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 3448,
+        "jsonl": 3452,
+        "mini": 2486
+      },
+      "tokens_ref_json_o200k": 3448
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/log.json",
+      "bytes_por_formato": {
+        "json": 9478,
+        "jsonl": 9468,
+        "mini": 4981
+      },
+      "clave_registros": "events",
+      "documento": "log",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/log/contract.json",
+        "contrato_sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "e30f5ae4b62ce9fe38454927038a3bc3c2e9ce1dd73e1088e49d3cc72a02d92f",
+      "sha256_texto_por_formato": {
+        "json": "e30f5ae4b62ce9fe38454927038a3bc3c2e9ce1dd73e1088e49d3cc72a02d92f",
+        "jsonl": "aaaf0ac9e43415a2abff7271c5e9b6b19046166e75b51b1c5b6d7c31bf93d72d",
+        "mini": "aa7a1cd719940a65a8d1274d285c83f9508e32af8e7ffd9ba722ba6f21c320dc"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 3057,
+        "jsonl": 3103,
+        "mini": 2105
+      },
+      "tokens_ref_json_o200k": 3057
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/map.json",
+      "bytes_por_formato": {
+        "json": 4604,
+        "jsonl": 4595,
+        "mini": 2166
+      },
+      "clave_registros": "edges",
+      "documento": "map",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/map/contract.json",
+        "contrato_sha256": "f7699064d358a0effa7818c4ef4d66676c80a7f3a7b41edc5c24d595dc269e71",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "56f3acbe5a91154cc154c5bc54535d1232e8d86bf8d36fad3bdb7a9d4a17e6dd",
+      "sha256_texto_por_formato": {
+        "json": "56f3acbe5a91154cc154c5bc54535d1232e8d86bf8d36fad3bdb7a9d4a17e6dd",
+        "jsonl": "63ae787ce28fd408021bb9b906d376838d903e260e247edf27dadc7b8a9ca03e",
+        "mini": "eda9ffae7c6abdcd5c95c7b8dce52f532d9730fdc99eaf5c3013471b457d9c4a"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 1519,
+        "jsonl": 1565,
+        "mini": 958
+      },
+      "tokens_ref_json_o200k": 1519
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/ner.json",
+      "bytes_por_formato": {
+        "json": 3995,
+        "jsonl": 3983,
+        "mini": 1512
+      },
+      "clave_registros": "entities",
+      "documento": "ner",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/ner/contract.json",
+        "contrato_sha256": "49b555e9d32ea77913d5ec4594726ab1d0e0a1a3dc39f3ca400d0c272679848f",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "5c7719bb01493b3fb8a16d07ed500587d67231240493d0793d7d32f20dc8d19b",
+      "sha256_texto_por_formato": {
+        "json": "5c7719bb01493b3fb8a16d07ed500587d67231240493d0793d7d32f20dc8d19b",
+        "jsonl": "12760b19784a615237920015cb2fd3a1ffcf683b32da4fb5b93eebd29494b1b0",
+        "mini": "48c4ba53c38a9bf496fcd527bd7b25e05ddd0924c195181d55897eb9e5021096"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 1460,
+        "jsonl": 1506,
+        "mini": 856
+      },
+      "tokens_ref_json_o200k": 1460
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/q.json",
+      "bytes_por_formato": {
+        "json": 24686,
+        "jsonl": 24677,
+        "mini": 15239
+      },
+      "clave_registros": "items",
+      "documento": "q",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/q/contract.json",
+        "contrato_sha256": "cc689a8c3a2e5af9daefcb32a311ee6f02790c94635a9d96a67fd6a475f48fda",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "086011341b93c2585ff8d03a7aa750191c418c6e131d7021766e2dba8993b48b",
+      "sha256_texto_por_formato": {
+        "json": "086011341b93c2585ff8d03a7aa750191c418c6e131d7021766e2dba8993b48b",
+        "jsonl": "e652f7b293540482cdfb88c632a31c6aaccf9e013f83c16cd6756f164cbdcb94",
+        "mini": "90f039a0a98bfb857493eeb0036efe639d9dcc3c3246836b261b1b84fc5d54ee"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 6979,
+        "jsonl": 7025,
+        "mini": 4653
+      },
+      "tokens_ref_json_o200k": 6979
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/r.json",
+      "bytes_por_formato": {
+        "json": 9608,
+        "jsonl": 9596,
+        "mini": 5680
+      },
+      "clave_registros": "criteria",
+      "documento": "r",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/r/contract.json",
+        "contrato_sha256": "7c8d839c9667ed59556a5273f14ab897d39c1bb11521b17e84df78c8f934153c",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "ea9274914f97528ead7efa2c74050960a1c5c60dd2c4d0f5d5fa39fb7a6ed795",
+      "sha256_texto_por_formato": {
+        "json": "ea9274914f97528ead7efa2c74050960a1c5c60dd2c4d0f5d5fa39fb7a6ed795",
+        "jsonl": "d998d09122935a9ff6ecb1d031cbdb49803d36aa679043e29bf1976ce7b9afdf",
+        "mini": "504c11b0a1c4055e7196f1fb83f37651f34a94b3b2afab5e4e5246fca114dfd3"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 2241,
+        "jsonl": 2287,
+        "mini": 1496
+      },
+      "tokens_ref_json_o200k": 2241
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/s.json",
+      "bytes_por_formato": {
+        "json": 8107,
+        "jsonl": 8098,
+        "mini": 4527
+      },
+      "clave_registros": "items",
+      "documento": "s",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/s/contract.json",
+        "contrato_sha256": "598f447d3cdaac67cb40480fd2d7cb030d09194641b9623aaa83aed6d1ba0d6b",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "c70ed67c44dda850e4832361be25352fb306e4a71078781b48920893bab6c457",
+      "sha256_texto_por_formato": {
+        "json": "c70ed67c44dda850e4832361be25352fb306e4a71078781b48920893bab6c457",
+        "jsonl": "3d51d4458f34df337664c70119f4fffafd66b9eb34cb6ee0a29f6edb0dd723dd",
+        "mini": "aed5a3eaffc4485cb038f9b9e1c90fc019e3172b618f37c8c3476ee6ffa6950a"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 1916,
+        "jsonl": 1962,
+        "mini": 1226
+      },
+      "tokens_ref_json_o200k": 1916
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/sum.json",
+      "bytes_por_formato": {
+        "json": 11190,
+        "jsonl": 11178,
+        "mini": 7315
+      },
+      "clave_registros": "segments",
+      "documento": "sum",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/sum/contract.json",
+        "contrato_sha256": "1be4fc6efb79edbf8dd25876db850a423ae71a68312db380205c239f97c5f9a4",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "516068c8bf80ab1d019f0ef60faf3f211daa7342d1311ad8fd2b67267c250c84",
+      "sha256_texto_por_formato": {
+        "json": "516068c8bf80ab1d019f0ef60faf3f211daa7342d1311ad8fd2b67267c250c84",
+        "jsonl": "4002c592e006177a3fe8f9155b753e67b35f5242315a77732edab8592271b37d",
+        "mini": "a49be895c2538fd18eb4403d30f03badba45caaf7b1a62ddf1a6876a7c3f6e63"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 3271,
+        "jsonl": 3317,
+        "mini": 2353
+      },
+      "tokens_ref_json_o200k": 3271
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/tc.json",
+      "bytes_por_formato": {
+        "json": 13550,
+        "jsonl": 13541,
+        "mini": 8091
+      },
+      "clave_registros": "cases",
+      "documento": "tc",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/tc/contract.json",
+        "contrato_sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "4be94e80c832559546b68a724815e05db68f436a264fde5f17c9c99c668e5529",
+      "sha256_texto_por_formato": {
+        "json": "4be94e80c832559546b68a724815e05db68f436a264fde5f17c9c99c668e5529",
+        "jsonl": "f11f2cf01f7853901d82179a784180238cdc37c40edd125b32dcd11d88e77e27",
+        "mini": "30dc55e1946f69c3544895e48bc0aa9fd7d3eaa89081eafbf514e273aea279b1"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 3045,
+        "jsonl": 3091,
+        "mini": 1985
+      },
+      "tokens_ref_json_o200k": 3045
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/us.json",
+      "bytes_por_formato": {
+        "json": 10983,
+        "jsonl": 10972,
+        "mini": 6700
+      },
+      "clave_registros": "stories",
+      "documento": "us",
+      "exclusiones": {},
+      "meta": {
+        "contrato_ruta": "forks/us/contract.json",
+        "contrato_sha256": "87f0dd913cd98ba4a7234cd0f46f76cc0fe41a7787f2b0a011c5b903010de96b",
+        "contrato_version": 1,
+        "generador": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+        "semilla": 20260914
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "228be2d06cdfe4b6cd19360d83c1d3cafc6037b885a2566351411972e577fea6",
+      "sha256_texto_por_formato": {
+        "json": "228be2d06cdfe4b6cd19360d83c1d3cafc6037b885a2566351411972e577fea6",
+        "jsonl": "78a933a0b6a784040286ef4a73c28f2abe4d1c44edb7f51e58a534d238c6536e",
+        "mini": "f87d8b74cd7c1c4deb3bdf0bf6e7fe7efbf2c4c101018c3d1fe8ee918adff490"
+      },
+      "sintetico": true,
+      "tipo": "dominio_sintetico",
+      "tokens_por_formato": {
+        "json": 2846,
+        "jsonl": 2892,
+        "mini": 1840
+      },
+      "tokens_ref_json_o200k": 2846
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/products.json",
+      "bytes_por_formato": {
+        "json": 72575,
+        "jsonl": 72563,
+        "mini": 41020
+      },
+      "clave_registros": "products",
+      "documento": "products",
+      "exclusiones": {},
+      "meta": {
+        "archivado_utc": "2026-09-16T22:00:34.291238+00:00",
+        "archivo": "data/products.json",
+        "archivo_registros": 194,
+        "archivo_sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+        "fuente_tipo": "public synthetic test data",
+        "fuente_url": "https://dummyjson.com/products?limit=0",
+        "seleccion": "primeros 50 registros en el orden archivado"
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "ac4124d9680320bd8327f1c5b54797a8ee6dca16f8c3bac2ed06df1ac5dcd59b",
+      "sha256_texto_por_formato": {
+        "json": "ac4124d9680320bd8327f1c5b54797a8ee6dca16f8c3bac2ed06df1ac5dcd59b",
+        "jsonl": "31b2423fafb2ac629217b0a2e621723ad5e1127e5b935f8d5aa5d238aee7abe1",
+        "mini": "25d868759ab05d978f698c57afa909e4269a0d96f8cc55cc699b1015e6a2ae7d"
+      },
+      "sintetico": true,
+      "tipo": "snapshot_prueba_publica",
+      "tokens_por_formato": {
+        "json": 21512,
+        "jsonl": 21558,
+        "mini": 15198
+      },
+      "tokens_ref_json_o200k": 21512
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/users.json",
+      "bytes_por_formato": {
+        "json": 69731,
+        "jsonl": 69722,
+        "mini": 26418
+      },
+      "clave_registros": "users",
+      "documento": "users",
+      "exclusiones": {},
+      "meta": {
+        "archivado_utc": "2026-09-16T22:00:35.858707+00:00",
+        "archivo": "data/users.json",
+        "archivo_registros": 208,
+        "archivo_sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+        "fuente_tipo": "public synthetic test data; identities and credentials are fictional",
+        "fuente_url": "https://dummyjson.com/users?limit=0",
+        "seleccion": "primeros 50 registros en el orden archivado"
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "8d4be7a7f27fd99d3382a0f3b98fb3cb09e89a8563eee63f04073e288cf8037f",
+      "sha256_texto_por_formato": {
+        "json": "8d4be7a7f27fd99d3382a0f3b98fb3cb09e89a8563eee63f04073e288cf8037f",
+        "jsonl": "98a9e9261ce8c9249bc57d8e19c4e780e3be8c592c7083bfa2bc3c13d6dc7eda",
+        "mini": "1b052fd33454269819ad407b21e499032311d87eee054f234c4d0d184d829744"
+      },
+      "sintetico": true,
+      "tipo": "snapshot_prueba_publica",
+      "tokens_por_formato": {
+        "json": 21984,
+        "jsonl": 22030,
+        "mini": 11183
+      },
+      "tokens_ref_json_o200k": 21984
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/comments.json",
+      "bytes_por_formato": {
+        "json": 13289,
+        "jsonl": 13288,
+        "mini": 11120
+      },
+      "clave_registros": null,
+      "documento": "comments",
+      "exclusiones": {},
+      "meta": {
+        "archivado_utc": "2026-09-16T22:00:36.634555+00:00",
+        "archivo": "data/comments.json",
+        "archivo_registros": 500,
+        "archivo_sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+        "fuente_tipo": "public synthetic test data",
+        "fuente_url": "https://jsonplaceholder.typicode.com/comments",
+        "seleccion": "primeros 50 registros en el orden archivado"
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "335791a8a2ee2423fbdac94c87aaa5d0c718c411230157d39c9b69dbf46403d6",
+      "sha256_texto_por_formato": {
+        "json": "335791a8a2ee2423fbdac94c87aaa5d0c718c411230157d39c9b69dbf46403d6",
+        "jsonl": "f191a9c55004d6434f4ec8e14a6eee4b106fab01b0fc3d5b96e7f7964351378f",
+        "mini": "584b6732806234c3a6fb0630a2006947678f740c9dab660395986c8860e3cba6"
+      },
+      "sintetico": true,
+      "tipo": "snapshot_prueba_publica",
+      "tokens_por_formato": {
+        "json": 3455,
+        "jsonl": 3502,
+        "mini": 2922
+      },
+      "tokens_ref_json_o200k": 3455
+    },
+    {
+      "archivo_referencia": "evidencia/corridas/v3a-20260930t190455z/documentos/earthquakes.json",
+      "bytes_por_formato": {
+        "json": 36088,
+        "jsonl": 36076,
+        "mini": 18235
+      },
+      "clave_registros": "features",
+      "documento": "earthquakes",
+      "exclusiones": {},
+      "meta": {
+        "archivado_utc": "2026-09-16T22:00:39.491236+00:00",
+        "archivo": "data/earthquakes.json",
+        "archivo_registros": 1000,
+        "archivo_sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+        "fuente_tipo": "real historical earthquake observations",
+        "fuente_url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+        "seleccion": "primeros 50 registros en el orden archivado"
+      },
+      "registros_solicitados": 50,
+      "sha256_referencia": "b1ecd3077bb9283b5c18f8ea36902f5c4c8a22893764c198a59a65518efc3e17",
+      "sha256_texto_por_formato": {
+        "json": "b1ecd3077bb9283b5c18f8ea36902f5c4c8a22893764c198a59a65518efc3e17",
+        "jsonl": "8696d4de3b3f6c0a435e0fe337b16a5783773df9b33644484185b4ea70a924fd",
+        "mini": "54924d136a08e4cd94de797271288bc3b15559e0ee58e0f48ac0e0047088b2c2"
+      },
+      "sintetico": false,
+      "tipo": "snapshot_real",
+      "tokens_por_formato": {
+        "json": 12708,
+        "jsonl": 12754,
+        "mini": 8214
+      },
+      "tokens_ref_json_o200k": 12708
+    }
+  ],
+  "esquema": "mini-format/v3a-documentos/1"
+}
