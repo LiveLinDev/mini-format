@@ -39,9 +39,9 @@
       "experiments/generativo/resultados/simulado/piloto/estado_estudio.json",
       "experiments/generativo/resultados/simulado/piloto/manifiesto.json"
     ],
-    "commit": "cb2a5cf44c385c65e811dfb18674d6652430b3f5",
+    "commit": "9235be252a60f445fdf8a6df4a3ae370945af26d",
     "rama": "stream/arnes",
-    "snapshot_sha256": "625b7d4235efae9c143effac5552cba71ada5efefe505db2bc51524d3ce1c480"
+    "snapshot_sha256": "1491e3b6c0569b5d0d6a0ed2fb88470e683d9c5a69b0de650dd993c34d81be37"
   },
   "comando": "python experiments/generativo/run.py ejecutar --config configs/piloto.yaml --adapter simulado --emitir-evidencia",
   "conjuntos": [
@@ -124,7 +124,7 @@
   "esquema": "mini-format/corrida/1",
   "estado_ejecucion": "ejecutado",
   "estudio": "V3b",
-  "fecha_utc": "2026-09-30T19:41:22Z",
+  "fecha_utc": "2026-09-30T19:46:31Z",
   "gasto_usd": 0.0,
   "intento": null,
   "limitaciones": [
@@ -271,9 +271,9 @@
       "sha256": "e1fde8169e0d9510dbb61817dd50b56c5d96c5b59ed93525a99ff30853187551"
     },
     {
-      "bytes": 279128,
+      "bytes": 278819,
       "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_solicitudes.jsonl",
-      "sha256": "b9a8d0bb469bfa7caf53d9b3b0f80c867a294eb25031a1a7d5af0a5a6d2d12cc"
+      "sha256": "c72f663f58ebaa402e7fa78f67eeaed33fd494621420d4a18b0c1d1803fc0edd"
     }
   ],
   "resumen": {

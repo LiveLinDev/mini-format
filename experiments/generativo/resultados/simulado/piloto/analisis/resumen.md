@@ -2,7 +2,7 @@
 
 > **RESULTADOS SIMULADOS.** Estas cifras provienen del adaptador simulado, cuyas tasas de falla son supuestos del simulador. Solo validan que el arnés funciona de extremo a extremo; **no son resultados del estudio** y no deben citarse como evidencia sobre ningún formato ni modelo.
 
-Muestras: 792 · commit: `cb2a5cf44c` · adaptador: simulado · procedencia: simulado
+Muestras: 792 · commit: `9235be252a` · adaptador: simulado · procedencia: simulado
 
 Estado del estudio: **completo** · celdas {'hecha': 792, 'pendiente': 0, 'bloqueado': 0, 'no_aplicable': 72, 'error_tecnico': 0} · gasto {'gastado_usd': '0', 'incierto_usd': '0', 'llamadas': 607, 'llamadas_huerfanas': 0, 'tope_usd': None}
 

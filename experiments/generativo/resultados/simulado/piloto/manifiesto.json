@@ -182,7 +182,7 @@
       "brazos.py": "8324f44a88814aacd57262d2ff1d9936221be33800e9c5b4b6904f189d5533f1",
       "json_tolerante.py": "9295b33566d8e74521408ee43614c4b540de4e8dcbaa41f0e550ccbbbe06c990",
       "metricas.py": "dbe33066f80007f4c4fe3e5f7f033783edd42e39614a6b2bffba8c6d4a6f16da",
-      "ejecucion.py": "708ed3b593a19eb16b8840428f0e0b51fbb715bd436157802c3e826f2bbc509a",
+      "ejecucion.py": "ab3c2207c3977877d638a50c59c58a660fb5f58d16fae3f3841084b837cdfb6d",
       "tareas.py": "38513d4b4b508827674cfd38c7ec0a5fd404d3fb22f07e7b4ba44632fb810820",
       "usage.py": "4f56395e2ded2b1ba0c9cc5c46efecd5495a32103bf39fcccde71bb0246f1df1",
       "tarifas.py": "ae8a2f2115b16463fc880b6b8408f75163c5f1924cf42591261cfbbc7b4234d7"
@@ -211,14 +211,14 @@
         }
       }
     },
-    "diseno_sha256": "31d3a3acea7d982cd4140d56b77de99e7489badefbc2f7172d4f1e2cffbf5dd4"
+    "diseno_sha256": "408c122ed55f7112f1d3c296ae68f368b897abbd5df8a3c4f9e6023e17382d3d"
   },
-  "commit": "cb2a5cf44c385c65e811dfb18674d6652430b3f5",
+  "commit": "9235be252a60f445fdf8a6df4a3ae370945af26d",
   "codigo": {
-    "commit": "cb2a5cf44c385c65e811dfb18674d6652430b3f5",
+    "commit": "9235be252a60f445fdf8a6df4a3ae370945af26d",
     "rama": "stream/arnes",
     "arbol_limpio": false,
-    "snapshot_sha256": "625b7d4235efae9c143effac5552cba71ada5efefe505db2bc51524d3ce1c480",
+    "snapshot_sha256": "1491e3b6c0569b5d0d6a0ed2fb88470e683d9c5a69b0de650dd993c34d81be37",
     "archivos_modificados": [
       "evidencia/corridas/v2-simulado-piloto/comparaciones_pareadas.csv",
       "evidencia/corridas/v2-simulado-piloto/desenlaces.csv",
