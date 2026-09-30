@@ -1,0 +1,331 @@
+{
+  "prefix": "products",
+  "profile": "mini-domain/1",
+  "record_fields": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "price",
+    "discountPercentage",
+    "rating",
+    "stock",
+    "tags",
+    "brand",
+    "sku",
+    "weight",
+    "dimensions/width",
+    "dimensions/height",
+    "dimensions/depth",
+    "warrantyInformation",
+    "shippingInformation",
+    "availabilityStatus",
+    "reviews",
+    "returnPolicy",
+    "minimumOrderQuantity",
+    "meta/createdAt",
+    "meta/updatedAt",
+    "meta/barcode",
+    "meta/qrCode",
+    "images",
+    "thumbnail"
+  ],
+  "record_path": [
+    "products"
+  ],
+  "sample_documents": 1,
+  "sample_records": 50,
+  "schema": {
+    "fields": [
+      {
+        "name": "products",
+        "optional": false,
+        "schema": {
+          "items": {
+            "fields": [
+              {
+                "name": "id",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "title",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "description",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "category",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "price",
+                "optional": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "discountPercentage",
+                "optional": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "rating",
+                "optional": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "stock",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "tags",
+                "optional": false,
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              {
+                "name": "brand",
+                "optional": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "sku",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "weight",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "dimensions",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "width",
+                      "optional": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "height",
+                      "optional": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "depth",
+                      "optional": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "warrantyInformation",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "shippingInformation",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "availabilityStatus",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "reviews",
+                "optional": false,
+                "schema": {
+                  "items": {
+                    "fields": [
+                      {
+                        "name": "rating",
+                        "optional": false,
+                        "schema": {
+                          "type": "integer"
+                        }
+                      },
+                      {
+                        "name": "comment",
+                        "optional": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "date",
+                        "optional": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "reviewerName",
+                        "optional": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "reviewerEmail",
+                        "optional": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              {
+                "name": "returnPolicy",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "minimumOrderQuantity",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "meta",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "createdAt",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "updatedAt",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "barcode",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "qrCode",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "images",
+                "optional": false,
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              {
+                "name": "thumbnail",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      {
+        "name": "total",
+        "optional": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "skip",
+        "optional": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "limit",
+        "optional": false,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    ],
+    "type": "object"
+  },
+  "schema_id": "5756133b6e00",
+  "version": 1
+}

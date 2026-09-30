@@ -1,0 +1,371 @@
+{
+  "prefix": "earthquakes",
+  "profile": "mini-domain/1",
+  "record_fields": [
+    "type",
+    "properties/mag",
+    "properties/place",
+    "properties/time",
+    "properties/updated",
+    "properties/tz",
+    "properties/url",
+    "properties/detail",
+    "properties/felt",
+    "properties/cdi",
+    "properties/mmi",
+    "properties/alert",
+    "properties/status",
+    "properties/tsunami",
+    "properties/sig",
+    "properties/net",
+    "properties/code",
+    "properties/ids",
+    "properties/sources",
+    "properties/types",
+    "properties/nst",
+    "properties/dmin",
+    "properties/rms",
+    "properties/gap",
+    "properties/magType",
+    "properties/type",
+    "properties/title",
+    "geometry/type",
+    "geometry/coordinates",
+    "id"
+  ],
+  "record_path": [
+    "features"
+  ],
+  "sample_documents": 1,
+  "sample_records": 50,
+  "schema": {
+    "fields": [
+      {
+        "name": "type",
+        "optional": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "metadata",
+        "optional": false,
+        "schema": {
+          "fields": [
+            {
+              "name": "generated",
+              "optional": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "url",
+              "optional": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "title",
+              "optional": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "status",
+              "optional": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "api",
+              "optional": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "limit",
+              "optional": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "offset",
+              "optional": false,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "type": "object"
+        }
+      },
+      {
+        "name": "features",
+        "optional": false,
+        "schema": {
+          "items": {
+            "fields": [
+              {
+                "name": "type",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "properties",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "mag",
+                      "optional": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "place",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "time",
+                      "optional": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "name": "updated",
+                      "optional": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "name": "tz",
+                      "optional": false,
+                      "schema": {
+                        "type": "json"
+                      }
+                    },
+                    {
+                      "name": "url",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "detail",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "felt",
+                      "optional": false,
+                      "schema": {
+                        "nullable": true,
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "name": "cdi",
+                      "optional": false,
+                      "schema": {
+                        "nullable": true,
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "mmi",
+                      "optional": false,
+                      "schema": {
+                        "type": "json"
+                      }
+                    },
+                    {
+                      "name": "alert",
+                      "optional": false,
+                      "schema": {
+                        "type": "json"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "tsunami",
+                      "optional": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "name": "sig",
+                      "optional": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "name": "net",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "code",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "ids",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "sources",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "types",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "nst",
+                      "optional": false,
+                      "schema": {
+                        "nullable": true,
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "name": "dmin",
+                      "optional": false,
+                      "schema": {
+                        "nullable": true,
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "rms",
+                      "optional": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "gap",
+                      "optional": false,
+                      "schema": {
+                        "nullable": true,
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "magType",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "type",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "title",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "geometry",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "type",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "coordinates",
+                      "optional": false,
+                      "schema": {
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "id",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      {
+        "name": "bbox",
+        "optional": false,
+        "schema": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      }
+    ],
+    "type": "object"
+  },
+  "schema_id": "25db8fa6c682",
+  "version": 1
+}

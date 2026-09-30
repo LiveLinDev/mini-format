@@ -1,0 +1,539 @@
+{
+  "prefix": "users",
+  "profile": "mini-domain/1",
+  "record_fields": [
+    "id",
+    "firstName",
+    "lastName",
+    "maidenName",
+    "age",
+    "gender",
+    "email",
+    "phone",
+    "username",
+    "password",
+    "birthDate",
+    "image",
+    "bloodGroup",
+    "height",
+    "weight",
+    "eyeColor",
+    "hair/color",
+    "hair/type",
+    "ip",
+    "address/address",
+    "address/city",
+    "address/state",
+    "address/stateCode",
+    "address/postalCode",
+    "address/coordinates/lat",
+    "address/coordinates/lng",
+    "address/country",
+    "macAddress",
+    "university",
+    "bank/cardExpire",
+    "bank/cardNumber",
+    "bank/cardType",
+    "bank/currency",
+    "bank/iban",
+    "company/department",
+    "company/name",
+    "company/title",
+    "company/address/address",
+    "company/address/city",
+    "company/address/state",
+    "company/address/stateCode",
+    "company/address/postalCode",
+    "company/address/coordinates/lat",
+    "company/address/coordinates/lng",
+    "company/address/country",
+    "ein",
+    "ssn",
+    "userAgent",
+    "crypto/coin",
+    "crypto/wallet",
+    "crypto/network",
+    "role"
+  ],
+  "record_path": [
+    "users"
+  ],
+  "sample_documents": 1,
+  "sample_records": 50,
+  "schema": {
+    "fields": [
+      {
+        "name": "users",
+        "optional": false,
+        "schema": {
+          "items": {
+            "fields": [
+              {
+                "name": "id",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "firstName",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "lastName",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "maidenName",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "age",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "gender",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "email",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "phone",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "username",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "password",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "birthDate",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "image",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "bloodGroup",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "height",
+                "optional": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "weight",
+                "optional": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "eyeColor",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "hair",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "color",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "type",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "ip",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "address",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "address",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "city",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "state",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "stateCode",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "postalCode",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "coordinates",
+                      "optional": false,
+                      "schema": {
+                        "fields": [
+                          {
+                            "name": "lat",
+                            "optional": false,
+                            "schema": {
+                              "type": "number"
+                            }
+                          },
+                          {
+                            "name": "lng",
+                            "optional": false,
+                            "schema": {
+                              "type": "number"
+                            }
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    {
+                      "name": "country",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "macAddress",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "university",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "bank",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "cardExpire",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "cardNumber",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "cardType",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "currency",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "iban",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "company",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "department",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "title",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "address",
+                      "optional": false,
+                      "schema": {
+                        "fields": [
+                          {
+                            "name": "address",
+                            "optional": false,
+                            "schema": {
+                              "type": "string"
+                            }
+                          },
+                          {
+                            "name": "city",
+                            "optional": false,
+                            "schema": {
+                              "type": "string"
+                            }
+                          },
+                          {
+                            "name": "state",
+                            "optional": false,
+                            "schema": {
+                              "type": "string"
+                            }
+                          },
+                          {
+                            "name": "stateCode",
+                            "optional": false,
+                            "schema": {
+                              "type": "string"
+                            }
+                          },
+                          {
+                            "name": "postalCode",
+                            "optional": false,
+                            "schema": {
+                              "type": "string"
+                            }
+                          },
+                          {
+                            "name": "coordinates",
+                            "optional": false,
+                            "schema": {
+                              "fields": [
+                                {
+                                  "name": "lat",
+                                  "optional": false,
+                                  "schema": {
+                                    "type": "number"
+                                  }
+                                },
+                                {
+                                  "name": "lng",
+                                  "optional": false,
+                                  "schema": {
+                                    "type": "number"
+                                  }
+                                }
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          {
+                            "name": "country",
+                            "optional": false,
+                            "schema": {
+                              "type": "string"
+                            }
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "ein",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "ssn",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "userAgent",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "crypto",
+                "optional": false,
+                "schema": {
+                  "fields": [
+                    {
+                      "name": "coin",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "wallet",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "network",
+                      "optional": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "object"
+                }
+              },
+              {
+                "name": "role",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      {
+        "name": "total",
+        "optional": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "skip",
+        "optional": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "name": "limit",
+        "optional": false,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    ],
+    "type": "object"
+  },
+  "schema_id": "8974266aebf8",
+  "version": 1
+}

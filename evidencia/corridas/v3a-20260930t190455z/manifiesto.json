@@ -1,0 +1,551 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "9a53ea879c697795598c1abc824269d955ddd19b",
+    "rama": "stream/v3a",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_v3a.py",
+  "conjuntos": [
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:a",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/a.json",
+      "semilla": 20260914,
+      "sha256": "63e6abc11b98353acda7e03ae16651737bc44984fdee382ad36de7a38d79f859",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:card",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/card.json",
+      "semilla": 20260914,
+      "sha256": "a8c040229380c887719d1ee1665a2ac45464bd3f22922f1be917b9f7b66cef45",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:cat",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/cat.json",
+      "semilla": 20260914,
+      "sha256": "15bb7dd3f1a69c9b8233df239c38c2938843581c3c2c265c7614e09907cd80d9",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:cls",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/cls.json",
+      "semilla": 20260914,
+      "sha256": "805570dec1fbe11551e665538c6b13abd694ee5cdeceb7f6593f6d020025f72a",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:code",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/code.json",
+      "semilla": 20260914,
+      "sha256": "be1d29b216bd24bf3621ac0e2e8c4c78d01eb4534ebfdafa80067baa2ef42f64",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:log",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/log.json",
+      "semilla": 20260914,
+      "sha256": "e30f5ae4b62ce9fe38454927038a3bc3c2e9ce1dd73e1088e49d3cc72a02d92f",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:map",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/map.json",
+      "semilla": 20260914,
+      "sha256": "56f3acbe5a91154cc154c5bc54535d1232e8d86bf8d36fad3bdb7a9d4a17e6dd",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:ner",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/ner.json",
+      "semilla": 20260914,
+      "sha256": "5c7719bb01493b3fb8a16d07ed500587d67231240493d0793d7d32f20dc8d19b",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:q",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/q.json",
+      "semilla": 20260914,
+      "sha256": "086011341b93c2585ff8d03a7aa750191c418c6e131d7021766e2dba8993b48b",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:r",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/r.json",
+      "semilla": 20260914,
+      "sha256": "ea9274914f97528ead7efa2c74050960a1c5c60dd2c4d0f5d5fa39fb7a6ed795",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:s",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/s.json",
+      "semilla": 20260914,
+      "sha256": "c70ed67c44dda850e4832361be25352fb306e4a71078781b48920893bab6c457",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:sum",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/sum.json",
+      "semilla": 20260914,
+      "sha256": "516068c8bf80ab1d019f0ef60faf3f211daa7342d1311ad8fd2b67267c250c84",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:tc",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/tc.json",
+      "semilla": 20260914,
+      "sha256": "4be94e80c832559546b68a724815e05db68f436a264fde5f17c9c99c668e5529",
+      "sintetico": true
+    },
+    {
+      "fuente": "experiments/comun.generar(prefijo, 50, 'muestreo')",
+      "licencia": null,
+      "nombre": "dominio:us",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/us.json",
+      "semilla": 20260914,
+      "sha256": "228be2d06cdfe4b6cd19360d83c1d3cafc6037b885a2566351411972e577fea6",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://dummyjson.com/products?limit=0",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:products",
+      "registros": 194,
+      "ruta": "benchmark/public/data/products.json",
+      "semilla": null,
+      "sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://dummyjson.com/products?limit=0",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:products (primeros 50 registros: referencia de la corrida)",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/products.json",
+      "semilla": null,
+      "sha256": "ac4124d9680320bd8327f1c5b54797a8ee6dca16f8c3bac2ed06df1ac5dcd59b",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://dummyjson.com/users?limit=0",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:users",
+      "registros": 208,
+      "ruta": "benchmark/public/data/users.json",
+      "semilla": null,
+      "sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://dummyjson.com/users?limit=0",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:users (primeros 50 registros: referencia de la corrida)",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/users.json",
+      "semilla": null,
+      "sha256": "8d4be7a7f27fd99d3382a0f3b98fb3cb09e89a8563eee63f04073e288cf8037f",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://jsonplaceholder.typicode.com/comments",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:comments",
+      "registros": 500,
+      "ruta": "benchmark/public/data/comments.json",
+      "semilla": null,
+      "sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://jsonplaceholder.typicode.com/comments",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:comments (primeros 50 registros: referencia de la corrida)",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/comments.json",
+      "semilla": null,
+      "sha256": "335791a8a2ee2423fbdac94c87aaa5d0c718c411230157d39c9b69dbf46403d6",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:earthquakes",
+      "registros": 1000,
+      "ruta": "benchmark/public/data/earthquakes.json",
+      "semilla": null,
+      "sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+      "sintetico": false
+    },
+    {
+      "fuente": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+      "licencia": "ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "snapshot:earthquakes (primeros 50 registros: referencia de la corrida)",
+      "registros": 50,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos/earthquakes.json",
+      "semilla": null,
+      "sha256": "b1ecd3077bb9283b5c18f8ea36902f5c4c8a22893764c198a59a65518efc3e17",
+      "sintetico": false
+    }
+  ],
+  "conteos": null,
+  "contratos": [
+    {
+      "prefijo": "a",
+      "ruta": "forks/a/contract.json",
+      "sha256": "446fc7d35c0ac4779e0284d96903d31ae1f6b6365238474a1a43d6b68935ff89",
+      "version": 1
+    },
+    {
+      "prefijo": "card",
+      "ruta": "forks/card/contract.json",
+      "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+      "version": 1
+    },
+    {
+      "prefijo": "cat",
+      "ruta": "forks/cat/contract.json",
+      "sha256": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
+      "version": 1
+    },
+    {
+      "prefijo": "cls",
+      "ruta": "forks/cls/contract.json",
+      "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+      "version": 1
+    },
+    {
+      "prefijo": "code",
+      "ruta": "forks/code/contract.json",
+      "sha256": "ca63bf2f894b8761bd4ef14a212b0308cdc85c08295bcc6028ca455ca239d162",
+      "version": 1
+    },
+    {
+      "prefijo": "log",
+      "ruta": "forks/log/contract.json",
+      "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+      "version": 1
+    },
+    {
+      "prefijo": "map",
+      "ruta": "forks/map/contract.json",
+      "sha256": "f7699064d358a0effa7818c4ef4d66676c80a7f3a7b41edc5c24d595dc269e71",
+      "version": 1
+    },
+    {
+      "prefijo": "ner",
+      "ruta": "forks/ner/contract.json",
+      "sha256": "49b555e9d32ea77913d5ec4594726ab1d0e0a1a3dc39f3ca400d0c272679848f",
+      "version": 1
+    },
+    {
+      "prefijo": "q",
+      "ruta": "forks/q/contract.json",
+      "sha256": "cc689a8c3a2e5af9daefcb32a311ee6f02790c94635a9d96a67fd6a475f48fda",
+      "version": 1
+    },
+    {
+      "prefijo": "r",
+      "ruta": "forks/r/contract.json",
+      "sha256": "7c8d839c9667ed59556a5273f14ab897d39c1bb11521b17e84df78c8f934153c",
+      "version": 1
+    },
+    {
+      "prefijo": "s",
+      "ruta": "forks/s/contract.json",
+      "sha256": "598f447d3cdaac67cb40480fd2d7cb030d09194641b9623aaa83aed6d1ba0d6b",
+      "version": 1
+    },
+    {
+      "prefijo": "sum",
+      "ruta": "forks/sum/contract.json",
+      "sha256": "1be4fc6efb79edbf8dd25876db850a423ae71a68312db380205c239f97c5f9a4",
+      "version": 1
+    },
+    {
+      "prefijo": "tc",
+      "ruta": "forks/tc/contract.json",
+      "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+      "version": 1
+    },
+    {
+      "prefijo": "us",
+      "ruta": "forks/us/contract.json",
+      "sha256": "87f0dd913cd98ba4a7234cd0f46f76cc0fe41a7787f2b0a011c5b903010de96b",
+      "version": 1
+    },
+    {
+      "prefijo": "products",
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/contratos/products.contract.json",
+      "sha256": "88269454d5ea6e67dafde55a0c658318327cff4453d78f35a1e08cf2a41e03ce",
+      "version": 1
+    },
+    {
+      "prefijo": "users",
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/contratos/users.contract.json",
+      "sha256": "c5ec391dad279b6a4761ea8621b6f93cf906382560759263559f811ec3de83c9",
+      "version": 1
+    },
+    {
+      "prefijo": "comments",
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/contratos/comments.contract.json",
+      "sha256": "ac85f7f90724e52412ea3213d23f56dca961dc2ce2a835f533b0c006af40be9d",
+      "version": 1
+    },
+    {
+      "prefijo": "earthquakes",
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/contratos/earthquakes.contract.json",
+      "sha256": "7cb0e128ce73e84c21a3a39ff9e2ab968164be39dec4b61527725b20cb96a861",
+      "version": 1
+    }
+  ],
+  "criterio": {
+    "aprobacion_asesor": "pendiente",
+    "condicion_primaria": "mini_tolerante",
+    "estadistico": "suma(recuperados)/suma(disponibles) sobre cortes con disponibles>0, k=1..20, todos los documentos",
+    "fijado_antes_del_analisis": true,
+    "meta": "recuperar >= 90 % de los registros completos disponibles",
+    "no_afirma": "nada universal sobre JSON ni .mini; el caso historico 38/40 de CIMA no se sustituye",
+    "protocolo": {
+      "ruta": "experiments/truncamiento/PROTOCOLO.md",
+      "sha256": "5afb29e01af232b68e6ce91f11d35403b563ff624fdf723c14a9709cd07217a2",
+      "sin_cambios_locales": true,
+      "ultimo_commit": "3d7bb90ef728162eda6795abede5c0a09c71773b"
+    },
+    "regla_de_decision": "cumple si el punto >= 0,90; no_cumple si no (el IC se informa, no decide)",
+    "umbral": 0.9
+  },
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V3a",
+  "fecha_utc": "2026-09-30T19:04:55Z",
+  "gasto_usd": 0,
+  "intento": null,
+  "limitaciones": [
+    "Datos sintéticos (14 dominios) y de prueba públicos ficticios (products, users, comments); solo earthquakes (USGS) son observaciones reales.",
+    "Los cortes son deterministas y los hace el tokenizador o200k_base (aproximación para Anthropic, Google o DeepSeek); no son los de ningún proveedor.",
+    "Los resultados valen para estas implementaciones de lector (json.loads, jiter, JSON Lines estándar, minifmt, escáner propio), no para JSON o .mini en abstracto.",
+    "Se mide minifmt en Python; el puerto TypeScript no se ejecuta.",
+    "Un lector que acepta un registro final cortado pero válido (.mini tal cual, jiter) emite registros espurios: se miden, no se corrigen.",
+    "Los 20 cortes son una malla uniforme, no una muestra de dónde cortan los modelos reales; no hay modelos en el bucle.",
+    "La meta ≥ 90 % sobre registros disponibles es casi trivial para cualquier lector capaz; no separa formatos por recall (ver resumen)."
+  ],
+  "modelo": null,
+  "notas": "Corrida local sin modelos ni claves. La interpretación del criterio está sujeta a aprobación del asesor; el veredicto aplica la regla fijada en PROTOCOLO.md y no la sustituye. El recall sobre disponibles es casi trivial para los lectores capaces: léase junto con recuperados/solicitados, precisión y el análisis solo-truncados.",
+  "parametros": {
+    "bootstrap": {
+      "B": 10000,
+      "ic": 0.95,
+      "semilla": 20260930,
+      "tipo": "conglomerados por documento"
+    },
+    "condiciones": [
+      "json_estricto",
+      "json_parcial_jiter",
+      "jsonl",
+      "mini_tolerante",
+      "json_objetos_completos",
+      "mini_tolerante_sin_cola"
+    ],
+    "cortes_por_documento": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "lectores": {
+      "json_estricto": "json.loads (Python 3.11.9)",
+      "json_objetos_completos": "implementación propia (experiments/truncamiento/lectores.py)",
+      "json_parcial_jiter": "jiter 0.17.0, partial_mode='on'",
+      "jsonl": "JSON Lines estándar (json.loads por línea)",
+      "mini_tolerante": "minifmt Reader(strict=False) / aislamiento por línea de minifmt.domain.diagnose"
+    },
+    "limite_k": "round(k/20 * T_ref), T_ref = tokens o200k del JSON compacto; mitad hacia arriba con enteros",
+    "registros_por_documento": 50,
+    "semilla_datos_dominios": 20260914
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [],
+  "resultado": "cumple",
+  "resultados": [
+    {
+      "bytes": 269116,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/cortes.csv",
+      "sha256": "0ba7556619ce290569b772d5e1691e50e2aeaa6a14aec25646e0214de15ccaee"
+    },
+    {
+      "bytes": 3806,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/resumen_lectores.csv",
+      "sha256": "428fa9b83778efab95f4ba24976698d5f470cd6edb5d7a6209ae79d966fbd7e9"
+    },
+    {
+      "bytes": 12438,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/curvas.csv",
+      "sha256": "32f7198c12c8e1676fb6bc20df9ccd1e59b9a4126296d855d95ef41b27f24c5b"
+    },
+    {
+      "bytes": 10226,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/por_documento.csv",
+      "sha256": "47f4e08f510c48cb3ae03b689fa9b43f9ceded4823bfd5a425a9edaa0e878e85"
+    },
+    {
+      "bytes": 30298,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/resultados.json",
+      "sha256": "850e0b1909291a4220eece093b27822d85ff018f18978cae63407d0fe5686b09"
+    },
+    {
+      "bytes": 22931,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos.json",
+      "sha256": "92934d08e5aa48342dac718547ad747215ee2784ce8ea8805d90f06f562af525"
+    },
+    {
+      "bytes": 213743,
+      "ruta": "evidencia/corridas/v3a-20260930t190455z/figura_v3a.png",
+      "sha256": "9a4b14911e46dc5d486f78322946ed3d818f11702d0298c8b6b2bf66a1f1d5de"
+    }
+  ],
+  "resumen": {
+    "condiciones": 6,
+    "cortes_evaluados": 2160,
+    "criterio_primario": {
+      "condicion": "mini_tolerante",
+      "ic95_inf": 1.0,
+      "ic95_sup": 1.0,
+      "punto": 1.0,
+      "veredicto_regla_fijada": "cumple"
+    },
+    "documentos": 18,
+    "duracion_s": 7.6,
+    "exclusiones": 0,
+    "por_condicion_todos": {
+      "json_estricto": {
+        "espurios": 0,
+        "precision": 1.0,
+        "recall_disponibles": 0.098039,
+        "recall_solo_truncados": 0.0,
+        "recuperados_sobre_solicitados": 0.05
+      },
+      "json_objetos_completos": {
+        "espurios": 0,
+        "precision": 1.0,
+        "recall_disponibles": 1.0,
+        "recall_solo_truncados": 1.0,
+        "recuperados_sobre_solicitados": 0.51
+      },
+      "json_parcial_jiter": {
+        "espurios": 336,
+        "precision": 0.964083,
+        "recall_disponibles": 1.0,
+        "recall_solo_truncados": 1.0,
+        "recuperados_sobre_solicitados": 0.51
+      },
+      "jsonl": {
+        "espurios": 0,
+        "precision": 1.0,
+        "recall_disponibles": 1.0,
+        "recall_solo_truncados": 1.0,
+        "recuperados_sobre_solicitados": 0.502056
+      },
+      "mini_tolerante": {
+        "espurios": 25,
+        "precision": 0.997968,
+        "recall_disponibles": 1.0,
+        "recall_solo_truncados": 1.0,
+        "recuperados_sobre_solicitados": 0.682111
+      },
+      "mini_tolerante_sin_cola": {
+        "espurios": 0,
+        "precision": 1.0,
+        "recall_disponibles": 0.999593,
+        "recall_solo_truncados": 0.999119,
+        "recuperados_sobre_solicitados": 0.681833
+      }
+    }
+  },
+  "run_id": "v3a-20260930t190455z",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "nombre": "o200k_base",
+      "paquete": "tiktoken",
+      "tipo": "aproximacion",
+      "version": "0.14.0",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    }
+  ]
+}

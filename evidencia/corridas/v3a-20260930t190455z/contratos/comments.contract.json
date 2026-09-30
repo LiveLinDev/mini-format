@@ -1,0 +1,59 @@
+{
+  "prefix": "comments",
+  "profile": "mini-domain/1",
+  "record_fields": [
+    "postId",
+    "id",
+    "name",
+    "email",
+    "body"
+  ],
+  "record_path": [],
+  "sample_documents": 1,
+  "sample_records": 50,
+  "schema": {
+    "items": {
+      "fields": [
+        {
+          "name": "postId",
+          "optional": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "id",
+          "optional": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "email",
+          "optional": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "body",
+          "optional": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "type": "object"
+    },
+    "type": "array"
+  },
+  "schema_id": "2f9b19bfeb28",
+  "version": 1
+}
