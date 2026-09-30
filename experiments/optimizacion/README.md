@@ -43,6 +43,89 @@ La búsqueda, sus candidatos y lo descartado están en [`diseno/`](diseno/).
 ## Cifras
 
 <!-- cifras:inicio (generado por tools/ejecutar_opt.py; no editar a mano) -->
+
+Corrida `opt-20260930t191636z` (procedencia `reproducido_local`, commit `12f37c0`, árbol limpio: true). Resultado del criterio fijado de antemano: **cumple** (C1 salida ≥ 30 % en los tres tokenizadores: true; C2 total menor que JSON: true; C3 equivalencia exacta sin fallos: true).
+
+### n = 100, tokenizador o200k_base (lectura primaria)
+
+Media de los lotes medidos. «Salida» es el texto que devuelve el modelo; «Total» es instrucción + salida tokenizados como un solo texto. Positivo = .mini usa menos tokens que JSON compacto.
+
+| Dominio | Perfil | Instrucción (tokens) | Salida | Total | Ahorro de salida | Ahorro del total vs JSON sin instrucción | Ahorro del total vs JSON con esquema |
+|---|---|--:|--:|--:|--:|--:|--:|
+| tickets (representativo) | JSON compacto (base) | 0 | 4068.8 | 4068.8 | — | — | — |
+| | general: mini from-schema | 410 | 2703.2 | 3114.2 | +33.6 % | +23.5 % | +27.9 % |
+| | general: mini build | 693 | 2725.2 | 3418.2 | +33.0 % | +16.0 % | +20.9 % |
+| | especializado (instrucción compacta) | 220 | 2433.0 | 2654.0 | +40.2 % | +34.8 % | +38.6 % |
+| eventos de planta (FAVORABLE) | JSON compacto (base) | 0 | 6598.6 | 6598.6 | — | — | — |
+| | general: mini from-schema | 582 | 3977.2 | 4560.2 | +39.7 % | +30.9 % | +35.4 % |
+| | general: mini build | 804 | 2465.0 | 3269.0 | +62.6 % | +50.5 % | +53.7 % |
+| | especializado (instrucción compacta) | 363 | 1624.0 | 1988.0 | +75.4 % | +69.9 % | +71.9 % |
+| comentarios (texto libre; ahorro pequeño) | JSON compacto (base) | 0 | 7187.0 | 7187.0 | — | — | — |
+| | general: mini from-schema | 461 | 6084.3 | 6546.3 | +15.3 % | +8.9 % | +12.5 % |
+| | general: mini build | 746 | 6102.3 | 6848.3 | +15.1 % | +4.7 % | +8.4 % |
+| | especializado (instrucción compacta) | 270 | 6085.3 | 6356.3 | +15.3 % | +11.6 % | +15.0 % |
+
+### n = 100, por tokenizador
+
+| Dominio | Tokenizador | Ahorro de salida general | Ahorro de salida especializado | Ahorro del total general | Ahorro del total especializado | Instrucción general → especializada (tokens) |
+|---|---|--:|--:|--:|--:|--:|
+| tickets (representativo) | o200k_base | +33.6 % | +40.2 % | +23.5 % | +34.8 % | 410 → 220 |
+|  | cl100k_base | +30.5 % | +37.8 % | +20.0 % | +32.1 % | 446 → 240 |
+|  | r50k_base | +31.2 % | +38.1 % | +20.4 % | +32.4 % | 572 → 302 |
+| eventos de planta (FAVORABLE) | o200k_base | +39.7 % | +75.4 % | +30.9 % | +69.9 % | 582 → 363 |
+|  | cl100k_base | +39.1 % | +77.5 % | +29.9 % | +71.8 % | 621 → 377 |
+|  | r50k_base | +42.7 % | +80.2 % | +33.1 % | +74.4 % | 791 → 477 |
+| comentarios (texto libre; ahorro pequeño) | o200k_base | +15.3 % | +15.3 % | +8.9 % | +11.6 % | 461 → 270 |
+|  | cl100k_base | +12.2 % | +12.2 % | +6.0 % | +8.5 % | 508 → 301 |
+|  | r50k_base | +11.3 % | +11.3 % | +4.6 % | +7.3 % | 650 → 388 |
+
+### Ahorro del total (instrucción con ejemplo + salida) según el tamaño de lote, o200k_base
+
+Negativo = el .mini gasta MÁS que JSON compacto sin instrucción. Frente a un JSON que también lleva su esquema como instrucción el equilibrio llega antes (columna correspondiente de la tabla de n = 100).
+
+| Dominio · perfil | n=1 | n=5 | n=10 | n=25 | n=50 | n=100 | n=250 |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| tickets · general | -871.5 % | -162.5 % | -66.5 % | -6.6 % | +13.3 % | +23.5 % | +29.6 % |
+| tickets · especializado | -450.9 % | -66.5 % | -14.0 % | +18.3 % | +29.2 % | +34.8 % | +38.1 % |
+| eventos · general | -765.8 % | -135.0 % | -48.2 % | +4.5 % | +22.2 % | +30.9 % | +36.2 % |
+| eventos · especializado | -442.7 % | -37.1 % | +18.9 % | +52.6 % | +64.1 % | +69.9 % | +72.9 % |
+| comentarios · general | -590.3 % | -115.1 % | -50.0 % | -10.4 % | +2.5 % | +8.9 % | +12.8 % |
+| comentarios · especializado | -341.6 % | -61.3 % | -23.0 % | +0.2 % | +7.8 % | +11.6 % | +13.9 % |
+
+### Punto de equilibrio n* (menor n desde el cual el .mini gasta menos hasta n = 250)
+
+«Salida»: payload frente a JSON compacto. «Total»: instrucción + salida frente a JSON compacto con instrucción 0 (lectura más dura para .mini).
+
+| Dominio | Tokenizador | Salida (n*) | Total general con ejemplo | Total especializado con ejemplo | Total especializado sin ejemplo |
+|---|---|--:|--:|--:|--:|
+| tickets (representativo) | o200k_base | 1 | 31 | 14 | 10 |
+|  | cl100k_base | 1 | 35 | 15 | 11 |
+|  | r50k_base | 1 | 35 | 15 | 11 |
+| eventos de planta (FAVORABLE) | o200k_base | 1 | 23 | 8 | 7 |
+|  | cl100k_base | 1 | 24 | 8 | 7 |
+|  | r50k_base | 1 | 23 | 8 | 7 |
+| comentarios (texto libre; ahorro pequeño) | o200k_base | 1 | 42 | 25 | 14 |
+|  | cl100k_base | 1 | 51 | 30 | 16 |
+|  | r50k_base | 1 | 60 | 36 | 19 |
+
+### Control: cuánto es del formato y cuánto de las abreviaturas (n = 100, o200k_base)
+
+JSON con las mismas abreviaturas (códigos, enteros escalados y constantes una sola vez) usa menos tokens que JSON compacto sin ellas: parte del ahorro del perfil especializado NO es del formato.
+
+| Dominio | JSON compacto | JSON con las mismas abreviaturas | .mini especializado | Ahorro frente a JSON compacto | Ahorro frente a JSON abreviado (efecto del formato) |
+|---|--:|--:|--:|--:|--:|
+| tickets (representativo) | 4068.8 | 3797.6 | 2433.0 | +40.2 % | +35.9 % |
+| eventos de planta (FAVORABLE) | 6598.6 | 4025.0 | 1624.0 | +75.4 % | +59.7 % |
+| comentarios (texto libre; ahorro pequeño) | 7187.0 | 7187.0 | 6085.3 | +15.3 % | +15.3 % |
+
+### Simulación de una ampliación NO implementada: diccionario por documento (n = 100, o200k_base)
+
+| Dominio | Salida general (tokens) | General con diccionario simulado | Ahorro potencial | Especializado a mano | Columnas del diccionario |
+|---|--:|--:|--:|--:|---|
+| tickets (representativo) | 2652 | 2608 | +1.7 % | 2382 | prioridad, categoria |
+| eventos de planta (FAVORABLE) | 3950 | 3108 | +21.3 % | 1621 | planta, tipo_evento, severidad, estado |
+| comentarios (texto libre; ahorro pequeño) | 5954 | — | — | 5955 | ninguna: ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla) |
+
 <!-- cifras:fin -->
 
 ## Qué se eligió y por qué
