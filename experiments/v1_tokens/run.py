@@ -365,7 +365,11 @@ def main(argv=None):
     ap.add_argument("--salida", default=None,
                     help="directorio de salida de las tablas (por defecto experiments/v1_tokens/results, lo archivado)")
     ap.add_argument("--sin-figuras", action="store_true", help="no genera las figuras PNG")
+    ap.add_argument("--dominios", default=None, help="subconjunto de dominios (p. ej. a,log,cls); solo para pruebas rápidas")
+    ap.add_argument("--tamanos", default=None, help="subconjunto de tamaños n (p. ej. 1,12,100); solo para pruebas rápidas")
     args = ap.parse_args(argv)
+    if args.tamanos:
+        C.TAMANOS = [int(x) for x in args.tamanos.split(",")]
     if args.salida:
         RES = Path(args.salida)
         FIG = RES / "figuras"
@@ -373,6 +377,8 @@ def main(argv=None):
     for n, t in toks.items():
         print(f"tokenizador {n}: backend={t.backend}")
     reg = C.registro()
+    if args.dominios:
+        reg.contracts = {k: v for k, v in reg.contracts.items() if k in args.dominios.split(",")}
     RES.mkdir(parents=True, exist_ok=True)
     difs = linea_base(reg, toks["o200k_base"])
     filas = medir(reg, toks)
