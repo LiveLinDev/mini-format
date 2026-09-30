@@ -14,11 +14,15 @@
     "equivalencia": "reconstruir(parse(mini)) es idéntico al objeto original: mismos valores, mismos TIPOS, mismo orden de claves y mismos metadatos, para TODO registro medido. Si falla en algún registro, la configuración se descarta y no entra en ninguna comparación."
   },
   "lectura_primaria": {
-    "perfil_especializado": "especializado con instrucción en la variante CON ejemplo de 2 registros (la más conservadora de las variantes medidas)",
+    "perfil_especializado": "especializado con la instrucción COMPACTA (plantilla propia del estudio, instruccion_compacta) en la variante CON ejemplo de 2 registros. Lectura secundaria, no decisoria: la misma configuración con la instrucción de spec_block + ejemplo (la más larga que puede emitir la herramienta real para ese contrato).",
     "perfil_general": "from-schema (mini from-schema + spec_block, es) con la misma variante CON ejemplo",
     "caso_representativo": "tickets",
     "n": 100,
-    "tokenizadores": ["o200k_base", "cl100k_base", "r50k_base"]
+    "tokenizadores": [
+      "o200k_base",
+      "cl100k_base",
+      "r50k_base"
+    ]
   },
   "criterios": [
     {
@@ -51,8 +55,17 @@
   ],
   "diseno_de_la_configuracion": {
     "conjunto": "desarrollo (semilla 20260930; comentarios 0..149)",
-    "espacio": ["orden de campos (búsqueda local)", "esquema de códigos por enumeración (etiqueta, letra, letra mayúscula, dígito)", "id numérico con prefijo constante", "enteros escalados", "hora como minutos", "constantes por lote en la cabecera", "instrucción compacta frente a spec_block"],
+    "espacio": [
+      "orden de campos (búsqueda local)",
+      "esquema de códigos por enumeración (etiqueta, letra, letra mayúscula, dígito)",
+      "id numérico con prefijo constante",
+      "enteros escalados",
+      "hora como minutos",
+      "constantes por lote en la cabecera",
+      "instrucción compacta frente a spec_block"
+    ],
     "regla_de_seleccion": "menor suma, sobre los tres tokenizadores, del total (instrucción compacta sin ejemplo + salida) con n=50 del conjunto de desarrollo; empate a favor de la forma más cercana al esquema original. Se conserva un cambio solo si mejora esa suma en al menos 1 %.",
     "prueba": "conjunto de prueba (semilla 20261001; comentarios 150..499), nunca usado para elegir"
-  }
+  },
+  "aclaracion_antes_de_medir": "Precisión añadida en un segundo commit, también anterior a cualquier medición sobre la semilla de prueba: la variante 'con ejemplo' del perfil especializado es la instrucción compacta con ejemplo; la variante spec_block + ejemplo se publica como lectura secundaria."
 }
