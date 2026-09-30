@@ -23,6 +23,15 @@ La salida va a `evidencia/corridas/<run_id>/` (una carpeta por serie, cada una c
 `benchmark/public/results.json`) **no se toca**: se compara fila a fila y la diferencia queda en el manifiesto.
 Para escribir en otro sitio: `--salida-base DIR`. Para fijar el sello: `--sello AAAAMMDDtHHMMz`.
 
+## Tiempo de ejecución (medido)
+
+Medido el 2026-09-30 en Windows 10, Python 3.11.9, Node 22.14.0, tiktoken 0.14.0, con la máquina compartida con
+otros procesos; el tiempo de cada paso queda en `resumen.tiempos_s` de cada manifiesto. Completo con `--con-v5`:
+**232,5 s** (de ellos, V5: 109,6 s; V1 sin V5: 122,9 s). Por paso: benchmark público con los tres vocabularios
+31,0 s, `benchmark/run_benchmark.py` 15,6 s, `experiments/v1_tokens/run.py` 31,2 s (el README de experimentos
+dice «≈2 min»), serie con reversibilidad 42,4 s, criterio 0,9 s, conciliación 0,9 s. `--rapido`: unos 35 s
+(medido en una ejecución de prueba: 34,4 s).
+
 ## Corridas
 
 | Corrida | Qué reproduce | Archivos principales |

@@ -135,8 +135,13 @@ def ejecutar(cmd: Sequence[str], log: Path, env: Dict[str, str]) -> Tuple[float,
 
 
 def copiar(origen: Path, destino: Path) -> Path:
+    """Copia un resultado a la corrida. Los textos se normalizan a LF: git los guarda así (.gitattributes) y
+    el SHA-256 del manifiesto debe coincidir con los bytes de un clon en cualquier sistema operativo."""
     destino.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(origen, destino)
+    datos = origen.read_bytes()
+    if origen.suffix.lower() in (".csv", ".json", ".md", ".txt"):
+        datos = datos.replace(bytes([13, 10]), bytes([10]))
+    destino.write_bytes(datos)
     return destino
 
 

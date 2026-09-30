@@ -90,7 +90,14 @@ class CorridasV1Test(unittest.TestCase):
             t = self.man[k]["parametros"]["toon"]
             self.assertEqual(t["sha256_arbol_lf"], esperado["sha256_arbol_lf"], k)
             self.assertEqual((t["version_declarada"], t["spec_declarada"]), ("4.1.1", "4.1"))
-            self.assertIn("declarada", t["la_version_es_declarada"])
+            self.assertIn("escrita a mano", t["la_version_es_declarada"])
+
+    def test_los_textos_de_las_corridas_estan_en_lf(self):
+        # git los guarda con LF (.gitattributes): el SHA-256 del manifiesto debe valer para un clon en cualquier sistema
+        for d in self.dirs.values():
+            for p in d.rglob("*"):
+                if p.is_file() and p.suffix.lower() in (".csv", ".json", ".md", ".txt"):
+                    self.assertNotIn(bytes([13]), p.read_bytes(), str(p))
 
     def test_el_codigo_ejecutado_esta_identificado(self):
         for k, m in self.man.items():
