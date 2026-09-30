@@ -1,0 +1,58 @@
+{
+  "creado": "2026-09-30",
+  "datos_crudos_modificados": false,
+  "definicion_de_payload": {
+    "contenido_hojas": "cota inferior de contenido: cada valor hoja tokenizado por separado y sumado (columna `payload` de benchmark/results/summary_12.csv); no es un texto enviado",
+    "documento": "texto completo del documento transmitido, sin contrato, mapa ni prompt (lo que los documentos del equipo llamaban 'solo payload', 35,64 %)",
+    "en_v7_y_v8": "las cifras de V7 y V8 son tokens de entrada y salida que informa el proveedor (tokenizador propio), no conteos locales de documento: no son comparables con la serie de V1",
+    "estructura_compartida": "contrato o mapa de aplanado necesario para decodificar",
+    "prompt_reutilizable": "bloque de instrucción de cada solicitud",
+    "total": "conteo del texto completo enviado, no la suma de fragmentos"
+  },
+  "directorio": "experiments/v8_sima",
+  "errata": [
+    {
+      "bloques": 31,
+      "bloques_con_respuesta_cruda": 17,
+      "bloques_donde_minifmt_reproduce_los_contadores": 17,
+      "campo": "conciliación de las clases completas",
+      "codigos_de_error": {
+        "E05": 2,
+        "E07": 5
+      },
+      "estado": "reconciliado_por_contadores_y_respuestas_crudas_parciales; registro_a_registro_pendiente",
+      "evidencia": [
+        "experiments/v8_sima/README.md:32",
+        "experiments/v8_sima/resumen.json:83",
+        "experiments/v8_sima/analizar.py:48",
+        "experiments/v8_sima/datos.json (clases[].bloques[])"
+      ],
+      "hecho": "343 + 5 + 2 = 350 ítems (343 válidas al llegar, 5 reparadas, 2 repuestas)",
+      "id": "V8-E1",
+      "identidad_por_bloque_ok": true,
+      "llamadas": 38,
+      "registro_a_registro": "pendiente: las respuestas de reparación y de reposición y las respuestas crudas de las clases 3 y 5 no están en datos.json",
+      "suma_es_finales_y_pedidos": true,
+      "totales_de_los_contadores": {
+        "finales": 350,
+        "invalidas": 7,
+        "llamadas": 38,
+        "pedidos": 350,
+        "recibidos_validos": 343,
+        "recuperadas": 2,
+        "reparadas": 5
+      }
+    },
+    {
+      "campo": "vocabulario: 'rechazadas' y 'recibidos'",
+      "descripcion": "README.md:32 llama 'líneas rechazadas' a las 7 líneas inválidas; en datos.json `rechazados` es otra cosa (líneas cuya reparación se rechazó: 1). `recibidos` = líneas válidas al llegar (343), no líneas recibidas (350).",
+      "evidencia": [
+        "experiments/v8_sima/README.md:32",
+        "experiments/v8_sima/analizar.py:48"
+      ],
+      "id": "V8-E2"
+    }
+  ],
+  "esquema": "mini-format/errata/1",
+  "generado_por": "python experiments/v1_tokens/errata_v7_v8.py --escribir"
+}

@@ -1,0 +1,43 @@
+{
+  "creado": "2026-09-30",
+  "datos_crudos_modificados": false,
+  "definicion_de_payload": {
+    "contenido_hojas": "cota inferior de contenido: cada valor hoja tokenizado por separado y sumado (columna `payload` de benchmark/results/summary_12.csv); no es un texto enviado",
+    "documento": "texto completo del documento transmitido, sin contrato, mapa ni prompt (lo que los documentos del equipo llamaban 'solo payload', 35,64 %)",
+    "en_v7_y_v8": "las cifras de V7 y V8 son tokens de entrada y salida que informa el proveedor (tokenizador propio), no conteos locales de documento: no son comparables con la serie de V1",
+    "estructura_compartida": "contrato o mapa de aplanado necesario para decodificar",
+    "prompt_reutilizable": "bloque de instrucción de cada solicitud",
+    "total": "conteo del texto completo enviado, no la suma de fragmentos"
+  },
+  "directorio": "experiments/v7_escalamiento/results/deepseek",
+  "errata": [
+    {
+      "archivado": {
+        "json": 100,
+        "mini": 300
+      },
+      "campo": "resumen.csv: lote_maximo_sin_perdida",
+      "corregido": {
+        "json": 100,
+        "mini": 200
+      },
+      "evidencia": [
+        "experiments/v7_escalamiento/results/deepseek/resumen.csv:3",
+        "experiments/v7_escalamiento/results/deepseek/por_lote.csv:16",
+        "experiments/v7_escalamiento/analizar.py:85",
+        "experiments/v7_escalamiento/analizar.py:99",
+        "experiments/v7_escalamiento/analizar.py:117",
+        "sitio/construir.py:838"
+      ],
+      "id": "V7-E1",
+      "mini_L300": {
+        "aprovechamiento_pct": 93.3,
+        "llamadas": 3,
+        "llamadas_cortadas": 2
+      },
+      "motivo": "analizar.py toma el mayor lote con ALGUNA llamada completa; con mini y lote 300, 1 de 3 llamadas salió completa y 2 se cortaron (aprovechamiento 93,3 %)"
+    }
+  ],
+  "esquema": "mini-format/errata/1",
+  "generado_por": "python experiments/v1_tokens/errata_v7_v8.py --escribir"
+}
