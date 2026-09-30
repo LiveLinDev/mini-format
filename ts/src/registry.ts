@@ -40,7 +40,7 @@ function nodeModule<T>(name: string): T {
   return mod as T;
 }
 
-/** Familias incluidas en el paquete; durante el desarrollo, las del repositorio. */
+/** Carpeta de ejemplos del checkout; no se incluye en el paquete publicado. */
 export function defaultForksDir(): string {
   const url = nodeModule<NodeUrl>('node:url');
   const fs = nodeModule<NodeFs>('node:fs');
@@ -80,6 +80,7 @@ export class Registry {
     const path = nodeModule<NodePath>('node:path');
     const dir = path.resolve(forksDir || defaultForksDir());
     const reg = new Registry();
+    if (!forksDir && !fs.existsSync(dir)) return reg;
     const entries = fs.readdirSync(dir, { withFileTypes: true })
       .filter(e => e.isDirectory())
       .map(e => e.name)

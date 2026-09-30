@@ -94,14 +94,14 @@ ERRORES_EN = [
 # --------------------------------------------------------------------------- navegación de docs
 GRUPOS_ES = [
     ("Empezar", [("docs", "Introducción"), ("downloads", "Descargas"), ("docs/quickstart", "Inicio rápido"), ("docs/build", "Crear tu toolkit")]),
-    ("Norma", [("docs/spec", "Especificación 1.1"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/adr", "Registro de decisiones"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias oficiales"), ("docs/errors", "Códigos de error")]),
+    ("Norma", [("docs/spec", "Especificación 1.1"), ("docs/profile", "Perfil mini-domain/1"), ("docs/spec/cambios", "Versiones y compatibilidad"), ("docs/adr", "Registro de decisiones"), ("docs/forking", "Extender: familias"), ("docs/forks", "Familias de ejemplo"), ("docs/errors", "Códigos de error")]),
     ("Bibliotecas", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Herramienta de línea de comandos"), ("docs/conformance", "Suite de conformidad")]),
     ("Evidencia", [("docs/metodologia", "Metodología y experimentos")]),
     ("Proyecto", [("docs/contribuir", "Contribuir"), ("docs/licencia", "Licencia")]),
 ]
 GRUPOS_EN = [
     ("Start", [("docs", "Introduction"), ("downloads", "Downloads"), ("docs/quickstart", "Quickstart"), ("docs/build", "Build your toolkit")]),
-    ("Reference", [("docs/spec", "Specification 1.1"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/adr", "Decision records"), ("docs/forking", "Extending: forks"), ("docs/forks", "Official families"), ("docs/errors", "Error codes")]),
+    ("Reference", [("docs/spec", "Specification 1.1"), ("docs/profile", "mini-domain/1 profile"), ("docs/spec/cambios", "Versions and compatibility"), ("docs/adr", "Decision records"), ("docs/forking", "Extending: forks"), ("docs/forks", "Sample families"), ("docs/errors", "Error codes")]),
     ("Libraries", [("docs/python", "Python"), ("docs/typescript", "TypeScript"), ("docs/cli", "Command-line tool"), ("docs/conformance", "Conformance suite")]),
     ("Evidence", [("docs/metodologia", "Methodology and experiments")]),
     ("Project", [("docs/contribuir", "Contributing"), ("docs/licencia", "License")]),
@@ -180,12 +180,8 @@ NAV = [
     ("validacion", "Validación", "Validation"),
     ("docs/spec", "Especificación", "Specification"),
     ("docs/errors", "Errores", "Errors"),
-    ("docs/forks", "Familias", "Families"),
     ("playground", "Playground", "Playground"),
-    ("mesa-de-ayuda", "Demo", "Demo"),
-    ("taller", "Taller", "Workshop"),
-    ("ejemplo", "Ejemplo", "Example"),
-    ("sima", "SIMA", "SIMA"),
+    ("ejemplo", "Ejemplos", "Examples"),
 ]
 ICONO_MENU = ('<svg class="ico-abrir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
               '<svg class="ico-cerrar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>')
@@ -250,16 +246,14 @@ def pie() -> str:
                                          ("/docs/conformance/", "Conformidad", "Conformance")])
     c3 = col("Evidencia", "Evidence", [("/validacion/", "Validación", "Validation"),
                                        ("/economia/", "Economía", "Economics"),
-                                       ("/mesa-de-ayuda/", "Mesa de ayuda (demo)", "Help desk (demo)"),
+                                       ("/ejemplo/", "Ejemplos", "Examples"),
                                        (f"{REPO}/tree/main/experiments/v5_ancho", "Eje de ancho (V5)", "Width axis (V5)"),
                                        (f"{REPO}/tree/main/experiments/v1_tokens", "Tokens (V1)", "Tokens (V1)"),
                                        (f"{REPO}/tree/main/experiments/v4_costos", "Costos (V4)", "Costs (V4)"),
                                        ("/docs/metodologia/", "Metodología", "Methodology")])
     c4 = col("Proyecto", "Project", [(SOURCE, "Código fuente", "Source code"),
                                      ("/playground/", "Playground", "Playground"),
-                                     ("/taller/", "Taller de integración", "Integration workshop"),
-                                     ("/ejemplo/", "Ejemplo a escala", "Example at scale"),
-                                     ("/sima/", "Caso SIMA", "SIMA case"),
+                                     ("/ejemplo/", "Ejemplos", "Examples"),
                                      ("/docs/licencia/", "Licencia MIT", "MIT License"),
                                      ("/docs/contribuir/", "Contribuir", "Contributing")])
     es = (f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo y Erick Palomino Santa Cruz · "
@@ -341,17 +335,19 @@ def construir_docs() -> int:
     reg = Registry.load(RAIZ / "forks")
     contratos = sorted(reg.contracts.values() if hasattr(reg, "contracts") and isinstance(reg.contracts, dict) else reg, key=lambda c: c.prefix)
     filas_es = "".join(f'<tr><td><a href="/docs/forks/{c.prefix}/"><code>{c.prefix}</code></a></td><td>{html.escape(c.name)}</td><td>{html.escape(c.domain)}</td><td>{len(c.core)}</td><td>{len(c.extensions)}</td><td>{"<code>" + c.parent + "</code>" if c.parent else "—"}</td></tr>' for c in contratos)
-    pagina_docs("docs/forks", "Familias oficiales", "Official families", f"""
-<h1>Familias oficiales</h1>
-<p>{cuenta(CIFRAS["familias"], CIFRAS, "familias_es")} contratos publicados en <code>forks/</code>. Cada familia es un archivo de datos (<code>contract.json</code>) que
-la misma implementación interpreta: parser, serializador, validador y bloque de prompt se derivan de él.
-Para crear la tuya, lee <a href="/docs/forking/">Extender: familias</a>.</p>
+    pagina_docs("docs/forks", "Familias de ejemplo", "Sample families", f"""
+<h1>Familias de ejemplo · descarga opcional</h1>
+<p><strong>.mini se adapta a tus datos.</strong> Estas {CIFRAS["familias"]} familias son contratos de muestra para estudiar y modificar; no hacen falta para crear tu propio toolkit ni vienen dentro de los paquetes Python o Node.</p>
+<p><a class="btn btn-solid" href="/downloads/mini-format-{__version__}-example-families.zip" download>Descargar las {CIFRAS["familias"]} familias (.zip) ↓</a></p>
+<p>Extrae el ZIP: obtendrás <code>forks/</code>. Para probarlo usa <code>mini --forks forks forks</code> o <code>mini --forks forks validate forks/a/fixtures/valid.mini</code>. En Python: <code>Registry.load("forks")</code>. En Node: <code>Registry.load("./forks")</code>. El directorio se indica explícitamente; puedes crear contratos nuevos sin descargarlo.</p>
+<p>Para crear el tuyo desde JSON, empieza en <a href="/docs/quickstart/">Inicio rápido</a>. Para ampliar una familia, lee <a href="/docs/forking/">Extender: familias</a>.</p>
 <table><thead><tr><th>Prefijo</th><th>Nombre</th><th>Dominio</th><th>Núcleo</th><th>Ext.</th><th>Padre</th></tr></thead><tbody>{filas_es}</tbody></table>
 """, f"""
-<h1>Official families</h1>
-<p>{cuenta(CIFRAS["familias"], CIFRAS, "familias_en")} contracts published in <code>forks/</code>. Each family is a data file (<code>contract.json</code>)
-that the same implementation interprets: parser, serializer, validator and prompt block are all derived from it.
-To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
+<h1>Sample families · optional download</h1>
+<p><strong>.mini adapts to your data.</strong> These {CIFRAS["familias"]} sample contracts are for study and modification. You do not need them to build your own toolkit, and they are not bundled with the Python or Node packages.</p>
+<p><a class="btn btn-solid" href="/downloads/mini-format-{__version__}-example-families.zip" download>Download {CIFRAS["familias"]} sample families (.zip) ↓</a></p>
+<p>Extract the ZIP to get <code>forks/</code>. Try <code>mini --forks forks forks</code> or <code>mini --forks forks validate forks/a/fixtures/valid.mini</code>. In Python: <code>Registry.load("forks")</code>. In Node: <code>Registry.load("./forks")</code>. Pass the directory explicitly; you can create new contracts without downloading it.</p>
+<p>To build your own format from JSON, start with the <a href="/docs/quickstart/">quickstart</a>. To extend a sample family, read <a href="/docs/forking/">Extending: forks</a>.</p>
 <table><thead><tr><th>Prefix</th><th>Name</th><th>Domain</th><th>Core</th><th>Ext.</th><th>Parent</th></tr></thead><tbody>{filas_es}</tbody></table>
 """); n += 1
 
@@ -360,13 +356,13 @@ To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
                "sep": "Separador de lista", "archivo": "Archivo", "campos": "Campos por posición",
                "tipo": "Tipo", "desc": "Descripción", "parte": "Parte", "nucleo": "núcleo",
                "ext": "extensión", "raiz": "— (raíz)", "ejemplo": "Ejemplo válido",
-               "cargalo": 'Cárgalo en el <a href="/playground/">playground</a> o valida con',
+               "cargalo": 'Con el ZIP opcional extraído, valida con',
                "notas": "Notas de la familia", "valores": "valores", "migas": "familias"},
         "en": {"dominio": "Domain", "version": "Version", "padre": "Parent", "clave": "Records key",
                "sep": "List separator", "archivo": "File", "campos": "Fields by position",
                "tipo": "Type", "desc": "Description", "parte": "Part", "nucleo": "core",
                "ext": "extension", "raiz": "— (root)", "ejemplo": "Valid example",
-               "cargalo": 'Load it in the <a href="/playground/">playground</a> or validate with',
+               "cargalo": 'With the optional ZIP extracted, validate with',
                "notas": "Family notes", "valores": "values", "migas": "families"},
     }
 
@@ -398,7 +394,7 @@ To create yours, read <a href="/docs/forking/">Extending: forks</a>.</p>
 <table><thead><tr><th>#</th><th>{t['tipo']}</th><th>{t['desc']}</th><th>{t['parte']}</th></tr></thead><tbody>{''.join(campos)}</tbody></table>
 <h2>{t['ejemplo']}</h2>
 <pre><code>{html.escape(ejemplo)}</code></pre>
-<p>{t['cargalo']} <code>mini validate forks/{c.prefix}/fixtures/valid.mini</code>.</p>
+<p>{t['cargalo']} <code>mini --forks forks validate forks/{c.prefix}/fixtures/valid.mini</code>.</p>
 {('<h2>' + t['notas'] + '</h2>' + notas[lang]) if notas[lang] else ''}
 """
         pagina_docs(f"docs/forks/{c.prefix}", f"Familia {c.prefix}", f"Family {c.prefix}",
@@ -618,11 +614,11 @@ whole flow runs with `python demo/sin-conexion/demo.py`.
     cli_es = md("""
 # Herramienta `mini`
 
-Se instala con el [paquete Python](/docs/quickstart/). La opción global `--forks DIR` se escribe antes del comando para usar
-otro directorio de familias: `mini --forks mis-familias validate respuesta.mini`.
+Se instala con el [paquete Python](/docs/quickstart/). Ejecuta `mini` en una terminal para abrir el asistente: crea un toolkit desde un archivo de datos o definiendo campos, y recibe una `GUIA.md` en la carpeta generada. También puedes crear tu propio contrato con `mini build` o `mini from-schema`. Las [familias de muestra](/docs/forks/) son opcionales; si las descargas, escribe `--forks DIR` antes del comando, por ejemplo `mini --forks forks validate respuesta.mini`.
 
 | Comando | Qué hace |
 |---|---|
+| `mini` / `mini init` | Asistente para construir tu toolkit propio desde datos o campos. |
 | `mini forks` | Lista las familias del registro. |
 | `mini validate ARCHIVO` | Validación estricta; sale con 1 si hay errores. |
 | `mini diagnose ARCHIVO` | Validación tolerante; imprime un informe JSON con errores y líneas a regenerar. |
@@ -639,22 +635,21 @@ otro directorio de familias: `mini --forks mis-familias validate respuesta.mini`
 | `mini repair ARCHIVO --contract contract.json` | Reparación segura de una respuesta de un toolkit de dominio, sin inventar datos. |
 
 ```bash
-mini validate forks/a/fixtures/valid.mini
-mini diagnose respuesta.mini | jq '.errors'
-mini prompt log --lang es > prompt_sistema.txt
-mini new-fork quiz2 --from a --add "feedback:str" "level:enum{easy|hard}"
-mini check-forks
-mini bench forks/a/fixtures/valid.mini -p a --format table
+mini from-schema ticket.schema.json -p tk --out contrato.json
+mini validate respuesta.mini --contract contrato.json
+mini diagnose respuesta.mini --contract contrato.json | jq '.errors'
+mini prompt --contract contrato.json --lang es > prompt_sistema.txt
+# Con el ZIP opcional extraído: mini --forks forks check-forks
 ```
 """)
     cli_en = md("""
 # `mini` tool
 
-Installed with the [Python package](/docs/quickstart/). Put the global `--forks DIR` option before the command to use
-another family directory: `mini --forks my-families validate response.mini`.
+Installed with the [Python package](/docs/quickstart/). Run `mini` in a terminal to start the interactive guide: build a toolkit from a data file or define fields, then follow the generated `GUIA.md`. You can also build your own contract with `mini build` or `mini from-schema`. The [sample families](/docs/forks/) are optional; after downloading them, put `--forks DIR` before the command, for example `mini --forks forks validate response.mini`.
 
 | Command | What it does |
 |---|---|
+| `mini` / `mini init` | Interactive guide to build your toolkit from data or fields. |
 | `mini forks` | Lists the registry families. |
 | `mini validate FILE` | Strict validation; exits 1 on errors. |
 | `mini diagnose FILE` | Lenient validation; prints a JSON report with errors and lines to regenerate. |
@@ -671,11 +666,11 @@ another family directory: `mini --forks my-families validate response.mini`.
 | `mini repair FILE --contract contract.json` | Safe repair of a domain-toolkit response, without guessing data. |
 
 ```bash
-mini validate forks/a/fixtures/valid.mini
-mini diagnose respuesta.mini | jq '.errors'
-mini prompt log --lang es > prompt_sistema.txt
-mini new-fork quiz2 --from a --add "feedback:str" "level:enum{easy|hard}"
-mini check-forks
+mini from-schema ticket.schema.json -p tk --out contract.json
+mini validate response.mini --contract contract.json
+mini diagnose response.mini --contract contract.json | jq '.errors'
+mini prompt --contract contract.json --lang en > system_prompt.txt
+# With the optional ZIP extracted: mini --forks forks check-forks
 ```
 """)
     pagina_docs("docs/cli", "Herramienta de línea de comandos", "Command-line tool",
@@ -739,10 +734,10 @@ TRADUCCIONES = [
     ('<html lang="en">', '<html lang="es">'),
     ("<title>.mini Playground</title>", "<title>Playground — mini-format</title>"),
     # (las pestañas se traducen al sustituir la cabecera, más arriba)
-    ("<b>.mini</b> is a family of contracts. Each card is a fork: a contract (data, not code) that the same parser interprets. Click a card to load its example in the editor. Lineage arrows show <code>parent → child</code> forks that keep the core stable and only append fields.",
-     "<b>.mini</b> es una familia de contratos. Cada tarjeta es una familia: un contrato (datos, no código) que interpreta el mismo parser. Pulsa una tarjeta para cargar su ejemplo en el editor. Las flechas de linaje muestran <code>padre → hija</code>: familias que conservan el núcleo y solo añaden campos."),
-    ("<label>Fork <select", "<label>Familia <select"),
-    (">Load example<", ">Cargar ejemplo<"), (">Load escaping example<", ">Cargar ejemplo con escapes<"), (">Inject 3 errors<", ">Inyectar 3 errores<"),
+    ("This editor starts with a sample help-desk contract. Change the document, or design a contract for your own data in the wizard. The sample is not required to use .mini. <a href=\"https://mini-format.pmoluna.com/ejemplo/\">Explore explained examples →</a>",
+     "Este editor empieza con un contrato de muestra para tickets. Cambia el documento o diseña un contrato para tus datos en el asistente. La muestra no es necesaria para usar .mini. <a href=\"/ejemplo/\">Ver los ejemplos explicados →</a>"),
+    ("<label>Contract <select", "<label>Contrato <select"),
+    (">Load example<", ">Cargar ejemplo<"), (">Load escaping example<", ">Cargar ejemplo con escapes<"), (">Inject errors<", ">Inyectar errores<"),
     ("<h2>.mini document</h2>", "<h2>Documento .mini</h2>"),
     ("<h2>Canonical JSON <span class=\"muted\">(edit and press “JSON → .mini”)</span></h2>", "<h2>JSON canónico <span class=\"muted\">(edita y pulsa «JSON → .mini»)</span></h2>"),
     ("<h2>Contract signature</h2>", "<h2>Firma del contrato</h2>"),
@@ -753,8 +748,8 @@ TRADUCCIONES = [
     ("<label>Show <select", "<label>Mostrar <select"),
     ('<option value="toon">TOON (official, as-is)</option><option value="toon_flat">TOON (flattened, tabular)</option><option value="csv">CSV (flattened)</option><option value="json">JSON compact</option><option value="json_pretty">JSON pretty</option>',
      '<option value="toon">TOON (oficial, tal cual)</option><option value="toon_flat">TOON (aplanado, tabular)</option><option value="csv">CSV (aplanado)</option><option value="json">JSON compacto</option><option value="json_pretty">JSON indentado</option>'),
-    ("Design a fork in four steps: (1) choose a parent or start blank, (2) add fields — inherited fields stay fixed, new ones are appended, (3) read the contract + prompt block, (4) download <code>contract.json</code> and run <code>mini check-forks</code>. The invariants of §10 are checked live.",
-     "Diseña una familia en cuatro pasos: (1) elige un padre o empieza en blanco, (2) añade campos — los heredados quedan fijos, los nuevos se añaden al final, (3) lee el contrato y el bloque de prompt, (4) descarga <code>contract.json</code> y ejecuta <code>mini check-forks</code>. Los invariantes de §10 se comprueban en vivo."),
+    ("Design your own contract: start blank or extend the sample, add fields, inspect the generated document and prompt, then download <code>contract.json</code>. To check a directory of contracts and fixtures later, run <code>mini --forks DIR check-forks</code>.",
+     "Diseña tu contrato: empieza en blanco o amplía la muestra, añade campos, examina el documento y el prompt generados, y descarga <code>contract.json</code>. Para comprobar después tus contratos y fixtures, ejecuta <code>mini --forks DIR check-forks</code>."),
     ("<h2>1 · Identity</h2>", "<h2>1 · Identidad</h2>"), ("<h2 style=\"margin-top:14px\">2 · Fields</h2>", "<h2 style=\"margin-top:14px\">2 · Campos</h2>"),
     ("<label>Prefix <input", "<label>Prefijo <input"), ("<label>Name <input", "<label>Nombre <input"), ("<label>Parent <select", "<label>Padre <select"),
     ('<option value="">(none — blank contract)</option>', '<option value="">(ninguno — contrato en blanco)</option>'),
@@ -763,9 +758,6 @@ TRADUCCIONES = [
     ("<h2 style=\"margin-top:14px\">Invariant check</h2>", "<h2 style=\"margin-top:14px\">Comprobación de invariantes</h2>"),
     ("<h2>3 · Generated contract</h2>", "<h2>3 · Contrato generado</h2>"), (">Download contract.json<", ">Descargar contract.json<"), (">Open example in editor<", ">Abrir ejemplo en el editor<"),
     ("<h2 style=\"margin-top:14px\">Prompt block</h2>", "<h2 style=\"margin-top:14px\">Bloque de prompt</h2>"), ("<h2 style=\"margin-top:14px\">Example document</h2>", "<h2 style=\"margin-top:14px\">Documento de ejemplo</h2>"),
-    ("Pre-computed results of <code>benchmark/run_benchmark.py</code> (o200k_base, n = 12 records per fork). Bars are tokens; the dotted line is the content-only lower bound (payload).",
-     "Resultados precalculados de <code>benchmark/run_benchmark.py</code> (o200k_base, n = 12 registros por familia). Las barras son tokens; la línea punteada es la cota inferior de solo contenido (carga útil)."),
-    ("<h2>Tokens by format and fork (n = 12)</h2>", "<h2>Tokens por formato y familia (n = 12)</h2>"), ("<h2>Summary</h2>", "<h2>Resumen</h2>"),
     ("<h2>Structure</h2>", "<h2>Estructura</h2>"), ("<h2 style=\"margin-top:14px\">Escapes</h2>", "<h2 style=\"margin-top:14px\">Escapes</h2>"),
     ("<h2 style=\"margin-top:14px\">Fork invariants</h2>", "<h2 style=\"margin-top:14px\">Invariantes de familia</h2>"), ("<h2>Error codes</h2>", "<h2>Códigos de error</h2>"),
     ("<tr><th>Code</th><th>Condition</th></tr>", "<tr><th>Código</th><th>Condición</th></tr>"),
@@ -782,18 +774,16 @@ def construir_playground() -> None:
     cab = cabecera("playground") + '''
 <div class="pg-nav"><div class="wrap">
   <nav>
-    <button data-tab="forks" class="active">Familias</button>
-    <button data-tab="editor">Editor y validador</button>
+    <button data-tab="editor" class="active">Editor y validador</button>
     <button data-tab="compare">Comparar formatos</button>
     <button data-tab="wizard">Asistente de familias</button>
-    <button data-tab="bench">Benchmark</button>
     <button data-tab="spec">Chuleta de la norma</button>
   </nav>
   <button class="toggle" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
 </div></div>
 <main id="contenido">
-<div class="pg-intro"><div><h1>Playground</h1><p>Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.</p></div>
-<p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js · ''' + str(CIFRAS["familias"]) + ''' familias</p></div>'''
+<div class="pg-intro"><div><h1>Playground</h1><p>Prueba un contrato de muestra de tickets, valida documentos, convierte JSON ↔ .mini y diseña el tuyo. Todo corre en tu navegador. <a href="/ejemplo/">Ver los ejemplos explicados →</a></p></div>
+<p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js</p></div>'''
     tpl = re.sub(r"<header>.*?</header>\s*<main>", cab, tpl, count=1, flags=re.S)
     # 3) pie del sitio
     tpl = re.sub(r"<footer>.*?</footer>", pie(), tpl, count=1, flags=re.S)
@@ -804,32 +794,19 @@ def construir_playground() -> None:
         else: faltan.append(a[:60])
     if faltan:
         print("  aviso: cadenas no encontradas en template.html:", *faltan, sep="\n    ")
-    # 5) datos embebidos, igual que playground/build.py
+    # 5) un caso de muestra; el catálogo de 14 familias se descarga por separado
     mini_js = (RAIZ / "js" / "mini.js").read_text(encoding="utf-8")
     toon_js = (RAIZ / "benchmark" / "toon_ref" / "toon.bundle.js").read_text(encoding="utf-8")
-    reg = Registry.load(RAIZ / "forks")
-    orden = ["a", "q", "card", "sum", "map", "r", "s", "code", "tc", "us", "log", "ner", "cat", "cls"]
-    forks = []
-    for c in sorted(reg, key=lambda c: (orden.index(c.prefix) if c.prefix in orden else 99, c.prefix)):
-        p = reg.paths[c.prefix]
-        e = {"prefix": c.prefix, "contract": json.loads((p / "contract.json").read_text(encoding="utf-8")),
-             "example": (p / "fixtures" / "valid.mini").read_text(encoding="utf-8")}
-        if (p / "fixtures" / "escaping.mini").exists():
-            e["escaping"] = (p / "fixtures" / "escaping.mini").read_text(encoding="utf-8")
-        forks.append(e)
-    import csv
-    bench = []
-    summ = RAIZ / "benchmark" / "results" / "summary_12.csv"
-    if summ.exists():
-        for r in csv.DictReader(open(summ, encoding="utf-8")):
-            bench.append({k: (float(v) if k != "prefix" and "." in v else (int(v) if k != "prefix" else v)) for k, v in r.items()})
+    sys.path.insert(0, str(RAIZ / "playground"))
+    from sample import sample_forks
+    forks = sample_forks(RAIZ)
     safe = lambda js: js.replace("</script", "<\\/script")
     out = (tpl.replace("__MINI_JS__", safe(mini_js)).replace("__TOON_JS__", safe(toon_js))
-              .replace("__FORKS_JSON__", safe(json.dumps(forks, ensure_ascii=False))).replace("__BENCH_JSON__", safe(json.dumps(bench))))
+              .replace("__FORKS_JSON__", safe(json.dumps(forks, ensure_ascii=False))))
     destino = SITIO / "playground" / "index.html"
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(out, encoding="utf-8")
-    print(f"  playground: {len(out.encode('utf-8'))//1024} KB, {len(forks)} familias, {len(bench)} filas de benchmark")
+    print(f"  playground: {len(out.encode('utf-8'))//1024} KB, {len(forks)} contrato de muestra")
 
 
 def precios_proveedores() -> dict:

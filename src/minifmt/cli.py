@@ -73,6 +73,9 @@ def _contract(args, text: str | None = None) -> Contract:
 
 def cmd_forks(args) -> int:
     reg = _reg(args)
+    if not reg.contracts:
+        print("No contracts loaded. Build your own with 'mini build' or download the optional example families and pass --forks DIR.")
+        return 0
     for c in reg:
         print(f"{c.prefix:6s} v{c.version}  parent={c.parent or '-':6s} arity={c.arity:2d}+{len(c.extensions)}  {c.name}")
     return 0
@@ -136,6 +139,8 @@ def cmd_to_json(args) -> int:
 def cmd_from_json(args) -> int:
     if _is_domain(args):
         return _domain_command(args, "encode")
+    if not args.prefix and not args.contract:
+        sys.exit("Para convertir tus datos, ejecuta primero 'mini' (asistente) o 'mini build MUESTRA.json --prefix NOMBRE --out .mini'; después usa el parser.py generado. 'from-json' necesita un contrato existente.")
     obj = json.loads(Path(args.file).read_text(encoding="utf-8"))
     c = _contract(args)
     output = dumps(obj, c)
@@ -182,7 +187,9 @@ def cmd_tokens(args) -> int:
 
 
 def cmd_check_forks(args) -> int:
-    forks = Path(args.dir) if args.dir else DEFAULT_FORKS_DIR
+    forks = Path(args.dir or args.forks) if (args.dir or args.forks) else DEFAULT_FORKS_DIR
+    if forks is None:
+        sys.exit("no sample families installed; download the optional families ZIP and pass its forks/ path to check-forks")
     reg = Registry.load(forks)
     errs = reg.check()
     failures = 0
@@ -237,7 +244,7 @@ def cmd_new_fork(args) -> int:
     if args.prefix in reg:
         sys.exit(f"prefix '{args.prefix}' already exists")
     if args.parent and args.parent not in reg:
-        reg = Registry.load(DEFAULT_FORKS_DIR)
+        sys.exit(f"unknown parent '{args.parent}'; pass --forks DIR if using the optional families")
     base = reg.get(args.parent).to_dict() if args.parent else {"prefix": args.prefix, "header": {"required": ["n"], "keys": {}}, "core": [], "extensions": []}
     d = dict(base)
     d["prefix"] = args.prefix
@@ -257,7 +264,7 @@ def cmd_new_fork(args) -> int:
             fld = {"name": name, "type": "list", "item": typ[5:-1]}
         (d["extensions"] if args.parent else d["core"]).append(fld)
     Contract.from_dict(d)  # validate
-    out = Path(args.forks or DEFAULT_FORKS_DIR) / args.prefix
+    out = Path(args.forks or DEFAULT_FORKS_DIR or Path.cwd() / "forks") / args.prefix
     out.mkdir(parents=True, exist_ok=True)
     (out / "fixtures").mkdir(exist_ok=True)
     _escribir(out / "contract.json", json.dumps(d, ensure_ascii=False, indent=2) + "\n")
@@ -287,7 +294,8 @@ def cmd_build(args):
         path = [part.replace("~1", "/").replace("~0", "~") for part in args.records[1:].split("/")] if args.records else []
     contract = build_bundle(samples, args.prefix, args.out, source_names=[Path(name).name for name in args.samples], record_path=path)
     print(f"Built {args.out}: {contract['profile']}, {contract['sample_documents']} samples, {contract['sample_records']} records, schema={contract['schema_id']}")
-    print(f"Run: python {Path(args.out) / 'parser.py'} decode response.mini")
+    print(f"Start with {Path(args.out) / 'GUIA.md'}")
+    print(f"Validate: python \"{Path(args.out) / 'validator.py'}\" response.mini")
     return 0
 
 
@@ -357,9 +365,10 @@ def cmd_to_schema(args) -> int:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="mini", description=".mini reference tools")
-    ap.add_argument("--forks", help="forks directory (default: bundled forks/)")
-    sub = ap.add_subparsers(dest="cmd", required=True)
+    ap = argparse.ArgumentParser(prog="mini", description="Crea tu propio formato .mini y úsalo con IA")
+    ap.add_argument("--forks", help="directory of your contracts or the optional example families")
+    sub = ap.add_subparsers(dest="cmd")
+    sub.add_parser("init", help="asistente interactivo para crear tu toolkit").set_defaults(fn=lambda args: _onboard())
     sub.add_parser("forks").set_defaults(fn=cmd_forks)
     p = sub.add_parser("validate"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.set_defaults(fn=cmd_validate)
     p = sub.add_parser("diagnose"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.set_defaults(fn=cmd_diagnose)
@@ -374,12 +383,31 @@ def main(argv=None) -> int:
     p = sub.add_parser("bench", help="compare tokens of a document across formats"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract", help="domain-profile contract (mini build)"); p.add_argument("--enc", default="o200k_base"); p.add_argument("--format", default="table", choices=["table", "json"]); p.set_defaults(fn=cmd_bench)
     p = sub.add_parser("from-schema", help="convert a JSON Schema or Pydantic model into a contract"); p.add_argument("schema", nargs="?"); p.add_argument("-p", "--prefix", required=True); p.add_argument("--pydantic", metavar="MODULE:MODEL"); p.add_argument("--name"); p.add_argument("--records-key"); p.add_argument("--strict", action="store_true", help="fail on keywords without contract equivalent"); p.add_argument("--out"); p.set_defaults(fn=cmd_from_schema)
     p = sub.add_parser("to-schema", help="describe a contract as JSON Schema"); p.add_argument("source", help="registered PREFIX or path to contract.json"); p.add_argument("--record", action="store_true", help="describe one record instead of the canonical document"); p.add_argument("--out"); p.set_defaults(fn=cmd_to_schema)
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv == ["help"]:
+        ap.print_help()
+        return 0
+    if not argv:
+        if sys.stdin.isatty():
+            return _onboard()
+        print("Bienvenido a .mini. Abre una terminal y ejecuta 'mini' para crear tu toolkit interactivo.")
+        print("También puedes ejecutar 'mini init' o consultar 'mini --help'.")
+        return 0
     args = ap.parse_args(argv)
+    if args.cmd is None:
+        ap.print_help()
+        return 0
     try:
         return args.fn(args)
     except (MiniError, OSError, ValueError) as e:
         print(e, file=sys.stderr)
         return 2
+
+
+def _onboard() -> int:
+    from .onboarding import run
+    return run()
 
 
 if __name__ == "__main__":  # pragma: no cover

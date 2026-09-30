@@ -4,18 +4,20 @@ Construye una vez el toolkit de tu dominio. Después, coloca su prompt en tu flu
 
 ## 1. Instalar
 
-[Descargar toolkit 1.2.1 (.zip)](/downloads/mini-format-1.2.1.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.1-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.1-source.zip)
+[Descargar toolkit 1.2.2 (.zip)](/downloads/mini-format-1.2.2.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.2-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.2-source.zip)
 
 Requiere Python 3.9 o posterior. El núcleo y el toolkit generado usan la biblioteca estándar.
 
 ```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.1-py3-none-any.whl
-mini --help
+pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.2-py3-none-any.whl
+mini
 ```
 
-Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.1.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.1.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
+El asistente te pregunta si ya tienes un archivo de datos (JSON, CSV, TSV o XML) o si prefieres definir los campos allí mismo. Crea la carpeta `.mini/` y una `GUIA.md` con los pasos para pedir, validar y convertir respuestas. En una terminal no interactiva, usa `mini init` o los comandos de abajo.
 
-## 2. Reunir ejemplos de tu JSON
+Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.2.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.2.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
+
+## 2. Opcional: construir desde muestras por comando
 
 Guarda esto como `phones.json`:
 
@@ -89,8 +91,8 @@ python .mini/repair.py response.mini --out corrected.mini
 
 La reparación normaliza envoltorios y saltos de línea seguros. Nunca inventa valores que faltan. Cambiar el recuento declarado exige `--fix-count`; úsalo solo si has comprobado que el lote recibido está completo. Los errores semánticos necesitan una corrección de tu aplicación o un reintento del modelo.
 
-## Familias incorporadas
+## Familias de muestra opcionales
 
-Las 14 familias del perfil base siguen disponibles: `mini forks`, `mini prompt log --lang es` y `mini validate documento.mini`. Sus APIs están en [Python](/docs/python/), [TypeScript](/docs/typescript/) y [CLI](/docs/cli/).
+Puedes descargar [14 contratos de muestra](/docs/forks/) para estudiarlos. No se instalan con Python o Node: tu `.mini` se construye con tus propios datos. Tras extraer el ZIP, usa `mini --forks forks forks` para listarlos.
 
-El [playground](/playground/) permite explorar el perfil base y comparar formatos sin instalar nada.
+El [playground](/playground/) incluye un ejemplo de tickets y permite probar el perfil base sin instalar nada. Mira también los [ejemplos explicados](/ejemplo/).

@@ -1,10 +1,13 @@
 # Changelog
 
-## 1.2.2 (unreleased)
+## 1.2.2
 
-The package version is still 1.2.1: bumping it is the maintainers' decision. No change alters SPEC 1.1 or an
-accepted ADR; every point that would change the norm is written down as a proposal (ADR 0017 and 0018, status
-"Propuesta", not in force).
+Running `mini` now opens a first-run wizard in a terminal; `mini init` starts it explicitly. It can build a toolkit from JSON, CSV, TSV or XML, or from fields entered interactively. Each generated toolkit includes `GUIA.md` with validation, repair and conversion steps. `mini help` also works.
+
+The core remains on SPEC 1.1. The 14 domain contracts are optional examples in a separate download;
+Python and Node packages focus on building and reading a contract for the user's own data.
+The site now explains this through one Examples entry point, with the help-desk demo clearly labeled.
+Previously prepared fixes below also ship in this release. Proposed ADRs 0017 and 0018 remain proposals.
 
 ### Fixed
 

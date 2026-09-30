@@ -57,19 +57,15 @@
      f función · e error · u enlace · E código de error.
      ------------------------------------------------------------------ */
   var PASOS = [
-    { titulo: "~/proyecto — mini forks", lineas: [
-      ['p','$ '], ['','mini forks\n'],
-      ['f','a    '], ['','Assessment items (multiple choice, Bloom + IRT 3PL + CAT)\n'],
-      ['f','q    '], ['','Formative quiz items  '], ['c','← extiende a\n'],
-      ['f','card '], ['','Flashcards (spaced repetition)\n'],
-      ['f','log  '], ['','Service events / incident records\n'],
-      ['f','tc   '], ['','Software test cases\n'],
-      ['f','us   '], ['','User stories with acceptance criteria\n'],
-      ['c','… 14 familias · forks/<prefijo>/contract.json\n\n'],
+    { titulo: "~/proyecto — tu contrato", lineas: [
+      ['p','$ '], ['','mini from-schema eventos.schema.json -p log --out contrato.json\n'],
+      ['s','contrato.json creado para tus eventos\n'],
+      ['c','# campos, tipos y reglas salen de tu esquema JSON\n'],
+      ['c','# con muestras JSON puedes usar mini build\n\n'],
       ['p','$ '], ['cursor','']
     ]},
     { titulo: "~/proyecto — mini prompt", lineas: [
-      ['p','$ '], ['','mini prompt log --lang es\n\n'],
+      ['p','$ '], ['','mini prompt --contract contrato.json --lang es\n\n'],
       ['','Responde en formato '], ['k','.mini'], ['', ', familia '], ['s','log'], ['','.\n'],
       ['','Primera línea: '], ['s','log|n=<número de registros>'], ['','\n'],
       ['','Luego un registro por línea, campos separados por '], ['s','|'], ['',':\n'],
@@ -81,15 +77,15 @@
       ['c','# derivado del contrato: cambia el contrato, cambia el prompt\n']
     ]},
     { titulo: "~/proyecto — python", lineas: [
-      ['k','from '], ['','minifmt '], ['k','import '], ['','Registry, parse, spec_block\n\n'],
-      ['','c '], ['p','= '], ['','Registry'], ['p','.'], ['f','load'], ['p','()'], ['p','.'], ['f','get'], ['p','('], ['s','"log"'], ['p',')\n'],
+      ['k','from '], ['','minifmt '], ['k','import '], ['','Contract, parse, spec_block\n\n'],
+      ['','c '], ['p','= '], ['','Contract'], ['p','.'], ['f','load'], ['p','('], ['s','"contrato.json"'], ['p',')\n'],
       ['','r '], ['p','= '], ['','cliente'], ['p','.'], ['f','completar'], ['p','('], ['','sistema'], ['p','='], ['f','spec_block'], ['p','('], ['','c'], ['p',', '], ['','lang'], ['p','='], ['s','"es"'], ['p','), '], ['','usuario'], ['p','='], ['','fuente'], ['p',')\n'],
       ['','doc '], ['p','= '], ['f','parse'], ['p','('], ['','r'], ['p',', '], ['','c'], ['p',', '], ['','strict'], ['p','='], ['k','False'], ['p',')\n\n'],
       ['c','# strict=False: acumula errores en doc.errors en vez de lanzar\n'],
       ['c','# cualquier proveedor; mini-format no se interpone en la llamada\n']
     ]},
     { titulo: "~/proyecto — mini diagnose", lineas: [
-      ['p','$ '], ['','mini diagnose respuesta.mini\n'],
+      ['p','$ '], ['','mini diagnose respuesta.mini --contract contrato.json\n'],
       ['','log|n=3|env=prod\n'],
       ['','2026-09-15T10:00:00Z|INFO|api|OK|arranque|…      '], ['s','✓\n'],
       ['e','2026-09-15T10:01:00Z|ALTO|api|E_DB|timeout|…\n'],
@@ -192,23 +188,20 @@
       { titulo: "mi-django — terminal", dur: 5000,
         cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
         lineas: [
-          [["p", "$ "], ["", "pip install mini_format-1.2.1-py3-none-any.whl\n"]],
-          [["c", "… instalando mini-format 1.2.1\n"]],
-          [["s", "mini-format 1.2.1 instalado\n"]],
+          [["p", "$ "], ["", "pip install mini_format-1.2.2-py3-none-any.whl\n"]],
+          [["c", "… instalando mini-format 1.2.2\n"]],
+          [["s", "mini-format 1.2.2 instalado\n"]],
           [["", "\n"]],
-          [["p", "$ "], ["", "mini forks\n"]],
-          [["f", "a    "], ["", "Assessment items (Bloom + IRT)\n"]],
-          [["f", "log  "], ["", "Service events / incidents\n"]],
-          [["c", "… 14 familias listas\n"]]
+          [["p", "$ "], ["", "mini from-schema eventos.schema.json -p log --out contrato.json\n"]],
+          [["s", "contrato.json creado para tus datos\n"]]
         ]},
       { titulo: "servicios/evaluacion.py", dur: 8000,
         cap: "2 · Pide el bloque de prompt, llama a tu proveedor como siempre y valida con parse().",
         lineas: [
-          [["k", "from "], ["", "minifmt "], ["k", "import "], ["", "Registry, parse\n"]],
+          [["k", "from "], ["", "minifmt "], ["k", "import "], ["", "Contract, parse\n"]],
           [["k", "from "], ["", "minifmt "], ["k", "import "], ["", "spec_block\n"]],
           [["", "\n"]],
-          [["", "reg "], ["p", "= "], ["", "Registry"], ["p", "."], ["f", "load"], ["p", "()\n"]],
-          [["", "c "], ["p", "= "], ["", "reg"], ["p", "."], ["f", "get"], ["p", "("], ["s", '"a"'], ["p", ")\n"]],
+          [["", "c "], ["p", "= "], ["", "Contract"], ["p", "."], ["f", "load"], ["p", "("], ["s", '"contrato.json"'], ["p", ")\n"]],
           [["", "\n"]],
           [["k", "def "], ["f", "generar_items"], ["p", "("], ["", "tema"], ["p", "):\n"]],
           [["", "    prompt "], ["p", "= "], ["f", "spec_block"], ["p", "("], ["", "c"], ["p", ", "], ["", "lang"], ["p", "="], ["s", '"es"'], ["p", ")\n"]],
@@ -219,7 +212,7 @@
       { titulo: "mi-django — mini diagnose", dur: 7000,
         cap: "3 · Cada fallo trae código estable, línea y campo. Aquí, E10 en la línea 3.",
         lineas: [
-          [["p", "$ "], ["", "mini diagnose respuesta.mini\n"]],
+          [["p", "$ "], ["", "mini diagnose respuesta.mini --contract contrato.json\n"]],
           [["", "log|n=3|env=prod\n"]],
           [["", "2026-09-15T10:00:00Z|INFO|api|OK\n"]],
           [["e", "2026-09-15T10:01:00Z|ALTO|api|E_DB\n"]],
@@ -386,47 +379,47 @@
   ];
 
   var DV_PLAYGROUND = [
-    { titulo: "playground — familias", dur: 6000,
-      cap: "1 · Elige una familia y carga su ejemplo en el editor.",
+    { titulo: "playground — ticket de muestra", dur: 6000,
+      cap: "1 · Abre un ticket de muestra y observa su contrato .mini.",
       lineas: [
-        [["f", "familia: "], ["", "a — ítems de evaluación\n"]],
-        [["", "ejemplo: valid.mini · 12 registros\n"]],
+        [["f", "contrato: "], ["", "tk — tickets de soporte\n"]],
+        [["", "ejemplo: 10 tickets grabados\n"]],
         [["", "\n"]],
-        [["", "a|n=12|m=IRT3PL|…\n"]],
-        [["", "i1|L1|Biología|¿Dónde ocurre…?|…\n"]],
-        [["", "i2|L2|Química|¿Qué representa…?|…\n"]],
+        [["", "tk|n=10\n"]],
+        [["", "T-1041|alta|acceso|No puede iniciar sesión|2\n"]],
+        [["", "T-1042|media|pago|Cobro duplicado|3\n"]],
         [["", "\n"]],
-        [["s", "12 líneas · 0 errores\n"]]
+        [["s", "10 tickets · 0 errores\n"]]
       ]},
     { titulo: "playground — editor", dur: 7000,
       cap: "2 · Inyecta errores y lee el diagnóstico: código, línea y campo.",
       lineas: [
-        [["p", "> "], ["", "inyectar 3 errores\n"]],
+        [["p", "> "], ["", "inyectar errores\n"]],
         [["", "\n"]],
-        [["E", "E04"], ["", " document: n=12, 11 válidos\n"]],
-        [["E", "E05"], ["", " línea 4: 9 campos, máx 8\n"]],
-        [["E", "E09"], ["", " línea 7: escape inválido\n"]],
+        [["E", "E04"], ["", " document: n=11, 9 válidos\n"]],
+        [["E", "E05"], ["", " línea 2: falta un campo\n"]],
+        [["E", "E09"], ["", " línea 4: escape inválido\n"]],
         [["", "\n"]],
-        [["c", "líneas a regenerar: [4, 7]\n"]]
+        [["c", "líneas a regenerar: [2, 4]\n"]]
       ]},
     { titulo: "playground — comparar", dur: 7000,
-      cap: "3 · Tokens medidos del fixture a de 12 registros con o200k_base.",
+      cap: "3 · Compara el documento actual en varios formatos.",
       lineas: [
-        [["c", "tokens por formato · o200k_base\n"]],
+        [["c", "tokens del documento en el editor\n"]],
         [["", "\n"]],
-        [["f", "mini "], ["", "   813   1,00x  referencia\n"]],
-        [["", "toon    928   1,14x  plano\n"]],
-        [["", "json   1314   1,62x\n"]],
-        [["", "yaml   1607   1,98x\n"]],
-        [["", "xml    1859   2,29x\n"]]
+        [["f", "mini "], ["", "   ← validación con contrato\n"]],
+        [["", "toon   ← codificador oficial\n"]],
+        [["", "json   ← objeto canónico\n"]],
+        [["", "yaml   ← representación equivalente\n"]],
+        [["", "xml    ← representación equivalente\n"]]
       ]},
-    { titulo: "playground — familias", dur: 4000,
-      cap: "4 · Diseña tu familia y descarga el contrato: la demo vuelve a empezar.",
+    { titulo: "playground — tu contrato", dur: 4000,
+      cap: "4 · Diseña tu propio contrato y descárgalo.",
       lineas: [
         [["p", "> "], ["", "descargar contract.json\n"]],
-        [["p", "> "], ["", "mini check-forks\n"]],
+        [["p", "> "], ["", "probar en el editor\n"]],
         [["", "\n"]],
-        [["s", "5 invariantes: ok\n"]],
+        [["s", "listo para adaptar a tus datos\n"]],
         [["", "\n"]],
         [["c", "(fin · la demo va en bucle)\n"]]
       ]}

@@ -17,12 +17,12 @@ import venv
 import zipfile
 
 
-def run(args, cwd, *, expected=0):
+def run(args, cwd, *, expected=0, input_text=None):
     env = dict(os.environ, PYTHONIOENCODING="utf-8")
     env.pop("PYTHONPATH", None)
     result = subprocess.run([str(a) for a in args], cwd=cwd, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            encoding="utf-8", errors="replace")
+                            encoding="utf-8", errors="replace", input=input_text)
     if result.returncode != expected:
         raise AssertionError(f"{args}: exit {result.returncode}\n{result.stdout}\n{result.stderr}")
     return result.stdout
@@ -46,7 +46,17 @@ def main(directory):
         python = bindir / ("python.exe" if os.name == "nt" else "python")
         mini = bindir / ("mini.exe" if os.name == "nt" else "mini")
         run([python, "-m", "pip", "install", "--no-index", kit / f"mini_format-{version}-py3-none-any.whl"], work)
-        run([mini, "check-forks"], work)
+        assert "mini init" in run([mini], work, input_text="")
+        (work / "incidentes.csv").write_text("id,titulo\n101,Error de acceso\n", encoding="utf-8")
+        guide = run([mini, "init"], work, input_text="1\nincidentes.csv\ninc\nmi-formato\n")
+        assert "Toolkit creado" in guide
+        assert (work / "mi-formato/GUIA.md").is_file()
+        run([python, work / "mi-formato/validator.py", work / "mi-formato/example.mini"], work)
+        assert "No contracts loaded" in run([mini, "forks"], work)
+        with zipfile.ZipFile(directory / f"mini-format-{version}-example-families.zip") as archive:
+            archive.extractall(work / "optional")
+        forks = work / "optional" / "forks"
+        run([mini, "check-forks", forks], work)
         run([mini, "build", kit / "examples/phones.json", kit / "examples/phones-extra.json",
              "--prefix", "phone", "--out", work / ".mini"], work)
         contract = work / ".mini/contract.json"
@@ -79,12 +89,13 @@ def main(directory):
         (work / "package.json").write_text('{"name": "mini-install-test", "private": true}\n', encoding="utf-8")
         run([npm, "install", "--offline", "--no-audit", "--no-fund", "--ignore-scripts",
              kit / f"mini-format-core-{version}.tgz"], work)
-        # Exercise compiled ESM, bundled family lookup, parsing and streaming.
+        # Exercise compiled ESM with the optional sample families and streaming.
         code = """
 import { readFileSync } from 'node:fs';
 import { Registry, parse, createReader, VERSION } from '@mini-format/core';
-const c = Registry.load().get('a');
-const text = readFileSync('node_modules/@mini-format/core/forks/a/fixtures/valid.mini', 'utf8');
+if (Registry.load().size !== 0) throw Error('Core package should not bundle example families');
+const c = Registry.load('optional/forks').get('a');
+const text = readFileSync('optional/forks/a/fixtures/valid.mini', 'utf8');
 const doc = parse(text, c);
 if (doc.records.length !== 12) throw Error('Expected 12 records');
 const reader = createReader(c);
@@ -93,7 +104,7 @@ if (JSON.stringify(reader.end().document.toCanonical()) !== JSON.stringify(doc.t
 console.log('Installed ESM and streaming OK', VERSION);
 """
         run(["node", "--input-type=module", "-e", code], work)
-    print("PASS: checksums, offline wheel + npm install, 14 bundled families, JSON round-trip, standalone runtime, safe repair, selective repair, ESM streaming")
+    print("PASS: checksums, offline wheel + npm install, first-run wizard, optional families, JSON round-trip, standalone runtime, safe repair, selective repair, ESM streaming")
 
 
 if __name__ == "__main__":

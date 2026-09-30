@@ -27,7 +27,7 @@ A field appearing only once may be optional. A value shared by every example doe
 
 ## Two explicit profiles
 
-The **SPEC 1.1 base profile** retains the 14 families and their Python, JavaScript and TypeScript parsers. The **generated `mini-domain/1` profile** adds the mapping required to preserve JSON structures and adapt encoding to the domain. Use its `parser.py`, not a base-profile parser that does not know the generated contract.
+The **SPEC 1.1 base profile** defines the notation and the Python, JavaScript and TypeScript parsers. The [14 sample families](/docs/forks/) are an optional download. The **generated `mini-domain/1` profile** adds the mapping required to preserve JSON structures and adapt encoding to the domain. Use its `parser.py`, not a base-profile parser that does not know the generated contract.
 
 ## Workflow
 

@@ -4,18 +4,20 @@ Build your domain toolkit once. Then add its prompt to your AI workflow and conv
 
 ## 1. Install
 
-[Download toolkit 1.2.1 (.zip)](/downloads/mini-format-1.2.1.zip) · [Python package (.whl)](/downloads/mini_format-1.2.1-py3-none-any.whl) · [Source code (.zip)](/downloads/mini-format-1.2.1-source.zip)
+[Download toolkit 1.2.2 (.zip)](/downloads/mini-format-1.2.2.zip) · [Python package (.whl)](/downloads/mini_format-1.2.2-py3-none-any.whl) · [Source code (.zip)](/downloads/mini-format-1.2.2-source.zip)
 
 Requires Python 3.9 or later. The core and generated toolkit use the standard library.
 
 ```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.1-py3-none-any.whl
-mini --help
+pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.2-py3-none-any.whl
+mini
 ```
 
-To install offline, download and extract the ZIP, then run `pip install` on the included `.whl` file. With Node 22.6 or later, install the base-profile package: `npm install ./mini-format-core-1.2.1.tgz`. You can also [download it separately](/downloads/mini-format-core-1.2.1.tgz). The generated domain toolkit is Python; the TypeScript and JavaScript libraries implement the base profile.
+The interactive guide asks whether you have a data file (JSON, CSV, TSV or XML) or want to define fields directly. It creates `.mini/` and a `GUIA.md` with the next steps for prompting, validating and converting responses. In a non-interactive terminal, use `mini init` or the commands below.
 
-## 2. Gather JSON examples
+To install offline, download and extract the ZIP, then run `pip install` on the included `.whl` file. With Node 22.6 or later, install the base-profile package: `npm install ./mini-format-core-1.2.2.tgz`. You can also [download it separately](/downloads/mini-format-core-1.2.2.tgz). The generated domain toolkit is Python; the TypeScript and JavaScript libraries implement the base profile.
+
+## 2. Optional: build from samples with a command
 
 Save this as `phones.json`:
 
@@ -89,8 +91,8 @@ python .mini/repair.py response.mini --out corrected.mini
 
 Repair normalizes safe wrappers and line endings. It never invents missing values. Changing the declared count requires `--fix-count`; use it only after checking that the received batch is complete. Semantic errors require an application correction or a model retry.
 
-## Included families
+## Optional sample families
 
-The 14 base-profile families remain available: `mini forks`, `mini prompt log --lang en` and `mini validate document.mini`. Their APIs are documented under [Python](/docs/python/), [TypeScript](/docs/typescript/) and [CLI](/docs/cli/).
+You can download [14 sample contracts](/docs/forks/) to study them. They are not installed with Python or Node: build your `.mini` from your own data. After extracting the ZIP, run `mini --forks forks forks` to list them.
 
-The [playground](/playground/) lets you explore the base profile and compare formats without installing anything.
+The [playground](/playground/) includes a ticket example for trying the base profile without installing anything. See the [explained examples](/ejemplo/) too.

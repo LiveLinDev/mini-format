@@ -5,6 +5,7 @@
 @media (min-width:1024px){ .hero{ padding-block:5rem 5.5rem } .hero-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); gap:4rem; align-items:start } }
 .hero h1{ margin-bottom:1.5rem }
 .hero .lead{ margin-bottom:2.4rem; max-width:40ch }
+.hero-examples{ margin:0 0 1.6rem }
 .quickstart{ display:inline-flex; align-items:center; gap:.45rem; margin-top:1.75rem; font-weight:650; font-size:1rem; color:rgb(var(--fg)); text-decoration:underline; text-decoration-thickness:1.5px }
 
 /* tarjeta de benchmark */

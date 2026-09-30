@@ -40,7 +40,7 @@ SOURCE_FILES = ("benchmark/formats.py", "benchmark/domains.py", "benchmark/run_b
                 "benchmark/make_forks.py", "benchmark/make_figures.py",
                 "experiments/README.md", "experiments/README.en.md", "experiments/comun.py",
                 "tools/build_node.mjs", "tools/build_release.py", "tools/smoke_release.py", "tools/check_site.py",
-                "tools/verificar_publicacion.py")
+                "tools/verificar_publicacion.py", "playground/sample.py")
 # Build inputs of the website: every source file at the top of sitio/ (the generator and its modules,
 # styles, scripts, translation maps, 404.html...), so that a new module can never be forgotten here and the
 # source archive can always rebuild the site. Not deployment tools (sitio/servidor, desplegar.sh) and not
@@ -137,7 +137,6 @@ def build(output: Path) -> dict:
 
         node = stage / "node"
         copy_tree(ROOT / "ts/src", node / "src")
-        copy_tree(ROOT / "forks", node / "forks")
         for name in ("package.json", "README.md", "README.en.md"):
             copy_file(ROOT / "ts" / name, node / name)
         copy_file(ROOT / "LICENSE", node / "LICENSE")
@@ -162,14 +161,16 @@ def build(output: Path) -> dict:
             f"Software release {VERSION}; core SPEC {SPEC_VERSION}; generated domain profile mini-domain/1.\n", encoding="utf-8")
         zip_name = f"mini-format-{VERSION}.zip"
         source_name = f"mini-format-{VERSION}-source.zip"
+        families_name = f"mini-format-{VERSION}-example-families.zip"
         zip_tree(kit, output / zip_name, f"mini-format-{VERSION}")
+        zip_tree(ROOT / "forks", output / families_name, "forks")
         # Wheel construction may have emitted build metadata; the source archive
         # comes only from the explicit original-source allowlist above.
         clean_source = stage / "clean-source"
         copy_tree(source, clean_source)
         zip_tree(clean_source, output / source_name, f"mini-format-{VERSION}")
 
-    names = [wheel.name, node_name, zip_name, source_name]
+    names = [wheel.name, node_name, zip_name, source_name, families_name]
     manifest = {"version": VERSION, "spec": SPEC_VERSION, "domain_profile": "mini-domain/1", "files": []}
     for name in names:
         p = output / name

@@ -134,18 +134,17 @@ def test_codigos_de_error_en_la_portada():
 def test_familias_en_la_portada_y_sus_traducciones():
     n = C["familias"]
     html = sin_etiquetas(leer(PUBLICADOS["index.html"]))
-    assert str(n) in re.findall(r"(\d+) contratos listos", html) and re.findall(r"(\d+) contratos listos", html) == [str(n)]
+    assert f"Las {n} familias publicadas son muestras opcionales" in html
+    assert "Ver ejemplos de .mini" in html
     assert re.findall(r"(\d+) dominios", html) == [str(n)]
-    assert C["palabra_familias_es"] + " familias listas" in html
     # «Mostrar las N filas» cuenta las filas de la tabla comparativa (no son familias): debe coincidir con la tabla
     fuente = leer(PUBLICADOS["index.html"])
     tabla = re.search(r'<div class="tablewrap" id="cmp">.*?</table>', fuente, re.S).group(0)
     assert re.findall(r"Mostrar las (\d+) filas", html) == [str(len(re.findall(r"<tr[ >]", tabla)) - 1)]
     mapa = json.loads(leer(PUBLICADOS["landing.en.json"]))
-    assert mapa[f"{n} contratos listos,"] == f"{n} ready-made contracts,"
-    assert mapa[C["palabra_familias_es"] + " familias listas. Cada una es un"].startswith(C["palabra_familias_en"])
+    assert "optional samples" in mapa["Los ejemplos muestran cómo funciona el formato con tickets de soporte. Después creas tu contrato a partir de tus datos. Las 14 familias publicadas son muestras opcionales para estudiar."]
     app = leer(PUBLICADOS["app.js"])
-    assert set(re.findall(r"(\d+) familias", app)) == {str(n)}
+    assert "mini forks" not in app
     anim = json.loads(leer(PUBLICADOS["animation.en.json"]))
     for clave, valor in anim.items():
         assert set(re.findall(r"(\d+) familias", clave)) <= {str(n)}
@@ -214,7 +213,9 @@ def test_el_sitio_construido_dice_el_total():
     assert f"{C['casos_conformidad']} casos" in texto and f"{C['casos_conformidad']} cases" in texto
     errores = sin_etiquetas(leer(SITIO / "docs" / "errors" / "index.html"))
     assert f"{C['palabra_codigos_es']} códigos estables" in errores
-    assert f"{C['palabra_familias_es']} contratos publicados" in sin_etiquetas(leer(SITIO / "docs" / "forks" / "index.html"))
+    families = sin_etiquetas(leer(SITIO / "docs" / "forks" / "index.html"))
+    assert f"Estas {C['familias']} familias son contratos de muestra" in families
+    assert f"Descargar las {C['familias']} familias" in families
 
 
 # --------------------------------------------------------------------------- ahorros escritos a mano en la portada

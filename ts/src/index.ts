@@ -7,7 +7,7 @@ import { parse } from './parser.ts';
 import { dumps } from './serializer.ts';
 import { scalarEqual } from './values.ts';
 
-export const VERSION = '1.2.1';
+export const VERSION = '1.2.2';
 export const SPEC_VERSION = '1.1';
 
 export {

@@ -1,6 +1,6 @@
 # Versions and compatibility
 
-mini-format **1.2.1** distributes the **SPEC 1.1** base profile, which keeps every SPEC 1.0 document valid, and the generated **`mini-domain/1`** domain toolkit. The package version identifies the tools; the contract version identifies the data each parser can read.
+mini-format **1.2.2** distributes the **SPEC 1.1** base profile, which keeps every SPEC 1.0 document valid, and the generated **`mini-domain/1`** domain toolkit. The package version identifies the tools; the contract version identifies the data each parser can read.
 
 ## Appended fields
 
@@ -18,4 +18,4 @@ The contract, prompt and generated tools form one unit. Reuse that unit and vers
 
 ## Distribution
 
-[Toolkit ZIP](/downloads/mini-format-1.2.1.zip), [Python wheel](/downloads/mini_format-1.2.1-py3-none-any.whl), [TypeScript package](/downloads/mini-format-core-1.2.1.tgz) and [source code](/downloads/mini-format-1.2.1-source.zip). Downloads require neither an account nor access to a private repository.
+[Toolkit ZIP](/downloads/mini-format-1.2.2.zip), [Python wheel](/downloads/mini_format-1.2.2-py3-none-any.whl), [TypeScript package](/downloads/mini-format-core-1.2.2.tgz) and [source code](/downloads/mini-format-1.2.2-source.zip). Downloads require neither an account nor access to a private repository.

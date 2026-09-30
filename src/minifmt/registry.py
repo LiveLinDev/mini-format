@@ -18,16 +18,13 @@ PACKAGE_FORKS_DIR = Path(__file__).resolve().parent / "forks"
 REPO_FORKS_DIR = Path(__file__).resolve().parent.parent.parent / "forks"
 
 
-def default_forks_dir() -> Path:
-    """Directory of the official forks.
-
-    Installed package (wheel/sdist): the forks travel as package data in
-    ``minifmt/forks``.  Source checkout (``PYTHONPATH=src`` or editable
-    install): ``forks/`` at the repository root, the single source of truth.
-    """
+def default_forks_dir() -> Optional[Path]:
+    """Use repository fixtures while developing; installed core has no families."""
     if (PACKAGE_FORKS_DIR / "registry.json").is_file():
         return PACKAGE_FORKS_DIR
-    return REPO_FORKS_DIR
+    if (REPO_FORKS_DIR / "registry.json").is_file():
+        return REPO_FORKS_DIR
+    return None
 
 
 DEFAULT_FORKS_DIR = default_forks_dir()
@@ -40,8 +37,12 @@ class Registry:
 
     # ---------------------------------------------------------------- load
     @classmethod
-    def load(cls, forks_dir: Path | str = DEFAULT_FORKS_DIR) -> "Registry":
+    def load(cls, forks_dir: Path | str | None = None) -> "Registry":
         reg = cls()
+        if forks_dir is None:
+            forks_dir = DEFAULT_FORKS_DIR
+        if forks_dir is None:
+            return reg
         forks_dir = Path(forks_dir)
         if not forks_dir.is_dir():
             raise FileNotFoundError(f"forks directory not found: {forks_dir}")

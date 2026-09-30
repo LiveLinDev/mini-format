@@ -761,6 +761,7 @@ _WRAPPER_IMPORT = (
 def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, record_path=None):
     """Write a portable bundle to a new/empty directory; never overwrite work."""
     destination = Path(out)
+    folder = destination.name
     if destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
         raise DomainError("D_OUTPUT", f"output is not empty: {destination}; choose a new directory")
     contract = infer_contract(samples, prefix, record_path=record_path)
@@ -783,6 +784,38 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "repair.py": '"""Repair only unambiguous transport wrappers; never fabricate data."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["repair", *sys.argv[1:]]))\n',
         "example.json": json.dumps(example, ensure_ascii=False, indent=2) + "\n",
         "example.mini": encode(example, contract) + "\n",
+        "GUIA.md": f"# Tu formato .mini: {prefix}\n\n"
+                   "Este toolkit es tuyo: describe tus datos y funciona sin las familias de muestra. "
+                   f"Los comandos siguientes se ejecutan desde la carpeta que contiene `{folder}`.\n\n"
+                   "## 1. Mira el ejemplo\n\n"
+                   "`example.json` contiene datos de muestra y `example.mini` muestra los mismos datos en .mini. "
+                   "`contract.json` fija los campos y tipos observados; `schema.json` sirve para herramientas compatibles con JSON Schema.\n\n"
+                   "## 2. Pide una respuesta a tu IA\n\n"
+                   "Añade `prompt.es.md` a las instrucciones de tu IA y describe la tarea y el número de registros esperado. "
+                   "Pídele que responda solo con .mini. Guarda la respuesta como `respuesta.mini`.\n\n"
+                   "## 3. Comprueba y usa la respuesta\n\n"
+                   "```powershell\n"
+                   f"python \"{folder}/validator.py\" respuesta.mini\n"
+                   f"python \"{folder}/parser.py\" decode respuesta.mini --out respuesta.json\n"
+                   "```\n\n"
+                   "Si el validador devuelve `ok: false`, revisa `errors`. "
+                   "`D_ENVELOPE` por saltos de línea de Windows o BOM se puede corregir sin inventar datos:\n\n"
+                   "```powershell\n"
+                   f"python \"{folder}/repair.py\" respuesta.mini --out respuesta-corregida.mini\n"
+                   f"python \"{folder}/validator.py\" respuesta-corregida.mini\n"
+                   "```\n\n"
+                   "Si falta información, vuelve a pedirla a la IA; la reparación no inventa registros.\n\n"
+                   "## Archivos de este toolkit\n\n"
+                   "| Archivo | Para qué sirve |\n| --- | --- |\n"
+                   "| `contract.json` | Reglas de tu formato. |\n"
+                   "| `schema.json` | Esquema interoperable. |\n"
+                   "| `example.json`, `example.mini` | El mismo ejemplo en dos representaciones. |\n"
+                   "| `prompt.es.md`, `prompt.en.md` | Instrucciones de formato para IA. |\n"
+                   "| `parser.py` | Convierte entre datos y .mini. |\n"
+                   "| `validator.py`, `repair.py` | Comprueba y corrige envoltorios seguros. |\n"
+                   "| `manifest.json` | Huellas de los archivos generados. |\n\n"
+                   "Si cambian tus campos o tipos, reúne muestras representativas y crea un toolkit nuevo. "
+                   "No edites el contrato generado a mano. Revisa los ejemplos y prompts antes de compartirlos si contienen datos privados.\n",
         "README.md": f"# {prefix} · .mini domain bundle\n\nProfile `{PROFILE}`. Python 3.9+; standard library only.\n"
                      "This generated profile uses its own bundled parser; it is not a core .mini 1.0 family.\n\n"
                      "```sh\npython parser.py encode input.json --out request.mini\npython parser.py decode response.mini --out response.json\n"

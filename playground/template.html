@@ -42,30 +42,23 @@ svg text{fill:var(--ink)}
 <header>
   <h1>.mini <small>playground · spec 1.0</small></h1>
   <nav>
-    <button data-tab="forks" class="active">Forks</button>
-    <button data-tab="editor">Editor &amp; validator</button>
+    <button data-tab="editor" class="active">Editor &amp; validator</button>
     <button data-tab="compare">Compare formats</button>
     <button data-tab="wizard">Fork wizard</button>
-    <button data-tab="bench">Benchmark</button>
     <button data-tab="spec">Spec cheatsheet</button>
   </nav>
   <button class="ghost toggle" id="themeBtn" title="toggle theme">◐</button>
 </header>
 <main>
 
-<!-- ============================================================ FORKS -->
-<section class="tab active" id="tab-forks">
-  <p class="note"><b>.mini</b> is a family of contracts. Each card is a fork: a contract (data, not code) that the same parser interprets. Click a card to load its example in the editor. Lineage arrows show <code>parent → child</code> forks that keep the core stable and only append fields.</p>
-  <div class="cards" id="forkCards"></div>
-</section>
-
 <!-- ============================================================ EDITOR -->
-<section class="tab" id="tab-editor">
+<section class="tab active" id="tab-editor">
+  <p class="note">This editor starts with a sample help-desk contract. Change the document, or design a contract for your own data in the wizard. The sample is not required to use .mini. <a href="https://mini-format.pmoluna.com/ejemplo/">Explore explained examples →</a></p>
   <div class="row">
-    <label>Fork <select id="forkSel"></select></label>
+    <label>Contract <select id="forkSel"></select></label>
     <button class="ghost" id="loadExample">Load example</button>
     <button class="ghost" id="loadEscaping">Load escaping example</button>
-    <button class="ghost" id="breakIt">Inject 3 errors</button>
+    <button class="ghost" id="breakIt">Inject errors</button>
     <span id="status" class="muted"></span>
   </div>
   <div class="grid">
@@ -94,10 +87,10 @@ svg text{fill:var(--ink)}
 
 <!-- ============================================================ WIZARD -->
 <section class="tab" id="tab-wizard">
-  <p class="note">Design a fork in four steps: (1) choose a parent or start blank, (2) add fields — inherited fields stay fixed, new ones are appended, (3) read the contract + prompt block, (4) download <code>contract.json</code> and run <code>mini check-forks</code>. The invariants of §10 are checked live.</p>
+  <p class="note">Design your own contract: start blank or extend the sample, add fields, inspect the generated document and prompt, then download <code>contract.json</code>. To check a directory of contracts and fixtures later, run <code>mini --forks DIR check-forks</code>.</p>
   <div class="grid">
     <div class="panel"><h2>1 · Identity</h2>
-      <div class="row"><label>Prefix <input type="text" id="wPrefix" value="quiz2" size="10"></label><label>Name <input type="text" id="wName" value="My quiz fork" size="28"></label></div>
+      <div class="row"><label>Prefix <input type="text" id="wPrefix" value="mine" size="10"></label><label>Name <input type="text" id="wName" value="My contract" size="28"></label></div>
       <div class="row"><label>Parent <select id="wParent"><option value="">(none — blank contract)</option></select></label><label>List separator <input type="text" id="wSep" value="," size="2" maxlength="1"></label><label>Records key <input type="text" id="wRecKey" value="items" size="10"></label></div>
       <h2 style="margin-top:14px">2 · Fields</h2>
       <div class="fields" id="wFields"></div>
@@ -110,13 +103,6 @@ svg text{fill:var(--ink)}
       <h2 style="margin-top:14px">Example document</h2><pre id="wExample"></pre>
     </div>
   </div>
-</section>
-
-<!-- ============================================================ BENCH -->
-<section class="tab" id="tab-bench">
-  <p class="note">Pre-computed results of <code>benchmark/run_benchmark.py</code> (o200k_base, n = 12 records per fork). Bars are tokens; the dotted line is the content-only lower bound (payload).</p>
-  <div class="panel"><h2>Tokens by format and fork (n = 12)</h2><div id="benchChart"></div><div class="legend" id="benchLegend"></div></div>
-  <div class="panel" style="margin-top:16px"><h2>Summary</h2><div id="benchTable"></div></div>
 </section>
 
 <!-- ============================================================ SPEC -->
@@ -155,16 +141,14 @@ I3 inherited core never changes      (breaking change ⇒ new prefix)</pre>
 <script>__MINI_JS__</script>
 <script>__TOON_JS__</script>
 <script id="forksData" type="application/json">__FORKS_JSON__</script>
-<script id="benchData" type="application/json">__BENCH_JSON__</script>
 <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@3.0.1/dist/o200k_base.js" onerror="window.__tokFail=true"></script>
 <script>
 (function(){
 'use strict';
 const FORKS = JSON.parse(document.getElementById('forksData').textContent);
-const BENCH = JSON.parse(document.getElementById('benchData').textContent);
 const $ = s => document.querySelector(s);
 const contracts = {}; for (const f of FORKS) contracts[f.prefix] = MINI.normalizeContract(f.contract);
-let current = 'a';
+let current = 'tk';
 
 // ---------------------------------------------------------------- theme
 $('#themeBtn').onclick = () => { const r=document.documentElement; const cur=r.getAttribute('data-theme'); const next = cur==='dark'?'light':(cur==='light'?'dark':(matchMedia('(prefers-color-scheme: dark)').matches?'light':'dark')); r.setAttribute('data-theme', next); try{localStorage.setItem('mini-theme',next)}catch(e){} };
@@ -172,7 +156,7 @@ try{const t=localStorage.getItem('mini-theme'); if(t) document.documentElement.s
 
 // ---------------------------------------------------------------- tabs
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
-function showTab(name){ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name)); document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id==='tab-'+name)); if(name==='compare') renderCompare(); if(name==='bench') renderBench(); if(name==='wizard') wizardRender(); }
+function showTab(name){ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name)); document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id==='tab-'+name)); if(name==='compare') renderCompare(); if(name==='wizard') wizardRender(); }
 
 // ---------------------------------------------------------------- tokens
 let tokenize = null, tokBackend = '';
@@ -185,15 +169,6 @@ function initTokens(){
 
 // ---------------------------------------------------------------- forks gallery
 function renderForks(){
-  const box = $('#forkCards'); box.innerHTML = '';
-  for (const f of FORKS) {
-    const c = contracts[f.prefix];
-    const lineage = []; let p = c; while (p) { lineage.unshift(p.prefix); p = p.parent ? contracts[p.parent] : null; }
-    const el = document.createElement('div'); el.className = 'card';
-    el.innerHTML = `<h3>.mini-${c.prefix} <span class="chip">${c.domain||''}</span></h3><div>${c.name}</div><div class="muted" style="font-size:12px;margin:4px 0">${c.arity} core fields${c.extensions.length? ' + '+c.extensions.length+' extensions':''} · lineage ${lineage.join(' → ')}</div><div class="sig">${MINI.signature(c)}</div>`;
-    el.onclick = () => { current = c.prefix; $('#forkSel').value = c.prefix; loadExample(); showTab('editor'); };
-    box.appendChild(el);
-  }
   const sel = $('#forkSel'); sel.innerHTML = FORKS.map(f => `<option value="${f.prefix}">${f.prefix} — ${f.contract.name}</option>`).join('');
   sel.value = current; sel.onchange = () => { current = sel.value; loadExample(); };
   const wp = $('#wParent'); wp.innerHTML += FORKS.map(f => `<option value="${f.prefix}">${f.prefix} — ${f.contract.name}</option>`).join('');
@@ -208,7 +183,7 @@ $('#breakIt').onclick = () => {
   const lines = $('#miniText').value.replace(/\n$/,'').split('\n'); if (lines.length < 4) return;
   lines[0] = lines[0].replace(/n=(\d+)/, (m,n)=>'n='+(Number(n)+1));          // E04
   lines[1] = lines[1].split('|').slice(0,-1).join('|');                        // E05
-  lines[2] = lines[2].replace('*','');                                          // E08 (if any mlist) or no-op
+  lines[2] = lines[2].replace('*','');                                          // E08 if any mlist
   lines[3] = lines[3] + '\\';                                                   // E09
   $('#miniText').value = lines.join('\n'); validate();
 };
@@ -262,21 +237,6 @@ function renderCompare(){
 function renderFmtOut(){ if (!lastFormats) return; $('#fmtOut').textContent = lastFormats[$('#fmtSel').value]; }
 $('#fmtSel').onchange = renderFmtOut;
 
-// ---------------------------------------------------------------- benchmark
-function renderBench(){
-  const fmts = ['mini','toon_flat','toon','csv','json_compact','yaml','xml','json_pretty']; const colors = {mini:'var(--accent2)',toon_flat:'#7c9cd6',toon:'#4a6fb5',csv:'#b8bec9',json_compact:'#e0a03b',yaml:'#c77d3d',xml:'#a34a4a',json_pretty:'#7a4a8a'};
-  const rows = BENCH; const W = 1100, H = 420, padL = 60, padB = 60, groupW = (W-padL-20)/rows.length, barW = groupW/(fmts.length+1);
-  const max = Math.max(...rows.map(r => Math.max(...fmts.map(f => r[f]))));
-  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">`;
-  for (let i=0;i<=4;i++){ const y = H-padB-(H-padB-20)*i/4; svg += `<line x1="${padL}" x2="${W-20}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${padL-6}" y="${y+4}" font-size="11" text-anchor="end">${Math.round(max*i/4)}</text>`; }
-  rows.forEach((r,gi) => { const x0 = padL + gi*groupW; fmts.forEach((f,fi) => { const h = (H-padB-20)*r[f]/max; svg += `<rect x="${x0+fi*barW}" y="${H-padB-h}" width="${barW-1}" height="${h}" fill="${colors[f]}"><title>${r.prefix} · ${LABELS[f]||f}: ${r[f]} tokens</title></rect>`; });
-    const py = H-padB-(H-padB-20)*r.payload/max; svg += `<line x1="${x0}" x2="${x0+groupW-barW}" y1="${py}" y2="${py}" stroke="var(--ink)" stroke-dasharray="3,3"/>`;
-    svg += `<text x="${x0+groupW/2-barW/2}" y="${H-padB+16}" font-size="12" text-anchor="middle">${r.prefix}</text>`; });
-  svg += '</svg>'; $('#benchChart').innerHTML = svg;
-  $('#benchLegend').innerHTML = fmts.map(f => `<span><span style="display:inline-block;width:12px;height:12px;background:${colors[f]};border-radius:2px;vertical-align:middle;margin-right:4px"></span>${LABELS[f]||f}</span>`).join('') + '<span>┄ payload (content-only lower bound)</span>';
-  $('#benchTable').innerHTML = `<table><tr><th>fork</th><th>.mini</th><th>TOON flat</th><th>TOON as-is</th><th>CSV</th><th>JSON</th><th>YAML</th><th>XML</th><th>JSON pretty</th><th>payload</th><th>.mini vs JSON</th><th>.mini vs TOON flat</th><th>.mini vs TOON as-is</th></tr>${rows.map(r=>`<tr><td>${r.prefix}</td><td class="mono">${r.mini}</td><td class="mono">${r.toon_flat}</td><td class="mono">${r.toon}</td><td class="mono">${r.csv}</td><td class="mono">${r.json_compact}</td><td class="mono">${r.yaml}</td><td class="mono">${r.xml}</td><td class="mono">${r.json_pretty}</td><td class="mono">${r.payload}</td><td class="mono">−${r.mini_vs_json_compact_pct}%</td><td class="mono">−${r.mini_vs_toon_flat_pct}%</td><td class="mono">−${r.mini_vs_toon_pct}%</td></tr>`).join('')}</table>`;
-}
-
 // ---------------------------------------------------------------- wizard
 let wFields = [];
 function parseType(t){ t = t.trim(); let m;
@@ -306,7 +266,7 @@ function wizardRender(){
   errs.forEach(e => check.push('✗ '+e));
   if (c && parent) { const pe = MINI.checkFork(c, contracts[parent.prefix]); if (pe.length) pe.forEach(e=>check.push('✗ '+e.message)); else check.push(`✓ I3/I4: core of '${parent.prefix}' preserved, ${d.extensions.length} extension(s) appended`); }
   if (c && contracts[c.prefix] && (!parent || c.prefix!==parent.prefix)) check.push(`✗ prefix '${c.prefix}' is already registered — choose another`);
-  if (c && !check.some(x=>x.startsWith('✗'))) check.push('✓ I1/I2: one line per record, header with prefix and n', '⚠ I5: add fixtures (valid.mini + canonical.json) and run mini check-forks');
+  if (c && !check.some(x=>x.startsWith('✗'))) check.push('✓ I1/I2: one line per record, header with prefix and n', '⚠ I5: add fixtures (valid.mini + canonical.json) and run mini --forks DIR check-forks');
   $('#wCheck').innerHTML = check.map(x => `<div class="${x.startsWith('✗')?'err':(x.startsWith('⚠')?'muted':'ok')}">${x}</div>`).join('');
   $('#wContract').textContent = JSON.stringify(d, null, 2);
   if (c) { const ex = exampleFor(c, parent); $('#wExample').textContent = ex; $('#wPrompt').textContent = MINI.specBlock(c, 'en', ex); window.__wizardState = { c, ex }; } else { $('#wExample').textContent = ''; $('#wPrompt').textContent = ''; }

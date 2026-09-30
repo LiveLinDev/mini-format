@@ -3,7 +3,7 @@
 [Español](DOMAIN_PROFILE.es.md) · [Integration guide](BUILD_GUIDE.md)
 
 This document specifies the generated JSON-domain profile shipped with software
-release 1.2.1. It does not replace [core SPEC 1.1](SPEC.md). Core families and their
+release 1.2.2. It does not replace [core SPEC 1.1](SPEC.md). Core families and their
 conformance corpus retain their established syntax and parsers. Generated domain
 documents use the runtime bundled by `mini build` or `minifmt.domain`.
 

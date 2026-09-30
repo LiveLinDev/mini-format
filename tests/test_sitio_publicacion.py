@@ -52,7 +52,7 @@ def sitio_sano(commit=SHA) -> dict:
     rutas = {r: (200, b"<html>" + r.encode() + b"</html>") for r in vp.RUTAS_CLAVE}
     rutas["/"] = (200, PORTADA)
     rutas["/404.html"] = (200, b"<html>error</html>")
-    rutas["/version.json"] = (200, json.dumps({"commit": commit, "construido": "2026-09-30T00:00:00+00:00", "mini_format": "1.2.1", "spec": "1.1"}).encode())
+    rutas["/version.json"] = (200, json.dumps({"commit": commit, "construido": "2026-09-30T00:00:00+00:00", "mini_format": "1.2.2", "spec": "1.1"}).encode())
     return rutas
 
 

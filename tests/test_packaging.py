@@ -1,4 +1,4 @@
-"""Empaquetado: las familias oficiales deben viajar dentro del paquete instalado."""
+"""El paquete instalado contiene el motor; las familias se cargan por separado."""
 from __future__ import annotations
 
 import os
@@ -33,30 +33,27 @@ class TestDefaultForksDir(unittest.TestCase):
 
 @unittest.skipUnless(HAVE_SETUPTOOLS, "setuptools not available")
 class TestBuiltPackage(unittest.TestCase):
-    """Simula una instalación: ``build_py`` a un directorio aislado y carga desde ahí."""
+    """Simula una instalación aislada y una carga explícita de los ejemplos."""
 
-    def test_build_py_ships_forks_and_registry_loads_outside_repo(self):
+    def test_build_py_excludes_forks_and_can_load_optional_examples(self):
         with tempfile.TemporaryDirectory() as tmp:
             lib = Path(tmp) / "lib"
             subprocess.run([sys.executable, "setup.py", "-q", "build_py", "-d", str(lib)],
                            cwd=ROOT, check=True, capture_output=True)
-            shipped = sorted(p.parent.name for p in (lib / "minifmt" / "forks").glob("*/contract.json"))
-            expected = sorted(p.parent.name for p in (ROOT / "forks").glob("*/contract.json"))
-            self.assertEqual(shipped, expected)
-            self.assertTrue((lib / "minifmt" / "forks" / "registry.json").is_file())
-            self.assertTrue((lib / "minifmt" / "forks" / "a" / "fixtures" / "valid.mini").is_file())
+            self.assertFalse((lib / "minifmt" / "forks").exists())
             code = ("import minifmt, json; from minifmt import Registry, parse; "
-                    "from minifmt.registry import DEFAULT_FORKS_DIR as D; r = Registry.load(); "
+                    "from minifmt.registry import DEFAULT_FORKS_DIR as D; empty = Registry.load(); "
+                    "r = Registry.load('" + str(ROOT / "forks").replace("\\", "/") + "'); "
                     "t = (r.paths['a'] / 'fixtures' / 'valid.mini').read_text(encoding='utf-8'); "
-                    "print(json.dumps([str(D), minifmt.__file__, len(r.contracts), len(parse(t, r.get('a')).records), len(r.check())]))")
+                    "print(json.dumps([D, minifmt.__file__, len(empty.contracts), len(parse(t, r.get('a')).records), len(r.check())]))")
             env = dict(os.environ, PYTHONPATH=str(lib))
             out = subprocess.run([sys.executable, "-c", code], cwd=tmp, env=env, check=True,
                                  capture_output=True, text=True).stdout
             import json
             forks_dir, init_file, n_contracts, n_records, n_errs = json.loads(out)
             self.assertTrue(Path(init_file).resolve().is_relative_to(lib.resolve()))
-            self.assertEqual(Path(forks_dir).resolve(), (lib / "minifmt" / "forks").resolve())
-            self.assertEqual(n_contracts, len(expected))
+            self.assertIsNone(forks_dir)
+            self.assertEqual(n_contracts, 0)
             self.assertEqual(n_records, 12)
             self.assertEqual(n_errs, 0)
 

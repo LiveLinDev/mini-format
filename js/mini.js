@@ -1,5 +1,5 @@
 /* mini.js — motor JavaScript de .mini para el navegador (playground) y CommonJS.
- * ARCHIVO GENERADO por tools/build_js.mjs desde ts/src (@mini-format/core 1.2.1, SPEC 1.1).
+ * ARCHIVO GENERADO por tools/build_js.mjs desde ts/src (@mini-format/core 1.2.2, SPEC 1.1).
  * No se edita a mano: se modifica ts/src y se ejecuta `node --no-warnings tools/build_js.mjs`.
  * tests/test_js_port.mjs comprueba que está al día y ejecuta toda la suite de conformidad contra él.
  * Expone el global `MINI` (navegador) o `module.exports` (Node) con la API de la biblioteca:
@@ -2766,7 +2766,7 @@
     mergeRepair: __m["repair"].mergeRepair,
     fromJsonSchema: __m["schema"].fromJsonSchema,
     fromZod: __m["schema"].fromZod,
-    VERSION: "1.2.1",
+    VERSION: "1.2.2",
     SPEC_VERSION: "1.1",
   });
 });

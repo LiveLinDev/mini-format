@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="es" data-title-es="Mesa de ayuda — mini-format" data-title-en="Help desk — mini-format">
+<html lang="es" data-title-es="Ejemplo: mesa de ayuda — mini-format" data-title-en="Example: help desk — mini-format">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mesa de ayuda — mini-format</title>
+<title>Ejemplo: mesa de ayuda — mini-format</title>
 __CABEZA__
 <style>
   .mesa { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
   .mesa-intro { max-width: 58rem; }
   .mesa-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
-  .mesa-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .mesa-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); max-width: 68ch; margin: 0; }
   .mesa-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 
   .mesa-mandos { display: flex; flex-wrap: wrap; gap: 1.1rem 1.6rem; align-items: flex-end;
@@ -151,13 +151,14 @@ __CABECERA__
 <main class="wrap mesa" id="contenido">
 
   <header class="mesa-intro">
-    <p class="eyebrow"><span data-lang="es">Caso de integración</span><span data-lang="en" hidden>Integration case</span></p>
+    <p class="eyebrow"><span data-lang="es">Ejemplo interactivo · datos de muestra</span><span data-lang="en" hidden>Interactive example · sample data</span></p>
     <h1><span data-lang="es">Mesa de ayuda: qué pasa cuando la respuesta del modelo sale mal</span><span data-lang="en" hidden>Help desk: what happens when the model's answer goes wrong</span></h1>
+    <p><a href="/ejemplo/"><span data-lang="es">← Todos los ejemplos</span><span data-lang="en" hidden>← All examples</span></a></p>
     <p class="lead">
-      <span data-lang="es">Una aplicación de soporte le pide a un LLM que convierta diez mensajes de clientes en tickets. Cambia
+      <span data-lang="es">Esta es una demostración de cómo usar mini-format, no una mesa de ayuda real. Una aplicación de soporte le pide a un LLM que convierta diez mensajes de muestra en tickets. Cambia
         una sola cosa: cómo se lee la respuesta. Corre en tu navegador con <code>js/mini.js</code>, el mismo motor del playground,
         con respuestas grabadas o —si pones tu propia clave— llamando a DeepSeek o Groq de verdad.</span>
-      <span data-lang="en" hidden>A support application asks an LLM to turn ten customer messages into tickets. Only one thing changes:
+      <span data-lang="en" hidden>This is a demonstration of how to use mini-format, not a real help desk. A support application asks an LLM to turn ten sample customer messages into tickets. Only one thing changes:
         how the answer is read. It runs in your browser with <code>js/mini.js</code>, the same engine as the playground,
         on recorded answers or —with your own key— calling DeepSeek or Groq for real.</span>
     </p>

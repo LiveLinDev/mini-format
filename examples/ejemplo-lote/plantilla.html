@@ -1,15 +1,16 @@
 <!doctype html>
-<html lang="es" data-title-es="Ejemplo a escala — mini-format" data-title-en="Example at scale — mini-format">
+<html lang="es" data-title-es="Ejemplos — mini-format" data-title-en="Examples — mini-format">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ejemplo a escala — mini-format</title>
+<title>Ejemplos — mini-format</title>
 __CABEZA__
 <style>
   .ej { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
   .ej-intro { max-width: 58rem; }
   .ej-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
-  .ej-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .ej-intro h2 { font-family: var(--f-display); font-size: clamp(1.7rem, 3vw, 2.3rem); letter-spacing: -.02em; line-height: 1.15; margin: 0 0 .65rem; }
+  .ej-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); max-width: 68ch; margin: 0; }
   .ej-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 
   .ej-mandos { display: flex; flex-wrap: wrap; gap: 1.1rem 1.8rem; align-items: flex-end; margin: 1.9rem 0 1.4rem;
@@ -45,14 +46,28 @@ __CABEZA__
   .ej-res p { margin: .3rem 0 0; font-size: var(--fs-cap); color: rgb(var(--fg-muted)); }
   .ej-nota { font-size: var(--fs-cap); color: rgb(var(--fg-faint)); max-width: 58rem; }
   .ej-nota code { font-size: .78rem; }
+  .ej-rutas { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; margin: 1.5rem 0 2.4rem; }
+  .ej-ruta { display: flex; flex-direction: column; gap: .65rem; padding: 1.2rem; border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); background: rgb(var(--raised)); }
+  .ej-ruta h2 { margin: 0; font-family: var(--f-display); font-size: var(--fs-h6); }
+  .ej-ruta p { margin: 0; color: rgb(var(--fg-muted)); font-size: .92rem; }
+  .ej-ruta .btn { align-self: flex-start; margin-top: auto; }
 </style>
 </head>
 <body>
 __CABECERA__
 <main id="contenido" class="wrap ej">
   <section class="ej-intro">
-    <p class="eyebrow"><span data-lang="es">Ejemplo a escala</span><span data-lang="en" hidden>Example at scale</span></p>
-    <h1><span data-lang="es">El mismo lote de tickets, en los dos formatos</span><span data-lang="en" hidden>The same batch of tickets, in both formats</span></h1>
+    <p class="eyebrow"><span data-lang="es">Ejemplos</span><span data-lang="en" hidden>Examples</span></p>
+    <h1><span data-lang="es">Mira cómo se usa .mini</span><span data-lang="en" hidden>See how .mini works</span></h1>
+    <p class="lead"><span data-lang="es">.mini es un formato que adaptas a los datos de tu aplicación. Defines tu propio contrato para que la IA responda de forma compacta y puedas validar y recuperar cada registro. Estos casos muestran el proceso; no necesitas adoptar ninguno de sus contratos.</span><span data-lang="en" hidden>.mini is a format you adapt to your application's data. Define your own contract so an AI can respond compactly and you can validate and recover each record. These cases show the process; you do not need to adopt any of their contracts.</span></p>
+  </section>
+  <section class="ej-rutas" aria-label="Ejemplos de mini-format">
+    <article class="ej-ruta"><h2><span data-lang="es">Mesa de ayuda · demo interactiva</span><span data-lang="en" hidden>Help desk · interactive demo</span></h2><p><span data-lang="es">Prueba respuestas correctas, con errores y cortadas. Ve cómo .mini valida tickets y conserva los registros útiles.</span><span data-lang="en" hidden>Try correct, invalid and truncated responses. See how .mini validates tickets and preserves useful records.</span></p><a class="btn btn-solid" href="/mesa-de-ayuda/"><span data-lang="es">Abrir la demo →</span><span data-lang="en" hidden>Open demo →</span></a></article>
+    <article class="ej-ruta"><h2><span data-lang="es">Lote de tickets · comparación</span><span data-lang="en" hidden>Ticket batch · comparison</span></h2><p><span data-lang="es">Compara .mini y JSON con varios tamaños de lote y simula un límite de salida.</span><span data-lang="en" hidden>Compare .mini and JSON across batch sizes and simulate an output limit.</span></p><a class="btn btn-ghost" href="#comparacion"><span data-lang="es">Ver comparación ↓</span><span data-lang="en" hidden>See comparison ↓</span></a></article>
+    <article class="ej-ruta"><h2><span data-lang="es">14 familias de muestra · opcionales</span><span data-lang="en" hidden>14 sample families · optional</span></h2><p><span data-lang="es">Contratos específicos para estudiar, modificar o copiar ideas. El formato y las bibliotecas funcionan sin ellos.</span><span data-lang="en" hidden>Specific contracts to study, change or draw ideas from. The format and libraries work without them.</span></p><a class="btn btn-ghost" href="/docs/forks/"><span data-lang="es">Explorar y descargar →</span><span data-lang="en" hidden>Browse and download →</span></a></article>
+  </section>
+  <section id="comparacion" class="ej-intro">
+    <h2><span data-lang="es">El mismo lote de tickets, en los dos formatos</span><span data-lang="en" hidden>The same batch of tickets, in both formats</span></h2>
     <p class="lead">
       <span data-lang="es">Un lote de tickets de soporte, generado con el mismo generador del experimento de escalamiento.
         Elige cuántos registros quieres ver y compara el documento en <code>.mini</code> y en JSON: tokens, ahorro y qué
