@@ -193,6 +193,24 @@ def localized(text: str, lang: str, path: str) -> str:
     return text.replace("</head>", meta + "</head>", 1)
 
 
+def seo_en_linea(text: str, path: str) -> str:
+    """Canonical, descripción y Open Graph para una página bilingüe en línea (sin hreflang: no hay /en/)."""
+    existente = re.search(r'<meta\s+name="description"\s+content="([^"]*)"', text)
+    desc = html.unescape(existente.group(1)) if existente else (
+        "Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.")
+    text = re.sub(r'<link\s+rel="(?:canonical|alternate|icon)"[^>]*>\s*', "", text)
+    text = re.sub(r'<meta\s+(?:name="description"|property="og:[^"]+")[^>]*>\s*', "", text)
+    title_match = re.search(r"<title>(.*?)</title>", text)
+    title = html.unescape(title_match.group(1)) if title_match else "mini-format"
+    url = ORIGIN + path
+    meta = ('<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n'
+            f'<meta name="description" content="{html.escape(desc, quote=True)}">\n'
+            f'<link rel="canonical" href="{url}">\n'
+            f'<meta property="og:type" content="website"><meta property="og:title" content="{html.escape(title, quote=True)}">'
+            f'<meta property="og:description" content="{html.escape(desc, quote=True)}"><meta property="og:url" content="{url}">\n')
+    return text.replace("</head>", meta + "</head>", 1)
+
+
 def prepare_public_site(playground_translations=()) -> None:
     from benchmarks import inject_benchmarks
     COPIED.clear()
@@ -258,13 +276,30 @@ def prepare_public_site(playground_translations=()) -> None:
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(en, encoding="utf-8")
         sitemap.extend([ORIGIN + route, ORIGIN + "/en" + route])
+    # Páginas bilingües en línea: una sola URL (sin /en/), con canonical y sellado de recursos.
+    inline = []
+    for ruta in sorted(RUTAS_EN_LINEA):
+        pagina = SITE / ruta / "index.html"
+        if not pagina.is_file():
+            continue
+        route = "/" + ruta + "/"
+        pagina.write_text(seo_en_linea(local_sources(pagina.read_text(encoding="utf-8")), route), encoding="utf-8")
+        inline.append(pagina)
+        sitemap.append(ORIGIN + route)
+    # 404.html: HTML fuente escrito a mano; se sirve en cualquier URL inexistente, así que solo se sella y se marca noindex.
+    error_404 = SITE / "404.html"
+    extras = []
+    if error_404.is_file():
+        # el pie de la 404 enlaza evidencia igual que el resto: se reescribe a /source/ (el repositorio es privado)
+        error_404.write_text(local_sources(error_404.read_text(encoding="utf-8")), encoding="utf-8")
+        extras.append(error_404)
     (SITE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>{html.escape(url)}</loc></url>" for url in sorted(sitemap)) + "</urlset>\n", encoding="utf-8")
     (SITE / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /source/\nSitemap: {ORIGIN}/sitemap.xml\n", encoding="utf-8")
     digest_cache: dict[str, str] = {}
-    rendered = routes + list((SITE / "en").rglob("*.html")) + list((SITE / "source").rglob("*.html"))
+    rendered = routes + inline + extras + list((SITE / "en").rglob("*.html")) + list((SITE / "source").rglob("*.html"))
     for page in rendered:
         original = page.read_text(encoding="utf-8")
         versioned = version_assets(original, digest_cache)
         if versioned != original:
             page.write_text(versioned, encoding="utf-8")
-    print(f"  public: {len(sitemap)} localized pages, {len(COPIED)} evidence files/directories")
+    print(f"  public: {len(sitemap)} sitemap URLs ({len(inline)} inline-bilingual), {len(COPIED)} evidence files/directories")
