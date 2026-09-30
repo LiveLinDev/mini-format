@@ -23,6 +23,20 @@ estrictos, enumeraciones, rangos, aridades, marcadores, clave de conteo y
 unicidad) e ``incorrecto_sin_aviso`` si no lo cumple.  Se pierden
 ``max(0, n_solicitados - aceptados)``, detectados si hubo aviso.
 
+Tres cosas distintas, nunca fusionadas
+--------------------------------------
+* **sintaxis analizable** (``sintaxis_ok``): el documento se pudo leer;
+* **cumplimiento del contrato** (``validos_contrato``): registros aceptados que
+  cumplen tipos, enumeraciones, rangos, aridades, marcadores y unicidad de
+  identidad, con o sin referencia;
+* **exactitud del contenido** (``exactos_contenido``, solo con referencia):
+  registros idénticos a los esperados.
+
+La **validez final** es ``validos_finales / solicitados``: el denominador son
+TODOS los registros solicitados, de modo que un registro ausente cuenta como no
+válido (``validos_finales`` se acota a ``solicitados``; el exceso va a
+``excedentes``).
+
 Normalización de comparación: espacios en blanco colapsados (un salto de línea
 equivale a un espacio), cadena vacía equivale a nulo, números por valor.
 """
@@ -101,7 +115,38 @@ def emparejar(got: List[Dict[str, Any]], exp: List[Dict[str, Any]], claves: List
 
 def _base(lectura: Lectura) -> Dict[str, Any]:
     return {"parseable": bool(lectura.parseable), "avisos": len(lectura.avisos), "detectado": bool(lectura.avisos),
-            "aceptados": len(lectura.registros)}
+            "aceptados": len(lectura.registros), "sintaxis_ok": bool(lectura.parseable)}
+
+
+def validar_aceptados(lectura: Lectura, t: Tarea) -> Tuple[int, int, int]:
+    """(válidos por contrato, inválidos, identidades duplicadas) entre los registros aceptados por el lector."""
+    c = t.contrato
+    unicos = [f.name for f in c.fields if f.unique]
+    vistos: Dict[str, set] = {u: set() for u in unicos}
+    validos = invalidos = duplicados = 0
+    for rec in lectura.registros:
+        ok = cumple_contrato(rec, c, t.cabecera)
+        for u in unicos:
+            v = rec.get(u)
+            try:
+                if v in vistos[u]:
+                    ok = False
+                    duplicados += 1
+                vistos[u].add(v)
+            except TypeError:
+                ok = False
+        if ok:
+            validos += 1
+        else:
+            invalidos += 1
+    return validos, invalidos, duplicados
+
+
+def _nuevas(m: Dict[str, Any], lectura: Lectura, t: Tarea, solicitados: int, exactos: Any) -> None:
+    validos, _, dup = validar_aceptados(lectura, t)
+    m.update({"solicitados": solicitados, "validos_contrato": validos,
+              "validos_finales": min(validos, solicitados), "excedentes": max(0, validos - solicitados),
+              "identidades_duplicadas": dup, "exactos_contenido": exactos})
 
 
 def evaluar_extraccion(lectura: Lectura, t: Tarea) -> Dict[str, Any]:
@@ -125,10 +170,12 @@ def evaluar_extraccion(lectura: Lectura, t: Tarea) -> Dict[str, Any]:
         "campos_correctos": campos_ok, "campos_totales": len(exp) * len(claves),
         "exacto": correctos == len(exp) and espurios == 0,
     })
+    _nuevas(m, lectura, t, len(exp), correctos)
     return m
 
 
-_TIPOS_PY = {"str": (str,), "int": (int,), "float": (int, float), "bool": (bool,), "enum": (str,)}
+_TIPOS_PY = {"str": (str,), "int": (int,), "float": (int, float), "bool": (bool,), "enum": (str,),
+             "date": (str,), "decimal": (str,)}
 
 
 def _tipo_ok(v: Any, tipo: str) -> bool:
@@ -186,24 +233,7 @@ def cumple_contrato(rec: Dict[str, Any], c: Contract, cabecera: Dict[str, Any]) 
 
 
 def evaluar_generativa(lectura: Lectura, t: Tarea) -> Dict[str, Any]:
-    c = t.contrato
-    unicos = [f.name for f in c.fields if f.unique]
-    vistos: Dict[str, set] = {u: set() for u in unicos}
-    validos = invalidos = 0
-    for rec in lectura.registros:
-        ok = cumple_contrato(rec, c, t.cabecera)
-        for u in unicos:
-            v = rec.get(u)
-            try:
-                if v in vistos[u]:
-                    ok = False
-                vistos[u].add(v)
-            except TypeError:
-                ok = False
-        if ok:
-            validos += 1
-        else:
-            invalidos += 1
+    validos, invalidos, _ = validar_aceptados(lectura, t)
     n = t.n_solicitados
     perdidos = max(0, n - len(lectura.registros))
     m = _base(lectura)
@@ -216,6 +246,7 @@ def evaluar_generativa(lectura: Lectura, t: Tarea) -> Dict[str, Any]:
         "campos_correctos": None, "campos_totales": None,
         "exacto": validos >= n and invalidos == 0,
     })
+    _nuevas(m, lectura, t, n, None)
     return m
 
 
