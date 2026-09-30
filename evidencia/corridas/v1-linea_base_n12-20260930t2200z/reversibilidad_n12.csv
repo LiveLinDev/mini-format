@@ -1,0 +1,365 @@
+variante,dominio,n,formato,estado,causa,normalizaciones,decodificacion,texto_sha256,replicacion_de_base
+muestreo,a,12,json_pretty,reversible,,,autocontenida,97d1b2469fc476df3abb36d072498d170562a63f9506267296fff347cfb440d4,False
+muestreo,a,12,json_compact,reversible,,,autocontenida,8b18d3f755776308a56a90d6f8af9f5deaed87e46e26638de58b4be1f2830b5e,False
+muestreo,a,12,yaml,reversible,,,autocontenida,827aafebfb2740bf6c69cac901b3a2b7fbbc232dcc2884b24661dd9494242be3,False
+muestreo,a,12,xml,reversible,,,con_contrato,1cbf65acb6618ef06f7a63c7068458716d0ca74082e8c7466cb5f65a86ee764e,False
+muestreo,a,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,con_contrato,d016a4b9e1f6c48ecaf23d809b25622abf631fe73bf101d1a1613db6744e657b,False
+muestreo,a,12,toon,reversible,,,autocontenida,41abb47d97ff68a15a72410531059d7a33f78f006b115656e4665b05311ad186,False
+muestreo,a,12,toon_flat,reversible,,,con_contrato,6666aedab7d6a838f0780cc09219d48f98ff1eed897051686f27d504445c711b,False
+muestreo,a,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,bceb7f5458ba909b4b8d0ebf17d76aeef1e57d4580c21736f2a7711ed904ff45,False
+muestreo,a,12,xml_tipado,reversible,,,autocontenida,5e32972ffa671b69629b93b3dc5344a34acf51cba150d4be17ac535acc70124a,False
+muestreo,a,12,csv_reversible:celdas,reversible,,,con_mapa,17cb45a6f297d918d91f6b355ac6b0241fad853e28dabca7c3d6978722d8f7a7,False
+muestreo,a,12,csv_reversible:columnas,reversible,,,con_mapa,b14694c8b64355dfb0f1bedb87aeaad4bf19270e8392d9761b611fd758543e1e,False
+muestreo,a,12,toon_reversible:celdas,reversible,,,con_mapa,d7604d82aaa2e697ae1561c851c5496f583fd672fe40e89d20906a9f2680e586,False
+muestreo,a,12,toon_reversible:columnas,reversible,,,con_mapa,13e08a6e0d0264f6d85598d82844e4fab30b187f45b0cf99aceeb9099b160523,False
+muestreo,card,12,json_pretty,reversible,,,autocontenida,a59af92a621ec312a49b2bc24a2522ffa004d787c0d570b506baf92dd34ee413,False
+muestreo,card,12,json_compact,reversible,,,autocontenida,e9450014d90b8af9e9a4062a378927156b7d3256eb621f26be7f021bfd5bf765,False
+muestreo,card,12,yaml,reversible,,,autocontenida,a43e2bf57de8e0cedbc728030a6c44c48fa68c162671efeea2f17c7b7a937c28,False
+muestreo,card,12,xml,reversible,,,con_contrato,09aacba715d8180d623bcdd145c07973485cf9a42af9904a9a88381c4cb51f0c,False
+muestreo,card,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, src); solo los registros se reconstruyen: reversible",,con_contrato,c789460ff9d17773c276c1b1ae9604e728514a71dcf7e71a4bcda6fc508bd025,False
+muestreo,card,12,toon,reversible,,,autocontenida,91bd3ec090306f496b3a1b0a1c6107243486f1cec63588f8dcdc767efc2f68c9,False
+muestreo,card,12,toon_flat,reversible,,,con_contrato,1006bcbce7498969d2252d752a7d31c974302bf8878fbd7f676a0b240f25a39d,False
+muestreo,card,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,64a1cdfbb516c08db6f6912c901c005c27f60c8ad736f26008e842f64c51f27c,False
+muestreo,card,12,xml_tipado,reversible,,,autocontenida,4af6f7e331860686b246cbc79b47c6e491fcfe0e4f2238a48ede2ca75b25234f,False
+muestreo,card,12,csv_reversible:celdas,reversible,,,con_mapa,7b0d850991e2a82e40caeaa47edf7f57b448c1090ebd1b20626c8839e7bde781,False
+muestreo,card,12,csv_reversible:columnas,reversible,,,con_mapa,99f8df818c959beaa7e12fa7edcf54fda667d1365eef329d8cb05b24c0805845,False
+muestreo,card,12,toon_reversible:celdas,reversible,,,con_mapa,782b1d651d39eb53f0da4250f392d00419ab5bc3b864841f6ee80253295e0125,False
+muestreo,card,12,toon_reversible:columnas,reversible,,,con_mapa,933b5c24ede90932736dcc1ac55ee3c2f4f0b2a2e3076dd869d7c585e29cf118,False
+muestreo,cat,12,json_pretty,reversible,,,autocontenida,5554440dacc7123a68de3c1f1e89c78f2ea4fa32e4ea9e52ddfc6d013d9d3303,False
+muestreo,cat,12,json_compact,reversible,,,autocontenida,3afac82f830465cc7ed7d6d02ceca1f049f7cfa649c110765ff4efe1fe627580,False
+muestreo,cat,12,yaml,reversible,,,autocontenida,8a7b6d9ecbefe69a8c80ca02e1cbf975f411952c80a86ec50bf7234c402eabaa,False
+muestreo,cat,12,xml,reversible,,,con_contrato,6f9f18b1e98eaa9b6d263094bdfa67997a54c41d3f17c902196faef7dd2c4031,False
+muestreo,cat,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 3 claves: d, store, cur); solo los registros se reconstruyen: reversible",,con_contrato,3e48db71e96197383fc641da508e0e0a6dedaabc897c02bd4b328f5416b030e7,False
+muestreo,cat,12,toon,reversible,,,autocontenida,b3bb3950ff813b731d152619d4793b3a7a1cc60ae53b368e4e56eed798a6c00a,False
+muestreo,cat,12,toon_flat,reversible,,,con_contrato,c55e06a97497252dad480830475b351c1441e0d1337f1a3b685505d9abb1c1d3,False
+muestreo,cat,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,297212e3094756c8d0fe0e762dad8f33265da8491c8c60911863df80d0719b55,False
+muestreo,cat,12,xml_tipado,reversible,,,autocontenida,d026175603766d5ab72c1a38ce5e4a516ec789dbf6a6b615c21da456aae22d01,False
+muestreo,cat,12,csv_reversible:celdas,reversible,,,con_mapa,9262309d5c774acfa4c58dbe5c089ed519eb7b2bd03ea139f2d54726b7940f8e,False
+muestreo,cat,12,csv_reversible:columnas,reversible,,,con_mapa,6aede737425b90d8e3876d0686efdc3745e3469b595900db3e5eaea2300f2aa7,False
+muestreo,cat,12,toon_reversible:celdas,reversible,,,con_mapa,014e8a10424e5275026e2193f008cbe518e8acc6ec27fcfc68a26e577d694bd2,False
+muestreo,cat,12,toon_reversible:columnas,reversible,,,con_mapa,0f79d3b0e94da2fc0b1fc76c2aa6cf2552a2e997cc1913726e7a84b488aee0e8,False
+muestreo,cls,12,json_pretty,reversible,,,autocontenida,aa67f4fa9c54b942633fd87b72cb7ae1e681fad5774ee2320c0101dfa0a5ebe6,False
+muestreo,cls,12,json_compact,reversible,,,autocontenida,93cb356897c5f24040db371b93e97cd0636206713f003542fd39c934cc18e087,False
+muestreo,cls,12,yaml,reversible,,,autocontenida,d9e6e21e27afd52ff7409533d3772bc5f9b89a8d21a9d290cda7d588a7b91317,False
+muestreo,cls,12,xml,reversible,,,con_contrato,0f658b28bfd52d1da758ee64f58354ac7082e3187fcd72abd011fe485348e61d,False
+muestreo,cls,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, model, k); solo los registros se reconstruyen: reversible",,con_contrato,3bfb4d6b0526e232b5bda9c6ef7302779d28fb0932d9aee9a91516e268d46fba,False
+muestreo,cls,12,toon,reversible,,,autocontenida,d1c7b8de76789bcde7a14e5d3dd05afc9caddc72938566020d579ed5e6772f7b,False
+muestreo,cls,12,toon_flat,reversible,,,con_contrato,a89bf1d9057387132c51a655e36a1c0303713ba9315759f034a3f6f7c6685132,False
+muestreo,cls,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,874ce4729a2a8f3c247e8fbdfd6c1b5f5792973813cca4318694d608c0758957,False
+muestreo,cls,12,xml_tipado,reversible,,,autocontenida,1cc388fecd910b38993cc1915017253d63606d5b087e8c330bd5598dd42854c5,False
+muestreo,cls,12,csv_reversible:celdas,reversible,,,con_mapa,aba8b6b64116c944bea5a92834f51fbdca767229a12251c6a449d8d7bb780e31,False
+muestreo,cls,12,csv_reversible:columnas,reversible,,,con_mapa,84882c158badf4549dd0770dba95861335c0d18d9bc4ea1f7f9b630bac74048c,False
+muestreo,cls,12,toon_reversible:celdas,reversible,,,con_mapa,43904f24e4f946dd55ad85b413e02b6bb064fba531e3a33b6b9ca0b6a9d78b8f,False
+muestreo,cls,12,toon_reversible:columnas,reversible,,,con_mapa,e0b0571cbcc17f329046cafdd7dcc6f2a0a5cb04e942975a6f1c877f16749085,False
+muestreo,code,12,json_pretty,reversible,,,autocontenida,2d26c68cb282f0d27c6f63c97087729da9ea5483e859a8eb1d019e7fb663c559,False
+muestreo,code,12,json_compact,reversible,,,autocontenida,742093aef2ed8c7949ecaf85ab590f2be0b984dc703c6c926e6fbe6b68964e32,False
+muestreo,code,12,yaml,reversible,,,autocontenida,c07be774b15006cd1d244321edcecff4a2e4de8e7e126f6e308c2f650eb52efb,False
+muestreo,code,12,xml,reversible,,,con_contrato,a699e0ffc1a9361e57792dcb67f406e0eb0bc2fb8ef53687a5b32ed483c3aea3,False
+muestreo,code,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 3 claves: d, l, t); solo los registros se reconstruyen: reversible",,con_contrato,562d98fd30ab510399595224ecb49b21892780c35cf47442d026d9996b9e061c,False
+muestreo,code,12,toon,reversible,,,autocontenida,5b9fdfb130716b653ca3ad33f0c794b146cc721df2987f10dd9eaa667eb2f102,False
+muestreo,code,12,toon_flat,reversible,,,con_contrato,75d60ebfead36c92e410c2babb9d6411c66d4d74ad6263a760c337331fc1f674,False
+muestreo,code,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,505f8cb936abafa1937032ce405fbe7d4dfc7b921d025f5ae6d1cb1cc5f8c74a,False
+muestreo,code,12,xml_tipado,reversible,,,autocontenida,52f227ae90f26e525eb66ce1c60adc09730ef6363867d0912edc8dc86819d248,False
+muestreo,code,12,csv_reversible:celdas,reversible,,,con_mapa,a3f311e9291de9c0e320eec25497ed57ce8f1174d3171930685c66d9c52f6b29,False
+muestreo,code,12,csv_reversible:columnas,reversible,,,con_mapa,2ed894afe25a8c40d94fa79ede920a82f4bed7164a2b8bdc18707ee1004179ea,False
+muestreo,code,12,toon_reversible:celdas,reversible,,,con_mapa,5f3e7cb475f2d985a71c072c7fb0d6fe7175d910a4c48741cc223af2542c74d9,False
+muestreo,code,12,toon_reversible:columnas,reversible,,,con_mapa,66b4c96cf16386a2b32847154604b8bf6da362358cd861ea8267fa290a0c1ff8,False
+muestreo,log,12,json_pretty,reversible,,,autocontenida,fa484e52a5d4bc589d785e60a7c48b74f44fae38fbb5a38b8089853da7b3e0d0,False
+muestreo,log,12,json_compact,reversible,,,autocontenida,22118940f7e79ffba230354ea773ee1cd29c61b4be2398c6315da0a3574398f4,False
+muestreo,log,12,yaml,reversible,,,autocontenida,08c55de7b04210193ad38bd24a47dd5c8ccc1434e9cf1a5cb11d90bcb06fee67,False
+muestreo,log,12,xml,reversible,,,con_contrato,298b8b6b556bedb6e1151e62266e30d8f532efa882117a087ae0c7204ec96cc3,False
+muestreo,log,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 3 claves: d, env, host); solo los registros se reconstruyen: reversible",,con_contrato,d42fa19edab93d8cee27e766b6a00c9d965424ef5ec0259d61f07300d6815cd2,False
+muestreo,log,12,toon,reversible,,,autocontenida,1b40cf0c438bd7277a1912e6683d210cb475fb722606a97986c863c634c6bc9a,False
+muestreo,log,12,toon_flat,reversible,,,con_contrato,abd538d76ed3da65107915c176c28ddf3dd0f535f68187a5ba034d24c4298a6e,False
+muestreo,log,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,88eca7e82a81f712f6e85e445bf08062e6573cf01e4a73cb9957faf7e899264f,False
+muestreo,log,12,xml_tipado,reversible,,,autocontenida,fdf13d734bdca0b39c9fd4941fbae2e8b476835282bf25513fab2737146ffc96,False
+muestreo,log,12,csv_reversible:celdas,reversible,,,con_mapa,1d96ca5c843ada89054ae62774c089a3cfea71f7a317b39cb3fc760124e09766,False
+muestreo,log,12,csv_reversible:columnas,reversible,,,con_mapa,63fa283a0c02a192c5008d51b8c79e59aa3ac623bd996c9befded2fa43f9620d,False
+muestreo,log,12,toon_reversible:celdas,reversible,,,con_mapa,e70a80bb27820a4e5b7e15afe86353484efd39aca9a7ea65008416ce7cbf3c42,False
+muestreo,log,12,toon_reversible:columnas,reversible,,,con_mapa,860a58beb5b6d31889e5b7469ac45a6eef518bea34f55abbfd0037451c82b047,False
+muestreo,map,12,json_pretty,reversible,,,autocontenida,bb854ed30522ff0d8960cd72fb56b6b5884e62a348efc704778fb7d26fe18f82,False
+muestreo,map,12,json_compact,reversible,,,autocontenida,47a8f23c8ccf4fed6bb4fe7b5558df01557305e479710e2650e168e6e2556c02,False
+muestreo,map,12,yaml,reversible,,,autocontenida,9ad990982760a20c38de9eac7201a41c40c31fbff5862811e9aa0e08a4e30225,False
+muestreo,map,12,xml,reversible,,,con_contrato,1d2d720be503287c482c21a99ea0536bc67aebae319ce947ff1aea7031dca91f,False
+muestreo,map,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, src); solo los registros se reconstruyen: reversible",,con_contrato,a7d48631bd2db82aaad419c8b53e69be0b1f74099d578a1a36625a9517fea84d,False
+muestreo,map,12,toon,reversible,,,autocontenida,a044f26b36282d10979753c646805acf064e9068b2c93105cb6c9960366b762c,False
+muestreo,map,12,toon_flat,reversible,,,con_contrato,a044f26b36282d10979753c646805acf064e9068b2c93105cb6c9960366b762c,False
+muestreo,map,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,b04e95f8829f3dd90367dcb95e032151b8422c93d9e9fd4a41fc7621ffa3ecfa,False
+muestreo,map,12,xml_tipado,reversible,,,autocontenida,5ea3e508f30f8de4a942e1e90539297b1646a3f3c82bddef55ccd2ead7823165,False
+muestreo,map,12,csv_reversible:celdas,reversible,,,con_mapa,5b169d7ca8eb893ebc9b77cdbde4bb924211b72ae110b51996a0f0d681867fb9,False
+muestreo,map,12,csv_reversible:columnas,reversible,,,con_mapa,5b169d7ca8eb893ebc9b77cdbde4bb924211b72ae110b51996a0f0d681867fb9,False
+muestreo,map,12,toon_reversible:celdas,reversible,,,con_mapa,44626ffd9eb3d6677a9875d0badefca20c0764b0d86ef1217a50988882fa6f41,False
+muestreo,map,12,toon_reversible:columnas,reversible,,,con_mapa,44626ffd9eb3d6677a9875d0badefca20c0764b0d86ef1217a50988882fa6f41,False
+muestreo,ner,12,json_pretty,reversible,,,autocontenida,7819d55267bfe0bc0e9b0a1190342bbdd77bc34ce86a824f8bdd53a685b6b82e,False
+muestreo,ner,12,json_compact,reversible,,,autocontenida,0295c8725b073b654fa50c3f3b37962901e9e7e2f77a80af7aca77558acbe449,False
+muestreo,ner,12,yaml,reversible,,,autocontenida,cd6d2f1ca129d426ad13dc6251ed8ad39078ff5cc3b6c904125d1e6328296dce,False
+muestreo,ner,12,xml,reversible,,,con_contrato,676a4fa388065741973609522cf2d405977e47bab59032ecd443e269cefef80d,False
+muestreo,ner,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, model, schema); solo los registros se reconstruyen: reversible",,con_contrato,635e2ea45125a0884e3da4cd1eefeb39b3205b4986bddf0ea84489c390137267,False
+muestreo,ner,12,toon,reversible,,,autocontenida,2723ec1de73064625d9b481a50b6626bb92efe6b907965013140f8852df03ca7,False
+muestreo,ner,12,toon_flat,reversible,,,con_contrato,2723ec1de73064625d9b481a50b6626bb92efe6b907965013140f8852df03ca7,False
+muestreo,ner,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,adf69401fb2ba56fa852cc7ed172f85be80b041e239676c2dc449a10fc36e4a1,False
+muestreo,ner,12,xml_tipado,reversible,,,autocontenida,db8c20e5ee187ec328f8a2ece564b9e9f39106e553bae410392a2bfbb2827463,False
+muestreo,ner,12,csv_reversible:celdas,reversible,,,con_mapa,38165b232693f485468affe3d33a47ff631fd2d1a84ade61fe57ab476bf1404c,False
+muestreo,ner,12,csv_reversible:columnas,reversible,,,con_mapa,38165b232693f485468affe3d33a47ff631fd2d1a84ade61fe57ab476bf1404c,False
+muestreo,ner,12,toon_reversible:celdas,reversible,,,con_mapa,c87666c47e042ef90f14812cfb2eda1a3a1b43f5ec39938140365628ae37cbf7,False
+muestreo,ner,12,toon_reversible:columnas,reversible,,,con_mapa,c87666c47e042ef90f14812cfb2eda1a3a1b43f5ec39938140365628ae37cbf7,False
+muestreo,q,12,json_pretty,reversible,,,autocontenida,9ad9cb7d809c91e0d92a5df08b33eebb9100967690af880f7dc14ae54253aad6,False
+muestreo,q,12,json_compact,reversible,,,autocontenida,dcc9a0418c6e8cdbcc282e9373def24297a1a4f79dd2248cf6c0e8263abd219a,False
+muestreo,q,12,yaml,reversible,,,autocontenida,7dee55c16cd7935c6303d51ec194471f6339fd1f496de82f656893f6b61e3ace,False
+muestreo,q,12,xml,reversible,,,con_contrato,8f35f6aa9aac0c3571aee4edb9d1643a9651779b7b083a454b8adc636b0451ec,False
+muestreo,q,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,con_contrato,db3d6a452cf4e63f5d949f71def91fdff669ec02ae237045cd4877b0a73d266a,False
+muestreo,q,12,toon,reversible,,,autocontenida,92da07e1c50ce02f488491032072ff16b2d9c5749a749e39014d7ad98545b83c,False
+muestreo,q,12,toon_flat,reversible,,,con_contrato,163f5f68bb18344430e8a53db19e0f51c25f800782ba7e642428a49dd876a393,False
+muestreo,q,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,4aa05f9a259567fddd5b4790c67bf6ae124ef6f92ab737f6b69797302744e618,False
+muestreo,q,12,xml_tipado,reversible,,,autocontenida,7afa2ef319327b87fa6f97cd9f88f14b0dded01ad4a6606268cdc62d98d1b9a3,False
+muestreo,q,12,csv_reversible:celdas,reversible,,,con_mapa,02aaac7a65cf51ca5ee3e7337f5f0fd8a9396e63de4932e6fc1735995b8e75c7,False
+muestreo,q,12,csv_reversible:columnas,reversible,,,con_mapa,c3a4d2c89f761b69652b81c5fc21dd93372c48f02df8aaed201f3a66acd16b6b,False
+muestreo,q,12,toon_reversible:celdas,reversible,,,con_mapa,99b982640b5febb29c34ca8e29dc0e1ef8f535c2fae662493bce025ee2e83875,False
+muestreo,q,12,toon_reversible:columnas,reversible,,,con_mapa,d6a8083dcad3facaa262fc8de1869a2572732b44081321648b997daf4730344c,False
+muestreo,r,12,json_pretty,reversible,,,autocontenida,d9d625aa4a19fa31e49c75e4a298187f248039306de9fb06ebb16f1f0c3cd7e1,False
+muestreo,r,12,json_compact,reversible,,,autocontenida,11e91c34f6db7cce785eafcf7699570102d665e33625e30880c357197e8f7e6a,False
+muestreo,r,12,yaml,reversible,,,autocontenida,59c987e6a44adbc5306f3d7571ec21e1eb453fa1345580c5ca3735d2a9718bd2,False
+muestreo,r,12,xml,reversible,,,con_contrato,3df891e2862d1d7074eb6c03e1d4e4d9d09eac49e6cc7c790e64af13a61a8223,False
+muestreo,r,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 5 claves: d, l, t, k, scale); solo los registros se reconstruyen: reversible",,con_contrato,7ce7f267a9ac7cc4425c968b3a3fcc8f114dec1ecfa1b70a23036d138a4becab,False
+muestreo,r,12,toon,reversible,,,autocontenida,173ef955b90a0219b19bb86b883cf6fb419a879f8e426dc7ad781bf8f0347ab0,False
+muestreo,r,12,toon_flat,reversible,,,con_contrato,49668f12eab42a4605688243b8b2c871ce76704f2431098849c29a07a2e42ed6,False
+muestreo,r,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,fb82842815cb1ad1a5259a777fc1aff16d6d81e1bf533087d1f2604b10ba0f88,False
+muestreo,r,12,xml_tipado,reversible,,,autocontenida,57be8a5f1e999b7a44456ad4c3d2fb35034dcf1b169707091c9d7691764387ab,False
+muestreo,r,12,csv_reversible:celdas,reversible,,,con_mapa,00800d4b8f58db842c4b75437e82cb1e5ac06d3cb7bc2724bfdfbe36a23dd2ef,False
+muestreo,r,12,csv_reversible:columnas,reversible,,,con_mapa,296133ce8f6c3ca9452b5942f62322a13886c1334643bd8223aeaf4d7d1dc266,False
+muestreo,r,12,toon_reversible:celdas,reversible,,,con_mapa,08920de025aa585c20479f683807a61489c14e9a184f69b0dc462997f4d2b1a2,False
+muestreo,r,12,toon_reversible:columnas,reversible,,,con_mapa,432dc17a5c04ff943ae26ac25b07f6c584b7c35bcca19c571bf0ae8b3a4514d4,False
+muestreo,s,12,json_pretty,reversible,,,autocontenida,4ec438b895e5fcd9a25eef8f9c9c29955072d1fba89f9643ccfded643c4748f8,False
+muestreo,s,12,json_compact,reversible,,,autocontenida,519c85ed0836b7aad60fd8018b7ad0cbb6adfca8339b1fbcfda0ba05d1c8589f,False
+muestreo,s,12,yaml,reversible,,,autocontenida,3fa98f1361536435e8f1739db29a3c5901711858b3bf1875f73015b1221ddb90,False
+muestreo,s,12,xml,reversible,,,con_contrato,641b1e657000f455dadcb54a34b05bcdf8f310bf6a7c1c63d129d770957816c6,False
+muestreo,s,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, k); solo los registros se reconstruyen: reversible",,con_contrato,f376f108815e7e2679f7c233c2f460a1d77c9e2c93bdb7f2e2f8a6ec53c152eb,False
+muestreo,s,12,toon,reversible,,,autocontenida,fdd73ffd2167fc74ae4fb544f5984c3778802d661b7f1b6e08441801012cb049,False
+muestreo,s,12,toon_flat,reversible,,,con_contrato,a3c273af381308379d88f6eb073a000d5d26fc3846d2f824e5085fecbb7371c0,False
+muestreo,s,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,6b06cb6d2c3feb64e0d4f89ad7e1ad871efa4ac7bb4f666c4bb30703061de128,False
+muestreo,s,12,xml_tipado,reversible,,,autocontenida,a7a1e01f029bea4f909fec1f97679bb5f3314615e5cdfb8fea7ccfbafeed782c,False
+muestreo,s,12,csv_reversible:celdas,reversible,,,con_mapa,1da3e5baf1ab5f9c1baa5ef8b04dac1894d15e6fa7c45b6ee785cc950383d199,False
+muestreo,s,12,csv_reversible:columnas,reversible,,,con_mapa,9dd69f0321966752bc31da8f623938c6682d59ffde1d3a31f14d3c05a9758f76,False
+muestreo,s,12,toon_reversible:celdas,reversible,,,con_mapa,95029e2f44b3b91897bc10f30a333855eb16ef7183ddcd246bb701f702a3b4f1,False
+muestreo,s,12,toon_reversible:columnas,reversible,,,con_mapa,6b45c3bad32cf152a71ac2d5fb4c180569ff58ebbcf3fed5e3736c8416ec9dc8,False
+muestreo,sum,12,json_pretty,reversible,,,autocontenida,4395987f5e3f9db56d609021b80d1c48143649f57d13636d7c7bb82dee9a46d8,False
+muestreo,sum,12,json_compact,reversible,,,autocontenida,5342a5c85652e3cd55b19dd46159076073e23f9aba55a3003e52fb4cf31fa198,False
+muestreo,sum,12,yaml,reversible,,,autocontenida,049facceb99dd7b312452774fa9c31fd3a7d109b3a1fccf99ffef9318f9a42d4,False
+muestreo,sum,12,xml,reversible,,,con_contrato,314d8b20fdf9887d7ade63cf6eb9b89c42d81c7a06471a2277c10707925da069,False
+muestreo,sum,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 5 claves: d, l, t, src, dur); solo los registros se reconstruyen: reversible",,con_contrato,b82a6d772b6869f5901416b51e137f30714a12d0986eff368779752752417d5d,False
+muestreo,sum,12,toon,reversible,,,autocontenida,d8c29ea3db22c4666355bc8e850469f66d1f13fbc8593e35df675752b7957318,False
+muestreo,sum,12,toon_flat,reversible,,,con_contrato,ba048bc4d637985d68c36b0bbe482da138429e32dac67a8bdc70888525df476f,False
+muestreo,sum,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,1f27986fdcce737a6189ee41bb7ca808a822ffbbeb54b1b8c94c3278ebaf7ec2,False
+muestreo,sum,12,xml_tipado,reversible,,,autocontenida,4fe85aa4068cd9a7382f0934826de2a8f208960022e2cd70bd712a1a02a93f86,False
+muestreo,sum,12,csv_reversible:celdas,reversible,,,con_mapa,5c97208a90a8ca8b6569fca4a431b726c06c9cb97a3eaa5bb917c726b9442312,False
+muestreo,sum,12,csv_reversible:columnas,reversible,,,con_mapa,f27dc109b6cb279b0b056bf176350ceee948a38c46b54bb21a880d60f8fe6bd7,False
+muestreo,sum,12,toon_reversible:celdas,reversible,,,con_mapa,33eec6b24ac448ae13f2a25d013275f1df0fc27179715ae9432dcbf9bf4cc6b3,False
+muestreo,sum,12,toon_reversible:columnas,reversible,,,con_mapa,d60953bdeaa3e72ddf9b84153f9ce05add82c879204f2cfd8af37d02b09b8e91,False
+muestreo,tc,12,json_pretty,reversible,,,autocontenida,6998b5cee8ebc6079db1892f85c0897b5e4dc3a71b2fd42131e53f99009e68ad,False
+muestreo,tc,12,json_compact,reversible,,,autocontenida,517786c2839efbe9cb5245653289638bc02e7d15a7da19d53be90785d2066c99,False
+muestreo,tc,12,yaml,reversible,,,autocontenida,3da701b97bd4f2bb69d2483c97088cd0ba006432be52dabe7e9535d49ad53552,False
+muestreo,tc,12,xml,reversible,,,con_contrato,85c2f6e8497cc9b65e68377c59f99ed4792cfac16be635c5720effec87f53c50,False
+muestreo,tc,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, proj); solo los registros se reconstruyen: reversible",,con_contrato,97978ebd2b778ae48350622c6662704916f306a8b0050dd8f0dcc96f8b983933,False
+muestreo,tc,12,toon,reversible,,,autocontenida,2a481b75d79695550847ac2de4d18d7ce623a5c4abd84ef48320eb0f08118400,False
+muestreo,tc,12,toon_flat,reversible,,,con_contrato,1e1d96c9abad8a08a5637c5f5b9f879d5002b4d8514feca6bf8e45607410239c,False
+muestreo,tc,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,0952b9fe22b3daf4d2b56af6e2b449f5329151a38c3ab7851dfd3ee2358e4301,False
+muestreo,tc,12,xml_tipado,reversible,,,autocontenida,311166f9b9cc6a79ff773102e04f26894152de70c2b54edb3f0592c7e0402f95,False
+muestreo,tc,12,csv_reversible:celdas,reversible,,,con_mapa,a1730d149d674cb91700d73460cd247a0be233436d92cf7a7dc2edac2024765a,False
+muestreo,tc,12,csv_reversible:columnas,reversible,,,con_mapa,f9d1fb6167ae08388993dec591e40ad41b9a123feb693934fedb4174b5dd50e7,False
+muestreo,tc,12,toon_reversible:celdas,reversible,,,con_mapa,683974e252d5f1afa315f343bf2223e46b1bbd096af6c2e844b69132a2f921b1,False
+muestreo,tc,12,toon_reversible:columnas,reversible,,,con_mapa,97883bfe57fb0c4fa1cbd163757f13186415f18647e48276731409cf0caa0f15,False
+muestreo,us,12,json_pretty,reversible,,,autocontenida,b2b23e57614d570bbab0cd4ab1dc7faa82df5f4b70d878d955d3573ac1d980fe,False
+muestreo,us,12,json_compact,reversible,,,autocontenida,fa0b303dea4bc70f16de741f33950a04beba40a78016753faf363211ee02fa0e,False
+muestreo,us,12,yaml,reversible,,,autocontenida,398b41f6e81b925cfaed43f8416592c5dd9c62743a60a03c50945afc5ba508a3,False
+muestreo,us,12,xml,reversible,,,con_contrato,a9f8c6f4f24907058bd00c4a432ee7e2a9c19b4934ca8f0f51d43e591effb9fb,False
+muestreo,us,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, sprint); solo los registros se reconstruyen: reversible",,con_contrato,d1d19f98730fd66b20b2dd0ef3943b2c07ab7deb6dba550c9e397350b34b5082,False
+muestreo,us,12,toon,reversible,,,autocontenida,cf8ddebbf57dacb0e6d2d9f480cd63664f6a93f40b70a1c2b61439d58ee229ce,False
+muestreo,us,12,toon_flat,reversible,,,con_contrato,7f5f4d664cbd4ec46fb42f7b727a5f0ccef3f4b4f2d989729eebfc9f5e5402b0,False
+muestreo,us,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,fef8912e3aac688d63ae27dc3298cd9db7ef0ee09eee212ae1cc175f99216740,False
+muestreo,us,12,xml_tipado,reversible,,,autocontenida,c55c54d9d48384c3d9e293947a5c60072f63b05eafa5db9c72b70c8643de5c1d,False
+muestreo,us,12,csv_reversible:celdas,reversible,,,con_mapa,7225e9599eecdbd64d78a09cd03d2bedf6022cf5c52047a34626b1cbcfd0f59a,False
+muestreo,us,12,csv_reversible:columnas,reversible,,,con_mapa,af2ff24d35f654fe6dd19171a7ddb93595156a5c6f956ea0ccd43302d340e075,False
+muestreo,us,12,toon_reversible:celdas,reversible,,,con_mapa,fe10256ed54f91effd04a845f0cbeb06a1adcd77c56e94b7704bddda08e2a5da,False
+muestreo,us,12,toon_reversible:columnas,reversible,,,con_mapa,e359d1ce4aa7023d5f69bc0f6ce5e75bb2f28aa9e07212e3dc6c3159ad07129b,False
+ciclo,a,12,json_pretty,reversible,,,autocontenida,8654f36c71a4d1b09ce47dc810bb2199ec69819fb1c63413a825546b74479301,False
+ciclo,a,12,json_compact,reversible,,,autocontenida,c523f3b539b7dd860cbadf3c6b1a7477a8fd54df53022bbb96695cb65e43616f,False
+ciclo,a,12,yaml,reversible,,,autocontenida,ded809a88ad5ce158011c4be378f05b42971392adffeff185dc0527488357307,False
+ciclo,a,12,xml,reversible,,,con_contrato,2a8d4722b78e3e755617101593e5c16353e7e03f85fa995abdc1404e5ca3a9db,False
+ciclo,a,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,con_contrato,a48c426ad500de53b05bd978c3cdcef594887b3e2edf55848a7835d714710f19,False
+ciclo,a,12,toon,reversible,,,autocontenida,856f32ab89f3b2f375597997649de58fd78bd6383af9f609664476d2e316716d,False
+ciclo,a,12,toon_flat,reversible,,,con_contrato,f292b99d8e3cd82e72774507423f7e0c29b4743edf4ccdb86ac3ff857530b0f6,False
+ciclo,a,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,7f663520257b7fdc4b1c5943c18b94f1193f6a5b5d06b44aba3ffe0c04e4f5c6,False
+ciclo,a,12,xml_tipado,reversible,,,autocontenida,534e198ed210ed086724e8c9f4398747427e0b54c7f61c971757042ffc356bff,False
+ciclo,a,12,csv_reversible:celdas,reversible,,,con_mapa,67a76f0d504cbba7db1d09e927ac3a1ecad47a2df48d63201d356a2bf5b26953,False
+ciclo,a,12,csv_reversible:columnas,reversible,,,con_mapa,e6c13fc937f86f3e172b6b57c73c40c1c903794b23f1dd76c4e858e6753ea020,False
+ciclo,a,12,toon_reversible:celdas,reversible,,,con_mapa,c35a192343b4ca9c07097ef4398819363376ae6108b2137b350e11c9a5f7f4e3,False
+ciclo,a,12,toon_reversible:columnas,reversible,,,con_mapa,066e61cb263081844661deb60eecb4dc34d5c360c1b2e4be6ee3647cab1c8a16,False
+ciclo,card,12,json_pretty,reversible,,,autocontenida,69df91b4e320cbf2ab262878c14c96095b8b9b710de3470c3705dff2f5cbab30,False
+ciclo,card,12,json_compact,reversible,,,autocontenida,f9843e4de19fef23fa72db417f3d89764e987edb206eb3d90489051565da8aea,False
+ciclo,card,12,yaml,reversible,,,autocontenida,b1b712ed7756639ddf7cc7316db3db6acc65da02f45456cc0b965fdbde91b413,False
+ciclo,card,12,xml,reversible,,,con_contrato,8907eb8b04896b7f335784d58112693d7d92699fd43da0001ef1e588feddcc68,False
+ciclo,card,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, src); solo los registros se reconstruyen: reversible",,con_contrato,d55e25a20116c287ac91777bc8254e6c4d73a6f351f6700e6ec43ae57cf783a4,False
+ciclo,card,12,toon,reversible,,,autocontenida,4a7c5a5a5e4974ad911b9a531a401b3abfd9155dfb1a2eda9f5306ad5c952fc2,False
+ciclo,card,12,toon_flat,reversible,,,con_contrato,5ccbdaeacd33a42a584ea0b412a5a1d693bf93650c786b6670f01e25beaed807,False
+ciclo,card,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,24a760c7b21fa066ab1bd657703749ccf9767180a9d8fd428c4928ca46e15489,False
+ciclo,card,12,xml_tipado,reversible,,,autocontenida,1719fd0ee0ee1895e25fe17c693c515c20d0af2ba44235944279dcc5e2f1e3ca,False
+ciclo,card,12,csv_reversible:celdas,reversible,,,con_mapa,a19b2195bd10978a9bdf27d97de0d8b3b74befd48014c787f484b46faa5f33a7,False
+ciclo,card,12,csv_reversible:columnas,reversible,,,con_mapa,0294c4d0751aed013c7afa283cc86fbecd714a86609bce571239570835d21c57,False
+ciclo,card,12,toon_reversible:celdas,reversible,,,con_mapa,a8fc95c3d2fb763483459408ee1b057686a92a18133a992f054f6e05c1226eb7,False
+ciclo,card,12,toon_reversible:columnas,reversible,,,con_mapa,30dc93df646ac290a8394298bd9fe740563ff5dc48594edcbabffab468b223fa,False
+ciclo,cat,12,json_pretty,reversible,,,autocontenida,eca367542c5b54502543c7a370b33d84a619c039f703e72ae0cc358769231321,False
+ciclo,cat,12,json_compact,reversible,,,autocontenida,4ce5fab0d3215d81a3b4443f4b8b635f4b9c702d3e69301acf63e769977d43fe,False
+ciclo,cat,12,yaml,reversible,,,autocontenida,03f8fdea30635cadff2e71f619b7ea7a7a9c7f2acdf37553ad78a3abfce1b8fb,False
+ciclo,cat,12,xml,reversible,,,con_contrato,4a7a90c18dec8a2d565a1d4ffe228c3298cab86b0106e72a5a0043082a2fb157,False
+ciclo,cat,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 3 claves: d, store, cur); solo los registros se reconstruyen: reversible",,con_contrato,aa71b84c27a3eb06947f7ab28a141c5bd21a7e5fac036b43aae676807a04cf45,False
+ciclo,cat,12,toon,reversible,,,autocontenida,06ec458ef7e06aa6bc6f2304fae7309b7509d75f3c7cf6b8a3e00fe5942a9915,False
+ciclo,cat,12,toon_flat,reversible,,,con_contrato,8aef267a5c39e6c82b09fe08a51f82d910976f9958ee7c9e186a621e9960e90a,False
+ciclo,cat,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,44b11825c9545d6fae509c0b4911e72b387b7a0753249c92f0c4ac3bdf76eabf,False
+ciclo,cat,12,xml_tipado,reversible,,,autocontenida,eafffd8849dd2364d71cbe5fd17a739037b459c00ccf268cb62857b5e9922a47,False
+ciclo,cat,12,csv_reversible:celdas,reversible,,,con_mapa,76b989dce8fad91e27d7071fd82c3df2037837c3e25dc2d07fe68b38060a90d4,False
+ciclo,cat,12,csv_reversible:columnas,reversible,,,con_mapa,f57d8f1d1bb57d860948d7faebc073846ca3fc9214ba502e69d1b47c610f8443,False
+ciclo,cat,12,toon_reversible:celdas,reversible,,,con_mapa,ada647b29117c96072608e374b3fe36ff6f334d3e2afacc5d24a0dcad0c2259f,False
+ciclo,cat,12,toon_reversible:columnas,reversible,,,con_mapa,8e081a073c72f751c813492fbcfe9da2499fc433a46ed34a501ec2a3d7a385c8,False
+ciclo,cls,12,json_pretty,reversible,,,autocontenida,7152fc81d9702d74dd00bf7c6571cfb7e73e3628738b3653f449b5fe45aff8eb,False
+ciclo,cls,12,json_compact,reversible,,,autocontenida,b1ab2d84c4537c2804406808d0af8809e3e96afcf92eaf1b4e7d3ce434451445,False
+ciclo,cls,12,yaml,reversible,,,autocontenida,62cfc95e1c34151efdd9ecc49b89ff3ba2c1f1d31621b43636927ab5a28c21d3,False
+ciclo,cls,12,xml,reversible,,,con_contrato,c6a8ebff0549ea6107552ee7b1af49e2283b44012e6bc6ac220e10850e4c7636,False
+ciclo,cls,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, model, k); solo los registros se reconstruyen: reversible",,con_contrato,f935aee0de3083347215c10f9001d1bcd7561af19a2802c1ab3fa67a24175895,False
+ciclo,cls,12,toon,reversible,,,autocontenida,b3b78d950820ea726ec26d1f70877a9d4e15dab566faca55a2bb2f1117249a95,False
+ciclo,cls,12,toon_flat,reversible,,,con_contrato,58b7b1abe31394e94541d329d78da39baa50f6dd3b7b058ab9395ca0c8f2428d,False
+ciclo,cls,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,4b531a0031d8e7223099f984767b89ca6a67c3e7c4af72753231d3770c9dada6,False
+ciclo,cls,12,xml_tipado,reversible,,,autocontenida,b137bf18aac32916b157edfeeeced0e0ec6d75b1eb6b26192849ee1c2c0ddc1e,False
+ciclo,cls,12,csv_reversible:celdas,reversible,,,con_mapa,fbed2da86577850c6877b2a31ff7d9c7638d325a31e5a9f47645af6c379ed883,False
+ciclo,cls,12,csv_reversible:columnas,reversible,,,con_mapa,725fa552859e90fec0eb9ab08aa6d0f24af4e4eafabae40bebc272456a713531,False
+ciclo,cls,12,toon_reversible:celdas,reversible,,,con_mapa,031a5ee6645b0a7fe5a9f57f130ebf30dbee38e8a05ff940e8dc44fa19bb8c52,False
+ciclo,cls,12,toon_reversible:columnas,reversible,,,con_mapa,17dbd628306f89d445ed5641d164a5ddf101c8680212c69efbd62a206efd3cd6,False
+ciclo,code,12,json_pretty,reversible,,,autocontenida,173a833a0a0a0d20e6a30c54ec1d453c9a64e6c62bd27e25c444543690f365ab,False
+ciclo,code,12,json_compact,reversible,,,autocontenida,a3772c271467094dfc1290c82f6c731508781c616ea687c65b782b102f056d4e,False
+ciclo,code,12,yaml,reversible,,,autocontenida,a9a3cefd22f445e30a895053d8fcefd5983ac29168b56bea4f0aa3404c9135a0,False
+ciclo,code,12,xml,reversible,,,con_contrato,a4c4168c599e984b2d6a66d4736fe7414087ee0523c1401804e9ecb34f83860e,False
+ciclo,code,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 3 claves: d, l, t); solo los registros se reconstruyen: reversible",,con_contrato,1c34216135daa303f928304b46d1fa7a5848b7099ed08bcec8a24e70f77edbf7,False
+ciclo,code,12,toon,reversible,,,autocontenida,9b08f5c2333568d4281f46df5c320b0cf5d4f50402fc9d8fab44a669b18c7aad,False
+ciclo,code,12,toon_flat,reversible,,,con_contrato,c2302083866a849b4dabe993132c5e144f552daf0f884bff68d30052b884803d,False
+ciclo,code,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,93c5a4c6ef1c811a027f833cb74881063169cdb3e22144a328411bb24b86b385,False
+ciclo,code,12,xml_tipado,reversible,,,autocontenida,b5b0cd0e58d540c623ae0069bdee7a2e52b5ecd0c803b4113dfc3f9086450315,False
+ciclo,code,12,csv_reversible:celdas,reversible,,,con_mapa,8e63aef0f044a2d1d8dc46366ee3ec75d2acce819e19b8a93d028a3decf7803e,False
+ciclo,code,12,csv_reversible:columnas,reversible,,,con_mapa,62b7cc19795ed7c18a961584446da3030a26dbafd91bdf39c1507c558214cc36,False
+ciclo,code,12,toon_reversible:celdas,reversible,,,con_mapa,3cab7c968b403f085aa8b7bcf85f1866cc61ee35ac1e6a94c7a072206ac8c248,False
+ciclo,code,12,toon_reversible:columnas,reversible,,,con_mapa,16f649d17697c644ecc6bccc2d8cd75ea38aa71a162aab2be0ae16bdee866f4d,False
+ciclo,log,12,json_pretty,reversible,,,autocontenida,0835c2f81769b483c12e1baa1c1879379266960f35466f3a5d1ea3b6538a5ea1,False
+ciclo,log,12,json_compact,reversible,,,autocontenida,de745cbe74e3ca21a229039b5452339bd8dc495093bae1ae0b15a6221227fdb0,False
+ciclo,log,12,yaml,reversible,,,autocontenida,f629dfa32ad3365ecdd34939ccbb091a6e5c42c6433b3f3e756f309119cc4fd0,False
+ciclo,log,12,xml,reversible,,,con_contrato,d39e00c6835d70fc871b3fe57de551057cc04efadf844c6ca7698532cb8cd990,False
+ciclo,log,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 3 claves: d, env, host); solo los registros se reconstruyen: reversible",,con_contrato,faf3dbf6d8a4ed992cbd6685b0fc645d3e2debe954ceed699d4c631db28a0545,False
+ciclo,log,12,toon,reversible,,,autocontenida,c58e026d0f0874ce0c2f9575685fcbd755ab55693c7bab4b35cfac03ce5934ae,False
+ciclo,log,12,toon_flat,reversible,,,con_contrato,65aeb58835b2985234a6f5a9353f4cd602e074358015b6bf06ca195354f5cdb3,False
+ciclo,log,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,20970dc400ddfa8695630f834dbc621033c1814999effbc9abb9d9e05779e53e,False
+ciclo,log,12,xml_tipado,reversible,,,autocontenida,52ee26e04bc029d3b9206a5d78bf436f8f0fd4eea2377cf894c2d2cf4e5dbc97,False
+ciclo,log,12,csv_reversible:celdas,reversible,,,con_mapa,e487b06daa5bfb3e38797f3d9565efe8e998dfdee0305b3dc2049a84036b5488,False
+ciclo,log,12,csv_reversible:columnas,reversible,,,con_mapa,5ffc1098962e4ccdebc0ed432f8c0b455e670b5cb7df5b4bde7e918ba069ff93,False
+ciclo,log,12,toon_reversible:celdas,reversible,,,con_mapa,4acb08602fb99ff5f0bd91435927717b92b117fc8951fcf65c7c171b4bbb4c4f,False
+ciclo,log,12,toon_reversible:columnas,reversible,,,con_mapa,12d3ed299da1e1eaf46c000fa1cb8bcf33d5dbbbff8cb0540cfec5ad001d27a3,False
+ciclo,map,12,json_pretty,reversible,,,autocontenida,f2f55c6dc85eb8abdcc0f020c7cd0ca98a25736e93ddc667905d607ccd62d2c9,False
+ciclo,map,12,json_compact,reversible,,,autocontenida,b7cf3a2c48f643fd9986a5c3d6a39ba01e48609af6dd444c431dba4b8a7c59bd,False
+ciclo,map,12,yaml,reversible,,,autocontenida,d950cd71992b3e3971e86cee0f6f3ec4258bd8bbe7aa18de4e202b4d7f9ffa42,False
+ciclo,map,12,xml,reversible,,,con_contrato,7ef34e238009f5794accdbeaaae2e5e9d3413adf67b8e581a629bc3baed69134,False
+ciclo,map,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, src); solo los registros se reconstruyen: reversible",,con_contrato,d88a7ee83ba217e21f949f5065a429dccb22585e03753dc4004f42f4f4b1f9f5,False
+ciclo,map,12,toon,reversible,,,autocontenida,2f2ac9a839722b60f2a460cd736389fab3f73f9e2d1ac99e72c44b724f7b146f,False
+ciclo,map,12,toon_flat,reversible,,,con_contrato,2f2ac9a839722b60f2a460cd736389fab3f73f9e2d1ac99e72c44b724f7b146f,False
+ciclo,map,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,7a1c923034f6df14d86143c592f5fb658a90538d641c5a2e2530efb5db2c3770,False
+ciclo,map,12,xml_tipado,reversible,,,autocontenida,dbbe6f5b94a3b321902a8a49c84c15ea4aac737b4a9aa9219c7248bb7ea13b36,False
+ciclo,map,12,csv_reversible:celdas,reversible,,,con_mapa,c4c54d22947f61fa3c79895aa258767f5c79559fdba2b5e09f823dbd5fb83940,False
+ciclo,map,12,csv_reversible:columnas,reversible,,,con_mapa,c4c54d22947f61fa3c79895aa258767f5c79559fdba2b5e09f823dbd5fb83940,False
+ciclo,map,12,toon_reversible:celdas,reversible,,,con_mapa,06d1e4c0ea96a722d1003fe86eba4cd837cf490555398d14a286b00461ea5cc8,False
+ciclo,map,12,toon_reversible:columnas,reversible,,,con_mapa,06d1e4c0ea96a722d1003fe86eba4cd837cf490555398d14a286b00461ea5cc8,False
+ciclo,ner,12,json_pretty,reversible,,,autocontenida,a9a9e374815d8890fb0213b0b47cf0f5b8b6f5a5a6cde62050fdb7b695bb637a,False
+ciclo,ner,12,json_compact,reversible,,,autocontenida,f106c5ebe476ad0c6e26764cd25fd0e14ffbe4bd318d276cae744ae0ab862f9e,False
+ciclo,ner,12,yaml,reversible,,,autocontenida,8190e4675926f86ae1373919d9d04e9761d020f31f796122c5b1bd8583ef90bd,False
+ciclo,ner,12,xml,reversible,,,con_contrato,d5d2b817ebe9d9433ab13bd56ab52345e57980e8db033c5b9d65d0b94ea59ead,False
+ciclo,ner,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, model, schema); solo los registros se reconstruyen: reversible",,con_contrato,401ddfa4c11b1d84cdcc57562261f3060c01900a24fc72bb5481fe9e9afbb897,False
+ciclo,ner,12,toon,reversible,,,autocontenida,ef20a67c8ce29bffa36a60f235900a81e68e530f62017cce8809ac3b1c46f198,False
+ciclo,ner,12,toon_flat,reversible,,,con_contrato,ef20a67c8ce29bffa36a60f235900a81e68e530f62017cce8809ac3b1c46f198,False
+ciclo,ner,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,644567dd5172a8939a0ee3f606ac033987448b7ef93b723132e805dac8cde154,False
+ciclo,ner,12,xml_tipado,reversible,,,autocontenida,1b46ed3bd705529d5d2e26f290bfd0c7dbdb362ef221ecab427daaebd31113d9,False
+ciclo,ner,12,csv_reversible:celdas,reversible,,,con_mapa,cb8808c4ad744496cd965d5ff244b8901279989b755e74626801990c42d59cdc,False
+ciclo,ner,12,csv_reversible:columnas,reversible,,,con_mapa,cb8808c4ad744496cd965d5ff244b8901279989b755e74626801990c42d59cdc,False
+ciclo,ner,12,toon_reversible:celdas,reversible,,,con_mapa,9b0caf32c00205140df8ac4bba22083dc6453f69f49f6e705fabd12bc3149c0d,False
+ciclo,ner,12,toon_reversible:columnas,reversible,,,con_mapa,9b0caf32c00205140df8ac4bba22083dc6453f69f49f6e705fabd12bc3149c0d,False
+ciclo,q,12,json_pretty,reversible,,,autocontenida,083b5635eb1afbbc218fe45e3006a37ddcfaacb4028e8aa49bf68ee79034d47a,False
+ciclo,q,12,json_compact,reversible,,,autocontenida,284710c0735328d9761917a8cb7bff57af496653a0e00515b72ecfb921ae19a9,False
+ciclo,q,12,yaml,reversible,,,autocontenida,44455b5419f810d66682368cd3c206243ef8da718ee8803bc0f4e0c2fc8a441f,False
+ciclo,q,12,xml,reversible,,,con_contrato,ee6c465e1227c56f8690719f1fb6f674e95ab7cb258d99b868a29c89ddf30560,False
+ciclo,q,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,con_contrato,ab5dfcb4ca71384f2643473f5774ffb70d608574bac1ae1cd642c0ea2b6e1949,False
+ciclo,q,12,toon,reversible,,,autocontenida,cbb3da7775c5cb7b0f94dcd5d969317e27a4f53a87f05a7c3f53f4c8ef4a2f00,False
+ciclo,q,12,toon_flat,reversible,,,con_contrato,9e200e394334385783900d8f5e1f831f7f59159cd9ec4c3743e22706a12ce015,False
+ciclo,q,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,9bd0ae2d90da51478cfb4beedda7c3ecfceae28c5e6de3ec88b2035a22c309ad,False
+ciclo,q,12,xml_tipado,reversible,,,autocontenida,bb62c70b644822162b41346520af7fc0e065a651b5a417a3601decdfe227e5e3,False
+ciclo,q,12,csv_reversible:celdas,reversible,,,con_mapa,5f5f1e26cf762c867ecd8ed65c13bbf21e9209ca07a47fd1b68e0d35512596b7,False
+ciclo,q,12,csv_reversible:columnas,reversible,,,con_mapa,e922603408931204fbae85fe38855c15b4f2914608f3ba3dfb197031d760d250,False
+ciclo,q,12,toon_reversible:celdas,reversible,,,con_mapa,ebc64cfd941523b11700560a82e10d1c93240bad11fa954a41143ce2f066f0c1,False
+ciclo,q,12,toon_reversible:columnas,reversible,,,con_mapa,005c9e1b306d11300cc8a2378ee448b86cad776d686c107f8ce56ba5248538bd,False
+ciclo,r,12,json_pretty,reversible,,,autocontenida,3c4cd6ca0b209bf406eaf74b2016961cb1d5b3e918929665ff311ca098dd9dbf,False
+ciclo,r,12,json_compact,reversible,,,autocontenida,7b47559326bdb17146b08024782246b797028118cff47fe51bb35a9b4efa529a,False
+ciclo,r,12,yaml,reversible,,,autocontenida,9c1aa250dda8f3151546015287fe3c89a28ac1bea53688e4308ecb783dd254cd,False
+ciclo,r,12,xml,reversible,,,con_contrato,aabc413ee231f7aa4dff564834cce8fb3f9aebe6e9f51a660bcf5cf10e99646e,False
+ciclo,r,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 5 claves: d, l, t, k, scale); solo los registros se reconstruyen: reversible",,con_contrato,f3dc981db474efca8426971886d784302d5fab7a0b72e8bc49e5798998e4600b,False
+ciclo,r,12,toon,reversible,,,autocontenida,2511e64e2a56e492674c837623d13677354b2f8b5314a39fdca180aeee27a0d3,False
+ciclo,r,12,toon_flat,reversible,,,con_contrato,20114d1f8166dfce23a7977b86e2f564e5236a8c9872b3f1b7d3503c5e8d9f78,False
+ciclo,r,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,e95ad444b4bfb3c1ec4f7d22650a244f146d18d80fd56d70299b916a24df1cd7,False
+ciclo,r,12,xml_tipado,reversible,,,autocontenida,b7c9fbc87347961996f658e37beb65d66c9a29916d57bd69329bdb8d21bac494,False
+ciclo,r,12,csv_reversible:celdas,reversible,,,con_mapa,18652e957471b876210f7a7e6ea545110963037b179e8b9cf9d7fea4929fd91b,False
+ciclo,r,12,csv_reversible:columnas,reversible,,,con_mapa,afacb3dfc63d544656287970f6bc5a1b4df9c063a6555879a4812fb7b0f609c8,False
+ciclo,r,12,toon_reversible:celdas,reversible,,,con_mapa,823d39e090f18cc19f779eb7e7507c63506156c312e47ccb88b94b4a1508eae7,False
+ciclo,r,12,toon_reversible:columnas,reversible,,,con_mapa,80f35814ec0c5593aaac15042e69c8ed131960bd2a149448f794e3b44899d56c,False
+ciclo,s,12,json_pretty,reversible,,,autocontenida,ae2a3cf53fdacd4afcaeac712696f1013a8c700f4bc4291f0ffabcbf6479e671,False
+ciclo,s,12,json_compact,reversible,,,autocontenida,49b84379a3b62dd9146bffb635f7a9b730de58ef9dd4f999324650986f26238c,False
+ciclo,s,12,yaml,reversible,,,autocontenida,be28e38fcf6849d95499089438ed1547585986f4bfd31640d44139c9c83cc28d,False
+ciclo,s,12,xml,reversible,,,con_contrato,a73b6e864ec433776bb902d5b874a78101cae3b5e867694a7ccf14b1e3431fd8,False
+ciclo,s,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, k); solo los registros se reconstruyen: reversible",,con_contrato,d87c52a4813740f14597fe245d03c7bf1ea777d882415d87a80a15cc678777c9,False
+ciclo,s,12,toon,reversible,,,autocontenida,9e6c2be91e2aade8834894b8bf98bf0209d696e74e98c1946ad39c0e6d7f58c1,False
+ciclo,s,12,toon_flat,reversible,,,con_contrato,435b6b33fa452c2934efd0c1eb8579f9af2fb50d89d1b740f0fc6ac960cb48f3,False
+ciclo,s,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,b3d876c0bd5a70badb58d61d9f8272efaee5d720d89b36631326852436fecd86,False
+ciclo,s,12,xml_tipado,reversible,,,autocontenida,ad3e7c69cc9cd5363372ac2495135e14c2855f2811f25baa9c4aef7859b88c8d,False
+ciclo,s,12,csv_reversible:celdas,reversible,,,con_mapa,0e21be06fcebb4d04500f269b8719c3e395d9aad4e2464bcdccbe45718913b85,False
+ciclo,s,12,csv_reversible:columnas,reversible,,,con_mapa,d84f0b323581c882759e56f0090f37aa7e7f955da7a895f87d96cfacb4f6d4ff,False
+ciclo,s,12,toon_reversible:celdas,reversible,,,con_mapa,791a8a7290e6f3b7fe6c847cf088a76d63ea7d49bdc446d6c5c9e38535d9dade,False
+ciclo,s,12,toon_reversible:columnas,reversible,,,con_mapa,aeecfe67f8306669f207caf142ce83848717be65fddab4bb90623250e38b4c7d,False
+ciclo,sum,12,json_pretty,reversible,,,autocontenida,0297fe039e1659daa329ecfa0dcbbade23bc14042bb682b5fb227f95d0c63d72,False
+ciclo,sum,12,json_compact,reversible,,,autocontenida,1769cb62dc69ccbd9e0a99b05522ba57d8f5a76ae79ea48414f70a041bd596ee,False
+ciclo,sum,12,yaml,reversible,,,autocontenida,5f6bbd1fb922272db7906be906c37bf03b5e1ef715b22a38fe0f0d8a2f3bb231,False
+ciclo,sum,12,xml,reversible,,,con_contrato,a03938133dee17eae62622fe5ea764380e62782548cec2cdaa8fdff737939ea9,False
+ciclo,sum,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 5 claves: d, l, t, src, dur); solo los registros se reconstruyen: reversible",,con_contrato,a114f12b0bfec09a001e4315bf232c9706d18453f478f261237909e814f50874,False
+ciclo,sum,12,toon,reversible,,,autocontenida,75228393e25607b5f2df0be3735e65b4fecdcf7d7cd268d3334aa06276669db3,False
+ciclo,sum,12,toon_flat,reversible,,,con_contrato,6f7700c302c3394b9dc02cbe8f23be1819b4395f33309ecac52fe17cf7896cd9,False
+ciclo,sum,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,014dea45711a1adb80001992cb0788da49cd2b26b727b89c07dcf21c1e808434,False
+ciclo,sum,12,xml_tipado,reversible,,,autocontenida,884bb922a92edcdbd29e3844203fa3b4cd74a3c25accbe5a2ce863e877226712,False
+ciclo,sum,12,csv_reversible:celdas,reversible,,,con_mapa,74a66544d72257c68ed18d9735019a890977a36877f546fd17a4d3fac1e38a7b,False
+ciclo,sum,12,csv_reversible:columnas,reversible,,,con_mapa,a4256cdddc32d120a9ae9ce3414be4ce106bc147e09e982eddfb4ea008e7608f,False
+ciclo,sum,12,toon_reversible:celdas,reversible,,,con_mapa,789a90545b2cffb022ea065691aee3cd37a5381831335f860c878b59a56760eb,False
+ciclo,sum,12,toon_reversible:columnas,reversible,,,con_mapa,c08ec920bcd82de3f093393048d90e37416124a9259368cb76e00dcaa5be4cfe,False
+ciclo,tc,12,json_pretty,reversible,,,autocontenida,076d3ffe09f802bffefdefc5eba2abeaef4a400a71302ce49e2ad7da21846bc6,False
+ciclo,tc,12,json_compact,reversible,,,autocontenida,1aa2e3410652366a437456851b9600f017a2254c96021080fafae46805a916c8,False
+ciclo,tc,12,yaml,reversible,,,autocontenida,fcee6d2c1a561f7f8aa7e9ccbd070f47ac7bc9f0a98665e8ee2a9fcf67c8bd41,False
+ciclo,tc,12,xml,reversible,,,con_contrato,1f2beed7fbfefddc5afb6270a194d7d62e2ed9ff02e4cde303c48fd6fc73a60a,False
+ciclo,tc,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, proj); solo los registros se reconstruyen: reversible",,con_contrato,84e8b52b653a47475789548f8a8218442211fa7135c1f8dfbd787ce6bced8485,False
+ciclo,tc,12,toon,reversible,,,autocontenida,29b787369737420c6f4825485d792c33d8630c7ae2a71b202ec5277ba31c1789,False
+ciclo,tc,12,toon_flat,reversible,,,con_contrato,08a2de707f233bb84f3ff2156b11d180ded46fcf77f54027fa80020fcca8c27c,False
+ciclo,tc,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,8afabc8a8155eaa133222cc702495a0d6857096ba163a57e50d8caf0b9a01ba2,False
+ciclo,tc,12,xml_tipado,reversible,,,autocontenida,752767b74f3fafb197ec4ed84b6e62b128203938ba3c2a4db9e64f80a5df1b1f,False
+ciclo,tc,12,csv_reversible:celdas,reversible,,,con_mapa,2a48b76e7b4ec004138bda660a431e3ed72e11a466205d1641f7a9fb7d0e640f,False
+ciclo,tc,12,csv_reversible:columnas,reversible,,,con_mapa,fd87ed121c700a64c8795adc5fb8422e207319ae36ddaa808b9b1deed6f2a956,False
+ciclo,tc,12,toon_reversible:celdas,reversible,,,con_mapa,4cc9da58e911d2bd449e7c6355953f4d3f8ecdd224750f65775d7102cb25c346,False
+ciclo,tc,12,toon_reversible:columnas,reversible,,,con_mapa,af6622fd77031f6f5b241b899e421c8b353c22762c0b0872f025d284898ca6ea,False
+ciclo,us,12,json_pretty,reversible,,,autocontenida,a4d8a37df0e260b135380fa2a4f27455ff1dad6dd3c8ada8292b0bd5a518d161,False
+ciclo,us,12,json_compact,reversible,,,autocontenida,b45135322c8849139eea747746db77a4805a09f76a402b4714362923ad988908,False
+ciclo,us,12,yaml,reversible,,,autocontenida,94ba02586749b3d9522a9776c84c6a5c712651829b8aa968b4fc0029b7c47627,False
+ciclo,us,12,xml,reversible,,,con_contrato,761f9835846bd4062ef712f202ab47179d14d5d10c437e89e58a3a98448b4346,False
+ciclo,us,12,csv,no_reversible,"el CSV descarta los metadatos del documento (header con 4 claves: d, l, t, sprint); solo los registros se reconstruyen: reversible",,con_contrato,b6e32fd27f36cbb18b96a0709205879eed412470a3505e604e4f593b26fedf9a,False
+ciclo,us,12,toon,reversible,,,autocontenida,c18b03d8ef2911f732c881bb5149a0d92450ddcf767672f06bd4dbfc2ecd42fc,False
+ciclo,us,12,toon_flat,reversible,,,con_contrato,65e26ebc6447d2c75a1cd005969323efd53e40c18ea0a995d931cea3a5bc4202,False
+ciclo,us,12,mini,reversible_normalizado,,header.n lo añade el serializador .mini; header.v lo añade el serializador .mini,con_contrato,8b31268635c3361ce1e34d3a06b1aa03262314d13018288c43555dc5e6efee3f,False
+ciclo,us,12,xml_tipado,reversible,,,autocontenida,6d72bf948a30de7ee136edf14b66196046659224e258b043d5261f59c6ed23c7,False
+ciclo,us,12,csv_reversible:celdas,reversible,,,con_mapa,c2efb584243475de69a8cfd2d714b220a38829abcdcef6e1d2129003da7e6a64,False
+ciclo,us,12,csv_reversible:columnas,reversible,,,con_mapa,0c5787756d469311d558591d5e96be681d4549804ee766725bb62c628e8dceca,False
+ciclo,us,12,toon_reversible:celdas,reversible,,,con_mapa,3122618d734f8ea2f3fd618f376e29b0ca47aa3614d1f4ef7153763c23715e33,False
+ciclo,us,12,toon_reversible:columnas,reversible,,,con_mapa,a86b9d769b60195378fb77570c269665b71c823c2281aeebfc226a9ce80452b8,False

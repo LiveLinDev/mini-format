@@ -1,0 +1,82 @@
+{
+  "creado": "2026-09-30",
+  "datos_crudos_modificados": false,
+  "definicion_de_payload": {
+    "contenido_hojas": "cota inferior de contenido: cada valor hoja tokenizado por separado y sumado (columna `payload` de benchmark/results/summary_12.csv); no es un texto enviado",
+    "documento": "texto completo del documento transmitido, sin contrato, mapa ni prompt (lo que los documentos del equipo llamaban 'solo payload', 35,64 %)",
+    "en_v7_y_v8": "las cifras de V7 y V8 son tokens de entrada y salida que informa el proveedor (tokenizador propio), no conteos locales de documento: no son comparables con la serie de V1",
+    "estructura_compartida": "contrato o mapa de aplanado necesario para decodificar",
+    "prompt_reutilizable": "bloque de instrucción de cada solicitud",
+    "total": "conteo del texto completo enviado, no la suma de fragmentos"
+  },
+  "directorio": "experiments/v7_escalamiento/results/deepseek_volumen",
+  "errata": [
+    {
+      "campo": "meta.json",
+      "descripcion": "meta.json describe UNA invocación (json, lote 100, 200 llamadas, 1,6823 USD); llamadas.jsonl contiene DOS (añade mini, lote 200, 100 llamadas)",
+      "evidencia": [
+        "experiments/v7_escalamiento/results/deepseek_volumen/meta.json:12",
+        "experiments/v7_escalamiento/results/deepseek_volumen/meta.json:15",
+        "experiments/v7_escalamiento/results/deepseek_volumen/meta.json:23",
+        "experiments/v7_escalamiento/results/deepseek_volumen/meta.json:24",
+        "experiments/v7_escalamiento/results/deepseek_volumen/llamadas.jsonl (300 líneas)"
+      ],
+      "id": "V7-E2",
+      "la_ventana_de_la_segunda_invocacion": "desconocida: llamadas.jsonl no guarda fecha por llamada",
+      "llamadas_jsonl_total": 300,
+      "meta_json": {
+        "fin": "2026-09-17T22:54:06+00:00",
+        "formatos": [
+          "json"
+        ],
+        "inicio": "2026-09-17T22:45:06+00:00",
+        "llamadas": 200,
+        "tamanos": [
+          100
+        ],
+        "usd_gastado": 1.6823
+      },
+      "por_formato_en_jsonl": {
+        "json": {
+          "llamadas": 200,
+          "lote": 100,
+          "registros": 20000,
+          "tokens_entrada": 577479,
+          "tokens_salida": 1257535,
+          "usd": 1.6823
+        },
+        "mini": {
+          "llamadas": 100,
+          "lote": 200,
+          "registros": 20000,
+          "tokens_entrada": 560563,
+          "tokens_salida": 473106,
+          "usd": 0.7359
+        }
+      },
+      "usd_estimado_jsonl_total": 2.4182
+    },
+    {
+      "campo": "costo_real.json",
+      "costo_real_json": {
+        "consumido_usd": 0.78,
+        "estimado_con_precios_publicados_usd": 2.4182,
+        "registros_procesados": 40000,
+        "tokens_entrada": 1138042,
+        "tokens_salida": 1730641
+      },
+      "descripcion": "0,78 USD es la diferencia de saldo del proveedor según el propio archivo; el saldo no está en el repositorio y no se puede verificar. La estimación con precios de lista (2,4182 USD) sí se reproduce desde llamadas.jsonl",
+      "estimado_reproducido_usd": 2.4182,
+      "evidencia": [
+        "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json:5",
+        "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json:9"
+      ],
+      "id": "V7-E3",
+      "tokens_entrada_reproducidos": 1138042,
+      "tokens_salida_reproducidos": 1730641,
+      "verificable": false
+    }
+  ],
+  "esquema": "mini-format/errata/1",
+  "generado_por": "python experiments/v1_tokens/errata_v7_v8.py --escribir"
+}

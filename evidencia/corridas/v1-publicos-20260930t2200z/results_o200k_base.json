@@ -1,0 +1,548 @@
+{
+  "methodology_version": 1,
+  "tokenizer": "o200k_base",
+  "tokenizer_backend": "tiktoken",
+  "python": "3.11.9",
+  "tiktoken": "0.14.0",
+  "toon": {
+    "implementation": "official vendored reference",
+    "package_version": "4.1.1",
+    "spec_version": "4.1"
+  },
+  "contract_training": "Complete snapshot; serialization measurement, not held-out LLM generation accuracy.",
+  "comparison": "Identical JSON values, full wrappers and metadata; reusable schema and generation prompt measured separately.",
+  "implementation_sha256": {
+    "run.py": "2fc2d53a24e2920b392ea5c7ed626e37037b88e6ff0a439b19e422952715156b",
+    "baselines.py": "cc725868d399e1a3cede168650778bb9ee976523316addde1e05029b5384a699",
+    "src/minifmt/domain.py": "af7281a06e8fd6c8e2c621361efd2f3fc102f0778d07bf67ad80fdfeac9ad17b"
+  },
+  "datasets": [
+    {
+      "id": "products",
+      "title": "DummyJSON products",
+      "records": 194,
+      "unique_ids": 194,
+      "source_kind": "public synthetic test data",
+      "source_url": "https://dummyjson.com/products?limit=0",
+      "sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+      "formats": {
+        "json_compact": {
+          "tokens": 89310,
+          "bytes": 306438,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 89310,
+          "payload_plus_prompt_tokens": null
+        },
+        "json_pretty": {
+          "tokens": 119823,
+          "bytes": 415114,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 119823,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon": {
+          "tokens": 93624,
+          "bytes": 296409,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 93624,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon_flat": {
+          "tokens": 68260,
+          "bytes": 201287,
+          "roundtrip": true,
+          "shared_schema_tokens": 903,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 69163,
+          "payload_plus_prompt_tokens": null
+        },
+        "csv": {
+          "tokens": 67057,
+          "bytes": 196746,
+          "roundtrip": true,
+          "shared_schema_tokens": 1143,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 68200,
+          "payload_plus_prompt_tokens": null
+        },
+        "yaml": {
+          "tokens": 100013,
+          "bytes": 313992,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 100013,
+          "payload_plus_prompt_tokens": null
+        },
+        "xml": {
+          "tokens": 169714,
+          "bytes": 578841,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 169714,
+          "payload_plus_prompt_tokens": null
+        },
+        "mini": {
+          "tokens": 64090,
+          "bytes": 181357,
+          "roundtrip": true,
+          "shared_schema_tokens": 759,
+          "prompt_tokens": 1206,
+          "payload_plus_schema_tokens": 64848,
+          "payload_plus_prompt_tokens": 65296
+        }
+      },
+      "flattening": {
+        "selection": "Lowest output token count among both reversible variants; shared schema cost is reported separately.",
+        "selected_toon": "arrays_as_indexed_columns",
+        "selected_csv": "arrays_as_indexed_columns",
+        "candidates": {
+          "arrays_as_json_cells": {
+            "toon_tokens": 78341,
+            "csv_tokens": 85029,
+            "roundtrip": true
+          },
+          "arrays_as_indexed_columns": {
+            "toon_tokens": 68260,
+            "csv_tokens": 67057,
+            "roundtrip": true
+          }
+        }
+      },
+      "savings": {
+        "vs_json_compact_pct": 28.24,
+        "vs_json_pretty_pct": 46.51,
+        "vs_toon_pct": 31.55,
+        "vs_toon_flat_pct": 6.11,
+        "vs_csv_pct": 4.42,
+        "vs_yaml_pct": 35.92,
+        "vs_xml_pct": 62.24
+      },
+      "mini_fits_smaller_than_flat_toon_including_schema": true,
+      "mini_without_document_factoring_tokens": 68645,
+      "sample_coverage": [
+        {
+          "training_percent": 20,
+          "training_records": 39,
+          "heldout_records": 155,
+          "status": "exact_roundtrip"
+        },
+        {
+          "training_percent": 80,
+          "training_records": 155,
+          "heldout_records": 39,
+          "status": "exact_roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "users",
+      "title": "DummyJSON users",
+      "records": 208,
+      "unique_ids": 208,
+      "source_kind": "public synthetic test data; identities and credentials are fictional",
+      "source_url": "https://dummyjson.com/users?limit=0",
+      "sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+      "formats": {
+        "json_compact": {
+          "tokens": 91251,
+          "bytes": 289146,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 91251,
+          "payload_plus_prompt_tokens": null
+        },
+        "json_pretty": {
+          "tokens": 131181,
+          "bytes": 423118,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 131181,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon": {
+          "tokens": 60815,
+          "bytes": 152941,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 60815,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon_flat": {
+          "tokens": 60926,
+          "bytes": 153344,
+          "roundtrip": true,
+          "shared_schema_tokens": 560,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 61486,
+          "payload_plus_prompt_tokens": null
+        },
+        "csv": {
+          "tokens": 60028,
+          "bytes": 150416,
+          "roundtrip": true,
+          "shared_schema_tokens": 820,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 60848,
+          "payload_plus_prompt_tokens": null
+        },
+        "yaml": {
+          "tokens": 104826,
+          "bytes": 300308,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 104826,
+          "payload_plus_prompt_tokens": null
+        },
+        "xml": {
+          "tokens": 202226,
+          "bytes": 653763,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 202226,
+          "payload_plus_prompt_tokens": null
+        },
+        "mini": {
+          "tokens": 43268,
+          "bytes": 92923,
+          "roundtrip": true,
+          "shared_schema_tokens": 1252,
+          "prompt_tokens": 1796,
+          "payload_plus_schema_tokens": 44519,
+          "payload_plus_prompt_tokens": 45064
+        }
+      },
+      "flattening": {
+        "selection": "Lowest output token count among both reversible variants; shared schema cost is reported separately.",
+        "selected_toon": "arrays_as_json_cells",
+        "selected_csv": "arrays_as_json_cells",
+        "candidates": {
+          "arrays_as_json_cells": {
+            "toon_tokens": 60926,
+            "csv_tokens": 60028,
+            "roundtrip": true
+          },
+          "arrays_as_indexed_columns": {
+            "toon_tokens": 60926,
+            "csv_tokens": 60028,
+            "roundtrip": true
+          }
+        }
+      },
+      "savings": {
+        "vs_json_compact_pct": 52.58,
+        "vs_json_pretty_pct": 67.02,
+        "vs_toon_pct": 28.85,
+        "vs_toon_flat_pct": 28.98,
+        "vs_csv_pct": 27.92,
+        "vs_yaml_pct": 58.72,
+        "vs_xml_pct": 78.6
+      },
+      "mini_fits_smaller_than_flat_toon_including_schema": true,
+      "mini_without_document_factoring_tokens": 61262,
+      "sample_coverage": [
+        {
+          "training_percent": 20,
+          "training_records": 42,
+          "heldout_records": 166,
+          "status": "exact_roundtrip"
+        },
+        {
+          "training_percent": 80,
+          "training_records": 166,
+          "heldout_records": 42,
+          "status": "exact_roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "comments",
+      "title": "JSONPlaceholder comments",
+      "records": 500,
+      "unique_ids": 500,
+      "source_kind": "public synthetic test data",
+      "source_url": "https://jsonplaceholder.typicode.com/comments",
+      "sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+      "formats": {
+        "json_compact": {
+          "tokens": 35761,
+          "bytes": 139744,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 35761,
+          "payload_plus_prompt_tokens": null
+        },
+        "json_pretty": {
+          "tokens": 45260,
+          "bytes": 157745,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 45260,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon": {
+          "tokens": 31014,
+          "bytes": 119776,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 31014,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon_flat": {
+          "tokens": 31022,
+          "bytes": 119791,
+          "roundtrip": true,
+          "shared_schema_tokens": 60,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 31082,
+          "payload_plus_prompt_tokens": null
+        },
+        "csv": {
+          "tokens": 29865,
+          "bytes": 117273,
+          "roundtrip": true,
+          "shared_schema_tokens": 85,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 29951,
+          "payload_plus_prompt_tokens": null
+        },
+        "yaml": {
+          "tokens": 39719,
+          "bytes": 145242,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 39719,
+          "payload_plus_prompt_tokens": null
+        },
+        "xml": {
+          "tokens": 59960,
+          "bytes": 221258,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 59960,
+          "payload_plus_prompt_tokens": null
+        },
+        "mini": {
+          "tokens": 30268,
+          "bytes": 117776,
+          "roundtrip": true,
+          "shared_schema_tokens": 150,
+          "prompt_tokens": 477,
+          "payload_plus_schema_tokens": 30417,
+          "payload_plus_prompt_tokens": 30745
+        }
+      },
+      "flattening": {
+        "selection": "Lowest output token count among both reversible variants; shared schema cost is reported separately.",
+        "selected_toon": "arrays_as_json_cells",
+        "selected_csv": "arrays_as_json_cells",
+        "candidates": {
+          "arrays_as_json_cells": {
+            "toon_tokens": 31022,
+            "csv_tokens": 29865,
+            "roundtrip": true
+          },
+          "arrays_as_indexed_columns": {
+            "toon_tokens": 31022,
+            "csv_tokens": 29865,
+            "roundtrip": true
+          }
+        }
+      },
+      "savings": {
+        "vs_json_compact_pct": 15.36,
+        "vs_json_pretty_pct": 33.12,
+        "vs_toon_pct": 2.41,
+        "vs_toon_flat_pct": 2.43,
+        "vs_csv_pct": -1.35,
+        "vs_yaml_pct": 23.79,
+        "vs_xml_pct": 49.52
+      },
+      "mini_fits_smaller_than_flat_toon_including_schema": true,
+      "mini_without_document_factoring_tokens": 30268,
+      "sample_coverage": [
+        {
+          "training_percent": 20,
+          "training_records": 100,
+          "heldout_records": 400,
+          "status": "exact_roundtrip"
+        },
+        {
+          "training_percent": 80,
+          "training_records": 400,
+          "heldout_records": 100,
+          "status": "exact_roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "earthquakes",
+      "title": "USGS earthquake observations",
+      "records": 1000,
+      "unique_ids": 1000,
+      "source_kind": "real historical earthquake observations",
+      "source_url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+      "sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+      "formats": {
+        "json_compact": {
+          "tokens": 252527,
+          "bytes": 716758,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 252527,
+          "payload_plus_prompt_tokens": null
+        },
+        "json_pretty": {
+          "tokens": 353250,
+          "bytes": 1094856,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 353250,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon": {
+          "tokens": 294355,
+          "bytes": 848976,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 294355,
+          "payload_plus_prompt_tokens": null
+        },
+        "toon_flat": {
+          "tokens": 173803,
+          "bytes": 449588,
+          "roundtrip": true,
+          "shared_schema_tokens": 590,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 174393,
+          "payload_plus_prompt_tokens": null
+        },
+        "csv": {
+          "tokens": 171180,
+          "bytes": 442266,
+          "roundtrip": true,
+          "shared_schema_tokens": 750,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 171930,
+          "payload_plus_prompt_tokens": null
+        },
+        "yaml": {
+          "tokens": 299369,
+          "bytes": 791819,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 299369,
+          "payload_plus_prompt_tokens": null
+        },
+        "xml": {
+          "tokens": 545323,
+          "bytes": 1757888,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 545323,
+          "payload_plus_prompt_tokens": null
+        },
+        "mini": {
+          "tokens": 164137,
+          "bytes": 357348,
+          "roundtrip": true,
+          "shared_schema_tokens": 879,
+          "prompt_tokens": 1336,
+          "payload_plus_schema_tokens": 165015,
+          "payload_plus_prompt_tokens": 165473
+        }
+      },
+      "flattening": {
+        "selection": "Lowest output token count among both reversible variants; shared schema cost is reported separately.",
+        "selected_toon": "arrays_as_indexed_columns",
+        "selected_csv": "arrays_as_indexed_columns",
+        "candidates": {
+          "arrays_as_json_cells": {
+            "toon_tokens": 174922,
+            "csv_tokens": 172301,
+            "roundtrip": true
+          },
+          "arrays_as_indexed_columns": {
+            "toon_tokens": 173803,
+            "csv_tokens": 171180,
+            "roundtrip": true
+          }
+        }
+      },
+      "savings": {
+        "vs_json_compact_pct": 35.0,
+        "vs_json_pretty_pct": 53.54,
+        "vs_toon_pct": 44.24,
+        "vs_toon_flat_pct": 5.56,
+        "vs_csv_pct": 4.11,
+        "vs_yaml_pct": 45.17,
+        "vs_xml_pct": 69.9
+      },
+      "mini_fits_smaller_than_flat_toon_including_schema": true,
+      "mini_without_document_factoring_tokens": 181521,
+      "sample_coverage": [
+        {
+          "training_percent": 20,
+          "training_records": 200,
+          "heldout_records": 800,
+          "status": "safely_rejected_unobserved_schema",
+          "error_code": "D_TYPE",
+          "error_path": "$/features/520/properties/rms"
+        },
+        {
+          "training_percent": 80,
+          "training_records": 800,
+          "heldout_records": 200,
+          "status": "exact_roundtrip"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "records": 1902,
+    "datasets": 4,
+    "tokens": {
+      "json_compact": 468849,
+      "json_pretty": 649514,
+      "toon": 479808,
+      "toon_flat": 334011,
+      "csv": 328130,
+      "yaml": 543927,
+      "xml": 977223,
+      "mini": 301763
+    },
+    "all_roundtrips_passed": true,
+    "weighted_savings_pct": {
+      "json_compact": 35.64,
+      "json_pretty": 53.54,
+      "toon": 37.11,
+      "toon_flat": 9.65,
+      "csv": 8.04,
+      "yaml": 44.52,
+      "xml": 69.12
+    },
+    "wins_vs_flat_toon": 4
+  }
+}

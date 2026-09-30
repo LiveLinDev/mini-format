@@ -1,0 +1,37 @@
+{
+  "id": "V1-documental-30-10-3",
+  "estudio": "V1",
+  "meta_documental": "Ahorro de tokens >= 30 % de .mini frente a JSON compacto en >= 10 de los 14 dominios y con tres tokenizadores.",
+  "fijado_por": "equipo de implementación (flujo v1, rama stream/v1)",
+  "fijado_el": "2026-09-30",
+  "fijado_antes_del_analisis": true,
+  "sujeto_a_aprobacion_del_asesor": true,
+  "declaracion": "Esta interpretación la fijó el equipo de implementación el 2026-09-30, ANTES de ejecutar el análisis de este flujo. Las cifras exploratorias previas de la auditoría (lectura de media por dominio sobre la serie archivada n=100: 12, 10 y 8 dominios con ahorro >= 30 % para o200k_base, cl100k_base y r50k_base) ya eran conocidas al fijarla. No se ha elegido por su resultado y queda SUJETA A APROBACIÓN del asesor: si el asesor fija otra lectura, el veredicto se recalcula con esa lectura (las demás se publican igualmente en criterio_v1.json).",
+  "interpretacion_primaria": {
+    "serie": "n=100, variante 'muestreo'",
+    "n": 100,
+    "variante": "muestreo",
+    "referencia": "json_compact",
+    "unidad": "documento_sin_contrato (solo el texto del documento transmitido; sin contrato, mapa ni prompt)",
+    "ahorro_del_dominio": "100 * (1 - suma(tokens .mini) / suma(tokens JSON compacto)), sumando los tokens de TODOS los documentos de ese dominio en la serie primaria",
+    "comparacion_con_umbral": "sobre el valor sin redondear; ahorro >= 30,0",
+    "umbral_pct": 30.0,
+    "min_dominios": 10,
+    "dominios_totales": 14,
+    "tokenizadores": ["o200k_base", "cl100k_base", "r50k_base"],
+    "regla": "cumple solo si, para CADA uno de los tres tokenizadores, al menos 10 dominios alcanzan el umbral; no_cumple si alguno de los tres no lo logra",
+    "reversibilidad": "el conteo de un formato solo se acepta si objeto->texto->objeto se verificó para ese documento; JSON compacto se verifica con json.loads y .mini con minifmt.parse"
+  },
+  "lecturas_alternativas_publicadas_sin_elegir": [
+    "media por dominio por tokenizador (media aritmética de los ahorros de los 14 dominios) frente a agregado por suma",
+    "serie n=12 (línea base, protocolo 'ciclo')",
+    "serie n=100 variante 'ciclo'",
+    "intersección de dominios: dominios que alcanzan el umbral con los tres tokenizadores a la vez",
+    "efecto del tamaño n (n=1, 5, 10, 25, 50, 100, 250)"
+  ],
+  "estadistica": {
+    "intervalo": "IC 95 % por bootstrap percentil de dominios (conglomerados), B = 10000, semilla 20260914",
+    "estadisticos": ["media por dominio", "agregado por suma"],
+    "nota_independencia": "Los 14 dominios no son una población: q extiende a a los mismos 12 ítems. Para n > 12 los 12 registros base se repiten (replicacion_de_base), de modo que n=100 NO aporta muestras independientes; el IC describe la variabilidad entre dominios, no inferencia poblacional."
+  }
+}

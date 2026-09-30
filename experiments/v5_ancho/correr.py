@@ -44,6 +44,7 @@ sys.path.insert(0, str(ROOT / "benchmark"))
 import formats  # noqa: E402
 from minifmt import Contract  # noqa: E402
 from minifmt.tokens import get_tokenizer  # noqa: E402
+import vocab_local  # noqa: E402  (vocabularios de benchmark/vocab, sin red y con hash verificado)
 
 RESULTS = Path(__file__).resolve().parent / "results"
 SEMILLA = 20260915
@@ -141,11 +142,19 @@ def main() -> None:
     ap.add_argument("--tokenizadores", default="o200k_base,cl100k_base,r50k_base")
     ap.add_argument("--repeticiones", type=int, default=5,
                     help="documentos independientes por celda, para dar variabilidad")
+    ap.add_argument("--salida", default=None, help="directorio de salida (por defecto experiments/v5_ancho/results)")
     args = ap.parse_args()
+    global RESULTS
+    if args.salida:
+        RESULTS = Path(args.salida)
 
     anchos = [int(x) for x in args.anchos.split(",")]
     lotes = [int(x) for x in args.lotes.split(",")]
+    vocab_local.preparar_cache([n for n in args.tokenizadores.split(",") if n in vocab_local.VOCABULARIOS])
     toks = {nom: get_tokenizer(nom) for nom in args.tokenizadores.split(",")}
+    for nom, tk in toks.items():  # un tokenizador que cayera al respaldo no equivale a tiktoken: error, no omisión
+        if tk.backend != "tiktoken":
+            raise SystemExit(f"tokenizador {nom}: backend {tk.backend!r}, se esperaba tiktoken")
     RESULTS.mkdir(parents=True, exist_ok=True)
 
     filas = []

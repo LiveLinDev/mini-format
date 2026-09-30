@@ -1,0 +1,125 @@
+{
+  "v7": {
+    "deepseek_volumen": {
+      "captura_del_saldo_en_el_repositorio": false,
+      "costo_real_json": {
+        "consumido_usd": 0.78,
+        "estimado_con_precios_publicados_usd": 2.4182,
+        "registros_procesados": 40000,
+        "tokens_entrada": 1138042,
+        "tokens_salida": 1730641
+      },
+      "el_jsonl_no_guarda_fecha_por_llamada": true,
+      "llamadas_jsonl_total": 300,
+      "meta_cubre_solo_una_invocacion": true,
+      "meta_json": {
+        "fin": "2026-09-17T22:54:06+00:00",
+        "formatos": [
+          "json"
+        ],
+        "inicio": "2026-09-17T22:45:06+00:00",
+        "llamadas": 200,
+        "tamanos": [
+          100
+        ],
+        "usd_gastado": 1.6823
+      },
+      "por_formato_en_jsonl": {
+        "json": {
+          "llamadas": 200,
+          "lote": 100,
+          "registros": 20000,
+          "tokens_entrada": 577479,
+          "tokens_salida": 1257535,
+          "usd": 1.6823
+        },
+        "mini": {
+          "llamadas": 100,
+          "lote": 200,
+          "registros": 20000,
+          "tokens_entrada": 560563,
+          "tokens_salida": 473106,
+          "usd": 0.7359
+        }
+      },
+      "tokens_entrada_jsonl": 1138042,
+      "tokens_salida_jsonl": 1730641,
+      "usd_estimado_jsonl": 2.4182
+    },
+    "lote_maximo_sin_perdida": {
+      "definicion_estricta_por_lote": {
+        "json": 100,
+        "mini": 200
+      },
+      "discrepancia": true,
+      "lineas": {
+        "analizar.py: buenos = alguna llamada con aprovechados == solicitados": 85,
+        "analizar.py: la salida legible ya usa aprovechamiento 100 % por lote": 117,
+        "analizar.py: lote_maximo_sin_perdida = max(lote de buenos)": 99
+      },
+      "mini_L300": {
+        "aprovechamiento_pct": 93.3,
+        "llamadas": 3,
+        "llamadas_cortadas": 2
+      },
+      "resumen_csv_archivado": {
+        "json": 100,
+        "mini": 300
+      }
+    }
+  },
+  "v8": {
+    "archivo": "experiments/v8_sima/datos.json",
+    "conciliacion_clases": {
+      "bloques": 31,
+      "bloques_con_respuesta_cruda": 17,
+      "bloques_donde_minifmt_reproduce_los_contadores": 17,
+      "clases": [
+        {
+          "bloques": 3,
+          "bloques_con_respuesta_cruda": 0,
+          "id": 3
+        },
+        {
+          "bloques": 11,
+          "bloques_con_respuesta_cruda": 0,
+          "id": 5
+        },
+        {
+          "bloques": 11,
+          "bloques_con_respuesta_cruda": 11,
+          "id": 6
+        },
+        {
+          "bloques": 3,
+          "bloques_con_respuesta_cruda": 3,
+          "id": 7
+        },
+        {
+          "bloques": 3,
+          "bloques_con_respuesta_cruda": 3,
+          "id": 8
+        }
+      ],
+      "codigos_de_error": {
+        "E05": 2,
+        "E07": 5
+      },
+      "estado": "reconciliado_por_contadores_y_respuestas_crudas_parciales; registro_a_registro_pendiente",
+      "identidad_por_bloque": "pedidos = recibidos + inválidas y finales = recibidos + reparadas + recuperadas, en cada bloque",
+      "identidad_por_bloque_ok": true,
+      "registro_a_registro": "pendiente: las respuestas de reparación y de reposición y las respuestas crudas de las clases 3 y 5 no están en datos.json",
+      "suma": "343 + 5 + 2 = 350",
+      "suma_es_finales_y_pedidos": true,
+      "totales_de_los_contadores": {
+        "finales": 350,
+        "invalidas": 7,
+        "llamadas": 38,
+        "pedidos": 350,
+        "recibidos_validos": 343,
+        "recuperadas": 2,
+        "reparadas": 5
+      }
+    }
+  }
+}

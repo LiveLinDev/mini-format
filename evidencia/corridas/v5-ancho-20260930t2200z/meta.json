@@ -1,0 +1,26 @@
+{
+  "semilla": 20260915,
+  "anchos": [
+    3,
+    5,
+    8,
+    12,
+    20,
+    32,
+    50
+  ],
+  "lotes": [
+    1,
+    10,
+    100,
+    1000
+  ],
+  "tokenizadores": [
+    "o200k_base",
+    "cl100k_base",
+    "r50k_base"
+  ],
+  "repeticiones": 5,
+  "datos": "sintéticos deterministas; repertorio POOL en este archivo",
+  "nota": "los campos se toman en orden fijo: W=12 es superconjunto de W=8"
+}

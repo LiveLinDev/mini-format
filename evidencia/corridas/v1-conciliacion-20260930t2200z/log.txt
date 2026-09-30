@@ -1,0 +1,298 @@
+$ C:\Users\APO\AppData\Local\Temp\claude\F--sesionesclaude\b5b4777d-66a0-440d-a362-c4be67e65951\scratchpad\venv\Scripts\python.exe benchmark/public/run.py --tokenizer o200k_base --out-dir F:\sesionesclaude\wt\v1\evidencia\corridas\v1-publicos-20260930t2200z\publico_o200k_base
+products {'json_compact': 89310, 'json_pretty': 119823, 'toon': 93624, 'toon_flat': 68260, 'csv': 67057, 'yaml': 100013, 'xml': 169714, 'mini': 64090}
+users {'json_compact': 91251, 'json_pretty': 131181, 'toon': 60815, 'toon_flat': 60926, 'csv': 60028, 'yaml': 104826, 'xml': 202226, 'mini': 43268}
+comments {'json_compact': 35761, 'json_pretty': 45260, 'toon': 31014, 'toon_flat': 31022, 'csv': 29865, 'yaml': 39719, 'xml': 59960, 'mini': 30268}
+earthquakes {'json_compact': 252527, 'json_pretty': 353250, 'toon': 294355, 'toon_flat': 173803, 'csv': 171180, 'yaml': 299369, 'xml': 545323, 'mini': 164137}
+
+$ C:\Users\APO\AppData\Local\Temp\claude\F--sesionesclaude\b5b4777d-66a0-440d-a362-c4be67e65951\scratchpad\venv\Scripts\python.exe benchmark/public/run.py --tokenizer cl100k_base --out-dir F:\sesionesclaude\wt\v1\evidencia\corridas\v1-publicos-20260930t2200z\publico_cl100k_base
+products {'json_compact': 89502, 'json_pretty': 120792, 'toon': 94437, 'toon_flat': 69450, 'csv': 68167, 'yaml': 100820, 'xml': 170116, 'mini': 65323}
+users {'json_compact': 90122, 'json_pretty': 131320, 'toon': 60735, 'toon_flat': 60845, 'csv': 59958, 'yaml': 104473, 'xml': 201278, 'mini': 43531}
+comments {'json_compact': 41295, 'json_pretty': 50794, 'toon': 36966, 'toon_flat': 36975, 'csv': 35881, 'yaml': 45874, 'xml': 65313, 'mini': 36254}
+earthquakes {'json_compact': 250798, 'json_pretty': 353525, 'toon': 294630, 'toon_flat': 174345, 'csv': 171720, 'yaml': 299642, 'xml': 542580, 'mini': 163301}
+
+$ C:\Users\APO\AppData\Local\Temp\claude\F--sesionesclaude\b5b4777d-66a0-440d-a362-c4be67e65951\scratchpad\venv\Scripts\python.exe benchmark/public/run.py --tokenizer r50k_base --out-dir F:\sesionesclaude\wt\v1\evidencia\corridas\v1-publicos-20260930t2200z\publico_r50k_base
+products {'json_compact': 101839, 'json_pretty': 207220, 'toon': 120807, 'toon_flat': 80838, 'csv': 80059, 'yaml': 119389, 'xml': 184389, 'mini': 74562}
+users {'json_compact': 96251, 'json_pretty': 228073, 'toon': 65533, 'toon_flat': 65655, 'csv': 65100, 'yaml': 128337, 'xml': 209296, 'mini': 46754}
+comments {'json_compact': 48367, 'json_pretty': 65422, 'toon': 43879, 'toon_flat': 43885, 'csv': 42404, 'yaml': 55038, 'xml': 71894, 'mini': 42884}
+earthquakes {'json_compact': 275418, 'json_pretty': 631729, 'toon': 433744, 'toon_flat': 198703, 'csv': 197700, 'yaml': 373705, 'xml': 577760, 'mini': 181360}
+
+$ C:\Users\APO\AppData\Local\Temp\claude\F--sesionesclaude\b5b4777d-66a0-440d-a362-c4be67e65951\scratchpad\venv\Scripts\python.exe benchmark/run_benchmark.py --sizes 12,25,50,100,250,500 --out-dir C:\Users\APO\AppData\Local\Temp\v1-ejecucion-t9l80vms\benchmark_results
+a     done (  1.7s)
+card  done (  2.6s)
+cat   done (  3.5s)
+cls   done (  4.3s)
+code  done (  5.3s)
+log   done (  6.2s)
+map   done (  6.8s)
+ner   done (  7.4s)
+q     done (  9.0s)
+r     done (  9.9s)
+s     done ( 10.7s)
+sum   done ( 11.6s)
+tc    done ( 12.6s)
+us    done ( 13.5s)
+[
+ {
+  "prefix": "a",
+  "mini": 813,
+  "toon_flat": 928,
+  "toon": 1537,
+  "csv": 811,
+  "json_compact": 1314,
+  "yaml": 1607,
+  "xml": 1859,
+  "json_pretty": 2097,
+  "payload": 626,
+  "mini_vs_json_compact_pct": 38.1,
+  "mini_vs_toon_flat_pct": 12.4,
+  "mini_vs_toon_pct": 47.1,
+  "mini_vs_csv_pct": -0.2,
+  "mini_overhead_pct": 23.0,
+  "json_overhead_pct": 52.4,
+  "toon_flat_overhead_pct": 32.5
+ },
+ {
+  "prefix": "card",
+  "mini": 523,
+  "toon_flat": 543,
+  "toon": 859,
+  "csv": 493,
+  "json_compact": 753,
+  "yaml": 852,
+  "xml": 1244,
+  "json_pretty": 1151,
+  "payload": 414,
+  "mini_vs_json_compact_pct": 30.5,
+  "mini_vs_toon_flat_pct": 3.7,
+  "mini_vs_toon_pct": 39.1,
+  "mini_vs_csv_pct": -6.1,
+  "mini_overhead_pct": 20.8,
+  "json_overhead_pct": 45.0,
+  "toon_flat_overhead_pct": 23.8
+ },
+ {
+  "prefix": "cat",
+  "mini": 381,
+  "toon_flat": 406,
+  "toon": 737,
+  "csv": 367,
+  "json_compact": 609,
+  "yaml": 764,
+  "xml": 1140,
+  "json_pretty": 1021,
+  "payload": 261,
+  "mini_vs_json_compact_pct": 37.4,
+  "mini_vs_toon_flat_pct": 6.2,
+  "mini_vs_toon_pct": 48.3,
+  "mini_vs_csv_pct": -3.8,
+  "mini_overhead_pct": 31.5,
+  "json_overhead_pct": 57.1,
+  "toon_flat_overhead_pct": 35.7
+ },
+ {
+  "prefix": "cls",
+  "mini": 384,
+  "toon_flat": 472,
+  "toon": 736,
+  "csv": 419,
+  "json_compact": 615,
+  "yaml": 855,
+  "xml": 1151,
+  "json_pretty": 1101,
+  "payload": 290,
+  "mini_vs_json_compact_pct": 37.6,
+  "mini_vs_toon_flat_pct": 18.6,
+  "mini_vs_toon_pct": 47.8,
+  "mini_vs_csv_pct": 8.4,
+  "mini_overhead_pct": 24.5,
+  "json_overhead_pct": 52.8,
+  "toon_flat_overhead_pct": 38.6
+ },
+ {
+  "prefix": "code",
+  "mini": 613,
+  "toon_flat": 613,
+  "toon": 952,
+  "csv": 569,
+  "json_compact": 848,
+  "yaml": 950,
+  "xml": 1436,
+  "json_pretty": 1282,
+  "payload": 498,
+  "mini_vs_json_compact_pct": 27.7,
+  "mini_vs_toon_flat_pct": 0.0,
+  "mini_vs_toon_pct": 35.6,
+  "mini_vs_csv_pct": -7.7,
+  "mini_overhead_pct": 18.8,
+  "json_overhead_pct": 41.3,
+  "toon_flat_overhead_pct": 18.8
+ },
+ {
+  "prefix": "log",
+  "mini": 524,
+  "toon_flat": 568,
+  "toon": 906,
+  "csv": 496,
+  "json_compact": 755,
+  "yaml": 887,
+  "xml": 1230,
+  "json_pretty": 1144,
+  "payload": 417,
+  "mini_vs_json_compact_pct": 30.6,
+  "mini_vs_toon_flat_pct": 7.7,
+  "mini_vs_toon_pct": 42.2,
+  "mini_vs_csv_pct": -5.6,
+  "mini_overhead_pct": 20.4,
+  "json_overhead_pct": 44.8,
+  "toon_flat_overhead_pct": 26.6
+ },
+ {
+  "prefix": "map",
+  "mini": 252,
+  "toon_flat": 258,
+  "toon": 258,
+  "csv": 220,
+  "json_compact": 388,
+  "yaml": 428,
+  "xml": 712,
+  "json_pretty": 635,
+  "payload": 175,
+  "mini_vs_json_compact_pct": 35.1,
+  "mini_vs_toon_flat_pct": 2.3,
+  "mini_vs_toon_pct": 2.3,
+  "mini_vs_csv_pct": -14.5,
+  "mini_overhead_pct": 30.6,
+  "json_overhead_pct": 54.9,
+  "toon_flat_overhead_pct": 32.2
+ },
+ {
+  "prefix": "ner",
+  "mini": 227,
+  "toon_flat": 253,
+  "toon": 253,
+  "csv": 204,
+  "json_compact": 375,
+  "yaml": 481,
+  "xml": 742,
+  "json_pretty": 659,
+  "payload": 139,
+  "mini_vs_json_compact_pct": 39
+total 13.5s; rows=1344
+
+$ C:\Users\APO\AppData\Local\Temp\claude\F--sesionesclaude\b5b4777d-66a0-440d-a362-c4be67e65951\scratchpad\venv\Scripts\python.exe experiments/v1_tokens/run.py --salida C:\Users\APO\AppData\Local\Temp\v1-ejecucion-t9l80vms\v1_results --sin-figuras --tokenizadores o200k_base,cl100k_base,r50k_base
+tokenizador o200k_base: backend=tiktoken
+tokenizador cl100k_base: backend=tiktoken
+tokenizador r50k_base: backend=tiktoken
+[1] línea base: 168 celdas comparadas, 0 diferencias
+     {'referencia': 'json_compact', 'media_publicada_pct': 33.8, 'media_reproducida_pct': 33.8, 'min_pct': 27.3, 'max_pct': 39.5}
+     {'referencia': 'toon', 'media_publicada_pct': 37.4, 'media_reproducida_pct': 37.4, 'min_pct': 2.3, 'max_pct': 48.3}
+     {'referencia': 'toon_flat', 'media_publicada_pct': 7.0, 'media_reproducida_pct': 7.0, 'min_pct': 0.0, 'max_pct': 18.6}
+     {'referencia': 'csv', 'media_publicada_pct': -5.0, 'media_reproducida_pct': -5.1, 'min_pct': -14.5, 'max_pct': 8.4}
+[2] muestreo a     (  1.0s)
+[2] muestreo card  (  1.8s)
+[2] muestreo cat   (  2.5s)
+[2] muestreo cls   (  3.2s)
+[2] muestreo code  (  4.0s)
+[2] muestreo log   (  4.7s)
+[2] muestreo map   (  5.3s)
+[2] muestreo ner   (  5.9s)
+[2] muestreo q     (  7.1s)
+[2] muestreo r     (  7.8s)
+[2] muestreo s     (  8.5s)
+[2] muestreo sum   (  9.2s)
+[2] muestreo tc    ( 10.0s)
+[2] muestreo us    ( 10.7s)
+[2] ciclo    a     ( 11.7s)
+[2] ciclo    card  ( 12.4s)
+[2] ciclo    cat   ( 13.1s)
+[2] ciclo    cls   ( 13.8s)
+[2] ciclo    code  ( 14.6s)
+[2] ciclo    log   ( 15.4s)
+[2] ciclo    map   ( 15.9s)
+[2] ciclo    ner   ( 16.4s)
+[2] ciclo    q     ( 17.6s)
+[2] ciclo    r     ( 18.3s)
+[2] ciclo    s     ( 18.9s)
+[2] ciclo    sum   ( 19.6s)
+[2] ciclo    tc    ( 20.3s)
+[2] ciclo    us    ( 21.0s)
+[2] ida y vuelta fallida: 0 filas ([])
+  o200k_base  n=1   vs json_pretty  media=  55.3 IC95=[53.4, 57.1] mediana=55.4 rango=[48.7, 60.9]
+  o200k_base  n=1   vs json_compact media=  27.0 IC95=[24.9, 29.1] mediana=26.8 rango=[20.4, 34.8]
+  o200k_base  n=1   vs yaml         media=  36.9 IC95=[33.7, 40.3] mediana=35.5 rango=[27.4, 49.6]
+  o200k_base  n=1   vs xml          media=  50.3 IC95=[48.5, 52.1] mediana=51.1 rango=[44.8, 56.1]
+  o200k_base  n=1   vs csv          media= -26.2 IC95=[-41.3, -13.7] mediana=-18.7 rango=[-91.3, 11.5]
+  o200k_base  n=1   vs toon         media=  34.8 IC95=[31.9, 37.8] mediana=34.5 rango=[23.7, 45.5]
+  o200k_base  n=1   vs toon_flat    media=  30.5 IC95=[26.5, 34.9] mediana=28.4 rango=[20.4, 44.3]
+  o200k_base  n=100 vs json_pretty  media=  59.3 IC95=[56.8, 61.8] mediana=60.2 rango=[51.3, 67.0]
+  o200k_base  n=100 vs json_compact media=  34.8 IC95=[32.7, 36.9] mediana=35.1 rango=[27.9, 41.7]
+  o200k_base  n=100 vs yaml         media=  45.6 IC95=[42.6, 48.8] mediana=44.5 rango=[35.9, 56.5]
+  o200k_base  n=100 vs xml          media=  63.1 IC95=[60.1, 66.0] mediana=65.3 rango=[52.4, 71.8]
+  o200k_base  n=100 vs csv          media=  -2.6 IC95=[-4.7, -0.4] mediana=-2.6 rango=[-10.7, 7.7]
+  o200k_base  n=100 vs toon         media=  37.4 IC95=[28.7, 44.1] mediana=42.7 rango=[-2.7, 49.4]
+  o200k_base  n=100 vs toon_flat    media=   2.0 IC95=[-0.1, 4.4] mediana=1.6 rango=[-4.3, 12.9]
+  cl100k_base n=1   vs json_pretty  media=  54.6 IC95=[52.5, 56.6] mediana=55.2 rango=[46.8, 60.2]
+  cl100k_base n=1   vs json_compact media=  24.0 IC95=[22.0, 26.2] mediana=23.4 rango=[17.8, 30.7]
+  cl100k_base n=1   vs yaml         media=  36.2 IC95=[32.8, 39.8] mediana=34.8 rango=[25.8, 47.4]
+  cl100k_base n=1   vs xml          media=  49.4 IC95=[47.3, 51.4] mediana=49.7 rango=[42.4, 57.0]
+  cl100k_base n=1   vs csv          media= -27.0 IC95=[-42.1, -14.3] mediana=-18.9 rango=[-95.7, 14.5]
+  cl100k_base n=1   vs toon         media=  34.1 IC95=[31.0, 37.2] mediana=34.1 rango=[23.3, 42.9]
+  cl100k_base n=1   vs toon_flat    media=  29.8 IC95=[25.7, 34.2] mediana=28.1 rango=[19.4, 45.9]
+  cl100k_base n=100 vs json_pretty  media=  58.2 IC95=[55.4, 61.0] mediana=59.2 rango=[49.1, 66.9]
+  cl100k_base n=100 vs json_compact media=  32.7 IC95=[30.4, 35.1] mediana=34.0 rango=[25.4, 41.5]
+  cl100k_base n=100 vs yaml         media=  44.6 IC95=[41.4, 47.9] mediana=44.2 rango=[35.7, 55.8]
+  cl100k_base n=100 vs xml          media=  61.8 IC95=[58.3, 65.2] mediana=65.2 rango=[48.8, 71.6]
+  cl100k_base n=100 vs csv          media=  -3.3 IC95=[-5.2, -1.2] mediana=-2.7 rango=[-10.6, 6.1]
+  cl100k_base n=100 vs toon         media=  36.1 IC95=[27.3, 43.0] mediana=42.3 rango=[-5.3, 48.3]
+  cl100k_base n=100 vs toon_flat    media=   1.3 IC95=[-0.8, 3.6] mediana=1.5 rango=[-5.3, 11.4]
+  r50k_base   n=1   vs json_pretty  media=  69.5 IC95=[67.5, 71.5] mediana=69.5 rango=[62.3, 75.4]
+  r50k_base   n=1   vs json_compact media=  22.6 IC95=[20.5, 25.0] mediana=21.8 rango=[17.0, 30.9]
+  r50k_base   n=1   vs yaml         media=  35.8 IC95=[32.5, 39.5] mediana=33.9 rango=[27.9, 48.7]
+  r50k_base   n=1   vs xml          media=  55.8 IC95=[54.0, 58.0] mediana=55.9 rango=[50.3, 65.5]
+  r50k_base   n=1   vs csv          media= -20.1 IC95=[-33.7, -8.8] mediana=-15.0 rango=[-81.5, 15.5]
+  r50k_base   n=1   vs toon         media=  40.5 IC95=[37.0, 44.0] mediana=40.9 rango=[29.6, 51.3]
+  r50k_base   n=1   vs toon_flat    media=  33.0 IC95=[29.3, 37.1] mediana=30.4 rango=[23.1, 46.9]
+  r50k_base   n=100 vs json_pretty  media=  73.6 IC95=[71.0, 76.1] mediana=74.4 rango=[65.1, 81.8]
+  r50k_base   n=100 vs json_compact media=  30.4 IC95=[27.9, 33.0] mediana=31.2 rango=[21.8, 40.2]
+  r50k_base   n=100 vs yaml         media=  42.2 IC95=[39.2, 45.1] mediana=42.0 rango=[33.1, 51.8]
+  r50k_base   n=100 vs xml          media=  67.4 IC95=[63.6, 70.8] mediana=70.9 rango=[53.4, 78.2]
+  r50k_base   n=100 vs csv          media=  -1.0 IC95=[-2.3, 0.4] mediana=-0.8 rango=[-6.9, 5.2]
+  r50k_base   n=100 vs toon         media=  42.9 IC95=[34.1, 50.0] mediana=49.1 rango=[6.3, 55.6]
+  r50k_base   n=100 vs toon_flat    media=   3.3 IC95=[1.6, 5.0] mediana=3.4 rango=[-3.9, 10.3]
+  eq {'tokenizador': 'o200k_base', 'idioma': 'es', 'instr_mini': 'mini_spec', 'instr_json': 'json_schema', 'delta_instruccion_media': 127.35714285714286, 'n_eq_media': 7.695757108024119, 'n_eq_mediana': 7.795444033302498, 'n_eq_min': 1.0, 'n_eq_max': 13.660714285714285}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'es', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_schema_ejemplo', 'delta_instruccion_media': 100.85714285714286, 'n_eq_media': 6.696179729075811, 'n_eq_mediana': 6.6934551341350605, 'n_eq_min': 1.0, 'n_eq_max': 12.5}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'es', 'instr_mini': 'mini_spec', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 279.5, 'n_eq_media': 15.140369848376904, 'n_eq_mediana': 14.809331293706293, 'n_eq_min': 5.833333333333333, 'n_eq_max': 25.359712230215827}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'es', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 357.85714285714283, 'n_eq_media': 19.030289423060044, 'n_eq_mediana': 18.958333333333332, 'n_eq_min': 9.342105263157894, 'n_eq_max': 29.76618705035971}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'en', 'instr_mini': 'mini_spec', 'instr_json': 'json_schema', 'delta_instruccion_media': 85.35714285714286, 'n_eq_media': 5.564703981651479, 'n_eq_mediana': 5.618061979648473, 'n_eq_min': 1.0, 'n_eq_max': 10.0}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'en', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_schema_ejemplo', 'delta_instruccion_media': 58.857142857142854, 'n_eq_media': 4.57426017898638, 'n_eq_mediana': 4.5101814142910035, 'n_eq_min': 1.0, 'n_eq_max': 8.818181818181818}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'en', 'instr_mini': 'mini_spec', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 238.5, 'n_eq_media': 12.914209185392323, 'n_eq_mediana': 12.744755244755245, 'n_eq_min': 4.717391304347826, 'n_eq_max': 21.785714285714285}
+  eq {'tokenizador': 'o200k_base', 'idioma': 'en', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 315.85714285714283, 'n_eq_media': 16.746915699410852, 'n_eq_mediana': 16.78442028985507, 'n_eq_min': 8.201754385964913, 'n_eq_max': 26.07913669064748}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'es', 'instr_mini': 'mini_spec', 'instr_json': 'json_schema', 'delta_instruccion_media': 161.57142857142858, 'n_eq_media': 9.897036657416843, 'n_eq_mediana': 10.232224261441004, 'n_eq_min': 1.0, 'n_eq_max': 16.42857142857143}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'es', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_schema_ejemplo', 'delta_instruccion_media': 137.64285714285714, 'n_eq_media': 8.952595808162949, 'n_eq_mediana': 9.1869918699187, 'n_eq_min': 1.0, 'n_eq_max': 15.357142857142858}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'es', 'instr_mini': 'mini_spec', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 302.92857142857144, 'n_eq_media': 17.35733544574321, 'n_eq_mediana': 17.373591972496296, 'n_eq_min': 7.105263157894736, 'n_eq_max': 27.428057553956833}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'es', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 384.42857142857144, 'n_eq_media': 21.616384383592163, 'n_eq_mediana': 21.361718129778964, 'n_eq_min': 11.095238095238095, 'n_eq_max': 32.10431654676259}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'en', 'instr_mini': 'mini_spec', 'instr_json': 'json_schema', 'delta_instruccion_media': 93.64285714285714, 'n_eq_media': 6.286002569526206, 'n_eq_mediana': 6.424157303370786, 'n_eq_min': 1.0, 'n_eq_max': 10.535714285714286}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'en', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_schema_ejemplo', 'delta_instruccion_media': 69.71428571428571, 'n_eq_media': 5.343322966316513, 'n_eq_mediana': 5.390449438202247, 'n_eq_min': 1.0, 'n_eq_max': 9.454545454545453}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'en', 'instr_mini': 'mini_spec', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 238.0, 'n_eq_media': 13.657964594386206, 'n_eq_mediana': 13.840770606814434, 'n_eq_min': 5.143540669856459, 'n_eq_max': 21.785714285714285}
+  eq {'tokenizador': 'cl100k_base', 'idioma': 'en', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 317.5, 'n_eq_media': 17.7984949890629, 'n_eq_mediana': 17.723436259557936, 'n_eq_min': 9.09090909090909, 'n_eq_max': 26.258992805755394}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'es', 'instr_mini': 'mini_spec', 'instr_json': 'json_schema', 'delta_instruccion_media': 232.78571428571428, 'n_eq_media': 14.10866207978292, 'n_eq_mediana': 14.038930146205615, 'n_eq_min': 1.9473684210526314, 'n_eq_max': 22.664670658682635}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'es', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_schema_ejemplo', 'delta_instruccion_media': 207.57142857142858, 'n_eq_media': 12.991900830572458, 'n_eq_mediana': 13.042565947242206, 'n_eq_min': 1.0, 'n_eq_max': 21.49700598802395}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'es', 'instr_mini': 'mini_spec', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 378.5, 'n_eq_media': 21.970419029705514, 'n_eq_mediana': 21.252688172043012, 'n_eq_min': 8.378995433789955, 'n_eq_max': 34.60144927536232}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'es', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 472.7142857142857, 'n_eq_media': 26.93701870473514, 'n_eq_mediana': 25.41136418414076, 'n_eq_min': 12.813918305597578, 'n_eq_max': 40.1268115942029}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'en', 'instr_mini': 'mini_spec', 'instr_json': 'json_schema', 'delta_instruccion_media': 105.5, 'n_eq_media': 7.121919719346735, 'n_eq_mediana': 6.938172043010752, 'n_eq_min': 1.0, 'n_eq_max': 11.796407185628743}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'en', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_schema_ejemplo', 'delta_instruccion_media': 80.28571428571429, 'n_eq_media': 6.184923251437817, 'n_eq_mediana': 5.92290585618977, 'n_eq_min': 1.0, 'n_eq_max': 10.62874251497006}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'en', 'instr_mini': 'mini_spec', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 260.2142857142857, 'n_eq_media': 15.182389492819695, 'n_eq_mediana': 14.70111111111111, 'n_eq_min': 4.863636363636363, 'n_eq_max': 24.461077844311376}
+  eq {'tokenizador': 'r50k_base', 'idioma': 'en', 'instr_mini': 'mini_spec_ejemplo', 'instr_json': 'json_ejemplo', 'delta_instruccion_media': 348.42857142857144, 'n_eq_media': 19.802516988857352, 'n_eq_mediana': 18.797491039426525, 'n_eq_min': 9.178082191780822, 'n_eq_max': 29.43840579710145}
+
+$ C:\Users\APO\AppData\Local\Temp\claude\F--sesionesclaude\b5b4777d-66a0-440d-a362-c4be67e65951\scratchpad\venv\Scripts\python.exe experiments/v5_ancho/correr.py --salida C:\Users\APO\AppData\Local\Temp\v1-ejecucion-t9l80vms\v5_results
+  W=  3 listo
+  W=  5 listo
+  W=  8 listo
+  W= 12 listo
+  W= 20 listo
+  W= 32 listo
+  W= 50 listo
+
+3360 filas -> C:\Users\APO\AppData\Local\Temp\v1-ejecucion-t9l80vms\v5_results\ancho_largo.csv
+672 filas -> C:\Users\APO\AppData\Local\Temp\v1-ejecucion-t9l80vms\v5_results\ancho_resumen.csv
+

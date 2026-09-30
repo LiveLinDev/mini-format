@@ -6,8 +6,6 @@ from __future__ import annotations
 
 import copy
 import csv
-import hashlib
-import importlib.util
 import json
 import random
 import sys
@@ -40,63 +38,37 @@ ETIQUETAS = {
     "mini": ".mini",
 }
 
-R50K_SHA256 = "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930"
-
-
 def registro() -> Registry:
     return Registry.load(ROOT / "forks")
 
 
 # --------------------------------------------------------------- tokenizadores
-class _EncTokenizer:
-    def __init__(self, name: str, enc, backend: str, fuente: str):
-        self.name = name
-        self._enc = enc
-        self.backend = backend
-        self.fuente = fuente
+import vocab_local  # noqa: E402  (benchmark/vocab_local.py: vocabularios locales, sin red)
 
-    def count(self, text: str) -> int:
-        return len(self._enc.encode(text, disallowed_special=()))
+TOKENIZADORES_V1 = tuple(vocab_local.NOMBRES)  # o200k_base, cl100k_base, r50k_base
 
 
-def _r50k_local() -> Optional[_EncTokenizer]:
-    """GPT-2 / r50k_base a partir de un archivo YA presente en disco.
+def tokenizadores(nombres: Sequence[str], estricto: bool = True) -> Dict[str, Any]:
+    """Tokenizadores tiktoken con el vocabulario de ``benchmark/vocab`` (sin red).
 
-    El paquete ``openai-whisper`` incluye ``assets/gpt2.tiktoken``; si su
-    sha256 coincide con el hash oficial de ``r50k_base`` (tiktoken_ext) se usa
-    sin ninguna descarga. Si no existe, se devuelve None.
+    Comprueba el SHA-256 de cada vocabulario contra el oficial y activa la caché
+    local de tiktoken, de modo que ni o200k_base, ni cl100k_base ni r50k_base se
+    descargan. Con ``estricto`` (por defecto) un tokenizador no disponible o que
+    cayera al respaldo de Python puro es un ERROR, no una omisión silenciosa.
     """
-    try:
-        import tiktoken
-        from tiktoken.load import load_tiktoken_bpe
-        import tiktoken_ext.openai_public as op
-    except Exception:
-        return None
-    candidatos: List[Path] = []
-    spec = importlib.util.find_spec("whisper")
-    if spec and spec.origin:
-        candidatos.append(Path(spec.origin).parent / "assets" / "gpt2.tiktoken")
-    candidatos.append(ROOT / "benchmark" / "vocab" / "r50k_base.tiktoken")
-    for p in candidatos:
-        if p.exists() and hashlib.sha256(p.read_bytes()).hexdigest() == R50K_SHA256:
-            ranks = load_tiktoken_bpe(str(p), expected_hash=R50K_SHA256)
-            enc = tiktoken.Encoding(name="r50k_base", pat_str=op.r50k_pat_str, mergeable_ranks=ranks,
-                                    special_tokens={"<|endoftext|>": 50256}, explicit_n_vocab=50257)
-            return _EncTokenizer("r50k_base", enc, "tiktoken(local)", str(p))
-    return None
-
-
-def tokenizadores(nombres: Sequence[str]) -> Dict[str, Any]:
+    vocab_local.preparar_cache([n for n in nombres if n in vocab_local.VOCABULARIOS])
     out: Dict[str, Any] = {}
     for n in nombres:
-        if n == "r50k_base":
-            t = _r50k_local()
-            if t is None:
-                print("AVISO: r50k_base no disponible localmente; se omite", flush=True)
-                continue
-            out[n] = t
-        else:
-            out[n] = get_tokenizer(n)
+        try:
+            t = get_tokenizer(n)
+        except Exception as e:  # tokenizador desconocido o vocabulario ausente
+            if estricto:
+                raise RuntimeError(f"tokenizador {n} no disponible: {e!r}") from e
+            print(f"AVISO: tokenizador {n} no disponible ({e!r}); se omite", flush=True)
+            continue
+        if estricto and t.backend != "tiktoken":
+            raise RuntimeError(f"tokenizador {n}: el backend es {t.backend!r}, no tiktoken (conteo no equivalente)")
+        out[n] = t
     return out
 
 

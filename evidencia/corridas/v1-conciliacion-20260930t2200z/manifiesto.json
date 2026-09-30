@@ -1,0 +1,318 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+    "rama": "stream/v1",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_v1.py --con-v5 --sello 20260930t2200z",
+  "conjuntos": [
+    {
+      "fuente": "escrito a mano por los autores (benchmark/domains.py)",
+      "licencia": "MIT (licencia del repositorio)",
+      "nombre": "dominios_14x12 (benchmark/domains.py)",
+      "nota": "168 registros base; n > 12 replica esos 12 registros por dominio (no son muestras independientes)",
+      "registros": 168,
+      "replicacion_de_base": true,
+      "ruta": "benchmark/domains.py",
+      "semilla": 20260914,
+      "sha256": "9b01a336cac4847b6cd120bd1fc09b3fed3a5466deb0879f23d013a11c9fba61",
+      "sha256_contenido_base": "009e763803a63f7ec23d83f73a5c97c87a5b2a73714a566438d9aaeaa5845c4d",
+      "sintetico": true
+    },
+    {
+      "fecha_captura_utc": "2026-09-16T22:00:34.291238+00:00",
+      "fuente": "https://dummyjson.com/products?limit=0",
+      "licencia": "MIT (DummyJSON, Muhammad Ovi); ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/products",
+      "registros": 194,
+      "registros_unicos": 194,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/products.json",
+      "semilla": null,
+      "sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+      "sintetico": true,
+      "tipo": "public synthetic test data"
+    },
+    {
+      "fecha_captura_utc": "2026-09-16T22:00:35.858707+00:00",
+      "fuente": "https://dummyjson.com/users?limit=0",
+      "licencia": "MIT (DummyJSON, Muhammad Ovi); identidades y credenciales ficticias; ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/users",
+      "registros": 208,
+      "registros_unicos": 208,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/users.json",
+      "semilla": null,
+      "sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+      "sintetico": true,
+      "tipo": "public synthetic test data; identities and credentials are fictional"
+    },
+    {
+      "fecha_captura_utc": "2026-09-16T22:00:36.634555+00:00",
+      "fuente": "https://jsonplaceholder.typicode.com/comments",
+      "licencia": "MIT (JSONPlaceholder, typicode); ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/comments",
+      "registros": 500,
+      "registros_unicos": 500,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/comments.json",
+      "semilla": null,
+      "sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+      "sintetico": true,
+      "tipo": "public synthetic test data"
+    },
+    {
+      "fecha_captura_utc": "2026-09-16T22:00:39.491236+00:00",
+      "fuente": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+      "licencia": "Crédito U.S. Geological Survey (política de copyright y crédito de USGS); ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/earthquakes",
+      "registros": 1000,
+      "registros_unicos": 1000,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/earthquakes.json",
+      "semilla": null,
+      "sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+      "sintetico": false,
+      "tipo": "real historical earthquake observations"
+    }
+  ],
+  "conteos": null,
+  "contratos": [
+    {
+      "prefijo": "a",
+      "ruta": "forks/a/contract.json",
+      "sha256": "446fc7d35c0ac4779e0284d96903d31ae1f6b6365238474a1a43d6b68935ff89",
+      "version": 1
+    },
+    {
+      "prefijo": "card",
+      "ruta": "forks/card/contract.json",
+      "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+      "version": 1
+    },
+    {
+      "prefijo": "cat",
+      "ruta": "forks/cat/contract.json",
+      "sha256": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
+      "version": 1
+    },
+    {
+      "prefijo": "cls",
+      "ruta": "forks/cls/contract.json",
+      "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+      "version": 1
+    },
+    {
+      "prefijo": "code",
+      "ruta": "forks/code/contract.json",
+      "sha256": "ca63bf2f894b8761bd4ef14a212b0308cdc85c08295bcc6028ca455ca239d162",
+      "version": 1
+    },
+    {
+      "prefijo": "log",
+      "ruta": "forks/log/contract.json",
+      "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+      "version": 1
+    },
+    {
+      "prefijo": "map",
+      "ruta": "forks/map/contract.json",
+      "sha256": "f7699064d358a0effa7818c4ef4d66676c80a7f3a7b41edc5c24d595dc269e71",
+      "version": 1
+    },
+    {
+      "prefijo": "ner",
+      "ruta": "forks/ner/contract.json",
+      "sha256": "49b555e9d32ea77913d5ec4594726ab1d0e0a1a3dc39f3ca400d0c272679848f",
+      "version": 1
+    },
+    {
+      "prefijo": "q",
+      "ruta": "forks/q/contract.json",
+      "sha256": "cc689a8c3a2e5af9daefcb32a311ee6f02790c94635a9d96a67fd6a475f48fda",
+      "version": 1
+    },
+    {
+      "prefijo": "r",
+      "ruta": "forks/r/contract.json",
+      "sha256": "7c8d839c9667ed59556a5273f14ab897d39c1bb11521b17e84df78c8f934153c",
+      "version": 1
+    },
+    {
+      "prefijo": "s",
+      "ruta": "forks/s/contract.json",
+      "sha256": "598f447d3cdaac67cb40480fd2d7cb030d09194641b9623aaa83aed6d1ba0d6b",
+      "version": 1
+    },
+    {
+      "prefijo": "sum",
+      "ruta": "forks/sum/contract.json",
+      "sha256": "1be4fc6efb79edbf8dd25876db850a423ae71a68312db380205c239f97c5f9a4",
+      "version": 1
+    },
+    {
+      "prefijo": "tc",
+      "ruta": "forks/tc/contract.json",
+      "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+      "version": 1
+    },
+    {
+      "prefijo": "us",
+      "ruta": "forks/us/contract.json",
+      "sha256": "87f0dd913cd98ba4a7234cd0f46f76cc0fe41a7787f2b0a011c5b903010de96b",
+      "version": 1
+    }
+  ],
+  "criterio": null,
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V1",
+  "fecha_utc": "2026-09-30T20:27:04Z",
+  "gasto_usd": 0,
+  "intento": null,
+  "limitaciones": [
+    "Los tres tokenizadores son de la misma familia BPE de OpenAI: no sustituyen a un tokenizador independiente; para Anthropic, Google o DeepSeek son una aproximación.",
+    "n > 12 replica los 12 registros base de cada dominio (replicacion_de_base): mide longitud de serialización, no diversidad semántica.",
+    "Los 14 dominios son conjuntos escritos a mano (sintéticos); q extiende a a.",
+    "Conteo local de texto: no es el conteo de solicitud ni el usage de ningún proveedor."
+  ],
+  "modelo": null,
+  "notas": "Las cuatro cifras se derivan de los archivos de las otras tres corridas de este sello.",
+  "parametros": {
+    "sin_api": true,
+    "sin_red": true
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [],
+  "resultado": "no_evaluable",
+  "resultados": [
+    {
+      "bytes": 12629,
+      "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/conciliacion_cifras.json",
+      "sha256": "725c285aa0cdb60211203df08650036515a9840ed37318a7daff2485e12a0d22"
+    },
+    {
+      "bytes": 6844,
+      "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/conciliacion_cifras.md",
+      "sha256": "20677febde85a08485f35031e86618c44a3c1950588d9c3eff74f06f057b5410"
+    },
+    {
+      "bytes": 12708,
+      "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/desglose_dominio_tokenizador.csv",
+      "sha256": "983de413943cbd23a79ff46b459a0d5255c524037d526a4b8c066702c3a1be70"
+    },
+    {
+      "bytes": 3519,
+      "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/errata_v7_v8_verificacion.json",
+      "sha256": "d90df3e5a2d3de4a175175679fb8224d12487dca69826f3b6b93eceedce6ce5f"
+    },
+    {
+      "bytes": 19447,
+      "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/log.txt",
+      "sha256": "c74434398fcb29b14d2bc249740e18387eca7d385bb761bafac9ad8757d12d7c"
+    }
+  ],
+  "resumen": {
+    "cifras": [
+      {
+        "cifra_citada": "33,8 %",
+        "cifra_id": "linea_base_n12.media_por_dominio",
+        "estadistico": "media aritmética de 14 ahorros por dominio (cada dominio pesa igual)",
+        "tokenizador": "o200k_base",
+        "valor_recalculado_pct": 33.80714285714286
+      },
+      {
+        "cifra_citada": "34,8 %",
+        "cifra_id": "serie_n100_muestreo.media_por_dominio",
+        "estadistico": "media aritmética de 14 ahorros por dominio",
+        "tokenizador": "o200k_base",
+        "valor_recalculado_pct": 34.806208
+      },
+      {
+        "cifra_citada": "34,99 %",
+        "cifra_id": "publico.suma.documento_mas_contrato",
+        "estadistico": "agregado por suma (1 - Σ tokens .mini / Σ tokens JSON compacto) sobre los 4 snapshots",
+        "tokenizador": "o200k_base",
+        "valor_recalculado_pct": 34.98994345727515
+      },
+      {
+        "cifra_citada": "35,64 %",
+        "cifra_id": "publico.suma.documento_sin_contrato",
+        "estadistico": "agregado por suma (1 - Σ tokens .mini / Σ tokens JSON compacto) sobre los 4 snapshots",
+        "tokenizador": "o200k_base",
+        "valor_recalculado_pct": 35.63748669614311
+      }
+    ],
+    "errata_v7_v8": {
+      "conciliacion_cima": "reconciliado_por_contadores_y_respuestas_crudas_parciales; registro_a_registro_pendiente",
+      "v7_lote_maximo_sin_perdida": {
+        "json": 100,
+        "mini": 200
+      }
+    },
+    "tiempos_s": {
+      "conciliacion": 0.7,
+      "criterio": 0.6,
+      "linea_base_benchmark": 14.4,
+      "publicos": 29.1,
+      "serie_reversibilidad": 41.5,
+      "total": 211.1,
+      "v1_run": 27.8,
+      "v5": 96.2
+    }
+  },
+  "run_id": "v1-conciliacion-20260930t2200z",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "backend": "tiktoken",
+      "nombre": "o200k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/o200k_base.tiktoken",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "cl100k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/cl100k_base.tiktoken",
+      "vocabulario_sha256": "223921b76ee99bde995b7ff738513eef100fb51d18c93597a113bcffe865b2a7"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "r50k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/r50k_base.tiktoken",
+      "vocabulario_sha256": "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930"
+    }
+  ]
+}

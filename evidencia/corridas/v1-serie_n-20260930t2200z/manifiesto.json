@@ -1,0 +1,502 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+    "rama": "stream/v1",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_v1.py --con-v5 --sello 20260930t2200z",
+  "conjuntos": [
+    {
+      "fuente": "escrito a mano por los autores (benchmark/domains.py)",
+      "licencia": "MIT (licencia del repositorio)",
+      "nombre": "dominios_14x12 (benchmark/domains.py)",
+      "nota": "168 registros base; n > 12 replica esos 12 registros por dominio (no son muestras independientes)",
+      "registros": 168,
+      "replicacion_de_base": true,
+      "ruta": "benchmark/domains.py",
+      "semilla": 20260914,
+      "sha256": "9b01a336cac4847b6cd120bd1fc09b3fed3a5466deb0879f23d013a11c9fba61",
+      "sha256_contenido_base": "009e763803a63f7ec23d83f73a5c97c87a5b2a73714a566438d9aaeaa5845c4d",
+      "sintetico": true
+    }
+  ],
+  "conteos": null,
+  "contratos": [
+    {
+      "prefijo": "a",
+      "ruta": "forks/a/contract.json",
+      "sha256": "446fc7d35c0ac4779e0284d96903d31ae1f6b6365238474a1a43d6b68935ff89",
+      "version": 1
+    },
+    {
+      "prefijo": "card",
+      "ruta": "forks/card/contract.json",
+      "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+      "version": 1
+    },
+    {
+      "prefijo": "cat",
+      "ruta": "forks/cat/contract.json",
+      "sha256": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
+      "version": 1
+    },
+    {
+      "prefijo": "cls",
+      "ruta": "forks/cls/contract.json",
+      "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+      "version": 1
+    },
+    {
+      "prefijo": "code",
+      "ruta": "forks/code/contract.json",
+      "sha256": "ca63bf2f894b8761bd4ef14a212b0308cdc85c08295bcc6028ca455ca239d162",
+      "version": 1
+    },
+    {
+      "prefijo": "log",
+      "ruta": "forks/log/contract.json",
+      "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+      "version": 1
+    },
+    {
+      "prefijo": "map",
+      "ruta": "forks/map/contract.json",
+      "sha256": "f7699064d358a0effa7818c4ef4d66676c80a7f3a7b41edc5c24d595dc269e71",
+      "version": 1
+    },
+    {
+      "prefijo": "ner",
+      "ruta": "forks/ner/contract.json",
+      "sha256": "49b555e9d32ea77913d5ec4594726ab1d0e0a1a3dc39f3ca400d0c272679848f",
+      "version": 1
+    },
+    {
+      "prefijo": "q",
+      "ruta": "forks/q/contract.json",
+      "sha256": "cc689a8c3a2e5af9daefcb32a311ee6f02790c94635a9d96a67fd6a475f48fda",
+      "version": 1
+    },
+    {
+      "prefijo": "r",
+      "ruta": "forks/r/contract.json",
+      "sha256": "7c8d839c9667ed59556a5273f14ab897d39c1bb11521b17e84df78c8f934153c",
+      "version": 1
+    },
+    {
+      "prefijo": "s",
+      "ruta": "forks/s/contract.json",
+      "sha256": "598f447d3cdaac67cb40480fd2d7cb030d09194641b9623aaa83aed6d1ba0d6b",
+      "version": 1
+    },
+    {
+      "prefijo": "sum",
+      "ruta": "forks/sum/contract.json",
+      "sha256": "1be4fc6efb79edbf8dd25876db850a423ae71a68312db380205c239f97c5f9a4",
+      "version": 1
+    },
+    {
+      "prefijo": "tc",
+      "ruta": "forks/tc/contract.json",
+      "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+      "version": 1
+    },
+    {
+      "prefijo": "us",
+      "ruta": "forks/us/contract.json",
+      "sha256": "87f0dd913cd98ba4a7234cd0f46f76cc0fe41a7787f2b0a011c5b903010de96b",
+      "version": 1
+    }
+  ],
+  "criterio": {
+    "archivo": "experiments/v1_tokens/criterio_v1.json",
+    "declaracion": "Esta interpretación la fijó el equipo de implementación el 2026-09-30, ANTES de ejecutar el análisis de este flujo. Las cifras exploratorias previas de la auditoría (lectura de media por dominio sobre la serie archivada n=100: 12, 10 y 8 dominios con ahorro >= 30 % para o200k_base, cl100k_base y r50k_base) ya eran conocidas al fijarla. No se ha elegido por su resultado y queda SUJETA A APROBACIÓN del asesor: si el asesor fija otra lectura, el veredicto se recalcula con esa lectura (las demás se publican igualmente en criterio_v1.json).",
+    "estadistica": {
+      "estadisticos": [
+        "media por dominio",
+        "agregado por suma"
+      ],
+      "intervalo": "IC 95 % por bootstrap percentil de dominios (conglomerados), B = 10000, semilla 20260914",
+      "nota_independencia": "Los 14 dominios no son una población: q extiende a a los mismos 12 ítems. Para n > 12 los 12 registros base se repiten (replicacion_de_base), de modo que n=100 NO aporta muestras independientes; el IC describe la variabilidad entre dominios, no inferencia poblacional."
+    },
+    "estudio": "V1",
+    "evaluacion": "criterio_v1_resultado.json",
+    "fijado_antes_del_analisis": true,
+    "fijado_el": "2026-09-30",
+    "fijado_por": "equipo de implementación (flujo v1, rama stream/v1)",
+    "id": "V1-documental-30-10-3",
+    "interpretacion_primaria": {
+      "ahorro_del_dominio": "100 * (1 - suma(tokens .mini) / suma(tokens JSON compacto)), sumando los tokens de TODOS los documentos de ese dominio en la serie primaria",
+      "comparacion_con_umbral": "sobre el valor sin redondear; ahorro >= 30,0",
+      "dominios_totales": 14,
+      "min_dominios": 10,
+      "n": 100,
+      "referencia": "json_compact",
+      "regla": "cumple solo si, para CADA uno de los tres tokenizadores, al menos 10 dominios alcanzan el umbral; no_cumple si alguno de los tres no lo logra",
+      "reversibilidad": "el conteo de un formato solo se acepta si objeto->texto->objeto se verificó para ese documento; JSON compacto se verifica con json.loads y .mini con minifmt.parse",
+      "serie": "n=100, variante 'muestreo'",
+      "tokenizadores": [
+        "o200k_base",
+        "cl100k_base",
+        "r50k_base"
+      ],
+      "umbral_pct": 30.0,
+      "unidad": "documento_sin_contrato (solo el texto del documento transmitido; sin contrato, mapa ni prompt)",
+      "variante": "muestreo"
+    },
+    "lecturas_alternativas_publicadas_sin_elegir": [
+      "media por dominio por tokenizador (media aritmética de los ahorros de los 14 dominios) frente a agregado por suma",
+      "serie n=12 (línea base, protocolo 'ciclo')",
+      "serie n=100 variante 'ciclo'",
+      "intersección de dominios: dominios que alcanzan el umbral con los tres tokenizadores a la vez",
+      "efecto del tamaño n (n=1, 5, 10, 25, 50, 100, 250)"
+    ],
+    "meta_documental": "Ahorro de tokens >= 30 % de .mini frente a JSON compacto en >= 10 de los 14 dominios y con tres tokenizadores.",
+    "sha256_archivo": "b226ec360b35cce14e0d3a431c7d36c62306223716021c35c5b15c02894c8b61",
+    "sujeto_a_aprobacion_del_asesor": true
+  },
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V1",
+  "fecha_utc": "2026-09-30T20:27:03Z",
+  "gasto_usd": 0,
+  "intento": null,
+  "limitaciones": [
+    "Los tres tokenizadores son de la misma familia BPE de OpenAI: no sustituyen a un tokenizador independiente; para Anthropic, Google o DeepSeek son una aproximación.",
+    "n > 12 replica los 12 registros base de cada dominio (replicacion_de_base): mide longitud de serialización, no diversidad semántica.",
+    "Los 14 dominios son conjuntos escritos a mano (sintéticos); q extiende a a.",
+    "Conteo local de texto: no es el conteo de solicitud ni el usage de ningún proveedor."
+  ],
+  "modelo": null,
+  "notas": "Veredicto según la interpretación primaria fijada el 2026-09-30 ANTES del análisis y SUJETA A APROBACIÓN del asesor; las lecturas alternativas están en criterio_v1_resultado.json.",
+  "parametros": {
+    "bootstrap": {
+      "B": 10000,
+      "nivel": "dominio",
+      "semilla": 20260914
+    },
+    "semilla_muestreo": 20260914,
+    "sin_api": true,
+    "sin_red": true,
+    "tamanos": [
+      1,
+      5,
+      10,
+      12,
+      25,
+      50,
+      100,
+      250
+    ],
+    "toon": {
+      "archivos": 21,
+      "implementacion": "TOON oficial vendored (benchmark/toon_ref/vendor/toon)",
+      "la_version_es_declarada": "el árbol vendored no trae archivo de versión ni hash de commit; la versión está escrita a mano en benchmark/public/run.py",
+      "sha256_arbol_lf": "c20b6727930bba34314809164588e9bd8b8c17060593a20c04bc4ed25678dd35",
+      "spec_declarada": "4.1",
+      "version_declarada": "4.1.1"
+    },
+    "variantes": [
+      "muestreo",
+      "ciclo"
+    ]
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [],
+  "resultado": "no_cumple",
+  "resultados": [
+    {
+      "bytes": 662137,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/tokens_largo.csv",
+      "sha256": "e303dae630770c6d46a5e265b5ccb8576eac56c354192103fab7e6456be32d55"
+    },
+    {
+      "bytes": 406936,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/reversibilidad.csv",
+      "sha256": "1f40fcb2a90c88268dbea8df8fce2d4e0f98bf8a95109e5bfcf3522ff1835a63"
+    },
+    {
+      "bytes": 52114,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/criterio_v1_resultado.json",
+      "sha256": "9514cb323c1bb3ae8c43d4dd84aa38ad8f7d73e6035e0088a1a8f31ed2edad2d"
+    },
+    {
+      "bytes": 3682,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/criterio_v1_resultado.md",
+      "sha256": "9975ee6c3b590ec7460f341e819577b3dfc79eff4db04112ed8f60360af2ca1f"
+    },
+    {
+      "bytes": 66695,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/ahorro_por_referencia.csv",
+      "sha256": "45a140f4bbaea96b784e248c4c3be8b82deca5ef742213e0521078c3f9e7675a"
+    },
+    {
+      "bytes": 236621,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/tokens.csv",
+      "sha256": "0e1432ee35bb8c7401225e08a3d9c2194d8d099775060f13832e116719d912d7"
+    },
+    {
+      "bytes": 211344,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ahorro_por_dominio.csv",
+      "sha256": "7dd6cd408a1b67272019da0d3e9f7af8b8b0904fbbfecbd6767ba61f34616352"
+    },
+    {
+      "bytes": 26812,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ahorro_resumen.csv",
+      "sha256": "6898a7c8259b9528f52b6baf53209592d7bdc21118c2a233ed1095b671e69702"
+    },
+    {
+      "bytes": 43575,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ajuste_lineal.csv",
+      "sha256": "fe91bf0ba56eec1f1b2ff2e0d84754c05cf7f8ac03e8f905079c6de1c60c47e2"
+    },
+    {
+      "bytes": 29555,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/equilibrio_tokens.csv",
+      "sha256": "e7f571fc9af352dfe231683851095224d38d6069a6462740077412c44c4b5741"
+    },
+    {
+      "bytes": 2202,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/equilibrio_tokens_resumen.csv",
+      "sha256": "c457b753cb245ced693f476bf223a0ad52bfd8f04b95e749b3c922d63e3d0b45"
+    },
+    {
+      "bytes": 17153,
+      "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/instruccion_tokens.csv",
+      "sha256": "5311411518439e2127d20c229121566f3d213c18185ffe23f460062929997d63"
+    }
+  ],
+  "resumen": {
+    "comparacion_con_archivado": {
+      "experiments/v1_tokens/results/ahorro_por_dominio.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/ahorro_por_dominio.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 4116,
+        "filas_comparadas": 4116,
+        "filas_identicas": 4116,
+        "filas_reproducidas": 4116,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "experiments/v1_tokens/results/ahorro_resumen.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/ahorro_resumen.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 294,
+        "filas_comparadas": 294,
+        "filas_identicas": 294,
+        "filas_reproducidas": 294,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "experiments/v1_tokens/results/ajuste_lineal.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/ajuste_lineal.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 672,
+        "filas_comparadas": 672,
+        "filas_identicas": 672,
+        "filas_reproducidas": 672,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "experiments/v1_tokens/results/equilibrio_tokens.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/equilibrio_tokens.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 336,
+        "filas_comparadas": 336,
+        "filas_identicas": 336,
+        "filas_reproducidas": 336,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "experiments/v1_tokens/results/equilibrio_tokens_resumen.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/equilibrio_tokens_resumen.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 24,
+        "filas_comparadas": 24,
+        "filas_identicas": 24,
+        "filas_reproducidas": 24,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "experiments/v1_tokens/results/instruccion_tokens.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/instruccion_tokens.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 420,
+        "filas_comparadas": 420,
+        "filas_identicas": 420,
+        "filas_reproducidas": 420,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "experiments/v1_tokens/results/tokens.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/tokens.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 4704,
+        "filas_comparadas": 4704,
+        "filas_identicas": 4704,
+        "filas_reproducidas": 4704,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "instrucciones_muestra": {
+        "archivos": 20,
+        "coincide_totalmente": true,
+        "distintos": 0
+      }
+    },
+    "consistencia_con_pipeline_archivado": {
+      "celdas_comparadas": 4704,
+      "celdas_distintas": 0,
+      "coincide": true
+    },
+    "criterio": {
+      "agregado_suma_pct": {
+        "cl100k_base": 31.71,
+        "o200k_base": 34.31,
+        "r50k_base": 29.17
+      },
+      "dominios_ge_30_por_tokenizador": {
+        "cl100k_base": 10,
+        "o200k_base": 12,
+        "r50k_base": 8
+      },
+      "media_por_dominio_pct": {
+        "cl100k_base": 32.74,
+        "o200k_base": 34.81,
+        "r50k_base": 30.43
+      },
+      "veredicto": "no_cumple"
+    },
+    "filas_tokens": 7392,
+    "reversibilidad": {
+      "documentos_verificados_por_formato_y_estado": {
+        "csv": {
+          "no_reversible": 224
+        },
+        "csv_reversible:celdas": {
+          "reversible": 224
+        },
+        "csv_reversible:columnas": {
+          "reversible": 224
+        },
+        "json_compact": {
+          "reversible": 224
+        },
+        "json_pretty": {
+          "reversible": 224
+        },
+        "mini": {
+          "reversible_normalizado": 224
+        },
+        "toon": {
+          "reversible": 224
+        },
+        "toon_flat": {
+          "reversible": 224
+        },
+        "toon_reversible:celdas": {
+          "reversible": 224
+        },
+        "toon_reversible:columnas": {
+          "reversible": 224
+        },
+        "xml": {
+          "reversible": 224
+        },
+        "xml_tipado": {
+          "reversible": 224
+        },
+        "yaml": {
+          "reversible": 224
+        }
+      },
+      "no_reversibles": [
+        "csv"
+      ]
+    },
+    "tiempos_s": {
+      "conciliacion": 0.7,
+      "criterio": 0.6,
+      "linea_base_benchmark": 14.4,
+      "publicos": 29.1,
+      "serie_reversibilidad": 41.5,
+      "total": 211.1,
+      "v1_run": 27.8,
+      "v5": 96.2
+    }
+  },
+  "run_id": "v1-serie_n-20260930t2200z",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "backend": "tiktoken",
+      "nombre": "o200k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/o200k_base.tiktoken",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "cl100k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/cl100k_base.tiktoken",
+      "vocabulario_sha256": "223921b76ee99bde995b7ff738513eef100fb51d18c93597a113bcffe865b2a7"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "r50k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/r50k_base.tiktoken",
+      "vocabulario_sha256": "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930"
+    }
+  ]
+}
