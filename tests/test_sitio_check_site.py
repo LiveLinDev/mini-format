@@ -172,6 +172,19 @@ def test_sitemap_con_una_pagina_inexistente_o_sin_una_pagina_en_linea(tmp_path):
     assert any("/fantasma/ no existe" in x for x in p) and any("falta /validacion/" in x for x in p)
 
 
+def test_recursos_locales_sin_sellar(tmp_path):
+    """/taller/, /sima/ y /ejemplo/ pedían base.css y docs.js sin ?v= y se quedaban con la caché vieja."""
+    s = sitio_valido(tmp_path)
+    (s / "docs.js").write_text("x", encoding="utf-8")
+    (s / "taller").mkdir()
+    (s / "taller" / "index.html").write_text(pagina(extra='<script src="/docs.js"></script><link rel="stylesheet" href="/base.css">'), encoding="utf-8")
+    p = problemas(s)
+    assert any("taller/index.html: /docs.js no lleva el sellado" in x for x in p)
+    assert any("taller/index.html: /base.css no lleva el sellado" in x for x in p)
+    (s / "taller" / "index.html").write_text(pagina(extra='<script src="/docs.js?v=abc"></script><link rel="stylesheet" href="/base.css?v=abc">'), encoding="utf-8")
+    assert not [x for x in problemas(s) if "sellado" in x]
+
+
 def test_version_json_incompleto(tmp_path):
     s = sitio_valido(tmp_path)
     (s / "version.json").write_text(json.dumps({"commit": "x"}), encoding="utf-8")

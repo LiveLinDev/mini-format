@@ -14,7 +14,8 @@ Reglas (todas sin red, sobre `sitio/` ya construido):
   6. cabecera unificada: todas las páginas con cabecera tienen el mismo menú que la portada (incluida
      «Validación»), y el botón de menú móvil apunta a una lista que existe;
   7. el sitemap solo enumera páginas que existen y no le falta ninguna página bilingüe en línea;
-  8. `version.json` tiene sus cuatro claves.
+  8. `version.json` tiene sus cuatro claves;
+  9. toda hoja de estilo y script local lleva el sellado `?v=` (sin él, un cambio de estilos deja la caché vieja).
 """
 from __future__ import annotations
 
@@ -222,6 +223,15 @@ def comprobar(site: Path = SITE) -> list[str]:
         for ruta in RUTAS_EN_LINEA:
             if (site / ruta / "index.html").is_file() and f"{ORIGIN}/{ruta}/" not in urls:
                 problems.append(f"sitemap.xml: falta /{ruta}/")
+    # ---- 9: sellado de recursos locales
+    for path, page in pages.items():
+        relative = path.relative_to(site).as_posix()
+        for link in page.links:
+            url = urlsplit(urljoin(ORIGIN + "/" + relative, link))
+            if url.netloc != urlsplit(ORIGIN).netloc or not url.path.endswith((".css", ".js")):
+                continue
+            if (site / unquote(url.path).lstrip("/")).is_file() and "v=" not in url.query:
+                problems.append(f"{relative}: {link} no lleva el sellado ?v= (la caché no se invalidaría al cambiar el archivo)")
     # ---- 8: version.json
     version = site / "version.json"
     if not version.exists():
