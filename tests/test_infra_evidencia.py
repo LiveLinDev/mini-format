@@ -325,6 +325,20 @@ class Agregaciones(unittest.TestCase):
         self.assertIsNone(a([], "conteo_distintos"))              # sin datos no hay 0 distintos
         self.assertEqual(a(["Linux 6.8", "Linux 5.15", "Windows 10", "Darwin 23"], "conteo_distintos_familia"), D(3))
 
+    def test_valores_que_son_objetos_aportan_sus_valores(self):
+        """Un resumen {tokenizador: n} se agrega por sus valores (el peor tokenizador) o por el número de claves."""
+        from decimal import Decimal as D
+        a = EV._agregar
+        por_tok = {"cl100k_base": 10, "o200k_base": 12, "r50k_base": 8}
+        self.assertEqual(a([por_tok], "min"), D(8))
+        self.assertEqual(a([por_tok], "max"), D(12))
+        self.assertEqual(a([por_tok, {"x": 1}], "min"), D(1))
+        self.assertEqual(a([por_tok], "conteo_claves"), D(3))
+        self.assertEqual(a([por_tok, {"r50k_base": 9, "extra": 1}], "conteo_claves"), D(4))
+        self.assertIsNone(a([3], "conteo_claves"))                 # un escalar no tiene claves
+        self.assertIsNone(a([{}], "conteo_claves"))                # un objeto vacío no es 0 tokenizadores medidos
+        self.assertIsNone(a([{"a": "x"}], "min"))                   # valores no numéricos: no evaluable
+
     def test_comparaciones(self):
         from decimal import Decimal as D
         self.assertTrue(EV._comparar(D(95), ">=", D(95)))

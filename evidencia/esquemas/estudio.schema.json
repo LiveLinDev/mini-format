@@ -87,7 +87,7 @@
         "descripcion": { "type": "string" },
         "fuente": { "enum": ["resumen", "corridas"], "description": "resumen: ruta dentro de manifiesto.resumen; corridas: ruta dentro del propio manifiesto (p. ej. modelo.proveedor)." },
         "ruta": { "type": "string", "minLength": 1 },
-        "agregacion": { "enum": ["min", "max", "suma", "unico", "conteo_distintos", "conteo_distintos_familia"] },
+        "agregacion": { "enum": ["min", "max", "suma", "unico", "conteo_distintos", "conteo_distintos_familia", "conteo_claves"] },
         "op": { "enum": [">=", "<=", ">", "<", "=="] },
         "valor": { "type": "number" }
       }
@@ -109,7 +109,7 @@
       "additionalProperties": false,
       "properties": {
         "id": { "type": "string" }, "etiqueta": { "type": "string" }, "ruta": { "type": "string" },
-        "agregacion": { "enum": ["min", "max", "suma", "unico", "conteo_distintos", "conteo_distintos_familia"] }, "unidad": { "type": "string" }
+        "agregacion": { "enum": ["min", "max", "suma", "unico", "conteo_distintos", "conteo_distintos_familia", "conteo_claves"] }, "unidad": { "type": "string" }
       }
     },
     "antecedente": {

@@ -97,6 +97,12 @@ ev.guardar_corrida(m, archivos=[...])
 exactas del `resumen` (o del manifiesto, p. ej. `modelo.proveedor`, `entorno.so`, `parametros.sistema`) que leen los
 predicados.
 
+**Predicados.** Cada predicado lee un valor de `resumen` (`fuente: resumen`) o del propio manifiesto (`fuente: corridas`,
+p. ej. `modelo.proveedor`) en las corridas que cuentan y lo agrega con `min`, `max`, `suma`, `unico` (exactamente una corrida
+lo aporta; si no, no evaluable), `conteo_distintos`, `conteo_distintos_familia` (p. ej. familias de sistema operativo) o
+`conteo_claves`. Si el valor es un objeto `{tokenizador: n}` aporta sus valores (el peor tokenizador con `min`). Comparan con
+`>=`, `<=`, `>`, `<` o `==`. Sin datos el predicado no es evaluable (nunca 0).
+
 ## Tarifas
 
 `tarifas/tarifas.json` guarda, por `(proveedor, modelo_api_id)`, los cuatro precios en USD por millón de tokens como

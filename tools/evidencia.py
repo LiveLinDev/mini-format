@@ -47,7 +47,7 @@ TIPO_POR_ESTUDIO = {"V1": "controlado", "V2": "controlado", "V3a": "controlado",
 ESTUDIOS_DE_APOYO = ("OPT", "CF")
 PROCEDENCIAS_REALES = ("reproducido_local", "api_real", "participantes")
 PROCEDENCIAS_NO_ADMISIBLES = ("reportado_historico", "simulado", "asistido_ia")
-AGREGACIONES = ("min", "max", "suma", "unico", "conteo_distintos", "conteo_distintos_familia")
+AGREGACIONES = ("min", "max", "suma", "unico", "conteo_distintos", "conteo_distintos_familia", "conteo_claves")
 OPERADORES = (">=", "<=", ">", "<", "==")
 VERIFICACIONES = ("json", "suma_longitudes")
 CLAVES_ESTUDIO = {"id", "nombre", "objetivo", "clasificacion", "pregunta", "procedimiento", "muestra", "comparadores", "criterio",
@@ -349,6 +349,18 @@ def validar_estructura_estudios(doc: Dict[str, Any]) -> List[str]:
 # ---------------------------------------------------------------- evaluación
 def _agregar(valores: List[Any], agregacion: str) -> Any:
     """Agrega los valores observados. Sin datos (o con un tipo inesperado) => None: no evaluable."""
+    if agregacion == "conteo_claves":
+        claves = set()
+        for v in valores:
+            if not isinstance(v, dict):
+                return None
+            claves |= set(v)
+        return Decimal(len(claves)) if claves else None
+    # Un valor que es un objeto {clave: número} (p. ej. dominios por tokenizador) aporta sus valores.
+    plano: List[Any] = []
+    for v in valores:
+        plano.extend(v.values() if isinstance(v, dict) else [v])
+    valores = plano
     if agregacion in ("conteo_distintos", "conteo_distintos_familia"):
         if agregacion == "conteo_distintos_familia":
             valores = [_familia_so(v) for v in valores]
