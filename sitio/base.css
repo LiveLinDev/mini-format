@@ -87,22 +87,56 @@ button{ font-family:inherit }
 .announce a{ color:#fff; text-decoration:none; white-space:nowrap }
 .announce a:hover{ text-decoration:underline }
 .site-header{ position:sticky; top:0; z-index:50; height:var(--header-h); background:rgb(var(--canvas) / .9); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid rgb(var(--line)) }
-.nav{ display:flex; align-items:center; gap:1.5rem; height:var(--header-h) }
+.nav{ display:flex; align-items:center; gap:1rem; height:var(--header-h) }
+/* la cabecera es más ancha que el contenido: con 10 enlaces no cabe en 76rem */
+.site-header .wrap{ max-width:84rem }
 .brand{ display:flex; align-items:center; gap:.55rem; text-decoration:none; color:rgb(var(--fg)); font-family:var(--f-display); font-weight:800; font-size:1.3rem; letter-spacing:-.045em }
 .brand .glyph{ width:26px; height:26px; flex:none; color:rgb(var(--accent)) }
 .nav .brand,.nav .lang-toggle,.nav>.btn,.nav .icon-link{flex-shrink:0;white-space:nowrap}
-@media (max-width:1500px){.nav .search{display:none}}
-@media (max-width:520px){.nav{gap:.65rem}.nav .brand{font-size:1.12rem}.nav>.btn{padding:.48rem .65rem}.nav .lang-toggle button{padding:.34rem .55rem}.nav .icon-link{display:none}}
-.nav-links{ display:flex; gap:1.4rem; list-style:none; margin:0; padding:0; font-size:.94rem; font-weight:500 }
-.nav-links a{ color:rgb(var(--fg)); text-decoration:none; opacity:.82 }
+.nav-links{ display:flex; gap:1.05rem; list-style:none; margin:0; padding:0; font-size:.9rem; font-weight:500 }
+.nav-links a{ color:rgb(var(--fg)); text-decoration:none; opacity:.82; white-space:nowrap }
 .nav-links a:hover,.nav-links a[aria-current]{ opacity:1 }
+.nav-links .nav-cta{ display:none }
 .nav .spacer{ flex:1 }
-.search{ display:flex; align-items:center; gap:.55rem; height:36px; padding:0 .7rem; width:min(330px,34vw); border:1px solid rgb(var(--line)); border-radius:var(--r-lg); background:rgb(var(--canvas)); color:rgb(var(--fg-faint)); font-size:.86rem; cursor:pointer }
+/* buscador: enlace a /docs/ (atajo «/»). La cabecera no tiene sitio para él hasta las pantallas muy anchas */
+.search{ display:flex; align-items:center; justify-content:center; gap:.55rem; height:36px; width:36px; flex:none; border:1px solid rgb(var(--line)); border-radius:var(--r-lg); background:rgb(var(--canvas)); color:rgb(var(--fg-faint)); font-size:.86rem; cursor:pointer; text-decoration:none }
+.search:hover{ color:rgb(var(--fg)); background:rgb(var(--subtle)) }
+.search, .search .search-txt{ display:none }
 .search kbd{ margin-left:auto; border:1px solid rgb(var(--line)); border-radius:var(--r-sm); padding:0 .32rem; font-size:.7rem }
+@media (min-width:1760px){ .site-header .wrap{ max-width:100rem } .search{ display:flex; width:min(240px,18vw); justify-content:flex-start; padding:0 .7rem } .search .search-txt{ display:inline; white-space:nowrap; overflow:hidden; text-overflow:ellipsis } }
 .icon-link{ color:rgb(var(--fg-muted)); display:grid; place-items:center; width:34px; height:34px; border-radius:var(--r-lg) }
 .icon-link:hover{ color:rgb(var(--fg)); background:rgb(var(--subtle)) }
 .icon-link svg{ width:19px; height:19px }
-@media (max-width:1080px){ .nav-links,.search{ display:none } }
+
+/* menú móvil: el botón solo existe bajo el punto de corte; sin JavaScript (html:not(.js)) los enlaces quedan a la vista */
+.nav-toggle{ display:none; flex:none; width:40px; height:40px; align-items:center; justify-content:center; padding:0; border:1px solid rgb(var(--line)); border-radius:var(--r-lg); background:transparent; color:rgb(var(--fg)); cursor:pointer }
+.nav-toggle:hover{ background:rgb(var(--subtle)) }
+.nav-toggle svg{ width:20px; height:20px }
+.nav-toggle .ico-cerrar,.site-header.menu-open .nav-toggle .ico-abrir{ display:none }
+.site-header.menu-open .nav-toggle .ico-cerrar{ display:block }
+@media (max-width:1339.98px){
+  .nav-toggle{ display:inline-flex; order:9 }
+  .search{ display:none }
+  .nav-links{ display:none; position:absolute; top:100%; left:0; right:0; flex-direction:column; gap:0; padding:.25rem var(--gutter) 1.1rem; background:rgb(var(--canvas)); border-bottom:1px solid rgb(var(--line)); box-shadow:0 22px 30px -22px rgb(var(--fg) / .3); max-height:calc(100vh - var(--header-h)); overflow-y:auto; font-size:1rem }
+  .site-header.menu-open .nav-links{ display:flex }
+  .nav-links li+li{ border-top:1px solid rgb(var(--line)) }
+  .nav-links a{ display:block; padding:.85rem 0; opacity:1 }
+  .nav-links a[aria-current]{ color:rgb(var(--accent-strong)); text-decoration:none }
+  html:not(.js) .nav-toggle{ display:none }
+  html:not(.js) .site-header{ position:static; height:auto }
+  html:not(.js) .nav{ height:auto; flex-wrap:wrap; padding-block:.75rem; row-gap:.5rem }
+  html:not(.js) .nav-links{ display:flex; position:static; flex-direction:row; flex-wrap:wrap; order:20; flex-basis:100%; padding:0; gap:.15rem 1.25rem; background:none; border:0; box-shadow:none; max-height:none; overflow:visible; font-size:.94rem }
+  html:not(.js) .nav-links li+li{ border-top:0 }
+  html:not(.js) .nav-links a{ padding:.3rem 0 }
+}
+@media (max-width:520px){
+  .nav{ gap:.65rem }
+  .nav .brand{ font-size:1.12rem }
+  .nav .lang-toggle button{ padding:.34rem .55rem }
+  .nav .icon-link,.nav>.btn{ display:none }
+  .nav-links .nav-cta{ display:block; border-top:0; padding-top:.85rem }
+  .nav-links .nav-cta a{ display:inline-flex; padding:.58rem 1.15rem; color:rgb(var(--canvas)) }
+}
 
 .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:650; font-size:.92rem; padding:.58rem 1.15rem; border-radius:var(--r-lg); text-decoration:none; border:1px solid transparent; cursor:pointer; white-space:nowrap; transition:background var(--d-fast), color var(--d-fast) }
 .btn-solid{ background:rgb(var(--fg)); color:rgb(var(--canvas)) }
@@ -144,5 +178,6 @@ button{ font-family:inherit }
 .colophon{ border-top:1px solid rgb(var(--line)); margin-top:2.75rem; padding-top:1.5rem; color:rgb(var(--fg-faint)); font-size:.8rem }
 
 .rv{ opacity:0; transform:translateY(10px); transition:opacity 520ms var(--ease), transform 520ms var(--ease) }
+html:not(.js) .rv{ opacity:1; transform:none }
 .rv.in{ opacity:1; transform:none }
 @media (prefers-reduced-motion:reduce){ .rv{ opacity:1; transform:none; transition:none } }

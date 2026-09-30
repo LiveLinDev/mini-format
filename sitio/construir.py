@@ -11,6 +11,13 @@ conmutador ES/EN (`sitio/docs.js`, elección persistida en localStorage). Los
 contratos (contract.json) y la licencia MIT se publican tal cual, sin traducir:
 las descripciones de contrato alimentan los bloques de prompt y la licencia es
 un texto legal.
+
+Orden del build (ver `__main__`): sello de versión, documentación, playground,
+mesa de ayuda, ejemplo, taller y SIMA; sincronización de la cabecera y el pie de
+`index.html` y `404.html` (`cabecera()`, `pie()`); módulos opcionales
+(`sitio/modulos.py`: «Cómo funciona», /validacion/, /economia/); ensamblado
+público (`sitio/publicar.py`: /en/, sitemap, `?v=`) y artefactos de descarga.
+Las cifras repetidas en el texto salen de `sitio/cifras.py`.
 """
 from __future__ import annotations
 
@@ -32,8 +39,11 @@ import cifras  # noqa: E402
 
 REPO = "https://github.com/LiveLinDev/mini-format"
 SITE_URL = "https://mini-format.pmoluna.com"
-DOWNLOAD = "/downloads/mini-format-1.2.1.zip"
-SOURCE = "/downloads/mini-format-1.2.1-source.zip"
+DOWNLOAD = f"/downloads/mini-format-{__version__}.zip"
+SOURCE = f"/downloads/mini-format-{__version__}-source.zip"
+# Marca «hay JavaScript» lo antes posible: el CSS la usa para no esconder contenido sin JS
+# (`html:not(.js) .rv{opacity:1}`) y para que el menú móvil tenga una alternativa sin JS.
+JS_FLAG = '<script>document.documentElement.classList.add("js")</script>'
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800'
@@ -162,27 +172,67 @@ def reescribir_enlaces(h: str, origin_dir: Path = Path(".")) -> str:
     h = re.sub(r'href="([^"]+)"', sub, h)
     h = re.sub(r'src="(?!http)([^"]+)"', lambda m: f'src="{REPO}/raw/main/{m.group(1)}"', h)
     return h
-def cabecera(activo: str = "") -> str:
+# --------------------------------------------------------------------------- cabecera y pie compartidos
+# Un solo contrato para TODAS las páginas (docs, playground, demo, taller, ejemplo, SIMA, validación,
+# economía, 404 y la portada): el menú se define aquí y nadie lo copia a mano.
+NAV = [
+    ("docs", "Documentación", "Documentation"),
+    ("validacion", "Validación", "Validation"),
+    ("docs/spec", "Especificación", "Specification"),
+    ("docs/errors", "Errores", "Errors"),
+    ("docs/forks", "Familias", "Families"),
+    ("playground", "Playground", "Playground"),
+    ("mesa-de-ayuda", "Demo", "Demo"),
+    ("taller", "Taller", "Workshop"),
+    ("ejemplo", "Ejemplo", "Example"),
+    ("sima", "SIMA", "SIMA"),
+]
+ICONO_MENU = ('<svg class="ico-abrir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
+              '<svg class="ico-cerrar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>')
+
+
+def ruta_activa(activo: str) -> str:
+    """Ruta del menú que corresponde a la página: la más específica que encaje por segmentos."""
+    activo = activo.strip("/")
+    mejores = [r for r, _, _ in NAV if activo == r or activo.startswith(r + "/")]
+    return max(mejores, key=len) if mejores else ""
+
+
+def cabeza() -> str:
+    """Bloque común del <head> de las páginas generadas: marca de JS, tipografías y hojas compartidas."""
+    return JS_FLAG + FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'
+
+
+def cabecera(activo: str = "", portada: bool = False) -> str:
+    """Enlace de salto + cabecera. `portada=True` da la variante de la página de inicio (salto a #main,
+    buscador y «Descargar» en lugar de «Instalar»); el menú y el botón móvil son los mismos."""
+    salto = "#main" if portada else "#contenido"
+    enlace = f'<a class="skip" href="{salto}">{ambos("Saltar al contenido", "Skip to content")}</a>'
+    return enlace + "\n" + encabezado(activo, portada)
+
+
+def encabezado(activo: str = "", portada: bool = False) -> str:
+    """Solo el <header>: la portada escribe el enlace de salto a mano porque el aviso va entre ambos."""
+    marcada = ruta_activa(activo)
     def a(ruta, es, en):
-        cur = ' aria-current="page"' if activo.startswith(ruta) else ""
+        cur = ' aria-current="page"' if ruta == marcada else ""
         return f'<li><a href="/{ruta}/"{cur}>{ambos(es, en)}</a></li>'
-    nav = "".join([a("docs", "Documentación", "Documentation"),
-                   a("docs/spec", "Especificación", "Specification"),
-                   a("docs/errors", "Errores", "Errors"),
-                   a("docs/forks", "Familias", "Families"),
-                   a("playground", "Playground", "Playground"),
-                   a("mesa-de-ayuda", "Demo", "Demo"),
-                   a("taller", "Taller", "Workshop"),
-                   a("ejemplo", "Ejemplo", "Example"),
-                   a("sima", "SIMA", "SIMA")])
-    return f'''<a class="skip" href="#contenido">{ambos("Saltar al contenido", "Skip to content")}</a>
-<header class="site-header"><div class="wrap nav">
+    nav = "".join(a(*item) for item in NAV)
+    buscador = ('<a class="search" href="/docs/" aria-label="Ir a la documentación">'
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
+                '<span class="search-txt">Buscar en la documentación <kbd>/</kbd></span></a>') if portada else ""
+    etiqueta_fuente = "Descargar código fuente" if portada else "Download source code"
+    cta = (f'<a class="btn btn-solid" href="#instalar">{ambos("Descargar", "Download")}</a>' if portada
+           else f'<a class="btn btn-solid" href="/docs/quickstart/">{ambos("Instalar", "Install")}</a>')
+    return f'''<header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
-  <ul class="nav-links">{nav}</ul>
+  <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links"><span class="sr">{ambos("Menú", "Menu")}</span>{ICONO_MENU}</button>
+  <ul class="nav-links" id="nav-links">{nav}<li class="nav-cta">{cta}</li></ul>
   <span class="spacer"></span>
-  <a class="icon-link" href="{SOURCE}" aria-label="Download source code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
+  {buscador}
+  <a class="icon-link" href="{SOURCE}" aria-label="{etiqueta_fuente}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
   <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
-  <a class="btn btn-solid" href="/docs/quickstart/">{ambos("Instalar", "Install")}</a>
+  {cta}
 </div></header>'''
 
 
@@ -192,22 +242,31 @@ def pie() -> str:
         return f"<div><h3>{ambos(es, en)}</h3><ul>{items}</ul></div>"
     c1 = col("Aprender", "Learn", [("/docs/", "Introducción", "Introduction"),
                                    ("/docs/quickstart/", "Inicio rápido", "Quickstart"),
-                                   ("/docs/spec/", "Especificación 1.1", "Specification 1.1"),
+                                   (f"/docs/spec/", f"Especificación {SPEC_VERSION}", f"Specification {SPEC_VERSION}"),
                                    ("/docs/errors/", "Índice de errores", "Error index")])
     c2 = col("Componente", "Component", [("/docs/python/", "Biblioteca Python", "Python library"),
                                          ("/docs/typescript/", "Biblioteca TypeScript", "TypeScript library"),
                                          ("/docs/cli/", "Herramienta", "Command-line tool"),
                                          ("/docs/conformance/", "Conformidad", "Conformance")])
-    c3 = col("Evidencia", "Evidence", [("/mesa-de-ayuda/", "Mesa de ayuda (demo)", "Help desk (demo)"),
+    c3 = col("Evidencia", "Evidence", [("/validacion/", "Validación", "Validation"),
+                                       ("/economia/", "Economía", "Economics"),
+                                       ("/mesa-de-ayuda/", "Mesa de ayuda (demo)", "Help desk (demo)"),
                                        (f"{REPO}/tree/main/experiments/v5_ancho", "Eje de ancho (V5)", "Width axis (V5)"),
                                        (f"{REPO}/tree/main/experiments/v1_tokens", "Tokens (V1)", "Tokens (V1)"),
                                        (f"{REPO}/tree/main/experiments/v4_costos", "Costos (V4)", "Costs (V4)"),
                                        ("/docs/metodologia/", "Metodología", "Methodology")])
     c4 = col("Proyecto", "Project", [(SOURCE, "Código fuente", "Source code"),
                                      ("/playground/", "Playground", "Playground"),
+                                     ("/taller/", "Taller de integración", "Integration workshop"),
+                                     ("/ejemplo/", "Ejemplo a escala", "Example at scale"),
+                                     ("/sima/", "Caso SIMA", "SIMA case"),
                                      ("/docs/licencia/", "Licencia MIT", "MIT License"),
                                      ("/docs/contribuir/", "Contribuir", "Contributing")])
-    return f'''<footer class="site-footer"><div class="wrap"><div class="fgrid">{c1}{c2}{c3}{c4}</div><div class="colophon">{ambos(f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo y Erick Palomino Santa Cruz · UPC, 2026.", f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo and Erick Palomino Santa Cruz · UPC, 2026.")}</div></div></footer>'''
+    es = (f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo y Erick Palomino Santa Cruz · "
+          "Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.")
+    en = (f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo and Erick Palomino Santa Cruz · "
+          "Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Every published figure comes from a repository script and archived data.")
+    return f'''<footer class="site-footer"><div class="wrap"><div class="fgrid">{c1}{c2}{c3}{c4}</div><div class="colophon">{ambos(es, en)}</div></div></footer>'''
 
 
 def lateral(activo: str) -> str:
@@ -232,7 +291,7 @@ def pagina_docs(ruta: str, titulo_es: str, titulo_en: str, cuerpo_es: str, cuerp
                   '<button type="button" data-lang-btn="es" aria-pressed="true">Español</button>'
                   '<button type="button" data-lang-btn="en" aria-pressed="false">English</button></div>')
     doc = f'''<!doctype html><html lang="es" data-title-es="{html.escape(titulo_es)} — mini-format" data-title-en="{html.escape(titulo_en)} — mini-format"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(titulo_es)} — mini-format</title>{FONTS}<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css"></head>
+<title>{html.escape(titulo_es)} — mini-format</title>{cabeza()}</head>
 <body>{cabecera(ruta)}
 <div class="docs-shell"><aside class="docs-side" aria-label="Docs">{lateral(ruta)}</aside>
 <main class="docs-main" id="contenido"><article class="docs-article"><div class="docs-top">{migas}</div><div class="prose" data-lang-body="es">{aviso_es}{cuerpo_es}</div><div class="prose" data-lang-body="en" hidden>{aviso_en}{cuerpo_en}</div>
@@ -718,7 +777,7 @@ TRADUCCIONES = [
 def construir_playground() -> None:
     tpl = (RAIZ / "playground" / "template.html").read_text(encoding="utf-8")
     # 1) estilos del sitio en lugar de los propios
-    tpl = re.sub(r"<style>.*?</style>", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/playground.css">', tpl, count=1, flags=re.S)
+    tpl = re.sub(r"<style>.*?</style>", lambda _: JS_FLAG + FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/playground.css">', tpl, count=1, flags=re.S)
     # 2) cabecera del sitio + barra de pestañas (mismo <nav> y #themeBtn que espera el motor)
     cab = cabecera("playground") + '''
 <div class="pg-nav"><div class="wrap">
@@ -890,7 +949,7 @@ def construir_mesa() -> None:
     }
     safe = lambda js: js.replace("</script", "<\\/script")
     pagina = (base / "plantilla.html").read_text(encoding="utf-8")
-    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+    for marca, valor in [("__CABEZA__", cabeza()),
                          ("__CABECERA__", cabecera("mesa-de-ayuda")),
                          ("__PIE__", pie()),
                          ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
@@ -914,7 +973,7 @@ def construir_ejemplo() -> None:
     datos = datos_publicados()
     pagina = (RAIZ / "examples" / "ejemplo-lote" / "plantilla.html").read_text(encoding="utf-8")
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
-    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+    for marca, valor in [("__CABEZA__", cabeza()),
                          ("__CABECERA__", cabecera("ejemplo")),
                          ("__PIE__", pie()),
                          ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
@@ -980,7 +1039,7 @@ def construir_taller() -> None:
     datos = {"ejemplos": {"tickets": {"prefijo": "tk", "esquema": tickets, "tarea": tarea}, **EJEMPLOS_TALLER}}
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     pagina = (RAIZ / "examples" / "taller" / "plantilla.html").read_text(encoding="utf-8")
-    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+    for marca, valor in [("__CABEZA__", cabeza()),
                          ("__CABECERA__", cabecera("taller")),
                          ("__PIE__", pie()),
                          ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
@@ -1001,7 +1060,7 @@ def construir_sima() -> None:
     datos = json.loads((origen / "datos.json").read_text(encoding="utf-8"))
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     pagina = (origen / "plantilla.html").read_text(encoding="utf-8")
-    for marca, valor in [("__CABEZA__", FONTS + '<link rel="stylesheet" href="/base.css"><link rel="stylesheet" href="/docs.css">'),
+    for marca, valor in [("__CABEZA__", cabeza()),
                          ("__CABECERA__", cabecera("sima")),
                          ("__PIE__", pie()),
                          ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
@@ -1027,6 +1086,32 @@ def sellar() -> None:
     (SITIO / "version.json").write_text(json.dumps(datos, indent=2) + "\n", encoding="utf-8")
 
 
+# --------------------------------------------------------------------------- portada y 404 (fuentes escritas a mano)
+def sincronizar_estatica(nombre: str, regiones: dict[str, str]) -> bool:
+    """Reescribe, entre sus anclas, las regiones generadas de una página fuente (`index.html`, `404.html`).
+
+    Las páginas fuente son HTML escrito a mano; lo único que NO se edita a mano es lo que viene de
+    `cabecera()`, `pie()` y `cabeza()`: así la portada y la 404 nunca se desincronizan del menú.
+    Devuelve True si el archivo cambió. Idempotente."""
+    import modulos
+    archivo = SITIO / nombre
+    original = archivo.read_text(encoding="utf-8")
+    nuevo = original
+    for region, contenido in regiones.items():
+        nuevo = modulos.region(nuevo, region, contenido)
+    if nuevo != original:
+        archivo.write_text(nuevo, encoding="utf-8")
+    return nuevo != original
+
+
+def sincronizar_portada() -> bool:
+    return sincronizar_estatica("index.html", {"CABECERA": encabezado("", portada=True), "PIE": pie()})
+
+
+def sincronizar_404() -> bool:
+    return sincronizar_estatica("404.html", {"CABEZA": cabeza(), "CABECERA": cabecera(""), "PIE": pie()})
+
+
 if __name__ == "__main__":
     sellar()
     n = construir_docs()
@@ -1036,8 +1121,12 @@ if __name__ == "__main__":
     construir_ejemplo()
     construir_taller()
     construir_sima()
-    from publicar import prepare_public_site
-    prepare_public_site(TRADUCCIONES)
+    sincronizar_portada()
+    sincronizar_404()
+    import modulos
+    import publicar
+    modulos.ejecutar(modulos.crear_contexto(sys.modules[__name__], publicar))
+    publicar.prepare_public_site(TRADUCCIONES)
     import subprocess
     subprocess.run([sys.executable, str(RAIZ / "tools" / "build_release.py"), "--output", str(SITIO / "downloads")], check=True)
     print("listo")

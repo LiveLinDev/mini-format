@@ -57,3 +57,11 @@
 
 /* código en línea largo (p. ej. nombres de columnas con guiones bajos): parte la línea en vez de desbordar el móvil */
 .prose :not(pre)>code{ overflow-wrap:anywhere }
+
+/* páginas de aviso: 404 y «en construcción» */
+.wip{ padding-block:clamp(3rem,8vw,6rem) 5rem }
+.wip>*{ max-width:44rem }
+.wip-ico{ width:40px; height:40px; color:rgb(var(--accent)); margin-bottom:1rem }
+.wip h1{ font-size:clamp(2.2rem,5vw,3.6rem); line-height:.95; margin-bottom:1.1rem }
+.wip .lead{ max-width:44rem }
+.wip-links{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.75rem }

@@ -207,3 +207,21 @@ tr[data-extra]{ display:none } .open tr[data-extra]{ display:table-row }
 .film summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .film video{width:100%;margin-top:.75rem;border:1px solid rgb(var(--line));border-radius:var(--r-lg);background:rgb(var(--slab))}
 .film p{margin-top:.45rem}
+
+/* ---------- sin JavaScript (html:not(.js)): el texto nunca depende de un script para verse ---------- */
+html:not(.js) .bar .fill{ width:var(--w) }
+html:not(.js) [role="tabpanel"][hidden]{ display:block !important }
+html:not(.js) .cmd[hidden]{ display:flex !important }
+html:not(.js) tr[data-extra]{ display:table-row }
+html:not(.js) .walk-steps .d{ display:block }
+html:not(.js) .walk-steps .progress{ display:none }
+html:not(.js) [role="tablist"],
+html:not(.js) .replay,
+html:not(.js) .cmd-row .seg,
+html:not(.js) .cmd .copy,
+html:not(.js) #cmp-toggle,
+html:not(.js) .term,
+html:not(.js) .term-foot,
+html:not(.js) .demo-video .dv-screen,
+html:not(.js) .demo-video .dv-controls{ display:none }
+html:not(.js) .demo-video:not(:has(.film)){ display:none }

@@ -32,6 +32,11 @@ EXCLUDE = {"node_modules", "__pycache__", ".venv", ".git", "vocab", "dist"}
 COPIED: set[str] = set()
 
 
+def registrar_en_linea(ruta: str) -> None:
+    """Declara una página bilingüe en línea generada por un módulo (sitemap, `?v=`, SEO)."""
+    RUTAS_EN_LINEA.add(ruta.strip("/"))
+
+
 def version_assets(text: str, digest_cache: dict[str, str]) -> str:
     """Version local runtime assets by their bytes, replacing earlier v values."""
     def replace(match: re.Match) -> str:
@@ -199,6 +204,13 @@ def prepare_public_site(playground_translations=()) -> None:
             raise ValueError("Unsafe generated-source output path")
         shutil.rmtree(source_output)
     mapping = json.loads((SITE / "landing.en.json").read_text(encoding="utf-8"))
+    # Claves EN de los módulos: sitio/i18n/<modulo>.en.json se funden con landing.en.json; una clave
+    # repetida con otra traducción es un error (dos personas no deben pisarse en silencio).
+    for extra in sorted((SITE / "i18n").glob("*.en.json")):
+        for clave, valor in json.loads(extra.read_text(encoding="utf-8")).items():
+            if clave in mapping and mapping[clave] != valor:
+                raise ValueError(f"{extra.name}: la clave «{clave[:60]}» ya tiene otra traducción en las cadenas de la portada")
+            mapping[clave] = valor
     dynamic = json.loads((SITE / "animation.en.json").read_text(encoding="utf-8"))
     def js_translate(match):
         try:
