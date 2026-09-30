@@ -1,0 +1,4 @@
+chg|n=3
+CHG-301|Reiniciar el balanceador del portal|normal|medio|30|portal|2
+CHG-302|Reemplazar el arreglo de discos del servidor de archivos|normal|alto|600|almacenamiento|7.5
+CHG-303|Activar la regla de filtrado del firewall perimetral|estandar|bajo|15|firewall|

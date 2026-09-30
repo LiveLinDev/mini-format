@@ -1,0 +1,11 @@
+inc|n=10
+INC-301|mayor|vpn|Las conexiones VPN se caen cada diez minutos|90
+INC-302|menor|impresion|Atasco de papel en la impresora del piso 3|30
+INC-303|critica|red|Sin conectividad en el laboratorio de cómputo|180
+INC-304|menor|correo|El buzón compartido no muestra los mensajes nuevos|45
+INC-305|mayor|correo|Rebote de mensajes hacia dominios externos|120
+INC-306|critica|vpn|Nadie puede autenticarse en la VPN de la sede norte|240
+INC-307|menor|telefonia|Puerto de red del aula 204 sin enlace|60
+INC-308|mayor|impresion|La cola de impresión se bloquea al enviar PDF grandes|75
+INC-309|menor|correo|Firma institucional con el logotipo desactualizado|20
+INC-310|mayor|red|Latencia alta en el wifi de la biblioteca|150

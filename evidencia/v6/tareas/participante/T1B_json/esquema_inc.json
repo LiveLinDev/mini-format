@@ -1,0 +1,44 @@
+{
+  "title": "Incidencias de infraestructura",
+  "type": "object",
+  "properties": {
+    "codigo": {
+      "type": "string",
+      "description": "código de la incidencia"
+    },
+    "severidad": {
+      "type": "string",
+      "enum": [
+        "menor",
+        "mayor",
+        "critica"
+      ]
+    },
+    "sistema": {
+      "type": "string",
+      "enum": [
+        "red",
+        "correo",
+        "vpn",
+        "impresion"
+      ]
+    },
+    "descripcion": {
+      "type": "string",
+      "description": "descripción breve de la incidencia"
+    },
+    "minutos": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 480,
+      "description": "minutos estimados de atención"
+    }
+  },
+  "required": [
+    "codigo",
+    "severidad",
+    "sistema",
+    "descripcion",
+    "minutos"
+  ]
+}

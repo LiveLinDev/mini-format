@@ -1,0 +1,4 @@
+chg|n=3
+CHG-201|Actualizar el firmware del switch de la sede norte|normal|medio|120|red,switch|3.5
+CHG-202|Rotar los certificados del portal de autoservicio|estandar|bajo|45|portal|
+CHG-203|Migrar el relé de correo a la nueva subred|emergencia|alto|240|correo,dns,firewall|8

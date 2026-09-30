@@ -1,0 +1,93 @@
+{
+  "tarea": "T2",
+  "contrato": "tk",
+  "linea_defecto": 8,
+  "codigo_error": "E05",
+  "registros_esperados": [
+    {
+      "id": "T-2201",
+      "prioridad": "alta",
+      "categoria": "acceso",
+      "resumen": "No puedo entrar al portal con el segundo factor",
+      "horas": 2
+    },
+    {
+      "id": "T-2202",
+      "prioridad": "media",
+      "categoria": "pago",
+      "resumen": "El comprobante de pago llegó sin el número de operación",
+      "horas": 1
+    },
+    {
+      "id": "T-2203",
+      "prioridad": "baja",
+      "categoria": "consulta",
+      "resumen": "Dónde descargo la factura del mes anterior",
+      "horas": 1
+    },
+    {
+      "id": "T-2204",
+      "prioridad": "alta",
+      "categoria": "error",
+      "resumen": "La aplicación móvil se congela al abrir el perfil",
+      "horas": 6
+    },
+    {
+      "id": "T-2205",
+      "prioridad": "media",
+      "categoria": "acceso",
+      "resumen": "El enlace de restablecimiento caduca de inmediato",
+      "horas": 2
+    },
+    {
+      "id": "T-2206",
+      "prioridad": "alta",
+      "categoria": "pago",
+      "resumen": "Doble cargo por la misma orden de compra",
+      "horas": 3
+    },
+    {
+      "id": "T-2207",
+      "prioridad": "media",
+      "categoria": "error",
+      "resumen": "El exportador falla con nombres como A|B en la columna cliente",
+      "horas": 4
+    },
+    {
+      "id": "T-2208",
+      "prioridad": "baja",
+      "categoria": "consulta",
+      "resumen": "Horario de atención del soporte telefónico",
+      "horas": 1
+    },
+    {
+      "id": "T-2209",
+      "prioridad": "media",
+      "categoria": "error",
+      "resumen": "Los filtros del reporte no recuerdan la última selección",
+      "horas": 5
+    },
+    {
+      "id": "T-2210",
+      "prioridad": "alta",
+      "categoria": "acceso",
+      "resumen": "Cuenta bloqueada tras tres intentos fallidos",
+      "horas": 1
+    },
+    {
+      "id": "T-2211",
+      "prioridad": "baja",
+      "categoria": "pago",
+      "resumen": "Solicitud de factura a nombre de otra empresa",
+      "horas": 2
+    },
+    {
+      "id": "T-2212",
+      "prioridad": "media",
+      "categoria": "consulta",
+      "resumen": "Diferencia entre el plan básico y el plan profesional",
+      "horas": 1
+    }
+  ],
+  "nota": "Dataset sintético; el defecto es un '|' sin escapar en el resumen del registro 7 (6 campos). correccion_modelo.mini es una respuesta de reparación redactada por el equipo, no de un modelo real."
+}

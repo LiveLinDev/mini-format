@@ -1,0 +1,68 @@
+{
+  "prefix": "tk",
+  "version": 1,
+  "name": "Tickets de soporte",
+  "description": "",
+  "parent": null,
+  "domain": "",
+  "list_separator": ",",
+  "records_key": "records",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "number of records"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "str",
+      "desc": "código del ticket"
+    },
+    {
+      "name": "prioridad",
+      "type": "enum",
+      "values": [
+        "baja",
+        "media",
+        "alta"
+      ]
+    },
+    {
+      "name": "categoria",
+      "type": "enum",
+      "values": [
+        "acceso",
+        "pago",
+        "error",
+        "consulta"
+      ]
+    },
+    {
+      "name": "resumen",
+      "type": "str",
+      "desc": "resumen breve de la solicitud"
+    },
+    {
+      "name": "horas",
+      "type": "int",
+      "min": 0,
+      "max": 40,
+      "desc": "horas estimadas de atención"
+    }
+  ],
+  "extensions": [],
+  "author": "",
+  "license": "MIT",
+  "source": ""
+}
