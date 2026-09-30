@@ -1,0 +1,114 @@
+{
+  "eventos": [
+    {
+      "id_equipo": "EQ-0137",
+      "planta": "planta_pintura",
+      "tipo_evento": "lectura_normal",
+      "severidad": "informativa",
+      "estado": "descartado",
+      "fecha": "2026-10-01",
+      "hora": "00:02",
+      "valor": 29.9,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0204",
+      "planta": "muelle_de_carga",
+      "tipo_evento": "lectura_normal",
+      "severidad": "advertencia",
+      "estado": "resuelto",
+      "fecha": "2026-10-01",
+      "hora": "00:05",
+      "valor": 23.3,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0216",
+      "planta": "planta_pintura",
+      "tipo_evento": "lectura_normal",
+      "severidad": "informativa",
+      "estado": "resuelto",
+      "fecha": "2026-10-01",
+      "hora": "00:11",
+      "valor": 30.4,
+      "confirmado": true
+    },
+    {
+      "id_equipo": "EQ-0153",
+      "planta": "taller_mecanico",
+      "tipo_evento": "lectura_normal",
+      "severidad": "informativa",
+      "estado": "resuelto",
+      "fecha": "2026-10-01",
+      "hora": "00:15",
+      "valor": 26.5,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0099",
+      "planta": "sala_de_control",
+      "tipo_evento": "lectura_normal",
+      "severidad": "informativa",
+      "estado": "resuelto",
+      "fecha": "2026-10-01",
+      "hora": "00:21",
+      "valor": 23.9,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0232",
+      "planta": "almacen_norte",
+      "tipo_evento": "vibracion_excesiva",
+      "severidad": "advertencia",
+      "estado": "en_progreso",
+      "fecha": "2026-10-01",
+      "hora": "00:30",
+      "valor": 29.7,
+      "confirmado": true
+    },
+    {
+      "id_equipo": "EQ-0155",
+      "planta": "sala_de_control",
+      "tipo_evento": "lectura_normal",
+      "severidad": "informativa",
+      "estado": "resuelto",
+      "fecha": "2026-10-01",
+      "hora": "00:36",
+      "valor": 21.4,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0058",
+      "planta": "sala_de_control",
+      "tipo_evento": "vibracion_excesiva",
+      "severidad": "advertencia",
+      "estado": "resuelto",
+      "fecha": "2026-10-01",
+      "hora": "00:40",
+      "valor": 26.6,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0030",
+      "planta": "taller_mecanico",
+      "tipo_evento": "falla_de_comunicacion",
+      "severidad": "advertencia",
+      "estado": "abierto",
+      "fecha": "2026-10-01",
+      "hora": "00:51",
+      "valor": 3.1,
+      "confirmado": false
+    },
+    {
+      "id_equipo": "EQ-0188",
+      "planta": "planta_pintura",
+      "tipo_evento": "lectura_normal",
+      "severidad": "informativa",
+      "estado": "descartado",
+      "fecha": "2026-10-01",
+      "hora": "00:51",
+      "valor": 31.0,
+      "confirmado": false
+    }
+  ]
+}

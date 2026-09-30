@@ -1,0 +1,35 @@
+{
+  "title": "Comentarios",
+  "type": "object",
+  "properties": {
+    "postId": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "publicación comentada"
+    },
+    "id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "identificador del comentario"
+    },
+    "name": {
+      "type": "string",
+      "description": "título del comentario"
+    },
+    "email": {
+      "type": "string",
+      "description": "correo de quien comenta"
+    },
+    "body": {
+      "type": "string",
+      "description": "texto del comentario"
+    }
+  },
+  "required": [
+    "postId",
+    "id",
+    "name",
+    "email",
+    "body"
+  ]
+}

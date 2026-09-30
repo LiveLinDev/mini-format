@@ -1,0 +1,42 @@
+# Contrato de dominio .mini
+
+Devuelve solamente un documento .mini conforme a este contrato, sin Markdown ni explicaciones.
+
+Profile: mini-domain/1
+Header: `evd|v=1|n=<record count>|h=237b1ba1db38`
+La cabecera requiere m=<JSON posicional del documento completo con la colección de registros sustituida por []>. record_path=["eventos"]. Escape m using the same field rules.
+
+1. Una cabecera seguida de una línea por registro. Conserva el orden de columnas indicado.
+2. Usa ? sólo para un campo opcional ausente y ~ para null; no son equivalentes. No inventes valores ausentes.
+3. Las cadenas se escriben sin comillas; cadena vacía, ? literal, ~ literal o cadena que empieza con comillas usa una cadena JSON.
+4. Escapa barra inversa como \\, separador como \|, salto de línea como \n y retorno como \r. No recortes espacios.
+5. Los objetos obligatorios no-nullables se aplanan en columnas según las rutas indicadas. Otros objetos anidados son arrays posicionales según schema; {} representa un miembro opcional ausente.
+6. Números y booleanos usan sintaxis JSON.
+7. Las listas contienen valores transformados recursivamente. Un nodo de tipo json envuelve su valor en [valor]; null sigue siendo null.
+8. No agregues claves ni cambies tipos. Si faltan muestras para un tipo, pide reconstruir el contrato con más ejemplos.
+9. No uses d salvo que agrupes columnas constantes: d es un array JSON de [índice de columna, celda codificada] y esas columnas se omiten de todas las filas.
+10. Opcionalmente e=[ [índice de columna,[celda0,celda1,...]],...] declara un diccionario de cadenas del documento; la columna usa índices enteros desde 0. Una columna no puede estar en d y e.
+11. Si no queda ninguna columna en una fila, escribe -. n cuenta todas las filas, incluso esas filas vacías.
+
+Columns (zero-based; paths use JSON Pointer escaping):
+0: id_equipo (string)
+1: planta (string)
+2: tipo_evento (string)
+3: severidad (string)
+4: estado (string)
+5: fecha (string)
+6: hora (string)
+7: valor (number)
+8: confirmado (boolean)
+
+Schema:
+```json
+{"type":"object","fields":[{"name":"eventos","optional":false,"schema":{"type":"array","items":{"type":"object","fields":[{"name":"id_equipo","optional":false,"schema":{"type":"string"}},{"name":"planta","optional":false,"schema":{"type":"string"}},{"name":"tipo_evento","optional":false,"schema":{"type":"string"}},{"name":"severidad","optional":false,"schema":{"type":"string"}},{"name":"estado","optional":false,"schema":{"type":"string"}},{"name":"fecha","optional":false,"schema":{"type":"string"}},{"name":"hora","optional":false,"schema":{"type":"string"}},{"name":"valor","optional":false,"schema":{"type":"number"}},{"name":"confirmado","optional":false,"schema":{"type":"boolean"}}]}}}]}
+```
+
+Example / Ejemplo:
+```mini
+evd|v=1|n=2|h=237b1ba1db38|m=[[]]
+EQ-0110|almacen_sur|apertura_no_autorizada|informativa|resuelto|2026-10-01|00:04|0.4|false
+EQ-0145|almacen_sur|mantenimiento_programado|informativa|resuelto|2026-10-01|00:09|0.3|true
+```

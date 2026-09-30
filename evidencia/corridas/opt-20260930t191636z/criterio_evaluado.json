@@ -1,0 +1,45 @@
+{
+  "archivo": "experiments/optimizacion/criterio.json",
+  "sha256": "13539261fbfee040ffb1246ff97f9485d549ddbfb7fd8c3644fcc8022d662b43",
+  "fijado_en_los_commits": [
+    "c196ec9",
+    "42b3c91"
+  ],
+  "n": 100,
+  "detalle": {
+    "o200k_base": {
+      "ahorro_salida_pct": 40.203,
+      "mini_total": 2654.0,
+      "json_compacto_total_sin_instruccion": 4068.8,
+      "ahorro_total_pct": 34.772
+    },
+    "cl100k_base": {
+      "ahorro_salida_pct": 37.808,
+      "mini_total": 2889.4,
+      "json_compacto_total_sin_instruccion": 4258.4,
+      "ahorro_total_pct": 32.148
+    },
+    "r50k_base": {
+      "ahorro_salida_pct": 38.113,
+      "mini_total": 3613.0,
+      "json_compacto_total_sin_instruccion": 5346.8,
+      "ahorro_total_pct": 32.427
+    }
+  },
+  "C1_ahorro_salida_ge_30_en_los_tres_tokenizadores": true,
+  "C1_por_tokenizador": {
+    "o200k_base": true,
+    "cl100k_base": true,
+    "r50k_base": true
+  },
+  "C2_total_menor_que_json_en_los_tres_tokenizadores": true,
+  "C2_por_tokenizador": {
+    "o200k_base": true,
+    "cl100k_base": true,
+    "r50k_base": true
+  },
+  "C3_equivalencia_exacta_sin_fallos": true,
+  "C3_fallos_en_alcance": 0,
+  "fallos_general_dominio_descriptivos": 0,
+  "resultado": "cumple"
+}

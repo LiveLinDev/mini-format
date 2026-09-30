@@ -1,0 +1,39 @@
+{
+  "esquema": "mini-format/mapa-opt/1",
+  "prefijo": "cme",
+  "clave_json": "comments",
+  "orden_contractual": [
+    "postId",
+    "id",
+    "name",
+    "email",
+    "body"
+  ],
+  "campos": [
+    {
+      "campo": "postId",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "postId"
+    },
+    {
+      "campo": "id",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "id"
+    },
+    {
+      "campo": "name",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "name"
+    },
+    {
+      "campo": "email",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "email"
+    },
+    {
+      "campo": "body",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "body"
+    }
+  ]
+}

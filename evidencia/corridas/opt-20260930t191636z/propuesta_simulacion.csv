@@ -1,0 +1,64 @@
+dominio,n,tokenizador,tokens_salida_general,tokens_salida_especializado_a_mano,aplica,tokens_salida_general_con_diccionario_simulado,ahorro_potencial_vs_general_pct,distancia_a_lo_hecho_a_mano_tokens,columnas,motivo
+tickets,1,o200k_base,37,35,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,1,cl100k_base,39,37,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,1,r50k_base,47,43,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,5,o200k_base,140,128,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,5,cl100k_base,149,135,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,5,r50k_base,183,167,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,10,o200k_base,271,245,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,10,cl100k_base,291,259,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,10,r50k_base,384,347,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+tickets,25,o200k_base,670,604,True,680,-1.49,76,"['prioridad', 'categoria']",
+tickets,25,cl100k_base,732,655,True,742,-1.37,87,"['prioridad', 'categoria']",
+tickets,25,r50k_base,931,842,True,924,0.75,82,"['prioridad', 'categoria']",
+tickets,50,o200k_base,1340,1203,True,1329,0.82,126,"['prioridad', 'categoria']",
+tickets,50,cl100k_base,1471,1312,True,1460,0.75,148,"['prioridad', 'categoria']",
+tickets,50,r50k_base,1845,1659,True,1791,2.93,132,"['prioridad', 'categoria']",
+tickets,100,o200k_base,2652,2382,True,2608,1.66,226,"['prioridad', 'categoria']",
+tickets,100,cl100k_base,2905,2588,True,2861,1.51,273,"['prioridad', 'categoria']",
+tickets,100,r50k_base,3639,3270,True,3502,3.76,232,"['prioridad', 'categoria']",
+tickets,250,o200k_base,6681,6014,True,6540,2.11,526,"['prioridad', 'categoria']",
+tickets,250,cl100k_base,7300,6536,True,7159,1.93,623,"['prioridad', 'categoria']",
+tickets,250,r50k_base,9078,8174,True,8706,4.1,532,"['prioridad', 'categoria']",
+eventos,1,o200k_base,44,30,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+eventos,1,cl100k_base,45,29,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+eventos,1,r50k_base,48,30,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+eventos,5,o200k_base,195,94,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+eventos,5,cl100k_base,203,85,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+eventos,5,r50k_base,225,94,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+eventos,10,o200k_base,391,174,True,386,1.28,212,"['tipo_evento', 'severidad']",
+eventos,10,cl100k_base,404,161,True,394,2.48,233,"['tipo_evento', 'severidad']",
+eventos,10,r50k_base,454,174,True,433,4.63,259,"['tipo_evento', 'severidad']",
+eventos,25,o200k_base,979,414,True,870,11.13,456,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,25,cl100k_base,1007,383,True,875,13.11,492,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,25,r50k_base,1154,415,True,938,18.72,523,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,50,o200k_base,1976,816,True,1624,17.81,808,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,50,cl100k_base,2030,757,True,1629,19.75,872,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,50,r50k_base,2328,817,True,1718,26.2,901,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,100,o200k_base,3950,1621,True,3108,21.32,1487,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,100,cl100k_base,4058,1513,True,3113,23.29,1600,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,100,r50k_base,4669,1623,True,3251,30.37,1628,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,250,o200k_base,9907,4097,True,7586,23.43,3489,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,250,cl100k_base,10196,3820,True,7591,25.55,3771,"['planta', 'tipo_evento', 'severidad', 'estado']",
+eventos,250,r50k_base,11779,4135,True,7875,33.14,3740,"['planta', 'tipo_evento', 'severidad', 'estado']",
+comentarios,1,o200k_base,75,76,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,1,cl100k_base,89,90,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,1,r50k_base,106,107,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,5,o200k_base,307,308,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,5,cl100k_base,371,372,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,5,r50k_base,441,442,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,10,o200k_base,597,598,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,10,cl100k_base,716,717,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,10,r50k_base,846,847,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,25,o200k_base,1470,1471,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,25,cl100k_base,1747,1748,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,25,r50k_base,2043,2044,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,50,o200k_base,2941,2942,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,50,cl100k_base,3515,3516,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,50,r50k_base,4120,4121,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,100,o200k_base,5954,5955,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,100,cl100k_base,7127,7128,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,100,r50k_base,8341,8342,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,250,o200k_base,15180,15181,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,250,cl100k_base,18153,18154,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)
+comentarios,250,r50k_base,21413,21414,False,,,,[],ninguna columna cumple la regla (se repite poco o ahorra menos de lo que cuesta declararla)

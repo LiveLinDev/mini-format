@@ -1,0 +1,98 @@
+{
+  "esquema": "mini-format/mapa-opt/1",
+  "prefijo": "eve",
+  "clave_json": "eventos",
+  "orden_contractual": [
+    "id_equipo",
+    "planta",
+    "tipo_evento",
+    "severidad",
+    "estado",
+    "hora",
+    "valor",
+    "confirmado"
+  ],
+  "campos": [
+    {
+      "campo": "id_equipo",
+      "tratamiento": "id_prefijo",
+      "nombre_en_contrato": "id_equipo",
+      "prefijo": "EQ-",
+      "ancho": 4
+    },
+    {
+      "campo": "planta",
+      "tratamiento": "codigos",
+      "nombre_en_contrato": "planta",
+      "codigos": {
+        "almacen_norte": "a",
+        "almacen_sur": "b",
+        "planta_ensamblaje": "c",
+        "planta_pintura": "d",
+        "patio_exterior": "e",
+        "sala_de_control": "f",
+        "taller_mecanico": "g",
+        "muelle_de_carga": "h"
+      }
+    },
+    {
+      "campo": "tipo_evento",
+      "tratamiento": "codigos",
+      "nombre_en_contrato": "tipo_evento",
+      "codigos": {
+        "temperatura_fuera_de_rango": "t",
+        "vibracion_excesiva": "v",
+        "apertura_no_autorizada": "a",
+        "falla_de_comunicacion": "f",
+        "mantenimiento_programado": "m",
+        "lectura_normal": "l",
+        "bateria_baja": "b"
+      }
+    },
+    {
+      "campo": "severidad",
+      "tratamiento": "codigos",
+      "nombre_en_contrato": "severidad",
+      "codigos": {
+        "informativa": "i",
+        "advertencia": "a",
+        "critica": "c"
+      }
+    },
+    {
+      "campo": "estado",
+      "tratamiento": "codigos",
+      "nombre_en_contrato": "estado",
+      "codigos": {
+        "abierto": "a",
+        "en_progreso": "e",
+        "resuelto": "r",
+        "descartado": "d"
+      }
+    },
+    {
+      "campo": "fecha",
+      "tratamiento": "constante",
+      "nombre_en_contrato": "fecha",
+      "clave_cabecera": "f",
+      "tipo": "date"
+    },
+    {
+      "campo": "hora",
+      "tratamiento": "hhmm",
+      "nombre_en_contrato": "hora"
+    },
+    {
+      "campo": "valor",
+      "tratamiento": "escalado",
+      "nombre_en_contrato": "valor",
+      "factor": 10,
+      "tipo_original": "float"
+    },
+    {
+      "campo": "confirmado",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "confirmado"
+    }
+  ]
+}

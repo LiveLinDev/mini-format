@@ -1,0 +1,9 @@
+Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.
+Línea 1 (cabecera): cme|n=<nº de registros>
+Luego UNA línea por registro, campos separados por |, en este orden:
+1. postId: entero >= 1 (publicación comentada)
+2. id: entero >= 1 (identificador del comentario)
+3. name: texto (título del comentario)
+4. email: texto (correo de quien comenta)
+5. body: texto (texto del comentario)
+Escapes: \| = barra vertical, \\ = barra invertida, \n = salto de línea. n = número exacto de líneas de registro.

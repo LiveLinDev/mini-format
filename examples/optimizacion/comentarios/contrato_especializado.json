@@ -1,0 +1,59 @@
+{
+  "prefix": "cme",
+  "version": 1,
+  "name": "Comentarios con texto libre largo (JSONPlaceholder)",
+  "description": "Comentarios.",
+  "parent": null,
+  "domain": "",
+  "list_separator": ",",
+  "records_key": "records",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "número de registros"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "postId",
+      "type": "int",
+      "min": 1,
+      "desc": "publicación comentada"
+    },
+    {
+      "name": "id",
+      "type": "int",
+      "min": 1,
+      "desc": "identificador del comentario"
+    },
+    {
+      "name": "name",
+      "type": "str",
+      "desc": "título del comentario"
+    },
+    {
+      "name": "email",
+      "type": "str",
+      "desc": "correo de quien comenta"
+    },
+    {
+      "name": "body",
+      "type": "str",
+      "desc": "texto del comentario"
+    }
+  ],
+  "extensions": [],
+  "author": "",
+  "license": "MIT",
+  "source": ""
+}

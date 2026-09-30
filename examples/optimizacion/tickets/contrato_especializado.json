@@ -1,0 +1,68 @@
+{
+  "prefix": "tke",
+  "version": 1,
+  "name": "Tickets de soporte (hilo de «Cómo funciona»)",
+  "description": "Tickets de soporte. id: número del identificador sin el prefijo T-. prioridad: b=baja m=media a=alta. categoria: a=acceso p=pago e=error c=consulta.",
+  "parent": null,
+  "domain": "",
+  "list_separator": ",",
+  "records_key": "records",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "número de registros"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "prioridad",
+      "type": "enum",
+      "values": [
+        "b",
+        "m",
+        "a"
+      ]
+    },
+    {
+      "name": "categoria",
+      "type": "enum",
+      "values": [
+        "a",
+        "p",
+        "e",
+        "c"
+      ]
+    },
+    {
+      "name": "resumen",
+      "type": "str",
+      "desc": "resumen breve de la solicitud"
+    },
+    {
+      "name": "horas",
+      "type": "int",
+      "min": 0,
+      "max": 40,
+      "desc": "horas estimadas de atención"
+    }
+  ],
+  "extensions": [],
+  "author": "",
+  "license": "MIT",
+  "source": ""
+}

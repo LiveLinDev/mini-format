@@ -1,0 +1,23 @@
+FORMATO .mini — familia 'eve' v1 (Eventos de planta (muchos campos cortos y enumerados))
+Eventos de planta de un día. id_equipo: número del identificador sin el prefijo EQ- (4 dígitos con ceros a la izquierda). planta: a=almacen_norte b=almacen_sur c=planta_ensamblaje d=planta_pintura e=patio_exterior f=sala_de_control g=taller_mecanico h=muelle_de_carga. tipo_evento: t=temperatura_fuera_de_rango v=vibracion_excesiva a=apertura_no_autorizada f=falla_de_comunicacion m=mantenimiento_programado l=lectura_normal b=bateria_baja. severidad: i=informativa a=advertencia c=critica. estado: a=abierto e=en_progreso r=resuelto d=descartado. hora: minutos desde las 00:00 (HH:MM = 60*HH + MM). valor: valor x10 como entero (p. ej. 21.5 se escribe 215).
+Reglas:
+- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'eve|n=<int>, f=<date>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.
+- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).
+- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):
+  1. id_equipo: int [0..]
+  2. planta: uno de {a|b|c|d|e|f|g|h}
+  3. tipo_evento: uno de {t|v|a|f|m|l|b}
+  4. severidad: uno de {i|a|c}
+  5. estado: uno de {a|e|r|d}
+  6. hora: int [0..1439]
+  7. valor: int [-500..2000]
+  8. confirmado: bool
+- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV ("impacto, justicia y evidencia"; el marcador * va después de la comilla de cierre) o escapa el separador como '\,'. Un asterisco final literal se escribe '\*'.
+- Escapes válidos en cualquier valor: '\|' para una barra vertical literal, '\\' para una barra invertida, '\n' para un salto de línea.
+- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.
+- Un campo vacío significa nulo (solo permitido en campos opcionales).
+- Registro: 8 campos núcleo.
+Ejemplo válido:
+eve|n=2|f=2026-10-01
+110|b|a|i|r|4|4|false
+145|b|m|i|r|9|3|true

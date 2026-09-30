@@ -1,0 +1,102 @@
+{
+  "profile": "mini-domain/1",
+  "prefix": "evd",
+  "version": 1,
+  "schema": {
+    "type": "object",
+    "fields": [
+      {
+        "name": "eventos",
+        "optional": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "id_equipo",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "planta",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "tipo_evento",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "severidad",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "estado",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "fecha",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "hora",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "valor",
+                "optional": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "confirmado",
+                "optional": false,
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "record_path": [
+    "eventos"
+  ],
+  "sample_documents": 1,
+  "sample_records": 100,
+  "schema_id": "237b1ba1db38",
+  "record_fields": [
+    "id_equipo",
+    "planta",
+    "tipo_evento",
+    "severidad",
+    "estado",
+    "fecha",
+    "hora",
+    "valor",
+    "confirmado"
+  ]
+}

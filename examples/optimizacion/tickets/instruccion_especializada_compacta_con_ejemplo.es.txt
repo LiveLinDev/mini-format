@@ -1,0 +1,13 @@
+Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.
+Línea 1 (cabecera): tke|n=<nº de registros>
+Luego UNA línea por registro, campos separados por |, en este orden:
+1. id: entero (número sin el prefijo T-)
+2. prioridad: b=baja m=media a=alta
+3. categoria: a=acceso p=pago e=error c=consulta
+4. resumen: texto (resumen breve de la solicitud)
+5. horas: entero 0..40 (horas estimadas de atención)
+Escapes: \| = barra vertical, \\ = barra invertida, \n = salto de línea. n = número exacto de líneas de registro.
+Ejemplo válido:
+tke|n=2
+1100|a|e|la app de escritorio ignora las palabras con tilde (desde el martes)|5
+1101|a|e|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2
