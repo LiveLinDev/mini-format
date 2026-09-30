@@ -1,8 +1,12 @@
-# Matriz PROPUESTA para el estudio real (no ejecutada).
-# 4 modelos de 3 proveedores, 14 tareas de 14 dominios distintos (10 de extracción + 4 generativas), 30 repeticiones por celda.
-# Antes de ejecutar: confirmar modelos y precios (precios.json), correr --dry-run y fijar --max-costo-usd.
+# Matriz PROPUESTA para el estudio real (NO ejecutada, NO autorizada).
+# 14 dominios × 4 modelos × 30 repeticiones × 4 condiciones primarias (A, B, C, D) = 6 720 llamadas primarias
+# nominales; C no aplica a los modelos sin modo estructurado (llama-3.3-70b-versatile): 6 300 a ejecutar.
+# Las reparaciones (A+1, B+1, C+1, D+1) son UNA llamada adicional sobre la MISMA respuesta y solo cuando la
+# respuesta tiene algo que reparar. V3b añade 2 100 llamadas con límite de salida reducido.
+# Antes de ejecutar: confirmar modelos y tarifas VERIFICADAS (evidencia/tarifas/tarifas.json), correr el dry-run,
+# obtener la autorización del presupuesto (bloque presupuesto) y pasar --max-costo-usd.
 nombre: estudio
-descripcion: Estudio V2/V3 — fiabilidad de generación y recuperación ante truncamiento
+descripcion: Estudio V2/V3b — fiabilidad de generación y recuperación ante truncamiento
 semilla: 20260915
 idioma: es
 temperatura: 0.7
@@ -26,7 +30,7 @@ tareas:
   - gen-q       # cuestionario formativo
   - gen-r       # rúbricas
   - gen-code    # ejercicios de programación
-brazos: [A, B, C, D, D+R]
+brazos: [A, B, C, D, A+1, B+1, C+1, D+1]
 
 modelos:
   - proveedor: openai
@@ -37,19 +41,32 @@ modelos:
     estructurado: true
   - proveedor: groq
     modelo: llama-3.3-70b-versatile
-    estructurado: false          # brazo C omitido para este modelo
+    estructurado: false          # C y C+1 quedan «no aplicable»; además su tarifa no está verificada (el real se rechaza)
   - proveedor: groq
     modelo: openai/gpt-oss-120b
     estructurado: true           # confirmar soporte de json_schema estricto antes de ejecutar
+
+# PRESUPUESTO: sin autorización (0). El tope de 40 USD del Charter es una propuesta, NO una autorización.
+presupuesto:
+  autorizado_usd: 0
+  por_celda_max_usd: null
+  firmado_por: ""
+  fecha: ""
+
+controles:
+  aleatorizar: true
+  reintentos_por_llamada: 2
+  max_fallos_seguidos: 5
 
 experimentos:
   v2:
     activo: true
   v3b:
     activo: true
-    brazos: [A, B, C, D, D+R]
+    brazos: [A, B, C, D, A+1, B+1, C+1, D+1]
     repeticiones: 10
-    fraccion_max_tokens: 0.5
+    politica_limite: comun_por_tarea
+    fraccion_max_tokens: 0.5     # PROVISIONAL: política y fracción se fijan con el piloto real
   v3a:
     cortes_por_muestra: 20
     semilla: 7
@@ -65,5 +82,3 @@ estimacion:
   factor_salida: 1.15
   tasa_reparacion_esperada: 0.35
   fraccion_lineas_reparadas: 0.2
-
-max_fallos_seguidos: 5
