@@ -1,0 +1,284 @@
+{
+  "ahorro_por_unidad": {
+    "n100_muestreo": {
+      "cl100k_base": {
+        "documento": {
+          "agregado_suma_pct": 31.709033031924704,
+          "media_por_dominio_pct": 32.73510294903471,
+          "suma_json_compacto": 86704,
+          "suma_mini": 59211
+        },
+        "total_documento_mas_estructura": {
+          "agregado_suma_pct": 26.46706034323676,
+          "media_por_dominio_pct": 27.050428840999533,
+          "suma_json_compacto": 86704,
+          "suma_mini": 63756
+        },
+        "total_documento_mas_prompt_en": {
+          "agregado_suma_pct": 28.905154616412187,
+          "media_por_dominio_pct": 29.258747982957345,
+          "suma_json_compacto": 90579,
+          "suma_mini": 64397
+        },
+        "total_documento_mas_prompt_es": {
+          "agregado_suma_pct": 27.84233235122102,
+          "media_por_dominio_pct": 28.019391474495553,
+          "suma_json_compacto": 90621,
+          "suma_mini": 65390
+        }
+      },
+      "o200k_base": {
+        "documento": {
+          "agregado_suma_pct": 34.30521890844369,
+          "media_por_dominio_pct": 34.80620754528328,
+          "suma_json_compacto": 85401,
+          "suma_mini": 56104
+        },
+        "total_documento_mas_estructura": {
+          "agregado_suma_pct": 28.884907670870362,
+          "media_por_dominio_pct": 28.9756247041207,
+          "suma_json_compacto": 85401,
+          "suma_mini": 60733
+        },
+        "total_documento_mas_prompt_en": {
+          "agregado_suma_pct": 31.416587439181253,
+          "media_por_dominio_pct": 31.29195300768671,
+          "suma_json_compacto": 89405,
+          "suma_mini": 61317
+        },
+        "total_documento_mas_prompt_es": {
+          "agregado_suma_pct": 30.74927599431977,
+          "media_por_dominio_pct": 30.521792745997733,
+          "suma_json_compacto": 89433,
+          "suma_mini": 61933
+        }
+      },
+      "r50k_base": {
+        "documento": {
+          "agregado_suma_pct": 29.171662354599192,
+          "media_por_dominio_pct": 30.430590521180815,
+          "suma_json_compacto": 95082,
+          "suma_mini": 67345
+        },
+        "total_documento_mas_estructura": {
+          "agregado_suma_pct": 24.12443995708967,
+          "media_por_dominio_pct": 24.799458931000235,
+          "suma_json_compacto": 95082,
+          "suma_mini": 72144
+        },
+        "total_documento_mas_prompt_en": {
+          "agregado_suma_pct": 26.45657233242995,
+          "media_por_dominio_pct": 26.91525058821795,
+          "suma_json_compacto": 99257,
+          "suma_mini": 72997
+        },
+        "total_documento_mas_prompt_es": {
+          "agregado_suma_pct": 24.612631092073645,
+          "media_por_dominio_pct": 24.714769152558006,
+          "suma_json_compacto": 99453,
+          "suma_mini": 74975
+        }
+      }
+    },
+    "n12_ciclo": {
+      "cl100k_base": {
+        "documento": {
+          "agregado_suma_pct": 30.88262391744979,
+          "media_por_dominio_pct": 31.629562447913077,
+          "suma_json_compacto": 10854,
+          "suma_mini": 7502
+        },
+        "total_documento_mas_estructura": {
+          "agregado_suma_pct": -10.991339598304783,
+          "media_por_dominio_pct": -13.550886720177441,
+          "suma_json_compacto": 10854,
+          "suma_mini": 12047
+        },
+        "total_documento_mas_prompt_en": {
+          "agregado_suma_pct": 13.85701676963813,
+          "media_por_dominio_pct": 11.360938531007262,
+          "suma_json_compacto": 14729,
+          "suma_mini": 12688
+        },
+        "total_documento_mas_prompt_es": {
+          "agregado_suma_pct": 7.3793243517703555,
+          "media_por_dominio_pct": 4.079331083107177,
+          "suma_json_compacto": 14771,
+          "suma_mini": 13681
+        }
+      },
+      "o200k_base": {
+        "documento": {
+          "agregado_suma_pct": 33.5262273660631,
+          "media_por_dominio_pct": 33.80065469471256,
+          "suma_json_compacto": 10714,
+          "suma_mini": 7122
+        },
+        "total_documento_mas_estructura": {
+          "agregado_suma_pct": -9.678924771327235,
+          "media_por_dominio_pct": -12.422587190121035,
+          "suma_json_compacto": 10714,
+          "suma_mini": 11751
+        },
+        "total_documento_mas_prompt_en": {
+          "agregado_suma_pct": 16.19105856774018,
+          "media_por_dominio_pct": 13.473103698482321,
+          "suma_json_compacto": 14718,
+          "suma_mini": 12335
+        },
+        "total_documento_mas_prompt_es": {
+          "agregado_suma_pct": 12.172792621727924,
+          "media_por_dominio_pct": 8.98927956974412,
+          "suma_json_compacto": 14746,
+          "suma_mini": 12951
+        }
+      },
+      "r50k_base": {
+        "documento": {
+          "agregado_suma_pct": 28.55580788964589,
+          "media_por_dominio_pct": 29.46936946487848,
+          "suma_json_compacto": 11889,
+          "suma_mini": 8494
+        },
+        "total_documento_mas_estructura": {
+          "agregado_suma_pct": -11.809235427706287,
+          "media_por_dominio_pct": -15.273686472789148,
+          "suma_json_compacto": 11889,
+          "suma_mini": 13293
+        },
+        "total_documento_mas_prompt_en": {
+          "agregado_suma_pct": 11.939741035856578,
+          "media_por_dominio_pct": 9.09809688168871,
+          "suma_json_compacto": 16064,
+          "suma_mini": 14146
+        },
+        "total_documento_mas_prompt_es": {
+          "agregado_suma_pct": 0.8364083640836406,
+          "media_por_dominio_pct": -3.47210374450991,
+          "suma_json_compacto": 16260,
+          "suma_mini": 16124
+        }
+      }
+    }
+  },
+  "alcance": "completo",
+  "cifras": [
+    {
+      "archivos": [
+        "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/summary_12.csv (columna mini_vs_json_compact_pct, redondeada a 1 decimal)",
+        "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/tokens.csv (tokens sin redondear)"
+      ],
+      "cifra_citada": "33,8 %",
+      "cifra_id": "linea_base_n12.media_por_dominio",
+      "comando": "python benchmark/run_benchmark.py",
+      "conjunto": "14 dominios x 12 registros base (168 registros escritos a mano; q extiende a a), protocolo 'ciclo'",
+      "denominador": {
+        "descripcion": "tokens de JSON compacto de cada dominio (n=12); la media no tiene un denominador único",
+        "suma_tokens_json_compacto": 10714,
+        "suma_tokens_mini": 7122
+      },
+      "estadistico": "media aritmética de 14 ahorros por dominio (cada dominio pesa igual)",
+      "generador_mini": "minifmt.dumps (contrato de forks/<dominio>)",
+      "lectura_alternativa_misma_serie": {
+        "agregado_por_suma_pct": 33.5262273660631
+      },
+      "que_cuenta": "documento (sin contrato, sin mapa, sin prompt)",
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "unidad": "ahorro de tokens de .mini frente a JSON compacto, %",
+      "valor_recalculado_pct": 33.80714285714286,
+      "valor_sin_redondear_pct": 33.80065469471256
+    },
+    {
+      "archivos": [
+        "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ahorro_resumen.csv (fila o200k_base / muestreo / n=100 / json_compact, columna media)",
+        "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/tokens.csv (tokens por dominio)"
+      ],
+      "cifra_citada": "34,8 %",
+      "cifra_id": "serie_n100_muestreo.media_por_dominio",
+      "comando": "python experiments/v1_tokens/run.py",
+      "conjunto": "14 dominios x 100 registros por dominio, variante 'muestreo'; los 12 registros base se REPITEN (8 pasadas + 4) con identificadores nuevos",
+      "denominador": {
+        "descripcion": "tokens de JSON compacto de cada dominio (n=100)",
+        "suma_tokens_json_compacto": 85401,
+        "suma_tokens_mini": 56104
+      },
+      "estadistico": "media aritmética de 14 ahorros por dominio",
+      "generador_mini": "minifmt.dumps (contrato de forks/<dominio>)",
+      "ic95_bootstrap_dominios": [
+        32.69495,
+        36.893462
+      ],
+      "lectura_alternativa_misma_serie": {
+        "agregado_por_suma_pct": 34.30521890844369
+      },
+      "que_cuenta": "documento (sin contrato, sin mapa, sin prompt)",
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "unidad": "ahorro de tokens de .mini frente a JSON compacto, %",
+      "valor_recalculado_pct": 34.806208,
+      "valor_sin_redondear_pct": 34.80620754528328
+    },
+    {
+      "archivos": [
+        "evidencia/corridas/v1-publicos-20260930t2200z/results_o200k_base.json (campos formats.mini.payload_plus_schema_tokens y formats.json_compact.tokens; no se guarda como campo: se calcula)"
+      ],
+      "cifra_citada": "34,99 %",
+      "cifra_id": "publico.suma.documento_mas_contrato",
+      "comando": "python benchmark/public/run.py",
+      "conjunto": "4 snapshots públicos con SHA-256 (DummyJSON products y users, JSONPlaceholder comments, USGS earthquakes): 1.902 objetos únicos, sin repetición",
+      "denominador": {
+        "descripcion": "Σ tokens de JSON compacto (documento; su esquema no se cuenta: JSON es autodescriptivo)",
+        "suma_tokens_json_compacto": 468849
+      },
+      "estadistico": "agregado por suma (1 - Σ tokens .mini / Σ tokens JSON compacto) sobre los 4 snapshots",
+      "generador_mini": "minifmt.domain (mini-domain/1), contrato inferido del snapshot completo",
+      "numerador": {
+        "descripcion": "Σ payload_plus_schema_tokens de .mini: conteo conjunto de contrato compartido + documento",
+        "suma_si_se_contaran_por_separado": 304803,
+        "suma_tokens_mini": 304799
+      },
+      "que_cuenta": "documento + contrato compartido (estructura) de .mini frente al documento de JSON compacto",
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "unidad": "ahorro de tokens de .mini frente a JSON compacto, %",
+      "valor_recalculado_pct": 34.98994345727515
+    },
+    {
+      "archivos": [
+        "evidencia/corridas/v1-publicos-20260930t2200z/results_o200k_base.json (campo summary.weighted_savings_pct.json_compact)"
+      ],
+      "cifra_citada": "35,64 %",
+      "cifra_id": "publico.suma.documento_sin_contrato",
+      "comando": "python benchmark/public/run.py",
+      "conjunto": "4 snapshots públicos con SHA-256 (DummyJSON products y users, JSONPlaceholder comments, USGS earthquakes): 1.902 objetos únicos, sin repetición",
+      "denominador": {
+        "descripcion": "Σ tokens de JSON compacto (documento)",
+        "suma_tokens_json_compacto": 468849
+      },
+      "estadistico": "agregado por suma (1 - Σ tokens .mini / Σ tokens JSON compacto) sobre los 4 snapshots",
+      "generador_mini": "minifmt.domain (mini-domain/1), contrato inferido del snapshot completo",
+      "lectura_alternativa_mismo_conjunto": {
+        "con_contrato_y_prompt_de_mini_pct": 34.61050359497408,
+        "nota": "con el prompt de generación de .mini (en inglés) frente al documento JSON sin instrucción: la asimetría perjudica a .mini"
+      },
+      "numerador": {
+        "descripcion": "Σ tokens del documento .mini, sin contrato",
+        "suma_tokens_mini": 301763
+      },
+      "que_cuenta": "documento (sin contrato, sin mapa, sin prompt)",
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "unidad": "ahorro de tokens de .mini frente a JSON compacto, %",
+      "valor_archivado_pct": 35.64,
+      "valor_recalculado_pct": 35.63748669614311
+    }
+  ],
+  "definiciones": {
+    "contenido_hojas": "Cota inferior de contenido: cada valor hoja del objeto se tokeniza por separado y se suman los conteos (benchmark/formats.py::payload_tokens; columna `payload` de benchmark/results/summary_12.csv). No es un texto que se envíe a un modelo.",
+    "documento": "Texto completo del documento transmitido (encabezado, metadatos, sintaxis y contenido), sin contrato, mapa ni prompt. Es lo que los documentos del equipo llamaban 'solo payload' (35,64 %).",
+    "estructura_compartida": "Contrato (.mini: JSON compacto del contrato) o mapa de aplanado (CSV reversible, TOON plano) que el receptor necesita para decodificar. 0 para JSON, YAML, XML tipado y TOON nativo, que son autodescriptivos.",
+    "prompt_reutilizable": "Bloque de instrucción que acompaña a cada solicitud: spec_block del contrato para .mini; instrucción + JSON Schema (json_schema) para JSON compacto. Se solapa con la estructura compartida (describe el mismo contrato en lenguaje natural): no se suman.",
+    "total": "Conteo del texto completo enviado: tokenizer.count(estructura_o_prompt + '\\n' + documento). No es la suma de conteos de fragmentos."
+  }
+}

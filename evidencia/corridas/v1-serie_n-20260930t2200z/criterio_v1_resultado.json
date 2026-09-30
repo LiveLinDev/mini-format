@@ -1,0 +1,1932 @@
+{
+  "criterio_id": "V1-documental-30-10-3",
+  "efecto_n": [
+    {
+      "agregado_suma_pct": 28.102189781021902,
+      "dominios_ge_umbral": 4,
+      "ic95_agregado": [
+        25.02129816775419,
+        30.650652565663933
+      ],
+      "ic95_media": [
+        24.93339235525254,
+        29.14745932033065
+      ],
+      "media_por_dominio_pct": 27.001016531634786,
+      "n": 1,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 25.03681885125184,
+      "dominios_ge_umbral": 2,
+      "ic95_agregado": [
+        21.97034094211513,
+        27.55527554889551
+      ],
+      "ic95_media": [
+        21.995400727086434,
+        26.195609386970762
+      ],
+      "media_por_dominio_pct": 24.048856678104503,
+      "n": 1,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 24.035206499661477,
+      "dominios_ge_umbral": 2,
+      "ic95_agregado": [
+        20.444815131641484,
+        26.96405640416133
+      ],
+      "ic95_media": [
+        20.519884580819184,
+        25.007050909813035
+      ],
+      "media_por_dominio_pct": 22.639711587297228,
+      "n": 1,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 32.43917654398004,
+      "dominios_ge_umbral": 11,
+      "ic95_agregado": [
+        30.500294074196358,
+        34.304792798665346
+      ],
+      "ic95_media": [
+        30.711584764016195,
+        34.229919344325424
+      ],
+      "media_por_dominio_pct": 32.49619799942191,
+      "n": 5,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 29.583848372476307,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        27.6577774394709,
+        31.48829186117045
+      ],
+      "ic95_media": [
+        28.033088347598447,
+        31.972857876134285
+      ],
+      "media_por_dominio_pct": 30.03414701226477,
+      "n": 5,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 27.573875399962354,
+      "dominios_ge_umbral": 3,
+      "ic95_agregado": [
+        25.649992755722977,
+        29.506094275877643
+      ],
+      "ic95_media": [
+        25.95997892407573,
+        30.032054083803523
+      ],
+      "media_por_dominio_pct": 27.986967033375407,
+      "n": 5,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 33.2375055285272,
+      "dominios_ge_umbral": 11,
+      "ic95_agregado": [
+        31.217390430939616,
+        35.27220425485002
+      ],
+      "ic95_media": [
+        31.531385322895105,
+        35.47623907546264
+      ],
+      "media_por_dominio_pct": 33.532057076388405,
+      "n": 10,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 30.581941259962875,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        28.612112130489933,
+        32.781706122664815
+      ],
+      "ic95_media": [
+        29.09320531755947,
+        33.497028321139695
+      ],
+      "media_por_dominio_pct": 31.309876605191334,
+      "n": 10,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 28.290785799760666,
+      "dominios_ge_umbral": 7,
+      "ic95_agregado": [
+        26.25840258125555,
+        30.620891927697347
+      ],
+      "ic95_media": [
+        26.81711205297123,
+        31.52705851193064
+      ],
+      "media_por_dominio_pct": 29.180944635830365,
+      "n": 10,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 33.53556094829195,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        31.589441816718804,
+        35.52041504090757
+      ],
+      "ic95_media": [
+        31.900144800688988,
+        35.700200926013636
+      ],
+      "media_por_dominio_pct": 33.81906412033848,
+      "n": 12,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 30.891837110742582,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        28.984319866576357,
+        33.07787451135645
+      ],
+      "ic95_media": [
+        29.534883149468683,
+        33.73842491319219
+      ],
+      "media_por_dominio_pct": 31.647599965950587,
+      "n": 12,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 28.55580788964589,
+      "dominios_ge_umbral": 7,
+      "ic95_agregado": [
+        26.562034585745536,
+        30.902403204414487
+      ],
+      "ic95_media": [
+        27.20029061693039,
+        31.74128467580124
+      ],
+      "media_por_dominio_pct": 29.46936946487848,
+      "n": 12,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 34.03138951534957,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.01513185051025,
+        36.1419371526085
+      ],
+      "ic95_media": [
+        32.423028526457706,
+        36.4487069516116
+      ],
+      "media_por_dominio_pct": 34.447790295707215,
+      "n": 25,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 31.388384754990927,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        29.35234745073092,
+        33.78027092848904
+      ],
+      "ic95_media": [
+        30.033705940470725,
+        34.57904502941632
+      ],
+      "media_por_dominio_pct": 32.319460259002994,
+      "n": 25,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 28.956633392701814,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        26.836083671631823,
+        31.516685221872276
+      ],
+      "ic95_media": [
+        27.622153278421568,
+        32.519462907550434
+      ],
+      "media_por_dominio_pct": 30.07988412237031,
+      "n": 25,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 34.18841220698806,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.21118624422563,
+        36.29826032682432
+      ],
+      "ic95_media": [
+        32.587063584083374,
+        36.683303859705106
+      ],
+      "media_por_dominio_pct": 34.647717906139746,
+      "n": 50,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 31.588845060086236,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        29.584071956529503,
+        33.97480785462331
+      ],
+      "ic95_media": [
+        30.2842248377362,
+        34.860530956297325
+      ],
+      "media_por_dominio_pct": 32.566936987270125,
+      "n": 50,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 29.099089672491363,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        26.99964340407055,
+        31.686153249849518
+      ],
+      "ic95_media": [
+        27.836804998567946,
+        32.81603596491904
+      ],
+      "media_por_dominio_pct": 30.309355081719595,
+      "n": 50,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 34.30521890844369,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.30363553570119,
+        36.46683607734814
+      ],
+      "ic95_media": [
+        32.69495020272165,
+        36.89346155125834
+      ],
+      "media_por_dominio_pct": 34.80620754528328,
+      "n": 100,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 31.709033031924704,
+      "dominios_ge_umbral": 10,
+      "ic95_agregado": [
+        29.668521677566282,
+        34.167499348455905
+      ],
+      "ic95_media": [
+        30.387418537551316,
+        35.0923551722889
+      ],
+      "media_por_dominio_pct": 32.73510294903471,
+      "n": 100,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 29.171662354599192,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        27.04634731284486,
+        31.80344839422166
+      ],
+      "ic95_media": [
+        27.909616654515208,
+        32.970071566836694
+      ],
+      "media_por_dominio_pct": 30.430590521180815,
+      "n": 100,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 34.3778216704289,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.38088580320281,
+        36.54316833617777
+      ],
+      "ic95_media": [
+        32.77625315255037,
+        36.96880990064041
+      ],
+      "media_por_dominio_pct": 34.883925346451846,
+      "n": 250,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 31.77714608468597,
+      "dominios_ge_umbral": 10,
+      "ic95_agregado": [
+        29.73433489931234,
+        34.23397648595864
+      ],
+      "ic95_media": [
+        30.477024179179477,
+        35.18768440575934
+      ],
+      "media_por_dominio_pct": 32.819084198781376,
+      "n": 250,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 29.235089200886733,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        27.100343516518997,
+        31.892977504863467
+      ],
+      "ic95_media": [
+        27.99718309357774,
+        33.07511981300475
+      ],
+      "media_por_dominio_pct": 30.521669750134354,
+      "n": 250,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "muestreo"
+    },
+    {
+      "agregado_suma_pct": 26.99859747545582,
+      "dominios_ge_umbral": 2,
+      "ic95_agregado": [
+        23.940340475342254,
+        29.671758849790468
+      ],
+      "ic95_media": [
+        23.957151029953526,
+        28.127877884621924
+      ],
+      "media_por_dominio_pct": 25.993083052470492,
+      "n": 1,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 23.826458036984356,
+      "dominios_ge_umbral": 1,
+      "ic95_agregado": [
+        20.689586317065107,
+        26.51807677409943
+      ],
+      "ic95_media": [
+        20.829967576458618,
+        24.94224352905603
+      ],
+      "media_por_dominio_pct": 22.82100462208668,
+      "n": 1,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 23.254281949934118,
+      "dominios_ge_umbral": 1,
+      "ic95_agregado": [
+        19.286788576708698,
+        26.679224477338547
+      ],
+      "ic95_media": [
+        19.476946986314132,
+        24.32615542964288
+      ],
+      "media_por_dominio_pct": 21.74563919253405,
+      "n": 1,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 32.017273288093776,
+      "dominios_ge_umbral": 10,
+      "ic95_agregado": [
+        30.102963320412027,
+        33.920326351111584
+      ],
+      "ic95_media": [
+        30.32809803887919,
+        33.721587678949646
+      ],
+      "media_por_dominio_pct": 32.02781463378263,
+      "n": 5,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 29.443079443079444,
+      "dominios_ge_umbral": 7,
+      "ic95_agregado": [
+        27.70643261936899,
+        31.231382792701456
+      ],
+      "ic95_media": [
+        28.062205725890074,
+        31.57437967717271
+      ],
+      "media_por_dominio_pct": 29.818372092170442,
+      "n": 5,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 27.69085768143261,
+      "dominios_ge_umbral": 3,
+      "ic95_agregado": [
+        25.829498704077015,
+        29.653382562837173
+      ],
+      "ic95_media": [
+        26.10545551790022,
+        29.85420520862596
+      ],
+      "media_por_dominio_pct": 27.967612820282376,
+      "n": 5,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 33.127549333039354,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        31.102888421771933,
+        35.185680380623005
+      ],
+      "ic95_media": [
+        31.41233474366654,
+        35.33433644143569
+      ],
+      "media_por_dominio_pct": 33.39090536770654,
+      "n": 10,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 30.56010481493613,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        28.60470617715585,
+        32.74218277442132
+      ],
+      "ic95_media": [
+        29.104547794071262,
+        33.39680343423458
+      ],
+      "media_por_dominio_pct": 31.249961179003094,
+      "n": 10,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 28.37851355406622,
+      "dominios_ge_umbral": 7,
+      "ic95_agregado": [
+        26.29579277410224,
+        30.71375084623323
+      ],
+      "ic95_media": [
+        26.825473580262855,
+        31.51124617017832
+      ],
+      "media_por_dominio_pct": 29.175106408809405,
+      "n": 10,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 33.5262273660631,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        31.576532549950013,
+        35.50793708346367
+      ],
+      "ic95_media": [
+        31.886825124348942,
+        35.68264819604795
+      ],
+      "media_por_dominio_pct": 33.80065469471256,
+      "n": 12,
+      "replicacion_de_base": false,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 30.88262391744979,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        28.978067272307708,
+        33.05308840352647
+      ],
+      "ic95_media": [
+        29.51585574158419,
+        33.72507347865969
+      ],
+      "media_por_dominio_pct": 31.629562447913077,
+      "n": 12,
+      "replicacion_de_base": false,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 28.55580788964589,
+      "dominios_ge_umbral": 7,
+      "ic95_agregado": [
+        26.562034585745536,
+        30.902403204414487
+      ],
+      "ic95_media": [
+        27.20029061693039,
+        31.74128467580124
+      ],
+      "media_por_dominio_pct": 29.46936946487848,
+      "n": 12,
+      "replicacion_de_base": false,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 33.92840752638825,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        31.922583294245506,
+        36.03700248345984
+      ],
+      "ic95_media": [
+        32.297783794257434,
+        36.33485556261728
+      ],
+      "media_por_dominio_pct": 34.32158884441652,
+      "n": 25,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 31.307142210554908,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        29.323590862474962,
+        33.62828959847364
+      ],
+      "ic95_media": [
+        29.959171513058372,
+        34.44212123889709
+      ],
+      "media_por_dominio_pct": 32.1994666570801,
+      "n": 25,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 28.895593948912957,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        26.808174353913653,
+        31.404265990518862
+      ],
+      "ic95_media": [
+        27.563931541628293,
+        32.409835161682
+      ],
+      "media_por_dominio_pct": 29.98839170233324,
+      "n": 25,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 34.1521228881504,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.146271481960405,
+        36.294375526291496
+      ],
+      "ic95_media": [
+        32.532553221209504,
+        36.65193663442392
+      ],
+      "media_por_dominio_pct": 34.604349920445486,
+      "n": 50,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 31.534956147381433,
+      "dominios_ge_umbral": 9,
+      "ic95_agregado": [
+        29.529888660551432,
+        33.93464035074684
+      ],
+      "ic95_media": [
+        30.21789275032131,
+        34.816434916486386
+      ],
+      "media_por_dominio_pct": 32.509353327983455,
+      "n": 50,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 29.06981605351171,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        26.96838911449058,
+        31.656012236548378
+      ],
+      "ic95_media": [
+        27.779285620273264,
+        32.756378013574114
+      ],
+      "media_por_dominio_pct": 30.262637838318945,
+      "n": 50,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 34.28608214239732,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.29217247487492,
+        36.43266978230354
+      ],
+      "ic95_media": [
+        32.68676259849064,
+        36.84274424962692
+      ],
+      "media_por_dominio_pct": 34.77245570006473,
+      "n": 100,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 31.684092821653774,
+      "dominios_ge_umbral": 10,
+      "ic95_agregado": [
+        29.65774777258477,
+        34.10938378636562
+      ],
+      "ic95_media": [
+        30.392126172753027,
+        35.037973185449175
+      ],
+      "media_por_dominio_pct": 32.70097650409179,
+      "n": 100,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 29.176482961716456,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        27.054274979024157,
+        31.79475061681845
+      ],
+      "ic95_media": [
+        27.91363518541409,
+        32.942457199331
+      ],
+      "media_por_dominio_pct": 30.41865099505539,
+      "n": 100,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 34.35882488446765,
+      "dominios_ge_umbral": 12,
+      "ic95_agregado": [
+        32.354395578806546,
+        36.53151580143427
+      ],
+      "ic95_media": [
+        32.754344624028356,
+        36.95646869885329
+      ],
+      "media_por_dominio_pct": 34.86861900868044,
+      "n": 250,
+      "replicacion_de_base": true,
+      "tokenizador": "o200k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 31.762320692097255,
+      "dominios_ge_umbral": 10,
+      "ic95_agregado": [
+        29.715902920799184,
+        34.22593299145059
+      ],
+      "ic95_media": [
+        30.459126304078257,
+        35.17611257543898
+      ],
+      "media_por_dominio_pct": 32.8059745417114,
+      "n": 250,
+      "replicacion_de_base": true,
+      "tokenizador": "cl100k_base",
+      "variante": "ciclo"
+    },
+    {
+      "agregado_suma_pct": 29.224598366019972,
+      "dominios_ge_umbral": 8,
+      "ic95_agregado": [
+        27.075026639294485,
+        31.889217134504637
+      ],
+      "ic95_media": [
+        27.972508987086457,
+        33.073097260556004
+      ],
+      "media_por_dominio_pct": 30.510738074331872,
+      "n": 250,
+      "replicacion_de_base": true,
+      "tokenizador": "r50k_base",
+      "variante": "ciclo"
+    }
+  ],
+  "fijado_el": "2026-09-30",
+  "interpretacion_primaria": {
+    "ahorro_del_dominio": "100 * (1 - suma(tokens .mini) / suma(tokens JSON compacto)), sumando los tokens de TODOS los documentos de ese dominio en la serie primaria",
+    "comparacion_con_umbral": "sobre el valor sin redondear; ahorro >= 30,0",
+    "dominios_totales": 14,
+    "min_dominios": 10,
+    "n": 100,
+    "referencia": "json_compact",
+    "regla": "cumple solo si, para CADA uno de los tres tokenizadores, al menos 10 dominios alcanzan el umbral; no_cumple si alguno de los tres no lo logra",
+    "reversibilidad": "el conteo de un formato solo se acepta si objeto->texto->objeto se verificó para ese documento; JSON compacto se verifica con json.loads y .mini con minifmt.parse",
+    "serie": "n=100, variante 'muestreo'",
+    "tokenizadores": [
+      "o200k_base",
+      "cl100k_base",
+      "r50k_base"
+    ],
+    "umbral_pct": 30.0,
+    "unidad": "documento_sin_contrato (solo el texto del documento transmitido; sin contrato, mapa ni prompt)",
+    "variante": "muestreo"
+  },
+  "lecturas_alternativas": {
+    "n100_ciclo": {
+      "lecturas": {
+        "agregado_suma_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "dominios_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "interseccion_de_dominios_ge_umbral_con_los_tres": {
+          "cumple": false,
+          "dominios": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "s",
+            "tc",
+            "us"
+          ],
+          "n": 8
+        },
+        "media_por_dominio_ge_umbral_en_cada_tokenizador": {
+          "cumple": true,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": true
+          }
+        }
+      },
+      "por_tokenizador": {
+        "cl100k_base": {
+          "agregado_suma_pct": 31.684092821653774,
+          "ahorro_por_dominio_pct": {
+            "a": 34.56032719836401,
+            "card": 27.781269641734763,
+            "cat": 36.42492339121552,
+            "cls": 36.45228215767635,
+            "code": 25.76963508034239,
+            "log": 30.066777963272116,
+            "map": 36.160569763677564,
+            "ner": 41.519861830742656,
+            "q": 28.808939765603704,
+            "r": 32.7027027027027,
+            "s": 34.308724832214764,
+            "sum": 25.394755903230482,
+            "tc": 33.617804551539486,
+            "us": 34.24509627496851
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 10,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            29.65774777258477,
+            34.10938378636562
+          ],
+          "ic95_media": [
+            30.392126172753027,
+            35.037973185449175
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "log",
+            "map",
+            "ner",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "q",
+            "sum"
+          ],
+          "max_pct": 41.519861830742656,
+          "media_por_dominio_pct": 32.70097650409179,
+          "mediana_pct": 33.931450413254,
+          "min_pct": 25.394755903230482,
+          "n": 100,
+          "tokenizador": "cl100k_base",
+          "tokens_json_compacto_total": 86747,
+          "tokens_mini_total": 59262,
+          "variante": "ciclo"
+        },
+        "o200k_base": {
+          "agregado_suma_pct": 34.28608214239732,
+          "ahorro_por_dominio_pct": {
+            "a": 38.841056399342165,
+            "card": 31.270627062706268,
+            "cat": 38.288748213191745,
+            "cls": 38.79292826661248,
+            "code": 28.057134528494387,
+            "log": 31.23768877216021,
+            "map": 37.20079787234043,
+            "ner": 41.689750692520775,
+            "q": 33.37182448036952,
+            "r": 33.505850585058504,
+            "s": 36.20372801260173,
+            "sum": 28.129309024053928,
+            "tc": 34.82701812191104,
+            "us": 35.397917769542964
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 12,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            32.29217247487492,
+            36.43266978230354
+          ],
+          "ic95_media": [
+            32.68676259849064,
+            36.84274424962692
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "card",
+            "cat",
+            "cls",
+            "log",
+            "map",
+            "ner",
+            "q",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "code",
+            "sum"
+          ],
+          "max_pct": 41.689750692520775,
+          "media_por_dominio_pct": 34.77245570006473,
+          "mediana_pct": 35.112467945727005,
+          "min_pct": 28.057134528494387,
+          "n": 100,
+          "tokenizador": "o200k_base",
+          "tokens_json_compacto_total": 85437,
+          "tokens_mini_total": 56144,
+          "variante": "ciclo"
+        },
+        "r50k_base": {
+          "agregado_suma_pct": 29.176482961716456,
+          "ahorro_por_dominio_pct": {
+            "a": 31.55423770694341,
+            "card": 25.891283719669246,
+            "cat": 35.96049573973664,
+            "cls": 33.3201424614167,
+            "code": 21.937716262975783,
+            "log": 29.003447195236596,
+            "map": 34.15384615384616,
+            "ner": 40.160374206481784,
+            "q": 25.82619339045288,
+            "r": 27.87668258792879,
+            "s": 30.91377091377091,
+            "sum": 24.03943377148635,
+            "tc": 32.74377836907184,
+            "us": 32.47971145175834
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 8,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            27.054274979024157,
+            31.79475061681845
+          ],
+          "ic95_media": [
+            27.91363518541409,
+            32.942457199331
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "log",
+            "q",
+            "r",
+            "sum"
+          ],
+          "max_pct": 40.160374206481784,
+          "media_por_dominio_pct": 30.41865099505539,
+          "mediana_pct": 31.23400431035716,
+          "min_pct": 21.937716262975783,
+          "n": 100,
+          "tokenizador": "r50k_base",
+          "tokens_json_compacto_total": 95080,
+          "tokens_mini_total": 67339,
+          "variante": "ciclo"
+        }
+      },
+      "serie": {
+        "n": 100,
+        "variante": "ciclo"
+      }
+    },
+    "n100_muestreo": {
+      "lecturas": {
+        "agregado_suma_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "dominios_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "interseccion_de_dominios_ge_umbral_con_los_tres": {
+          "cumple": false,
+          "dominios": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "s",
+            "tc",
+            "us"
+          ],
+          "n": 8
+        },
+        "media_por_dominio_ge_umbral_en_cada_tokenizador": {
+          "cumple": true,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": true
+          }
+        }
+      },
+      "por_tokenizador": {
+        "cl100k_base": {
+          "agregado_suma_pct": 31.709033031924704,
+          "ahorro_por_dominio_pct": {
+            "a": 34.530771372876636,
+            "card": 27.736767708496934,
+            "cat": 36.508585445625506,
+            "cls": 36.670135275754426,
+            "code": 25.58035045679197,
+            "log": 30.068413148673457,
+            "map": 36.26053143227479,
+            "ner": 41.519861830742656,
+            "q": 28.885250375221727,
+            "r": 32.851006104453994,
+            "s": 34.32795698924731,
+            "sum": 25.388074858552155,
+            "tc": 33.65690376569037,
+            "us": 34.30683252208401
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 10,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            29.668521677566282,
+            34.167499348455905
+          ],
+          "ic95_media": [
+            30.387418537551316,
+            35.0923551722889
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "log",
+            "map",
+            "ner",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "q",
+            "sum"
+          ],
+          "max_pct": 41.519861830742656,
+          "media_por_dominio_pct": 32.73510294903471,
+          "mediana_pct": 33.98186814388719,
+          "min_pct": 25.388074858552155,
+          "n": 100,
+          "tokenizador": "cl100k_base",
+          "tokens_json_compacto_total": 86704,
+          "tokens_mini_total": 59211,
+          "variante": "muestreo"
+        },
+        "o200k_base": {
+          "agregado_suma_pct": 34.30521890844369,
+          "ahorro_por_dominio_pct": {
+            "a": 38.77235379410343,
+            "card": 31.255154214085433,
+            "cat": 38.393951777686965,
+            "cls": 39.01345291479821,
+            "code": 27.931986629850314,
+            "log": 31.238720262510256,
+            "map": 37.31691078561917,
+            "ner": 41.689750692520775,
+            "q": 33.41037122634696,
+            "r": 33.6271186440678,
+            "s": 36.215505913272004,
+            "sum": 28.13985585032971,
+            "tc": 34.82128150222369,
+            "us": 35.46049142655118
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 12,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            32.30363553570119,
+            36.46683607734814
+          ],
+          "ic95_media": [
+            32.69495020272165,
+            36.89346155125834
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "card",
+            "cat",
+            "cls",
+            "log",
+            "map",
+            "ner",
+            "q",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "code",
+            "sum"
+          ],
+          "max_pct": 41.689750692520775,
+          "media_por_dominio_pct": 34.80620754528328,
+          "mediana_pct": 35.140886464387435,
+          "min_pct": 27.931986629850314,
+          "n": 100,
+          "tokenizador": "o200k_base",
+          "tokens_json_compacto_total": 85401,
+          "tokens_mini_total": 56104,
+          "variante": "muestreo"
+        },
+        "r50k_base": {
+          "agregado_suma_pct": 29.171662354599192,
+          "ahorro_por_dominio_pct": {
+            "a": 31.44571381605984,
+            "card": 25.82216808769793,
+            "cat": 36.030977734753144,
+            "cls": 33.439111463704876,
+            "code": 21.78477690288714,
+            "log": 28.980742132456548,
+            "map": 34.195136965220065,
+            "ner": 40.20066889632107,
+            "q": 25.859151642452883,
+            "r": 28.01742919389978,
+            "s": 30.969571944301187,
+            "sum": 24.033358605003798,
+            "tc": 32.72869429241595,
+            "us": 32.52076561935717
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 8,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            27.04634731284486,
+            31.80344839422166
+          ],
+          "ic95_media": [
+            27.909616654515208,
+            32.970071566836694
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "log",
+            "q",
+            "r",
+            "sum"
+          ],
+          "max_pct": 40.20066889632107,
+          "media_por_dominio_pct": 30.430590521180815,
+          "mediana_pct": 31.207642880180515,
+          "min_pct": 21.78477690288714,
+          "n": 100,
+          "tokenizador": "r50k_base",
+          "tokens_json_compacto_total": 95082,
+          "tokens_mini_total": 67345,
+          "variante": "muestreo"
+        }
+      },
+      "serie": {
+        "n": 100,
+        "variante": "muestreo"
+      }
+    },
+    "n12_ciclo": {
+      "lecturas": {
+        "agregado_suma_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "dominios_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": false,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "interseccion_de_dominios_ge_umbral_con_los_tres": {
+          "cumple": false,
+          "dominios": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "tc",
+            "us"
+          ],
+          "n": 7
+        },
+        "media_por_dominio_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        }
+      },
+      "por_tokenizador": {
+        "cl100k_base": {
+          "agregado_suma_pct": 30.88262391744979,
+          "ahorro_por_dominio_pct": {
+            "a": 33.99267399267399,
+            "card": 26.962025316455694,
+            "cat": 35.584843492586494,
+            "cls": 35.21594684385382,
+            "code": 25.213154689403172,
+            "log": 29.284750337381915,
+            "map": 33.838383838383834,
+            "ner": 38.93333333333333,
+            "q": 28.7350054525627,
+            "r": 31.428571428571427,
+            "s": 32.90870488322718,
+            "sum": 24.620770128354728,
+            "tc": 32.61744966442953,
+            "us": 33.47826086956521
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 9,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            28.978067272307708,
+            33.05308840352647
+          ],
+          "ic95_media": [
+            29.51585574158419,
+            33.72507347865969
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "log",
+            "q",
+            "sum"
+          ],
+          "max_pct": 38.93333333333333,
+          "media_por_dominio_pct": 31.629562447913077,
+          "mediana_pct": 32.76307727382836,
+          "min_pct": 24.620770128354728,
+          "n": 12,
+          "tokenizador": "cl100k_base",
+          "tokens_json_compacto_total": 10854,
+          "tokens_mini_total": 7502,
+          "variante": "ciclo"
+        },
+        "o200k_base": {
+          "agregado_suma_pct": 33.5262273660631,
+          "ahorro_por_dominio_pct": {
+            "a": 38.12785388127854,
+            "card": 30.544488711819383,
+            "cat": 37.4384236453202,
+            "cls": 37.5609756097561,
+            "code": 27.7122641509434,
+            "log": 30.59602649006623,
+            "map": 35.051546391752574,
+            "ner": 39.46666666666667,
+            "q": 33.103051237766266,
+            "r": 32.38434163701067,
+            "s": 34.85477178423236,
+            "sum": 27.306273062730625,
+            "tc": 34.168865435356196,
+            "us": 34.89361702127659
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 12,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            31.576532549950013,
+            35.50793708346367
+          ],
+          "ic95_media": [
+            31.886825124348942,
+            35.68264819604795
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "card",
+            "cat",
+            "cls",
+            "log",
+            "map",
+            "ner",
+            "q",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "code",
+            "sum"
+          ],
+          "max_pct": 39.46666666666667,
+          "media_por_dominio_pct": 33.80065469471256,
+          "mediana_pct": 34.511818609794275,
+          "min_pct": 27.306273062730625,
+          "n": 12,
+          "tokenizador": "o200k_base",
+          "tokens_json_compacto_total": 10714,
+          "tokens_mini_total": 7122,
+          "variante": "ciclo"
+        },
+        "r50k_base": {
+          "agregado_suma_pct": 28.55580788964589,
+          "ahorro_por_dominio_pct": {
+            "a": 31.452658884565498,
+            "card": 25.191675794085434,
+            "cat": 35.10971786833855,
+            "cls": 32.069510268562404,
+            "code": 21.573033707865164,
+            "log": 28.299492385786806,
+            "map": 32.29665071770334,
+            "ner": 37.43589743589744,
+            "q": 25.99160055996267,
+            "r": 26.80412371134021,
+            "s": 29.531568228105908,
+            "sum": 23.42158859470469,
+            "tc": 31.898734177215193,
+            "us": 31.494920174165454
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 7,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            26.562034585745536,
+            30.902403204414487
+          ],
+          "ic95_media": [
+            27.20029061693039,
+            31.74128467580124
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "log",
+            "q",
+            "r",
+            "s",
+            "sum"
+          ],
+          "max_pct": 37.43589743589744,
+          "media_por_dominio_pct": 29.46936946487848,
+          "mediana_pct": 30.492113556335703,
+          "min_pct": 21.573033707865164,
+          "n": 12,
+          "tokenizador": "r50k_base",
+          "tokens_json_compacto_total": 11889,
+          "tokens_mini_total": 8494,
+          "variante": "ciclo"
+        }
+      },
+      "serie": {
+        "n": 12,
+        "variante": "ciclo"
+      }
+    },
+    "n12_muestreo": {
+      "lecturas": {
+        "agregado_suma_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "dominios_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": false,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        },
+        "interseccion_de_dominios_ge_umbral_con_los_tres": {
+          "cumple": false,
+          "dominios": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "tc",
+            "us"
+          ],
+          "n": 7
+        },
+        "media_por_dominio_ge_umbral_en_cada_tokenizador": {
+          "cumple": false,
+          "por_tokenizador": {
+            "cl100k_base": true,
+            "o200k_base": true,
+            "r50k_base": false
+          }
+        }
+      },
+      "por_tokenizador": {
+        "cl100k_base": {
+          "agregado_suma_pct": 30.891837110742582,
+          "ahorro_por_dominio_pct": {
+            "a": 33.99267399267399,
+            "card": 26.962025316455694,
+            "cat": 35.584843492586494,
+            "cls": 35.21594684385382,
+            "code": 25.213154689403172,
+            "log": 29.284750337381915,
+            "map": 34.09090909090909,
+            "ner": 38.93333333333333,
+            "q": 28.7350054525627,
+            "r": 31.428571428571427,
+            "s": 32.90870488322718,
+            "sum": 24.620770128354728,
+            "tc": 32.61744966442953,
+            "us": 33.47826086956521
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 9,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            28.984319866576357,
+            33.07787451135645
+          ],
+          "ic95_media": [
+            29.534883149468683,
+            33.73842491319219
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "log",
+            "q",
+            "sum"
+          ],
+          "max_pct": 38.93333333333333,
+          "media_por_dominio_pct": 31.647599965950587,
+          "mediana_pct": 32.76307727382836,
+          "min_pct": 24.620770128354728,
+          "n": 12,
+          "tokenizador": "cl100k_base",
+          "tokens_json_compacto_total": 10854,
+          "tokens_mini_total": 7501,
+          "variante": "muestreo"
+        },
+        "o200k_base": {
+          "agregado_suma_pct": 33.53556094829195,
+          "ahorro_por_dominio_pct": {
+            "a": 38.12785388127854,
+            "card": 30.544488711819383,
+            "cat": 37.4384236453202,
+            "cls": 37.5609756097561,
+            "code": 27.7122641509434,
+            "log": 30.59602649006623,
+            "map": 35.30927835051546,
+            "ner": 39.46666666666667,
+            "q": 33.103051237766266,
+            "r": 32.38434163701067,
+            "s": 34.85477178423236,
+            "sum": 27.306273062730625,
+            "tc": 34.168865435356196,
+            "us": 34.89361702127659
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 12,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            31.589441816718804,
+            35.52041504090757
+          ],
+          "ic95_media": [
+            31.900144800688988,
+            35.700200926013636
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "card",
+            "cat",
+            "cls",
+            "log",
+            "map",
+            "ner",
+            "q",
+            "r",
+            "s",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "code",
+            "sum"
+          ],
+          "max_pct": 39.46666666666667,
+          "media_por_dominio_pct": 33.81906412033848,
+          "mediana_pct": 34.511818609794275,
+          "min_pct": 27.306273062730625,
+          "n": 12,
+          "tokenizador": "o200k_base",
+          "tokens_json_compacto_total": 10714,
+          "tokens_mini_total": 7121,
+          "variante": "muestreo"
+        },
+        "r50k_base": {
+          "agregado_suma_pct": 28.55580788964589,
+          "ahorro_por_dominio_pct": {
+            "a": 31.452658884565498,
+            "card": 25.191675794085434,
+            "cat": 35.10971786833855,
+            "cls": 32.069510268562404,
+            "code": 21.573033707865164,
+            "log": 28.299492385786806,
+            "map": 32.29665071770334,
+            "ner": 37.43589743589744,
+            "q": 25.99160055996267,
+            "r": 26.80412371134021,
+            "s": 29.531568228105908,
+            "sum": 23.42158859470469,
+            "tc": 31.898734177215193,
+            "us": 31.494920174165454
+          },
+          "dominios_excluidos": [],
+          "dominios_ge_umbral": 7,
+          "dominios_validos": 14,
+          "ic95_agregado": [
+            26.562034585745536,
+            30.902403204414487
+          ],
+          "ic95_media": [
+            27.20029061693039,
+            31.74128467580124
+          ],
+          "lista_dominios_ge_umbral": [
+            "a",
+            "cat",
+            "cls",
+            "map",
+            "ner",
+            "tc",
+            "us"
+          ],
+          "lista_dominios_lt_umbral": [
+            "card",
+            "code",
+            "log",
+            "q",
+            "r",
+            "s",
+            "sum"
+          ],
+          "max_pct": 37.43589743589744,
+          "media_por_dominio_pct": 29.46936946487848,
+          "mediana_pct": 30.492113556335703,
+          "min_pct": 21.573033707865164,
+          "n": 12,
+          "tokenizador": "r50k_base",
+          "tokens_json_compacto_total": 11889,
+          "tokens_mini_total": 8494,
+          "variante": "muestreo"
+        }
+      },
+      "serie": {
+        "n": 12,
+        "variante": "muestreo"
+      }
+    }
+  },
+  "min_dominios": 10,
+  "primario": {
+    "alcance_completo": true,
+    "decision_por_tokenizador": {
+      "cl100k_base": {
+        "cumple": true,
+        "dominios_ge_umbral": 10
+      },
+      "o200k_base": {
+        "cumple": true,
+        "dominios_ge_umbral": 12
+      },
+      "r50k_base": {
+        "cumple": false,
+        "dominios_ge_umbral": 8
+      }
+    },
+    "dominios_en_los_datos": [
+      "a",
+      "card",
+      "cat",
+      "cls",
+      "code",
+      "log",
+      "map",
+      "ner",
+      "q",
+      "r",
+      "s",
+      "sum",
+      "tc",
+      "us"
+    ],
+    "resumen_por_tokenizador": {
+      "cl100k_base": {
+        "agregado_suma_pct": 31.709033031924704,
+        "ahorro_por_dominio_pct": {
+          "a": 34.530771372876636,
+          "card": 27.736767708496934,
+          "cat": 36.508585445625506,
+          "cls": 36.670135275754426,
+          "code": 25.58035045679197,
+          "log": 30.068413148673457,
+          "map": 36.26053143227479,
+          "ner": 41.519861830742656,
+          "q": 28.885250375221727,
+          "r": 32.851006104453994,
+          "s": 34.32795698924731,
+          "sum": 25.388074858552155,
+          "tc": 33.65690376569037,
+          "us": 34.30683252208401
+        },
+        "dominios_excluidos": [],
+        "dominios_ge_umbral": 10,
+        "dominios_validos": 14,
+        "ic95_agregado": [
+          29.668521677566282,
+          34.167499348455905
+        ],
+        "ic95_media": [
+          30.387418537551316,
+          35.0923551722889
+        ],
+        "lista_dominios_ge_umbral": [
+          "a",
+          "cat",
+          "cls",
+          "log",
+          "map",
+          "ner",
+          "r",
+          "s",
+          "tc",
+          "us"
+        ],
+        "lista_dominios_lt_umbral": [
+          "card",
+          "code",
+          "q",
+          "sum"
+        ],
+        "max_pct": 41.519861830742656,
+        "media_por_dominio_pct": 32.73510294903471,
+        "mediana_pct": 33.98186814388719,
+        "min_pct": 25.388074858552155,
+        "n": 100,
+        "tokenizador": "cl100k_base",
+        "tokens_json_compacto_total": 86704,
+        "tokens_mini_total": 59211,
+        "variante": "muestreo"
+      },
+      "o200k_base": {
+        "agregado_suma_pct": 34.30521890844369,
+        "ahorro_por_dominio_pct": {
+          "a": 38.77235379410343,
+          "card": 31.255154214085433,
+          "cat": 38.393951777686965,
+          "cls": 39.01345291479821,
+          "code": 27.931986629850314,
+          "log": 31.238720262510256,
+          "map": 37.31691078561917,
+          "ner": 41.689750692520775,
+          "q": 33.41037122634696,
+          "r": 33.6271186440678,
+          "s": 36.215505913272004,
+          "sum": 28.13985585032971,
+          "tc": 34.82128150222369,
+          "us": 35.46049142655118
+        },
+        "dominios_excluidos": [],
+        "dominios_ge_umbral": 12,
+        "dominios_validos": 14,
+        "ic95_agregado": [
+          32.30363553570119,
+          36.46683607734814
+        ],
+        "ic95_media": [
+          32.69495020272165,
+          36.89346155125834
+        ],
+        "lista_dominios_ge_umbral": [
+          "a",
+          "card",
+          "cat",
+          "cls",
+          "log",
+          "map",
+          "ner",
+          "q",
+          "r",
+          "s",
+          "tc",
+          "us"
+        ],
+        "lista_dominios_lt_umbral": [
+          "code",
+          "sum"
+        ],
+        "max_pct": 41.689750692520775,
+        "media_por_dominio_pct": 34.80620754528328,
+        "mediana_pct": 35.140886464387435,
+        "min_pct": 27.931986629850314,
+        "n": 100,
+        "tokenizador": "o200k_base",
+        "tokens_json_compacto_total": 85401,
+        "tokens_mini_total": 56104,
+        "variante": "muestreo"
+      },
+      "r50k_base": {
+        "agregado_suma_pct": 29.171662354599192,
+        "ahorro_por_dominio_pct": {
+          "a": 31.44571381605984,
+          "card": 25.82216808769793,
+          "cat": 36.030977734753144,
+          "cls": 33.439111463704876,
+          "code": 21.78477690288714,
+          "log": 28.980742132456548,
+          "map": 34.195136965220065,
+          "ner": 40.20066889632107,
+          "q": 25.859151642452883,
+          "r": 28.01742919389978,
+          "s": 30.969571944301187,
+          "sum": 24.033358605003798,
+          "tc": 32.72869429241595,
+          "us": 32.52076561935717
+        },
+        "dominios_excluidos": [],
+        "dominios_ge_umbral": 8,
+        "dominios_validos": 14,
+        "ic95_agregado": [
+          27.04634731284486,
+          31.80344839422166
+        ],
+        "ic95_media": [
+          27.909616654515208,
+          32.970071566836694
+        ],
+        "lista_dominios_ge_umbral": [
+          "a",
+          "cat",
+          "cls",
+          "map",
+          "ner",
+          "s",
+          "tc",
+          "us"
+        ],
+        "lista_dominios_lt_umbral": [
+          "card",
+          "code",
+          "log",
+          "q",
+          "r",
+          "sum"
+        ],
+        "max_pct": 40.20066889632107,
+        "media_por_dominio_pct": 30.430590521180815,
+        "mediana_pct": 31.207642880180515,
+        "min_pct": 21.78477690288714,
+        "n": 100,
+        "tokenizador": "r50k_base",
+        "tokens_json_compacto_total": 95082,
+        "tokens_mini_total": 67345,
+        "variante": "muestreo"
+      }
+    },
+    "veredicto": "no_cumple"
+  },
+  "sujeto_a_aprobacion_del_asesor": true,
+  "tokenizadores": [
+    "o200k_base",
+    "cl100k_base",
+    "r50k_base"
+  ],
+  "umbral_pct": 30.0
+}

@@ -1,0 +1,295 @@
+{
+  "contratos": [
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "a",
+      "ruta": "forks/a/contract.json",
+      "sha256": "446fc7d35c0ac4779e0284d96903d31ae1f6b6365238474a1a43d6b68935ff89",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "card",
+      "ruta": "forks/card/contract.json",
+      "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "cat",
+      "ruta": "forks/cat/contract.json",
+      "sha256": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "cls",
+      "ruta": "forks/cls/contract.json",
+      "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "code",
+      "ruta": "forks/code/contract.json",
+      "sha256": "ca63bf2f894b8761bd4ef14a212b0308cdc85c08295bcc6028ca455ca239d162",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "log",
+      "ruta": "forks/log/contract.json",
+      "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "map",
+      "ruta": "forks/map/contract.json",
+      "sha256": "f7699064d358a0effa7818c4ef4d66676c80a7f3a7b41edc5c24d595dc269e71",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "ner",
+      "ruta": "forks/ner/contract.json",
+      "sha256": "49b555e9d32ea77913d5ec4594726ab1d0e0a1a3dc39f3ca400d0c272679848f",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "q",
+      "ruta": "forks/q/contract.json",
+      "sha256": "cc689a8c3a2e5af9daefcb32a311ee6f02790c94635a9d96a67fd6a475f48fda",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "r",
+      "ruta": "forks/r/contract.json",
+      "sha256": "7c8d839c9667ed59556a5273f14ab897d39c1bb11521b17e84df78c8f934153c",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "s",
+      "ruta": "forks/s/contract.json",
+      "sha256": "598f447d3cdaac67cb40480fd2d7cb030d09194641b9623aaa83aed6d1ba0d6b",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "sum",
+      "ruta": "forks/sum/contract.json",
+      "sha256": "1be4fc6efb79edbf8dd25876db850a423ae71a68312db380205c239f97c5f9a4",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "tc",
+      "ruta": "forks/tc/contract.json",
+      "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+      "version": 1
+    },
+    {
+      "generador": "minifmt.dumps (contrato del fork; no inferido)",
+      "prefijo": "us",
+      "ruta": "forks/us/contract.json",
+      "sha256": "87f0dd913cd98ba4a7234cd0f46f76cc0fe41a7787f2b0a011c5b903010de96b",
+      "version": 1
+    }
+  ],
+  "dominios": {
+    "archivo": "benchmark/domains.py",
+    "dominios": 14,
+    "fuente": "escrito a mano por los autores (benchmark/domains.py)",
+    "licencia": "MIT (licencia del repositorio)",
+    "nota_q_extiende_a": "q contiene los mismos 12 ítems que a con tres campos más: a lo sumo 13 dominios independientes",
+    "por_dominio": {
+      "a": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "card": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "cat": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "cls": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "code": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "log": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "map": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "ner": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "q": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "r": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "s": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "sum": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "tc": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      },
+      "us": {
+        "independientes": 12,
+        "n100_contenidos_distintos_sin_id": 12,
+        "n100_registros": 100,
+        "registros_base": 12,
+        "registros_base_distintos_sin_id": 12
+      }
+    },
+    "registros_base_por_dominio": 12,
+    "registros_base_total": 168,
+    "replicacion_de_base": {
+      "descripcion": "para n > 12 se repiten los 12 registros base con identificadores nuevos; no son muestras independientes",
+      "n_mayor_que": 12
+    },
+    "semilla_ciclo": null,
+    "semilla_muestreo": 20260914,
+    "sha256_archivo": "9b01a336cac4847b6cd120bd1fc09b3fed3a5466deb0879f23d013a11c9fba61",
+    "sha256_contenido_base": "009e763803a63f7ec23d83f73a5c97c87a5b2a73714a566438d9aaeaa5845c4d",
+    "sintetico": true
+  },
+  "muestra_independiente": "los 4 snapshots públicos (1.902 objetos únicos) y los 12 registros base de cada dominio (168); las series n > 12 son replicación de base",
+  "publicos": [
+    {
+      "bytes": 306438,
+      "documentacion": "https://dummyjson.com/docs/products",
+      "fecha_captura_utc": "2026-09-16T22:00:34.291238+00:00",
+      "fuente": "https://dummyjson.com/products?limit=0",
+      "licencia": "MIT (DummyJSON, Muhammad Ovi); ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/products",
+      "registros": 194,
+      "registros_unicos": 194,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/products.json",
+      "seleccion": "All products returned by the public endpoint; no field selection.",
+      "semilla": null,
+      "sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+      "sha256_coincide_con_sources_json": true,
+      "sintetico": true,
+      "tipo": "public synthetic test data"
+    },
+    {
+      "bytes": 289146,
+      "documentacion": "https://dummyjson.com/docs/users",
+      "fecha_captura_utc": "2026-09-16T22:00:35.858707+00:00",
+      "fuente": "https://dummyjson.com/users?limit=0",
+      "licencia": "MIT (DummyJSON, Muhammad Ovi); identidades y credenciales ficticias; ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/users",
+      "registros": 208,
+      "registros_unicos": 208,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/users.json",
+      "seleccion": "All users returned by the public endpoint; no field selection.",
+      "semilla": null,
+      "sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+      "sha256_coincide_con_sources_json": true,
+      "sintetico": true,
+      "tipo": "public synthetic test data; identities and credentials are fictional"
+    },
+    {
+      "bytes": 157745,
+      "documentacion": "https://jsonplaceholder.typicode.com/",
+      "fecha_captura_utc": "2026-09-16T22:00:36.634555+00:00",
+      "fuente": "https://jsonplaceholder.typicode.com/comments",
+      "licencia": "MIT (JSONPlaceholder, typicode); ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/comments",
+      "registros": 500,
+      "registros_unicos": 500,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/comments.json",
+      "seleccion": "The complete comments collection; no field selection.",
+      "semilla": null,
+      "sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+      "sha256_coincide_con_sources_json": true,
+      "sintetico": true,
+      "tipo": "public synthetic test data"
+    },
+    {
+      "bytes": 717757,
+      "documentacion": "https://earthquake.usgs.gov/fdsnws/event/1/",
+      "fecha_captura_utc": "2026-09-16T22:00:39.491236+00:00",
+      "fuente": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc",
+      "licencia": "Crédito U.S. Geological Survey (política de copyright y crédito de USGS); ver benchmark/public/THIRD_PARTY.md",
+      "nombre": "public/earthquakes",
+      "registros": 1000,
+      "registros_unicos": 1000,
+      "replicacion_de_base": false,
+      "ruta": "benchmark/public/data/earthquakes.json",
+      "seleccion": "First 1000 events chronologically in January 2025; no magnitude filter or field selection.",
+      "semilla": null,
+      "sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+      "sha256_coincide_con_sources_json": true,
+      "sintetico": false,
+      "tipo": "real historical earthquake observations"
+    }
+  ]
+}

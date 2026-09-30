@@ -27,9 +27,9 @@ Para escribir en otro sitio: `--salida-base DIR`. Para fijar el sello: `--sello 
 
 Medido el 2026-09-30 en Windows 10, Python 3.11.9, Node 22.14.0, tiktoken 0.14.0, con la máquina compartida con
 otros procesos; el tiempo de cada paso queda en `resumen.tiempos_s` de cada manifiesto. Completo con `--con-v5`:
-**232,5 s** (de ellos, V5: 109,6 s; V1 sin V5: 122,9 s). Por paso: benchmark público con los tres vocabularios
-31,0 s, `benchmark/run_benchmark.py` 15,6 s, `experiments/v1_tokens/run.py` 31,2 s (el README de experimentos
-dice «≈2 min»), serie con reversibilidad 42,4 s, criterio 0,9 s, conciliación 0,9 s. `--rapido`: unos 35 s
+**211,1 s** (de ellos, V5: 96,2 s; V1 sin V5: 114,9 s). Por paso: benchmark público con los tres vocabularios
+29,1 s, `benchmark/run_benchmark.py` 14,4 s, `experiments/v1_tokens/run.py` 27,8 s (el README de experimentos
+dice «≈2 min»), serie con reversibilidad 41,5 s, criterio 0,6 s, conciliación 0,7 s. `--rapido`: unos 35 s
 (medido en una ejecución de prueba: 34,4 s).
 
 ## Corridas

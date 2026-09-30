@@ -1,0 +1,165 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+    "rama": "stream/v1",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_v1.py --con-v5 --sello 20260930t2200z",
+  "conjuntos": [
+    {
+      "fuente": "generado por correr.py",
+      "licencia": "MIT (licencia del repositorio)",
+      "nombre": "v5_sintetico (repertorio POOL de correr.py)",
+      "registros": null,
+      "replicacion_de_base": false,
+      "ruta": "experiments/v5_ancho/correr.py",
+      "semilla": 20260915,
+      "sha256": "fc47cb7150239a72b1f015487c2cc12be2fe20f68ba9fe4682fba1e55c332cfe",
+      "sintetico": true
+    }
+  ],
+  "conteos": null,
+  "contratos": [],
+  "criterio": null,
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V5",
+  "fecha_utc": "2026-09-30T20:27:05Z",
+  "gasto_usd": 0,
+  "intento": null,
+  "limitaciones": [
+    "Sintético a propósito (barre el ancho); no es un estudio poblacional.",
+    "Los tres tokenizadores son de la misma familia BPE de OpenAI."
+  ],
+  "modelo": null,
+  "notas": "Reproducción de V5 con r50k_base incluido, sin red: r50k_base sale ahora de benchmark/vocab.",
+  "parametros": {
+    "anchos": [
+      3,
+      5,
+      8,
+      12,
+      20,
+      32,
+      50
+    ],
+    "lotes": [
+      1,
+      10,
+      100,
+      1000
+    ],
+    "repeticiones": 5,
+    "semilla": 20260915,
+    "sin_api": true,
+    "sin_red": true
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [],
+  "resultado": "no_evaluable",
+  "resultados": [
+    {
+      "bytes": 193245,
+      "ruta": "evidencia/corridas/v5-ancho-20260930t2200z/ancho_largo.csv",
+      "sha256": "7027eb5da8705d8a5214bc564ede2fb54ca217cf14b8b893debd04904eea803a"
+    },
+    {
+      "bytes": 34823,
+      "ruta": "evidencia/corridas/v5-ancho-20260930t2200z/ancho_resumen.csv",
+      "sha256": "f3eaf83bc0001fe972f01fdd461df7a587efcc5199ab746e8c1ce654e9bbac5f"
+    },
+    {
+      "bytes": 397,
+      "ruta": "evidencia/corridas/v5-ancho-20260930t2200z/meta.json",
+      "sha256": "a2a3d8e0a06d2c1073a5966a0a6b513951db2d460bcdaf00d844700357e0911b"
+    }
+  ],
+  "resumen": {
+    "comparacion_con_archivado": {
+      "ancho_largo.csv": {
+        "archivo_archivado": "experiments/v5_ancho/results/ancho_largo.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 3360,
+        "filas_comparadas": 3360,
+        "filas_identicas": 3360,
+        "filas_reproducidas": 3360,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "ancho_resumen.csv": {
+        "archivo_archivado": "experiments/v5_ancho/results/ancho_resumen.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 672,
+        "filas_comparadas": 672,
+        "filas_identicas": 672,
+        "filas_reproducidas": 672,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "meta.json": {
+        "coincide_totalmente": true
+      }
+    },
+    "tiempo_s": 96.1
+  },
+  "run_id": "v5-ancho-20260930t2200z",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "backend": "tiktoken",
+      "nombre": "o200k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/o200k_base.tiktoken",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "cl100k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/cl100k_base.tiktoken",
+      "vocabulario_sha256": "223921b76ee99bde995b7ff738513eef100fb51d18c93597a113bcffe865b2a7"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "r50k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/r50k_base.tiktoken",
+      "vocabulario_sha256": "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930"
+    }
+  ]
+}

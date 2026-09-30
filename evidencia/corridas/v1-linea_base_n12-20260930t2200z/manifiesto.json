@@ -1,0 +1,373 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+    "rama": "stream/v1",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_v1.py --con-v5 --sello 20260930t2200z",
+  "conjuntos": [
+    {
+      "fuente": "escrito a mano por los autores (benchmark/domains.py)",
+      "licencia": "MIT (licencia del repositorio)",
+      "nombre": "dominios_14x12 (benchmark/domains.py)",
+      "nota": "168 registros base; n > 12 replica esos 12 registros por dominio (no son muestras independientes)",
+      "registros": 168,
+      "replicacion_de_base": true,
+      "ruta": "benchmark/domains.py",
+      "semilla": 20260914,
+      "sha256": "9b01a336cac4847b6cd120bd1fc09b3fed3a5466deb0879f23d013a11c9fba61",
+      "sha256_contenido_base": "009e763803a63f7ec23d83f73a5c97c87a5b2a73714a566438d9aaeaa5845c4d",
+      "sintetico": true
+    }
+  ],
+  "conteos": null,
+  "contratos": [
+    {
+      "prefijo": "a",
+      "ruta": "forks/a/contract.json",
+      "sha256": "446fc7d35c0ac4779e0284d96903d31ae1f6b6365238474a1a43d6b68935ff89",
+      "version": 1
+    },
+    {
+      "prefijo": "card",
+      "ruta": "forks/card/contract.json",
+      "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+      "version": 1
+    },
+    {
+      "prefijo": "cat",
+      "ruta": "forks/cat/contract.json",
+      "sha256": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
+      "version": 1
+    },
+    {
+      "prefijo": "cls",
+      "ruta": "forks/cls/contract.json",
+      "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+      "version": 1
+    },
+    {
+      "prefijo": "code",
+      "ruta": "forks/code/contract.json",
+      "sha256": "ca63bf2f894b8761bd4ef14a212b0308cdc85c08295bcc6028ca455ca239d162",
+      "version": 1
+    },
+    {
+      "prefijo": "log",
+      "ruta": "forks/log/contract.json",
+      "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+      "version": 1
+    },
+    {
+      "prefijo": "map",
+      "ruta": "forks/map/contract.json",
+      "sha256": "f7699064d358a0effa7818c4ef4d66676c80a7f3a7b41edc5c24d595dc269e71",
+      "version": 1
+    },
+    {
+      "prefijo": "ner",
+      "ruta": "forks/ner/contract.json",
+      "sha256": "49b555e9d32ea77913d5ec4594726ab1d0e0a1a3dc39f3ca400d0c272679848f",
+      "version": 1
+    },
+    {
+      "prefijo": "q",
+      "ruta": "forks/q/contract.json",
+      "sha256": "cc689a8c3a2e5af9daefcb32a311ee6f02790c94635a9d96a67fd6a475f48fda",
+      "version": 1
+    },
+    {
+      "prefijo": "r",
+      "ruta": "forks/r/contract.json",
+      "sha256": "7c8d839c9667ed59556a5273f14ab897d39c1bb11521b17e84df78c8f934153c",
+      "version": 1
+    },
+    {
+      "prefijo": "s",
+      "ruta": "forks/s/contract.json",
+      "sha256": "598f447d3cdaac67cb40480fd2d7cb030d09194641b9623aaa83aed6d1ba0d6b",
+      "version": 1
+    },
+    {
+      "prefijo": "sum",
+      "ruta": "forks/sum/contract.json",
+      "sha256": "1be4fc6efb79edbf8dd25876db850a423ae71a68312db380205c239f97c5f9a4",
+      "version": 1
+    },
+    {
+      "prefijo": "tc",
+      "ruta": "forks/tc/contract.json",
+      "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+      "version": 1
+    },
+    {
+      "prefijo": "us",
+      "ruta": "forks/us/contract.json",
+      "sha256": "87f0dd913cd98ba4a7234cd0f46f76cc0fe41a7787f2b0a011c5b903010de96b",
+      "version": 1
+    }
+  ],
+  "criterio": null,
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V1",
+  "fecha_utc": "2026-09-30T20:27:02Z",
+  "gasto_usd": 0,
+  "intento": null,
+  "limitaciones": [
+    "Los tres tokenizadores son de la misma familia BPE de OpenAI: no sustituyen a un tokenizador independiente; para Anthropic, Google o DeepSeek son una aproximación.",
+    "n > 12 replica los 12 registros base de cada dominio (replicacion_de_base): mide longitud de serialización, no diversidad semántica.",
+    "Los 14 dominios son conjuntos escritos a mano (sintéticos); q extiende a a.",
+    "Conteo local de texto: no es el conteo de solicitud ni el usage de ningún proveedor."
+  ],
+  "modelo": null,
+  "notas": "Reproduce la línea base de 12 registros x 14 dominios y la compara fila a fila con lo archivado. r50k_base no estaba archivado para n=12: se mide ahora.",
+  "parametros": {
+    "n": 12,
+    "protocolo": "ciclo (benchmark) y ciclo+muestreo (serie)",
+    "semilla_muestreo": 20260914,
+    "sin_api": true,
+    "sin_red": true,
+    "toon": {
+      "archivos": 21,
+      "implementacion": "TOON oficial vendored (benchmark/toon_ref/vendor/toon)",
+      "la_version_es_declarada": "el árbol vendored no trae archivo de versión ni hash de commit; la versión está escrita a mano en benchmark/public/run.py",
+      "sha256_arbol_lf": "c20b6727930bba34314809164588e9bd8b8c17060593a20c04bc4ed25678dd35",
+      "spec_declarada": "4.1",
+      "version_declarada": "4.1.1"
+    }
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [],
+  "resultado": "no_evaluable",
+  "resultados": [
+    {
+      "bytes": 60562,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/tokens.csv",
+      "sha256": "ccf1600b3546fc94aee2d9c25ab63bc8aec8665ab7e97f0eadfd5f8106de3f57"
+    },
+    {
+      "bytes": 1274,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/summary_12.csv",
+      "sha256": "f6be7f4e594263e42f6a50e6f34c43de15808cdb1a6ddbf198d0d81b257a8b5d"
+    },
+    {
+      "bytes": 368,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/roundtrip.csv",
+      "sha256": "0f7c1734e7d119cd9ea0fce469a3a18aba96a64d468c2dad7ae08f627b92c60c"
+    },
+    {
+      "bytes": 17103,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/docs_hashes.json",
+      "sha256": "98950d0a5722a2c5deba1eb6188172e2589fad8b8616707720181029e3c5e635"
+    },
+    {
+      "bytes": 85412,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/tokens_n12_tres_tokenizadores.csv",
+      "sha256": "f70237083a20bcd7a1d12e62dbc9482144dc1a0db3cab28c74f9d6e83879f0e2"
+    },
+    {
+      "bytes": 51140,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/reversibilidad_n12.csv",
+      "sha256": "3b985393003eb604c0e036a9f67f08ddf8cd94f325ebfd18ba2cbddbfc39dc19"
+    },
+    {
+      "bytes": 5675,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/linea_base_n12.csv",
+      "sha256": "7badc0da4502ca0cd35df9a1b9831237511be942c46fb47b39b40d1376d44571"
+    },
+    {
+      "bytes": 177,
+      "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/linea_base_n12_agregado.csv",
+      "sha256": "7d1828a7da0fff2d100b63c0126219c772d04792e87751c5c175abc6d45cbaf3"
+    }
+  ],
+  "resumen": {
+    "celdas_linea_base_que_no_coinciden_con_summary_12": 0,
+    "celdas_linea_base_v1_run": 168,
+    "comparacion_con_archivado": {
+      "benchmark/results/docs": {
+        "archivos": 112,
+        "coincide_totalmente": true,
+        "distintos": 0,
+        "nota": "hash SHA-256 sobre el texto normalizado a LF (en Windows se escriben con CRLF)"
+      },
+      "benchmark/results/roundtrip.csv": {
+        "archivo_archivado": "benchmark/results/roundtrip.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 14,
+        "filas_comparadas": 14,
+        "filas_identicas": 14,
+        "filas_reproducidas": 14,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "benchmark/results/summary_12.csv": {
+        "archivo_archivado": "benchmark/results/summary_12.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 14,
+        "filas_comparadas": 14,
+        "filas_identicas": 14,
+        "filas_reproducidas": 14,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "benchmark/results/tokens.csv": {
+        "archivo_archivado": "benchmark/results/tokens.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 1344,
+        "filas_comparadas": 1344,
+        "filas_identicas": 1344,
+        "filas_reproducidas": 1344,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "linea_base_n12.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/linea_base_n12.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 168,
+        "filas_comparadas": 168,
+        "filas_identicas": 168,
+        "filas_reproducidas": 168,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      },
+      "linea_base_n12_agregado.csv": {
+        "archivo_archivado": "experiments/v1_tokens/results/linea_base_n12_agregado.csv",
+        "celdas_distintas": 0,
+        "coincide_en_filas_comunes": true,
+        "coincide_totalmente": true,
+        "filas_archivadas": 4,
+        "filas_comparadas": 4,
+        "filas_identicas": 4,
+        "filas_reproducidas": 4,
+        "primeras_diferencias": [],
+        "solo_en_archivado": 0,
+        "solo_en_reproducido": 0
+      }
+    },
+    "n12_filas_tres_tokenizadores": 924,
+    "reversibilidad_n12": {
+      "documentos_verificados_por_formato_y_estado": {
+        "csv": {
+          "no_reversible": 28
+        },
+        "csv_reversible:celdas": {
+          "reversible": 28
+        },
+        "csv_reversible:columnas": {
+          "reversible": 28
+        },
+        "json_compact": {
+          "reversible": 28
+        },
+        "json_pretty": {
+          "reversible": 28
+        },
+        "mini": {
+          "reversible_normalizado": 28
+        },
+        "toon": {
+          "reversible": 28
+        },
+        "toon_flat": {
+          "reversible": 28
+        },
+        "toon_reversible:celdas": {
+          "reversible": 28
+        },
+        "toon_reversible:columnas": {
+          "reversible": 28
+        },
+        "xml": {
+          "reversible": 28
+        },
+        "xml_tipado": {
+          "reversible": 28
+        },
+        "yaml": {
+          "reversible": 28
+        }
+      },
+      "no_reversibles": [
+        "csv"
+      ]
+    },
+    "tiempos_s": {
+      "conciliacion": 0.7,
+      "criterio": 0.6,
+      "linea_base_benchmark": 14.4,
+      "publicos": 29.1,
+      "serie_reversibilidad": 41.5,
+      "total": 211.1,
+      "v1_run": 27.8,
+      "v5": 96.2
+    }
+  },
+  "run_id": "v1-linea_base_n12-20260930t2200z",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "backend": "tiktoken",
+      "nombre": "o200k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/o200k_base.tiktoken",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "cl100k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/cl100k_base.tiktoken",
+      "vocabulario_sha256": "223921b76ee99bde995b7ff738513eef100fb51d18c93597a113bcffe865b2a7"
+    },
+    {
+      "backend": "tiktoken",
+      "nombre": "r50k_base",
+      "nota": "conteo local de texto con el vocabulario de OpenAI; aproximación para Anthropic, Google o DeepSeek (no es su conteo de solicitud ni su usage)",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_ruta": "benchmark/vocab/r50k_base.tiktoken",
+      "vocabulario_sha256": "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930"
+    }
+  ]
+}

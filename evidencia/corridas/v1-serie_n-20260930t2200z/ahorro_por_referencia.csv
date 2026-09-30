@@ -1,0 +1,481 @@
+tokenizador,variante,n,referencia,decodificacion,replicacion_de_base,estado,dominios_validos,dominios_excluidos,causa,media_por_dominio_pct,ic95_media_inf,ic95_media_sup,agregado_suma_pct,ic95_agregado_inf,ic95_agregado_sup,dominios_ge_umbral
+cl100k_base,ciclo,1,json_pretty,autocontenida,False,incluido,14,,,53.358832,51.360731,55.339354,53.736501,51.280727,55.907594,14
+cl100k_base,ciclo,1,json_compact,autocontenida,False,incluido,14,,,22.821005,20.820123,24.901118,23.826458,20.689435,26.485939,1
+cl100k_base,ciclo,1,yaml,autocontenida,False,incluido,14,,,35.027592,31.913486,38.293409,37.221571,32.086123,41.349433,10
+cl100k_base,ciclo,1,xml,con_contrato,False,incluido,14,,,48.549477,46.706007,50.418081,48.460058,46.765777,50.22534,14
+cl100k_base,ciclo,1,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,1,toon,autocontenida,False,incluido,14,,,32.571764,29.57571,35.728199,34.415187,30.234879,37.759121,8
+cl100k_base,ciclo,1,toon_flat,con_contrato,False,incluido,14,,,28.651674,24.682804,32.660729,30.634715,25.251381,34.899995,5
+cl100k_base,ciclo,1,xml_tipado,autocontenida,False,incluido,14,,,70.21792,68.491853,71.904765,70.455172,68.476381,72.191787,14
+cl100k_base,ciclo,1,csv_reversible,con_mapa,False,incluido,14,,,25.511435,22.640365,28.334378,27.142857,23.524091,29.994194,4
+cl100k_base,ciclo,1,toon_reversible,con_mapa,False,incluido,14,,,35.014658,32.81417,37.217502,36.021505,32.850674,38.671868,11
+cl100k_base,ciclo,5,json_pretty,autocontenida,False,incluido,14,,,56.699581,54.500354,59.010384,55.972914,53.896665,58.379827,14
+cl100k_base,ciclo,5,json_compact,autocontenida,False,incluido,14,,,29.818372,28.122521,31.579679,29.443079,27.746963,31.288504,7
+cl100k_base,ciclo,5,yaml,autocontenida,False,incluido,14,,,41.944651,39.298341,44.625003,41.957217,39.262786,44.631937,14
+cl100k_base,ciclo,5,xml,con_contrato,False,incluido,14,,,58.408468,55.504128,61.245413,56.930384,53.869324,60.661935,14
+cl100k_base,ciclo,5,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,5,toon,autocontenida,False,incluido,14,,,35.630455,29.31374,40.483872,38.376252,34.904598,40.978812,12
+cl100k_base,ciclo,5,toon_flat,con_contrato,False,incluido,14,,,11.909534,9.408667,14.548698,12.515867,9.514998,15.178331,0
+cl100k_base,ciclo,5,xml_tipado,autocontenida,False,incluido,14,,,71.844422,69.875575,73.816313,71.316797,69.52364,73.315144,14
+cl100k_base,ciclo,5,csv_reversible,con_mapa,False,incluido,14,,,10.393204,7.687898,13.110842,11.139763,8.654112,13.409044,0
+cl100k_base,ciclo,5,toon_reversible,con_mapa,False,incluido,14,,,17.764632,15.485798,20.011051,17.991433,15.820236,20.084809,0
+cl100k_base,ciclo,10,json_pretty,autocontenida,False,incluido,14,,,57.474655,54.897264,60.111195,56.557377,54.204199,59.370554,14
+cl100k_base,ciclo,10,json_compact,autocontenida,False,incluido,14,,,31.249961,29.16993,33.409404,30.560105,28.591248,32.783029,9
+cl100k_base,ciclo,10,yaml,autocontenida,False,incluido,14,,,43.190553,40.2436,46.38641,42.821181,40.0242,45.978539,14
+cl100k_base,ciclo,10,xml,con_contrato,False,incluido,14,,,60.236869,56.964278,63.387322,58.572173,55.050771,62.531107,14
+cl100k_base,ciclo,10,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,10,toon,autocontenida,False,incluido,14,,,35.988168,28.480543,41.72451,39.225991,35.58885,42.068937,12
+cl100k_base,ciclo,10,toon_flat,con_contrato,False,incluido,14,,,7.178465,4.743311,9.603103,7.450524,4.947647,9.692574,0
+cl100k_base,ciclo,10,xml_tipado,autocontenida,False,incluido,14,,,72.282953,70.113925,74.516096,71.632471,69.650393,73.909878,14
+cl100k_base,ciclo,10,csv_reversible,con_mapa,False,incluido,14,,,6.080186,3.393118,8.772064,6.635349,4.568563,8.703372,0
+cl100k_base,ciclo,10,toon_reversible,con_mapa,False,incluido,14,,,11.623952,9.380389,13.985715,11.678933,9.980846,13.67317,0
+cl100k_base,ciclo,12,json_pretty,autocontenida,False,incluido,14,,,57.723976,55.19031,60.315991,56.760807,54.474848,59.5901,14
+cl100k_base,ciclo,12,json_compact,autocontenida,False,incluido,14,,,31.629562,29.581985,33.733155,30.882624,28.931527,33.102795,9
+cl100k_base,ciclo,12,yaml,autocontenida,False,incluido,14,,,43.538579,40.741325,46.65698,43.093378,40.408081,46.179488,14
+cl100k_base,ciclo,12,xml,con_contrato,False,incluido,14,,,60.572483,57.246162,63.747388,58.881885,55.337404,62.915761,14
+cl100k_base,ciclo,12,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,12,toon,autocontenida,False,incluido,14,,,36.178626,28.436936,42.025625,39.524385,35.891086,42.303655,12
+cl100k_base,ciclo,12,toon_flat,con_contrato,False,incluido,14,,,6.184829,3.89603,8.554954,6.470515,4.092954,8.616551,0
+cl100k_base,ciclo,12,xml_tipado,autocontenida,False,incluido,14,,,72.451702,70.295686,74.611016,71.763023,69.813741,74.054127,14
+cl100k_base,ciclo,12,csv_reversible,con_mapa,False,incluido,14,,,5.732032,3.45918,8.056299,6.01353,4.066102,8.021516,0
+cl100k_base,ciclo,12,toon_reversible,con_mapa,False,incluido,14,,,10.267865,8.147438,12.51903,10.359661,8.743488,12.307697,0
+cl100k_base,ciclo,25,json_pretty,autocontenida,True,incluido,14,,,57.954783,55.358008,60.611221,56.894544,54.502251,59.836694,14
+cl100k_base,ciclo,25,json_compact,autocontenida,True,incluido,14,,,32.199467,30.018683,34.450627,31.307142,29.299148,33.669479,9
+cl100k_base,ciclo,25,yaml,autocontenida,True,incluido,14,,,44.074021,41.173641,47.228865,43.449586,40.784878,46.651811,14
+cl100k_base,ciclo,25,xml,con_contrato,True,incluido,14,,,61.26569,57.771834,64.542943,59.495596,55.836696,63.650725,14
+cl100k_base,ciclo,25,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,25,toon,autocontenida,True,incluido,14,,,36.082605,27.795388,42.410728,39.776199,36.163528,42.636301,12
+cl100k_base,ciclo,25,toon_flat,con_contrato,True,incluido,14,,,3.430097,1.243112,5.618332,3.638095,1.624376,5.481867,0
+cl100k_base,ciclo,25,xml_tipado,autocontenida,True,incluido,14,,,72.528438,70.29722,74.794235,71.778947,69.779668,74.135429,14
+cl100k_base,ciclo,25,csv_reversible,con_mapa,True,incluido,14,,,3.037758,0.740716,5.267698,3.28809,1.404483,5.227179,0
+cl100k_base,ciclo,25,toon_reversible,con_mapa,True,incluido,14,,,6.180747,4.037114,8.338196,6.297462,4.828001,8.092143,0
+cl100k_base,ciclo,50,json_pretty,autocontenida,True,incluido,14,,,58.099612,55.435464,60.81512,56.981914,54.578017,59.964269,14
+cl100k_base,ciclo,50,json_compact,autocontenida,True,incluido,14,,,32.509353,30.259605,34.836167,31.534956,29.512544,33.964187,9
+cl100k_base,ciclo,50,yaml,autocontenida,True,incluido,14,,,44.36379,41.421452,47.523606,43.636535,40.977008,46.920748,14
+cl100k_base,ciclo,50,xml,con_contrato,True,incluido,14,,,61.609506,58.066005,64.96392,59.795062,56.025848,64.024553,14
+cl100k_base,ciclo,50,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,50,toon,autocontenida,True,incluido,14,,,36.068273,27.441191,42.639261,39.936115,36.269645,42.816566,12
+cl100k_base,ciclo,50,toon_flat,con_contrato,True,incluido,14,,,2.013533,-0.16737,4.125228,2.204632,0.360737,3.947878,0
+cl100k_base,ciclo,50,xml_tipado,autocontenida,True,incluido,14,,,72.595117,70.298031,74.89129,71.807904,69.78898,74.199584,14
+cl100k_base,ciclo,50,csv_reversible,con_mapa,True,incluido,14,,,1.646455,-0.726288,3.907313,1.890136,0.052449,3.744666,0
+cl100k_base,ciclo,50,toon_reversible,con_mapa,True,incluido,14,,,4.070973,1.914877,6.239654,4.222194,2.754565,5.993121,0
+cl100k_base,ciclo,100,json_pretty,autocontenida,True,incluido,14,,,58.206208,55.519977,60.957886,57.059011,54.621634,60.062947,14
+cl100k_base,ciclo,100,json_compact,autocontenida,True,incluido,14,,,32.700977,30.42243,35.066063,31.684093,29.644349,34.168364,10
+cl100k_base,ciclo,100,yaml,autocontenida,True,incluido,14,,,44.544832,41.563376,47.720365,43.772593,41.138706,47.082642,14
+cl100k_base,ciclo,100,xml,con_contrato,True,incluido,14,,,61.816975,58.239076,65.20588,59.981362,56.152802,64.24685,14
+cl100k_base,ciclo,100,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,100,toon,autocontenida,True,incluido,14,,,36.09412,27.264247,42.828538,40.055835,36.398819,42.974769,12
+cl100k_base,ciclo,100,toon_flat,con_contrato,True,incluido,14,,,1.290017,-0.885251,3.386063,1.481223,-0.317861,3.191766,0
+cl100k_base,ciclo,100,xml_tipado,autocontenida,True,incluido,14,,,72.656667,70.351653,74.966566,71.849705,69.803016,74.259074,14
+cl100k_base,ciclo,100,csv_reversible,con_mapa,True,incluido,14,,,0.947177,-1.474687,3.186168,1.193771,-0.629,3.019188,0
+cl100k_base,ciclo,100,toon_reversible,con_mapa,True,incluido,14,,,2.979436,0.784268,5.193086,3.160337,1.672093,4.92576,0
+cl100k_base,ciclo,250,json_pretty,autocontenida,True,incluido,14,,,58.258141,55.559359,61.023994,57.092962,54.634402,60.125656,14
+cl100k_base,ciclo,250,json_compact,autocontenida,True,incluido,14,,,32.805975,30.493417,35.205823,31.762321,29.693739,34.263464,10
+cl100k_base,ciclo,250,yaml,autocontenida,True,incluido,14,,,44.630193,41.638038,47.851582,43.827803,41.181164,47.179394,14
+cl100k_base,ciclo,250,xml,con_contrato,True,incluido,14,,,61.928517,58.327403,65.339921,60.078208,56.242919,64.368718,14
+cl100k_base,ciclo,250,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,ciclo,250,toon,autocontenida,True,incluido,14,,,36.089279,27.148585,42.921941,40.108473,36.420361,43.05249,12
+cl100k_base,ciclo,250,toon_flat,con_contrato,True,incluido,14,,,0.828769,-1.383474,2.918822,1.015228,-0.773462,2.733057,0
+cl100k_base,ciclo,250,xml_tipado,autocontenida,True,incluido,14,,,72.683366,70.363594,75.011197,71.864264,69.812926,74.301016,14
+cl100k_base,ciclo,250,csv_reversible,con_mapa,True,incluido,14,,,0.518054,-1.947434,2.766336,0.762691,-1.070905,2.618937,0
+cl100k_base,ciclo,250,toon_reversible,con_mapa,True,incluido,14,,,2.291854,0.056652,4.501509,2.487746,0.978745,4.276148,0
+cl100k_base,muestreo,1,json_pretty,autocontenida,False,incluido,14,,,54.626568,52.544429,56.606666,54.995579,52.591579,56.935615,14
+cl100k_base,muestreo,1,json_compact,autocontenida,False,incluido,14,,,24.048857,21.948325,26.115081,25.036819,21.937622,27.524477,2
+cl100k_base,muestreo,1,yaml,autocontenida,False,incluido,14,,,36.211453,32.692095,39.680738,38.3404,33.252771,42.244311,12
+cl100k_base,muestreo,1,xml,con_contrato,False,incluido,14,,,49.370567,47.414917,51.490169,49.302789,47.4389,51.169513,14
+cl100k_base,muestreo,1,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,1,toon,autocontenida,False,incluido,14,,,34.071782,30.920187,37.137456,35.813367,31.874787,38.876892,10
+cl100k_base,muestreo,1,toon_flat,con_contrato,False,incluido,14,,,29.764723,25.750187,34.104474,31.723675,26.277882,36.093702,6
+cl100k_base,muestreo,1,xml_tipado,autocontenida,False,incluido,14,,,71.271272,69.591445,72.901523,71.476604,69.732765,72.945262,14
+cl100k_base,muestreo,1,csv_reversible,con_mapa,False,incluido,14,,,26.621829,23.43004,29.823415,28.056537,24.271625,31.104142,4
+cl100k_base,muestreo,1,toon_reversible,con_mapa,False,incluido,14,,,36.282438,33.921571,38.539323,37.276648,34.176216,39.739599,13
+cl100k_base,muestreo,5,json_pretty,autocontenida,False,incluido,14,,,56.88069,54.504764,59.274569,56.128867,54.010897,58.589253,14
+cl100k_base,muestreo,5,json_compact,autocontenida,False,incluido,14,,,30.034147,28.095588,31.967955,29.583848,27.678708,31.510085,9
+cl100k_base,muestreo,5,yaml,autocontenida,False,incluido,14,,,41.964949,39.099137,44.898114,41.930003,39.001559,44.611548,14
+cl100k_base,muestreo,5,xml,con_contrato,False,incluido,14,,,58.533948,55.497248,61.427392,57.038713,53.955219,60.763433,14
+cl100k_base,muestreo,5,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,5,toon,autocontenida,False,incluido,14,,,35.868783,29.753489,40.614057,38.480922,35.093275,41.099423,12
+cl100k_base,muestreo,5,toon_flat,con_contrato,False,incluido,14,,,12.115394,9.566559,14.921963,12.515997,9.442984,15.204382,0
+cl100k_base,muestreo,5,xml_tipado,autocontenida,False,incluido,14,,,72.02116,69.943465,74.051472,71.464351,69.658836,73.508738,14
+cl100k_base,muestreo,5,csv_reversible,con_mapa,False,incluido,14,,,11.188538,8.915471,13.852058,11.542443,9.443578,13.869137,0
+cl100k_base,muestreo,5,toon_reversible,con_mapa,False,incluido,14,,,17.902069,15.885325,20.092998,17.994242,16.120137,20.095714,0
+cl100k_base,muestreo,10,json_pretty,autocontenida,False,incluido,14,,,57.531835,54.916591,60.128303,56.585865,54.252955,59.370306,14
+cl100k_base,muestreo,10,json_compact,autocontenida,False,incluido,14,,,31.309877,29.18653,33.545319,30.581941,28.600325,32.826831,9
+cl100k_base,muestreo,10,yaml,autocontenida,False,incluido,14,,,43.197375,40.220126,46.330521,42.782577,39.963732,45.826114,14
+cl100k_base,muestreo,10,xml,con_contrato,False,incluido,14,,,60.263248,56.922456,63.495933,58.585201,55.096892,62.603942,14
+cl100k_base,muestreo,10,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,10,toon,autocontenida,False,incluido,14,,,36.052292,28.589433,41.738839,39.227681,35.612501,42.02422,12
+cl100k_base,muestreo,10,toon_flat,con_contrato,False,incluido,14,,,7.17188,4.830894,9.636793,7.425743,4.853017,9.689589,0
+cl100k_base,muestreo,10,xml_tipado,autocontenida,False,incluido,14,,,72.321919,70.083911,74.521647,71.647715,69.665844,73.921811,14
+cl100k_base,muestreo,10,csv_reversible,con_mapa,False,incluido,14,,,6.915292,4.562488,9.465571,7.155374,5.18386,9.40038,0
+cl100k_base,muestreo,10,toon_reversible,con_mapa,False,incluido,14,,,11.645188,9.488212,13.940247,11.682178,10.022324,13.727754,0
+cl100k_base,muestreo,12,json_pretty,autocontenida,False,incluido,14,,,57.735051,55.199629,60.321926,56.766571,54.480059,59.593518,14
+cl100k_base,muestreo,12,json_compact,autocontenida,False,incluido,14,,,31.6476,29.591241,33.761132,30.891837,28.93516,33.118392,9
+cl100k_base,muestreo,12,yaml,autocontenida,False,incluido,14,,,43.555075,40.759773,46.65698,43.100963,40.427888,46.188336,14
+cl100k_base,muestreo,12,xml,con_contrato,False,incluido,14,,,60.582543,57.266576,63.767258,58.887366,55.340034,62.915921,14
+cl100k_base,muestreo,12,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,12,toon,autocontenida,False,incluido,14,,,36.205888,28.495287,42.025625,39.532447,35.925646,42.303655,12
+cl100k_base,muestreo,12,toon_flat,con_contrato,False,incluido,14,,,6.212091,3.975513,8.555636,6.482982,4.109868,8.625692,0
+cl100k_base,muestreo,12,xml_tipado,autocontenida,False,incluido,14,,,72.458733,70.302541,74.61797,71.766787,69.817658,74.066783,14
+cl100k_base,muestreo,12,csv_reversible,con_mapa,False,incluido,14,,,5.934939,3.594347,8.363112,6.178862,4.268346,8.347166,0
+cl100k_base,muestreo,12,toon_reversible,con_mapa,False,incluido,14,,,10.295057,8.196121,12.531075,10.37161,8.760376,12.314646,0
+cl100k_base,muestreo,25,json_pretty,autocontenida,True,incluido,14,,,58.064662,55.415621,60.730816,56.974991,54.543826,59.942418,14
+cl100k_base,muestreo,25,json_compact,autocontenida,True,incluido,14,,,32.31946,30.088531,34.596499,31.388385,29.347753,33.799324,9
+cl100k_base,muestreo,25,yaml,autocontenida,True,incluido,14,,,44.196363,41.30251,47.376677,43.530378,40.839995,46.745063,14
+cl100k_base,muestreo,25,xml,con_contrato,True,incluido,14,,,61.332577,57.82402,64.64296,59.543047,55.817829,63.737709,14
+cl100k_base,muestreo,25,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,25,toon,autocontenida,True,incluido,14,,,36.246601,28.022411,42.573522,39.879935,36.278147,42.739516,12
+cl100k_base,muestreo,25,toon_flat,con_contrato,True,incluido,14,,,3.522417,1.348536,5.732936,3.687663,1.694202,5.53267,0
+cl100k_base,muestreo,25,xml_tipado,autocontenida,True,incluido,14,,,72.620323,70.332847,74.898776,71.849287,69.822672,74.237285,14
+cl100k_base,muestreo,25,csv_reversible,con_mapa,True,incluido,14,,,3.241036,0.85261,5.620014,3.454,1.543341,5.553656,0
+cl100k_base,muestreo,25,toon_reversible,con_mapa,True,incluido,14,,,6.299546,4.186995,8.425772,6.371123,4.924605,8.1869,0
+cl100k_base,muestreo,50,json_pretty,autocontenida,True,incluido,14,,,58.151508,55.523856,60.868421,57.027817,54.621876,59.978009,14
+cl100k_base,muestreo,50,json_compact,autocontenida,True,incluido,14,,,32.566937,30.331988,34.877157,31.588845,29.559715,34.033276,9
+cl100k_base,muestreo,50,yaml,autocontenida,True,incluido,14,,,44.411937,41.475966,47.585277,43.684042,41.029463,46.912352,14
+cl100k_base,muestreo,50,xml,con_contrato,True,incluido,14,,,61.654005,58.102412,65.006809,59.833571,56.045681,64.074739,14
+cl100k_base,muestreo,50,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,50,toon,autocontenida,True,incluido,14,,,36.141912,27.515952,42.738926,40.005229,36.391325,42.879953,12
+cl100k_base,muestreo,50,toon_flat,con_contrato,True,incluido,14,,,2.025915,-0.14009,4.127724,2.228777,0.363141,3.981866,0
+cl100k_base,muestreo,50,xml_tipado,autocontenida,True,incluido,14,,,72.64094,70.358376,74.923171,71.847336,69.83599,74.240769,14
+cl100k_base,muestreo,50,csv_reversible,con_mapa,True,incluido,14,,,1.869671,-0.631621,4.216041,2.10364,0.19029,4.140228,0
+cl100k_base,muestreo,50,toon_reversible,con_mapa,True,incluido,14,,,4.127858,1.965241,6.317357,4.289794,2.820824,6.049164,0
+cl100k_base,muestreo,100,json_pretty,autocontenida,True,incluido,14,,,58.233159,55.533744,60.986958,57.080727,54.634628,60.084821,14
+cl100k_base,muestreo,100,json_compact,autocontenida,True,incluido,14,,,32.735103,30.43306,35.102724,31.709033,29.648578,34.190589,10
+cl100k_base,muestreo,100,yaml,autocontenida,True,incluido,14,,,44.56699,41.560392,47.780406,43.78578,41.123929,47.103004,14
+cl100k_base,muestreo,100,xml,con_contrato,True,incluido,14,,,61.834261,58.243981,65.215696,59.993919,56.185521,64.250409,14
+cl100k_base,muestreo,100,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,100,toon,autocontenida,True,incluido,14,,,36.128344,27.311596,42.854783,40.073477,36.398647,42.982522,12
+cl100k_base,muestreo,100,toon_flat,con_contrato,True,incluido,14,,,1.292299,-0.873035,3.40108,1.466085,-0.337935,3.207013,0
+cl100k_base,muestreo,100,xml_tipado,autocontenida,True,incluido,14,,,72.677611,70.359377,74.995107,71.866314,69.834911,74.295078,14
+cl100k_base,muestreo,100,csv_reversible,con_mapa,True,incluido,14,,,1.134781,-1.400355,3.493607,1.359388,-0.519732,3.372843,0
+cl100k_base,muestreo,100,toon_reversible,con_mapa,True,incluido,14,,,2.989314,0.79897,5.208196,3.155054,1.668587,4.931165,0
+cl100k_base,muestreo,250,json_pretty,autocontenida,True,incluido,14,,,58.269261,55.575674,61.030571,57.105307,54.650083,60.134696,14
+cl100k_base,muestreo,250,json_compact,autocontenida,True,incluido,14,,,32.819084,30.522993,35.214969,31.777146,29.712675,34.270038,10
+cl100k_base,muestreo,250,yaml,autocontenida,True,incluido,14,,,44.644299,41.663899,47.856128,43.842319,41.201481,47.195767,14
+cl100k_base,muestreo,250,xml,con_contrato,True,incluido,14,,,61.934924,58.336162,65.347254,60.086025,56.24434,64.368268,14
+cl100k_base,muestreo,250,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+cl100k_base,muestreo,250,toon,autocontenida,True,incluido,14,,,36.105781,27.162789,42.92651,40.124091,36.437158,43.066139,12
+cl100k_base,muestreo,250,toon_flat,con_contrato,True,incluido,14,,,0.833128,-1.367,2.928239,1.020292,-0.757197,2.73615,0
+cl100k_base,muestreo,250,xml_tipado,autocontenida,True,incluido,14,,,72.691933,70.37423,75.010953,71.873246,69.824233,74.306332,14
+cl100k_base,muestreo,250,csv_reversible,con_mapa,True,incluido,14,,,0.70045,-1.867949,3.037178,0.93845,-0.943083,2.942111,0
+cl100k_base,muestreo,250,toon_reversible,con_mapa,True,incluido,14,,,2.295542,0.083628,4.505593,2.495186,0.987963,4.276435,0
+o200k_base,ciclo,1,json_pretty,autocontenida,False,incluido,14,,,54.092634,52.156562,56.016853,54.581152,52.047698,56.837106,14
+o200k_base,ciclo,1,json_compact,autocontenida,False,incluido,14,,,25.993083,23.989518,28.110598,26.998597,23.836561,29.647054,2
+o200k_base,ciclo,1,yaml,autocontenida,False,incluido,14,,,35.83151,32.70694,39.230196,38.035714,32.847288,42.191362,11
+o200k_base,ciclo,1,xml,con_contrato,False,incluido,14,,,49.718188,48.154077,51.28418,49.710145,48.169254,51.29167,14
+o200k_base,ciclo,1,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,1,toon,autocontenida,False,incluido,14,,,33.727498,30.849192,36.719746,35.541796,31.46184,38.876546,9
+o200k_base,ciclo,1,toon_flat,con_contrato,False,incluido,14,,,29.795885,25.760064,33.985349,32.005225,26.367334,36.58049,5
+o200k_base,ciclo,1,xml_tipado,autocontenida,False,incluido,14,,,70.920638,69.24336,72.531269,71.235148,69.258464,73.007492,14
+o200k_base,ciclo,1,csv_reversible,con_mapa,False,incluido,14,,,27.302004,24.640724,30.137999,28.94198,25.376692,31.9102,4
+o200k_base,ciclo,1,toon_reversible,con_mapa,False,incluido,14,,,35.955709,33.877225,38.056746,36.947305,33.862716,39.632881,14
+o200k_base,ciclo,5,json_pretty,autocontenida,False,incluido,14,,,57.514119,55.495529,59.578497,57.126183,55.159277,59.307986,14
+o200k_base,ciclo,5,json_compact,autocontenida,False,incluido,14,,,32.027815,30.356403,33.751849,32.017273,30.128174,33.961581,10
+o200k_base,ciclo,5,yaml,autocontenida,False,incluido,14,,,42.708986,39.921968,45.485915,42.990171,39.985218,45.762494,14
+o200k_base,ciclo,5,xml,con_contrato,False,incluido,14,,,59.531574,57.077362,61.958992,58.346982,55.683684,61.382928,14
+o200k_base,ciclo,5,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,5,toon,autocontenida,False,incluido,14,,,36.591227,30.241851,41.411775,39.494876,35.83629,42.226943,12
+o200k_base,ciclo,5,toon_flat,con_contrato,False,incluido,14,,,12.771003,9.999659,15.701686,13.591218,10.110933,16.646101,0
+o200k_base,ciclo,5,xml_tipado,autocontenida,False,incluido,14,,,72.645353,70.880565,74.382769,72.35786,70.721762,74.138905,14
+o200k_base,ciclo,5,csv_reversible,con_mapa,False,incluido,14,,,11.676248,8.946714,14.561134,12.539683,9.834419,14.99426,0
+o200k_base,ciclo,5,toon_reversible,con_mapa,False,incluido,14,,,18.644986,16.347462,21.007492,19.049951,16.702504,21.281876,0
+o200k_base,ciclo,10,json_pretty,autocontenida,False,incluido,14,,,58.397081,56.066368,60.77191,57.842797,55.650238,60.271657,14
+o200k_base,ciclo,10,json_compact,autocontenida,False,incluido,14,,,33.390905,31.405439,35.382303,33.127549,31.116512,35.218997,12
+o200k_base,ciclo,10,yaml,autocontenida,False,incluido,14,,,44.137013,41.165657,47.22194,44.04059,41.043592,47.009517,14
+o200k_base,ciclo,10,xml,con_contrato,False,incluido,14,,,61.434321,58.735063,64.149856,60.092105,57.245218,63.360099,14
+o200k_base,ciclo,10,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,10,toon,autocontenida,False,incluido,14,,,37.086129,29.653482,42.814779,40.523581,36.687952,43.287751,12
+o200k_base,ciclo,10,toon_flat,con_contrato,False,incluido,14,,,7.996887,5.478241,10.621453,8.423913,5.603487,10.945771,0
+o200k_base,ciclo,10,xml_tipado,autocontenida,False,incluido,14,,,73.173152,71.208884,75.101214,72.788444,70.967816,74.71197,14
+o200k_base,ciclo,10,csv_reversible,con_mapa,False,incluido,14,,,7.129655,4.426276,9.872201,7.783521,5.439397,10.021097,0
+o200k_base,ciclo,10,toon_reversible,con_mapa,False,incluido,14,,,12.503468,10.303112,14.882349,12.706864,10.879935,14.830837,0
+o200k_base,ciclo,12,json_pretty,autocontenida,False,incluido,14,,,58.717213,56.469166,61.008514,58.15757,56.036317,60.539782,14
+o200k_base,ciclo,12,json_compact,autocontenida,False,incluido,14,,,33.800655,31.903695,35.717808,33.526227,31.556143,35.579667,12
+o200k_base,ciclo,12,yaml,autocontenida,False,incluido,14,,,44.57866,41.799818,47.529587,44.450511,41.630572,47.320048,14
+o200k_base,ciclo,12,xml,con_contrato,False,incluido,14,,,61.840244,59.11154,64.544424,60.507929,57.617627,63.787023,14
+o200k_base,ciclo,12,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,12,toon,autocontenida,False,incluido,14,,,37.395343,29.787534,43.230988,40.984422,37.211484,43.688562,12
+o200k_base,ciclo,12,toon_flat,con_contrato,False,incluido,14,,,7.035515,4.622305,9.589004,7.470443,4.742855,9.896258,0
+o200k_base,ciclo,12,xml_tipado,autocontenida,False,incluido,14,,,73.401779,71.532389,75.27334,73.007391,71.246189,74.896827,14
+o200k_base,ciclo,12,csv_reversible,con_mapa,False,incluido,14,,,6.772539,4.299714,9.240671,7.168926,4.862917,9.278699,0
+o200k_base,ciclo,12,toon_reversible,con_mapa,False,incluido,14,,,11.196191,9.06645,13.468526,11.43994,9.65306,13.466683,0
+o200k_base,ciclo,25,json_pretty,autocontenida,True,incluido,14,,,58.967343,56.623395,61.371162,58.317892,56.113513,60.78791,14
+o200k_base,ciclo,25,json_compact,autocontenida,True,incluido,14,,,34.321589,32.331489,36.339307,33.928408,31.906159,36.091075,12
+o200k_base,ciclo,25,yaml,autocontenida,True,incluido,14,,,45.130827,42.265769,48.101612,44.83908,42.008764,47.788988,14
+o200k_base,ciclo,25,xml,con_contrato,True,incluido,14,,,62.552056,59.692678,65.324388,61.1417,58.151446,64.49637,14
+o200k_base,ciclo,25,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,25,toon,autocontenida,True,incluido,14,,,37.338516,29.088297,43.650916,41.28706,37.444723,44.067825,12
+o200k_base,ciclo,25,toon_flat,con_contrato,True,incluido,14,,,4.258511,2.00576,6.604081,4.560822,2.219358,6.692612,0
+o200k_base,ciclo,25,xml_tipado,autocontenida,True,incluido,14,,,73.49931,71.534256,75.437096,73.047906,71.210947,75.005599,14
+o200k_base,ciclo,25,csv_reversible,con_mapa,True,incluido,14,,,3.98473,1.457428,6.420662,4.313439,2.117257,6.413407,0
+o200k_base,ciclo,25,toon_reversible,con_mapa,True,incluido,14,,,7.089458,4.944689,9.252975,7.313462,5.652896,9.172463,0
+o200k_base,ciclo,50,json_pretty,autocontenida,True,incluido,14,,,59.122643,56.735384,61.588444,58.429917,56.228659,60.969602,14
+o200k_base,ciclo,50,json_compact,autocontenida,True,incluido,14,,,34.60435,32.571635,36.646598,34.152123,32.128439,36.358147,12
+o200k_base,ciclo,50,yaml,autocontenida,True,incluido,14,,,45.425721,42.54221,48.404507,45.049937,42.250997,48.043411,14
+o200k_base,ciclo,50,xml,con_contrato,True,incluido,14,,,62.901691,59.974088,65.721571,61.458418,58.39866,64.842849,14
+o200k_base,ciclo,50,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,50,toon,autocontenida,True,incluido,14,,,37.322894,28.708869,43.877665,41.462659,37.589288,44.230889,12
+o200k_base,ciclo,50,toon_flat,con_contrato,True,incluido,14,,,2.791736,0.590586,5.021889,3.051972,0.925448,4.981393,0
+o200k_base,ciclo,50,xml_tipado,autocontenida,True,incluido,14,,,73.575642,71.585402,75.547327,73.096533,71.278168,75.078399,14
+o200k_base,ciclo,50,csv_reversible,con_mapa,True,incluido,14,,,2.501208,-0.066294,4.907433,2.805886,0.674389,4.836285,0
+o200k_base,ciclo,50,toon_reversible,con_mapa,True,incluido,14,,,4.928122,2.777465,7.11136,5.164335,3.5658,6.946962,0
+o200k_base,ciclo,100,json_pretty,autocontenida,True,incluido,14,,,59.230443,56.82999,61.692233,58.512651,56.304844,61.08422,14
+o200k_base,ciclo,100,json_compact,autocontenida,True,incluido,14,,,34.772456,32.737831,36.842188,34.286082,32.255617,36.488777,12
+o200k_base,ciclo,100,yaml,autocontenida,True,incluido,14,,,45.609297,42.725679,48.612612,45.192214,42.399728,48.195514,14
+o200k_base,ciclo,100,xml,con_contrato,True,incluido,14,,,63.107155,60.145882,65.959279,61.645558,58.56098,65.073128,14
+o200k_base,ciclo,100,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,100,toon,autocontenida,True,incluido,14,,,37.344424,28.530751,44.015167,41.584818,37.725786,44.352815,12
+o200k_base,ciclo,100,toon_flat,con_contrato,True,incluido,14,,,2.025251,-0.131451,4.228764,2.274982,0.240452,4.130084,0
+o200k_base,ciclo,100,xml_tipado,autocontenida,True,incluido,14,,,73.63902,71.617515,75.616013,73.14301,71.32546,75.145341,14
+o200k_base,ciclo,100,csv_reversible,con_mapa,True,incluido,14,,,1.740722,-0.861572,4.139882,2.041386,-0.081321,4.068537,0
+o200k_base,ciclo,100,toon_reversible,con_mapa,True,incluido,14,,,3.795435,1.66559,5.994595,4.050313,2.481159,5.774281,0
+o200k_base,ciclo,250,json_pretty,autocontenida,True,incluido,14,,,59.285882,56.880166,61.754136,58.551841,56.339016,61.138854,14
+o200k_base,ciclo,250,json_compact,autocontenida,True,incluido,14,,,34.868619,32.807818,36.948169,34.358825,32.32919,36.572847,12
+o200k_base,ciclo,250,yaml,autocontenida,True,incluido,14,,,45.700501,42.775864,48.727815,45.253294,42.436942,48.280405,14
+o200k_base,ciclo,250,xml,con_contrato,True,incluido,14,,,63.2211,60.246177,66.097026,61.746301,58.627833,65.179628,14
+o200k_base,ciclo,250,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,ciclo,250,toon,autocontenida,True,incluido,14,,,37.345023,28.425994,44.078059,41.642321,37.783564,44.424784,12
+o200k_base,ciclo,250,toon_flat,con_contrato,True,incluido,14,,,1.552179,-0.611319,3.722179,1.785262,-0.210291,3.641214,0
+o200k_base,ciclo,250,xml_tipado,autocontenida,True,incluido,14,,,73.66932,71.639881,75.658965,73.162884,71.339812,75.189805,14
+o200k_base,ciclo,250,csv_reversible,con_mapa,True,incluido,14,,,1.282644,-1.339953,3.704401,1.574098,-0.551138,3.596296,0
+o200k_base,ciclo,250,toon_reversible,con_mapa,True,incluido,14,,,3.093796,0.864036,5.302245,3.352276,1.788159,5.091772,0
+o200k_base,muestreo,1,json_pretty,autocontenida,False,incluido,14,,,55.274153,53.386326,57.191841,55.869176,53.470596,57.933809,14
+o200k_base,muestreo,1,json_compact,autocontenida,False,incluido,14,,,27.001017,24.933328,29.132543,28.10219,24.999467,30.628443,4
+o200k_base,muestreo,1,yaml,autocontenida,False,incluido,14,,,36.908872,33.633036,40.252922,39.084725,34.067562,42.966803,12
+o200k_base,muestreo,1,xml,con_contrato,False,incluido,14,,,50.3107,48.550876,52.103382,50.502513,48.754033,52.116168,14
+o200k_base,muestreo,1,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,1,toon,autocontenida,False,incluido,14,,,34.819064,31.940208,37.774468,36.655949,32.802182,39.81574,11
+o200k_base,muestreo,1,toon_flat,con_contrato,False,incluido,14,,,30.541114,26.483243,34.885231,32.856169,27.06468,37.419286,6
+o200k_base,muestreo,1,xml_tipado,autocontenida,False,incluido,14,,,71.894289,70.403085,73.377938,72.28475,70.449011,73.775001,14
+o200k_base,muestreo,1,csv_reversible,con_mapa,False,incluido,14,,,28.044909,25.047371,31.212563,29.642857,25.803171,32.74577,5
+o200k_base,muestreo,1,toon_reversible,con_mapa,False,incluido,14,,,36.928671,34.695039,39.175187,38.089252,34.881641,40.642348,14
+o200k_base,muestreo,5,json_pretty,autocontenida,False,incluido,14,,,57.933242,55.841281,60.055876,57.534963,55.598032,59.698409,14
+o200k_base,muestreo,5,json_compact,autocontenida,False,incluido,14,,,32.496198,30.757533,34.243896,32.439177,30.514582,34.382099,11
+o200k_base,muestreo,5,yaml,autocontenida,False,incluido,14,,,43.051374,40.332815,45.861806,43.278631,40.349704,46.003969,14
+o200k_base,muestreo,5,xml,con_contrato,False,incluido,14,,,59.839834,57.397584,62.240422,58.679893,56.131341,61.685894,14
+o200k_base,muestreo,5,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,5,toon,autocontenida,False,incluido,14,,,37.037288,30.900306,41.75155,39.888992,36.355018,42.568543,12
+o200k_base,muestreo,5,toon_flat,con_contrato,False,incluido,14,,,13.108709,10.388228,16.082141,13.796763,10.447792,16.844111,0
+o200k_base,muestreo,5,xml_tipado,autocontenida,False,incluido,14,,,72.985441,71.217702,74.730302,72.69289,71.03779,74.432399,14
+o200k_base,muestreo,5,csv_reversible,con_mapa,False,incluido,14,,,12.52757,10.071158,15.401567,13.081862,10.609707,15.606321,0
+o200k_base,muestreo,5,toon_reversible,con_mapa,False,incluido,14,,,18.925824,16.868578,21.166794,19.259443,17.168915,21.512301,0
+o200k_base,muestreo,10,json_pretty,autocontenida,False,incluido,14,,,58.545254,56.222704,60.902612,57.976058,55.836413,60.374272,14
+o200k_base,muestreo,10,json_compact,autocontenida,False,incluido,14,,,33.532057,31.590695,35.506678,33.237506,31.21704,35.304922,11
+o200k_base,muestreo,10,yaml,autocontenida,False,incluido,14,,,44.282817,41.446466,47.272581,44.159808,41.208128,47.068034,14
+o200k_base,muestreo,10,xml,con_contrato,False,incluido,14,,,61.555672,58.847068,64.289208,60.216116,57.356915,63.530865,14
+o200k_base,muestreo,10,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,10,toon,autocontenida,False,incluido,14,,,37.315074,29.960193,42.944066,40.710919,36.987288,43.429685,12
+o200k_base,muestreo,10,toon_flat,con_contrato,False,incluido,14,,,8.053043,5.580209,10.655314,8.473549,5.60504,11.052546,0
+o200k_base,muestreo,10,xml_tipado,autocontenida,False,incluido,14,,,73.290608,71.342086,75.237898,72.892161,71.108416,74.795844,14
+o200k_base,muestreo,10,csv_reversible,con_mapa,False,incluido,14,,,8.017982,5.418533,10.674768,8.376328,6.048593,10.788582,0
+o200k_base,muestreo,10,toon_reversible,con_mapa,False,incluido,14,,,12.597981,10.472599,14.962592,12.796072,10.978253,14.935409,0
+o200k_base,muestreo,12,json_pretty,autocontenida,False,incluido,14,,,58.728461,56.470578,61.019763,58.163445,56.039374,60.541967,14
+o200k_base,muestreo,12,json_compact,autocontenida,False,incluido,14,,,33.819064,31.933016,35.742028,33.535561,31.566639,35.589553,12
+o200k_base,muestreo,12,yaml,autocontenida,False,incluido,14,,,44.595349,41.833196,47.555154,44.458311,41.644556,47.32027,14
+o200k_base,muestreo,12,xml,con_contrato,False,incluido,14,,,61.850276,59.112164,64.547214,60.513475,57.62202,63.793161,14
+o200k_base,muestreo,12,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,12,toon,autocontenida,False,incluido,14,,,37.423028,29.857251,43.230988,40.992708,37.231102,43.689364,12
+o200k_base,muestreo,12,toon_flat,con_contrato,False,incluido,14,,,7.063201,4.648952,9.591979,7.483435,4.759552,9.911506,0
+o200k_base,muestreo,12,xml_tipado,autocontenida,False,incluido,14,,,73.408796,71.539406,75.282004,73.011181,71.246189,74.896922,14
+o200k_base,muestreo,12,csv_reversible,con_mapa,False,incluido,14,,,6.96374,4.439655,9.498816,7.326913,5.098087,9.595724,0
+o200k_base,muestreo,12,toon_reversible,con_mapa,False,incluido,14,,,11.213962,9.093604,13.493306,11.441363,9.657561,13.490389,0
+o200k_base,muestreo,25,json_pretty,autocontenida,True,incluido,14,,,59.085514,56.717555,61.507077,58.417709,56.214634,60.921631,14
+o200k_base,muestreo,25,json_compact,autocontenida,True,incluido,14,,,34.44779,32.452493,36.455338,34.03139,31.982292,36.211604,12
+o200k_base,muestreo,25,yaml,autocontenida,True,incluido,14,,,45.271022,42.410386,48.234908,44.949301,42.133087,47.917268,14
+o200k_base,muestreo,25,xml,con_contrato,True,incluido,14,,,62.621165,59.745711,65.428095,61.203443,58.181435,64.613121,14
+o200k_base,muestreo,25,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,25,toon,autocontenida,True,incluido,14,,,37.496151,29.30122,43.783489,41.402289,37.609875,44.16483,12
+o200k_base,muestreo,25,toon_flat,con_contrato,True,incluido,14,,,4.30888,2.078766,6.642626,4.586606,2.278175,6.708993,0
+o200k_base,muestreo,25,xml_tipado,autocontenida,True,incluido,14,,,73.59465,71.636551,75.540074,73.129991,71.297203,75.112099,14
+o200k_base,muestreo,25,csv_reversible,con_mapa,True,incluido,14,,,4.13354,1.559727,6.672416,4.446667,2.247625,6.673973,0
+o200k_base,muestreo,25,toon_reversible,con_mapa,True,incluido,14,,,7.15353,5.057128,9.331075,7.349709,5.707771,9.19405,0
+o200k_base,muestreo,50,json_pretty,autocontenida,True,incluido,14,,,59.167935,56.801254,61.605254,58.468115,56.285221,60.999457,14
+o200k_base,muestreo,50,json_compact,autocontenida,True,incluido,14,,,34.647718,32.65399,36.675939,34.188412,32.186484,36.351236,12
+o200k_base,muestreo,50,yaml,autocontenida,True,incluido,14,,,45.470334,42.567884,48.454219,45.086919,42.305029,48.068363,14
+o200k_base,muestreo,50,xml,con_contrato,True,incluido,14,,,62.937679,60.011757,65.780491,61.487536,58.421962,64.920208,14
+o200k_base,muestreo,50,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,50,toon,autocontenida,True,incluido,14,,,37.382975,28.775875,43.92627,41.516694,37.681096,44.278447,12
+o200k_base,muestreo,50,toon_flat,con_contrato,True,incluido,14,,,2.789953,0.594734,5.024689,3.061889,0.94637,4.983725,0
+o200k_base,muestreo,50,xml_tipado,autocontenida,True,incluido,14,,,73.616095,71.626811,75.571973,73.130073,71.328039,75.111199,14
+o200k_base,muestreo,50,csv_reversible,con_mapa,True,incluido,14,,,2.691048,0.002942,5.212331,2.995368,0.783886,5.190925,0
+o200k_base,muestreo,50,toon_reversible,con_mapa,True,incluido,14,,,4.959363,2.771834,7.152359,5.203863,3.595782,6.98642,0
+o200k_base,muestreo,100,json_pretty,autocontenida,True,incluido,14,,,59.256154,56.856523,61.719526,58.529031,56.309585,61.111004,14
+o200k_base,muestreo,100,json_compact,autocontenida,True,incluido,14,,,34.806208,32.746534,36.878228,34.305219,32.270691,36.512716,12
+o200k_base,muestreo,100,yaml,autocontenida,True,incluido,14,,,45.62945,42.701049,48.647624,45.198093,42.3898,48.207349,14
+o200k_base,muestreo,100,xml,con_contrato,True,incluido,14,,,63.123229,60.172453,65.9875,61.654284,58.550261,65.081615,14
+o200k_base,muestreo,100,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,100,toon,autocontenida,True,incluido,14,,,37.378374,28.592363,44.030598,41.596661,37.761019,44.372874,12
+o200k_base,muestreo,100,toon_flat,con_contrato,True,incluido,14,,,2.03518,-0.133549,4.252292,2.266353,0.216878,4.15374,0
+o200k_base,muestreo,100,xml_tipado,autocontenida,True,incluido,14,,,73.658941,71.634632,75.644573,73.156495,71.330701,75.177141,14
+o200k_base,muestreo,100,csv_reversible,con_mapa,True,incluido,14,,,1.918712,-0.82849,4.471671,2.203319,0.009283,4.36609,0
+o200k_base,muestreo,100,toon_reversible,con_mapa,True,incluido,14,,,3.797757,1.671679,6.016936,4.035031,2.467082,5.76518,0
+o200k_base,muestreo,250,json_pretty,autocontenida,True,incluido,14,,,59.300002,56.891986,61.761661,58.569058,56.365224,61.157464,14
+o200k_base,muestreo,250,json_compact,autocontenida,True,incluido,14,,,34.883925,32.832343,36.953367,34.377822,32.348976,36.585487,12
+o200k_base,muestreo,250,yaml,autocontenida,True,incluido,14,,,45.718502,42.803226,48.737073,45.274102,42.478895,48.296979,14
+o200k_base,muestreo,250,xml,con_contrato,True,incluido,14,,,63.230865,60.254559,66.1054,61.759346,58.644108,65.190985,14
+o200k_base,muestreo,250,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+o200k_base,muestreo,250,toon,autocontenida,True,incluido,14,,,37.366349,28.448368,44.094868,41.665761,37.817503,44.438566,12
+o200k_base,muestreo,250,toon_flat,con_contrato,True,incluido,14,,,1.557486,-0.599722,3.735056,1.792576,-0.198584,3.64759,0
+o200k_base,muestreo,250,xml_tipado,autocontenida,True,incluido,14,,,73.680598,71.65618,75.665035,73.175945,71.359253,75.195183,14
+o200k_base,muestreo,250,csv_reversible,con_mapa,True,incluido,14,,,1.451852,-1.313685,3.97365,1.74417,-0.426135,3.888439,0
+o200k_base,muestreo,250,toon_reversible,con_mapa,True,incluido,14,,,3.08756,0.868913,5.2953,3.348941,1.77515,5.07747,0
+r50k_base,ciclo,1,json_pretty,autocontenida,False,incluido,14,,,68.795134,66.799248,70.634332,69.358233,66.871518,71.464505,14
+r50k_base,ciclo,1,json_compact,autocontenida,False,incluido,14,,,21.745639,19.513486,24.30705,23.254282,19.329796,26.626763,1
+r50k_base,ciclo,1,yaml,autocontenida,False,incluido,14,,,35.411086,32.225085,38.932145,38.163482,32.201223,43.025977,11
+r50k_base,ciclo,1,xml,con_contrato,False,incluido,14,,,55.51162,53.558864,57.426012,55.123267,53.306086,57.130995,14
+r50k_base,ciclo,1,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,1,toon,autocontenida,False,incluido,14,,,39.888274,36.588196,43.459068,42.269574,37.185514,46.232355,14
+r50k_base,ciclo,1,toon_flat,con_contrato,False,incluido,14,,,32.06308,28.158856,36.191271,34.3292,28.154916,39.081948,9
+r50k_base,ciclo,1,xml_tipado,autocontenida,False,incluido,14,,,69.109943,67.204174,70.915179,69.285526,67.048338,71.233272,14
+r50k_base,ciclo,1,csv_reversible,con_mapa,False,incluido,14,,,31.505351,29.048244,34.107764,32.853026,29.244116,35.808612,8
+r50k_base,ciclo,1,toon_reversible,con_mapa,False,incluido,14,,,37.586642,35.137899,40.117109,38.845144,34.968057,42.16769,14
+r50k_base,ciclo,5,json_pretty,autocontenida,False,incluido,14,,,72.328373,70.26609,74.455389,71.876833,69.800143,74.309547,14
+r50k_base,ciclo,5,json_compact,autocontenida,False,incluido,14,,,27.967613,26.106375,29.854321,27.690858,25.853118,29.683445,3
+r50k_base,ciclo,5,yaml,autocontenida,False,incluido,14,,,40.393797,37.854122,42.963683,40.930089,37.709452,43.992387,14
+r50k_base,ciclo,5,xml,con_contrato,False,incluido,14,,,64.507769,61.579667,67.424718,62.879814,59.639784,66.694623,14
+r50k_base,ciclo,5,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,5,toon,autocontenida,False,incluido,14,,,42.790472,36.551842,47.841907,46.002252,42.117928,48.999871,12
+r50k_base,ciclo,5,toon_flat,con_contrato,False,incluido,14,,,14.624261,12.162545,17.162121,14.831261,11.841072,17.719237,0
+r50k_base,ciclo,5,xml_tipado,autocontenida,False,incluido,14,,,70.371752,68.255915,72.539785,69.613435,67.590218,72.048655,14
+r50k_base,ciclo,5,csv_reversible,con_mapa,False,incluido,14,,,15.452738,13.139801,18.081866,15.562404,13.388767,18.150911,0
+r50k_base,ciclo,5,toon_reversible,con_mapa,False,incluido,14,,,20.14164,18.047847,22.514835,19.866305,17.677838,22.481737,1
+r50k_base,ciclo,10,json_pretty,autocontenida,False,incluido,14,,,72.965786,70.663781,75.346187,72.298526,70.028862,75.050102,14
+r50k_base,ciclo,10,json_compact,autocontenida,False,incluido,14,,,29.175106,26.864735,31.532457,28.378514,26.282929,30.771298,7
+r50k_base,ciclo,10,yaml,autocontenida,False,incluido,14,,,41.149053,38.248967,44.019526,41.132944,37.937904,44.30663,14
+r50k_base,ciclo,10,xml,con_contrato,False,incluido,14,,,66.046294,62.713375,69.35058,64.178507,60.619596,68.412192,14
+r50k_base,ciclo,10,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,10,toon,autocontenida,False,incluido,14,,,42.908979,35.515888,48.788017,46.58311,42.806995,49.701749,12
+r50k_base,ciclo,10,toon_flat,con_contrato,False,incluido,14,,,9.339297,6.95402,11.531705,9.056268,6.609174,11.465478,0
+r50k_base,ciclo,10,xml_tipado,autocontenida,False,incluido,14,,,70.646011,68.158257,73.199444,69.654588,67.371557,72.424441,14
+r50k_base,ciclo,10,csv_reversible,con_mapa,False,incluido,14,,,10.101648,7.96428,12.460787,9.97108,8.106406,12.318086,0
+r50k_base,ciclo,10,toon_reversible,con_mapa,False,incluido,14,,,13.7888,12.015277,15.751156,13.212121,11.489026,15.431716,0
+r50k_base,ciclo,12,json_pretty,autocontenida,False,incluido,14,,,73.111353,70.772947,75.495247,72.372744,70.038927,75.180168,14
+r50k_base,ciclo,12,json_compact,autocontenida,False,incluido,14,,,29.469369,27.230025,31.749046,28.555808,26.57367,30.932549,7
+r50k_base,ciclo,12,yaml,autocontenida,False,incluido,14,,,41.39498,38.65513,44.160788,41.242391,38.201629,44.292049,14
+r50k_base,ciclo,12,xml,con_contrato,False,incluido,14,,,66.279094,62.789905,69.59976,64.34089,60.622611,68.665792,14
+r50k_base,ciclo,12,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,12,toon,autocontenida,False,incluido,14,,,43.027384,35.328299,49.034968,46.752758,43.011774,49.788652,12
+r50k_base,ciclo,12,toon_flat,con_contrato,False,incluido,14,,,8.430385,6.235786,10.471762,8.053691,5.897174,10.248093,0
+r50k_base,ciclo,12,xml_tipado,autocontenida,False,incluido,14,,,70.742599,68.233109,73.263367,69.665369,67.301966,72.472238,14
+r50k_base,ciclo,12,csv_reversible,con_mapa,False,incluido,14,,,9.578578,7.513728,11.91271,9.174508,7.438501,11.444428,0
+r50k_base,ciclo,12,toon_reversible,con_mapa,False,incluido,14,,,12.593872,10.910006,14.500885,11.951902,10.287992,14.095892,0
+r50k_base,ciclo,25,json_pretty,autocontenida,True,incluido,14,,,73.377231,70.965158,75.836745,72.564749,70.148486,75.438756,14
+r50k_base,ciclo,25,json_compact,autocontenida,True,incluido,14,,,29.988392,27.573765,32.415554,28.895594,26.79848,31.420251,8
+r50k_base,ciclo,25,yaml,autocontenida,True,incluido,14,,,41.825198,39.018101,44.63494,41.470468,38.461583,44.615234,14
+r50k_base,ciclo,25,xml,con_contrato,True,incluido,14,,,66.91029,63.340139,70.326155,64.910456,61.087483,69.328062,14
+r50k_base,ciclo,25,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,25,toon,autocontenida,True,incluido,14,,,42.958859,34.650292,49.424521,47.04162,43.28766,50.158637,12
+r50k_base,ciclo,25,toon_flat,con_contrato,True,incluido,14,,,5.537784,3.592688,7.325084,4.976801,3.190669,6.895657,0
+r50k_base,ciclo,25,xml_tipado,autocontenida,True,incluido,14,,,70.808651,68.218438,73.431258,69.654795,67.209749,72.585801,14
+r50k_base,ciclo,25,csv_reversible,con_mapa,True,incluido,14,,,6.332618,4.272143,8.580611,5.907127,4.238662,8.074635,0
+r50k_base,ciclo,25,toon_reversible,con_mapa,True,incluido,14,,,8.689341,7.083051,10.52907,7.985665,6.383545,10.046209,0
+r50k_base,ciclo,50,json_pretty,autocontenida,True,incluido,14,,,73.513085,71.064904,76.052455,72.658271,70.183427,75.614285,14
+r50k_base,ciclo,50,json_compact,autocontenida,True,incluido,14,,,30.262638,27.797802,32.770834,29.069816,26.950743,31.672601,8
+r50k_base,ciclo,50,yaml,autocontenida,True,incluido,14,,,42.049923,39.220685,44.853274,41.581448,38.593001,44.731143,14
+r50k_base,ciclo,50,xml,con_contrato,True,incluido,14,,,67.204214,63.577886,70.694507,65.169773,61.264566,69.653473,14
+r50k_base,ciclo,50,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,50,toon,autocontenida,True,incluido,14,,,42.915667,34.307573,49.631164,47.186814,43.446289,50.335359,12
+r50k_base,ciclo,50,toon_flat,con_contrato,True,incluido,14,,,4.064291,2.26052,5.788364,3.429336,1.817424,5.247022,0
+r50k_base,ciclo,50,xml_tipado,autocontenida,True,incluido,14,,,70.855791,68.215684,73.511014,69.65635,67.16991,72.667116,14
+r50k_base,ciclo,50,csv_reversible,con_mapa,True,incluido,14,,,4.691325,2.564374,6.965498,4.25766,2.606808,6.391059,0
+r50k_base,ciclo,50,toon_reversible,con_mapa,True,incluido,14,,,6.695738,5.093983,8.467169,5.97933,4.417659,8.032138,0
+r50k_base,ciclo,100,json_pretty,autocontenida,True,incluido,14,,,73.593129,71.130419,76.126223,72.717033,70.231052,75.70424,14
+r50k_base,ciclo,100,json_compact,autocontenida,True,incluido,14,,,30.418651,27.939593,32.930468,29.176483,27.033851,31.815194,8
+r50k_base,ciclo,100,yaml,autocontenida,True,incluido,14,,,42.164333,39.307124,45.010181,41.649336,38.688962,44.804508,14
+r50k_base,ciclo,100,xml,con_contrato,True,incluido,14,,,67.36907,63.699749,70.892125,65.317422,61.368058,69.835501,14
+r50k_base,ciclo,100,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,100,toon,autocontenida,True,incluido,14,,,42.901718,34.111123,49.753058,47.276485,43.567277,50.430404,12
+r50k_base,ciclo,100,toon_flat,con_contrato,True,incluido,14,,,3.29707,1.551699,4.960626,2.634433,1.077351,4.423572,0
+r50k_base,ciclo,100,xml_tipado,autocontenida,True,incluido,14,,,70.894513,68.247932,73.583192,69.671352,67.153661,72.699453,14
+r50k_base,ciclo,100,csv_reversible,con_mapa,True,incluido,14,,,3.851373,1.668644,6.191546,3.417859,1.746763,5.545911,0
+r50k_base,ciclo,100,toon_reversible,con_mapa,True,incluido,14,,,5.655842,4.040779,7.415119,4.944807,3.361511,7.007594,0
+r50k_base,ciclo,250,json_pretty,autocontenida,True,incluido,14,,,73.636717,71.159164,76.184519,72.74142,70.231489,75.767325,14
+r50k_base,ciclo,250,json_compact,autocontenida,True,incluido,14,,,30.510738,27.995922,33.061427,29.224598,27.059128,31.9061,8
+r50k_base,ciclo,250,yaml,autocontenida,True,incluido,14,,,42.221708,39.341454,45.111303,41.660315,38.710724,44.825609,14
+r50k_base,ciclo,250,xml,con_contrato,True,incluido,14,,,67.463434,63.756479,70.987548,65.393,61.411158,69.942287,14
+r50k_base,ciclo,250,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,ciclo,250,toon,autocontenida,True,incluido,14,,,42.880582,33.977239,49.829889,47.311977,43.598255,50.472803,12
+r50k_base,ciclo,250,toon_flat,con_contrato,True,incluido,14,,,2.80502,1.06402,4.421871,2.121324,0.600193,3.922193,0
+r50k_base,ciclo,250,xml_tipado,autocontenida,True,incluido,14,,,70.913827,68.242238,73.626755,69.669039,67.124776,72.735001,14
+r50k_base,ciclo,250,csv_reversible,con_mapa,True,incluido,14,,,3.327471,1.114215,5.698543,2.892464,1.210706,5.0066,0
+r50k_base,ciclo,250,toon_reversible,con_mapa,True,incluido,14,,,4.998944,3.375172,6.730064,4.288047,2.674953,6.37143,0
+r50k_base,muestreo,1,json_pretty,autocontenida,False,incluido,14,,,69.517199,67.479296,71.399789,70.016034,67.658015,71.755196,14
+r50k_base,muestreo,1,json_compact,autocontenida,False,incluido,14,,,22.639712,20.571508,24.958246,24.035206,20.463537,26.9474,2
+r50k_base,muestreo,1,yaml,autocontenida,False,incluido,14,,,35.813434,32.3762,39.442192,38.587849,32.527294,42.977347,11
+r50k_base,muestreo,1,xml,con_contrato,False,incluido,14,,,55.828726,54.038439,57.968856,55.47619,53.836344,57.580065,14
+r50k_base,muestreo,1,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,1,toon,autocontenida,False,incluido,14,,,40.459489,37.082906,44.093864,42.929807,37.993262,46.59146,13
+r50k_base,muestreo,1,toon_flat,con_contrato,False,incluido,14,,,32.973769,29.21091,37.008894,35.25678,29.264505,39.772196,7
+r50k_base,muestreo,1,xml_tipado,autocontenida,False,incluido,14,,,69.910779,68.160555,71.583845,70.024045,68.170852,71.533644,14
+r50k_base,muestreo,1,csv_reversible,con_mapa,False,incluido,14,,,32.460693,29.85274,35.042116,33.648729,30.229167,36.258823,9
+r50k_base,muestreo,1,toon_reversible,con_mapa,False,incluido,14,,,38.544035,36.197428,40.911347,39.774557,36.150476,42.581121,14
+r50k_base,muestreo,5,json_pretty,autocontenida,False,incluido,14,,,72.223868,70.020617,74.462337,71.74743,69.666608,74.194967,14
+r50k_base,muestreo,5,json_compact,autocontenida,False,incluido,14,,,27.986967,26.034862,30.022103,27.573875,25.605979,29.545956,3
+r50k_base,muestreo,5,yaml,autocontenida,False,incluido,14,,,39.933989,37.151912,42.583696,40.424214,37.058849,43.291049,14
+r50k_base,muestreo,5,xml,con_contrato,False,incluido,14,,,64.370004,61.393192,67.414148,62.709565,59.544144,66.612394,14
+r50k_base,muestreo,5,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,5,toon,autocontenida,False,incluido,14,,,42.552718,36.306675,47.630986,45.74933,41.789376,48.66665,12
+r50k_base,muestreo,5,toon_flat,con_contrato,False,incluido,14,,,14.49276,11.809808,17.095188,14.65957,11.437681,17.55088,0
+r50k_base,muestreo,5,xml_tipado,autocontenida,False,incluido,14,,,70.304971,68.009487,72.615976,69.508716,67.543905,71.919375,14
+r50k_base,muestreo,5,csv_reversible,con_mapa,False,incluido,14,,,15.545493,13.599559,17.992761,15.465729,13.4873,17.844893,0
+r50k_base,muestreo,5,toon_reversible,con_mapa,False,incluido,14,,,19.692244,17.749808,21.971328,19.481063,17.466487,21.870954,1
+r50k_base,muestreo,10,json_pretty,autocontenida,False,incluido,14,,,72.924668,70.488508,75.369325,72.214065,69.915449,75.032133,14
+r50k_base,muestreo,10,json_compact,autocontenida,False,incluido,14,,,29.180945,26.874543,31.529685,28.290786,26.246863,30.725546,7
+r50k_base,muestreo,10,yaml,autocontenida,False,incluido,14,,,41.065826,38.165379,43.920228,40.960591,37.785692,43.981687,14
+r50k_base,muestreo,10,xml,con_contrato,False,incluido,14,,,66.008203,62.624275,69.346184,64.084507,60.444505,68.416213,14
+r50k_base,muestreo,10,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,10,toon,autocontenida,False,incluido,14,,,42.906834,35.406637,48.702591,46.479607,42.701401,49.497341,12
+r50k_base,muestreo,10,toon_flat,con_contrato,False,incluido,14,,,9.378289,6.998639,11.588629,9.032258,6.613584,11.404298,0
+r50k_base,muestreo,10,xml_tipado,autocontenida,False,incluido,14,,,70.618239,68.069028,73.194607,69.567057,67.321479,72.435173,14
+r50k_base,muestreo,10,csv_reversible,con_mapa,False,incluido,14,,,10.605918,8.458826,13.023627,10.202298,8.435864,12.53514,0
+r50k_base,muestreo,10,toon_reversible,con_mapa,False,incluido,14,,,13.76548,12.023476,15.706808,13.120696,11.480285,15.28559,0
+r50k_base,muestreo,12,json_pretty,autocontenida,False,incluido,14,,,73.111353,70.772947,75.495247,72.372744,70.038927,75.180168,14
+r50k_base,muestreo,12,json_compact,autocontenida,False,incluido,14,,,29.469369,27.230025,31.749046,28.555808,26.57367,30.932549,7
+r50k_base,muestreo,12,yaml,autocontenida,False,incluido,14,,,41.39498,38.65513,44.160788,41.242391,38.201629,44.292049,14
+r50k_base,muestreo,12,xml,con_contrato,False,incluido,14,,,66.279094,62.789905,69.59976,64.34089,60.622611,68.665792,14
+r50k_base,muestreo,12,csv,con_contrato,False,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,12,toon,autocontenida,False,incluido,14,,,43.027384,35.328299,49.034968,46.752758,43.011774,49.788652,12
+r50k_base,muestreo,12,toon_flat,con_contrato,False,incluido,14,,,8.430385,6.235786,10.471762,8.053691,5.897174,10.248093,0
+r50k_base,muestreo,12,xml_tipado,autocontenida,False,incluido,14,,,70.742599,68.233109,73.263367,69.665369,67.301966,72.472238,14
+r50k_base,muestreo,12,csv_reversible,con_mapa,False,incluido,14,,,9.561039,7.502289,11.91271,9.15508,7.416344,11.424348,0
+r50k_base,muestreo,12,toon_reversible,con_mapa,False,incluido,14,,,12.549178,10.872889,14.461208,11.906244,10.25795,14.067422,0
+r50k_base,muestreo,25,json_pretty,autocontenida,True,incluido,14,,,73.436465,71.017846,75.920738,72.611139,70.172972,75.529742,14
+r50k_base,muestreo,25,json_compact,autocontenida,True,incluido,14,,,30.079884,27.629615,32.529689,28.956633,26.843338,31.544688,8
+r50k_base,muestreo,25,yaml,autocontenida,True,incluido,14,,,41.899322,39.055854,44.759231,41.518633,38.478034,44.72136,14
+r50k_base,muestreo,25,xml,con_contrato,True,incluido,14,,,66.942521,63.342223,70.379729,64.933658,61.074079,69.386669,14
+r50k_base,muestreo,25,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,25,toon,autocontenida,True,incluido,14,,,43.037282,34.727269,49.48951,47.104176,43.371417,50.230279,12
+r50k_base,muestreo,25,toon_flat,con_contrato,True,incluido,14,,,5.563383,3.595663,7.373408,4.99086,3.190737,6.931335,0
+r50k_base,muestreo,25,xml_tipado,autocontenida,True,incluido,14,,,70.879262,68.248605,73.503727,69.711097,67.248141,72.670791,14
+r50k_base,muestreo,25,csv_reversible,con_mapa,True,incluido,14,,,6.354805,4.270017,8.629527,5.908168,4.224938,8.105263,0
+r50k_base,muestreo,25,toon_reversible,con_mapa,True,incluido,14,,,8.709441,7.082645,10.560991,7.987769,6.389997,10.067296,0
+r50k_base,muestreo,50,json_pretty,autocontenida,True,incluido,14,,,73.53808,71.095568,76.038906,72.669044,70.20061,75.636909,14
+r50k_base,muestreo,50,json_compact,autocontenida,True,incluido,14,,,30.309355,27.871346,32.825873,29.09909,26.981818,31.690434,8
+r50k_base,muestreo,50,yaml,autocontenida,True,incluido,14,,,42.073771,39.229256,44.910686,41.587214,38.662552,44.719277,14
+r50k_base,muestreo,50,xml,con_contrato,True,incluido,14,,,67.235104,63.564663,70.733666,65.185581,61.242015,69.698677,14
+r50k_base,muestreo,50,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,50,toon,autocontenida,True,incluido,14,,,42.955551,34.362751,49.656578,47.215081,43.524272,50.332219,12
+r50k_base,muestreo,50,toon_flat,con_contrato,True,incluido,14,,,4.066304,2.273516,5.78777,3.437268,1.81844,5.254246,0
+r50k_base,muestreo,50,xml_tipado,autocontenida,True,incluido,14,,,70.892713,68.269344,73.532757,69.677714,67.178774,72.682132,14
+r50k_base,muestreo,50,csv_reversible,con_mapa,True,incluido,14,,,4.729,2.593295,7.05653,4.28297,2.614931,6.436524,0
+r50k_base,muestreo,50,toon_reversible,con_mapa,True,incluido,14,,,6.699155,5.095702,8.482297,5.977688,4.416479,8.042101,0
+r50k_base,muestreo,100,json_pretty,autocontenida,True,incluido,14,,,73.593096,71.119785,76.143103,72.710954,70.218831,75.712795,14
+r50k_base,muestreo,100,json_compact,autocontenida,True,incluido,14,,,30.430591,27.941181,32.963175,29.171662,27.031074,31.821709,8
+r50k_base,muestreo,100,yaml,autocontenida,True,incluido,14,,,42.162075,39.282541,45.037477,41.627951,38.685805,44.767,14
+r50k_base,muestreo,100,xml,con_contrato,True,incluido,14,,,67.366569,63.687622,70.892776,65.306648,61.364779,69.823357,14
+r50k_base,muestreo,100,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,100,toon,autocontenida,True,incluido,14,,,42.903251,34.132793,49.761413,47.265181,43.565917,50.399817,12
+r50k_base,muestreo,100,toon_flat,con_contrato,True,incluido,14,,,3.294921,1.515562,4.972987,2.622941,1.051643,4.433468,0
+r50k_base,muestreo,100,xml_tipado,autocontenida,True,incluido,14,,,70.898566,68.249134,73.599641,69.66701,67.156021,72.699404,14
+r50k_base,muestreo,100,csv_reversible,con_mapa,True,incluido,14,,,3.843642,1.656242,6.182967,3.400941,1.727591,5.519378,0
+r50k_base,muestreo,100,toon_reversible,con_mapa,True,incluido,14,,,5.614059,4.017129,7.362062,4.889347,3.324714,6.921016,0
+r50k_base,muestreo,250,json_pretty,autocontenida,True,incluido,14,,,73.642779,71.165173,76.191975,72.746787,70.223775,75.771022,14
+r50k_base,muestreo,250,json_compact,autocontenida,True,incluido,14,,,30.52167,28.019319,33.061355,29.235089,27.075396,31.908857,8
+r50k_base,muestreo,250,yaml,autocontenida,True,incluido,14,,,42.235176,39.372125,45.123445,41.671655,38.717799,44.835961,14
+r50k_base,muestreo,250,xml,con_contrato,True,incluido,14,,,67.467693,63.767592,70.996432,65.396623,61.397429,69.948643,14
+r50k_base,muestreo,250,csv,con_contrato,True,excluido_no_reversible,0,a;card;cat;cls;code;log;map;ner;q;r;s;sum;tc;us,"el CSV descarta los metadatos del documento (header con 7 claves: m, d, l, t, bd, cat, k); solo los registros se reconstruyen: reversible",,,,,,,
+r50k_base,muestreo,250,toon,autocontenida,True,incluido,14,,,42.894188,33.983499,49.843438,47.32291,43.621832,50.481235,12
+r50k_base,muestreo,250,toon_flat,con_contrato,True,incluido,14,,,2.817404,1.089311,4.43232,2.133238,0.630632,3.929149,0
+r50k_base,muestreo,250,xml_tipado,autocontenida,True,incluido,14,,,70.921146,68.255891,73.633003,69.675053,67.143452,72.738606,14
+r50k_base,muestreo,250,csv_reversible,con_mapa,True,incluido,14,,,3.317219,1.109796,5.682827,2.881863,1.198656,5.012517,0
+r50k_base,muestreo,250,toon_reversible,con_mapa,True,incluido,14,,,4.958209,3.364372,6.678089,4.242518,2.659706,6.283448,0

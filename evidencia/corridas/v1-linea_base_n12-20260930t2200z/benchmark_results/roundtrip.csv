@@ -1,0 +1,15 @@
+prefix,n,mini_roundtrip,toon_official_roundtrip,toon_flat_roundtrip
+a,12,True,True,True
+card,12,True,True,True
+cat,12,True,True,True
+cls,12,True,True,True
+code,12,True,True,True
+log,12,True,True,True
+map,12,True,True,True
+ner,12,True,True,True
+q,12,True,True,True
+r,12,True,True,True
+s,12,True,True,True
+sum,12,True,True,True
+tc,12,True,True,True
+us,12,True,True,True
