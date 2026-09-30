@@ -295,7 +295,7 @@ def _clave_celda(s: Dict[str, Any]) -> tuple:
 def comparaciones_pareadas(muestras: List[Dict[str, Any]], n_boot: int = 1000) -> List[Dict[str, Any]]:
     """Diferencia de validez final (y − x) entre brazos emparejados por (tarea, modelo, repetición).
 
-    Los pares X → X+1 comparten la MISMA respuesta generada; los demás son generaciones distintas sobre la misma
+    Los pares X -> X+1 comparten la MISMA respuesta generada; los demás son generaciones distintas sobre la misma
     tarea (emparejadas por diseño).  IC por bootstrap de pares (solicitud) y por documento.
     """
     idx: Dict[tuple, Dict[str, Dict[str, Any]]] = defaultdict(dict)

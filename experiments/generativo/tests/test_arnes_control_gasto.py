@@ -617,3 +617,9 @@ def test_la_solicitud_es_consumible_por_el_calculo_de_economia(tmp_path):
     assert tot["registros_validos_finales"] == str(sum(s["registros_validos_finales"] for s in sols))
     assert Decimal(tot["costo_total_usd"]) == sum(Decimal(s["costo_usd"]).quantize(q, ROUND_HALF_UP) for s in ms if s["brazo"] == "D+1")
     assert tot["costo_por_1000_validos"]["estado"] == "calculado"
+
+
+def test_la_autorizacion_de_prueba_no_existe_fuera_de_pytest(monkeypatch):
+    monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+    with pytest.raises(ErrorAutorizacion, match="solo existe para las pruebas"):
+        autorizacion_de_prueba()

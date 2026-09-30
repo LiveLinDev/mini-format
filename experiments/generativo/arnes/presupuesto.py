@@ -108,7 +108,13 @@ def validar_autorizacion(presupuesto: Presupuesto, max_costo_usd: Optional[float
 
 
 def autorizacion_de_prueba(tope_usd: float = 1000.0) -> Autorizacion:
-    """Autorización ficticia para pruebas con adaptadores inyectados (nunca se usa en run.py)."""
+    """Autorización ficticia para pruebas con adaptadores inyectados (nunca se usa en run.py).
+
+    Solo funciona dentro de pytest: fuera de una prueba no hay forma de fabricar una autorización.
+    """
+    import os
+    if "PYTEST_CURRENT_TEST" not in os.environ:
+        raise ErrorAutorizacion(["autorizacion_de_prueba solo existe para las pruebas"])
     p = Presupuesto(Decimal(str(tope_usd)), None, "prueba", "2000-01-01")
     return Autorizacion(tope_usd=Decimal(str(tope_usd)), presupuesto=p, _sello=_SELLO)
 

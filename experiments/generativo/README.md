@@ -37,7 +37,7 @@ experiments/generativo/
 │   ├── evidencia.py        corridas V2/V3b/V4 con tools/evidencia_lib
 │   ├── simulador.py        extensión del adaptador simulado para las condiciones del Plan
 │   └── estadistica.py · truncamiento.py
-├── tests/                  172 pruebas (red bloqueada en todas; una se activa solo si está el cálculo de economía)
+├── tests/                  173 pruebas (red bloqueada en todas; una se activa solo si está el cálculo de economía)
 └── resultados/simulado/
     ├── piloto/                   piloto SIMULADO vigente (reproducible a HEAD)
     └── piloto_historico_0cfa477/ el del arnés anterior: HISTÓRICO, ya no se reproduce (ver su LEEME)
@@ -199,7 +199,7 @@ Cada muestra lleva la estructura **`solicitud`** acordada con el flujo de infrae
   DeepSeek `prompt_tokens` incluye la caché (se resta) y `completion_tokens` incluye el razonamiento (no se suma otra vez).
   Si el proveedor no entrega usage, el usage es `null`.
 * **Costo:** `tarifas.py` consume `evidencia/tarifas/tarifas.json` (estructura acordada). Tarifa `no_verificada` o ausente
-  ⇒ costo `null` («tarifa no verificada»); **no existe ningún precio por defecto** (se eliminó el `precios.json`
+  implica costo `null` («tarifa no verificada»); **no existe ningún precio por defecto** (se eliminó el `precios.json`
   provisional). La fórmula oficial de los informes vive en `experiments/economia`; la de este módulo sirve para el control
   de gasto, el dry-run y el costo por solicitud del análisis, y usa la misma estructura.
 * **Tokens:** hay tres cosas distintas y nunca se mezclan: el **conteo local** de texto (`o200k_base`, una aproximación para
@@ -332,7 +332,7 @@ real **se rechazaría** hasta sustituir el modelo o verificarla.
 ## Adaptadores
 
 Interfaz común (`minifmt.ai.adapters.base.Adapter`):
-`generate(system, user, *, max_tokens, temperature, response_format=None, seed=None) → {"text", "input_tokens",
+`generate(system, user, *, max_tokens, temperature, response_format=None, seed=None) -> {"text", "input_tokens",
 "output_tokens", "latency_ms", "raw", "stop_reason", "model", "provider"}`; `response_format` es neutro
 (`{"type": "json_schema", "name", "schema"}`) y cada adaptador lo traduce (OpenAI `json_schema` estricto; Anthropic
 `output_config.format`; Groq `response_format`). Claves solo de `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GROQ_API_KEY`: no se
@@ -357,8 +357,8 @@ Los adaptadores reales se crean **sin reintentos propios**: los reintentos son d
 ## Equivalencia con los experimentos previos (E1–E5)
 
 Los experimentos de `generative/` usaron modelos de **un solo proveedor**, n = 6–10 por celda y lectura estricta. **E1**
-(fidelidad) ↔ V2 extracción con B y D; **E2** ↔ brazo D sobre 14 forks; **E3** (síntesis de parser) fuera de alcance;
-**E4** (punto de equilibrio) ↔ tokens facturados por brazo con el usage por categorías; **E5** (truncamiento) ↔ V3a (otro
+(fidelidad) corresponde a V2 extracción con B y D; **E2** corresponde al brazo D sobre 14 forks; **E3** (síntesis de parser) fuera de alcance;
+**E4** (punto de equilibrio) corresponde a tokens facturados por brazo con el usage por categorías; **E5** (truncamiento) corresponde a V3a (otro
 flujo, `experiments/truncamiento/`) y V3b (aquí, truncamiento real por `max_tokens`).
 
 ## Riesgos y amenazas a la validez
@@ -379,9 +379,9 @@ flujo, `experiments/truncamiento/`) y V3b (aquí, truncamiento real por `max_tok
 
 ## Qué cambió respecto a la versión anterior
 
-Brazo A (pipe) → A0 opcional y A = JSON mínimo · D+R → D+1 · reparación también para JSON · métricas separadas y validez
+Brazo A (pipe) -> A0 opcional y A = JSON mínimo · D+R -> D+1 · reparación también para JSON · métricas separadas y validez
 sobre lo solicitado · presupuesto autorizado, proyección previa, libro, reintentos registrados, detención segura, estado y
 celdas faltantes · orden aleatorizado y hashes del diseño · usage por categorías y costo por solicitud · IC por
 conglomerados, mediana y p95 · dry-run con recuento · importación de material asistido por IA · corridas con
 `tools/evidencia_lib` · se elimina `precios.json`. Las 60 pruebas anteriores se conservan (con los cambios intencionales:
-A→A0, D+R→D+1, presupuesto por proyección y errores conservados como muestra) y se añaden 112.
+A->A0, D+R->D+1, presupuesto por proyección y errores conservados como muestra) y se añaden 113.
