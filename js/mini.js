@@ -33,17 +33,17 @@
     const E_RANGE = 'E13';
     const E_CONTRACT = 'E20';
     const E_FORK = 'E21';
-    
+
                            
                                                                              
                                                       
-    
+
     /** Un error de validación: código, línea física 1-based (0 = documento) y campo. */
     class MiniError extends Error {
                code           ;
                line        ;
                field        ;
-    
+
       constructor(code           , line        , message        , field         ) {
         super(message);
         this.name = 'MiniError';
@@ -51,28 +51,28 @@
         this.line = line;
         this.field = field || '';
       }
-    
+
                toString()         {
         const where = this.line ? `line ${this.line}` : 'document';
         const fld = this.field ? ` [${this.field}]` : '';
         return `${this.code} ${where}${fld}: ${this.message}`;
       }
-    
+
       toJSON()                                                                    {
         return { code: this.code, line: this.line, field: this.field, message: this.message };
       }
     }
-    
+
     /** Lanzado por el análisis estricto cuando se recogió uno o más errores. */
     class MiniValidationError extends Error {
                errors             ;
-    
+
       constructor(errors             ) {
         super(errors.map(String).join('\n'));
         this.name = 'MiniValidationError';
         this.errors = errors;
       }
-    
+
       get codes()              {
         return this.errors.map(e => e.code);
       }
@@ -1430,7 +1430,7 @@
       }
       return null;
     }
-    return { Document, put, shallowCopy, parseHeader, decodeField, LineEngine, parse, detectPrefix };
+    return { Document, put, shallowCopy, parseHeader, decodeField, uniqueKey, LineEngine, parse, detectPrefix };
   })();
 
   // ---------------------------------------------------------------- serializer.ts
@@ -1636,7 +1636,7 @@
         let rng = '';
         if (f.min !== null || f.max !== null) {
           const lo = Math.trunc(Number(f.min || 0));
-          const hi = f.max ? String(Math.trunc(Number(f.max))) : '∞';
+          const hi = f.max !== null ? String(Math.trunc(Number(f.max))) : '∞';
           rng = es ? `, entre ${lo} y ${hi} elementos` : `, ${lo} to ${hi} elements`;
         }
         let base = es ? `${f.name}: lista de ${it} separada por '${sep}'${rng}` : `${f.name}: '${sep}'-separated list of ${it}${rng}`;
@@ -1724,9 +1724,12 @@
 
   // ---------------------------------------------------------------- stream.ts
   __m["stream"] = (function () {
-    const { isBlank } = __m["codec"];const { normalizeContract } = __m["contract"];const { MiniError, MiniValidationError } = __m["errors"];const { Document, LineEngine } = __m["parser"];
+    const { isBlank } = __m["codec"];
+    const { normalizeContract } = __m["contract"];
+    const { MiniError, MiniValidationError } = __m["errors"];
+    const { Document, LineEngine } = __m["parser"];
                                                           
-    
+
     /** Registro emitido en cuanto su línea se cierra con LF. */
                                    
                          
@@ -1735,7 +1738,7 @@
                                                                          
                     
      
-    
+
     /** Última línea recibida sin LF final que no pudo validarse (típico de una salida truncada). */
                                        
                    
@@ -1746,7 +1749,7 @@
                         
                           
      
-    
+
                                     
                                                                                                     
                        
@@ -1754,7 +1757,7 @@
                                              
                                          
      
-    
+
                                    
                          
                             
@@ -1776,15 +1779,21 @@
                          
                                         
                         
+         
+                                                                                                          
+                                                                                                    
+                                                  
+         
+                                   
      
-    
+
                                      
                               
                        
                     
                      
      
-    
+
                                  
                                                                                                                                
                                                        
@@ -1800,7 +1809,7 @@
                                         
                               
      
-    
+
     function countFieldsApprox(line        )         {
       let n = 1;
       for (let i = 0; i < line.length; i++) {
@@ -1809,13 +1818,13 @@
       }
       return n;
     }
-    
+
     function declaredCount(header               )                {
       if (!header || !Object.prototype.hasOwnProperty.call(header, 'n')) return null;
       const n = header.n;
       return typeof n === 'number' && Number.isInteger(n) ? n : null;
     }
-    
+
     /** Crea un lector incremental para `contract`. */
     function createReader(contract                         , opts                = {})             {
       const c = normalizeContract(contract);
@@ -1826,12 +1835,12 @@
       let ended = false;
       let decoder                     = null;
       let reportedErrors = 0;
-    
+
       const flushErrors = ()       => {
         if (opts.onError) for (; reportedErrors < engine.errors.length; reportedErrors++) opts.onError(engine.errors[reportedErrors]);
         else reportedErrors = engine.errors.length;
       };
-    
+
       const feedLine = (raw        , out                )       => {
         const hadHeader = engine.header !== null;
         const outcome = engine.feed(raw);
@@ -1845,13 +1854,13 @@
         }
         flushErrors();
       };
-    
+
       const toText = (chunk                     )         => {
         if (typeof chunk === 'string') return chunk;
         if (!decoder) decoder = new TextDecoder('utf-8');
         return decoder.decode(chunk, { stream: true });
       };
-    
+
       const reader             = {
         push(chunk                     )                 {
           if (ended) throw new Error('mini reader already ended');
@@ -1870,7 +1879,7 @@
           scanFrom = buffer.length;
           return out;
         },
-    
+
         end(chunk                      )               {
           if (ended) throw new Error('mini reader already ended');
           if (chunk !== undefined) reader.push(chunk);
@@ -1885,7 +1894,8 @@
           const errsBefore = engine.errors.length;
           const hadHeader = engine.header !== null;
           const lineNo = engine.physical + 1;
-          feedLine(rest, []);
+          const finalRecords                 = [];
+          feedLine(rest, finalRecords);
           let incomplete                          = null;
           if (!terminated) {
             const lineErrors = engine.errors.slice(errsBefore).filter(e => e.line === lineNo);
@@ -1914,13 +1924,14 @@
             incomplete,
             truncated: incomplete !== null || missing > 0,
             complete: document.errors.length === 0,
+            finalRecords,
           };
           if (strict && document.errors.length) {
             throw Object.assign(new MiniValidationError(document.errors), { result });
           }
           return result;
         },
-    
+
         get contract() { return c; },
         get prefix() { return engine.prefix; },
         get header() { return engine.header; },
@@ -1939,7 +1950,7 @@
       };
       return reader;
     }
-    
+
     /**
      * Consume un iterable (síncrono o asíncrono) de fragmentos y produce los registros
      * a medida que se completan. Devuelve el ReaderResult final como valor de retorno del generador.
@@ -1953,7 +1964,9 @@
       for await (const chunk of chunks                                      ) {
         for (const rec of reader.push(chunk)) yield rec;
       }
-      return reader.end();
+      const result = reader.end();
+      for (const rec of result.finalRecords) yield rec;
+      return result;
     }
     return { createReader, readRecords };
   })();
@@ -1963,7 +1976,7 @@
     const { splitFields } = __m["codec"];
     const { normalizeContract } = __m["contract"];
     const { E_HEADER_KEY, E_NO_COUNT, E_NO_HEADER, E_UNKNOWN_PREFIX, MiniError, MiniValidationError } = __m["errors"];
-    const { Document, parse } = __m["parser"];
+    const { Document, parse, uniqueKey } = __m["parser"];
     const { specBlock } = __m["prompt"];
 
     const HEADER_CODES                      = new Set([E_NO_HEADER, E_UNKNOWN_PREFIX, E_NO_COUNT, E_HEADER_KEY]);
@@ -2298,6 +2311,20 @@
       for (const ln of order) {
         if (!invalidLines.has(ln) && ln !== headerLine) seen.add(pyStrip(content.get(ln)          ));
       }
+      // valores de los campos `unique` que ya pertenecen a los registros que se quedan en el documento:
+      // una corrección no puede reclamar uno (convertiría un registro válido en un duplicado E11)
+      const uniqueNames = c.fields.filter(f => f.unique).map(f => f.name);
+      const claimed = new Map                     (uniqueNames.map(name => [name, new Set        ()]));
+      if (uniqueNames.length) {
+        const kept = order.filter(ln => !invalidLines.has(ln) && ln !== headerLine).map(ln => content.get(ln)          );
+        const [keptDoc] = lenientParse([headerText, ...kept].join('\n'), c);
+        for (const rec of keptDoc ? keptDoc.records : []) {
+          for (const name of uniqueNames) {
+            const v = rec[name];
+            if (v !== null && v !== undefined) (claimed.get(name)               ).add(uniqueKey(v));
+          }
+        }
+      }
       for (const [it, next] of pairs) {
         if (it.isHeader) continue;
         const cand = pyStrip(next);
@@ -2317,10 +2344,25 @@
         // el documento de prueba tiene la n de la cabecera original: se ignora el conteo
         const lineErrs = errs.filter(e => e.line > 1 || (e.line === 0 && e.code !== 'E04'));
         if (probe !== null && probe.records.length === 1 && !lineErrs.length && !cand.includes('\n')) {
+          const probed = probe.records[0];
+          const clash = uniqueNames.find(name => {
+            const v = probed[name];
+            return v !== null && v !== undefined && (claimed.get(name)               ).has(uniqueKey(v));
+          });
+          if (clash !== undefined) {
+            // SPEC §6: un valor `unique` no puede repetirse; se conserva la línea original en vez de dañar otro registro válido
+            notes.push(`line ${it.line}: correction repeats the unique value of field '${clash}' of another record`);
+            unresolved.push(...it.lines);
+            continue;
+          }
           content.set(it.line, cand);
           for (const ln of it.lines.slice(1)) content.delete(ln);
           replaced.push(...it.lines);
           seen.add(cand);
+          for (const name of uniqueNames) {
+            const v = probed[name];
+            if (v !== null && v !== undefined) (claimed.get(name)               ).add(uniqueKey(v));
+          }
         } else {
           unresolved.push(...it.lines);
         }
@@ -2704,6 +2746,7 @@
     shallowCopy: __m["parser"].shallowCopy,
     parseHeader: __m["parser"].parseHeader,
     decodeField: __m["parser"].decodeField,
+    uniqueKey: __m["parser"].uniqueKey,
     LineEngine: __m["parser"].LineEngine,
     parse: __m["parser"].parse,
     detectPrefix: __m["parser"].detectPrefix,

@@ -473,7 +473,20 @@ def header_cases() -> None:
     add("header", "hdr-list-bad-item", "elemento inválido en lista de cabecera (E06)", contract=c, input="hd|n=1|src=s|ls=1,x\nx", errors=[err("E06", 1)])
     add("header", "hdr-tuple-arity", "tupla de cabecera con aridad incorrecta (E07)", contract=c, input="hd|n=1|src=s|tp=1\nx", errors=[err("E07", 1)])
     add("header", "hdr-escape-invalid", "escape inválido en la cabecera (E09)", contract=c, input="hd|n=1|src=a\\qb\nx", errors=[err("E09", 1)])
-    add("header", "hdr-count-errors-combined", "errores de cabecera y de conteo se acumulan", contract=c,
+    # SPEC §3.2: '=' separa clave y valor solo en su primera aparición SIN escapar. '\=' no es una
+    # secuencia de escape válida (§3.3: E09) y su '=' queda escapado, así que la entrada no tiene
+    # separador (§5: entrada sin '=' es E12). Hallado por el fuzz diferencial de la auditoría V5
+    # (Python conservaba una clave rota y no informaba E12).
+    add("header", "hdr-escaped-eq-key", "'\\=' en una clave de cabecera: E09 por el escape y E12 por la entrada sin '=' sin escapar", contract=c,
+        input="hd|n=1|src=s|foo\\=bar\nx", errors=[err("E09", 1), err("E12", 1)])
+    add("header", "hdr-escaped-eq-key-lenient", "modo tolerante: la entrada con '\\=' se descarta y el registro se conserva", mode="lenient", contract=c,
+        input="hd|n=1|src=s|foo\\=bar\nx", canonical=C("hd", {"n": 1, "src": "s", "lang": "es"}, "rows", rec),
+        errors=[err("E09", 1), err("E12", 1)])
+    add("header", "hdr-escaped-eq-n", "'n\\=1' no declara n: E09, E12 por la entrada y E03 porque falta n", contract=c,
+        input="hd|n\\=1|src=s\nx", errors=[err("E09", 1), err("E12", 1), err("E03", 1)])
+    add("header", "hdr-escaped-eq-in-value", "'\\=' dentro de un valor es un escape inválido (E09), sin otros errores", contract=c,
+        input="hd|n=1|src=a\\=b\nx", errors=[err("E09", 1)])
+    add("header", "hdr-count-errors-combined","errores de cabecera y de conteo se acumulan", contract=c,
         input="hd|n=2|src=s|basura\nx", errors=[err("E12", 1), err("E04", 0)])
     add("header", "hdr-lenient-keeps-records", "con errores de cabecera el modo tolerante conserva los registros", mode="lenient", contract=c,
         input="hd|n=1|basura\nx", canonical=C("hd", {"n": 1, "lang": "es"}, "rows", rec), errors=[err("E12", 1)])

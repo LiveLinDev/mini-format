@@ -1,5 +1,10 @@
 name: ci
 on: [push, pull_request]
+# Matriz: Linux, Windows y macOS con Python 3.9 y 3.12 (6 trabajos). Todos los pasos usan bash y rutas con barra normal;
+# .gitattributes fija eol=lf, así que el texto comparado byte a byte (js/mini.js, fixtures) es el mismo en los tres sistemas.
+# Node está fijado en 22.14.0: es la versión con la que se generó y se verificó js/mini.js (la salida de
+# `stripTypeScriptTypes` puede cambiar entre versiones menores; subirla es una decisión deliberada: regenerar el bundle,
+# revisar el diff y cambiar este número y el de sitio.yml a la vez).
 jobs:
   test:
     name: ${{ matrix.os }} · Python ${{ matrix.python }}
@@ -19,24 +24,30 @@ jobs:
       - uses: actions/setup-python@v6
         with: { python-version: "${{ matrix.python }}" }
       - uses: actions/setup-node@v5
-        with: { node-version: "22" }
+        with: { node-version: "22.14.0" }
+      # El extra "dev" trae pytest, coverage, hypothesis, pydantic y jsonschema: sin ellos las pruebas de propiedades, de
+      # Pydantic y de JSON Schema se omitirían en silencio.
       - run: pip install -e ".[bench,release,dev]"
+      - name: Las dependencias de prueba están instaladas (si no, sus pruebas se omitirían en silencio)
+        run: python -c "import coverage, hypothesis, jsonschema, pydantic, pytest; print('hypothesis', hypothesis.__version__, '| pydantic', pydantic.VERSION, '| jsonschema', jsonschema.__version__)"
       - run: mini check-forks
-      - name: Python tests with coverage (minimum 90 %)
-        run: |
-          python -m coverage run --source=minifmt -m pytest -q tests experiments/generativo/tests
-          python -m coverage report --fail-under=90
-      - run: python conformance/run_python.py
+      - name: js/mini.js está al día con ts/src (generado con LF, igualdad exacta)
+        run: node --no-warnings tools/build_js.mjs --check
       - run: node tests/test_js_port.mjs
       - run: npm ci --prefix ts
       - run: npm run typecheck --prefix ts
-      - name: TypeScript tests with coverage (minimum 90 % of lines)
-        working-directory: ts
-        run: >
-          node --experimental-strip-types --no-warnings --test
-          --experimental-test-coverage --test-coverage-include="src/**"
-          --test-coverage-lines=90 test/*.test.ts
-      - run: node conformance/run_js.mjs
+      - name: Conformidad en los tres ejecutores y en el oráculo independiente
+        run: |
+          python conformance/run_python.py
+          node conformance/run_js.mjs
+          python conformance/oraculo/ejecutar.py
+      - name: Fuzz diferencial Python / js/mini.js / oráculo (60 s, semilla fija)
+        run: python tools/fuzz_diferencial.py --presupuesto 60
+      - name: Cobertura y pruebas (puerta - líneas de Python y de TypeScript >= 90 %; las ramas se reportan aparte)
+        run: python tools/cobertura.py --json cobertura.json
+      - name: Resumen de cobertura
+        if: always()
+        run: cat cobertura.json || true
       - run: python playground/build.py
       - name: Build and verify offline distributions
         if: matrix.python == '3.12' && matrix.os == 'ubuntu-latest'

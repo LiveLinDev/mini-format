@@ -1,4 +1,13 @@
 * text=auto eol=lf
+# Finales de línea fijos (LF) en todo lo que se genera o se compara byte a byte.
+# js/mini.js lo produce tools/build_js.mjs y `--check` exige igualdad exacta: un CR suelto
+# hacía que git lo tratara como binario y que el bundle no fuera reproducible (auditoría V5).
+js/mini.js text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
 # Archived HTTP response bytes are authenticated by sources.json SHA-256.
 benchmark/public/data/*.json -text
 *.mp4 binary

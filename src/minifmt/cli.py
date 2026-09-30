@@ -28,6 +28,12 @@ from .errors import MiniError, MiniValidationError
 from .registry import DEFAULT_FORKS_DIR
 
 
+def _escribir(ruta: Path, texto: str) -> None:
+    """Escribe UTF-8 con LF en todos los sistemas (write_text usaria CRLF en Windows y la salida no seria reproducible)."""
+    with ruta.open("w", encoding="utf-8", newline="\n") as fh:
+        fh.write(texto)
+
+
 def _reg(args) -> Registry:
     return Registry.load(getattr(args, "forks", None) or DEFAULT_FORKS_DIR)
 
@@ -118,7 +124,7 @@ def cmd_to_json(args) -> int:
         return 1
     output = json.dumps(doc.to_canonical(), ensure_ascii=False, indent=None if args.compact else 2)
     if args.out:
-        Path(args.out).write_text(output + "\n", encoding="utf-8")
+        _escribir(Path(args.out), output + "\n")
     else:
         print(output)
     if doc.errors:
@@ -134,7 +140,7 @@ def cmd_from_json(args) -> int:
     c = _contract(args)
     output = dumps(obj, c)
     if args.out:
-        Path(args.out).write_text(output + "\n", encoding="utf-8")
+        _escribir(Path(args.out), output + "\n")
     else:
         print(output)
     return 0
@@ -165,7 +171,11 @@ def cmd_prompt(args) -> int:
 
 def cmd_tokens(args) -> int:
     from .tokens import get_tokenizer
-    tk = get_tokenizer(args.enc)
+    try:
+        tk = get_tokenizer(args.enc)
+    except (FileNotFoundError, ImportError) as e:
+        # una instalacion sin extras no trae benchmark/vocab ni tiktoken: el mensaje debe decir como arreglarlo
+        sys.exit(f"mini tokens needs a tokenizer ({type(e).__name__}): install the extras with 'pip install mini-format[bench]'")
     text = Path(args.file).read_text(encoding="utf-8")
     print(f"{tk.count(text)} tokens ({args.enc}, backend={tk.backend}); {len(text.encode('utf-8'))} bytes")
     return 0
@@ -250,7 +260,7 @@ def cmd_new_fork(args) -> int:
     out = Path(args.forks or DEFAULT_FORKS_DIR) / args.prefix
     out.mkdir(parents=True, exist_ok=True)
     (out / "fixtures").mkdir(exist_ok=True)
-    (out / "contract.json").write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _escribir(out / "contract.json", json.dumps(d, ensure_ascii=False, indent=2) + "\n")
     print(f"created {out / 'contract.json'} — now add fixtures/valid.mini + fixtures/canonical.json and run 'mini check-forks'")
     return 0
 
@@ -308,7 +318,7 @@ def cmd_bench(args) -> int:
 def _write_or_print(data, out) -> None:
     text = json.dumps(data, ensure_ascii=False, indent=2)
     if out:
-        Path(out).write_text(text + "\n", encoding="utf-8")
+        _escribir(Path(out), text + "\n")
         print(f"wrote {out}", file=sys.stderr)
     else:
         print(text)

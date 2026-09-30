@@ -19,7 +19,7 @@ function fieldDoc(f: Field, sep: string, lang: string): string {
     let rng = '';
     if (f.min !== null || f.max !== null) {
       const lo = Math.trunc(Number(f.min || 0));
-      const hi = f.max ? String(Math.trunc(Number(f.max))) : '∞';
+      const hi = f.max !== null ? String(Math.trunc(Number(f.max))) : '∞';
       rng = es ? `, entre ${lo} y ${hi} elementos` : `, ${lo} to ${hi} elements`;
     }
     let base = es ? `${f.name}: lista de ${it} separada por '${sep}'${rng}` : `${f.name}: '${sep}'-separated list of ${it}${rng}`;

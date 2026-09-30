@@ -24,6 +24,7 @@ The suite also runs inside `pytest` (`tests/test_conformance.py`), in
 | `generate.py` | Source of the cases. Expectations come from the fixtures published in `forks/*/fixtures` or are handwritten from `SPEC.md`; they are **never** computed by running the implementation. |
 | `run_python.py` | Reference runner against `minifmt`. |
 | `run_js.mjs` | Runner against `js/mini.js`, the playground engine generated from `ts/src`. |
+| `oraculo/` | Independent reference decoder written from the SPEC grammar without importing `minifmt` (`decodificador.py`), and its runner over this corpus (`ejecutar.py`). |
 
 Cases using `family` read `forks/<family>/contract.json` from the repository root.
 
@@ -123,3 +124,25 @@ The 1.1 suite also covers the `date` and `decimal` types
 The 303 cases of the 1.0 suite are kept with the same expectations; five
 `dumps-reject-*` cases now also pin the error code and `contract-unknown-type`
 uses `datetime` as the unknown type.
+
+## Cases added after 1.1 (376 in total)
+
+| Case | Rule (SPEC) |
+|---|---|
+| `hdr-escaped-eq-key`, `hdr-escaped-eq-key-lenient` | `key\=value` in the header: `\=` is an invalid escape (E09, §3.3) and its `=` is escaped, so the entry has no separator (E12, §3.2 and §5) |
+| `hdr-escaped-eq-n` | `n\=1` does not declare `n`: E09, E12 and E03 |
+| `hdr-escaped-eq-in-value` | `\=` inside a value: E09 only |
+
+The expectations were written from the norm, not by running an implementation. The three executors (`run_python.py`,
+`run_js.mjs` and `ts/test/conformance.test.ts`) meet them; before the Python parser was fixed, three of them failed.
+
+## Where the expectations come from, and the independent oracle
+
+Of the 376 cases, 128 (`fx-*`: fixtures, `dumps`, `escaping` and `lenient` of the 14 families) come from `forks/*/fixtures`, which
+`benchmark/make_forks.py` produces with the Python implementation's `dumps`/`parse`: with respect to Python they are circular. The rest
+is written by hand from `SPEC.md`. So as not to depend only on that, `oraculo/decodificador.py` re-implements decoding from the
+specification grammar with a different structure and without importing `minifmt`; `python conformance/oraculo/ejecutar.py` checks
+that it meets the 307 `strict` and `lenient` cases (it does not decode the `dumps`, `contract` and `fork` modes).
+`tests/test_nucleo_propiedades.py`, `tests/test_nucleo_oraculo.py` and `tools/fuzz_diferencial.py` use it to compare Python and
+`js/mini.js` on generated documents. Where the SPEC is silent and the oracle picks a reading, it is declared at the top of its code
+and in ADR 0017.

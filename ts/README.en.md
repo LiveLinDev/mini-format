@@ -1,6 +1,6 @@
 # @mini-format/core — `.mini` TypeScript library
 
-Software release 1.2.0. Modular, typed TypeScript implementation of the `.mini`
+Software release 1.2.1. Modular, typed TypeScript implementation of the `.mini`
 core notation (SPEC 1.1):
 parser, serializer, specification block for prompts, family (fork) registry, a
 streaming read API for token-by-token model responses, selective repair,
@@ -18,11 +18,11 @@ Authors: A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC). MIT license.
 
 ## Install the package
 
-Requires Node.js ≥ 22.6. Download `mini-format-core-1.2.0.tgz` from Downloads or
+Requires Node.js ≥ 22.6. Download `mini-format-core-1.2.1.tgz` from Downloads or
 extract it from the toolkit ZIP. Install the local file:
 
 ```sh
-npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.2.0.tgz
+npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.2.1.tgz
 ```
 
 The archive contains compiled JavaScript ESM and `.d.ts` declarations in `dist/`
@@ -80,6 +80,11 @@ ts/
     ├── stream.test.ts       random 1–7 character chunks == parse
     ├── truncation.test.ts   truncated outputs
     ├── conformance.test.ts  ../conformance/ runner (skipped if missing)
+    ├── cortes.test.ts       byte cuts at every boundary (ts/src and js/mini.js) == parse
+    ├── defectos.test.ts     defects fixed after the V5 audit (unique in repair, max 0, finalRecords) and ADR 0017 proposals
+    ├── bigint.test.ts       current behaviour with integers beyond ±2^53 (ADR 0018, proposal)
+    ├── esquema_ramas.test.ts  branches of fromJsonSchema/fromZod
+    ├── registro.test.ts     Registry on disk and in memory, roundtripOk
     └── helpers.ts
 ```
 
@@ -126,6 +131,7 @@ res.received;      // record lines received
 res.missing;       // records missing relative to n
 res.incomplete;    // last line without LF that did not validate (text, line, errors) or null
 res.truncated;     // incomplete or fewer lines than n
+res.finalRecords;  // records completed by end() (a valid last line without LF); already in valid/records
 res.terminated;    // the stream ended on LF
 ```
 
@@ -278,10 +284,9 @@ SPEC decides, follow the SPEC; otherwise follow the Python reference):
 | Topic | Python | TS and `js/mini.js` |
 |---|---|---|
 | Empty document in lenient mode | always throws | returns `Document` with E01 (SPEC §8) |
-| `clave\=valor` in header (lenient) | broken key | E12 (first unescaped `=`, SPEC §3.2) |
 | Non-ASCII prefix letters | accepts | rejects (SPEC §4) |
 | `float` signature/spec with `max: 3.0` | `3.0` | `3` (JSON.parse cannot tell them apart) |
-| Integers outside ±2^53 | exact | lose precision (use `decimal` for exact values) |
+| Integers outside ±2^53 | exact | lose precision **silently** (use `decimal` for exact values); pending decision: ADR 0018 (proposal), behaviour pinned by `ts/test/bigint.test.ts` |
 
 ## Limitations
 

@@ -1,4 +1,4 @@
-/* adapters.test.ts — HU17: proveedores intercambiables con fetch simulado y streams SSE sintéticos.
+/* adapters.test.ts — HU17: proveedores intercambiables con fetch simulado y streams SSE sintéticos (MOCK: no hay llamadas reales).
  * Ninguna prueba usa la red ni claves reales: el fetch global se reemplaza por uno que falla.
  * MIT License — A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC, 2026)
  */

@@ -343,7 +343,7 @@ function sortedJson(v: Value): string {
 }
 
 /** Clave de unicidad: listas y objetos se comparan por contenido. */
-function uniqueKey(v: Value): string {
+export function uniqueKey(v: Value): string {
   if (typeof v === 'number') return 'n:' + String(v);
   if (typeof v === 'string') return 's:' + v;
   return 'j:' + sortedJson(v);

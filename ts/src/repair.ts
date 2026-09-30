@@ -15,7 +15,7 @@ import { splitFields } from './codec.ts';
 import { normalizeContract } from './contract.ts';
 import type { Contract, ContractJSON } from './contract.ts';
 import { E_HEADER_KEY, E_NO_COUNT, E_NO_HEADER, E_UNKNOWN_PREFIX, MiniError, MiniValidationError } from './errors.ts';
-import { Document, parse } from './parser.ts';
+import { Document, parse, uniqueKey } from './parser.ts';
 import { specBlock } from './prompt.ts';
 
 const HEADER_CODES: ReadonlySet<string> = new Set([E_NO_HEADER, E_UNKNOWN_PREFIX, E_NO_COUNT, E_HEADER_KEY]);
@@ -350,6 +350,20 @@ export function mergeRepair(
   for (const ln of order) {
     if (!invalidLines.has(ln) && ln !== headerLine) seen.add(pyStrip(content.get(ln) as string));
   }
+  // valores de los campos `unique` que ya pertenecen a los registros que se quedan en el documento:
+  // una corrección no puede reclamar uno (convertiría un registro válido en un duplicado E11)
+  const uniqueNames = c.fields.filter(f => f.unique).map(f => f.name);
+  const claimed = new Map<string, Set<string>>(uniqueNames.map(name => [name, new Set<string>()]));
+  if (uniqueNames.length) {
+    const kept = order.filter(ln => !invalidLines.has(ln) && ln !== headerLine).map(ln => content.get(ln) as string);
+    const [keptDoc] = lenientParse([headerText, ...kept].join('\n'), c);
+    for (const rec of keptDoc ? keptDoc.records : []) {
+      for (const name of uniqueNames) {
+        const v = rec[name];
+        if (v !== null && v !== undefined) (claimed.get(name) as Set<string>).add(uniqueKey(v));
+      }
+    }
+  }
   for (const [it, next] of pairs) {
     if (it.isHeader) continue;
     const cand = pyStrip(next);
@@ -369,10 +383,25 @@ export function mergeRepair(
     // el documento de prueba tiene la n de la cabecera original: se ignora el conteo
     const lineErrs = errs.filter(e => e.line > 1 || (e.line === 0 && e.code !== 'E04'));
     if (probe !== null && probe.records.length === 1 && !lineErrs.length && !cand.includes('\n')) {
+      const probed = probe.records[0];
+      const clash = uniqueNames.find(name => {
+        const v = probed[name];
+        return v !== null && v !== undefined && (claimed.get(name) as Set<string>).has(uniqueKey(v));
+      });
+      if (clash !== undefined) {
+        // SPEC §6: un valor `unique` no puede repetirse; se conserva la línea original en vez de dañar otro registro válido
+        notes.push(`line ${it.line}: correction repeats the unique value of field '${clash}' of another record`);
+        unresolved.push(...it.lines);
+        continue;
+      }
       content.set(it.line, cand);
       for (const ln of it.lines.slice(1)) content.delete(ln);
       replaced.push(...it.lines);
       seen.add(cand);
+      for (const name of uniqueNames) {
+        const v = probed[name];
+        if (v !== null && v !== undefined) (claimed.get(name) as Set<string>).add(uniqueKey(v));
+      }
     } else {
       unresolved.push(...it.lines);
     }
