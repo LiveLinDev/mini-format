@@ -278,10 +278,9 @@ SPEC decides, follow the SPEC; otherwise follow the Python reference):
 | Topic | Python | TS and `js/mini.js` |
 |---|---|---|
 | Empty document in lenient mode | always throws | returns `Document` with E01 (SPEC §8) |
-| `clave\=valor` in header (lenient) | broken key | E12 (first unescaped `=`, SPEC §3.2) |
 | Non-ASCII prefix letters | accepts | rejects (SPEC §4) |
 | `float` signature/spec with `max: 3.0` | `3.0` | `3` (JSON.parse cannot tell them apart) |
-| Integers outside ±2^53 | exact | lose precision (use `decimal` for exact values) |
+| Integers outside ±2^53 | exact | lose precision **silently** (use `decimal` for exact values); pending decision: ADR 0018 (proposal), behaviour pinned by `ts/test/bigint.test.ts` |
 
 ## Limitations
 

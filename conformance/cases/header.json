@@ -1336,6 +1336,276 @@
       }
     },
     {
+      "id": "hdr-escaped-eq-key",
+      "category": "header",
+      "description": "'\\=' en una clave de cabecera: E09 por el escape y E12 por la entrada sin '=' sin escapar",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|foo\\=bar\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 1
+          },
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-escaped-eq-key-lenient",
+      "category": "header",
+      "description": "modo tolerante: la entrada con '\\=' se descarta y el registro se conserva",
+      "mode": "lenient",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=s|foo\\=bar\nx",
+      "expected": {
+        "canonical": {
+          "prefix": "hd",
+          "header": {
+            "v": 1,
+            "n": 1,
+            "src": "s",
+            "lang": "es"
+          },
+          "rows": [
+            {
+              "id": "x"
+            }
+          ]
+        },
+        "errors": [
+          {
+            "code": "E09",
+            "line": 1
+          },
+          {
+            "code": "E12",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-escaped-eq-n",
+      "category": "header",
+      "description": "'n\\=1' no declara n: E09, E12 por la entrada y E03 porque falta n",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n\\=1|src=s\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 1
+          },
+          {
+            "code": "E12",
+            "line": 1
+          },
+          {
+            "code": "E03",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "hdr-escaped-eq-in-value",
+      "category": "header",
+      "description": "'\\=' dentro de un valor es un escape inválido (E09), sin otros errores",
+      "mode": "strict",
+      "contract": {
+        "prefix": "hd",
+        "records_key": "rows",
+        "header": {
+          "required": [
+            "n",
+            "src"
+          ],
+          "keys": {
+            "src": {
+              "type": "str"
+            },
+            "ls": {
+              "type": "list",
+              "item": "int"
+            },
+            "tp": {
+              "type": "tuple",
+              "items": [
+                {
+                  "name": "a",
+                  "type": "int"
+                },
+                {
+                  "name": "b",
+                  "type": "str"
+                }
+              ]
+            },
+            "k": {
+              "type": "int"
+            },
+            "lang": {
+              "type": "str",
+              "default": "es"
+            }
+          }
+        },
+        "core": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      "input": "hd|n=1|src=a\\=b\nx",
+      "expected": {
+        "errors": [
+          {
+            "code": "E09",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
       "id": "hdr-count-errors-combined",
       "category": "header",
       "description": "errores de cabecera y de conteo se acumulan",

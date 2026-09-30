@@ -283,10 +283,9 @@ decide, se sigue la SPEC; si no, se sigue la referencia Python):
 | Tema | Python | TS y `js/mini.js` |
 |---|---|---|
 | Documento vacío en modo tolerante | lanza siempre | devuelve `Document` con E01 (SPEC §8) |
-| `clave\=valor` en cabecera (tolerante) | clave rota | E12 (primer `=` no escapado, SPEC §3.2) |
 | Prefijo con letras no ASCII | acepta | rechaza (SPEC §4) |
 | Firma/spec de `float` con `max: 3.0` | `3.0` | `3` (JSON.parse no distingue) |
-| Enteros fuera de ±2^53 | exactos | pierden precisión (usa `decimal` para valores exactos) |
+| Enteros fuera de ±2^53 | exactos | pierden precisión **sin error ni aviso** (usa `decimal` para valores exactos); decisión pendiente: ADR 0018 (propuesta), comportamiento fijado por `ts/test/bigint.test.ts` |
 
 ## Limitaciones
 

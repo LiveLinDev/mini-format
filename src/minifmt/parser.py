@@ -140,11 +140,13 @@ def parse_header(line: str, lineno: int, contract: Contract, strict: bool) -> Tu
         txt = codec.text_of(toks)
         if not txt:
             continue
-        if "=" not in txt:
+        # SPEC §3.2: '=' separates key and value at its first UNESCAPED occurrence (an '=' inside a
+        # value is literal); an entry without one is E12. '\=' is an invalid escape (E09, already
+        # reported) and its '=' is escaped, so the entry has no separator.
+        eq = next((i for i, (ch, esc) in enumerate(toks) if ch == "=" and not esc), -1)
+        if eq < 0:
             errs.append(MiniError(E_HEADER_KEY, lineno, f"header entry '{txt}' is not key=value"))
             continue
-        # split on the first unescaped '='  (an '=' inside a value is literal)
-        eq = next((i for i, (ch, esc) in enumerate(toks) if ch == "=" and not esc), -1)
         key = codec.text_of(codec.strip_toks(toks[:eq]))
         vtoks = codec.strip_toks(toks[eq + 1:])
         if key in seen:
