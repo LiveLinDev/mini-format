@@ -25,8 +25,15 @@ const ENTRY = ['errors', 'values', 'codec', 'contract', 'parser', 'serializer', 
 const IMPORT_RE = /^\s*import\s+([^;]*?)\s+from\s+['"]\.\/([\w-]+)\.ts['"];?/gm;
 const EXPORT_RE = /^export\s+((?:async\s+)?(?:function\*?|class|const|let|var))\s+([A-Za-z_$][\w$]*)/gm;
 
+/** Lee un fuente de ts/src con finales de línea LF, sea cual sea su codificación en disco.
+ *  Sin esto el bundle depende de `core.autocrlf` del checkout: un `.ts` en CRLF dejaba CR sueltos
+ *  y líneas de solo espacios en js/mini.js (auditoría V5). */
+function readSource(file) {
+  return fs.readFileSync(file, 'utf8').replace(/\r\n?/g, '\n');
+}
+
 function readModule(name) {
-  const source = fs.readFileSync(path.join(SRC, `${name}.ts`), 'utf8');
+  const source = readSource(path.join(SRC, `${name}.ts`));
   let code = stripTypeScriptTypes(source, { mode: 'strip' });
   const deps = [];
   code = code.replace(IMPORT_RE, (_all, clause, dep) => {
@@ -75,7 +82,7 @@ export function buildBundle() {
       api.set(id, mod.name);
     }
   }
-  const index = fs.readFileSync(path.join(SRC, 'index.ts'), 'utf8');
+  const index = readSource(path.join(SRC, 'index.ts'));
   const constant = key => {
     const m = new RegExp(`export const ${key} = '([^']+)'`).exec(index);
     if (!m) throw new Error(`index.ts does not define ${key}`);
