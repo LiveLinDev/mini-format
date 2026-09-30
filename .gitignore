@@ -33,3 +33,9 @@ output/
 # evidencia restringida (datos personales, claves, sesiones): nunca se publica
 evidencia/restringida/*
 !evidencia/restringida/README.md
+
+# salidas de los módulos de páginas de sitio/construir.py
+sitio/validacion/
+sitio/economia/
+sitio/como-funciona/
+cobertura.json

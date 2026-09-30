@@ -94,7 +94,7 @@
   "«en mi máquina»": "“works for me”",
   "Conformidad": "Conformance",
   "sustituye a pruebas por implementación": "shared expectations across implementations",
-  "372 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 372/372.": "372 language-independent cases, with expectations derived from the specification rather than calculated by the code. Python and TypeScript pass 372/372.",
+  "376 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 376/376.": "376 language-independent cases, with expectations derived from the specification rather than calculated by the code. Python and TypeScript pass 376/376.",
   "Un minuto con mini-format": "One minute with mini-format",
   "Del contrato": "From contract",
   "al registro": "to typed",

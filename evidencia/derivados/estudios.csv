@@ -1,10 +1,10 @@
 id,nombre,tipo,estado_ejecucion,estado_calculado,resultado,resultado_calculado,n_corridas,n_corridas_que_cuentan,procedencias_que_cuentan,fecha_ultima_corrida,commit_ultima_corrida,hu_relacionadas
-V1,Ahorro de tokens por formato,controlado,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU105 HU106 HU107 HU118
-V2,Validez y exactitud con varios modelos y proveedores,controlado,bloqueado,pendiente,no_evaluable,no_evaluable,0,0,,,,HU108 HU109 HU110 HU111 HU118
-V3a,Recuperación ante truncamiento (cortes sobre salidas guardadas),controlado,pendiente,pendiente,no_evaluable,no_evaluable,0,0,,,,HU109 HU112 HU118
-V3b,Recuperación ante truncamiento (cortes reales con tope de salida reducido),controlado,bloqueado,pendiente,no_evaluable,no_evaluable,0,0,,,,HU109 HU112 HU113 HU118
-V4,Costo por registro válido y latencia,controlado,bloqueado,pendiente,no_evaluable,no_evaluable,0,0,,,,HU109 HU114 HU115 HU118
-V5,Conformidad y calidad del componente,controlado,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU104 HU116 HU118
+V1,Ahorro de tokens por formato,controlado,parcial,ejecutado,no_evaluable,no_evaluable,4,4,reproducido_local:4,2026-09-30T20:27:04Z,6e3321706b16a22ae55ef06363982f6b7911520d,HU105 HU106 HU107 HU118
+V2,Validez y exactitud con varios modelos y proveedores,controlado,bloqueado,pendiente,no_evaluable,no_evaluable,1,0,,,,HU108 HU109 HU110 HU111 HU118
+V3a,Recuperación ante truncamiento (cortes sobre salidas guardadas),controlado,pendiente,ejecutado,no_evaluable,no_evaluable,1,1,reproducido_local:1,2026-09-30T19:04:55Z,9a53ea879c697795598c1abc824269d955ddd19b,HU109 HU112 HU118
+V3b,Recuperación ante truncamiento (cortes reales con tope de salida reducido),controlado,bloqueado,pendiente,no_evaluable,no_evaluable,1,0,,,,HU109 HU112 HU113 HU118
+V4,Costo por registro válido y latencia,controlado,bloqueado,pendiente,no_evaluable,no_evaluable,1,0,,,,HU109 HU114 HU115 HU118
+V5,Conformidad y calidad del componente,controlado,parcial,pendiente,no_evaluable,no_evaluable,1,0,,,,HU104 HU116 HU118
 V6a,Integración en sistemas reales,naturalista,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU119 HU120 HU121 HU122 HU123 HU124 HU125 HU126 HU127 HU128 HU118
 V6b,Desempeño de desarrolladores externos,controlado,pendiente,pendiente,no_evaluable,no_evaluable,0,0,,,,HU117 HU118 HU129 HU130 HU131 HU132 HU133 HU134 HU135 HU136 HU137 HU138
 V7,Escalamiento por tamaño de lote y volumen (exploratorio),exploratorio,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU108 HU113

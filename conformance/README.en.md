@@ -142,7 +142,7 @@ Of the 376 cases, 128 (`fx-*`: fixtures, `dumps`, `escaping` and `lenient` of th
 `benchmark/make_forks.py` produces with the Python implementation's `dumps`/`parse`: with respect to Python they are circular. The rest
 is written by hand from `SPEC.md`. So as not to depend only on that, `oraculo/decodificador.py` re-implements decoding from the
 specification grammar with a different structure and without importing `minifmt`; `python conformance/oraculo/ejecutar.py` checks
-that it meets the 307 `strict` and `lenient` cases (it does not decode the `dumps`, `contract` and `fork` modes).
+that it meets 307 of them, the `strict` and `lenient` ones (it does not decode the `dumps`, `contract` and `fork` modes).
 `tests/test_nucleo_propiedades.py`, `tests/test_nucleo_oraculo.py` and `tools/fuzz_diferencial.py` use it to compare Python and
 `js/mini.js` on generated documents. Where the SPEC is silent and the oracle picks a reading, it is declared at the top of its code
 and in ADR 0017.

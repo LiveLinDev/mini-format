@@ -145,6 +145,6 @@ De los 376 casos, 128 (`fx-*`: fixtures, `dumps`, `escaping` y `lenient` de las 
 `benchmark/make_forks.py` genera con `dumps`/`parse` de la implementación Python: respecto de Python son circulares. El resto está
 escrito a mano desde `SPEC.md`. Para no depender solo de eso, `oraculo/decodificador.py` reimplementa la lectura desde la gramática
 de la especificación con otra estructura y sin importar `minifmt`; `python conformance/oraculo/ejecutar.py` comprueba que cumple los
-307 casos `strict` y `lenient` (los modos `dumps`, `contract` y `fork` no los decodifica). `tests/test_nucleo_propiedades.py`,
+307 de ellos, los de modo `strict` y `lenient` (los modos `dumps`, `contract` y `fork` no los decodifica). `tests/test_nucleo_propiedades.py`,
 `tests/test_nucleo_oraculo.py` y `tools/fuzz_diferencial.py` lo usan para comparar Python y `js/mini.js` sobre documentos generados.
 Las zonas en las que la SPEC calla y el oráculo adopta una lectura están declaradas al principio de su código y en el ADR 0017.

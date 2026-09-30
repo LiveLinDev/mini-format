@@ -27,7 +27,7 @@
         "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
         "tipo": "controlado"
       },
-      "commit_ultima_corrida": null,
+      "commit_ultima_corrida": "6e3321706b16a22ae55ef06363982f6b7911520d",
       "comparadores": [
         "JSON compacto (principal)",
         "JSON legible",
@@ -39,23 +39,229 @@
       ],
       "componentes": [
         {
-          "corridas_que_cuentan": [],
+          "corridas_que_cuentan": [
+            "v1-conciliacion-20260930t2200z",
+            "v1-linea_base_n12-20260930t2200z",
+            "v1-publicos-20260930t2200z",
+            "v1-serie_n-20260930t2200z"
+          ],
           "descripcion": "Conteo de tokens de todos los formatos por dominio, tamaño de lote y tokenizador, con ida y vuelta",
           "id": "tokens_por_dominio_y_tokenizador",
           "minimo_corridas": 1,
-          "satisfecho": false
+          "satisfecho": true
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+          "componente": null,
+          "cuenta": true,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/tokens.csv",
+              "sha256": "ccf1600b3546fc94aee2d9c25ab63bc8aec8665ab7e97f0eadfd5f8106de3f57"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/summary_12.csv",
+              "sha256": "f6be7f4e594263e42f6a50e6f34c43de15808cdb1a6ddbf198d0d81b257a8b5d"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/roundtrip.csv",
+              "sha256": "0f7c1734e7d119cd9ea0fce469a3a18aba96a64d468c2dad7ae08f627b92c60c"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/benchmark_results/docs_hashes.json",
+              "sha256": "98950d0a5722a2c5deba1eb6188172e2589fad8b8616707720181029e3c5e635"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/tokens_n12_tres_tokenizadores.csv",
+              "sha256": "f70237083a20bcd7a1d12e62dbc9482144dc1a0db3cab28c74f9d6e83879f0e2"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/reversibilidad_n12.csv",
+              "sha256": "3b985393003eb604c0e036a9f67f08ddf8cd94f325ebfd18ba2cbddbfc39dc19"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/linea_base_n12.csv",
+              "sha256": "7badc0da4502ca0cd35df9a1b9831237511be942c46fb47b39b40d1376d44571"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/linea_base_n12_agregado.csv",
+              "sha256": "7d1828a7da0fff2d100b63c0126219c772d04792e87751c5c175abc6d45cbaf3"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T20:27:02Z",
+          "gasto_usd": 0,
+          "manifiesto": "evidencia/corridas/v1-linea_base_n12-20260930t2200z/manifiesto.json",
+          "modelo": null,
+          "motivo": null,
+          "procedencia": "reproducido_local",
+          "resultado": "no_evaluable",
+          "run_id": "v1-linea_base_n12-20260930t2200z",
+          "snapshot_sha256": null
+        },
+        {
+          "arbol_limpio": true,
+          "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+          "componente": null,
+          "cuenta": true,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/results_o200k_base.json",
+              "sha256": "44991873eb95b9ec45ef660c052295c0ebe2004177dc7980341de638657347f8"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/results_o200k_base.csv",
+              "sha256": "85cb3db5dfff2dbab328822ef7a45e5a38b4df4dc20292290951ce9cd36e903f"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/results_cl100k_base.json",
+              "sha256": "462752ccdfb8081f94fb310dede9f67e2987c2331b4cbcb892e7fe8ebb3f4131"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/results_cl100k_base.csv",
+              "sha256": "09443f15bbe80c7443029cbde48e98ddc29224bf8dd4f8e02bfadf6a91ca4f19"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/results_r50k_base.json",
+              "sha256": "9eee75584a946608e710136a8ec637dccc26a7dc7f4e01b6c7795bcf7ab2a03d"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/results_r50k_base.csv",
+              "sha256": "f604e27f1f4c407f1b122813a763daaba24d933dd8ba9fac473f639602cab9d4"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-publicos-20260930t2200z/ahorro_publicos_por_tokenizador.csv",
+              "sha256": "3fadb67228c155cc735390f7c0c553f8242b3ce6ab031e8f13d79eae2629fdb7"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T20:27:03Z",
+          "gasto_usd": 0,
+          "manifiesto": "evidencia/corridas/v1-publicos-20260930t2200z/manifiesto.json",
+          "modelo": null,
+          "motivo": null,
+          "procedencia": "reproducido_local",
+          "resultado": "no_evaluable",
+          "run_id": "v1-publicos-20260930t2200z",
+          "snapshot_sha256": null
+        },
+        {
+          "arbol_limpio": true,
+          "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+          "componente": null,
+          "cuenta": true,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/tokens_largo.csv",
+              "sha256": "e303dae630770c6d46a5e265b5ccb8576eac56c354192103fab7e6456be32d55"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/reversibilidad.csv",
+              "sha256": "1f40fcb2a90c88268dbea8df8fce2d4e0f98bf8a95109e5bfcf3522ff1835a63"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/criterio_v1_resultado.json",
+              "sha256": "9514cb323c1bb3ae8c43d4dd84aa38ad8f7d73e6035e0088a1a8f31ed2edad2d"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/criterio_v1_resultado.md",
+              "sha256": "9975ee6c3b590ec7460f341e819577b3dfc79eff4db04112ed8f60360af2ca1f"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/ahorro_por_referencia.csv",
+              "sha256": "45a140f4bbaea96b784e248c4c3be8b82deca5ef742213e0521078c3f9e7675a"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/tokens.csv",
+              "sha256": "0e1432ee35bb8c7401225e08a3d9c2194d8d099775060f13832e116719d912d7"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ahorro_por_dominio.csv",
+              "sha256": "7dd6cd408a1b67272019da0d3e9f7af8b8b0904fbbfecbd6767ba61f34616352"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ahorro_resumen.csv",
+              "sha256": "6898a7c8259b9528f52b6baf53209592d7bdc21118c2a233ed1095b671e69702"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/ajuste_lineal.csv",
+              "sha256": "fe91bf0ba56eec1f1b2ff2e0d84754c05cf7f8ac03e8f905079c6de1c60c47e2"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/equilibrio_tokens.csv",
+              "sha256": "e7f571fc9af352dfe231683851095224d38d6069a6462740077412c44c4b5741"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/equilibrio_tokens_resumen.csv",
+              "sha256": "c457b753cb245ced693f476bf223a0ad52bfd8f04b95e749b3c922d63e3d0b45"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-serie_n-20260930t2200z/archivado_pipeline/instruccion_tokens.csv",
+              "sha256": "5311411518439e2127d20c229121566f3d213c18185ffe23f460062929997d63"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T20:27:03Z",
+          "gasto_usd": 0,
+          "manifiesto": "evidencia/corridas/v1-serie_n-20260930t2200z/manifiesto.json",
+          "modelo": null,
+          "motivo": null,
+          "procedencia": "reproducido_local",
+          "resultado": "no_cumple",
+          "run_id": "v1-serie_n-20260930t2200z",
+          "snapshot_sha256": null
+        },
+        {
+          "arbol_limpio": true,
+          "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+          "componente": null,
+          "cuenta": true,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/conciliacion_cifras.json",
+              "sha256": "725c285aa0cdb60211203df08650036515a9840ed37318a7daff2485e12a0d22"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/conciliacion_cifras.md",
+              "sha256": "20677febde85a08485f35031e86618c44a3c1950588d9c3eff74f06f057b5410"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/desglose_dominio_tokenizador.csv",
+              "sha256": "983de413943cbd23a79ff46b459a0d5255c524037d526a4b8c066702c3a1be70"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/errata_v7_v8_verificacion.json",
+              "sha256": "d90df3e5a2d3de4a175175679fb8224d12487dca69826f3b6b93eceedce6ce5f"
+            },
+            {
+              "ruta": "evidencia/corridas/v1-conciliacion-20260930t2200z/log.txt",
+              "sha256": "c74434398fcb29b14d2bc249740e18387eca7d385bb761bafac9ad8757d12d7c"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T20:27:04Z",
+          "gasto_usd": 0,
+          "manifiesto": "evidencia/corridas/v1-conciliacion-20260930t2200z/manifiesto.json",
+          "modelo": null,
+          "motivo": null,
+          "procedencia": "reproducido_local",
+          "resultado": "no_evaluable",
+          "run_id": "v1-conciliacion-20260930t2200z",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": {
         "aprobado_por_equipo": false,
         "fijado_utc": "2026-09-30T19:00:00Z",
         "interpretacion": "El ahorro de un dominio con un tokenizador es la media, sobre los tamaños de lote de la serie principal, de 100 x (1 - T_mini / T_json_compacto), con T medido como conteo LOCAL de texto. Un dominio supera el umbral si esa media es >= 30 %. La meta se cumple si, con cada uno de >= 3 tokenizadores, >= 10 dominios superan el umbral. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
         "texto": "I4.1: ahorro de tokens >= 30 % en >= 10 dominios y con tres tokenizadores."
       },
-      "estado_calculado": "pendiente",
+      "estado_calculado": "ejecutado",
       "estado_ejecucion": "parcial",
-      "fecha_ultima_corrida": null,
+      "fecha_ultima_corrida": "2026-09-30T20:27:04Z",
       "hay_simulado_o_asistido": false,
       "hu_relacionadas": [
         "HU105",
@@ -70,13 +276,13 @@
         "Los cuatro conjuntos públicos y los 14 dominios del conjunto académico no son una muestra aleatoria de sistemas reales."
       ],
       "meta_documental": "V1 >= 30 % de ahorro en >= 10 dominios y con tres tokenizadores (Charter v5, I4.1).",
-      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "motivo_resultado": "faltan datos para evaluar: dominios_que_superan, tokenizadores, dominios_medidos",
       "muestra": {
         "descripcion": "14 dominios; lotes de 1, 5, 10, 25, 50, 100 y 250 registros más la línea base de n = 12; 4 conjuntos públicos congelados (1 902 objetos); 3 tokenizadores locales.",
         "unidad": "documento serializado (celda dominio x tamaño de lote x formato x tokenizador)"
       },
-      "n_corridas": 0,
-      "n_corridas_que_cuentan": 0,
+      "n_corridas": 4,
+      "n_corridas_que_cuentan": 4,
       "nombre": "Ahorro de tokens por formato",
       "objetivo": "OE4",
       "predicados": [
@@ -106,8 +312,12 @@
         }
       ],
       "pregunta": "PI1: ¿cuántos tokens ahorra .mini frente a JSON y a otros formatos de serialización?",
-      "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_que_cuentan": {
+        "reproducido_local": 4
+      },
+      "procedencias_todas": {
+        "reproducido_local": 4
+      },
       "reproduccion": {
         "comando": "python experiments/v1_tokens/run.py",
         "nota": "Sin red ni API. Cada ejecución debe registrarse con tools/evidencia_lib.py (nueva_corrida/guardar_corrida) y parametros.componente = tokens_por_dominio_y_tokenizador."
@@ -170,7 +380,54 @@
           "satisfecho": false
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "6d6b07a53db7ce28d3411e32ba926ced0aa88be8",
+          "componente": null,
+          "cuenta": false,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/resumen_brazos.csv",
+              "sha256": "5396debe815738c41e4b790961390c5ecfd4c3a854dc5b6f1e5fb9fbfec92070"
+            },
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/resumen_brazo_modelo.csv",
+              "sha256": "e8fa0d3dbc226913f71c13db8c877acd0dd760e6a98f4d79e02e4df4be5e5a79"
+            },
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/comparaciones_pareadas.csv",
+              "sha256": "61b76382c0fc4c2958cb84ae21c2f57b313e53b4d5c28740d27e5fbd890b028b"
+            },
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/reparacion.csv",
+              "sha256": "d7c52bdd8e3229fd6e5ca9d20bd3627896cedd44bbba5c899162429624de2c64"
+            },
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/desenlaces.csv",
+              "sha256": "153225c6feb3c3e9b88ca2c8cf7fa3c3db69582b15347ea627b74a4aa4c01c45"
+            },
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/solicitudes.jsonl",
+              "sha256": "c8ecfbfc95a3776c39bc7161bc6a677aec87ad173b99852bdbf7c01cee34fbc1"
+            },
+            {
+              "ruta": "evidencia/corridas/v2-simulado-piloto/meta_v2.json",
+              "sha256": "12bb913cca2ebecbd260f1c00dc67f45838b57cedf81dc728f51d180bc1d6678"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T19:48:22Z",
+          "gasto_usd": 0.0,
+          "manifiesto": "evidencia/corridas/v2-simulado-piloto/manifiesto.json",
+          "modelo": null,
+          "motivo": "procedencia simulado: no acredita ejecución",
+          "procedencia": "simulado",
+          "resultado": "no_evaluable",
+          "run_id": "v2-simulado-piloto",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": {
         "aprobado_por_equipo": false,
         "fijado_utc": "2026-09-30T19:00:00Z",
@@ -180,7 +437,7 @@
       "estado_calculado": "pendiente",
       "estado_ejecucion": "bloqueado",
       "fecha_ultima_corrida": null,
-      "hay_simulado_o_asistido": false,
+      "hay_simulado_o_asistido": true,
       "hu_relacionadas": [
         "HU108",
         "HU109",
@@ -201,7 +458,7 @@
         "descripcion": "Mínimo comprometido: >= 3 modelos de >= 2 proveedores. Diseño ampliado: 14 dominios x 4 modelos (>= 3 proveedores) x 30 repeticiones x 4 condiciones (A-D, más D+1), con un máximo de 6 720 llamadas primarias.",
         "unidad": "respuesta de un modelo a una solicitud de N registros"
       },
-      "n_corridas": 0,
+      "n_corridas": 1,
       "n_corridas_que_cuentan": 0,
       "nombre": "Validez y exactitud con varios modelos y proveedores",
       "objetivo": "OE4",
@@ -233,7 +490,9 @@
       ],
       "pregunta": "PI2: ¿.mini produce registros válidos y exactos con varios modelos de varios proveedores, antes y después de una reparación selectiva?",
       "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_todas": {
+        "simulado": 1
+      },
       "reproduccion": {
         "comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE",
         "nota": "TOPE es el presupuesto que el usuario autorice explícitamente; sin él no se ejecuta. Antes: --dry-run."
@@ -250,7 +509,7 @@
         "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
         "tipo": "controlado"
       },
-      "commit_ultima_corrida": null,
+      "commit_ultima_corrida": "9a53ea879c697795598c1abc824269d955ddd19b",
       "comparadores": [
         "JSON estricto",
         "JSON con recuperación parcial",
@@ -259,23 +518,72 @@
       ],
       "componentes": [
         {
-          "corridas_que_cuentan": [],
+          "corridas_que_cuentan": [
+            "v3a-20260930t190455z"
+          ],
           "descripcion": "Cortes sobre un documento canónico o salidas guardadas, leídos con cada lector",
           "id": "cortes_sobre_salidas_guardadas",
           "minimo_corridas": 1,
-          "satisfecho": false
+          "satisfecho": true
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "9a53ea879c697795598c1abc824269d955ddd19b",
+          "componente": null,
+          "cuenta": true,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/cortes.csv",
+              "sha256": "0ba7556619ce290569b772d5e1691e50e2aeaa6a14aec25646e0214de15ccaee"
+            },
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/resumen_lectores.csv",
+              "sha256": "428fa9b83778efab95f4ba24976698d5f470cd6edb5d7a6209ae79d966fbd7e9"
+            },
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/curvas.csv",
+              "sha256": "32f7198c12c8e1676fb6bc20df9ccd1e59b9a4126296d855d95ef41b27f24c5b"
+            },
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/por_documento.csv",
+              "sha256": "47f4e08f510c48cb3ae03b689fa9b43f9ceded4823bfd5a425a9edaa0e878e85"
+            },
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/resultados.json",
+              "sha256": "850e0b1909291a4220eece093b27822d85ff018f18978cae63407d0fe5686b09"
+            },
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/documentos.json",
+              "sha256": "92934d08e5aa48342dac718547ad747215ee2784ce8ea8805d90f06f562af525"
+            },
+            {
+              "ruta": "evidencia/corridas/v3a-20260930t190455z/figura_v3a.png",
+              "sha256": "9a4b14911e46dc5d486f78322946ed3d818f11702d0298c8b6b2bf66a1f1d5de"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T19:04:55Z",
+          "gasto_usd": 0,
+          "manifiesto": "evidencia/corridas/v3a-20260930t190455z/manifiesto.json",
+          "modelo": null,
+          "motivo": null,
+          "procedencia": "reproducido_local",
+          "resultado": "cumple",
+          "run_id": "v3a-20260930t190455z",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": {
         "aprobado_por_equipo": false,
         "fijado_utc": "2026-09-30T19:00:00Z",
         "interpretacion": "Un registro completo disponible es aquel cuya línea y su salto terminan antes del corte. La recuperación del lector .mini tolerante es (registros completos correctos recuperados) / (registros completos disponibles), agregada sobre todos los cortes; se exige >= 90 % como mínimo entre las corridas, y 0 registros inventados y 0 duplicados. Los demás lectores se reportan sin umbral. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
         "texto": "I4.3: >= 90 % de los registros completos disponibles se recuperan, sin contar registros inventados ni duplicados."
       },
-      "estado_calculado": "pendiente",
+      "estado_calculado": "ejecutado",
       "estado_ejecucion": "pendiente",
-      "fecha_ultima_corrida": null,
+      "fecha_ultima_corrida": "2026-09-30T19:04:55Z",
       "hay_simulado_o_asistido": false,
       "hu_relacionadas": [
         "HU109",
@@ -288,13 +596,13 @@
         "Un corte en mitad del último campo puede dar una línea sintácticamente válida pero truncada: el oráculo debe decidir el registro completo antes de contar."
       ],
       "meta_documental": "V3 >= 90 % de registros completos disponibles recuperados (Charter v5, I4.3).",
-      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "motivo_resultado": "faltan datos para evaluar: recuperacion, inventados, duplicados",
       "muestra": {
         "descripcion": "20 cortes por documento; número de documentos por dominio y tamaño de lote por fijar con el piloto (el Plan v3 no lo fija).",
         "unidad": "corte de una salida guardada"
       },
-      "n_corridas": 0,
-      "n_corridas_que_cuentan": 0,
+      "n_corridas": 1,
+      "n_corridas_que_cuentan": 1,
       "nombre": "Recuperación ante truncamiento (cortes sobre salidas guardadas)",
       "objetivo": "OE4",
       "predicados": [
@@ -324,8 +632,12 @@
         }
       ],
       "pregunta": "PI2: ¿cuántos registros completos se recuperan de una salida cortada, frente a lectores JSON estrictos o parciales?",
-      "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_que_cuentan": {
+        "reproducido_local": 1
+      },
+      "procedencias_todas": {
+        "reproducido_local": 1
+      },
       "reproduccion": {
         "comando": "python experiments/generativo/analyze.py --resultados RUTA_DE_SALIDAS_GUARDADAS",
         "nota": "Sin API si las salidas ya están guardadas; registrar con parametros.componente = cortes_sobre_salidas_guardadas."
@@ -370,7 +682,50 @@
           "satisfecho": false
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "6d6b07a53db7ce28d3411e32ba926ced0aa88be8",
+          "componente": null,
+          "cuenta": false,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazos.csv",
+              "sha256": "39ddb228aaae4d22211afdaa88029cfece64d13a07a844f079396f504d729750"
+            },
+            {
+              "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazo_modelo.csv",
+              "sha256": "a9e184217d264213d1a17b3b075188b8f6010bc09ecce3aae8bf9598a4777bf9"
+            },
+            {
+              "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_reparacion.csv",
+              "sha256": "cfc6a7a86dde7563d97c07219a9293388b6e730545cce9eb4464428008eb78cb"
+            },
+            {
+              "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_desenlaces.csv",
+              "sha256": "7dc22384198e2f3f464b0d5391790da28af4d04332f6ba3d04ec100c506a3b15"
+            },
+            {
+              "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_muestras.jsonl",
+              "sha256": "e1fde8169e0d9510dbb61817dd50b56c5d96c5b59ed93525a99ff30853187551"
+            },
+            {
+              "ruta": "evidencia/corridas/v3b-simulado-piloto/v3b_solicitudes.jsonl",
+              "sha256": "c72f663f58ebaa402e7fa78f67eeaed33fd494621420d4a18b0c1d1803fc0edd"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T19:48:23Z",
+          "gasto_usd": 0.0,
+          "manifiesto": "evidencia/corridas/v3b-simulado-piloto/manifiesto.json",
+          "modelo": null,
+          "motivo": "procedencia simulado: no acredita ejecución",
+          "procedencia": "simulado",
+          "resultado": "no_evaluable",
+          "run_id": "v3b-simulado-piloto",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": {
         "aprobado_por_equipo": false,
         "fijado_utc": "2026-09-30T19:00:00Z",
@@ -380,7 +735,7 @@
       "estado_calculado": "pendiente",
       "estado_ejecucion": "bloqueado",
       "fecha_ultima_corrida": null,
-      "hay_simulado_o_asistido": false,
+      "hay_simulado_o_asistido": true,
       "hu_relacionadas": [
         "HU109",
         "HU112",
@@ -398,7 +753,7 @@
         "descripcion": "Solicitudes por condición y modelo por fijar con el piloto (el arnés define fraccion_max_tokens = 0,5 y 10 repeticiones).",
         "unidad": "solicitud real con tope de salida reducido"
       },
-      "n_corridas": 0,
+      "n_corridas": 1,
       "n_corridas_que_cuentan": 0,
       "nombre": "Recuperación ante truncamiento (cortes reales con tope de salida reducido)",
       "objetivo": "OE4",
@@ -430,7 +785,9 @@
       ],
       "pregunta": "PI2: ¿qué ocurre con .mini y con JSON cuando la respuesta real se corta por un límite de tokens de salida?",
       "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_todas": {
+        "simulado": 1
+      },
       "reproduccion": {
         "comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE",
         "nota": "TOPE es el presupuesto que el usuario autorice; los casos de V3b están en la configuración (fraccion_max_tokens)."
@@ -488,12 +845,35 @@
           "satisfecho": false
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "6d6b07a53db7ce28d3411e32ba926ced0aa88be8",
+          "componente": null,
+          "cuenta": false,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v4-simulado-piloto/latencia_costo.csv",
+              "sha256": "edf043c534e3321f2a9a11fa93237d087100ba47e48b99a8c573cd3138cf143f"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T19:48:24Z",
+          "gasto_usd": 0.0,
+          "manifiesto": "evidencia/corridas/v4-simulado-piloto/manifiesto.json",
+          "modelo": null,
+          "motivo": "procedencia simulado: no acredita ejecución",
+          "procedencia": "simulado",
+          "resultado": "no_evaluable",
+          "run_id": "v4-simulado-piloto",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": null,
       "estado_calculado": "pendiente",
       "estado_ejecucion": "bloqueado",
       "fecha_ultima_corrida": null,
-      "hay_simulado_o_asistido": false,
+      "hay_simulado_o_asistido": true,
       "hu_relacionadas": [
         "HU109",
         "HU114",
@@ -512,14 +892,16 @@
         "descripcion": "Los mismos modelos de V2; modelo de costos: 12 modelos de 5 proveedores.",
         "unidad": "solicitud original con todos sus intentos"
       },
-      "n_corridas": 0,
+      "n_corridas": 1,
       "n_corridas_que_cuentan": 0,
       "nombre": "Costo por registro válido y latencia",
       "objetivo": "OE4",
       "predicados": [],
       "pregunta": "PI1: ¿cuánto cuesta y cuánto tarda cada registro válido con .mini frente a JSON, incluyendo instrucciones y reintentos?",
       "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_todas": {
+        "simulado": 1
+      },
       "reproduccion": {
         "comando": "python experiments/v4_costos/run.py",
         "nota": "Modelo de costos local. La parte real requiere el arnés con presupuesto autorizado. El cálculo exacto está en experiments/economia/calculo.py y las tarifas en evidencia/tarifas/."
@@ -535,8 +917,8 @@
             {
               "etiqueta": "Casos en conformance/cases",
               "unidad": "casos",
-              "valor": 372,
-              "valor_actual": 372,
+              "valor": 376,
+              "valor_actual": 376,
               "verificacion": "coincide"
             }
           ],
@@ -587,7 +969,38 @@
           "satisfecho": false
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "6e3321706b16a22ae55ef06363982f6b7911520d",
+          "componente": null,
+          "cuenta": false,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v5-ancho-20260930t2200z/ancho_largo.csv",
+              "sha256": "7027eb5da8705d8a5214bc564ede2fb54ca217cf14b8b893debd04904eea803a"
+            },
+            {
+              "ruta": "evidencia/corridas/v5-ancho-20260930t2200z/ancho_resumen.csv",
+              "sha256": "f3eaf83bc0001fe972f01fdd461df7a587efcc5199ab746e8c1ce654e9bbac5f"
+            },
+            {
+              "ruta": "evidencia/corridas/v5-ancho-20260930t2200z/meta.json",
+              "sha256": "a2a3d8e0a06d2c1073a5966a0a6b513951db2d460bcdaf00d844700357e0911b"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-09-30T20:27:05Z",
+          "gasto_usd": 0,
+          "manifiesto": "evidencia/corridas/v5-ancho-20260930t2200z/manifiesto.json",
+          "modelo": null,
+          "motivo": "no declara parametros.componente y el estudio tiene varios componentes; no declara parametros.componente y el estudio tiene varios componentes; no declara parametros.componente y el estudio tiene varios componentes",
+          "procedencia": "reproducido_local",
+          "resultado": "no_evaluable",
+          "run_id": "v5-ancho-20260930t2200z",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": {
         "aprobado_por_equipo": false,
         "fijado_utc": "2026-09-30T19:00:00Z",
@@ -614,7 +1027,7 @@
         "descripcion": "Todos los casos de conformance/cases (16 categorías) en Python y TypeScript.",
         "unidad": "release congelado"
       },
-      "n_corridas": 0,
+      "n_corridas": 1,
       "n_corridas_que_cuentan": 0,
       "nombre": "Conformidad y calidad del componente",
       "objetivo": "OE4",
@@ -662,7 +1075,9 @@
       ],
       "pregunta": "PI2: ¿las implementaciones de Python y TypeScript cumplen la especificación y se mantienen con umbrales de calidad en tres sistemas operativos?",
       "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_todas": {
+        "reproducido_local": 1
+      },
       "reproduccion": {
         "comando": "python -m coverage run --source=minifmt -m pytest -q tests experiments/generativo/tests && python -m coverage report --fail-under=90 && python conformance/run_python.py && node conformance/run_js.mjs",
         "nota": "Registrar cada ejecución con parametros.componente = suite_de_conformidad, cobertura o ci_tres_sistemas."
@@ -1118,7 +1533,7 @@
   "nota": "Derivado por tools/evidencia.py regenerar desde evidencia/estudios.json y evidencia/corridas/*/manifiesto.json. No editar a mano: python tools/evidencia.py verificar falla si difiere.",
   "objetivo": "OE4",
   "totales": {
-    "corridas": 0,
+    "corridas": 10,
     "corridas_invalidas": 0,
     "estudios": 10,
     "por_estado_ejecucion": {

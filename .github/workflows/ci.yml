@@ -48,6 +48,12 @@ jobs:
       - name: Resumen de cobertura
         if: always()
         run: cat cobertura.json || true
+      - name: Economía: el cálculo de JavaScript coincide con el de Python en los vectores dorados
+        run: node tests/test_economia_js.mjs
+      - name: Evidencia: manifiestos válidos, estudios honestos y derivados al día (ninguna cifra editada a mano)
+        run: python tools/evidencia.py verificar
+      - name: Tarifas: estructura y antigüedad (advertencia; caducan a los 14 días)
+        run: python tools/tarifas.py verificar || true
       - run: python playground/build.py
       - name: Build and verify offline distributions
         if: matrix.python == '3.12' && matrix.os == 'ubuntu-latest'

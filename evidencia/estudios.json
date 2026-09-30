@@ -236,7 +236,7 @@
       "bloqueo": null,
       "antecedentes": [
         {"id": "v5-casos-de-conformidad", "descripcion": "Casos de conformidad del repositorio (suite común a Python y TypeScript). El Plan v3 reporta 372 de 372; la cifra se vuelve a contar aquí desde los archivos.", "procedencia": "reportado_historico", "fuente": "conformance/cases", "cifras": [
-          {"etiqueta": "Casos en conformance/cases", "valor": 372, "unidad": "casos", "verificacion": {"tipo": "suma_longitudes", "glob": "conformance/cases/*.json", "ruta": "cases", "estricta": false}}
+          {"etiqueta": "Casos en conformance/cases", "valor": 376, "unidad": "casos", "verificacion": {"tipo": "suma_longitudes", "glob": "conformance/cases/*.json", "ruta": "cases", "estricta": false}}
         ]}
       ]
     },

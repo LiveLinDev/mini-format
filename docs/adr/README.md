@@ -42,3 +42,4 @@ Convenciones:
 | [0016](0016-tipos-date-y-decimal.md) | Tipos `date` y `decimal` | aceptada | 1.1, §6 |
 | [0017](0017-espacio-exterior-decimal-canonico-y-blancos.md) | Espacio exterior, escape de elementos de lista, decimal canónico, valores por omisión, registros vacíos y conjunto de blancos | **propuesta (no vigente)** | §3.4, §3.5, §6, §9 |
 | [0018](0018-enteros-grandes-en-typescript.md) | Enteros fuera de ±2^53 en TypeScript y en el navegador | **propuesta (no vigente)** | §4, §6 |
+| [0030](0030-propuesta-alias-de-enumeracion-y-diccionarios-por-documento.md) | Alias de enumeración y diccionarios por documento dentro de `.mini` 1.x (simulación de la ganancia) | **propuesta (no vigente)** | §5, §6 |

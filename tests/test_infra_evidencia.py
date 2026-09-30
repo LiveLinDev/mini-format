@@ -291,10 +291,13 @@ class HonestidadDeEstudios(Base):
         d = json.loads(p.read_text(encoding="utf-8"))
         d["clases"]["items_pedidos"] = 351
         p.write_text(json.dumps(d), encoding="utf-8")
-        (self.raiz / "conformance" / "cases" / "unique.json").unlink()   # 372 -> 367 casos
+        cases = self.raiz / "conformance" / "cases"
+        total = sum(len(json.loads(f.read_text(encoding="utf-8"))["cases"]) for f in cases.glob("*.json"))
+        quitados = len(json.loads((cases / "unique.json").read_text(encoding="utf-8"))["cases"])
+        (cases / "unique.json").unlink()   # el total baja; el registro declara el anterior
         errores, avisos, _ = self.estudios()
         self.assertTrue(any("«Ítems pedidos» dice 350 y el archivo da 351" in e for e in errores))
-        self.assertTrue(any("Casos en conformance/cases" in a and "367" in a for a in avisos))
+        self.assertTrue(any("Casos en conformance/cases" in a and str(total - quitados) in a for a in avisos))
         self.assertFalse(any("Casos en conformance/cases" in e for e in errores))
 
     def test_registro_incompleto_o_con_claves_raras(self):
