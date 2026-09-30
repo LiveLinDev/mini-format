@@ -26,11 +26,9 @@ from minifmt import dumps, from_json_schema, parse  # noqa: E402
 from minifmt.ai.repair import invalid_items, merge_repair, repair_request  # noqa: E402
 from minifmt.errors import MiniValidationError  # noqa: E402
 
-import diseno  # noqa: E402
-import perfiles  # noqa: E402
-import tokenizadores  # noqa: E402
-from dominios import dominios  # noqa: E402
-from especializacion import serializar_objeto  # noqa: E402
+from . import datos, diseno, perfiles, tokenizadores  # noqa: E402
+from .dominios import dominios  # noqa: E402
+from .especializacion import comprobar_equivalencia, serializar_objeto  # noqa: E402
 
 MESA = RAIZ / "examples" / "mesa-de-ayuda"
 ORIGEN = MESA / "grabaciones" / "mini" / "ok.mini"
@@ -95,7 +93,7 @@ def construir(comparacion: Optional[List[Dict[str, Any]]] = None,
     esp = diseno.especializacion_de("tickets")
     regs = registros_canonicos()
     mensajes = json.loads(MENSAJES.read_text(encoding="utf-8"))
-    dev = dom.generar(__import__("datos").SEMILLA_DESARROLLO, 0, perfiles.MUESTRAS_DOMINIO)
+    dev = dom.generar(datos.SEMILLA_DESARROLLO, 0, perfiles.MUESTRAS_DOMINIO)
     cd = perfiles.contrato_dominio(dom, dev)
     ins = perfiles.instrucciones(dom, esp, cd, dev)
     cg, ce = perfiles.contrato_general(dom), esp.contrato()
@@ -109,7 +107,6 @@ def construir(comparacion: Optional[List[Dict[str, Any]]] = None,
     perfiles.verificar_general(dom, regs)
     perfiles.verificar_dominio(dom, cd, regs)
     perfiles.verificar_json_abreviado(esp, regs)
-    from especializacion import comprobar_equivalencia
     comprobar_equivalencia(esp, regs)
 
     # ---- conversión a JSON canónico de la aplicación
@@ -209,6 +206,10 @@ def construir(comparacion: Optional[List[Dict[str, Any]]] = None,
             "general.cabecera": t.contar(g[0]), "general.registros_juntos": t.contar("\n".join(g[1:])),
             "nota": "cada componente es un texto completo tokenizado aparte; no suman exactamente el conteo del documento"}
 
+    lineas_instr = ins["especializado"]["compacta_sin_ejemplo"].split("\n")
+    componentes_instr = {nombre: [{"linea": i + 1, "texto": l, "tokens": t.contar(l)} for i, l in enumerate(lineas_instr)]
+                         for nombre, t in toks.items()}
+
     def ahorro(a, b):
         return None if not b else round(100 * (1 - a / b), 2)
 
@@ -222,7 +223,7 @@ def construir(comparacion: Optional[List[Dict[str, Any]]] = None,
             "ahorro_total_general_con_ejemplo_vs_json_sin_instruccion_pct": ahorro(tt["general_fromschema.con_ejemplo"], tt["json_compacto.ninguna"]),
             "ahorro_total_especializado_compacta_con_ejemplo_vs_json_sin_instruccion_pct": ahorro(tt["especializado.compacta_con_ejemplo"], tt["json_compacto.ninguna"]),
             "ahorro_total_especializado_compacta_con_ejemplo_vs_json_con_esquema_y_ejemplo_pct": ahorro(tt["especializado.compacta_con_ejemplo"], tt["json_compacto.schema_con_ejemplo"]),
-            "costo_instruccion_extra_especializado_vs_general_con_ejemplo": conteos[nombre]["instruccion.especializado.compacta_con_ejemplo"] - conteos[nombre]["instruccion.general_fromschema.con_ejemplo"],
+            "instruccion_especializado_menos_general_con_ejemplo_tokens": conteos[nombre]["instruccion.especializado.compacta_con_ejemplo"] - conteos[nombre]["instruccion.general_fromschema.con_ejemplo"],
         }
     out: Dict[str, Any] = {
         "esquema": "mini-format/ejemplo-tickets/1",
@@ -251,7 +252,9 @@ def construir(comparacion: Optional[List[Dict[str, Any]]] = None,
         "mapa_explicito": esp.mapa_explicito(),
         "contratos": {"general": cg.to_dict(), "especializado": esp.contrato_dict()},
         "conteos": {"tokens_por_texto_completo": conteos, "tokens_total_instruccion_mas_salida": totales,
-                    "componentes_del_mini": componentes_mini, "separador_del_total": "salto de línea doble"},
+                    "componentes_del_mini": componentes_mini,
+                    "componentes_de_la_instruccion_especializada_compacta": componentes_instr,
+                    "separador_del_total": "salto de línea doble"},
         "lectura": lectura,
         "conversion_a_json_canonico": conversion,
         "registro_erroneo": erroneo,

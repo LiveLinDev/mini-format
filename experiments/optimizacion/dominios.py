@@ -11,8 +11,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List
 
-import datos
-from especializacion import Campo
+from . import datos
+from .especializacion import Campo
 
 RAIZ = Path(__file__).resolve().parents[2]
 ESQUEMA_TICKETS = RAIZ / "examples" / "mesa-de-ayuda" / "ticket.schema.json"
@@ -22,7 +22,7 @@ ESQUEMA_TICKETS = RAIZ / "examples" / "mesa-de-ayuda" / "ticket.schema.json"
 class Dominio:
     id: str
     titulo: str
-    etiqueta: str                       # representativo | favorable | sin_ahorro
+    etiqueta: str                       # representativo | favorable | ahorro_pequeno
     sintetico: bool
     fuente: str
     clave_json: str
@@ -121,10 +121,10 @@ def dominios() -> Dict[str, Dominio]:
             notas=["CASO FAVORABLE: diseñado con esa forma (cuatro enumeraciones de etiqueta larga, fecha constante por lote, "
                    "hora, decimal de un dígito y booleano). El ahorro observado aquí NO es una promesa general."]),
         "comentarios": Dominio(
-            id="comentarios", titulo="Comentarios con texto libre largo (JSONPlaceholder)", etiqueta="sin_ahorro",
+            id="comentarios", titulo="Comentarios con texto libre largo (JSONPlaceholder)", etiqueta="ahorro_pequeno",
             sintetico=False, fuente="benchmark/public/data/comments.json (JSONPlaceholder, MIT; datos públicos de prueba)",
             clave_json="comments", prefijo_general="cm", prefijo_especializado="cme",
             esquema=ESQUEMA_COMENTARIOS, generar=datos.generar_comentarios, lotes_maximos=_lotes_comentarios,
             descripcion_especializada="Comentarios.",
-            notas=["Texto libre largo: no hay enumeraciones ni constantes que abreviar; se publica aunque no haya ahorro."]),
+            notas=["Texto libre largo: no hay enumeraciones ni constantes que abreviar. Es el caso de menor ahorro; se publica igual."]),
     }

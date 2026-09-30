@@ -19,9 +19,8 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, List, Sequence, Tuple
 
-import perfiles
-import tokenizadores
-from dominios import Dominio
+from . import perfiles, tokenizadores
+from .dominios import Dominio
 from minifmt import codec
 from minifmt.serializer import encode_field
 

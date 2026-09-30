@@ -11,12 +11,9 @@ import statistics
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-import datos
-import diseno
-import perfiles
-import tokenizadores
-from dominios import Dominio, dominios
-from especializacion import Especializacion, NoEquivalente, comprobar_equivalencia
+from . import datos, diseno, perfiles, tokenizadores
+from .dominios import Dominio, dominios
+from .especializacion import Especializacion, NoEquivalente, comprobar_equivalencia
 
 TAMANOS = (1, 5, 10, 25, 50, 100, 250)
 NMAX_EQUILIBRIO = 250

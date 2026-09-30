@@ -9,7 +9,7 @@ Dos de los tres dominios son SINTÉTICOS y deterministas (semilla registrada, si
 El tercero es una muestra PÚBLICA archivada (no sintética, pero de prueba y con licencia MIT):
 
 * ``comentarios`` — los comentarios de JSONPlaceholder de ``benchmark/public/data/comments.json``
-  (texto libre largo). Caso SIN AHORRO o con ahorro pequeño.
+  (texto libre largo). Caso de AHORRO PEQUEÑO (con lotes pequeños no ahorra en el total).
 
 Los generadores usan una sola fuente aleatoria por lote y consumen el flujo registro a registro, de
 modo que el lote de ``n`` registros es siempre el prefijo del lote de ``m > n`` para el mismo

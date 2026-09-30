@@ -11,11 +11,8 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-import datos
-import ejemplo
-import medir
-import perfiles
-from dominios import dominios
+from . import datos, ejemplo, medir, perfiles
+from .dominios import dominios
 
 RAIZ = Path(__file__).resolve().parents[2]
 DESTINO = RAIZ / "examples" / "optimizacion"
@@ -72,7 +69,7 @@ def archivos_dominio(dom_id: str) -> Dict[str, str]:
 
 def leeme(dom, regs, origen: str) -> str:
     etiqueta = {"representativo": "REPRESENTATIVO", "favorable": "FAVORABLE (diseñado con esa forma; no es promesa general)",
-                "sin_ahorro": "SIN AHORRO o con ahorro pequeño (texto libre largo)"}[dom.etiqueta]
+                "ahorro_pequeno": "AHORRO PEQUEÑO (texto libre largo; sin ahorro en el total con lotes pequeños)"}[dom.etiqueta]
     return (f"# {dom.titulo}\n\n"
             f"* Caso: **{etiqueta}**.\n"
             f"* Datos de referencia ({len(regs)} registros): {origen}. {'Sintético.' if dom.sintetico else 'No sintético: datos públicos de prueba.'}\n"

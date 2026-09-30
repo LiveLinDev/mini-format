@@ -26,21 +26,17 @@ from typing import Any, Dict, List, Optional
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "src"))
 sys.path.insert(0, str(RAIZ / "tools"))
-sys.path.insert(0, str(RAIZ / "experiments" / "optimizacion"))
+sys.path.insert(0, str(RAIZ / "experiments"))
 
 import evidencia_lib as ev  # noqa: E402
 
-import carpeta_ejemplos  # noqa: E402
-import datos  # noqa: E402
-import diseno  # noqa: E402
-import ejemplo  # noqa: E402
-import medir  # noqa: E402
-import perfiles  # noqa: E402
-import propuesta  # noqa: E402
-import tokenizadores  # noqa: E402
-from dominios import dominios  # noqa: E402
+from optimizacion import (carpeta_ejemplos, datos, diseno, documentos, ejemplo, medir, perfiles,  # noqa: E402
+                          propuesta, tokenizadores)
+from optimizacion.dominios import dominios  # noqa: E402
 
 CRITERIO = RAIZ / "experiments" / "optimizacion" / "criterio.json"
+README = RAIZ / "experiments" / "optimizacion" / "README.md"
+ADR = RAIZ / "docs" / "adr" / "0030-propuesta-alias-de-enumeracion-y-diccionarios-por-documento.md"
 ESPECIALIZADO = medir.PRIMARIO_ESPECIALIZADO
 DOMINIOS = ("tickets", "eventos", "comentarios")
 
@@ -256,6 +252,10 @@ def correr(salida: Path, run_id: str, tamanos, nmax: int, con_ejemplos: bool, of
     m["duracion_s"] = round(time.time() - t0, 1)
     destino = ev.guardar_corrida(m, archivos=archivos, directorio=salida)
     print(f"manifiesto: {destino}  ({m['duracion_s']} s)  resultado={m['resultado']}", flush=True)
+    if oficial:
+        # documentos derivados de los resultados que acaban de validarse (nunca cifras escritas a mano)
+        documentos.insertar_bloque(README, documentos.bloque_readme(salida))
+        ADR.write_text(documentos.adr(salida), encoding="utf-8", newline="\n")
     return destino
 
 

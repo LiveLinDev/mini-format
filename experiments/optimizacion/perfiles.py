@@ -26,8 +26,8 @@ from minifmt import dumps, from_json_schema, parse, spec_block  # noqa: E402
 from minifmt import domain as dominio_mini  # noqa: E402
 from minifmt.contract import Contract  # noqa: E402
 
-from dominios import Dominio  # noqa: E402
-from especializacion import (Especializacion, NoEquivalente, instruccion_compacta,  # noqa: E402
+from .dominios import Dominio  # noqa: E402
+from .especializacion import (Especializacion, NoEquivalente, instruccion_compacta,  # noqa: E402
                              instruccion_spec_block, serializar_objeto)
 
 PERFILES = ("json_compacto", "json_legible", "json_abreviado", "general_fromschema", "general_dominio", "especializado")

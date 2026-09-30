@@ -19,12 +19,11 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-import datos
-import tokenizadores
-from dominios import Dominio, dominios
-from especializacion import (Campo, Especializacion, NoEquivalente, comprobar_equivalencia, con_codigos,
+from . import datos, tokenizadores
+from .dominios import Dominio, dominios
+from .especializacion import (Campo, Especializacion, NoEquivalente, comprobar_equivalencia, con_codigos,
                              esquemas_de_codigos, instruccion_compacta)
-from perfiles import salida_especializada
+from .perfiles import salida_especializada
 
 AQUI = Path(__file__).resolve().parent
 DIRECTORIO = AQUI / "diseno"
