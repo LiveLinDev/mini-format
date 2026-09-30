@@ -1,0 +1,44 @@
+{
+  "title": "Tickets de soporte",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "código del ticket"
+    },
+    "prioridad": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta"
+      ]
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "acceso",
+        "pago",
+        "error",
+        "consulta"
+      ]
+    },
+    "resumen": {
+      "type": "string",
+      "description": "resumen breve de la solicitud"
+    },
+    "horas": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 40,
+      "description": "horas estimadas de atención"
+    }
+  },
+  "required": [
+    "id",
+    "prioridad",
+    "categoria",
+    "resumen",
+    "horas"
+  ]
+}

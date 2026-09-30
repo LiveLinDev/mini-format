@@ -1,0 +1,68 @@
+{
+  "prefix": "inc",
+  "version": 1,
+  "name": "Incidencias de infraestructura",
+  "description": "",
+  "parent": null,
+  "domain": "",
+  "list_separator": ",",
+  "records_key": "records",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "number of records"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "codigo",
+      "type": "str",
+      "desc": "código de la incidencia"
+    },
+    {
+      "name": "severidad",
+      "type": "enum",
+      "values": [
+        "menor",
+        "mayor",
+        "critica"
+      ]
+    },
+    {
+      "name": "sistema",
+      "type": "enum",
+      "values": [
+        "red",
+        "correo",
+        "vpn",
+        "impresion"
+      ]
+    },
+    {
+      "name": "descripcion",
+      "type": "str",
+      "desc": "descripción breve de la incidencia"
+    },
+    {
+      "name": "minutos",
+      "type": "int",
+      "min": 0,
+      "max": 480,
+      "desc": "minutos estimados de atención"
+    }
+  ],
+  "extensions": [],
+  "author": "",
+  "license": "MIT",
+  "source": ""
+}

@@ -1,0 +1,79 @@
+{
+  "prefix": "chg",
+  "version": 1,
+  "name": "Solicitudes de cambio",
+  "description": "",
+  "parent": null,
+  "domain": "",
+  "list_separator": ",",
+  "records_key": "cambios",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "number of records"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "codigo",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "titulo",
+      "type": "str"
+    },
+    {
+      "name": "tipo",
+      "type": "enum",
+      "values": [
+        "estandar",
+        "normal",
+        "emergencia"
+      ]
+    },
+    {
+      "name": "riesgo",
+      "type": "enum",
+      "values": [
+        "bajo",
+        "medio",
+        "alto"
+      ]
+    },
+    {
+      "name": "ventana_min",
+      "type": "int",
+      "min": 15,
+      "max": 480
+    },
+    {
+      "name": "sistemas",
+      "type": "list",
+      "item": "str",
+      "min": 1,
+      "max": 5
+    },
+    {
+      "name": "puntaje",
+      "type": "float",
+      "optional": true,
+      "min": 0,
+      "max": 10
+    }
+  ],
+  "extensions": [],
+  "author": "",
+  "license": "MIT",
+  "source": ""
+}

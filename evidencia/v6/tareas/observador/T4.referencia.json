@@ -1,0 +1,56 @@
+{
+  "tarea": "T4",
+  "prefijo": "chg",
+  "registros_positivo": [
+    {
+      "codigo": "CHG-201",
+      "titulo": "Actualizar el firmware del switch de la sede norte",
+      "tipo": "normal",
+      "riesgo": "medio",
+      "ventana_min": 120,
+      "sistemas": [
+        "red",
+        "switch"
+      ],
+      "puntaje": 3.5
+    },
+    {
+      "codigo": "CHG-202",
+      "titulo": "Rotar los certificados del portal de autoservicio",
+      "tipo": "estandar",
+      "riesgo": "bajo",
+      "ventana_min": 45,
+      "sistemas": [
+        "portal"
+      ],
+      "puntaje": null
+    },
+    {
+      "codigo": "CHG-203",
+      "titulo": "Migrar el relé de correo a la nueva subred",
+      "tipo": "emergencia",
+      "riesgo": "alto",
+      "ventana_min": 240,
+      "sistemas": [
+        "correo",
+        "dns",
+        "firewall"
+      ],
+      "puntaje": 8.0
+    }
+  ],
+  "negativo": {
+    "codigo_error": "E13",
+    "linea": 3
+  },
+  "campos": [
+    "codigo",
+    "titulo",
+    "tipo",
+    "riesgo",
+    "ventana_min",
+    "sistemas",
+    "puntaje"
+  ],
+  "nota": "Casos sintéticos; contrato de partida = forks/cat/contract.json (copia literal)."
+}

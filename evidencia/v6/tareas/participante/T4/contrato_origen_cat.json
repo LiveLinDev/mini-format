@@ -1,0 +1,79 @@
+{
+  "prefix": "cat",
+  "version": 1,
+  "parent": null,
+  "name": "Product catalogue entries",
+  "domain": "e-commerce",
+  "records_key": "products",
+  "description": "Catalogue rows with price, currency, stock, tags and optional rating.",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "d": {
+        "type": "str",
+        "desc": "generation date YYYYMMDD"
+      },
+      "store": {
+        "type": "str"
+      },
+      "cur": {
+        "type": "str",
+        "desc": "default currency"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "sku",
+      "type": "str",
+      "unique": true
+    },
+    {
+      "name": "name",
+      "type": "str"
+    },
+    {
+      "name": "category",
+      "type": "str"
+    },
+    {
+      "name": "price",
+      "type": "float",
+      "min": 0
+    },
+    {
+      "name": "currency",
+      "type": "enum",
+      "values": [
+        "USD",
+        "PEN",
+        "EUR"
+      ]
+    },
+    {
+      "name": "stock",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "tags",
+      "type": "list",
+      "item": "str",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "name": "rating",
+      "type": "float",
+      "optional": true,
+      "min": 0,
+      "max": 5
+    }
+  ],
+  "extensions": [],
+  "author": "A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC)",
+  "license": "MIT",
+  "source": "mini-format reference forks"
+}

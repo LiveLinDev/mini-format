@@ -1,0 +1,16 @@
+tk|n=15
+T-3301|alta|acceso|No llega el correo de confirmación de la cuenta|2
+T-3302|media|pago|El cupón de descuento no se aplica al carrito|2
+T-3303|baja|consulta|Cómo cambiar el idioma de la interfaz|1
+T-3304|alta|error|Pantalla en blanco al iniciar la aplicación de escritorio|7
+T-3305|media|acceso|El token de sesión expira antes de terminar el trámite|3
+T-3306|alta|pago|Pago rechazado con tarjeta aceptada en otra tienda|4
+T-3307|media|error|Las tildes aparecen rotas en el reporte exportado|3
+T-3308|baja|consulta|Requisitos mínimos para instalar el cliente|1
+T-3309|alta|error|Fallo 502 intermitente al guardar el formulario|8
+T-3310|media|acceso|No se puede vincular la cuenta con el proveedor externo|3
+T-3311|baja|pago|Consulta sobre el ciclo de facturación anual|1
+T-3312|media|error|El corrector ortográfico subraya palabras correctas|2
+T-3313|alta|acceso|Cuenta suspendida sin aviso previo|2
+T-3314|media|consulta|Límite de archivos adjuntos por mensaje|1
+T-3315|baja|error|El modo oscuro no recuerda la preferencia|2

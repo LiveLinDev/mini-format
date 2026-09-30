@@ -1,0 +1,782 @@
+{
+  "aviso": "fixture de prueba, no son datos de participantes",
+  "sesiones": [
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-01",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "json_mini",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1200,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 720,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 600,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 300,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 700,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          4,
+          2,
+          4,
+          2,
+          4,
+          2,
+          4,
+          2,
+          4,
+          2
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-02",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "mini_json",
+        "variante_json": "B",
+        "variante_mini": "A"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1800,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1110,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 700,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 420,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 800,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-03",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "json_mini",
+        "variante_json": "B",
+        "variante_mini": "A"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "tiempo_agotado",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_con_ayuda",
+          "segundos_activos": 1500,
+          "ayudas": [
+            {
+              "t_s": 100,
+              "nota": "ayuda de prueba"
+            }
+          ]
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_con_ayuda",
+          "segundos_activos": 800,
+          "ayudas": [
+            {
+              "t_s": 100,
+              "nota": "ayuda de prueba"
+            }
+          ]
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 400,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_con_ayuda",
+          "segundos_activos": 850,
+          "ayudas": [
+            {
+              "t_s": 100,
+              "nota": "ayuda de prueba"
+            }
+          ]
+        }
+      },
+      "sus": {
+        "respuestas": [
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-04",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "mini_json",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1620,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1770,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 500,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 350,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "tiempo_agotado",
+          "segundos_activos": null,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-05",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "json_mini",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "tiempo_agotado",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "tiempo_agotado",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "tiempo_agotado",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 550,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 600,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          5,
+          1,
+          4,
+          2,
+          5,
+          1,
+          4,
+          2,
+          5,
+          2
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-06",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "mini_json",
+        "variante_json": "B",
+        "variante_mini": "A"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 840,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 480,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 400,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 250,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 500,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          4,
+          3,
+          4,
+          2,
+          3,
+          2,
+          4,
+          1,
+          5,
+          3
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-07",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "json_mini",
+        "variante_json": "B",
+        "variante_mini": "A"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1560,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1260,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_con_ayuda",
+          "segundos_activos": 890,
+          "ayudas": [
+            {
+              "t_s": 100,
+              "nota": "ayuda de prueba"
+            }
+          ]
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 500,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_con_ayuda",
+          "segundos_activos": 880,
+          "ayudas": [
+            {
+              "t_s": 100,
+              "nota": "ayuda de prueba"
+            }
+          ]
+        }
+      },
+      "sus": {
+        "respuestas": [
+          2,
+          4,
+          3,
+          3,
+          2,
+          4,
+          3,
+          3,
+          2,
+          4
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-08",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "mini_json",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "tiempo_agotado",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "abandono",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "no_completa",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "abandono",
+          "segundos_activos": null,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "abandono",
+          "segundos_activos": null,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          4,
+          2,
+          4,
+          null,
+          4,
+          2,
+          4,
+          2,
+          4,
+          2
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-09",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "json_mini",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 1320,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 900,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 450,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 650,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          4,
+          2,
+          4,
+          2,
+          4,
+          2,
+          4,
+          2,
+          4,
+          2
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "PIL-01",
+        "tipo": "piloto",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "json_mini",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "PIL-02",
+        "tipo": "piloto",
+        "perfil": "fixture",
+        "lenguaje": "python"
+      },
+      "plan": {
+        "orden_t1": "mini_json",
+        "variante_json": "B",
+        "variante_mini": "A"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1
+        ],
+        "version_linguistica": "fixture"
+      }
+    },
+    {
+      "esquema": "mini-format/v6b-sesion/1",
+      "tipo_datos": "fixture_de_prueba",
+      "aviso": "fixture de prueba, no son datos de participantes",
+      "participante": {
+        "codigo": "EST-10",
+        "tipo": "estudio",
+        "perfil": "fixture",
+        "lenguaje": "python",
+        "valido": false,
+        "motivo_exclusion": "fixture: experiencia previa directa con mini-format"
+      },
+      "plan": {
+        "orden_t1": "mini_json",
+        "variante_json": "A",
+        "variante_mini": "B"
+      },
+      "tareas": {
+        "T1_json": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T1_mini": {
+          "tope_s": 1800,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T2": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T3": {
+          "tope_s": 600,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        },
+        "T4": {
+          "tope_s": 900,
+          "resultado": "completa_sin_ayuda",
+          "segundos_activos": 60,
+          "ayudas": []
+        }
+      },
+      "sus": {
+        "respuestas": [
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1,
+          5,
+          1
+        ],
+        "version_linguistica": "fixture"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+tk|n=12
+T-2201|alta|acceso|No puedo entrar al portal con el segundo factor|2
+T-2202|media|pago|El comprobante de pago llegó sin el número de operación|1
+T-2203|baja|consulta|Dónde descargo la factura del mes anterior|1
+T-2204|alta|error|La aplicación móvil se congela al abrir el perfil|6
+T-2205|media|acceso|El enlace de restablecimiento caduca de inmediato|2
+T-2206|alta|pago|Doble cargo por la misma orden de compra|3
+T-2207|media|error|El exportador falla con nombres como A\|B en la columna cliente|4
+T-2208|baja|consulta|Horario de atención del soporte telefónico|1
+T-2209|media|error|Los filtros del reporte no recuerdan la última selección|5
+T-2210|alta|acceso|Cuenta bloqueada tras tres intentos fallidos|1
+T-2211|baja|pago|Solicitud de factura a nombre de otra empresa|2
+T-2212|media|consulta|Diferencia entre el plan básico y el plan profesional|1

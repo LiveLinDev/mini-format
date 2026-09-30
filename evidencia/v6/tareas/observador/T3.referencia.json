@@ -1,0 +1,87 @@
+{
+  "tarea": "T3",
+  "contrato": "tk",
+  "declarados": 15,
+  "recuperados": [
+    {
+      "id": "T-3301",
+      "prioridad": "alta",
+      "categoria": "acceso",
+      "resumen": "No llega el correo de confirmación de la cuenta",
+      "horas": 2
+    },
+    {
+      "id": "T-3302",
+      "prioridad": "media",
+      "categoria": "pago",
+      "resumen": "El cupón de descuento no se aplica al carrito",
+      "horas": 2
+    },
+    {
+      "id": "T-3303",
+      "prioridad": "baja",
+      "categoria": "consulta",
+      "resumen": "Cómo cambiar el idioma de la interfaz",
+      "horas": 1
+    },
+    {
+      "id": "T-3304",
+      "prioridad": "alta",
+      "categoria": "error",
+      "resumen": "Pantalla en blanco al iniciar la aplicación de escritorio",
+      "horas": 7
+    },
+    {
+      "id": "T-3305",
+      "prioridad": "media",
+      "categoria": "acceso",
+      "resumen": "El token de sesión expira antes de terminar el trámite",
+      "horas": 3
+    },
+    {
+      "id": "T-3306",
+      "prioridad": "alta",
+      "categoria": "pago",
+      "resumen": "Pago rechazado con tarjeta aceptada en otra tienda",
+      "horas": 4
+    },
+    {
+      "id": "T-3307",
+      "prioridad": "media",
+      "categoria": "error",
+      "resumen": "Las tildes aparecen rotas en el reporte exportado",
+      "horas": 3
+    },
+    {
+      "id": "T-3308",
+      "prioridad": "baja",
+      "categoria": "consulta",
+      "resumen": "Requisitos mínimos para instalar el cliente",
+      "horas": 1
+    },
+    {
+      "id": "T-3309",
+      "prioridad": "alta",
+      "categoria": "error",
+      "resumen": "Fallo 502 intermitente al guardar el formulario",
+      "horas": 8
+    },
+    {
+      "id": "T-3310",
+      "prioridad": "media",
+      "categoria": "acceso",
+      "resumen": "No se puede vincular la cuenta con el proveedor externo",
+      "horas": 3
+    },
+    {
+      "id": "T-3311",
+      "prioridad": "baja",
+      "categoria": "pago",
+      "resumen": "Consulta sobre el ciclo de facturación anual",
+      "horas": 1
+    }
+  ],
+  "sin_recuperar": 4,
+  "primer_no_recuperado": 12,
+  "nota": "Dataset sintético; la respuesta se corta dentro del resumen del registro 12."
+}

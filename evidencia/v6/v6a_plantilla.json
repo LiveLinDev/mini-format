@@ -1,0 +1,108 @@
+{
+  "esquema": "mini-format/v6a-ficha/1",
+  "estado": "plantilla_vacia",
+  "aviso": "PLANTILLA SIN DATOS. Una ficha por sistema integrado. Nada de lo que hay aquí es un resultado: cada campo con valor null, cadena vacía o lista vacía está pendiente. No se rellena con supuestos; lo que no se conozca se deja en null y se explica en 'limitaciones'. Los datos personales y los documentos de autorización van a evidencia/restringida/, nunca a este archivo.",
+  "clasificacion": "naturalista (FEDS): la integración opera en el contexto real del sistema anfitrión; se estudian utilidad, restricciones y esfuerzo de adopción. No es intercambiable con V6b.",
+  "procedencia": null,
+  "ficha_numero": null,
+
+  "identificacion": {
+    "nombre_del_sistema": null,
+    "dominio": null,
+    "descripcion_breve": null,
+    "repositorio_o_ubicacion": null,
+    "version_del_sistema_anfitrion": null,
+    "sistema_registrado_en_este_estudio_como": null,
+    "dominio_distinto_del_otro_sistema_registrado": null,
+    "justificacion_de_dominio_distinto": null
+  },
+
+  "independencia_del_equipo": {
+    "es_ajeno_al_equipo": null,
+    "justificacion": null,
+    "relacion_del_mantenedor_con_el_equipo": null,
+    "nota": "Un sistema desarrollado o mantenido por el equipo, o por su misma organización, no acredita por sí solo una adopción externa. Un demostrador preparado por el equipo tampoco."
+  },
+
+  "mantenedor": {
+    "rol": null,
+    "organizacion": null,
+    "codigo_seudonimo": null,
+    "contacto_guardado_en": "evidencia/restringida/ (no se escribe aquí)"
+  },
+
+  "autorizacion": {
+    "uso_de_la_evidencia": {"otorgada": null, "fecha": null, "alcance": null, "documento_guardado_en": null},
+    "datos_del_sistema_enviados_a_un_proveedor": {"hubo_envio": null, "autorizada": null, "minimizacion_aplicada": null, "documento_guardado_en": null}
+  },
+
+  "cambio": {
+    "componente_reemplazado": null,
+    "flujo_anterior": null,
+    "flujo_nuevo": null,
+    "repositorio": null,
+    "commit_antes": null,
+    "commit_despues": null,
+    "archivos_tocados": [],
+    "lineas_anadidas": null,
+    "lineas_eliminadas": null,
+    "cambios_de_interfaz_o_persistencia": null,
+    "sustituye_o_complementa_el_lector_sin_rehacer_el_sistema": null
+  },
+
+  "contrato": {
+    "origen": null,
+    "comando_de_generacion": null,
+    "ruta": null,
+    "sha256": null,
+    "prefijo": null,
+    "version_del_contrato": null
+  },
+
+  "version_del_componente": {
+    "paquete": null,
+    "version_mini_format": null,
+    "version_spec": null,
+    "hash_del_paquete": null,
+    "commit_de_mini_format": null,
+    "entorno_instalado": {"so": null, "python": null, "node": null}
+  },
+
+  "ejecucion": {
+    "escenario": null,
+    "entradas_permitidas": null,
+    "datos_usados": {"origen": null, "minimizacion": null},
+    "modelo_usado": {"proveedor": null, "modelo": null, "procedencia_de_las_respuestas": null},
+    "fecha_inicio_utc": null,
+    "fecha_fin_utc": null,
+    "archivos_de_resultados": [],
+    "resultados_observados": null,
+    "fallos_observados": []
+  },
+
+  "incidencias": [],
+
+  "impacto_tecnico": {
+    "esfuerzo_de_integracion": {"valor": null, "unidad": null, "quien_lo_midio": null, "como_se_midio": null},
+    "dependencias_anadidas": [],
+    "riesgos_de_retorno": null
+  },
+
+  "conformidad_del_mantenedor": {
+    "confirma_el_alcance_ejecutado": null,
+    "forma_de_confirmacion": null,
+    "fecha": null,
+    "referencia_de_archivo": null,
+    "nota": "Es la confirmación del mantenedor sobre lo que se ejecutó, no una firma inventada. Solo se completa con una confirmación real y guardada."
+  },
+
+  "limitaciones": [],
+
+  "campos_de_incidencia": ["id", "descripcion", "severidad", "paso", "efecto", "evidencia", "resuelta", "fecha_utc"],
+  "enumeraciones": {
+    "contrato.origen": ["from-schema", "build", "manual"],
+    "ejecucion.datos_usados.origen": ["reales_minimizados", "sinteticos", "publicos"],
+    "conformidad_del_mantenedor.forma_de_confirmacion": ["correo", "acta", "comentario_en_repositorio", "otra"],
+    "procedencia": ["reportado_historico", "reproducido_local", "asistido_ia", "api_real"]
+  }
+}
