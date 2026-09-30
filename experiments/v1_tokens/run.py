@@ -15,7 +15,8 @@ No llama a ningún modelo ni descarga nada. Pasos:
  4. Tokens de los bloques de instrucción (.mini y JSON, es/en) y punto de
     equilibrio en tokens por llamada.
 
-Salidas en experiments/v1_tokens/results/ y experiments/v1_tokens/figures/.
+Salidas en experiments/v1_tokens/results/ y experiments/v1_tokens/figures/
+(o en --salida, p. ej. evidencia/corridas/<run_id>/, sin tocar lo archivado).
 """
 from __future__ import annotations
 
@@ -357,10 +358,17 @@ def figuras(reg, toks, resumen, T, filas_eq, I):
     print(f"[fig] figuras en {FIG}")
 
 
-def main():
+def main(argv=None):
+    global RES, FIG
     ap = argparse.ArgumentParser()
     ap.add_argument("--tokenizadores", default="o200k_base,cl100k_base,r50k_base")
-    args = ap.parse_args()
+    ap.add_argument("--salida", default=None,
+                    help="directorio de salida de las tablas (por defecto experiments/v1_tokens/results, lo archivado)")
+    ap.add_argument("--sin-figuras", action="store_true", help="no genera las figuras PNG")
+    args = ap.parse_args(argv)
+    if args.salida:
+        RES = Path(args.salida)
+        FIG = RES / "figuras"
     toks = C.tokenizadores(args.tokenizadores.split(","))
     for n, t in toks.items():
         print(f"tokenizador {n}: backend={t.backend}")
@@ -375,7 +383,8 @@ def main():
     FIT = ajustes(reg, toks, T)
     I = instrucciones(reg, toks)
     filas_eq, res_eq = equilibrio(reg, toks, T, FIT, I)
-    figuras(reg, toks, resumen, T, filas_eq, I)
+    if not args.sin_figuras:
+        figuras(reg, toks, resumen, T, filas_eq, I)
     for r in resumen:
         if r["variante"] == "muestreo" and r["n"] in (1, 100):
             print(f"  {r['tokenizador']:11s} n={r['n']:<3d} vs {r['referencia']:12s} media={r['media']:6.1f} "

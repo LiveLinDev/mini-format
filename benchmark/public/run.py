@@ -2,6 +2,11 @@
 
     python benchmark/public/run.py
     python benchmark/public/run.py --baselines-only
+    python benchmark/public/run.py --tokenizer cl100k_base --out-dir evidencia/corridas/<run_id>
+
+With the defaults the output is the archived ``results.json``/``results.csv`` (o200k_base).
+``--tokenizer`` and ``--out-dir`` let a reproduction count with another of the three
+vocabularies in ``benchmark/vocab`` and write elsewhere without touching the archive.
 
 Requires the optional benchmark dependencies and Node >=22.6 for official TOON.
 """
@@ -21,6 +26,8 @@ import yaml
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "benchmark"))
+import vocab_local  # noqa: E402
 from baselines import (  # noqa: E402
     compact, csv_decode, csv_encode, equivalent, flatten, toon_batch,
     unflatten, xml_decode, xml_encode,
@@ -60,14 +67,20 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--node", default="node")
     parser.add_argument("--baselines-only", action="store_true")
+    parser.add_argument("--tokenizer", default="o200k_base", choices=vocab_local.NOMBRES,
+                        help="vocabulary in benchmark/vocab used for every count (default: o200k_base)")
+    parser.add_argument("--out-dir", default=None, help="where to write the results (default: this directory)")
     args = parser.parse_args()
+    out_dir = Path(args.out_dir) if args.out_dir else HERE
+    out_dir.mkdir(parents=True, exist_ok=True)
+    vocab_local.preparar_cache([args.tokenizer])
     if not args.baselines_only:
         from minifmt.domain import infer_contract, encode, decode, make_prompt
-    tokenizer = get_tokenizer("o200k_base")
+    tokenizer = get_tokenizer(args.tokenizer)
     manifest = json.loads((HERE / "sources.json").read_text(encoding="utf-8"))
     report = {
         "methodology_version": 1,
-        "tokenizer": "o200k_base",
+        "tokenizer": args.tokenizer,
         "tokenizer_backend": tokenizer.backend,
         "python": platform.python_version(),
         "tiktoken": version("tiktoken") if tokenizer.backend == "tiktoken" else None,
@@ -194,8 +207,8 @@ def main() -> None:
         }
         report["summary"]["wins_vs_flat_toon"] = sum(dataset["savings"]["vs_toon_flat_pct"] > 0 for dataset in report["datasets"])
     basename = "baseline-results" if args.baselines_only else "results"
-    (HERE / f"{basename}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    with (HERE / f"{basename}.csv").open("w", encoding="utf-8", newline="") as handle:
+    (out_dir / f"{basename}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    with (out_dir / f"{basename}.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(flat_rows[0]))
         writer.writeheader()
         writer.writerows(flat_rows)

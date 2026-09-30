@@ -5,7 +5,8 @@ Outputs
 benchmark/results/tokens.csv      long table: prefix,n,tokenizer,format,tokens,bytes,payload_tokens
 benchmark/results/summary_12.csv  per fork at n=12 (o200k_base): tokens per format + savings
 benchmark/results/roundtrip.csv   parser round-trip + official TOON round-trip per fork
-Run:  python benchmark/run_benchmark.py [--sizes 12,25,50,100,250,500]
+Run:  python benchmark/run_benchmark.py [--sizes 12,25,50,100,250,500] [--out-dir DIR]
+(--out-dir writes the same files elsewhere, e.g. evidencia/corridas/<run_id>, leaving the archive untouched)
 """
 from __future__ import annotations
 
@@ -32,7 +33,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sizes", default="12,25,50,100,250,500")
     ap.add_argument("--tokenizers", default="o200k_base,cl100k_base")
+    ap.add_argument("--out-dir", default=None, help="output directory (default: benchmark/results)")
     args = ap.parse_args()
+    RESULTS = Path(args.out_dir) if args.out_dir else globals()["RESULTS"]
     sizes = [int(s) for s in args.sizes.split(",")]
     toks = {name: get_tokenizer(name) for name in args.tokenizers.split(",")}
     reg = Registry.load(ROOT / "forks")
