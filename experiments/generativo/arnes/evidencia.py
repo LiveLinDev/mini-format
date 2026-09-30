@@ -24,6 +24,25 @@ from .ejecucion import leer_muestras  # noqa: E402
 ESTUDIOS = ("V2", "V3b", "V4")
 
 
+PREFIJOS_DE_SALIDAS = ("experiments/generativo/resultados/", "evidencia/corridas/")
+
+
+def codigo_de_la_corrida(prefijos: Sequence[str] = PREFIJOS_DE_SALIDAS) -> Dict[str, Any]:
+    """``info_codigo`` sin contar como «código modificado» las salidas que la propia corrida va a sobrescribir.
+
+    Regenerar el piloto borra y reescribe archivos versionados de ``resultados/`` y ``evidencia/corridas/``: eso no cambia el
+    código que se ejecuta.  Si TODO lo modificado son salidas, el árbol cuenta como limpio (y se anota cuántas se ignoraron);
+    si hay cualquier otro cambio, se conserva tal cual (con su ``snapshot_sha256``).
+    """
+    c = EV.info_codigo()
+    if c.get("arbol_limpio") is False:
+        resto = [f for f in c.get("archivos_modificados", []) if not any(f.replace("\\", "/").startswith(p) for p in prefijos)]
+        if not resto:
+            c = dict(c, arbol_limpio=True, snapshot_sha256=None, ignorados_por_ser_salidas=len(c.get("archivos_modificados", [])),
+                     archivos_modificados=[])
+    return c
+
+
 def _csv(ruta: Path) -> List[Dict[str, str]]:
     if not ruta.exists():
         return []

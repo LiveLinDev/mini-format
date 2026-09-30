@@ -44,6 +44,7 @@ from arnes import ejecucion as X  # noqa: E402
 from arnes import importacion as IM  # noqa: E402
 from arnes import plan as PL  # noqa: E402
 from arnes.archivos import escribir_texto  # noqa: E402
+from arnes.evidencia import codigo_de_la_corrida  # noqa: E402
 from arnes.costos import estimar  # noqa: E402
 from arnes.presupuesto import ErrorAutorizacion, Presupuesto, validar_autorizacion  # noqa: E402
 from arnes.tarifas import Tarifas  # noqa: E402
@@ -186,8 +187,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
 # ejecutar
 # --------------------------------------------------------------------------
 def ejecutar(args: argparse.Namespace, argv_original: List[str]) -> int:
-    import evidencia_lib as EV
-    codigo0 = EV.info_codigo()              # el código que ejecuta, ANTES de escribir ningún resultado
+    codigo0 = codigo_de_la_corrida()              # el código que ejecuta, ANTES de escribir ningún resultado
     try:
         cfg = X.cargar_config(_resolver(args.config))
         ctx = X.Contexto(cfg)
@@ -362,8 +362,7 @@ def cmd_importar(argv: List[str], argv_original: List[str]) -> int:
     ap.add_argument("--analizar", action="store_true")
     ap.add_argument("--emitir-evidencia", nargs="?", const="", default=None, metavar="ETIQUETA")
     a = ap.parse_args(argv)
-    import evidencia_lib as EV
-    codigo0 = EV.info_codigo()
+    codigo0 = codigo_de_la_corrida()
     ruta = Path(a.ruta)
     if not ruta.exists():
         print(f"no existe {ruta}", file=sys.stderr)

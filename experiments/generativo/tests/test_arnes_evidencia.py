@@ -101,3 +101,17 @@ def test_v3b_y_v4_conservan_su_identidad(corridas):
     assert filas and all(f["latencia_origen"] == "simulada" for f in filas)
     # sin tarifa verificada el costo está vacío y dice por qué; nunca un 0
     assert all(f["costo_por_1000_validos_usd"] == "" and f["costo_nota"] for f in filas)
+
+
+def test_codigo_de_la_corrida_ignora_las_salidas_pero_no_el_codigo(monkeypatch):
+    base = {"commit": "abc", "rama": "x", "arbol_limpio": False, "snapshot_sha256": "h",
+            "archivos_modificados": ["experiments/generativo/resultados/simulado/piloto/manifiesto.json", "evidencia/corridas/v2-x/a.csv"]}
+    monkeypatch.setattr(EVI.EV, "info_codigo", lambda: dict(base))
+    c = EVI.codigo_de_la_corrida()
+    assert c["arbol_limpio"] is True and c["snapshot_sha256"] is None and c["ignorados_por_ser_salidas"] == 2 and c["archivos_modificados"] == []
+    sucio = dict(base, archivos_modificados=base["archivos_modificados"] + ["experiments/generativo/arnes/brazos.py"])
+    monkeypatch.setattr(EVI.EV, "info_codigo", lambda: dict(sucio))
+    c2 = EVI.codigo_de_la_corrida()                                   # hay código modificado: se conserva tal cual
+    assert c2["arbol_limpio"] is False and c2["snapshot_sha256"] == "h" and len(c2["archivos_modificados"]) == 3
+    monkeypatch.setattr(EVI.EV, "info_codigo", lambda: dict(base, arbol_limpio=True, archivos_modificados=[], snapshot_sha256=None))
+    assert EVI.codigo_de_la_corrida()["arbol_limpio"] is True

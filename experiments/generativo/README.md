@@ -37,7 +37,7 @@ experiments/generativo/
 │   ├── evidencia.py        corridas V2/V3b/V4 con tools/evidencia_lib
 │   ├── simulador.py        extensión del adaptador simulado para las condiciones del Plan
 │   └── estadistica.py · truncamiento.py
-├── tests/                  176 pruebas (red bloqueada en todas; una se activa solo si está el cálculo de economía)
+├── tests/                  177 pruebas (red bloqueada en todas; una se activa solo si está el cálculo de economía)
 └── resultados/simulado/
     ├── piloto/                   piloto SIMULADO vigente (reproducible a HEAD)
     └── piloto_historico_0cfa477/ el del arnés anterior: HISTÓRICO, ya no se reproduce (ver su LEEME)
@@ -55,7 +55,9 @@ Desde la raíz del repositorio (Python ≥ 3.9; `pyyaml`, `matplotlib`, `tiktoke
 python experiments/generativo/run.py ejecutar --config configs/piloto.yaml --adapter simulado --emitir-evidencia
 ```
 
-Escribe `resultados/simulado/piloto/`, el análisis y las corridas `evidencia/corridas/v2-…`, `v3b-…` y `v4-…` con
+Escribe `resultados/simulado/piloto/`, el análisis y las corridas `evidencia/corridas/v2-…`, `v3b-…` y `v4-…` (el manifiesto
+registra el commit y si el árbol de código estaba limpio; las salidas que la propia corrida sobrescribe no cuentan como código
+modificado) con
 procedencia `simulado` y resultado `no_evaluable`. El piloto se reproduce **bit a bit** (en simulado los tiempos locales
 no se miden: el reloj es constante; la latencia de API es sintética y va marcada como simulada).
 
@@ -384,4 +386,4 @@ sobre lo solicitado · presupuesto autorizado, proyección previa, libro, reinte
 celdas faltantes · orden aleatorizado y hashes del diseño · usage por categorías y costo por solicitud · IC por
 conglomerados, mediana y p95 · dry-run con recuento · importación de material asistido por IA · corridas con
 `tools/evidencia_lib` · se elimina `precios.json`. Las 60 pruebas anteriores se conservan (con los cambios intencionales:
-A->A0, D+R->D+1, presupuesto por proyección y errores conservados como muestra) y se añaden 116.
+A->A0, D+R->D+1, presupuesto por proyección y errores conservados como muestra) y se añaden 117.
