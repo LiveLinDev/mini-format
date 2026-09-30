@@ -1,16 +1,26 @@
 """Brazos (condiciones) del experimento: construcción de prompts y lectores.
 
-A    Prompt propio: instrucción escrita a mano ("una línea por registro, campos
-     separados por |"), lectura con ``split('|')`` ingenuo, como la haría un
-     equipo sin biblioteca: sin escapes, sin validar enumeraciones ni conteos.
-B    JSON sin modo estructurado: se pide JSON con un ejemplo; lectura con
-     ``json.loads`` (quitando cercas de código, práctica habitual).
-C    JSON con modo estructurado nativo del proveedor (esquema JSON derivado del
-     contrato); misma lectura que B.
+Condiciones del Plan de Validación v3 (§5):
+
+A    JSON con instrucción MÍNIMA: solo la forma del documento y los nombres de
+     campo, sin tipos, rangos, ejemplo ni reglas; lectura con ``json.loads``
+     (quitando cercas de código, práctica habitual).
+B    JSON con el contrato descrito en el prompt (tipos, rangos, opcionales,
+     ejemplo); misma lectura que A.
+C    JSON con restricción nativa del proveedor (``response_format`` /
+     ``json_schema``) derivada del contrato; misma lectura que A. Solo donde el
+     modelo la admite: si no, la celda es ``no_aplicable`` (no un fallo).
 D    .mini con biblioteca: instrucción ``spec_block(contrato, idioma)``, lectura
      con ``extract_document`` + ``minifmt.parse(..., strict=False)``.
-D+R  D seguido de reparación selectiva (``minifmt.ai.repair_request`` /
-     ``merge_repair``); no genera de nuevo, reutiliza la salida de D.
+X+1  UNA reparación selectiva de la MISMA respuesta del brazo X (no otra muestra
+     independiente), para X en A, B, C y D. D+1 usa ``minifmt.ai.repair_request``
+     / ``merge_repair``; A+1, B+1 y C+1 usan la reparación equivalente para JSON
+     (``json_tolerante``): así la ventaja de un formato no se confunde con que
+     solo un brazo tenga reparación.
+A0   Control opcional FUERA del diseño del Plan: prompt escrito a mano ("una
+     línea por registro, campos separados por |") con lectura ``split('|')``
+     ingenua, como la haría un equipo sin biblioteca. Era el «A» del arnés
+     anterior; no se incluye en las configuraciones del estudio.
 """
 from __future__ import annotations
 
@@ -28,8 +38,24 @@ from minifmt.serializer import encode_header
 
 from .tareas import Tarea
 
-BRAZOS = ["A", "B", "C", "D", "D+R"]
-GENERADORES = {"A", "B", "C", "D"}          # brazos que hacen una llamada de generación propia
+BRAZOS_PRIMARIOS = ("A0", "A", "B", "C", "D")
+BASE_REPARACION = {"A+1": "A", "B+1": "B", "C+1": "C", "D+1": "D"}   # brazo de reparación -> brazo que repara
+BRAZOS = BRAZOS_PRIMARIOS + tuple(BASE_REPARACION)
+GENERADORES = set(BRAZOS_PRIMARIOS)        # brazos que hacen una llamada de generación propia
+ORDEN_BRAZOS = ["A", "A+1", "B", "B+1", "C", "C+1", "D", "D+1", "A0"]   # orden de presentación
+
+
+def es_reparacion(brazo: str) -> bool:
+    return brazo in BASE_REPARACION
+
+
+def base_de(brazo: str) -> str:
+    """Brazo cuya respuesta se usa (el propio brazo si genera; el que repara si es X+1)."""
+    return BASE_REPARACION.get(brazo, brazo)
+
+
+def formato_de(brazo: str) -> str:
+    return {"A0": "pipe", "A": "json", "B": "json", "C": "json", "D": "mini"}[base_de(brazo)]
 
 
 @dataclass
@@ -54,17 +80,24 @@ def _tipo_humano(f) -> str:
     if f.type == "enum":
         return "uno de: " + ", ".join(f.values or [])
     if f.type == "list":
-        return f"lista de {f.item}"
+        return f"lista de {f.item if f.item != 'enum' else 'uno de: ' + ', '.join(f.item_values or [])}" + _rango_lista(f)
     if f.type == "mlist":
         regla = {"exactly_one": "exactamente uno", "at_least_one": "al menos uno", "at_most_one": "como máximo uno",
                  "any": "cero o más"}[f.marker]
-        return f"lista de opciones con selección ({regla} seleccionado)"
+        return f"lista de opciones con selección ({regla} seleccionado)" + _rango_lista(f)
     if f.type == "tuple":
         return "grupo fijo (" + ", ".join(f"{c.name}: {c.type}" for c in f.items) + ")"
     rng = ""
     if f.min is not None or f.max is not None:
         rng = f" entre {f.min if f.min is not None else '-∞'} y {f.max if f.max is not None else '∞'}"
-    return f.type + rng
+    pista = {"date": " (AAAA-MM-DD)", "decimal": " (decimal exacto sin exponente, p. ej. 12.50)"}.get(f.type, "")
+    return f.type + rng + pista + (f" — {f.desc}" if f.desc else "")
+
+
+def _rango_lista(f) -> str:
+    if f.min is None and f.max is None:
+        return ""
+    return f", entre {int(f.min or 0)} y {int(f.max) if f.max else '∞'} elementos"
 
 
 def _campos_lista(c: Contract) -> str:
@@ -101,7 +134,7 @@ def cabecera_mini_sin_n(t: Tarea) -> str:
 # --------------------------------------------------------------------------
 # Esquema JSON (brazo C)
 # --------------------------------------------------------------------------
-_JSON_T = {"str": "string", "int": "integer", "float": "number", "bool": "boolean"}
+_JSON_T = {"str": "string", "int": "integer", "float": "number", "bool": "boolean", "date": "string", "decimal": "string"}
 
 
 def _esq_escalar(tipo: str, valores: Optional[List[str]]) -> Dict[str, Any]:
@@ -139,10 +172,29 @@ def esquema_json(c: Contract) -> Dict[str, Any]:
 # --------------------------------------------------------------------------
 # Prompts
 # --------------------------------------------------------------------------
+def nombres_json(c: Contract) -> List[str]:
+    """Claves de un registro JSON, en el orden del contrato (una lista con selección son dos claves)."""
+    out: List[str] = []
+    for f in c.fields:
+        out += [f.json_items, f.json_selected] if f.type == "mlist" else [f.name]
+    return out
+
+
+def _nota_seleccion(c: Contract) -> str:
+    mlist = [f for f in c.fields if f.type == "mlist"]
+    if not mlist:
+        return ""
+    f = mlist[0]
+    return (f" En '{f.json_items}' van las opciones y en '{f.json_selected}' el índice (base 0) "
+            "de la opción seleccionada, o la lista de índices si puede haber varias.")
+
+
 def construir_prompt(t: Tarea, brazo: str, idioma: str = "es") -> Prompt:
+    """Prompt del brazo; un brazo de reparación (X+1) comparte el prompt de generación de X."""
     c = t.contrato
     user = _mensaje_usuario(t)
-    if brazo == "A":
+    brazo = base_de(brazo)
+    if brazo == "A0":
         sistema = (
             "Devuelve los datos como texto plano: una línea por registro, campos separados por | en este orden:\n"
             + _campos_lista(c)
@@ -151,23 +203,23 @@ def construir_prompt(t: Tarea, brazo: str, idioma: str = "es") -> Prompt:
               "true o false. No escribas encabezado ni texto adicional.\nEjemplo de una línea:\n"
             + _ejemplo_pipe(t))
         return Prompt(sistema, user)
+    if brazo == "A":
+        # instrucción mínima: forma del documento y nombres de campo; nada más (sin tipos, rangos, ejemplo ni reglas)
+        sistema = (f"Devuelve solo JSON: un objeto con la clave \"{c.records_key}\" que contiene una lista con un objeto "
+                   "por registro, con los campos: " + ", ".join(nombres_json(c)) + ".")
+        return Prompt(sistema, user)
     if brazo in ("B", "C"):
         ejemplo = json.dumps({c.records_key: [_registro_json(t.ejemplo, c)]}, ensure_ascii=False)
-        mlist = [f for f in c.fields if f.type == "mlist"]
-        nota_sel = ""
-        if mlist:
-            f = mlist[0]
-            nota_sel = (f" En '{f.json_items}' van las opciones y en '{f.json_selected}' el índice (base 0) "
-                        "de la opción seleccionada, o la lista de índices si puede haber varias.")
+        descripcion = (c.description + "\n") if c.description else ""
         sistema = (
             f"Devuelve solo un documento JSON válido con la forma {{\"{c.records_key}\": [ ... ]}}, un objeto por "
-            "registro, con estos campos:\n" + _campos_lista(c) + "\n" + nota_sel
+            "registro, con estos campos:\n" + descripcion + _campos_lista(c) + "\n" + _nota_seleccion(c)
             + " Usa null para campos sin valor. Sin texto adicional.\nEjemplo con un registro:\n" + ejemplo)
         rf = None
         if brazo == "C":
             rf = {"type": "json_schema", "name": f"salida_{c.prefix}", "schema": esquema_json(c)}
         return Prompt(sistema, user, rf)
-    if brazo in ("D", "D+R"):
+    if brazo == "D":
         ej = dumps({"header": t.cabecera, c.records_key: [t.ejemplo]}, c)
         sistema = spec_block(c, idioma, ej)
         sistema += f"\nCabecera que debes usar: {cabecera_mini_sin_n(t)}"
@@ -181,9 +233,10 @@ def construir_prompt(t: Tarea, brazo: str, idioma: str = "es") -> Prompt:
 # --------------------------------------------------------------------------
 def salida_referencia(t: Tarea, brazo: str) -> str:
     c = t.contrato
-    if brazo == "A":
+    brazo = base_de(brazo)
+    if brazo == "A0":
         return "\n".join("|".join(naive_cell(r.get(f.name), f, r) for f in c.fields) for r in t.registros)
-    if brazo == "B":
+    if brazo in ("A", "B"):
         return json.dumps({c.records_key: [_registro_json(r, c) for r in t.registros]}, ensure_ascii=False, indent=1)
     if brazo == "C":
         return json.dumps({c.records_key: [_registro_json(r, c) for r in t.registros]}, ensure_ascii=False)
@@ -214,7 +267,7 @@ def _conv_ingenua(txt: str, tipo: str) -> Any:
     return txt
 
 
-def leer_A(texto: str, t: Tarea) -> Lectura:
+def leer_pipe(texto: str, t: Tarea) -> Lectura:
     c = t.contrato
     regs, avisos = [], []
     for k, linea in enumerate((texto or "").split("\n"), 1):
@@ -292,14 +345,14 @@ def leer_D(texto: str, t: Tarea) -> Lectura:
 
 
 def leer(brazo: str, texto: str, t: Tarea) -> Lectura:
-    if brazo == "A":
-        return leer_A(texto, t)
-    if brazo in ("B", "C"):
+    """Lector del brazo. Los brazos X+1 leen con el lector de X (el documento reparado tiene su mismo formato)."""
+    f = formato_de(brazo)
+    if f == "pipe":
+        return leer_pipe(texto, t)
+    if f == "json":
         return leer_json(texto, t)
-    if brazo in ("D", "D+R"):
-        return leer_D(texto, t)
-    raise ValueError(brazo)
+    return leer_D(texto, t)
 
 
 def tipo_objetivo_simulado(brazo: str) -> str:
-    return {"A": "pipe", "B": "json", "C": "json_schema", "D": "mini", "D+R": "mini"}[brazo]
+    return {"A0": "pipe", "A": "json_minimo", "B": "json", "C": "json_schema", "D": "mini"}[base_de(brazo)]

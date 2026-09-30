@@ -8,7 +8,12 @@ aplica el lector del brazo al prefijo.  Métricas por corte:
 * ``correctos_completo``: registros correctos en la respuesta sin cortar;
 * ``ideal``: ``floor(fraccion_cortada × correctos_completo)`` (misma
   aproximación que E5);
-* ``eficiencia``: ``min(1, recuperados / max(1, ideal))``.
+* ``eficiencia``: ``min(1, recuperados / ideal)``, o ``None`` si ``ideal`` es 0 (denominador cero: no hay nada
+  recuperable, no es un fracaso ni un éxito).
+
+V3a HEREDADA y exploratoria: corta las respuestas guardadas de cada brazo.  La V3a del Plan de Validación
+(documento canónico único, fracciones predefinidas, JSON parcial y JSON Lines) es otro flujo:
+``experiments/truncamiento/``.
 """
 from __future__ import annotations
 
@@ -39,7 +44,7 @@ def cortes_muestra(muestra: Dict[str, Any], tarea: Tarea, cortes: int, semilla: 
         filas.append({"id": muestra["id"], "tarea": muestra["tarea"], "brazo": brazo, "proveedor": muestra["proveedor"],
                       "modelo": muestra["modelo"], "fraccion": round(frac, 4), "correctos_completo": completo,
                       "recuperados": m["correctos"], "ideal": ideal,
-                      "eficiencia": min(1.0, m["correctos"] / max(1, ideal)),
+                      "eficiencia": (min(1.0, m["correctos"] / ideal) if ideal > 0 else None),
                       "incorrectos_sin_aviso": m["incorrectos_sin_aviso"], "detectado": m["detectado"],
                       "cero": m["correctos"] == 0})
     return filas

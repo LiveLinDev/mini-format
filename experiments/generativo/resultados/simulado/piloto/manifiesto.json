@@ -2,6 +2,7 @@
   "nombre": "piloto",
   "adaptador": "simulado",
   "simulado": true,
+  "procedencia": "simulado",
   "advertencia": "RESULTADOS SIMULADOS: solo validan el arnés; no son resultados del estudio",
   "config": {
     "nombre": "piloto",
@@ -22,7 +23,10 @@
       "B",
       "C",
       "D",
-      "D+R"
+      "A+1",
+      "B+1",
+      "C+1",
+      "D+1"
     ],
     "modelos": [
       {
@@ -44,6 +48,17 @@
         "perfil_simulado": "debil"
       }
     ],
+    "presupuesto": {
+      "autorizado_usd": 0,
+      "por_celda_max_usd": null,
+      "firmado_por": "",
+      "fecha": ""
+    },
+    "controles": {
+      "aleatorizar": true,
+      "reintentos_por_llamada": 2,
+      "max_fallos_seguidos": 5
+    },
     "experimentos": {
       "v2": {
         "activo": true
@@ -55,9 +70,13 @@
           "B",
           "C",
           "D",
-          "D+R"
+          "A+1",
+          "B+1",
+          "C+1",
+          "D+1"
         ],
         "repeticiones": 3,
+        "politica_limite": "comun_por_tarea",
         "fraccion_max_tokens": 0.5
       },
       "v3a": {
@@ -83,16 +102,195 @@
       "fraccion_lineas_reparadas": 0.2
     }
   },
-  "commit": "0cfa477e3096c273764f04d903d53215a89532b4",
-  "python": "3.9.0",
-  "unidades": 504,
+  "hashes": {
+    "config_sha256": "d852ed9e84decad05207f198716d7771facd0bd0c96a2df0a371235a6bf826da",
+    "prompts_sha256": "a614f6fc045cf2b3124dc9df048a66fcefd4949ee8cf966fc07bbef1f98bbd4f",
+    "prompts": {
+      "ext-cls/A": "9fa5d4883262c3eaec9ec294eac53be24806ac728fa3b19ebf28584652ec3950",
+      "ext-cls/B": "c6a04b1cd629dcfc59fda6fd5fef3807b854dc3a31a9c1579d97e0b7842bbb6e",
+      "ext-cls/C": "a368a3447ae14c456250b26bab5a3e1be85e43c2e43506dba2cd2875b40b481b",
+      "ext-cls/D": "f0204404180f85cedf7dd2fdfdad0ec3d29bbac7e5b583c23a541b693426fcbf",
+      "ext-log/A": "72f1764768a53324775b9db47dd0384e4b960b4f855fe1c7b3a887c82db35257",
+      "ext-log/B": "b04c453ccdfc58b6002103bf6923f4aea18bce053ac4ef2ab4029eef81eb10a3",
+      "ext-log/C": "6378da7272e36f74e4a8e4c93a04d0acb7f36eb025e67e4d90b67ec6d0343b0b",
+      "ext-log/D": "04bc1fda24152ce205822db4bc172ca255e07873b769763043626ad9d136cdae",
+      "ext-tc/A": "eafddfed30afaacfe13ead5cf0516ffefa301efd0a62de29de36a3f7c42f60a8",
+      "ext-tc/B": "9054e7cb9644be1f5b44ab2512564a008d6b1bad4550ba8c9fb9d8883b01583b",
+      "ext-tc/C": "218bf043aee5ed8f56eb65ccd67d568ae8e6f0cd90fd0484b9b6ef524f8748b5",
+      "ext-tc/D": "d39156d332028cd8aee1fb6099ac478e061b67b2a471b32b2456d31a43f41c07",
+      "gen-card/A": "3227d0c7f7bcedc2d1564b5e5f88e233e44d68c406d3a68f759fa31be1212356",
+      "gen-card/B": "e88457ccd4bf7cbc80d5f94d1252a8a881ed6490f2f021a2afbf0b1761e62f1c",
+      "gen-card/C": "a99c7ac180aa00a768191f3aa441a8af7196dfaeb98e786ae19c0420d25a0794",
+      "gen-card/D": "0438eb2e16351897e01ed719554ee5a441a8a3e22ee13236a993b2594576d9cf"
+    },
+    "contratos": [
+      {
+        "ruta": "forks/cls/contract.json",
+        "sha256": "b1fc4c5749c6fb46b1aadd6149cf1bc279aabeab4266aa7ab42e2472aaa77629",
+        "prefijo": "cls"
+      },
+      {
+        "ruta": "forks/log/contract.json",
+        "sha256": "6a4837eaa0cd1d4ad69a598823d0aaeaf27d87c4a7947cdf0bca5a5ebd2c8a28",
+        "prefijo": "log"
+      },
+      {
+        "ruta": "forks/tc/contract.json",
+        "sha256": "6c9eeb6c7cd005a846c436d1008886dfb5a1c4821726c0d2c4f0f90e24800736",
+        "prefijo": "tc"
+      },
+      {
+        "ruta": "forks/card/contract.json",
+        "sha256": "d234087016acd6bfae9b38e9ad28bafa55d033f08568aa449bb72eb7f3a82eb7",
+        "prefijo": "card"
+      }
+    ],
+    "conjuntos": [
+      {
+        "ruta": "forks/cls/fixtures/canonical.json",
+        "sha256": "0be01ae9640d9bf02a169916b1fb90bac279be88868f171ddfc81c459c88a466",
+        "nombre": "cls/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/log/fixtures/canonical.json",
+        "sha256": "df1e6be8a74b47d1ce2bc6440488cdcda76ec1e801894f1510549b24d986b76a",
+        "nombre": "log/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/tc/fixtures/canonical.json",
+        "sha256": "8971f5c6ddcb0926640624f00081e41d59624c4cee6655aa84b3ef4db2a4786f",
+        "nombre": "tc/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/card/fixtures/canonical.json",
+        "sha256": "64ba99c26aee30c88e5d0e796adb3f497a43c32fdad6bc12bd1e1c488113135f",
+        "nombre": "card/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      }
+    ],
+    "celdas_sha256": "f70afa7d04a72c49d99588290c377e1e33eec6233d2bf53d322c437ab598f69f",
+    "limites_sha256": "b24cfa96f2e43af50c48bb88393799eb58ced2d45075c36c2661445c15db23a9",
+    "orden_sha256": "e44361603cbfbbf9fa96d788661be8ce31535eca4eb076b0b660d7c1e050dbf3",
+    "codigo_arnes_sha256": {
+      "brazos.py": "8324f44a88814aacd57262d2ff1d9936221be33800e9c5b4b6904f189d5533f1",
+      "json_tolerante.py": "9295b33566d8e74521408ee43614c4b540de4e8dcbaa41f0e550ccbbbe06c990",
+      "metricas.py": "dbe33066f80007f4c4fe3e5f7f033783edd42e39614a6b2bffba8c6d4a6f16da",
+      "ejecucion.py": "ab3c2207c3977877d638a50c59c58a660fb5f58d16fae3f3841084b837cdfb6d",
+      "tareas.py": "38513d4b4b508827674cfd38c7ec0a5fd404d3fb22f07e7b4ba44632fb810820",
+      "usage.py": "4f56395e2ded2b1ba0c9cc5c46efecd5495a32103bf39fcccde71bb0246f1df1",
+      "tarifas.py": "ae8a2f2115b16463fc880b6b8408f75163c5f1924cf42591261cfbbc7b4234d7"
+    },
+    "nucleo_minifmt_sha256": {
+      "parser.py": "d6e4803835dc94fa20cf5ec7dfff75f37dc84f1443e941c416518da0dd319423",
+      "values.py": "fc8aae78a26ad923ebcc0c094807ddfcb415b8f4e282de4d43cc4bb4af70461b",
+      "codec.py": "79fb58915bd0e58b06f9c10a711a52547014bd6d4e493ebe72862cc3f9678751",
+      "serializer.py": "a1c821ada116e63ef1fc30ebc2a00c2de812c7597e78b3e13b6eff690b94c38d",
+      "contract.py": "4655da142451797449b3d5fe53878e705078f6d3394f5c442661aef1f978736d",
+      "prompt.py": "68bab0177eb7cf5d5d3fb466a628462ed841fc6648adf9c20c842ea2e106a482",
+      "ai/repair.py": "d902807ac2e4b36cd7066a2d5b5c4fad4afcafff23277e44c96d1f1c91518d2a"
+    },
+    "tarifas": {
+      "archivo": null,
+      "sha256": null,
+      "por_modelo": {
+        "openai:gpt-4.1-mini": {
+          "estado": "ausente"
+        },
+        "anthropic:claude-haiku-4-5": {
+          "estado": "ausente"
+        },
+        "groq:llama-3.3-70b-versatile": {
+          "estado": "ausente"
+        }
+      }
+    },
+    "diseno_sha256": "408c122ed55f7112f1d3c296ae68f368b897abbd5df8a3c4f9e6023e17382d3d"
+  },
+  "commit": "6d6b07a53db7ce28d3411e32ba926ced0aa88be8",
+  "codigo": {
+    "commit": "6d6b07a53db7ce28d3411e32ba926ced0aa88be8",
+    "rama": "stream/arnes",
+    "arbol_limpio": true,
+    "snapshot_sha256": null,
+    "archivos_modificados": [],
+    "ignorados_por_ser_salidas": 36
+  },
+  "python": "3.11.9",
+  "unidades": 792,
+  "no_aplicables": 72,
   "omitidas": [
-    "v2: brazo C omitido para groq:llama-3.3-70b-versatile (sin modo estructurado declarado) en 4 tarea(s)",
-    "v3b: brazo C omitido para groq:llama-3.3-70b-versatile (sin modo estructurado declarado) en 4 tarea(s)"
+    "v2: brazo C omitido (y C+1) para groq:llama-3.3-70b-versatile (sin modo estructurado declarado) en 4 tarea(s)",
+    "v3b: brazo C omitido (y C+1) para groq:llama-3.3-70b-versatile (sin modo estructurado declarado) en 4 tarea(s)"
   ],
+  "orden": {
+    "aleatorizado": true,
+    "semilla": 3820194968
+  },
+  "presupuesto": {
+    "autorizado_usd": "0",
+    "por_celda_max_usd": null,
+    "firmado_por": "",
+    "fecha": ""
+  },
+  "max_costo_usd": null,
+  "nueva_version": null,
+  "condiciones_ejecucion": {
+    "concurrencia": 1,
+    "calentamiento": "ninguno (no hay llamadas de calentamiento)",
+    "exclusiones_tecnicas": "las muestras con desenlace error_tecnico no entran en la latencia (se cuentan aparte)",
+    "reintentos_por_llamada": 2,
+    "red": "simulada",
+    "latencia_api": "simulada"
+  },
   "estimacion": {
-    "llamadas": 396,
-    "costo_esperado_usd": 1.067541628425,
-    "costo_maximo_usd": 3.652806636
+    "recuento": {
+      "experimentos": {
+        "v2": {
+          "primarias_nominales": 288,
+          "no_aplicables_primarias": 24,
+          "primarias_a_ejecutar": 264,
+          "reparaciones_nominales": 288,
+          "no_aplicables_reparaciones": 24,
+          "celdas_reparacion_a_ejecutar": 264,
+          "reparaciones_maximas": 264,
+          "llamadas_maximas": 528
+        },
+        "v3b": {
+          "primarias_nominales": 144,
+          "no_aplicables_primarias": 12,
+          "primarias_a_ejecutar": 132,
+          "reparaciones_nominales": 144,
+          "no_aplicables_reparaciones": 12,
+          "celdas_reparacion_a_ejecutar": 132,
+          "reparaciones_maximas": 132,
+          "llamadas_maximas": 264
+        }
+      },
+      "totales": {
+        "primarias_nominales": 432,
+        "primarias_a_ejecutar": 396,
+        "no_aplicables": 72,
+        "reparaciones_maximas": 396,
+        "llamadas_maximas": 792
+      },
+      "explicacion": [
+        "v2: nominal = 4 tareas × 3 modelos × 6 repeticiones × 4 brazos primarios (A, B, C, D) = 288 llamadas primarias",
+        "v2: menos 24 celdas del brazo C no aplicables (groq:llama-3.3-70b-versatile: 24; el modelo no declara modo estructurado) = 264 llamadas primarias a ejecutar",
+        "v2: además 264 celdas de reparación (A+1, B+1, C+1, D+1), de 288 nominales; cada una añade como máximo 1 llamada(s) de reparación y solo si la respuesta base tiene algo que reparar",
+        "v3b: nominal = 4 tareas × 3 modelos × 3 repeticiones × 4 brazos primarios (A, B, C, D) = 144 llamadas primarias",
+        "v3b: menos 12 celdas del brazo C no aplicables (groq:llama-3.3-70b-versatile: 12; el modelo no declara modo estructurado) = 132 llamadas primarias a ejecutar",
+        "v3b: además 132 celdas de reparación (A+1, B+1, C+1, D+1), de 144 nominales; cada una añade como máximo 1 llamada(s) de reparación y solo si la respuesta base tiene algo que reparar",
+        "total de llamadas primarias a ejecutar = 264 (v2) + 132 (v3b) = 396"
+      ]
+    },
+    "costo_esperado_usd": null,
+    "costo_maximo_usd": null
   }
 }

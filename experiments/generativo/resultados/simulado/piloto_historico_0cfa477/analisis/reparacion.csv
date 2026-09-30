@@ -1,0 +1,5 @@
+experimento,tipo_tarea,pares,muestras_reparadas,llamadas_reparacion,registros_correctos_ganados,cambio_incorrectos_sin_aviso,exactas_D,exactas_DR,tokens_reparacion_total,tokens_por_registro_ganado,salida_reparacion_vs_generacion_pct
+v2,extraccion,54,22,22,24,0,25,31,17367,723.6,5.62
+v2,generativa,18,7,7,7,0,12,15,5865,837.9,5.52
+v3b,extraccion,27,22,22,2,0,0,0,16065,8032.5,16.24
+v3b,generativa,9,9,9,2,0,0,0,7273,3636.5,27.49

@@ -1,0 +1,18 @@
+{
+  "_aviso": "FIXTURE DE PRUEBA: estas cifras NO son tarifas reales ni se usan fuera de las pruebas. Solo ejercitan la aritmética, la proyección del tope y el rechazo de tarifas no verificadas.",
+  "consultado_utc": "2000-01-01T00:00:00Z",
+  "tarifas": [
+    {"proveedor": "openai", "modelo_api_id": "gpt-4.1-mini", "moneda": "USD", "entrada_sin_cache_por_millon": "1.00",
+     "entrada_cache_lectura_por_millon": "0.10", "entrada_cache_escritura_por_millon": null, "salida_por_millon": "2.00",
+     "estado": "verificada", "fecha_consulta_utc": "2000-01-01T00:00:00Z", "url_oficial": "https://ejemplo.invalid/openai"},
+    {"proveedor": "anthropic", "modelo_api_id": "claude-haiku-4-5", "moneda": "USD", "entrada_sin_cache_por_millon": "1.00",
+     "entrada_cache_lectura_por_millon": "0.10", "entrada_cache_escritura_por_millon": "1.25", "salida_por_millon": "5.00",
+     "estado": "verificada", "fecha_consulta_utc": "2000-01-01T00:00:00Z", "url_oficial": "https://ejemplo.invalid/anthropic"},
+    {"proveedor": "groq", "modelo_api_id": "llama-3.3-70b-versatile", "moneda": "USD", "entrada_sin_cache_por_millon": null,
+     "entrada_cache_lectura_por_millon": null, "entrada_cache_escritura_por_millon": null, "salida_por_millon": null,
+     "estado": "no_verificada", "fecha_consulta_utc": "2000-01-01T00:00:00Z", "url_oficial": "https://ejemplo.invalid/groq"},
+    {"proveedor": "groq", "modelo_api_id": "openai/gpt-oss-120b", "moneda": "USD", "entrada_sin_cache_por_millon": "0.50",
+     "entrada_cache_lectura_por_millon": "0.25", "entrada_cache_escritura_por_millon": null, "salida_por_millon": "1.50",
+     "estado": "verificada", "fecha_consulta_utc": "2000-01-01T00:00:00Z", "url_oficial": "https://ejemplo.invalid/groq"}
+  ]
+}

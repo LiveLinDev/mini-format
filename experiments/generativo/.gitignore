@@ -1,5 +1,9 @@
 # Muestras crudas del adaptador simulado: se regeneran de forma determinista con run.py
 resultados/simulado/**/muestras.jsonl
 resultados/simulado/**/fallos.jsonl
+resultados/**/plan.jsonl
+resultados/**/libro.jsonl
+resultados/**/ejecucion.lock
+resultados/**/analisis/solicitudes.jsonl
 # Logs de ejecución
 resultados/**/ejecucion.log

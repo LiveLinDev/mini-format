@@ -1,0 +1,65 @@
+{
+  "criterio": {
+    "evaluable_solo_con": "api_real",
+    "interpretacion": "estimación puntual de la validez agregada por (brazo, modelo) >= umbral; se cumple si al menos min_modelos modelos de al menos min_proveedores proveedores la alcanzan; el IC por solicitud se informa pero no decide",
+    "metrica": "validez final = registros válidos / registros solicitados (ausentes cuentan como no válidos)",
+    "min_modelos": 3,
+    "min_proveedores": 2,
+    "umbral": 0.95
+  },
+  "motivo": "el material no es api_real (simulado, asistido por IA o mezclado): una meta no se evalúa con él",
+  "por_brazo": {
+    "A": {
+      "cumple": null,
+      "modelos_evaluados": 3,
+      "modelos_que_cumplen": 0,
+      "proveedores_que_cumplen": 0
+    },
+    "A+1": {
+      "cumple": null,
+      "modelos_evaluados": 3,
+      "modelos_que_cumplen": 0,
+      "proveedores_que_cumplen": 0
+    },
+    "B": {
+      "cumple": null,
+      "modelos_evaluados": 3,
+      "modelos_que_cumplen": 0,
+      "proveedores_que_cumplen": 0
+    },
+    "B+1": {
+      "cumple": null,
+      "modelos_evaluados": 3,
+      "modelos_que_cumplen": 1,
+      "proveedores_que_cumplen": 1
+    },
+    "C": {
+      "cumple": null,
+      "modelos_evaluados": 2,
+      "modelos_que_cumplen": 2,
+      "proveedores_que_cumplen": 2
+    },
+    "C+1": {
+      "cumple": null,
+      "modelos_evaluados": 2,
+      "modelos_que_cumplen": 2,
+      "proveedores_que_cumplen": 2
+    },
+    "D": {
+      "cumple": null,
+      "modelos_evaluados": 3,
+      "modelos_que_cumplen": 1,
+      "proveedores_que_cumplen": 1
+    },
+    "D+1": {
+      "cumple": null,
+      "modelos_evaluados": 3,
+      "modelos_que_cumplen": 2,
+      "proveedores_que_cumplen": 2
+    }
+  },
+  "procedencias": [
+    "simulado"
+  ],
+  "resultado": "no_evaluable"
+}
