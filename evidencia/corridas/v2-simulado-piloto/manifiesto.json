@@ -1,10 +1,47 @@
 {
   "codigo": {
-    "arbol_limpio": true,
-    "archivos_modificados": [],
-    "commit": "f6266308c488580d873c0d5837564950d05cc5dd",
+    "arbol_limpio": false,
+    "archivos_modificados": [
+      "evidencia/corridas/v2-simulado-piloto/comparaciones_pareadas.csv",
+      "evidencia/corridas/v2-simulado-piloto/desenlaces.csv",
+      "evidencia/corridas/v2-simulado-piloto/manifiesto.json",
+      "evidencia/corridas/v2-simulado-piloto/meta_v2.json",
+      "evidencia/corridas/v2-simulado-piloto/reparacion.csv",
+      "evidencia/corridas/v2-simulado-piloto/resumen_brazo_modelo.csv",
+      "evidencia/corridas/v2-simulado-piloto/resumen_brazos.csv",
+      "evidencia/corridas/v2-simulado-piloto/solicitudes.jsonl",
+      "evidencia/corridas/v3b-simulado-piloto/manifiesto.json",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_desenlaces.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_muestras.jsonl",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_reparacion.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazo_modelo.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazos.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_solicitudes.jsonl",
+      "evidencia/corridas/v4-simulado-piloto/latencia_costo.csv",
+      "evidencia/corridas/v4-simulado-piloto/manifiesto.json",
+      "experiments/generativo/resultados/simulado/piloto/analisis/comparaciones_pareadas.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/desenlaces.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v2_desenlaces_registros.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v2_tokens.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v2_validez_final.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v3_recuperacion.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v4_latencia.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/latencia_costo.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/meta_v2.json",
+      "experiments/generativo/resultados/simulado/piloto/analisis/reparacion.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen.md",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen_brazo_modelo.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen_brazo_tarea.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen_brazos.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/v3a_truncamiento.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/v3a_truncamiento_modelo.csv",
+      "experiments/generativo/resultados/simulado/piloto/celdas_faltantes.jsonl",
+      "experiments/generativo/resultados/simulado/piloto/estado_estudio.json",
+      "experiments/generativo/resultados/simulado/piloto/manifiesto.json"
+    ],
+    "commit": "cb2a5cf44c385c65e811dfb18674d6652430b3f5",
     "rama": "stream/arnes",
-    "snapshot_sha256": null
+    "snapshot_sha256": "625b7d4235efae9c143effac5552cba71ada5efefe505db2bc51524d3ce1c480"
   },
   "comando": "python experiments/generativo/run.py ejecutar --config configs/piloto.yaml --adapter simulado --emitir-evidencia",
   "conjuntos": [
@@ -98,7 +135,7 @@
   "esquema": "mini-format/corrida/1",
   "estado_ejecucion": "ejecutado",
   "estudio": "V2",
-  "fecha_utc": "2026-09-30T19:35:33Z",
+  "fecha_utc": "2026-09-30T19:41:21Z",
   "gasto_usd": 0.0,
   "intento": null,
   "limitaciones": [
@@ -229,9 +266,9 @@
       "sha256": "153225c6feb3c3e9b88ca2c8cf7fa3c3db69582b15347ea627b74a4aa4c01c45"
     },
     {
-      "bytes": 465507,
+      "bytes": 496131,
       "ruta": "evidencia/corridas/v2-simulado-piloto/solicitudes.jsonl",
-      "sha256": "3c9a80b93adb98f8c9fc04e1d1cb9d277df286f31fa3d398c84a2be9210c8b7d"
+      "sha256": "ad68f0343afe09c6329225b0b0009d220a368af61877be55ef2e7c296e0a0b27"
     },
     {
       "bytes": 1791,

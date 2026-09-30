@@ -182,10 +182,10 @@
       "brazos.py": "8324f44a88814aacd57262d2ff1d9936221be33800e9c5b4b6904f189d5533f1",
       "json_tolerante.py": "9295b33566d8e74521408ee43614c4b540de4e8dcbaa41f0e550ccbbbe06c990",
       "metricas.py": "dbe33066f80007f4c4fe3e5f7f033783edd42e39614a6b2bffba8c6d4a6f16da",
-      "ejecucion.py": "7ba42c83bf82e4e5078a41f85b0bfca22f23c1a5a78bb1136e0f73bd374874b5",
+      "ejecucion.py": "708ed3b593a19eb16b8840428f0e0b51fbb715bd436157802c3e826f2bbc509a",
       "tareas.py": "38513d4b4b508827674cfd38c7ec0a5fd404d3fb22f07e7b4ba44632fb810820",
       "usage.py": "4f56395e2ded2b1ba0c9cc5c46efecd5495a32103bf39fcccde71bb0246f1df1",
-      "tarifas.py": "ecc07f8f2de0ab086a9a58db283a85b3fc6399080fd471b9ce530ca339a5f5b8"
+      "tarifas.py": "ae8a2f2115b16463fc880b6b8408f75163c5f1924cf42591261cfbbc7b4234d7"
     },
     "nucleo_minifmt_sha256": {
       "parser.py": "d6e4803835dc94fa20cf5ec7dfff75f37dc84f1443e941c416518da0dd319423",
@@ -211,15 +211,52 @@
         }
       }
     },
-    "diseno_sha256": "8de96be621e68765665d2b96e2b03cd7ed777c1a7ec3d29fcc68540577097fc7"
+    "diseno_sha256": "31d3a3acea7d982cd4140d56b77de99e7489badefbc2f7172d4f1e2cffbf5dd4"
   },
-  "commit": "f6266308c488580d873c0d5837564950d05cc5dd",
+  "commit": "cb2a5cf44c385c65e811dfb18674d6652430b3f5",
   "codigo": {
-    "commit": "f6266308c488580d873c0d5837564950d05cc5dd",
+    "commit": "cb2a5cf44c385c65e811dfb18674d6652430b3f5",
     "rama": "stream/arnes",
-    "arbol_limpio": true,
-    "snapshot_sha256": null,
-    "archivos_modificados": []
+    "arbol_limpio": false,
+    "snapshot_sha256": "625b7d4235efae9c143effac5552cba71ada5efefe505db2bc51524d3ce1c480",
+    "archivos_modificados": [
+      "evidencia/corridas/v2-simulado-piloto/comparaciones_pareadas.csv",
+      "evidencia/corridas/v2-simulado-piloto/desenlaces.csv",
+      "evidencia/corridas/v2-simulado-piloto/manifiesto.json",
+      "evidencia/corridas/v2-simulado-piloto/meta_v2.json",
+      "evidencia/corridas/v2-simulado-piloto/reparacion.csv",
+      "evidencia/corridas/v2-simulado-piloto/resumen_brazo_modelo.csv",
+      "evidencia/corridas/v2-simulado-piloto/resumen_brazos.csv",
+      "evidencia/corridas/v2-simulado-piloto/solicitudes.jsonl",
+      "evidencia/corridas/v3b-simulado-piloto/manifiesto.json",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_desenlaces.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_muestras.jsonl",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_reparacion.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazo_modelo.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_resumen_brazos.csv",
+      "evidencia/corridas/v3b-simulado-piloto/v3b_solicitudes.jsonl",
+      "evidencia/corridas/v4-simulado-piloto/latencia_costo.csv",
+      "evidencia/corridas/v4-simulado-piloto/manifiesto.json",
+      "experiments/generativo/resultados/simulado/piloto/analisis/comparaciones_pareadas.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/desenlaces.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v2_desenlaces_registros.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v2_tokens.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v2_validez_final.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v3_recuperacion.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/fig_v4_latencia.png",
+      "experiments/generativo/resultados/simulado/piloto/analisis/latencia_costo.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/meta_v2.json",
+      "experiments/generativo/resultados/simulado/piloto/analisis/reparacion.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen.md",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen_brazo_modelo.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen_brazo_tarea.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/resumen_brazos.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/v3a_truncamiento.csv",
+      "experiments/generativo/resultados/simulado/piloto/analisis/v3a_truncamiento_modelo.csv",
+      "experiments/generativo/resultados/simulado/piloto/celdas_faltantes.jsonl",
+      "experiments/generativo/resultados/simulado/piloto/estado_estudio.json",
+      "experiments/generativo/resultados/simulado/piloto/manifiesto.json"
+    ]
   },
   "python": "3.11.9",
   "unidades": 792,
