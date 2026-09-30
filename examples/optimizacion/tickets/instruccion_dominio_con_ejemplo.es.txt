@@ -1,0 +1,38 @@
+# Contrato de dominio .mini
+
+Devuelve solamente un documento .mini conforme a este contrato, sin Markdown ni explicaciones.
+
+Profile: mini-domain/1
+Header: `tkd|v=1|n=<record count>|h=9e9a0b51d50e`
+La cabecera requiere m=<JSON posicional del documento completo con la colección de registros sustituida por []>. record_path=["tickets"]. Escape m using the same field rules.
+
+1. Una cabecera seguida de una línea por registro. Conserva el orden de columnas indicado.
+2. Usa ? sólo para un campo opcional ausente y ~ para null; no son equivalentes. No inventes valores ausentes.
+3. Las cadenas se escriben sin comillas; cadena vacía, ? literal, ~ literal o cadena que empieza con comillas usa una cadena JSON.
+4. Escapa barra inversa como \\, separador como \|, salto de línea como \n y retorno como \r. No recortes espacios.
+5. Los objetos obligatorios no-nullables se aplanan en columnas según las rutas indicadas. Otros objetos anidados son arrays posicionales según schema; {} representa un miembro opcional ausente.
+6. Números y booleanos usan sintaxis JSON.
+7. Las listas contienen valores transformados recursivamente. Un nodo de tipo json envuelve su valor en [valor]; null sigue siendo null.
+8. No agregues claves ni cambies tipos. Si faltan muestras para un tipo, pide reconstruir el contrato con más ejemplos.
+9. No uses d salvo que agrupes columnas constantes: d es un array JSON de [índice de columna, celda codificada] y esas columnas se omiten de todas las filas.
+10. Opcionalmente e=[ [índice de columna,[celda0,celda1,...]],...] declara un diccionario de cadenas del documento; la columna usa índices enteros desde 0. Una columna no puede estar en d y e.
+11. Si no queda ninguna columna en una fila, escribe -. n cuenta todas las filas, incluso esas filas vacías.
+
+Columns (zero-based; paths use JSON Pointer escaping):
+0: id (string)
+1: prioridad (string)
+2: categoria (string)
+3: resumen (string)
+4: horas (integer)
+
+Schema:
+```json
+{"type":"object","fields":[{"name":"tickets","optional":false,"schema":{"type":"array","items":{"type":"object","fields":[{"name":"id","optional":false,"schema":{"type":"string"}},{"name":"prioridad","optional":false,"schema":{"type":"string"}},{"name":"categoria","optional":false,"schema":{"type":"string"}},{"name":"resumen","optional":false,"schema":{"type":"string"}},{"name":"horas","optional":false,"schema":{"type":"integer"}}]}}}]}
+```
+
+Example / Ejemplo:
+```mini
+tkd|v=1|n=2|h=9e9a0b51d50e|m=[[]]
+T-1100|alta|error|la app de escritorio ignora las palabras con tilde (desde el martes)|5
+T-1101|alta|error|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2
+```

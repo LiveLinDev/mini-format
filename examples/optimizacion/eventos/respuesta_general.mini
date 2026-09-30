@@ -1,0 +1,11 @@
+ev|n=10
+EQ-0137|planta_pintura|lectura_normal|informativa|descartado|2026-10-01|00:02|29.9|false
+EQ-0204|muelle_de_carga|lectura_normal|advertencia|resuelto|2026-10-01|00:05|23.3|false
+EQ-0216|planta_pintura|lectura_normal|informativa|resuelto|2026-10-01|00:11|30.4|true
+EQ-0153|taller_mecanico|lectura_normal|informativa|resuelto|2026-10-01|00:15|26.5|false
+EQ-0099|sala_de_control|lectura_normal|informativa|resuelto|2026-10-01|00:21|23.9|false
+EQ-0232|almacen_norte|vibracion_excesiva|advertencia|en_progreso|2026-10-01|00:30|29.7|true
+EQ-0155|sala_de_control|lectura_normal|informativa|resuelto|2026-10-01|00:36|21.4|false
+EQ-0058|sala_de_control|vibracion_excesiva|advertencia|resuelto|2026-10-01|00:40|26.6|false
+EQ-0030|taller_mecanico|falla_de_comunicacion|advertencia|abierto|2026-10-01|00:51|3.1|false
+EQ-0188|planta_pintura|lectura_normal|informativa|descartado|2026-10-01|00:51|31|false

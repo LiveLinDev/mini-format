@@ -1,0 +1,11 @@
+evd|v=1|n=10|h=237b1ba1db38|m=[[]]|d=[[5,"2026-10-01"]]|e=[[2,["lectura_normal","vibracion_excesiva","falla_de_comunicacion"]],[3,["informativa","advertencia"]]]
+EQ-0137|planta_pintura|0|0|descartado|00:02|29.9|false
+EQ-0204|muelle_de_carga|0|1|resuelto|00:05|23.3|false
+EQ-0216|planta_pintura|0|0|resuelto|00:11|30.4|true
+EQ-0153|taller_mecanico|0|0|resuelto|00:15|26.5|false
+EQ-0099|sala_de_control|0|0|resuelto|00:21|23.9|false
+EQ-0232|almacen_norte|1|1|en_progreso|00:30|29.7|true
+EQ-0155|sala_de_control|0|0|resuelto|00:36|21.4|false
+EQ-0058|sala_de_control|1|1|resuelto|00:40|26.6|false
+EQ-0030|taller_mecanico|2|1|abierto|00:51|3.1|false
+EQ-0188|planta_pintura|0|0|descartado|00:51|31.0|false

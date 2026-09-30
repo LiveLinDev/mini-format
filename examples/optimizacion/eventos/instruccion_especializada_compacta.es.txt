@@ -1,0 +1,12 @@
+Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.
+Línea 1 (cabecera): eve|n=<nº de registros>|f=<día del reporte>
+Luego UNA línea por registro, campos separados por |, en este orden:
+1. id_equipo: entero (número sin el prefijo EQ-; 4 dígitos)
+2. planta: a=almacen_norte b=almacen_sur c=planta_ensamblaje d=planta_pintura e=patio_exterior f=sala_de_control g=taller_mecanico h=muelle_de_carga
+3. tipo_evento: t=temperatura_fuera_de_rango v=vibracion_excesiva a=apertura_no_autorizada f=falla_de_comunicacion m=mantenimiento_programado l=lectura_normal b=bateria_baja
+4. severidad: i=informativa a=advertencia c=critica
+5. estado: a=abierto e=en_progreso r=resuelto d=descartado
+6. hora: entero 0..1439 (minutos desde las 00:00)
+7. valor: entero -500..2000 (valor x10, p. ej. 21.5 -> 215)
+8. confirmado: true/false
+Escapes: \| = barra vertical, \\ = barra invertida, \n = salto de línea. n = número exacto de líneas de registro.

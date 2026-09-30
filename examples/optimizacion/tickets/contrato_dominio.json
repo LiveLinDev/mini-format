@@ -1,0 +1,70 @@
+{
+  "profile": "mini-domain/1",
+  "prefix": "tkd",
+  "version": 1,
+  "schema": {
+    "type": "object",
+    "fields": [
+      {
+        "name": "tickets",
+        "optional": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "id",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "prioridad",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "categoria",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "resumen",
+                "optional": false,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "horas",
+                "optional": false,
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "record_path": [
+    "tickets"
+  ],
+  "sample_documents": 1,
+  "sample_records": 100,
+  "schema_id": "9e9a0b51d50e",
+  "record_fields": [
+    "id",
+    "prioridad",
+    "categoria",
+    "resumen",
+    "horas"
+  ]
+}

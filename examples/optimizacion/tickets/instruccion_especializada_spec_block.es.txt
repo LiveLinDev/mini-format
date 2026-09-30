@@ -1,0 +1,16 @@
+FORMATO .mini — familia 'tke' v1 (Tickets de soporte (hilo de «Cómo funciona»))
+Tickets de soporte. id: número del identificador sin el prefijo T-. prioridad: b=baja m=media a=alta. categoria: a=acceso p=pago e=error c=consulta.
+Reglas:
+- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tke|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.
+- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).
+- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):
+  1. id: int [0..]
+  2. prioridad: uno de {b|m|a}
+  3. categoria: uno de {a|p|e|c}
+  4. resumen: str — resumen breve de la solicitud
+  5. horas: int [0..40] — horas estimadas de atención
+- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV ("impacto, justicia y evidencia"; el marcador * va después de la comilla de cierre) o escapa el separador como '\,'. Un asterisco final literal se escribe '\*'.
+- Escapes válidos en cualquier valor: '\|' para una barra vertical literal, '\\' para una barra invertida, '\n' para un salto de línea.
+- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.
+- Un campo vacío significa nulo (solo permitido en campos opcionales).
+- Registro: 5 campos núcleo.

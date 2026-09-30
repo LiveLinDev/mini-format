@@ -1,0 +1,16 @@
+FORMATO .mini — familia 'cme' v1 (Comentarios con texto libre largo (JSONPlaceholder))
+Comentarios.
+Reglas:
+- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'cme|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.
+- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).
+- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):
+  1. postId: int [1..] — publicación comentada
+  2. id: int [1..] — identificador del comentario
+  3. name: str — título del comentario
+  4. email: str — correo de quien comenta
+  5. body: str — texto del comentario
+- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV ("impacto, justicia y evidencia"; el marcador * va después de la comilla de cierre) o escapa el separador como '\,'. Un asterisco final literal se escribe '\*'.
+- Escapes válidos en cualquier valor: '\|' para una barra vertical literal, '\\' para una barra invertida, '\n' para un salto de línea.
+- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.
+- Un campo vacío significa nulo (solo permitido en campos opcionales).
+- Registro: 5 campos núcleo.

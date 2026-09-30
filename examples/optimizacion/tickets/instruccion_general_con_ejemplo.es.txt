@@ -1,0 +1,19 @@
+FORMATO .mini — familia 'tk' v1 (Tickets de soporte)
+Reglas:
+- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tk|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.
+- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).
+- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):
+  1. id: str — código del ticket
+  2. prioridad: uno de {baja|media|alta}
+  3. categoria: uno de {acceso|pago|error|consulta}
+  4. resumen: str — resumen breve de la solicitud
+  5. horas: int [0..40] — horas estimadas de atención
+- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV ("impacto, justicia y evidencia"; el marcador * va después de la comilla de cierre) o escapa el separador como '\,'. Un asterisco final literal se escribe '\*'.
+- Escapes válidos en cualquier valor: '\|' para una barra vertical literal, '\\' para una barra invertida, '\n' para un salto de línea.
+- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.
+- Un campo vacío significa nulo (solo permitido en campos opcionales).
+- Registro: 5 campos núcleo.
+Ejemplo válido:
+tk|n=2
+T-1100|alta|error|la app de escritorio ignora las palabras con tilde (desde el martes)|5
+T-1101|alta|error|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2

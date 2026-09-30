@@ -1,0 +1,52 @@
+{
+  "esquema": "mini-format/mapa-opt/1",
+  "prefijo": "tke",
+  "clave_json": "tickets",
+  "orden_contractual": [
+    "id",
+    "prioridad",
+    "categoria",
+    "resumen",
+    "horas"
+  ],
+  "campos": [
+    {
+      "campo": "id",
+      "tratamiento": "id_prefijo",
+      "nombre_en_contrato": "id",
+      "prefijo": "T-",
+      "ancho": 0
+    },
+    {
+      "campo": "prioridad",
+      "tratamiento": "codigos",
+      "nombre_en_contrato": "prioridad",
+      "codigos": {
+        "baja": "b",
+        "media": "m",
+        "alta": "a"
+      }
+    },
+    {
+      "campo": "categoria",
+      "tratamiento": "codigos",
+      "nombre_en_contrato": "categoria",
+      "codigos": {
+        "acceso": "a",
+        "pago": "p",
+        "error": "e",
+        "consulta": "c"
+      }
+    },
+    {
+      "campo": "resumen",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "resumen"
+    },
+    {
+      "campo": "horas",
+      "tratamiento": "pasa",
+      "nombre_en_contrato": "horas"
+    }
+  ]
+}

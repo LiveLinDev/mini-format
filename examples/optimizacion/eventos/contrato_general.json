@@ -1,0 +1,104 @@
+{
+  "prefix": "ev",
+  "version": 1,
+  "name": "Eventos de planta",
+  "description": "",
+  "parent": null,
+  "domain": "",
+  "list_separator": ",",
+  "records_key": "records",
+  "header": {
+    "required": [
+      "n"
+    ],
+    "keys": {
+      "n": {
+        "type": "int",
+        "desc": "number of records"
+      },
+      "v": {
+        "type": "int",
+        "default": 1,
+        "desc": "contract version"
+      }
+    }
+  },
+  "core": [
+    {
+      "name": "id_equipo",
+      "type": "str",
+      "desc": "código del equipo (EQ- y cuatro dígitos)"
+    },
+    {
+      "name": "planta",
+      "type": "enum",
+      "values": [
+        "almacen_norte",
+        "almacen_sur",
+        "planta_ensamblaje",
+        "planta_pintura",
+        "patio_exterior",
+        "sala_de_control",
+        "taller_mecanico",
+        "muelle_de_carga"
+      ]
+    },
+    {
+      "name": "tipo_evento",
+      "type": "enum",
+      "values": [
+        "temperatura_fuera_de_rango",
+        "vibracion_excesiva",
+        "apertura_no_autorizada",
+        "falla_de_comunicacion",
+        "mantenimiento_programado",
+        "lectura_normal",
+        "bateria_baja"
+      ]
+    },
+    {
+      "name": "severidad",
+      "type": "enum",
+      "values": [
+        "informativa",
+        "advertencia",
+        "critica"
+      ]
+    },
+    {
+      "name": "estado",
+      "type": "enum",
+      "values": [
+        "abierto",
+        "en_progreso",
+        "resuelto",
+        "descartado"
+      ]
+    },
+    {
+      "name": "fecha",
+      "type": "date",
+      "desc": "día del reporte"
+    },
+    {
+      "name": "hora",
+      "type": "str",
+      "desc": "hora local HH:MM"
+    },
+    {
+      "name": "valor",
+      "type": "float",
+      "min": -50,
+      "max": 200,
+      "desc": "lectura del sensor con un decimal"
+    },
+    {
+      "name": "confirmado",
+      "type": "bool"
+    }
+  ],
+  "extensions": [],
+  "author": "",
+  "license": "MIT",
+  "source": ""
+}
