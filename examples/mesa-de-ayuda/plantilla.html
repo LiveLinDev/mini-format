@@ -78,6 +78,8 @@ __CABEZA__
   .mesa pre.salida .malo { color: rgb(var(--warn)); text-decoration: underline wavy; }
 
   .mesa table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+  /* tablas anchas (tickets, corrida real, V7): desplazamiento propio en vez de desbordar la página en móvil */
+  #tablaTickets, #tablaReal, #v7Tabla, #v7Volumen { overflow-x: auto; }
   .mesa th { text-align: left; font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em;
              color: rgb(var(--fg-muted)); padding: .35rem .45rem; border-bottom: 1px solid rgb(var(--line)); }
   .mesa td { padding: .4rem .45rem; border-bottom: 1px solid rgb(var(--line)); }

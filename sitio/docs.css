@@ -54,3 +54,6 @@
 .docs-top .crumbs{ margin-bottom:0; padding-top:.35rem }
 .lang-toggle{ flex:none }
 @media (max-width:520px){ .docs-top{ flex-direction:column-reverse; align-items:stretch } .docs-top .lang-toggle{ align-self:flex-start } }
+
+/* código en línea largo (p. ej. nombres de columnas con guiones bajos): parte la línea en vez de desbordar el móvil */
+.prose :not(pre)>code{ overflow-wrap:anywhere }
