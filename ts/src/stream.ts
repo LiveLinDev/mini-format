@@ -59,6 +59,12 @@ export interface ReaderResult {
   truncated: boolean;
   /** Sin errores de ningún tipo. */
   complete: boolean;
+  /**
+   * Registros que completó el propio `end()`: una última línea válida sin LF final. Ya están contados
+   * en `valid` y en `records`; quien use solo lo que devuelve `push()` los perdería (equivale a
+   * `final_records` de la referencia Python).
+   */
+  finalRecords: StreamRecord[];
 }
 
 export interface ReaderProgress {
@@ -168,7 +174,8 @@ export function createReader(contract: Contract | ContractJSON, opts: ReaderOpti
       const errsBefore = engine.errors.length;
       const hadHeader = engine.header !== null;
       const lineNo = engine.physical + 1;
-      feedLine(rest, []);
+      const finalRecords: StreamRecord[] = [];
+      feedLine(rest, finalRecords);
       let incomplete: IncompleteRecord | null = null;
       if (!terminated) {
         const lineErrors = engine.errors.slice(errsBefore).filter(e => e.line === lineNo);
@@ -197,6 +204,7 @@ export function createReader(contract: Contract | ContractJSON, opts: ReaderOpti
         incomplete,
         truncated: incomplete !== null || missing > 0,
         complete: document.errors.length === 0,
+        finalRecords,
       };
       if (strict && document.errors.length) {
         throw Object.assign(new MiniValidationError(document.errors), { result });
@@ -236,5 +244,7 @@ export async function* readRecords(
   for await (const chunk of chunks as AsyncIterable<string | Uint8Array>) {
     for (const rec of reader.push(chunk)) yield rec;
   }
-  return reader.end();
+  const result = reader.end();
+  for (const rec of result.finalRecords) yield rec;
+  return result;
 }

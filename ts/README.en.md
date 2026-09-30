@@ -126,6 +126,7 @@ res.received;      // record lines received
 res.missing;       // records missing relative to n
 res.incomplete;    // last line without LF that did not validate (text, line, errors) or null
 res.truncated;     // incomplete or fewer lines than n
+res.finalRecords;  // records completed by end() (a valid last line without LF); already in valid/records
 res.terminated;    // the stream ended on LF
 ```
 

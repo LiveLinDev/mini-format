@@ -126,6 +126,7 @@ res.received;      // líneas de registro recibidas
 res.missing;       // registros que faltan respecto de n
 res.incomplete;    // última línea sin LF que no validó (texto, línea, errores) o null
 res.truncated;     // incompleto o menos líneas que n
+res.finalRecords;  // registros que completó end() (última línea válida sin LF); ya cuentan en valid/records
 res.terminated;    // el flujo terminó en LF
 ```
 

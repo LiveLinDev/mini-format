@@ -32,7 +32,7 @@ from typing import Dict, List, Optional, Tuple
 from ..contract import Contract
 from ..errors import (E_HEADER_KEY, E_NO_COUNT, E_NO_HEADER, E_UNKNOWN_PREFIX,
                       MiniError, MiniValidationError)
-from ..parser import Document, _physical_lines, parse
+from ..parser import Document, _hashable, _physical_lines, parse
 from ..prompt import spec_block
 
 HEADER_CODES = {E_NO_HEADER, E_UNKNOWN_PREFIX, E_NO_COUNT, E_HEADER_KEY}
@@ -314,6 +314,17 @@ def merge_repair(original_doc: str, repaired_text: str, contract: Contract,
     header_text = content.get(header_line, f"{contract.prefix}|n=0") if header_line is not None else f"{contract.prefix}|n=0"
     invalid_lines = {ln for it in items for ln in it.lines}
     seen = {content[ln].strip() for ln in order if ln not in invalid_lines and ln != header_line}
+    # values of the `unique` fields already owned by the records that stay in the document: a
+    # correction may not claim one of them (it would turn a valid record into an E11 duplicate)
+    unique_names = [f.name for f in contract.fields if f.unique]
+    claimed: Dict[str, set] = {name: set() for name in unique_names}
+    if unique_names:
+        kept = [content[ln] for ln in order if ln not in invalid_lines and ln != header_line]
+        kept_doc, _ = lenient_parse("\n".join([header_text] + kept), contract)
+        for rec in (kept_doc.records if kept_doc is not None else []):
+            for name in unique_names:
+                if rec.get(name) is not None:
+                    claimed[name].add(_hashable(rec[name]))
     for it, new in pairs:
         if it.is_header:
             continue
@@ -334,11 +345,23 @@ def merge_repair(original_doc: str, repaired_text: str, contract: Contract,
         line_errs = [e for e in errs if e.line > 1 or (e.line == 0 and e.code != "E04")]
         # the probe document has n from the original header: ignore the count
         if probe is not None and len(probe.records) == 1 and not line_errs and "\n" not in cand:
+            clash = next((name for name in unique_names
+                          if probe.records[0].get(name) is not None
+                          and _hashable(probe.records[0][name]) in claimed[name]), None)
+            if clash is not None:
+                # SPEC §6: a `unique` value must not repeat; keep the original line instead of
+                # damaging another valid record
+                notes.append(f"line {it.line}: correction repeats the unique value of field '{clash}' of another record")
+                unresolved.extend(it.lines)
+                continue
             content[it.line] = cand
             for ln in it.lines[1:]:
                 content.pop(ln, None)
             replaced.extend(it.lines)
             seen.add(cand)
+            for name in unique_names:
+                if probe.records[0].get(name) is not None:
+                    claimed[name].add(_hashable(probe.records[0][name]))
         else:
             unresolved.extend(it.lines)
     for it in items[len(answer):]:

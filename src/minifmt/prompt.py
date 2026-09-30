@@ -21,8 +21,8 @@ def _field_doc(f: Field, sep: str, lang: str) -> str:
         it = f.item if f.item != "enum" else "{" + "|".join(f.item_values or []) + "}"
         rng = ""
         if f.min is not None or f.max is not None:
-            rng = (f", entre {int(f.min or 0)} y {int(f.max) if f.max else '∞'} elementos" if es
-                   else f", {int(f.min or 0)} to {int(f.max) if f.max else '∞'} elements")
+            rng = (f", entre {int(f.min or 0)} y {int(f.max) if f.max is not None else '∞'} elementos" if es
+                   else f", {int(f.min or 0)} to {int(f.max) if f.max is not None else '∞'} elements")
         base = (f"{f.name}: lista de {it} separada por '{sep}'{rng}" if es
                 else f"{f.name}: '{sep}'-separated list of {it}{rng}")
         if f.type == "mlist":

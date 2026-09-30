@@ -17,7 +17,7 @@ describe('enteros fuera de ±2^53 (comportamiento documentado, no normativo)', (
   test('dentro de ±2^53 - 1 la ida y vuelta es exacta', () => {
     for (const v of [0, 1, -1, 9007199254740991, -9007199254740991]) {
       const text = dumps({ prefix: 'bi', header: { n: 1 }, rows: [{ id: v }] }, C);
-      assert.equal(parse(text, C).toCanonical().rows[0].id, v);
+      assert.equal(parse(text, C).records[0].id, v);
     }
   });
 

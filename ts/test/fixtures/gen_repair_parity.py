@@ -108,6 +108,37 @@ def dump_merge(m):
             "errors": [[e.code, e.line, e.field] for e in m.errors]}
 
 
+def unique_cases():
+    """Defecto D-3 (auditoría V5): una corrección no puede repetir un valor `unique` de otro registro.
+
+    Documentos escritos a mano con la familia `cls` (unique: id); las respuestas son fijas para que
+    las dos implementaciones reciban exactamente lo mismo. Las expectativas por caso (qué se
+    sustituye y qué queda sin resolver) están además escritas a mano en tests/test_nucleo_reparacion.py.
+    """
+    c = REG.get("cls")
+    tail = "|question*,feedback,bug,request,praise,other|0.9|"
+    m = lambda i, t="texto": f"m{i}|{t}{tail}"  # noqa: E731
+    rotas = {"m2": "m2|registro roto sin campos suficientes"}
+    base = "\n".join(["cls|n=3|k=6", m(1), rotas["m2"], m(3, "tercero")])
+    escenarios = [
+        ("d3-duplica-un-valido-posterior", base, "cls|n=1\n" + m(3, "corregido")),
+        ("d3-duplica-un-valido-anterior", base, "cls|n=1\n" + m(1, "corregido")),
+        ("d3-id-nuevo-se-acepta", base, "cls|n=1\n" + m(9, "corregido")),
+        ("d3-dos-correcciones-mismo-id-nuevo",
+         "\n".join(["cls|n=4|k=6", m(1), rotas["m2"], "otra linea rota", m(4)]),
+         "cls|n=2\n" + m(9, "uno") + "\n" + m(9, "dos")),
+        ("d3-corrige-su-propio-id", base, "cls|n=1\n" + m(2, "corregido")),
+    ]
+    out = []
+    for name, doc, answer in escenarios:
+        req = repair_request(doc, c, "es")
+        out.append({"prefix": "cls", "name": name, "input": doc, "lang": "es", "options": {"include_spec": True},
+                    "extracted_sha256": sha(extract_document(doc, c)), "request": dump_request(req),
+                    "merges": [{"answer": answer, "result": dump_merge(merge_repair(doc, answer, c, req)),
+                                "result_no_request": None}]})
+    return out
+
+
 def main():
     rng = random.Random(20260916)
     cases = []
@@ -138,6 +169,7 @@ def main():
                 merges.append({"answer": a, "result": with_req, "result_no_request": None if without == with_req else without})
             cases.append({"prefix": c.prefix, "name": name, "input": raw, "lang": lang, "options": opts,
                           "extracted_sha256": sha(extract_document(raw, c)), "request": dump_request(req), "merges": merges})
+    cases.extend(unique_cases())
     text = json.dumps({"generator": "minifmt.ai.repair", "cases": cases}, ensure_ascii=False, separators=(",", ":")) + "\n"
     OUT.write_bytes(text.encode("utf-8"))
     print(f"{len(cases)} casos -> {OUT}")
