@@ -1,0 +1,1133 @@
+{
+  "esquema": "mini-format/estudios-derivado/1",
+  "estudios": [
+    {
+      "antecedentes": [
+        {
+          "cifras": [],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Resultados de V1 archivados por celda (dominio, tamaño de lote, tokenizador) con IC 95 %, anteriores a los manifiestos de corrida: sin commit ni snapshot fijados.",
+          "fuente": "experiments/v1_tokens/results/ahorro_resumen.csv",
+          "id": "v1-resultados-archivados",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": null,
+      "cifras_principales": [
+        {
+          "etiqueta": "Ahorro medio de tokens de .mini frente a JSON compacto",
+          "id": "ahorro_medio_pct",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "%",
+          "valor": null
+        }
+      ],
+      "clasificacion": {
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "JSON compacto (principal)",
+        "JSON legible",
+        "YAML",
+        "XML tipado",
+        "CSV reversible",
+        "TOON nativo",
+        "TOON plano"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Conteo de tokens de todos los formatos por dominio, tamaño de lote y tokenizador, con ida y vuelta",
+          "id": "tokens_por_dominio_y_tokenizador",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "El ahorro de un dominio con un tokenizador es la media, sobre los tamaños de lote de la serie principal, de 100 x (1 - T_mini / T_json_compacto), con T medido como conteo LOCAL de texto. Un dominio supera el umbral si esa media es >= 30 %. La meta se cumple si, con cada uno de >= 3 tokenizadores, >= 10 dominios superan el umbral. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
+        "texto": "I4.1: ahorro de tokens >= 30 % en >= 10 dominios y con tres tokenizadores."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "parcial",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU105",
+        "HU106",
+        "HU107",
+        "HU118"
+      ],
+      "id": "V1",
+      "limitaciones": [
+        "tiktoken es una aproximación para Anthropic, Google y DeepSeek: solo es exacto para texto plano de los modelos de OpenAI que mapea.",
+        "Conteo local de texto: no incluye los tokens de formato de mensaje ni el esquema de la solicitud, que sí cuenta el proveedor.",
+        "Los cuatro conjuntos públicos y los 14 dominios del conjunto académico no son una muestra aleatoria de sistemas reales."
+      ],
+      "meta_documental": "V1 >= 30 % de ahorro en >= 10 dominios y con tres tokenizadores (Charter v5, I4.1).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "14 dominios; lotes de 1, 5, 10, 25, 50, 100 y 250 registros más la línea base de n = 12; 4 conjuntos públicos congelados (1 902 objetos); 3 tokenizadores locales.",
+        "unidad": "documento serializado (celda dominio x tamaño de lote x formato x tokenizador)"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Ahorro de tokens por formato",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Dominios con ahorro medio >= 30 % (el peor tokenizador)",
+          "id": "dominios_que_superan",
+          "op": ">=",
+          "umbral": 10,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Tokenizadores medidos",
+          "id": "tokenizadores",
+          "op": ">=",
+          "umbral": 3,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Dominios medidos",
+          "id": "dominios_medidos",
+          "op": ">=",
+          "umbral": 10,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI1: ¿cuántos tokens ahorra .mini frente a JSON y a otros formatos de serialización?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/v1_tokens/run.py",
+        "nota": "Sin red ni API. Cada ejecución debe registrarse con tools/evidencia_lib.py (nueva_corrida/guardar_corrida) y parametros.componente = tokens_por_dominio_y_tokenizador."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [],
+          "cuenta_como_evidencia": false,
+          "descripcion": "HU108 reporta una medición de un día (20/09/2026) con 10 tickets: GPT-OSS 20B 434 tokens de salida en JSON frente a 265 en .mini; DeepSeek 619 frente a 241. Sin datos crudos propios en el repositorio.",
+          "fuente": "Benchmarks_y_Validacion.xlsx, hoja Backlog, HU108 (reportado; no verificado por archivo)",
+          "id": "v2-hu108-reportado",
+          "procedencia": "reportado_historico"
+        },
+        {
+          "cifras": [],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Piloto del arnés con el proveedor SIMULADO: valida el arnés, no un modelo. No cuenta como evidencia.",
+          "fuente": "experiments/generativo/resultados/simulado/piloto",
+          "id": "v2-piloto-simulado",
+          "procedencia": "simulado"
+        }
+      ],
+      "bloqueo": {
+        "causa": "Sin presupuesto de API autorizado ni claves: ninguna llamada de pago a APIs de modelos.",
+        "desbloquea": "Autorización expresa del usuario de un tope de gasto y de los proveedores a usar."
+      },
+      "cifras_principales": [
+        {
+          "etiqueta": "Válidos antes de reparar (condición D), el peor modelo",
+          "id": "validos_iniciales_pct_d",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "%",
+          "valor": null
+        }
+      ],
+      "clasificacion": {
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "A: JSON por instrucción mínima",
+        "B: JSON con contrato en el prompt",
+        "C: JSON nativo (si el proveedor lo admite)",
+        "D: .mini sin reparación",
+        "D+1: .mini con una reparación pareada sobre la misma D"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Generación con modelos reales (llamadas autorizadas) con usage original y gasto registrado",
+          "id": "matriz_generacion_real",
+          "minimo_corridas": 3,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "El porcentaje de válidos finales se calcula en la condición D+1 con denominador = TODOS los registros solicitados (incluidos los de respuestas cortadas o rechazadas), por modelo, con IC 95 %; el umbral de 95 % debe cumplirlo CADA modelo (el mínimo entre modelos). Cada corrida registrada corresponde a un modelo (modelo.proveedor y modelo.modelo_pedido). Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
+        "texto": "I4.2: >= 95 % de registros válidos tras la reparación, con >= 3 modelos y >= 2 proveedores."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "bloqueado",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU108",
+        "HU109",
+        "HU110",
+        "HU111",
+        "HU118"
+      ],
+      "id": "V2",
+      "limitaciones": [
+        "No hay presupuesto de API autorizado: toda corrida real está bloqueada hasta que el usuario lo autorice.",
+        "El arnés actual define el brazo A como separador con split ingenuo y no como JSON por instrucción mínima (comparador débil frente al Plan v3).",
+        "La corrida con el proveedor simulado valida el arnés, nunca un modelo: no cuenta como evidencia del criterio.",
+        "Los conteos de tiktoken son aproximación fuera de OpenAI: el costo y los tokens reales salen del usage de cada respuesta."
+      ],
+      "meta_documental": "V2 >= 3 modelos de >= 2 proveedores (Charter v5, I4.2); diseño ampliado: 14 dominios x 4 modelos x 30 repeticiones x 4 condiciones con >= 3 proveedores.",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "Mínimo comprometido: >= 3 modelos de >= 2 proveedores. Diseño ampliado: 14 dominios x 4 modelos (>= 3 proveedores) x 30 repeticiones x 4 condiciones (A-D, más D+1), con un máximo de 6 720 llamadas primarias.",
+        "unidad": "respuesta de un modelo a una solicitud de N registros"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Validez y exactitud con varios modelos y proveedores",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Válidos finales (D+1) sobre todos los solicitados: el peor modelo",
+          "id": "validos_finales",
+          "op": ">=",
+          "umbral": 95,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Modelos distintos medidos",
+          "id": "modelos",
+          "op": ">=",
+          "umbral": 3,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Proveedores distintos medidos",
+          "id": "proveedores",
+          "op": ">=",
+          "umbral": 2,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI2: ¿.mini produce registros válidos y exactos con varios modelos de varios proveedores, antes y después de una reparación selectiva?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE",
+        "nota": "TOPE es el presupuesto que el usuario autorice explícitamente; sin él no se ejecuta. Antes: --dry-run."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [],
+      "bloqueo": null,
+      "cifras_principales": [],
+      "clasificacion": {
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "JSON estricto",
+        "JSON con recuperación parcial",
+        "JSON Lines",
+        ".mini tolerante"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Cortes sobre un documento canónico o salidas guardadas, leídos con cada lector",
+          "id": "cortes_sobre_salidas_guardadas",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "Un registro completo disponible es aquel cuya línea y su salto terminan antes del corte. La recuperación del lector .mini tolerante es (registros completos correctos recuperados) / (registros completos disponibles), agregada sobre todos los cortes; se exige >= 90 % como mínimo entre las corridas, y 0 registros inventados y 0 duplicados. Los demás lectores se reportan sin umbral. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
+        "texto": "I4.3: >= 90 % de los registros completos disponibles se recuperan, sin contar registros inventados ni duplicados."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "pendiente",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU109",
+        "HU112",
+        "HU118"
+      ],
+      "id": "V3a",
+      "limitaciones": [
+        "El arnés actual corta respuestas de modelos en posiciones aleatorias y no un documento canónico en fracciones predefinidas; no existen aún los lectores JSON parcial ni JSON Lines.",
+        "Un corte en mitad del último campo puede dar una línea sintácticamente válida pero truncada: el oráculo debe decidir el registro completo antes de contar."
+      ],
+      "meta_documental": "V3 >= 90 % de registros completos disponibles recuperados (Charter v5, I4.3).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "20 cortes por documento; número de documentos por dominio y tamaño de lote por fijar con el piloto (el Plan v3 no lo fija).",
+        "unidad": "corte de una salida guardada"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Recuperación ante truncamiento (cortes sobre salidas guardadas)",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Recuperación del lector .mini tolerante (mínimo)",
+          "id": "recuperacion",
+          "op": ">=",
+          "umbral": 90,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Registros inventados",
+          "id": "inventados",
+          "op": "==",
+          "umbral": 0,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Registros duplicados",
+          "id": "duplicados",
+          "op": "==",
+          "umbral": 0,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI2: ¿cuántos registros completos se recuperan de una salida cortada, frente a lectores JSON estrictos o parciales?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/generativo/analyze.py --resultados RUTA_DE_SALIDAS_GUARDADAS",
+        "nota": "Sin API si las salidas ya están guardadas; registrar con parametros.componente = cortes_sobre_salidas_guardadas."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [],
+          "cuenta_como_evidencia": false,
+          "descripcion": "HU113 reporta (20/09/2026, GPT-OSS 20B y DeepSeek) cortes reales de JSON con 0 de 10 registros frente a 10 de 10 en .mini con un tope de 300 tokens. Dato de un solo día, sin datos crudos propios.",
+          "fuente": "Benchmarks_y_Validacion.xlsx, hoja Backlog, HU113 (reportado; no verificado por archivo)",
+          "id": "v3b-hu113-reportado",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": {
+        "causa": "Sin presupuesto de API autorizado ni claves.",
+        "desbloquea": "Autorización expresa del usuario de un tope de gasto."
+      },
+      "cifras_principales": [],
+      "clasificacion": {
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "JSON estricto",
+        "JSON con recuperación parcial",
+        "JSON Lines",
+        ".mini tolerante"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Llamadas reales autorizadas con un límite de salida que corta la respuesta",
+          "id": "llamadas_reales_con_tope_reducido",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "Misma lectura que V3a, aplicada a respuestas realmente cortadas por el límite de salida: recuperación del lector .mini tolerante >= 90 % (mínimo entre corridas), 0 inventados y 0 duplicados. El tope de salida debe fijarse antes de medir y cortar de verdad al menos el formato de referencia. Lectura propuesta; pendiente de confirmación del equipo.",
+        "texto": "I4.3: >= 90 % de los registros completos disponibles se recuperan, sin contar inventados ni duplicados."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "bloqueado",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU109",
+        "HU112",
+        "HU113",
+        "HU118"
+      ],
+      "id": "V3b",
+      "limitaciones": [
+        "Sin presupuesto de API autorizado: bloqueado.",
+        "Con un tope de 300 tokens la salida .mini de HU108/HU113 cabe sin cortarse (241-265 tokens): el 10 de 10 reportado refleja el tamaño y no una recuperación tras el corte; el tope debe fijarse con la salida de referencia de cada formato."
+      ],
+      "meta_documental": "V3 >= 90 % de registros completos disponibles recuperados (Charter v5, I4.3).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "Solicitudes por condición y modelo por fijar con el piloto (el arnés define fraccion_max_tokens = 0,5 y 10 repeticiones).",
+        "unidad": "solicitud real con tope de salida reducido"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Recuperación ante truncamiento (cortes reales con tope de salida reducido)",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Recuperación del lector .mini tolerante (mínimo)",
+          "id": "recuperacion",
+          "op": ">=",
+          "umbral": 90,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Registros inventados",
+          "id": "inventados",
+          "op": "==",
+          "umbral": 0,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Registros duplicados",
+          "id": "duplicados",
+          "op": "==",
+          "umbral": 0,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI2: ¿qué ocurre con .mini y con JSON cuando la respuesta real se corta por un límite de tokens de salida?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE",
+        "nota": "TOPE es el presupuesto que el usuario autorice; los casos de V3b están en la configuración (fraccion_max_tokens)."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Modelo de costos por 1 000 registros (12 modelos, precios del 15/09/2026, ya con obsolescencias respecto de las tarifas consultadas el 30/09/2026): estimación, no facturación.",
+          "fuente": "experiments/v4_costos/results/costo_por_1000_registros.csv",
+          "id": "v4-modelo-de-costos",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": {
+        "causa": "Costo y latencia reales exigen llamadas de pago: sin presupuesto ni claves.",
+        "desbloquea": "Autorización expresa del usuario de un tope de gasto."
+      },
+      "cifras_principales": [
+        {
+          "etiqueta": "Costo por 1 000 registros válidos con .mini",
+          "id": "costo_por_1000_validos_mini_usd",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "USD",
+          "valor": null
+        }
+      ],
+      "clasificacion": {
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "Mismo flujo para todas las condiciones de V2"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Modelo de costos con tarifas fechadas y tokens medidos en V1 (sin llamadas)",
+          "id": "modelo_de_costos",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        },
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Costo y latencia medidos en llamadas reales con usage original",
+          "id": "costo_y_latencia_reales",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": null,
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "bloqueado",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU109",
+        "HU114",
+        "HU115",
+        "HU118"
+      ],
+      "id": "V4",
+      "limitaciones": [
+        "La parte real está bloqueada por falta de presupuesto autorizado; el modelo de costos no es una facturación.",
+        "Tarifas de DeepSeek según el horario (pico o fuera de pico): hay que registrar la hora de la corrida.",
+        "deepseek-chat ya no figura en la página de precios oficial: su tarifa real no es verificable sin una llamada de pago."
+      ],
+      "meta_documental": "V4 es descriptivo: el Plan v3 no fija una meta de decisión (se recomienda declararlo así para que no se lea como meta incumplida).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "Los mismos modelos de V2; modelo de costos: 12 modelos de 5 proveedores.",
+        "unidad": "solicitud original con todos sus intentos"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Costo por registro válido y latencia",
+      "objetivo": "OE4",
+      "predicados": [],
+      "pregunta": "PI1: ¿cuánto cuesta y cuánto tarda cada registro válido con .mini frente a JSON, incluyendo instrucciones y reintentos?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/v4_costos/run.py",
+        "nota": "Modelo de costos local. La parte real requiere el arnés con presupuesto autorizado. El cálculo exacto está en experiments/economia/calculo.py y las tarifas en evidencia/tarifas/."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [
+            {
+              "etiqueta": "Casos en conformance/cases",
+              "unidad": "casos",
+              "valor": 372,
+              "valor_actual": 372,
+              "verificacion": "coincide"
+            }
+          ],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Casos de conformidad del repositorio (suite común a Python y TypeScript). El Plan v3 reporta 372 de 372; la cifra se vuelve a contar aquí desde los archivos.",
+          "fuente": "conformance/cases",
+          "id": "v5-casos-de-conformidad",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": null,
+      "cifras_principales": [
+        {
+          "etiqueta": "Casos de conformidad ejecutados",
+          "id": "casos_de_conformidad",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "casos",
+          "valor": null
+        }
+      ],
+      "clasificacion": {
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Suite de conformidad en Python y TypeScript",
+          "id": "suite_de_conformidad",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        },
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Cobertura de líneas de las dos implementaciones",
+          "id": "cobertura",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        },
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Suite ejecutada en Linux, Windows y macOS",
+          "id": "ci_tres_sistemas",
+          "minimo_corridas": 3,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "Conformidad = casos que pasan / casos de la suite, en Python y en TypeScript (el mínimo de las corridas debe ser 100 %); cobertura de líneas de Python y de TypeScript cada una >= 90 %; el CI se acredita con corridas de la suite en >= 3 familias de sistema operativo distintas (entorno.so); defectos bloqueantes abiertos = 0. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
+        "texto": "I3.1: 100 % de conformidad; I3.2: cobertura >= 90 % y CI en Linux, Windows y macOS; sin defectos bloqueantes."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "parcial",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU104",
+        "HU116",
+        "HU118"
+      ],
+      "id": "V5",
+      "limitaciones": [
+        "La ejecución de CI de un commit concreto en tres sistemas no es verificable desde un equipo local: hace falta enlazar la corrida (o reproducirla en cada sistema).",
+        "Las cifras de cobertura de 94 % y 97 % del Plan v3 son reportadas; no se han reproducido en este registro."
+      ],
+      "meta_documental": "V5 100 % de conformidad, cobertura >= 90 % y CI en Linux, Windows y macOS (Charter v5, I3.1 e I3.2).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "Todos los casos de conformance/cases (16 categorías) en Python y TypeScript.",
+        "unidad": "release congelado"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Conformidad y calidad del componente",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Conformidad (mínimo entre corridas)",
+          "id": "conformidad",
+          "op": "==",
+          "umbral": 100,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Cobertura de líneas de Python (mínimo)",
+          "id": "cobertura_python",
+          "op": ">=",
+          "umbral": 90,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Cobertura de líneas de TypeScript (mínimo)",
+          "id": "cobertura_typescript",
+          "op": ">=",
+          "umbral": 90,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Familias de sistema operativo con la suite ejecutada",
+          "id": "sistemas_operativos",
+          "op": ">=",
+          "umbral": 3,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Defectos bloqueantes abiertos",
+          "id": "defectos_bloqueantes",
+          "op": "==",
+          "umbral": 0,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI2: ¿las implementaciones de Python y TypeScript cumplen la especificación y se mantienen con umbrales de calidad en tres sistemas operativos?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python -m coverage run --source=minifmt -m pytest -q tests experiments/generativo/tests && python -m coverage report --fail-under=90 && python conformance/run_python.py && node conformance/run_js.mjs",
+        "nota": "Registrar cada ejecución con parametros.componente = suite_de_conformidad, cobertura o ci_tres_sistemas."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [
+            {
+              "etiqueta": "Ítems pedidos",
+              "unidad": "ítems",
+              "valor": 350,
+              "valor_actual": 350,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Válidos al llegar",
+              "unidad": "ítems",
+              "valor": 343,
+              "valor_actual": 343,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Líneas inválidas",
+              "unidad": "líneas",
+              "valor": 7,
+              "valor_actual": 7,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Líneas reparadas",
+              "unidad": "líneas",
+              "valor": 5,
+              "valor_actual": 5,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Válidos finales",
+              "unidad": "ítems",
+              "valor": 350,
+              "valor_actual": 350,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Llamadas",
+              "unidad": "llamadas",
+              "valor": 38,
+              "valor_actual": 38,
+              "verificacion": "coincide"
+            }
+          ],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Integración en CIMA (SIMA en código) archivada en experiments/v8_sima: 350 ítems pedidos, 343 válidos al llegar, 7 líneas inválidas, 5 reparadas, 350 válidos finales en 38 llamadas.",
+          "fuente": "experiments/v8_sima/resumen.json",
+          "id": "v6a-cima-v8",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": null,
+      "cifras_principales": [],
+      "clasificacion": {
+        "formativo_sumativo": "sumativo con la versión congelada",
+        "tipo": "naturalista"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "Flujo anterior del sistema frente al flujo con mini-format"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Integración ejecutada en un sistema real con su evidencia mínima",
+          "id": "integracion_en_sistema_real",
+          "minimo_corridas": 2,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "Se cuenta un sistema cuando existe al menos una corrida ejecutada con su evidencia mínima (parametros.sistema y parametros.dominio); la meta exige >= 2 sistemas distintos en >= 2 dominios distintos. Queda por decidir si CIMA cuenta como sistema propio del equipo y si el segundo debe ser ajeno (Plan v3 §8): esa decisión no cambia el predicado pero sí cómo se reporta. Lectura propuesta; pendiente de confirmación del equipo.",
+        "texto": "I4.4: integración en dos sistemas de dominios distintos."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "parcial",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU119",
+        "HU120",
+        "HU121",
+        "HU122",
+        "HU123",
+        "HU124",
+        "HU125",
+        "HU126",
+        "HU127",
+        "HU128",
+        "HU118"
+      ],
+      "id": "V6a",
+      "limitaciones": [
+        "Hoy hay una sola integración reportada (CIMA, experimento V8) y con un modelo cuyo nombre (deepseek-chat) ya no figura en la documentación oficial.",
+        "CIMA pertenece a la misma organización de GitHub que mini-format: falta decidir si cuenta como sistema ajeno.",
+        "No hay una medida de éxito más allá de la presencia de los dos sistemas."
+      ],
+      "meta_documental": "V6a dos sistemas de dominios distintos (Charter v5, I4.4).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "Dos sistemas de dominios distintos: CIMA (en código SIMA) y un segundo sistema.",
+        "unidad": "sistema integrado"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Integración en sistemas reales",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Sistemas integrados distintos",
+          "id": "sistemas",
+          "op": ">=",
+          "umbral": 2,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Dominios distintos",
+          "id": "dominios",
+          "op": ">=",
+          "umbral": 2,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI3: ¿.mini opera en el contexto real de sistemas distintos de la tesis, reemplazando o complementando al lector anterior?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/v8_sima/analizar.py",
+        "nota": "Reanaliza los datos archivados de la integración con CIMA; una nueva integración real requiere autorización de gasto."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [],
+      "bloqueo": null,
+      "cifras_principales": [
+        {
+          "etiqueta": "Participantes que completaron T1 con .mini dentro del tope",
+          "id": "completaron_t1_pct",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "%",
+          "valor": null
+        }
+      ],
+      "clasificacion": {
+        "formativo_sumativo": "sumativo con la versión congelada",
+        "tipo": "controlado"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "T1 con JSON frente a T1 con .mini (contrabalanceado)",
+        "T2-T4 sin comparador"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Sesiones con participantes (datos personales en evidencia/restringida; solo agregados publicables)",
+          "id": "sesiones_con_participantes",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-09-30T19:00:00Z",
+        "interpretacion": "La mediana de T1 en .mini se calcula sobre los participantes válidos con los tiempos reales; quien no termina en el tope de 30 min cuenta como 30 (censura) y se reporta aparte la fracción que completó T1 dentro del tope, porque el tope coincide con la meta y la deja casi vacía. SUS = media de los participantes válidos con la fórmula estándar (2,5 x [suma de impares - 1 + suma de 5 - pares]). Se exigen >= 8 participantes válidos. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
+        "texto": "I4.4: mediana de T1 con .mini <= 30 min y SUS >= 70, con >= 8 participantes válidos tras excluir los dos pilotos."
+      },
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "pendiente",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU117",
+        "HU118",
+        "HU129",
+        "HU130",
+        "HU131",
+        "HU132",
+        "HU133",
+        "HU134",
+        "HU135",
+        "HU136",
+        "HU137",
+        "HU138"
+      ],
+      "id": "V6b",
+      "limitaciones": [
+        "No hay participantes ni materiales (tareas T1-T4, respuestas congeladas, ficha, consentimiento) en el repositorio: pendiente.",
+        "Cualquier dato sintético o asistido por IA es solo ensayo del protocolo y no cuenta como sesión con participantes.",
+        "n pequeño: el análisis es descriptivo con intervalos, no un contraste de hipótesis."
+      ],
+      "meta_documental": "V6b mediana de T1 con .mini <= 30 min y SUS >= 70 con >= 8 participantes válidos tras 2 pilotos excluidos (Charter v5, I4.4).",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "8-12 participantes válidos más 2 de piloto; se procura que >= 3 tengan ejercicio profesional; se excluye a autores, asesores y personas con experiencia previa con mini-format.",
+        "unidad": "participante"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Desempeño de desarrolladores externos",
+      "objetivo": "OE4",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Participantes válidos",
+          "id": "participantes",
+          "op": ">=",
+          "umbral": 8,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Mediana de T1 con .mini, en minutos",
+          "id": "t1_mediana",
+          "op": "<=",
+          "umbral": 30,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "SUS medio",
+          "id": "sus",
+          "op": ">=",
+          "umbral": 70,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI3: ¿un desarrollador externo integra .mini con la guía en un tiempo y con una satisfacción razonables, frente a hacerlo con JSON?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": null,
+        "nota": "Requiere sesiones con participantes según el protocolo del Plan v3 (secciones 9 y 10). Los datos crudos van a evidencia/restringida/ (ignorada por git); solo los agregados se registran con tools/evidencia_lib.py y procedencia participantes."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [
+            {
+              "etiqueta": "Registros procesados",
+              "unidad": "registros",
+              "valor": 40000,
+              "valor_actual": 40000,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Tokens de entrada",
+              "unidad": "tokens",
+              "valor": 1138042,
+              "valor_actual": 1138042,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Tokens de salida",
+              "unidad": "tokens",
+              "valor": 1730641,
+              "valor_actual": 1730641,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Consumo declarado",
+              "unidad": "USD",
+              "valor": 0.78,
+              "valor_actual": 0.78,
+              "verificacion": "coincide"
+            }
+          ],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Corrida de volumen archivada con DeepSeek (17/09/2026): 40 000 registros procesados; consumo declarado por diferencia de saldo de la cuenta.",
+          "fuente": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json",
+          "id": "v7-volumen-deepseek",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": null,
+      "cifras_principales": [],
+      "clasificacion": {
+        "formativo_sumativo": "formativo",
+        "tipo": "exploratorio"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "JSON (lector json.loads, todo o nada)",
+        ".mini"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Barrido por tamaño de lote con modelos reales",
+          "id": "barrido_por_lote",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": null,
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "parcial",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU108",
+        "HU113"
+      ],
+      "id": "V7",
+      "limitaciones": [
+        "Datos reales de un solo proveedor por experimento; el lector JSON es solo json.loads y se corta a 8 192 tokens desde 150 registros por llamada.",
+        "Usa deepseek-chat, que ya no figura en la página oficial de precios (descontinuado según su registro de cambios): la tarifa con la que se facturó no es verificable.",
+        "El consumo real declarado (0,78 USD) es menor que el mínimo teórico con las tarifas publicadas hoy (1,04 USD): discrepancia sin resolver; no presentar una estimación como costo real.",
+        "Sin manifiesto de corrida: los datos son históricos, no reproducibles sin gasto."
+      ],
+      "meta_documental": "Exploratorio: sin meta de aceptación.",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "Un proveedor por experimento (DeepSeek y Groq); no cumple las metas I4.2 ni I4.3 y se cita como antecedente.",
+        "unidad": "llamada a un modelo real"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Escalamiento por tamaño de lote y volumen (exploratorio)",
+      "objetivo": "OE4",
+      "predicados": [],
+      "pregunta": "¿Cómo cambian los tokens, los cortes y la validez de JSON frente a .mini al crecer el tamaño de lote y el volumen?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/v7_escalamiento/analizar.py",
+        "nota": "Reanaliza los datos archivados; repetir las llamadas requiere autorización de gasto."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    },
+    {
+      "antecedentes": [
+        {
+          "cifras": [
+            {
+              "etiqueta": "Ítems pedidos",
+              "unidad": "ítems",
+              "valor": 350,
+              "valor_actual": 350,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Válidos finales",
+              "unidad": "ítems",
+              "valor": 350,
+              "valor_actual": 350,
+              "verificacion": "coincide"
+            },
+            {
+              "etiqueta": "Llamadas",
+              "unidad": "llamadas",
+              "valor": 38,
+              "valor_actual": 38,
+              "verificacion": "coincide"
+            }
+          ],
+          "cuenta_como_evidencia": false,
+          "descripcion": "Cinco clases completas archivadas (350 ítems; 343 válidos al llegar, 350 finales tras reparar 5 líneas en 38 llamadas).",
+          "fuente": "experiments/v8_sima/resumen.json",
+          "id": "v8-clases-completas",
+          "procedencia": "reportado_historico"
+        }
+      ],
+      "bloqueo": null,
+      "cifras_principales": [],
+      "clasificacion": {
+        "formativo_sumativo": "formativo",
+        "tipo": "exploratorio"
+      },
+      "commit_ultima_corrida": null,
+      "comparadores": [
+        "JSON (lector anterior)",
+        ".mini"
+      ],
+      "componentes": [
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Generación real en CIMA con comparación pareada",
+          "id": "integracion_sima_real",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        }
+      ],
+      "corridas": [],
+      "criterio": null,
+      "estado_calculado": "pendiente",
+      "estado_ejecucion": "parcial",
+      "fecha_ultima_corrida": null,
+      "hay_simulado_o_asistido": false,
+      "hu_relacionadas": [
+        "HU123",
+        "HU124",
+        "HU125",
+        "HU126",
+        "HU128"
+      ],
+      "id": "V8",
+      "limitaciones": [
+        "Un solo proveedor y un solo sistema; usa deepseek-chat (ya no documentado por el proveedor).",
+        "Sin manifiesto de corrida: los datos son históricos, no reproducibles sin gasto."
+      ],
+      "meta_documental": "Exploratorio: sin meta de aceptación.",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "muestra": {
+        "descripcion": "12 y 40 preguntas por comparación pareada y cinco clases completas (350 ítems).",
+        "unidad": "solicitud de preguntas de una clase"
+      },
+      "n_corridas": 0,
+      "n_corridas_que_cuentan": 0,
+      "nombre": "Integración real en CIMA con comparación pareada (exploratorio)",
+      "objetivo": "OE4",
+      "predicados": [],
+      "pregunta": "¿Cómo se comportan .mini y JSON en la generación real de preguntas de CIMA (SIMA en código), con reparación selectiva y respuestas cortadas?",
+      "procedencias_que_cuentan": {},
+      "procedencias_todas": {},
+      "reproduccion": {
+        "comando": "python experiments/v8_sima/analizar.py",
+        "nota": "Reanaliza los datos archivados; repetir las llamadas requiere autorización de gasto."
+      },
+      "resultado": "no_evaluable",
+      "resultado_calculado": "no_evaluable",
+      "snapshot_ultima_corrida": null
+    }
+  ],
+  "nota": "Derivado por tools/evidencia.py regenerar desde evidencia/estudios.json y evidencia/corridas/*/manifiesto.json. No editar a mano: python tools/evidencia.py verificar falla si difiere.",
+  "objetivo": "OE4",
+  "totales": {
+    "corridas": 0,
+    "corridas_invalidas": 0,
+    "estudios": 10,
+    "por_estado_ejecucion": {
+      "bloqueado": 3,
+      "parcial": 5,
+      "pendiente": 2
+    },
+    "por_resultado": {
+      "no_evaluable": 10
+    }
+  }
+}
