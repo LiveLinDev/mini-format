@@ -67,18 +67,18 @@ def test_referencia_de_brazos_con_escape_es_exacta(tc, cls, brazo):
         assert m["incorrectos_sin_aviso"] == 0 and m["avisos"] == 0
 
 
-def test_brazo_A_corrompe_o_pierde_con_texto_real(cls):
-    texto = B.salida_referencia(cls, "A")
-    m = M.evaluar(B.leer("A", texto, cls), cls)
+def test_brazo_A0_pipe_corrompe_o_pierde_con_texto_real(cls):
+    texto = B.salida_referencia(cls, "A0")
+    m = M.evaluar(B.leer("A0", texto, cls), cls)
     assert not m["exacto"]
     assert m["incorrectos_sin_aviso"] > 0          # coma dentro de una etiqueta -> lista partida en silencio
     assert m["perdidos_detectados"] > 0            # barra vertical en el texto -> aridad incorrecta con aviso
 
 
-def test_A_fila_de_encabezado_se_acepta_sin_aviso(tc):
+def test_A0_fila_de_encabezado_se_acepta_sin_aviso(tc):
     fila_enc = "|".join(f.name for f in tc.contrato.fields)
-    texto = fila_enc + "\n" + B.salida_referencia(tc, "A")
-    lect = B.leer("A", texto, tc)
+    texto = fila_enc + "\n" + B.salida_referencia(tc, "A0")
+    lect = B.leer("A0", texto, tc)
     assert any(r["id"] == "id" for r in lect.registros)   # 'automated' -> False: nadie avisa
     m = M.evaluar(lect, tc)
     assert m["espurios"] >= 1
@@ -134,8 +134,8 @@ def test_generativa_contra_contrato(gen_card):
 
 
 def test_generativa_faltan_registros(gen_card):
-    texto = "\n".join(B.salida_referencia(gen_card, "A").split("\n")[:4])
-    m = M.evaluar(B.leer("A", texto, gen_card), gen_card)
+    texto = "\n".join(B.salida_referencia(gen_card, "A0").split("\n")[:4])
+    m = M.evaluar(B.leer("A0", texto, gen_card), gen_card)
     assert 0 < m["aceptados"] <= 4
     assert m["perdidos"] == gen_card.n_solicitados - m["aceptados"]
 
@@ -151,9 +151,12 @@ def test_esquema_json_estricto(cls):
 
 
 def test_prompts_por_brazo(cls):
-    pa, pb, pc, pd = (B.construir_prompt(cls, b) for b in "ABCD")
-    assert "separados por |" in pa.system and pa.response_format is None
+    pa0, pa, pb, pc, pd = (B.construir_prompt(cls, b) for b in ("A0", "A", "B", "C", "D"))
+    assert "separados por |" in pa0.system and pa0.response_format is None           # A0: control pipe a mano
+    assert "Devuelve solo JSON" in pa.system and pa.response_format is None          # A: JSON con instrucción mínima
     assert pb.response_format is None and pc.response_format["type"] == "json_schema"
     assert "FORMATO .mini" in pd.system and "k=6" in pd.system
-    assert pa.user == pb.user == pc.user == pd.user          # mismo contenido en todos los brazos
-    assert B.construir_prompt(cls, "D+R").system == pd.system
+    assert pa0.user == pa.user == pb.user == pc.user == pd.user          # mismo contenido en todos los brazos
+    # los brazos de reparación comparten el prompt de generación de su base
+    for x in ("A", "B", "C", "D"):
+        assert B.construir_prompt(cls, f"{x}+1").system == B.construir_prompt(cls, x).system
