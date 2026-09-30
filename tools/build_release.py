@@ -33,16 +33,28 @@ SOURCE_DIRS = ("src", "forks", "ts/src", "ts/test", "js", "tests", "conformance"
                "benchmark/public", "benchmark/toon_ref", "benchmark/vocab", "benchmark/results",
                "experiments/v1_tokens", "experiments/v4_costos", "experiments/v5_ancho",
                "experiments/v7_escalamiento", "experiments/v8_sima", "generative",
-               "playground", "sitio/content", "sitio/assets")
+               "playground", "docs", "evidencia", "sitio/content", "sitio/i18n", "sitio/assets")
+# Carpetas que NUNCA van a ningún archivo publicado aunque estén dentro de una de SOURCE_DIRS (datos restringidos).
+EXCLUDED_TREES = ("evidencia/restringida",)
 SOURCE_FILES = ("benchmark/formats.py", "benchmark/domains.py", "benchmark/run_benchmark.py",
                 "benchmark/make_forks.py", "benchmark/make_figures.py",
                 "experiments/README.md", "experiments/README.en.md", "experiments/comun.py",
-                "tools/build_node.mjs", "tools/build_release.py", "tools/smoke_release.py", "tools/check_site.py")
-# These are build inputs, not deployment tools or generated site output.
+                "tools/build_node.mjs", "tools/build_release.py", "tools/smoke_release.py", "tools/check_site.py",
+                "tools/verificar_publicacion.py")
+# Build inputs of the website: every source file at the top of sitio/ (the generator and its modules,
+# styles, scripts, translation maps, 404.html...), so that a new module can never be forgotten here and the
+# source archive can always rebuild the site. Not deployment tools (sitio/servidor, desplegar.sh) and not
+# generated output (version.json, sitemap.xml, robots.txt, search-index.json, app.en.js).
 # publicar.py assembles local evidence links, locales and SEO; it does not deploy.
-SITE_FILES = ("animation.en.json", "app.js", "base.css", "benchmarks.py", "construir.py",
-              "docs.css", "docs.js", "favicon.svg", "index.html", "landing.css",
-              "landing.en.json", "playground.css", "publicar.py")
+SITE_SUFFIXES = {".py", ".css", ".js", ".json", ".svg", ".html", ".md"}
+SITE_GENERATED = {"version.json", "robots.txt", "sitemap.xml", "search-index.json", "app.en.js"}
+
+
+def site_files() -> list[str]:
+    return sorted(p.name for p in (ROOT / "sitio").iterdir()
+                  if p.is_file() and p.suffix in SITE_SUFFIXES and p.name not in SITE_GENERATED)
+
+
 BUILD_EPOCH = 1767225600  # 2026-01-01 UTC, also used by the deterministic ZIP entries.
 SKIP_PARTS = {"__pycache__", "node_modules", ".git", ".venv", "dist", "build", ".pytest_cache"}
 
@@ -52,9 +64,18 @@ def copy_file(source: Path, dest: Path) -> None:
     shutil.copyfile(source, dest)
 
 
+def is_excluded_tree(path: Path) -> bool:
+    try:
+        rel = path.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return False
+    return any(rel == tree or rel.startswith(tree + "/") for tree in EXCLUDED_TREES)
+
+
 def files_under(root: Path):
     for p in sorted(root.rglob("*")):
-        if p.is_file() and not any(x in SKIP_PARTS or x.endswith(".egg-info") for x in p.relative_to(root).parts) and p.suffix != ".pyc":
+        if (p.is_file() and not any(x in SKIP_PARTS or x.endswith(".egg-info") for x in p.relative_to(root).parts)
+                and p.suffix != ".pyc" and not is_excluded_tree(p)):
             yield p
 
 
@@ -92,7 +113,8 @@ def build(output: Path) -> dict:
     with tempfile.TemporaryDirectory(prefix="mini_release_") as td:
         stage = Path(td)
         source = stage / "source"
-        for name in (*DOCS, ".gitattributes", "pyproject.toml", "setup.py", "MANIFEST.in", "ts/package.json", "ts/README.md", "ts/README.en.md"):
+        for name in (*DOCS, ".gitattributes", "pyproject.toml", "setup.py", "MANIFEST.in", "ts/package.json", "ts/package-lock.json",
+                     "ts/tsconfig.json", "ts/tsconfig.test.json", "ts/README.md", "ts/README.en.md"):
             p = ROOT / name
             if p.is_file():
                 copy_file(p, source / name)
@@ -102,7 +124,7 @@ def build(output: Path) -> dict:
             copy_file(ROOT / name, source / name)
         # Website sources only: never ship SSH/deployment/server configuration,
         # generated downloads or recursive copies of release archives.
-        for name in SITE_FILES:
+        for name in site_files():
             copy_file(ROOT / "sitio" / name, source / "sitio" / name)
         wheels = stage / "wheels"
         build_env = dict(os.environ, SOURCE_DATE_EPOCH=str(BUILD_EPOCH))
