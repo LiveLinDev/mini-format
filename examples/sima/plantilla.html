@@ -97,6 +97,18 @@ __CABEZA__
   .sm th, .sm td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid rgb(var(--line)); vertical-align: top; }
   .sm th { font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em; color: rgb(var(--fg-muted)); }
   .sm .tabla { overflow-x: auto; }
+  /* confirmación antes de gastar crédito de un proveedor de pago (diálogo propio, accesible) */
+  .sm-dlg-fondo { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 1rem; background: rgb(var(--slab) / .62); }
+  .sm-dlg { width: min(36rem, 100%); max-height: calc(100vh - 2rem); overflow: auto; background: rgb(var(--raised)); color: rgb(var(--fg));
+            border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: 1.3rem 1.4rem; box-shadow: 0 28px 60px -24px rgb(var(--slab) / .7); }
+  .sm-dlg:focus { outline: none; }
+  .sm-dlg h2 { font-family: var(--f-display); font-size: 1.25rem; line-height: 1.15; letter-spacing: -.02em; margin: 0 0 .8rem; }
+  .sm-dlg p { font-size: .9rem; margin: 0 0 .7rem; color: rgb(var(--fg-muted)); }
+  .sm-dlg p b, .sm-dlg p code { color: rgb(var(--fg)); }
+  .sm-dlg .sm-dlg-lectura { border-left: 3px solid rgb(var(--accent)); padding-left: .8rem; }
+  .sm-dlg-acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .6rem; margin-top: 1.2rem; }
+  .sm-dlg-aviso { display: flex; gap: .6rem; align-items: flex-start; }
+  .sm-dlg-aviso svg { width: 22px; height: 22px; flex: none; color: rgb(var(--warn)); margin-top: .1rem; }
   @media (max-width: 640px) {
     .sm-barra { grid-template-columns: 6.5rem 1fr 4rem; }
     .sm-pregunta { padding: .9rem; }
@@ -133,6 +145,8 @@ __CABECERA__
       <span data-lang="en" hidden>This section calls SIMA on its server (sima.pmoluna.com). The lecture is sent to SIMA, SIMA processes it right away with DeepSeek and mini-format, and each block is
       shown here as it finishes: what the model answered, what was rejected with its code, what was repaired and the final questions.
       The model key stays in SIMA; this page never receives it.</span></p>
+    <p class="sm-nota"><span data-lang="es">Al abrir la página solo se consulta el estado de SIMA (<code>GET</code>, solo lectura). «Procesar en SIMA» y «Comparar en SIMA» llaman a un modelo de pago, así que piden tu confirmación antes de enviar nada.</span>
+      <span data-lang="en" hidden>Opening the page only queries SIMA's status (<code>GET</code>, read-only). “Process in SIMA” and “Compare in SIMA” call a paid model, so they ask for your confirmation before sending anything.</span></p>
     <div class="sm-fila">
       <span id="vivo-estado" class="sm-estado">…</span>
       <label class="et" for="vivo-url"><span data-lang="es">Dirección de SIMA</span><span data-lang="en" hidden>SIMA address</span></label>
@@ -262,6 +276,26 @@ __CABECERA__
   <p class="sm-nota" id="nota"></p>
 </main>
 __PIE__
+<div class="sm-dlg-fondo" id="dlg-fondo" hidden>
+  <div class="sm-dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlg-titulo" aria-describedby="dlg-desc" tabindex="-1">
+    <div class="sm-dlg-aviso">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19z"/><path d="M12 9.5v5M12 17.6v.1"/></svg>
+      <h2 id="dlg-titulo"><span data-lang="es">Esta acción consume crédito de un proveedor de pago</span><span data-lang="en" hidden>This action uses credit from a paid provider</span></h2>
+    </div>
+    <div id="dlg-desc">
+      <p><span data-lang="es">Si continúas, esta página enviará una petición <code>POST</code> al servidor <b id="dlg-servidor"></b>. Ese servidor llamará al modelo <b id="dlg-modelo"></b> con la cuenta del proveedor que tiene configurada, y cada llamada se cobra. <span id="dlg-alcance-es"></span></span>
+         <span data-lang="en" hidden>If you continue, this page will send a <code>POST</code> request to the server <b id="dlg-servidor-en"></b>. That server will call the model <b id="dlg-modelo-en"></b> using the provider account configured on it, and every call is billed. <span id="dlg-alcance-en"></span></span></p>
+      <p class="sm-dlg-lectura"><span data-lang="es">Al cargar esta página solo se hizo una consulta de estado (<code>GET</code>, solo lectura): no consumió crédito. Hasta que confirmes aquí, no se envía ninguna petición de pago.</span>
+         <span data-lang="en" hidden>When this page loaded it only made a status query (<code>GET</code>, read-only): it used no credit. Until you confirm here, no paid request is sent.</span></p>
+      <p><span data-lang="es">El texto del cuadro se envía a ese servidor y, desde allí, al proveedor del modelo.</span>
+         <span data-lang="en" hidden>The text in the box is sent to that server and, from there, to the model provider.</span></p>
+    </div>
+    <div class="sm-dlg-acciones">
+      <button type="button" class="btn btn-ghost" id="dlg-cancelar"><span data-lang="es">Cancelar</span><span data-lang="en" hidden>Cancel</span></button>
+      <button type="button" class="btn btn-solid" id="dlg-continuar"><span data-lang="es">Continuar y consumir crédito</span><span data-lang="en" hidden>Continue and use credit</span></button>
+    </div>
+  </div>
+</div>
 <script>__MINI_JS__</script>
 <script>const DATOS = __DATOS__;</script>
 <script>
@@ -465,6 +499,57 @@ __PIE__
     $$("[data-clase]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.clase === k)));
     palabras();
   }
+  // ------------------------------------------------------------ confirmación antes de cualquier POST de pago
+  // Procesar y Comparar llaman a un modelo de pago desde el servidor de SIMA. Ninguna de las dos acciones se envía
+  // sin que el visitante confirme aquí; al cargar la página solo se hace el GET de estado (solo lectura).
+  const dlg = { fondo: $("#dlg-fondo"), caja: $("#dlg"), permiso: false };
+  const servidorDe = () => { try { return new URL(urlBase()).host; } catch (x) { return urlBase() || "—"; } };
+  const modeloDe = () => vivo.modelo || t(["el proveedor configurado en SIMA", "the provider configured in SIMA"]);
+  function pedirConfirmacion(alcance) {
+    // alcance: [es, en] con qué se va a pedir al modelo
+    return new Promise((resolver) => {
+      const previo = document.activeElement;
+      $("#dlg-servidor").textContent = $("#dlg-servidor-en").textContent = servidorDe();
+      $("#dlg-modelo").textContent = $("#dlg-modelo-en").textContent = modeloDe();
+      $("#dlg-alcance-es").textContent = alcance[0]; $("#dlg-alcance-en").textContent = alcance[1];
+      const resto = Array.from(document.body.children).filter((n) => n !== dlg.fondo && !n.inert);
+      resto.forEach((n) => { n.inert = true; });
+      dlg.fondo.hidden = false;
+      const botones = () => [$("#dlg-cancelar"), $("#dlg-continuar")];
+      let cerrado = false;
+      function cerrar(ok) {
+        if (cerrado) return;
+        cerrado = true;
+        document.removeEventListener("keydown", teclas, true);
+        dlg.fondo.removeEventListener("click", fuera);
+        $("#dlg-cancelar").removeEventListener("click", cancelar);
+        $("#dlg-continuar").removeEventListener("click", continuar);
+        dlg.fondo.hidden = true;
+        resto.forEach((n) => { n.inert = false; });
+        if (previo && previo.focus) previo.focus();
+        dlg.permiso = ok;
+        resolver(ok);
+      }
+      const cancelar = () => cerrar(false), continuar = () => cerrar(true);
+      const fuera = (ev) => { if (ev.target === dlg.fondo) cerrar(false); };
+      function teclas(ev) {
+        if (ev.key === "Escape" || ev.key === "Esc") { ev.preventDefault(); cerrar(false); return; }
+        if (ev.key !== "Tab") return;
+        const [a, b] = botones();
+        if (ev.shiftKey && document.activeElement === a) { ev.preventDefault(); b.focus(); }
+        else if (!ev.shiftKey && document.activeElement === b) { ev.preventDefault(); a.focus(); }
+        else if (!dlg.caja.contains(document.activeElement)) { ev.preventDefault(); a.focus(); }
+      }
+      document.addEventListener("keydown", teclas, true);
+      dlg.fondo.addEventListener("click", fuera);
+      $("#dlg-cancelar").addEventListener("click", cancelar);
+      $("#dlg-continuar").addEventListener("click", continuar);
+      $("#dlg-cancelar").focus();   // el foco empieza en la opción que no gasta
+    });
+  }
+  // El permiso vale para UNA sola petición: lo consume el POST que lo pidió.
+  function consumirPermiso() { const ok = dlg.permiso; dlg.permiso = false; return ok; }
+
   async function conectar() {
     const e = $("#vivo-estado");
     e.className = "sm-estado"; e.textContent = t(["Conectando…", "Connecting…"]);
@@ -487,6 +572,7 @@ __PIE__
       $("#vivo-avance").innerHTML = '<p class="sm-aviso mal">' + t(["La clase necesita al menos 150 palabras.", "The lecture needs at least 150 words."]) + "</p>";
       return;
     }
+    if (!consumirPermiso()) return;   // solo se llega aquí después de confirmar en el diálogo
     $("#vivo-procesar").disabled = true;
     vivo.fase = "procesando"; $("#registrado").hidden = true; avisoRegistro();
     $("#vivo-bloques").innerHTML = ""; $("#vivo-resultado").innerHTML = "";
@@ -614,7 +700,13 @@ __PIE__
   $$("[data-clase]").forEach((b) => b.addEventListener("click", () => cargarClase(b.dataset.clase)));
   $("#vivo-texto").addEventListener("input", palabras);
   $("#vivo-conectar").addEventListener("click", conectar);
-  $("#vivo-procesar").addEventListener("click", procesar);
+  $("#vivo-procesar").addEventListener("click", async () => {
+    if (palabras() < 150) { procesar(); return; }   // solo muestra el aviso de longitud: no cuesta nada
+    const ok = await pedirConfirmacion([
+      "Se pedirá al modelo que genere preguntas para toda la clase cargada (" + num(palabras()) + " palabras), en varias llamadas, bloque por bloque.",
+      "The model will be asked to generate questions for the whole lecture loaded (" + num(palabras()) + " words), in several calls, block by block."]);
+    if (ok) procesar();
+  });
 
   // ------------------------------------------------------------ JSON frente a .mini, en vivo (dos llamadas reales desde SIMA)
   const cmp = { id: null, items: 40, temporizador: null };
@@ -629,6 +721,7 @@ __PIE__
       (opciones.leyenda ? '<p class="sm-leyenda">' + (opciones.limite ? "<i></i>" : "") + opciones.leyenda + "</p>" : "") + "</div>";
   }
   async function comparar() {
+    if (!consumirPermiso()) return;   // solo se llega aquí después de confirmar en el diálogo
     const texto = $("#vivo-texto").value;
     $("#comparar-iniciar").disabled = true;
     $("#comparar-graficas").innerHTML = ""; $("#comparar-vivo").innerHTML = "";
@@ -700,7 +793,12 @@ __PIE__
     cmp.items = Number(b.dataset.items);
     $$("[data-items]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
   }));
-  $("#comparar-iniciar").addEventListener("click", comparar);
+  $("#comparar-iniciar").addEventListener("click", async () => {
+    const ok = await pedirConfirmacion([
+      "Se harán dos llamadas al modelo a la vez (una en .mini y otra en JSON) para pedir " + cmp.items + " preguntas del primer bloque de la clase.",
+      "Two calls will be made to the model at the same time (one in .mini and one in JSON) to request " + cmp.items + " questions from the first block of the lecture."]);
+    if (ok) comparar();
+  });
 
   function pintarTodo() { avisoRegistro(); pintarClase(); pintarTokens(); pintarRespuesta(); pintarPregunta(); pintarCorridas();
     $("#nota").textContent = t(["Datos: llamadas reales a DeepSeek y Groq del " + DATOS.fecha + ". Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + ").",
