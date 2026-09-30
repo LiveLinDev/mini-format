@@ -11,6 +11,7 @@ SPEC §12.
 from __future__ import annotations
 
 import contextlib
+import datetime
 import io
 import json
 import shutil
@@ -280,7 +281,7 @@ if PYDANTIC_V2:
         salary_min: Optional[int] = pydantic.Field(ge=0)
         skills: List[str] = pydantic.Field(max_length=10)
         city: Optional[str] = None
-        deadline: Optional[str] = None
+        deadline: Optional[datetime.date] = None
 
     class Postings(pydantic.BaseModel):
         postings: List[JobPosting]
