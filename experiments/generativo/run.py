@@ -43,6 +43,7 @@ from arnes import brazos as B  # noqa: E402
 from arnes import ejecucion as X  # noqa: E402
 from arnes import importacion as IM  # noqa: E402
 from arnes import plan as PL  # noqa: E402
+from arnes.archivos import escribir_texto  # noqa: E402
 from arnes.costos import estimar  # noqa: E402
 from arnes.presupuesto import ErrorAutorizacion, Presupuesto, validar_autorizacion  # noqa: E402
 from arnes.tarifas import Tarifas  # noqa: E402
@@ -172,12 +173,12 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
     for linea in _texto_recuento(cfg, en, est, args.adapter, tarifas):
         print(linea)
     if args.json:
-        Path(args.json).write_text(json.dumps({
+        escribir_texto(args.json, json.dumps({
             "config": cfg["nombre"], "recuento": est.recuento, "tarifas": {"archivo": tarifas.origen, "sha256": tarifas.sha256},
             "costo_esperado_usd": _usd(est.costo_esperado), "costo_maximo_usd": _usd(est.costo_maximo),
             "por_modelo": [{"proveedor": f.proveedor, "modelo": f.modelo, "llamadas_generacion": f.llamadas_generacion,
                             "costo_esperado_usd": _usd(f.costo_esperado), "costo_maximo_usd": _usd(f.costo_maximo),
-                            "tarifa": f.tarifa_estado} for f in est.filas]}, ensure_ascii=False, indent=2), encoding="utf-8")
+                            "tarifa": f.tarifa_estado} for f in est.filas]}, ensure_ascii=False, indent=2))
     return 0
 
 
@@ -331,7 +332,7 @@ def cmd_preparar(argv: List[str]) -> int:
             return 2
         tareas, brazos, reps = a.tareas.split(","), a.brazos.split(","), a.repeticiones
     filas, omitidas = IM.preparar_prompts(tareas, brazos, reps, a.modelo_declarado, a.experimento)
-    Path(a.salida).write_text("".join(json.dumps(f, ensure_ascii=False) + "\n" for f in filas), encoding="utf-8", newline="\n")
+    escribir_texto(a.salida, "".join(json.dumps(f, ensure_ascii=False) + "\n" for f in filas))
     print(f"{len(filas)} celdas preparadas en {a.salida}; {len(omitidas)} no aplicables")
     for o in omitidas[:5]:
         print("  no aplicable:", o["celda_id"], "-", o["motivo"])
@@ -346,7 +347,7 @@ def cmd_preparar_reparacion(argv: List[str]) -> int:
     a = ap.parse_args(argv)
     filas = IM.leer_filas(Path(a.respuestas))
     out = IM.preparar_reparaciones(filas, a.idioma)
-    Path(a.salida).write_text("".join(json.dumps(f, ensure_ascii=False) + "\n" for f in out), encoding="utf-8", newline="\n")
+    escribir_texto(a.salida, "".join(json.dumps(f, ensure_ascii=False) + "\n" for f in out))
     print(f"{len(out)} solicitudes de reparación en {a.salida}")
     return 0
 

@@ -179,7 +179,7 @@ class Libro:
     # -- eventos ------------------------------------------------------------
     def _escribir(self, ev: Dict[str, Any]) -> None:
         self.ruta.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.ruta, "a", encoding="utf-8") as fh:
+        with open(self.ruta, "a", encoding="utf-8", newline="\n") as fh:
             fh.write(json.dumps(ev, ensure_ascii=False) + "\n")
             fh.flush()
             os.fsync(fh.fileno())

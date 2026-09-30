@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 from . import brazos as B
+from .archivos import escribir_texto
 
 VERSION_ESQUEMA_MUESTRA = 2
 ESTADOS_CELDA = ("hecha", "pendiente", "bloqueado", "no_aplicable", "error_tecnico")
@@ -159,14 +160,14 @@ def escribir_manifiesto(dir_salida: Path, manifiesto: Dict[str, Any], hash_previ
         k = 1
         while (dir_salida / f"manifiesto.v{k}.json").exists():
             k += 1
-        (dir_salida / f"manifiesto.v{k}.json").write_text(destino.read_text(encoding="utf-8"), encoding="utf-8")
+        escribir_texto(dir_salida / f"manifiesto.v{k}.json", destino.read_text(encoding="utf-8"))
         with open(dir_salida / "versiones.jsonl", "a", encoding="utf-8") as fh:
             fh.write(json.dumps({"fecha_utc": fecha, "motivo": nueva_version, "diseno_previo_sha256": hash_previo,
                                  "diseno_nuevo_sha256": manifiesto["hashes"]["diseno_sha256"],
                                  "manifiesto_previo": f"manifiesto.v{k}.json"}, ensure_ascii=False) + "\n")
     elif destino.exists():
         return                                     # mismo diseño: el manifiesto no se toca (inmutable)
-    destino.write_text(json.dumps(manifiesto, ensure_ascii=False, indent=2), encoding="utf-8")
+    escribir_texto(destino, json.dumps(manifiesto, ensure_ascii=False, indent=2))
 
 
 # --------------------------------------------------------------------------
@@ -192,9 +193,9 @@ class EstadoEstudio:
                  "actualizado_utc": fecha, "celdas": contadores, "gasto": gasto, "orden_semilla": orden_semilla,
                  "reanudaciones": self.reanudaciones, "interrupcion": interrupcion}
         tmp = self.ruta.with_suffix(".tmp")
-        tmp.write_text(json.dumps(datos, ensure_ascii=False, indent=2), encoding="utf-8")
+        escribir_texto(tmp, json.dumps(datos, ensure_ascii=False, indent=2))
         os.replace(tmp, self.ruta)
-        with open(self.faltantes, "w", encoding="utf-8") as fh:
+        with open(self.faltantes, "w", encoding="utf-8", newline="\n") as fh:
             for f in faltantes:
                 fh.write(json.dumps(f, ensure_ascii=False) + "\n")
 

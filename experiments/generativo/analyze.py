@@ -45,6 +45,7 @@ sys.path.insert(0, str(HERE))
 import arnes  # noqa: E402,F401
 from arnes import brazos as B  # noqa: E402
 from arnes import tareas as T  # noqa: E402
+from arnes.archivos import escribir_texto  # noqa: E402
 from arnes.ejecucion import leer_muestras  # noqa: E402
 from arnes.estadistica import bootstrap_diferencia, bootstrap_razon, mediana, percentil, wilson  # noqa: E402
 from arnes.tarifas import NO_VERIFICADA, Tarifas, costo_usage  # noqa: E402
@@ -262,7 +263,7 @@ def escribir_csv(path: Path, filas: List[Dict[str, Any]]) -> None:
         return
     campos = list(dict.fromkeys(k for f in filas for k in f))
     with open(path, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=campos)
+        w = csv.DictWriter(fh, fieldnames=campos, lineterminator="\n")
         w.writeheader()
         w.writerows({k: ("" if v is None else v) for k, v in f.items()} for f in filas)
 
@@ -735,8 +736,7 @@ def main(argv=None) -> int:
     with open(salida / "solicitudes.jsonl", "w", encoding="utf-8", newline="\n") as fh:
         for x in sols:
             fh.write(json.dumps(x, ensure_ascii=False, sort_keys=True) + "\n")
-    (salida / "meta_v2.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2, sort_keys=True, default=list) + "\n",
-                                         encoding="utf-8", newline="\n")
+    escribir_texto(salida / "meta_v2.json", json.dumps(meta, ensure_ascii=False, indent=2, sort_keys=True, default=list) + "\n")
 
     for f in res_brazos + res_modelo:
         f["validez_txt"] = _ic_txt(f, "validez_final", "_solicitud")
@@ -781,7 +781,7 @@ def main(argv=None) -> int:
     if not args.sin_figuras:
         hechas = figuras(salida, res_brazos, v3a, procs)
         L += ["## Figuras", ""] + [f"![{h}]({h})" for h in hechas]
-    (salida / "resumen.md").write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
+    escribir_texto(salida / "resumen.md", "\n".join(L) + "\n")
     print(f"análisis escrito en {salida}")
     return 0
 

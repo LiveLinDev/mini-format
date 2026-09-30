@@ -114,6 +114,8 @@ def test_las_corridas_emitidas_del_piloto_validan():
         assert (d / "manifiesto.json").exists(), rid
         m = json.loads((d / "manifiesto.json").read_text(encoding="utf-8"))
         assert EV.validar_corrida(m, d) == [], rid                # incluye los SHA-256 de los resultados
+        # los resultados se escriben con LF: el repositorio normaliza a LF y el hash guardado debe coincidir en cualquier plataforma
+        assert all(b"\r" not in (ROOT / r["ruta"]).read_bytes() for r in m["resultados"]), rid
         assert m["procedencia"] == "simulado" and m["resultado"] == "no_evaluable" and m["gasto_usd"] == 0.0
         assert m["comando"].startswith("python experiments/generativo/run.py ejecutar --config configs/piloto.yaml")
     # las cifras de la corrida V2 salen del CSV del piloto versionado, no de otra parte

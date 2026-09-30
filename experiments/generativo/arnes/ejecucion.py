@@ -314,14 +314,14 @@ class Almacen:
         self.costo_incremental += Decimal(str(s.get("costo_incremental_usd") or 0))
 
     def agregar(self, s: Dict[str, Any]) -> None:
-        with open(self.muestras, "a", encoding="utf-8") as fh:
+        with open(self.muestras, "a", encoding="utf-8", newline="\n") as fh:
             fh.write(json.dumps(s, ensure_ascii=False) + "\n")
             fh.flush()
             os.fsync(fh.fileno())
         self._registrar(s)
 
     def fallo(self, d: Dict[str, Any]) -> None:
-        with open(self.fallos, "a", encoding="utf-8") as fh:
+        with open(self.fallos, "a", encoding="utf-8", newline="\n") as fh:
             fh.write(json.dumps(d, ensure_ascii=False) + "\n")
 
     def leer(self) -> List[Dict[str, Any]]:

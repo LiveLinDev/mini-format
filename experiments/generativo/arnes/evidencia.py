@@ -43,7 +43,7 @@ def _filtrar_csv(origen: Path, destino: Path, experimento: str) -> int:
     if not filas:
         return 0
     with open(destino, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=list(filas[0].keys()))
+        w = csv.DictWriter(fh, fieldnames=list(filas[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(filas)
     return len(filas)

@@ -58,6 +58,8 @@ def test_todos_los_manifiestos_validan_y_son_simulado_no_evaluable(corridas):
         assert m["tarifas"] is None and all(len(r["sha256"]) == 64 for r in m["resultados"])
         assert all(c["sintetico"] is True for c in m["conjuntos"]) and m["contratos"] and m["prompts"]
         assert m["tokenizadores"][0]["tipo"] == "aproximacion"
+        assert all(b"\r" not in (ROOT / r["ruta"]).read_bytes() if (ROOT / r["ruta"]).exists() else b"\r" not in (d / Path(r["ruta"]).name).read_bytes()
+                   for r in m["resultados"])
         assert m["codigo"]["commit"] is not None
 
 

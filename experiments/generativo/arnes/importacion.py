@@ -29,6 +29,7 @@ from . import brazos as B
 from . import metricas as M
 from . import reparar as RP
 from . import tareas as T
+from .archivos import escribir_texto
 from .ejecucion import STOP_TRUNCADO, Almacen, Contexto, clasificar_desenlace
 from .plan import VERSION_ESQUEMA_MUESTRA, EstadoEstudio, hashes_diseno, json_estable
 
@@ -365,7 +366,7 @@ def escribir_resultados_importacion(salida: Path, origen: Path, inf: Informe, *,
                                                                "sha256": hashlib.sha256(Path(origen).read_bytes()).hexdigest()
                                                                if Path(origen).is_file() else None},
                   "gasto_usd": 0, "muestras": len(muestras)}
-    (salida / "manifiesto.json").write_text(json.dumps(manifiesto, ensure_ascii=False, indent=2), encoding="utf-8")
+    escribir_texto(salida / "manifiesto.json", json.dumps(manifiesto, ensure_ascii=False, indent=2))
     ahora = _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds")
     EstadoEstudio(salida).escribir(estado="completo" if not inf.reparaciones_pendientes else "parcial", motivo="importación",
                                    fecha_inicio=ahora, fecha=ahora,
@@ -375,7 +376,7 @@ def escribir_resultados_importacion(salida: Path, origen: Path, inf: Informe, *,
                                    modo="importado", interrupcion=None,
                                    faltantes=[{"estado": "pendiente", "id": x["celda_id"], "motivo": x["motivo"]} for x in inf.reparaciones_pendientes]
                                    + [{"estado": "no_aplicable", "id": x.get("celda_id"), "motivo": x["motivo"]} for x in inf.no_aplicables])
-    (salida / "importacion.json").write_text(json.dumps(
+    escribir_texto(salida / "importacion.json", json.dumps(
         {"aceptadas": inf.aceptadas, "rechazadas": inf.rechazadas, "reparaciones_pendientes": inf.reparaciones_pendientes,
-         "no_aplicables": inf.no_aplicables}, ensure_ascii=False, indent=2), encoding="utf-8")
+         "no_aplicables": inf.no_aplicables}, ensure_ascii=False, indent=2))
     return manifiesto
