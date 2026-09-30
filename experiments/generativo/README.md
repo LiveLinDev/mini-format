@@ -187,10 +187,14 @@ Cada muestra lleva la estructura **`solicitud`** acordada con el flujo de infrae
                "estado": "ok|error", "status": null, "costo_usd": "0.00182"}]}
 ```
 
-* Un **brazo X+1 es una solicitud completa**: sus `intentos` incluyen la generación de X (marcada `compartido_con`) y la
-  reparación. `grupo` es la generación original y sirve para agrupar (conglomerados). **No se suman los costos de X y de X+1
-  de un mismo grupo**: son estrategias alternativas sobre la misma respuesta. El gasto real sale del libro, que cuenta cada
-  llamada una sola vez.
+* Un **brazo X+1 es una solicitud completa y autosuficiente**: sus `intentos` incluyen la generación de X (marcada
+  `compartido_con`) y la reparación. Por eso `grupo` es el **propio `id`** y `familia` enlaza con la generación original:
+  agrupar por `grupo` (como hace `experiments/economia/calculo.py`) no cuenta dos veces una generación. Las solicitudes
+  de X y de X+1 de una misma familia son **estrategias alternativas sobre la misma respuesta**: no se suman entre sí (la
+  generación aparece en las dos). El gasto real sale del libro, que cuenta cada llamada una sola vez. Una prueba alimenta
+  el cálculo de economía con estas solicitudes y comprueba que da la misma cifra que el arnés (se activa cuando ese módulo
+  está en la rama). Un intento fallido lleva `usage: null` (no se sabe qué se facturó), así que el cálculo de economía lo
+  marca «usage no informado»; el análisis del arnés lo excluye y cuenta como gasto incierto los fallos sin código HTTP.
 * **Sin doble conteo:** Anthropic informa entrada sin caché, lectura y escritura de caché por separado; en OpenAI, Groq y
   DeepSeek `prompt_tokens` incluye la caché (se resta) y `completion_tokens` incluye el razonamiento (no se suma otra vez).
   Si el proveedor no entrega usage, el usage es `null`.

@@ -118,7 +118,7 @@ class Tarifas:
             t = Tarifa.desde_dict(d)
             for ident in _ids_de(d):
                 lista.append(Tarifa(**{**t.__dict__, "modelo_api_id": ident}))
-        consultado = data.get("consultado_utc") if isinstance(data, dict) else None
+        consultado = (data.get("consultado_utc") or data.get("consulta_utc")) if isinstance(data, dict) else None
         try:
             origen = p.resolve().relative_to(Path(__file__).resolve().parents[3]).as_posix()
         except ValueError:

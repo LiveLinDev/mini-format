@@ -563,3 +563,57 @@ def test_comando_con_api_autorizado_de_extremo_a_extremo_con_adaptador_falso(tmp
     for f in salida.rglob("*"):
         if f.is_file() and f.suffix in (".json", ".jsonl", ".md", ".csv", ".log"):
             assert "sk-prueba-0123456789abcdefghij" not in f.read_text(encoding="utf-8", errors="ignore"), f
+
+
+# ------------------------------------------------------------------ consumible por el cálculo de economía (flujo de infraestructura)
+def _economia():
+    import importlib.util
+    ruta = Path(__file__).resolve().parents[3] / "experiments" / "economia" / "calculo.py"
+    if not ruta.exists():
+        pytest.skip("experiments/economia/calculo.py no está en esta rama (lo implementa el flujo de infraestructura)")
+    spec = importlib.util.spec_from_file_location("economia_calculo", ruta)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_la_solicitud_es_consumible_por_el_calculo_de_economia(tmp_path):
+    from decimal import ROUND_HALF_UP
+    CE = _economia()
+    cfg = cfg_base(brazos=["D", "D+1"], repeticiones=2)
+    cfg, ctx, en, ej, ad = montar(tmp_path, cfg)
+    t = ctx.tareas["ext-cls"]
+    pr = ctx.prompt(t, "D")
+    lineas = B.salida_referencia(t, "D").split("\n")
+    buena = lineas[3]
+    lineas[3] = "m4|roto"
+    ad.textos[pr.system] = "\n".join(lineas)
+
+    def generate(system, user, **kw):
+        texto = "\n".join(lineas) if system == pr.system else f"cls|n=1\n{buena}"
+        raw = {"usage": {"prompt_tokens": 1000, "completion_tokens": 500, "prompt_tokens_details": {"cached_tokens": 250}},
+               "choices": [{"message": {"content": texto}, "finish_reason": "stop"}]}
+        return result(texto, 1000, 500, 300.0, raw, stop_reason="stop", model="m", provider="openai")
+    ad.generate = generate
+    ej.ejecutar_estudio(en)
+    ms = X.leer_muestras(tmp_path / "res" / "muestras.jsonl")
+    tarifas = json.loads(TARIFAS.read_text(encoding="utf-8"))["tarifas"]
+    q = Decimal("0.000001")
+    for s in ms:
+        r = CE.costo_solicitud(s["solicitud"], tarifas)
+        assert r["estado"] == "calculado", (s["id"], r)
+        assert Decimal(r["costo_usd"]) == Decimal(s["costo_usd"]).quantize(q, ROUND_HALF_UP)     # misma cifra que la del arnés
+    d1 = next(s for s in ms if s["brazo"] == "D+1")
+    d = next(s for s in ms if s["id"] == d1["generacion_de"])
+    assert d1["solicitud"]["grupo"] == d1["id"] and d1["solicitud"]["familia"] == d["id"]        # autosuficiente: sin doble conteo
+    c1, c0 = CE.costo_solicitud(d1["solicitud"], tarifas), CE.costo_solicitud(d["solicitud"], tarifas)
+    rep = [i for i in d1["solicitud"]["intentos"] if i["fase"] == "reparacion"]
+    assert len(rep) == 1 and Decimal(c1["costo_usd"]) > Decimal(c0["costo_usd"])
+    assert [i["fase"] for i in c1["intentos"]] == ["generacion", "reparacion"]
+    # el total por grupo de las solicitudes D+1 coincide con la suma de sus costos y las válidas salen del propio arnés
+    sols = [s["solicitud"] for s in ms if s["brazo"] == "D+1"]
+    tot = CE.costo_total(sols, tarifas)
+    assert tot["estado"] == "calculado" and len(tot["grupos"]) == len(sols)
+    assert tot["registros_validos_finales"] == str(sum(s["registros_validos_finales"] for s in sols))
+    assert Decimal(tot["costo_total_usd"]) == sum(Decimal(s["costo_usd"]).quantize(q, ROUND_HALF_UP) for s in ms if s["brazo"] == "D+1")
+    assert tot["costo_por_1000_validos"]["estado"] == "calculado"

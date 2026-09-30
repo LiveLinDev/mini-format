@@ -60,7 +60,7 @@ def test_todos_los_manifiestos_validan_y_son_simulado_no_evaluable(corridas):
         assert m["tokenizadores"][0]["tipo"] == "aproximacion"
         assert all(b"\r" not in (ROOT / r["ruta"]).read_bytes() if (ROOT / r["ruta"]).exists() else b"\r" not in (d / Path(r["ruta"]).name).read_bytes()
                    for r in m["resultados"])
-        assert m["codigo"]["commit"] is not None
+        assert "commit" in m["codigo"] and "arbol_limpio" in m["codigo"]          # null si se ejecuta fuera de un repositorio git
 
 
 def test_una_corrida_simulada_no_puede_declararse_cumple(corridas):

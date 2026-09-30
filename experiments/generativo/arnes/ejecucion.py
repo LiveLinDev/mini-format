@@ -749,9 +749,11 @@ class Ejecutor:
     def _estado_costo(self, est: str) -> str:
         return "nocional" if (self.modo == "simulado" and est == "calculado") else est
 
-    def _solicitud(self, u: Unidad, t: T.Tarea, grupo: str, met: Dict[str, Any], intentos: List[Dict[str, Any]],
+    def _solicitud(self, u: Unidad, t: T.Tarea, familia: str, met: Dict[str, Any], intentos: List[Dict[str, Any]],
                    finales: Optional[int] = None) -> Dict[str, Any]:
-        return {"id": u.id, "grupo": grupo, "brazo": u.brazo, "celda": u.id,
+        """``grupo`` es el propio id: la solicitud es AUTOSUFICIENTE (un X+1 lleva la generación compartida y la reparación),
+        de modo que agrupar por ``grupo`` no cuenta dos veces una generación. ``familia`` enlaza con la generación original."""
+        return {"id": u.id, "grupo": u.id, "familia": familia, "brazo": u.brazo, "celda": u.id,
                 "registros_solicitados": met["solicitados"],
                 "registros_validos_finales": met["validos_finales"] if finales is None else finales,
                 "intentos": intentos}
