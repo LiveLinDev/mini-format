@@ -1,0 +1,103 @@
+{
+  "esquema": "mini-format/v6b-sus-items/1",
+  "instrumento": "System Usability Scale (SUS)",
+  "estado": "Materiales listos. Sin participantes: estudio pendiente. La versión en español es PROVISIONAL del equipo; versión lingüística por fijar antes del piloto.",
+  "original": {
+    "autor": "John Brooke",
+    "anio": 1996,
+    "obra": "SUS: A quick and dirty usability scale. En Usability evaluation in industry (pp. 189-194). Taylor & Francis.",
+    "nota_de_derechos": "La escala lleva la nota «© Digital Equipment Corporation, 1986» en el capítulo original.",
+    "verificacion": "Los 10 ítems en inglés y la regla de puntuación se cotejaron el 2026-09-30 con el texto del capítulo de Brooke alojado en https://digital.ahrq.gov/sites/default/files/docs/survey/systemusabilityscale%2528sus%2529_comp%255B1%255D.pdf (enunciados sin punto final, tal como aparecen allí). La referencia bibliográfica es la del Plan de Validación v3 (R15)."
+  },
+  "escala": {
+    "puntos": 5,
+    "ancla_1_en": "Strongly disagree",
+    "ancla_5_en": "Strongly agree",
+    "ancla_1_es_provisional": "Totalmente en desacuerdo",
+    "ancla_5_es_provisional": "Totalmente de acuerdo"
+  },
+  "puntuacion": {
+    "regla": "Ítems impares (1,3,5,7,9): respuesta - 1. Ítems pares (2,4,6,8,10): 5 - respuesta. Se suma y se multiplica por 2,5. Rango 0-100.",
+    "formula": "SUS = 2,5 x [suma(impares: r - 1) + suma(pares: 5 - r)]",
+    "no_es": "un porcentaje de tareas completadas",
+    "formularios_incompletos": "no se puntúan (Plan v3, 10.2)",
+    "implementaciones": [
+      "tools/analizar_v6.py puntuar_sus",
+      "evidencia/v6/herramienta/sesion.html V6.puntuarSUS",
+      "Excel Benchmarks_y_Validacion.xlsx hoja 'V6 SUS' columna P (según la auditoría previa)"
+    ]
+  },
+  "version_es": {
+    "estado": "PROVISIONAL del equipo: versión lingüística por fijar",
+    "origen": "Traducción redactada por el equipo para poder ensayar la herramienta. No es una adaptación publicada y no debe presentarse como escala validada.",
+    "adaptacion_candidata": {
+      "cita": "Sevilla-Gonzalez, M. D. R., Moreno Loaeza, L., Lazaro-Carrera, L. S., Bourguet Ramirez, B., Vázquez Rodríguez, A., Peralta-Pedrero, M. L., y Almeda-Valdes, P. (2020). Spanish Version of the System Usability Scale for the Assessment of Electronic Tools: Development and Validation. JMIR Human Factors, 7(4), e21161. https://doi.org/10.2196/21161",
+      "licencia": "CC BY 4.0 (según la ficha en PubMed Central, PMC7773510)",
+      "verificado": "La ficha bibliográfica se abrió el 2026-09-30 en https://pmc.ncbi.nlm.nih.gov/articles/PMC7773510/ (título, revista, volumen, número, artículo, año y DOI). Los nombres de los siete autores salen de la ficha de la revista que devolvió la búsqueda; en PMC se abrió la cita con los tres primeros y «et al.».",
+      "no_verificado": "Los diez ítems finales en español están en el Apéndice multimedia 2 del artículo; ese apéndice NO se abrió en esta sesión y por eso sus enunciados no se reproducen aquí.",
+      "decision_pendiente": "El equipo y el asesor deben abrir el apéndice, decidir si adoptan esa versión (u otra) y fijarla antes del piloto; en ese caso sustituir 'es_provisional' por los enunciados publicados y citar la fuente."
+    }
+  },
+  "items": [
+    {
+      "n": 1,
+      "polaridad": "positivo",
+      "original_en": "I think that I would like to use this system frequently",
+      "es_provisional": "Creo que me gustaría usar este sistema con frecuencia."
+    },
+    {
+      "n": 2,
+      "polaridad": "negativo",
+      "original_en": "I found the system unnecessarily complex",
+      "es_provisional": "Encontré el sistema innecesariamente complejo."
+    },
+    {
+      "n": 3,
+      "polaridad": "positivo",
+      "original_en": "I thought the system was easy to use",
+      "es_provisional": "Pensé que el sistema era fácil de usar."
+    },
+    {
+      "n": 4,
+      "polaridad": "negativo",
+      "original_en": "I think that I would need the support of a technical person to be able to use this system",
+      "es_provisional": "Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar este sistema."
+    },
+    {
+      "n": 5,
+      "polaridad": "positivo",
+      "original_en": "I found the various functions in this system were well integrated",
+      "es_provisional": "Encontré que las diversas funciones de este sistema estaban bien integradas."
+    },
+    {
+      "n": 6,
+      "polaridad": "negativo",
+      "original_en": "I thought there was too much inconsistency in this system",
+      "es_provisional": "Pensé que había demasiada inconsistencia en este sistema."
+    },
+    {
+      "n": 7,
+      "polaridad": "positivo",
+      "original_en": "I would imagine that most people would learn to use this system very quickly",
+      "es_provisional": "Imagino que la mayoría de las personas aprendería a usar este sistema muy rápidamente."
+    },
+    {
+      "n": 8,
+      "polaridad": "negativo",
+      "original_en": "I found the system very cumbersome to use",
+      "es_provisional": "Encontré el sistema muy incómodo de usar."
+    },
+    {
+      "n": 9,
+      "polaridad": "positivo",
+      "original_en": "I felt very confident using the system",
+      "es_provisional": "Me sentí muy seguro o segura al usar el sistema."
+    },
+    {
+      "n": 10,
+      "polaridad": "negativo",
+      "original_en": "I needed to learn a lot of things before I could get going with this system",
+      "es_provisional": "Necesité aprender muchas cosas antes de poder empezar a usar este sistema."
+    }
+  ]
+}
