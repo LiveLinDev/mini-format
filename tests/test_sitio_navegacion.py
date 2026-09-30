@@ -271,6 +271,7 @@ def test_menu_movil_abre_cierra_con_esc_al_elegir_y_al_hacer_clic_fuera(navegado
     # al ensanchar la ventana se cierra y la lista vuelve a ser la barra de escritorio
     boton.click()
     pagina.set_viewport_size({"width": 1440, "height": 700})
+    pagina.wait_for_function("document.querySelector('.nav-toggle').getAttribute('aria-expanded') === 'false'")   # el aviso de matchMedia es asíncrono
     assert not boton.is_visible() and lista.is_visible() and boton.get_attribute("aria-expanded") == "false"
     contexto.close()
 
