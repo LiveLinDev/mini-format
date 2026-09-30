@@ -5,7 +5,7 @@
  */
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createReader, mergeRepair, normalizeContract, readRecords, repairRequest, specBlock } from '../src/index.ts';
+import { createReader, dumps, mergeRepair, normalizeContract, parse, readRecords, repairRequest, specBlock } from '../src/index.ts';
 import { REG, rng } from './helpers.ts';
 
 const CLS = REG.get('cls');
@@ -120,5 +120,53 @@ describe('D-7: ReaderResult.finalRecords (registro final sin LF)', () => {
     while (!step.done) { got.push(step.value.record.id); step = await it.next(); }
     assert.deepEqual(got, ['i1', 'i2']);
     assert.equal(step.value.finalRecords.length, 1);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// ADR 0017 (Propuesta, no vigente): B-1 conjunto de blancos y D-1/D-2/D-4 como pruebas «todo».
+// ---------------------------------------------------------------------------------------------
+const WS = normalizeContract({
+  prefix: 'p', records_key: 'rows',
+  core: [{ name: 'id', type: 'str' }],
+  extensions: [
+    { name: 'ls', type: 'list', item: 'str' },
+    { name: 'dec', type: 'decimal' },
+  ],
+});
+const TRIMMED = [0x09, 0x0b, 0x0c, 0x0d, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x85, 0xa0, 0x1680,
+  0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200a,
+  0x2028, 0x2029, 0x202f, 0x205f, 0x3000];
+const NOT_TRIMMED = [0x200b, 0x200c, 0x200d, 0x2060, 0xfeff, 0x180e, 0x86, 0xad, 0x2800, 0x3164];
+
+describe('B-1 (ADR 0017): conjunto de blancos que recorta hoy la biblioteca (no normativo; igual que Python)', () => {
+  const valueOf = (cp: number): unknown => {
+    const ch = String.fromCodePoint(cp);
+    return parse('p|n=1\n' + ch + 'x' + ch, WS, { strict: false }).records[0].id;
+  };
+  test('los caracteres de la lista se recortan en ambos extremos de un campo', () => {
+    for (const cp of TRIMMED) assert.equal(valueOf(cp), 'x', `U+${cp.toString(16)}`);
+  });
+  test('los caracteres vecinos que no son espacio se conservan', () => {
+    for (const cp of NOT_TRIMMED) {
+      const ch = String.fromCodePoint(cp);
+      assert.equal(valueOf(cp), ch + 'x' + ch, `U+${cp.toString(16)}`);
+    }
+  });
+});
+
+describe('D-1, D-2 y D-4 (ADR 0017, propuesta): lo que SPEC §9 exige y hoy no se cumple', () => {
+  const back = (rec: Record<string, unknown>): Record<string, unknown> =>
+    parse(dumps({ prefix: 'p', header: { n: 1 }, rows: [{ id: 'a', ...rec }] }, WS), WS).records[0];
+  test('D-1: el espacio exterior de una cadena sobrevive a la ida y vuelta', { todo: 'ADR 0017' }, () => {
+    assert.equal(back({ id: ' a' }).id, ' a');
+    assert.equal(back({ id: 'hola ' }).id, 'hola ');
+  });
+  test('D-2: un elemento de lista con espacio antes de la comilla se puede escribir', { todo: 'ADR 0017' }, () => {
+    assert.deepEqual(back({ ls: [' "a'] }).ls, [' "a']);
+  });
+  test('D-4: el texto emitido para un decimal no canónico es estable', { todo: 'ADR 0017' }, () => {
+    const text = dumps({ prefix: 'p', header: { n: 1 }, rows: [{ id: 'a', dec: '007.50' }] }, WS);
+    assert.equal(dumps(parse(text, WS).toCanonical(), WS), text);
   });
 });

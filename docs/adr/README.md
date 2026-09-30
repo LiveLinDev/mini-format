@@ -14,7 +14,8 @@ Convenciones:
 * Estados: *propuesta*, *aceptada*, *reemplazada por ADR NNNN*.
 * Los registros 0001–0007 documentan de forma retrospectiva decisiones vigentes
   desde SPEC 1.0 (2026-09-01). Los registros 0008–0016 corresponden a SPEC 1.1
-  (2026-09-17) y a la versión 1.2.0 de las herramientas.
+  (2026-09-17) y a la versión 1.2.0 de las herramientas. Los registros 0017 y 0018 son
+  propuestas de la auditoría V5 (2026-09-30): no están vigentes y no cambian la norma.
 * Una regla nueva de la especificación requiere su ADR, su caso de conformidad en
   [`conformance/generate.py`](../../conformance/generate.py) y la implementación
   equivalente en Python y TypeScript ([CONTRIBUTING.md](../../CONTRIBUTING.md)).
@@ -39,3 +40,5 @@ Convenciones:
 | [0014](0014-lista-opcional-vacia-es-null.md) | La lista opcional vacía es null | aceptada | 1.1, §6 |
 | [0015](0015-errores-del-serializador.md) | Códigos de error del serializador | aceptada | 1.1, §9 |
 | [0016](0016-tipos-date-y-decimal.md) | Tipos `date` y `decimal` | aceptada | 1.1, §6 |
+| [0017](0017-espacio-exterior-decimal-canonico-y-blancos.md) | Espacio exterior, escape de elementos de lista, decimal canónico y conjunto de blancos | **propuesta (no vigente)** | §3.4, §3.5, §6, §9 |
+| [0018](0018-enteros-grandes-en-typescript.md) | Enteros fuera de ±2^53 en TypeScript y en el navegador | **propuesta (no vigente)** | §4, §6 |
