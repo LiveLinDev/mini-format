@@ -1,0 +1,58 @@
+{
+  "esquema": "mini-format/criterio-opt/1",
+  "fijado_antes_de_medir": true,
+  "nota_de_orden": "Este archivo se versiona en un commit anterior a cualquier medición sobre los datos de prueba (semilla 20261001). Las mediciones sobre la semilla de desarrollo (20260930) solo sirven para diseñar la configuración especializada y no cuentan como evidencia del criterio.",
+  "pregunta": "¿Una configuración .mini especializada, diseñada a mano dentro de SPEC 1.1, reduce los tokens transmitidos frente a JSON compacto y frente al perfil general, contando la instrucción completa?",
+  "definiciones": {
+    "tokens": "Conteo local del TEXTO COMPLETO con el vocabulario BPE archivado (o200k_base, cl100k_base, r50k_base). Es una aproximación a la facturación de cualquier proveedor; no es usage ni conteo de solicitud.",
+    "salida": "Texto que el modelo devuelve: el documento .mini completo o el JSON compacto completo (separadores , y :, sin espacios, UTF-8 sin escapes).",
+    "instruccion": "Texto completo que se enviaría para pedir ese formato: contrato, reglas, mapas de códigos y, según la variante, un ejemplo de 2 registros.",
+    "total": "Tokens de (instruccion + salto doble + salida) tokenizados como UN solo texto. No se suman fragmentos.",
+    "json_linea_base": "JSON compacto del mismo objeto de aplicación envuelto en {clave:[...]}. Su instrucción se cuenta como 0 tokens en la lectura primaria (favorable a JSON, como en benchmark/public); la lectura secundaria suma instrucción + JSON Schema compacto.",
+    "ahorro": "1 - tokens(mini) / tokens(json_compacto). Positivo = .mini usa menos.",
+    "lote": "Tamaño n de registros por respuesta. La lectura primaria usa la MEDIA de los totales de los lotes medidos (hasta 5 lotes disjuntos de n registros del mismo conjunto de prueba).",
+    "equivalencia": "reconstruir(parse(mini)) es idéntico al objeto original: mismos valores, mismos TIPOS, mismo orden de claves y mismos metadatos, para TODO registro medido. Si falla en algún registro, la configuración se descarta y no entra en ninguna comparación."
+  },
+  "lectura_primaria": {
+    "perfil_especializado": "especializado con instrucción en la variante CON ejemplo de 2 registros (la más conservadora de las variantes medidas)",
+    "perfil_general": "from-schema (mini from-schema + spec_block, es) con la misma variante CON ejemplo",
+    "caso_representativo": "tickets",
+    "n": 100,
+    "tokenizadores": ["o200k_base", "cl100k_base", "r50k_base"]
+  },
+  "criterios": [
+    {
+      "id": "C1",
+      "texto": "Caso representativo (tickets), n=100, en los TRES tokenizadores: el ahorro de salida del perfil especializado frente a JSON compacto es >= 30 %.",
+      "umbral_pct": 30,
+      "origen_del_umbral": "umbral de salida del proyecto (>= 30 % frente a JSON compacto); se aplica por tokenizador, sin promediar entre tokenizadores."
+    },
+    {
+      "id": "C2",
+      "texto": "Caso representativo (tickets), n=100, en los TRES tokenizadores: el total del perfil especializado (instrucción con ejemplo + salida) es MENOR que el total del JSON compacto (instrucción JSON = 0).",
+      "comparador": "json_compacto, instrucción 0"
+    },
+    {
+      "id": "C3",
+      "texto": "Equivalencia exacta (ida y vuelta) en TODOS los registros medidos de TODOS los perfiles y dominios incluidos en las tablas: 0 fallos.",
+      "fallos_permitidos": 0
+    }
+  ],
+  "resultado_del_estudio": "cumple si y solo si C1, C2 y C3 se cumplen; no_cumple si alguno falla; los demás dominios y variantes son DESCRIPTIVOS (no tienen umbral): se publican todos, incluido el caso sin ahorro.",
+  "descriptivo_sin_umbral": [
+    "caso favorable (eventos): ahorro de salida, de instrucción y total por lote y tokenizador",
+    "caso sin ahorro (comentarios): ídem; se publica aunque no haya ahorro",
+    "punto de equilibrio n* por dominio y tokenizador",
+    "perfil general por mini build (mini-domain/1) como segunda variante general"
+  ],
+  "no_se_mide": [
+    "validez ni exactitud de un modelo real (sin llamadas de API): nada de lo medido prueba que un modelo siga la instrucción compacta",
+    "costo en dinero: el total no pondera por precio de entrada/salida"
+  ],
+  "diseno_de_la_configuracion": {
+    "conjunto": "desarrollo (semilla 20260930; comentarios 0..149)",
+    "espacio": ["orden de campos (búsqueda local)", "esquema de códigos por enumeración (etiqueta, letra, letra mayúscula, dígito)", "id numérico con prefijo constante", "enteros escalados", "hora como minutos", "constantes por lote en la cabecera", "instrucción compacta frente a spec_block"],
+    "regla_de_seleccion": "menor suma, sobre los tres tokenizadores, del total (instrucción compacta sin ejemplo + salida) con n=50 del conjunto de desarrollo; empate a favor de la forma más cercana al esquema original. Se conserva un cambio solo si mejora esa suma en al menos 1 %.",
+    "prueba": "conjunto de prueba (semilla 20261001; comentarios 150..499), nunca usado para elegir"
+  }
+}
