@@ -26,8 +26,11 @@ import unittest
 from pathlib import Path
 from typing import Any, Dict
 
-from hypothesis import HealthCheck, assume, given, settings
-from hypothesis import strategies as st
+try:
+    from hypothesis import HealthCheck, assume, given, settings
+    from hypothesis import strategies as st
+except ImportError:  # sin el extra "dev"; la CI lo instala y comprueba que esté (ci.yml), así que allí no se omite en silencio
+    raise unittest.SkipTest("hypothesis no está instalado: pip install -e .[dev]")
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))

@@ -8,6 +8,10 @@
  * `stripTypeScriptTypes` de Node (≥ 22.13), se envuelve en su propio ámbito y se enlaza por
  * orden topológico de sus importaciones relativas; el resultado es un UMD sin dependencias
  * que expone el global `MINI` (navegador) o `module.exports` (Node/CommonJS).
+ * Determinismo: el resultado no depende de los finales de línea de los fuentes (se leen con LF), pero SÍ puede depender de
+ * la versión de Node, porque `stripTypeScriptTypes` (amaro) decide cómo quedan los huecos de los tipos. Solo se verificó con
+ * Node 22.14.0 (la otra versión no estaba instalada), que es la que fija .github/workflows/ci.yml; al subirla hay que
+ * regenerar js/mini.js, revisar el diff y cambiar el número en ci.yml y sitio.yml a la vez.
  * Solo se incluyen los módulos alcanzables desde ENTRY: registry.ts usa `import.meta` y
  * node:fs, que no existen en un script clásico de navegador.
  * MIT License — A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC, 2026)
