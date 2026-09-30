@@ -34,8 +34,9 @@ def corridas(tmp_path_factory):
     original = EVI.emitir_corridas
     EVI.emitir_corridas = lambda *a, **k: original(*a, **dict(k, directorio_corridas=destino))
     try:
+        # --tarifas apunta a un archivo que no existe: la prueba no depende de que el repositorio traiga evidencia/tarifas/
         assert run.main(["ejecutar", "--config", str(cfg), "--adapter", "simulado", "--salida", str(tmp / "res"),
-                         "--emitir-evidencia", "prueba-mini"]) == 0
+                         "--tarifas", str(tmp / "sin_tarifas.json"), "--emitir-evidencia", "prueba-mini"]) == 0
     finally:
         EVI.emitir_corridas = original
     return tmp, destino

@@ -163,7 +163,8 @@ def test_presupuesto_previo_y_proyeccion_antes_de_llamar(cfg_path, tmp_path):
                      "--max-costo-usd", "0.000001"]) == 2
     assert not (salida / "muestras.jsonl").exists()
     # sin tarifas no se puede proyectar
-    assert run.main(["--config", str(p), "--adapter", "simulado", "--salida", str(salida), "--max-costo-usd", "5"]) == 2
+    assert run.main(["--config", str(p), "--adapter", "simulado", "--salida", str(salida), "--max-costo-usd", "5",
+                     "--tarifas", str(tmp_path / "sin_tarifas.json")]) == 2
     # durante la ejecución: nunca se gasta más que el tope (la llamada que lo superaría NO se hace)
     cfg = X.cargar_config(p)
     ctx = X.Contexto(cfg)
