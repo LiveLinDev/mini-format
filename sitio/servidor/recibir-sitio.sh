@@ -45,7 +45,7 @@ head -c "$MAX_BYTES" | tar xzf - -C "$NUEVO" --no-same-owner --no-same-permissio
 
 # 2) comprobaciones: nada de enlaces simbólicos, estructura mínima presente
 if [ -n "$(find "$NUEVO" -type l -print -quit)" ]; then rm -rf "$NUEVO"; log "rechazado: contiene enlaces simbólicos"; exit 3; fi
-for f in index.html base.css app.js playground/index.html docs/index.html; do
+for f in index.html 404.html base.css app.js playground/index.html docs/index.html; do
   [ -f "$NUEVO/$f" ] || { rm -rf "$NUEVO"; log "rechazado: falta $f"; exit 3; }
 done
 find "$NUEVO" -type d -exec chmod 755 {} + ; find "$NUEVO" -type f -exec chmod 644 {} +

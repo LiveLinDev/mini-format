@@ -7,19 +7,34 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "sitio"
+sys.path.insert(0, str(SITE))
+import cifras  # noqa: E402
+
+FAMILIAS = cifras.calcular(ROOT)["familias"]
 ORIGIN = "https://mini-format.pmoluna.com"
 REPO = "https://github.com/LiveLinDev/mini-format"
-SOURCE_ZIP = "/downloads/mini-format-1.2.1-source.zip"
+VERSION = re.search(r'^version = "([^"]+)"', (ROOT / "pyproject.toml").read_text(encoding="utf-8"), re.M).group(1)
+SOURCE_ZIP = f"/downloads/mini-format-{VERSION}-source.zip"
+# Páginas bilingües EN LÍNEA (los dos idiomas en el mismo HTML, docs.js conmuta sin cambiar de URL).
+# No tienen copia /en/: entran en el sitemap con su URL única, sin hreflang ni `data-localized-routes`.
+# Los módulos añaden las suyas con registrar_en_linea() (ver sitio/modulos.py).
+RUTAS_EN_LINEA: set[str] = {"taller", "sima", "ejemplo", "validacion", "economia"}
 ALLOW_ROOTS = {"benchmark", "experiments", "conformance", "forks", "src", "ts", "js", "docs"}
 ALLOW_SUFFIX = {".md", ".json", ".csv", ".py", ".ts", ".js", ".mini", ".txt", ".toml", ".png", ".svg", ".yaml", ".yml"}
 EXCLUDE = {"node_modules", "__pycache__", ".venv", ".git", "vocab", "dist"}
 COPIED: set[str] = set()
+
+
+def registrar_en_linea(ruta: str) -> None:
+    """Declara una página bilingüe en línea generada por un módulo (sitemap, `?v=`, SEO)."""
+    RUTAS_EN_LINEA.add(ruta.strip("/"))
 
 
 def version_assets(text: str, digest_cache: dict[str, str]) -> str:
@@ -171,10 +186,28 @@ def localized(text: str, lang: str, path: str) -> str:
     meta += f'<link rel="canonical" href="{canonical}">\n<link rel="alternate" hreflang="es" href="{ORIGIN}{path}">\n<link rel="alternate" hreflang="en" href="{ORIGIN}/en{path}">\n<link rel="alternate" hreflang="x-default" href="{ORIGIN}{path}">\n'
     meta += f'<meta property="og:type" content="website"><meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(desc, quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:locale" content="{"es_ES" if lang == "es" else "en_US"}">\n'
     if path == "/":
-        schema = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.2.1", "license": "https://opensource.org/license/mit", "downloadUrl": ORIGIN + "/downloads/mini-format-1.2.1.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": lang, "description": desc}
+        schema = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": VERSION, "license": "https://opensource.org/license/mit", "downloadUrl": ORIGIN + f"/downloads/mini-format-{VERSION}.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": lang, "description": desc}
         meta += '<script type="application/ld+json">' + json.dumps(schema, ensure_ascii=False) + '</script>\n'
     # Avoid duplicate structured data on repeated builds.
     text = re.sub(r'<script type="application/ld\+json">.*?</script>\s*', "", text, flags=re.S)
+    return text.replace("</head>", meta + "</head>", 1)
+
+
+def seo_en_linea(text: str, path: str) -> str:
+    """Canonical, descripción y Open Graph para una página bilingüe en línea (sin hreflang: no hay /en/)."""
+    existente = re.search(r'<meta\s+name="description"\s+content="([^"]*)"', text)
+    desc = html.unescape(existente.group(1)) if existente else (
+        "Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.")
+    text = re.sub(r'<link\s+rel="(?:canonical|alternate|icon)"[^>]*>\s*', "", text)
+    text = re.sub(r'<meta\s+(?:name="description"|property="og:[^"]+")[^>]*>\s*', "", text)
+    title_match = re.search(r"<title>(.*?)</title>", text)
+    title = html.unescape(title_match.group(1)) if title_match else "mini-format"
+    url = ORIGIN + path
+    meta = ('<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n'
+            f'<meta name="description" content="{html.escape(desc, quote=True)}">\n'
+            f'<link rel="canonical" href="{url}">\n'
+            f'<meta property="og:type" content="website"><meta property="og:title" content="{html.escape(title, quote=True)}">'
+            f'<meta property="og:description" content="{html.escape(desc, quote=True)}"><meta property="og:url" content="{url}">\n')
     return text.replace("</head>", meta + "</head>", 1)
 
 
@@ -189,6 +222,13 @@ def prepare_public_site(playground_translations=()) -> None:
             raise ValueError("Unsafe generated-source output path")
         shutil.rmtree(source_output)
     mapping = json.loads((SITE / "landing.en.json").read_text(encoding="utf-8"))
+    # Claves EN de los módulos: sitio/i18n/<modulo>.en.json se funden con landing.en.json; una clave
+    # repetida con otra traducción es un error (dos personas no deben pisarse en silencio).
+    for extra in sorted((SITE / "i18n").glob("*.en.json")):
+        for clave, valor in json.loads(extra.read_text(encoding="utf-8")).items():
+            if clave in mapping and mapping[clave] != valor:
+                raise ValueError(f"{extra.name}: la clave «{clave[:60]}» ya tiene otra traducción en las cadenas de la portada")
+            mapping[clave] = valor
     dynamic = json.loads((SITE / "animation.en.json").read_text(encoding="utf-8"))
     def js_translate(match):
         try:
@@ -223,7 +263,7 @@ def prepare_public_site(playground_translations=()) -> None:
             english = content
             for source, translated in playground_translations:
                 english = english.replace(translated, source)
-            for source, translated in {"Familias": "Families", "Editor y validador": "Editor and validator", "Comparar formatos": "Compare formats", "Asistente de familias": "Family wizard", "Chuleta de la norma": "Specification cheatsheet", "Cambiar tema": "Toggle theme", "Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.": "Validate documents, convert JSON ↔ .mini, compare tokens with JSON, YAML, XML, CSV and the official TOON encoder, and design your own family. Everything runs in your browser.", "motor: js/mini.js · 14 familias": "engine: js/mini.js · 14 families"}.items():
+            for source, translated in {"Familias": "Families", "Editor y validador": "Editor and validator", "Comparar formatos": "Compare formats", "Asistente de familias": "Family wizard", "Chuleta de la norma": "Specification cheatsheet", "Cambiar tema": "Toggle theme", "Valida documentos, convierte JSON ↔ .mini, compara tokens contra JSON, YAML, XML, CSV y el codificador oficial de TOON, y diseña tu propia familia. Todo corre en tu navegador.": "Validate documents, convert JSON ↔ .mini, compare tokens with JSON, YAML, XML, CSV and the official TOON encoder, and design your own family. Everything runs in your browser.", f"motor: js/mini.js · {FAMILIAS} familias": f"engine: js/mini.js · {FAMILIAS} families"}.items():
                 english = english.replace(source, translated)
         else:
             english = content
@@ -236,13 +276,30 @@ def prepare_public_site(playground_translations=()) -> None:
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(en, encoding="utf-8")
         sitemap.extend([ORIGIN + route, ORIGIN + "/en" + route])
+    # Páginas bilingües en línea: una sola URL (sin /en/), con canonical y sellado de recursos.
+    inline = []
+    for ruta in sorted(RUTAS_EN_LINEA):
+        pagina = SITE / ruta / "index.html"
+        if not pagina.is_file():
+            continue
+        route = "/" + ruta + "/"
+        pagina.write_text(seo_en_linea(local_sources(pagina.read_text(encoding="utf-8")), route), encoding="utf-8")
+        inline.append(pagina)
+        sitemap.append(ORIGIN + route)
+    # 404.html: HTML fuente escrito a mano; se sirve en cualquier URL inexistente, así que solo se sella y se marca noindex.
+    error_404 = SITE / "404.html"
+    extras = []
+    if error_404.is_file():
+        # el pie de la 404 enlaza evidencia igual que el resto: se reescribe a /source/ (el repositorio es privado)
+        error_404.write_text(local_sources(error_404.read_text(encoding="utf-8")), encoding="utf-8")
+        extras.append(error_404)
     (SITE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>{html.escape(url)}</loc></url>" for url in sorted(sitemap)) + "</urlset>\n", encoding="utf-8")
     (SITE / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /source/\nSitemap: {ORIGIN}/sitemap.xml\n", encoding="utf-8")
     digest_cache: dict[str, str] = {}
-    rendered = routes + list((SITE / "en").rglob("*.html")) + list((SITE / "source").rglob("*.html"))
+    rendered = routes + inline + extras + list((SITE / "en").rglob("*.html")) + list((SITE / "source").rglob("*.html"))
     for page in rendered:
         original = page.read_text(encoding="utf-8")
         versioned = version_assets(original, digest_cache)
         if versioned != original:
             page.write_text(versioned, encoding="utf-8")
-    print(f"  public: {len(sitemap)} localized pages, {len(COPIED)} evidence files/directories")
+    print(f"  public: {len(sitemap)} sitemap URLs ({len(inline)} inline-bilingual), {len(COPIED)} evidence files/directories")

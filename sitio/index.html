@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js")</script>
 <title>mini-format — contratos verificables para salidas de LLM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/base.css?v=fe2218a8e23cd0c5">
-<link rel="stylesheet" href="/landing.css?v=922e451f95736bb6">
+<link rel="stylesheet" href="/base.css?v=5f6a4fa80e7c6ec4">
+<link rel="stylesheet" href="/landing.css?v=960429876d298cfd">
 <link rel="icon" href="/favicon.svg?v=1496ea04e852d75e" type="image/svg+xml">
 <meta name="description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.">
 <link rel="canonical" href="https://mini-format.pmoluna.com/">
@@ -22,36 +23,22 @@
 <a class="skip" href="#main">Saltar al contenido</a>
 
 <div class="announce">
-  mini-format 1.1 — crea tu toolkit desde tus muestras JSON
+  mini-format 1.2.1 · SPEC 1.1 — crea tu toolkit desde tus muestras JSON
   <a href="/docs/quickstart/">empezar →</a>
 </div>
 
-<header class="site-header">
-  <div class="wrap nav">
-    <a class="brand" href="/">
-      <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>
-      mini-format
-    </a>
-    <ul class="nav-links">
-      <li><a href="/docs/">Documentación</a></li>
-      <li><a href="/docs/spec/">Especificación</a></li>
-      <li><a href="/docs/errors/">Errores</a></li>
-      <li><a href="/docs/forks/">Familias</a></li>
-      <li><a href="/playground/">Playground</a></li>
-      <li><a href="/mesa-de-ayuda/">Demo</a></li>
-    </ul>
-    <span class="spacer"></span>
-    <a class="search" href="/docs/" aria-label="Ir a la documentación">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      Buscar en la documentación <kbd>/</kbd>
-    </a>
-    <a class="icon-link" href="/downloads/mini-format-1.2.1-source.zip" aria-label="Descargar código fuente">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg>
-    </a>
-    <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
-    <a class="btn btn-solid" href="#instalar">Descargar</a>
-  </div>
-</header>
+<!-- ═══════════ CABECERA ═══════════ -->
+<header class="site-header"><div class="wrap nav">
+  <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
+  <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links"><span class="sr"><span data-lang="es">Menú</span><span data-lang="en" hidden>Menu</span></span><svg class="ico-abrir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="ico-cerrar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <ul class="nav-links" id="nav-links"><li><a href="/docs/"><span data-lang="es">Documentación</span><span data-lang="en" hidden>Documentation</span></a></li><li><a href="/validacion/"><span data-lang="es">Validación</span><span data-lang="en" hidden>Validation</span></a></li><li><a href="/docs/spec/"><span data-lang="es">Especificación</span><span data-lang="en" hidden>Specification</span></a></li><li><a href="/docs/errors/"><span data-lang="es">Errores</span><span data-lang="en" hidden>Errors</span></a></li><li><a href="/docs/forks/"><span data-lang="es">Familias</span><span data-lang="en" hidden>Families</span></a></li><li><a href="/playground/"><span data-lang="es">Playground</span><span data-lang="en" hidden>Playground</span></a></li><li><a href="/mesa-de-ayuda/"><span data-lang="es">Demo</span><span data-lang="en" hidden>Demo</span></a></li><li><a href="/taller/"><span data-lang="es">Taller</span><span data-lang="en" hidden>Workshop</span></a></li><li><a href="/ejemplo/"><span data-lang="es">Ejemplo</span><span data-lang="en" hidden>Example</span></a></li><li><a href="/sima/"><span data-lang="es">SIMA</span><span data-lang="en" hidden>SIMA</span></a></li><li class="nav-cta"><a class="btn btn-solid" href="#instalar"><span data-lang="es">Descargar</span><span data-lang="en" hidden>Download</span></a></li></ul>
+  <span class="spacer"></span>
+  <a class="search" href="/docs/" aria-label="Ir a la documentación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="search-txt">Buscar en la documentación <kbd>/</kbd></span></a>
+  <a class="icon-link" href="/downloads/mini-format-1.2.1-source.zip" aria-label="Descargar código fuente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
+  <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
+  <a class="btn btn-solid" href="#instalar"><span data-lang="es">Descargar</span><span data-lang="en" hidden>Download</span></a>
+</div></header>
+<!-- ═══════════ /CABECERA ═══════════ -->
 
 <main id="main">
 
@@ -59,7 +46,7 @@
 <section class="frame hero">
   <div class="hero-grid">
     <div>
-      <p class="eyebrow"><span class="badge">1.1</span> <a href="/docs/quickstart/">Tu JSON. Tu contrato. Tu .mini. →</a></p>
+      <p class="eyebrow"><span class="badge">1.2.1</span> <a href="/docs/quickstart/">Tu JSON. Tu contrato. Tu .mini. →</a></p>
       <h1>Salidas de LLM que se <span style="color:rgb(var(--accent))">validan</span> solas.</h1>
       <p class="lead">
         Entrega muestras JSON de tu dominio. mini-format construye tu contrato,
@@ -107,6 +94,9 @@
   <div class="items"><span class="item">Python</span><span class="item">TypeScript</span><span class="item">JavaScript</span></div>
 </div></div>
 
+<!-- ═══════════ COMO FUNCIONA ═══════════ -->
+<!-- ═══════════ /COMO FUNCIONA ═══════════ -->
+
 <!-- ═══════════ CUATRO PIEZAS ═══════════ -->
 <section class="section">
   <div class="frame">
@@ -144,7 +134,7 @@
         <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
         <h3>Conformidad</h3>
         <p class="replaces">sustituye a pruebas por implementación</p>
-        <p>303 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 303/303.</p>
+        <p>372 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 372/372.</p>
         <div class="cmdlite"><b>$</b> python conformance/run_python.py</div>
       </article>
     </div>
@@ -363,10 +353,10 @@ mini tokens respuesta.mini --enc o200k_base <span class="c"># tokens y bytes, co
 mini check-forks                            <span class="c"># invariantes + fixtures de ida y vuelta</span>
 mini new-fork quiz2 --from a --add <span class="s">"nivel:enum{facil|dificil}"</span></code></pre></div>
     <div class="codeblock" id="a-conf" role="tabpanel" hidden><div class="tb"><span>shell</span><span>conformance/</span></div><pre><code>$ python conformance/run_python.py
-<span class="s">303 casos · 303 pasan · 0 fallan</span>
+<span class="s">372 casos · 372 pasan · 0 fallan</span>
 
 $ cd ts &amp;&amp; npm test
-<span class="s">conformance.test.ts · 303/303</span>
+<span class="s">conformance.test.ts · 372/372</span>
 
 <span class="c"># las expectativas salen de la norma y de los fixtures publicados,</span>
 <span class="c"># nunca se calculan ejecutando la implementación</span></code></pre></div>
@@ -461,7 +451,7 @@ $ mini check-forks
         <tr><th scope="row">Recuperación ante truncamiento</th><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td class="no">parcial</td></tr>
         <tr data-extra><th scope="row">Reparación selectiva por línea</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
         <tr data-extra><th scope="row">Lectura en streaming, registro a registro</th><td class="yes">✓</td><td class="no">parcial</td><td class="yes">✓</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Suite de conformidad publicada</th><td class="yes">303</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr data-extra><th scope="row">Suite de conformidad publicada</th><td class="yes">372</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
         <tr data-extra><th scope="row">Dos implementaciones independientes</th><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">parcial</td></tr>
         <tr data-extra><th scope="row">Listas con elemento marcado</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
         <tr data-extra><th scope="row">Compatibilidad hacia adelante declarada</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
@@ -486,18 +476,10 @@ $ mini check-forks
 </section>
 </main>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="fgrid">
-      <div><h3>Aprender</h3><ul><li><a href="/docs/">Introducción</a></li><li><a href="/docs/quickstart/">Inicio rápido</a></li><li><a href="/docs/spec/">Especificación 1.1</a></li><li><a href="/docs/errors/">Índice de errores</a></li></ul></div>
-      <div><h3>Componente</h3><ul><li><a href="/docs/python/">Biblioteca Python</a></li><li><a href="/docs/typescript/">Biblioteca TypeScript</a></li><li><a href="/docs/cli/">Herramienta</a></li><li><a href="/docs/conformance/">Conformidad</a></li></ul></div>
-      <div><h3>Evidencia</h3><ul><li><a href="/source/experiments/v5_ancho/">Eje de ancho (V5)</a></li><li><a href="/source/experiments/v1_tokens/">Tokens (V1)</a></li><li><a href="/source/experiments/v4_costos/">Costos (V4)</a></li><li><a href="/docs/metodologia/">Metodología</a></li></ul></div>
-      <div><h3>Proyecto</h3><ul><li><a href="/downloads/mini-format-1.2.1-source.zip">Código fuente</a></li><li><a href="/playground/">Playground</a></li><li><a href="/docs/licencia/">Licencia MIT</a></li><li><a href="/docs/contribuir/">Contribuir</a></li></ul></div>
-    </div>
-    <div class="colophon">mini-format · Adrián Palma Obispo y Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas, 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.</div>
-  </div>
-</footer>
-<script src="/docs.js?v=3f4038252e189a5a"></script>
+<!-- ═══════════ PIE ═══════════ -->
+<footer class="site-footer"><div class="wrap"><div class="fgrid"><div><h3><span data-lang="es">Aprender</span><span data-lang="en" hidden>Learn</span></h3><ul><li><a href="/docs/"><span data-lang="es">Introducción</span><span data-lang="en" hidden>Introduction</span></a></li><li><a href="/docs/quickstart/"><span data-lang="es">Inicio rápido</span><span data-lang="en" hidden>Quickstart</span></a></li><li><a href="/docs/spec/"><span data-lang="es">Especificación 1.1</span><span data-lang="en" hidden>Specification 1.1</span></a></li><li><a href="/docs/errors/"><span data-lang="es">Índice de errores</span><span data-lang="en" hidden>Error index</span></a></li></ul></div><div><h3><span data-lang="es">Componente</span><span data-lang="en" hidden>Component</span></h3><ul><li><a href="/docs/python/"><span data-lang="es">Biblioteca Python</span><span data-lang="en" hidden>Python library</span></a></li><li><a href="/docs/typescript/"><span data-lang="es">Biblioteca TypeScript</span><span data-lang="en" hidden>TypeScript library</span></a></li><li><a href="/docs/cli/"><span data-lang="es">Herramienta</span><span data-lang="en" hidden>Command-line tool</span></a></li><li><a href="/docs/conformance/"><span data-lang="es">Conformidad</span><span data-lang="en" hidden>Conformance</span></a></li></ul></div><div><h3><span data-lang="es">Evidencia</span><span data-lang="en" hidden>Evidence</span></h3><ul><li><a href="/validacion/"><span data-lang="es">Validación</span><span data-lang="en" hidden>Validation</span></a></li><li><a href="/economia/"><span data-lang="es">Economía</span><span data-lang="en" hidden>Economics</span></a></li><li><a href="/mesa-de-ayuda/"><span data-lang="es">Mesa de ayuda (demo)</span><span data-lang="en" hidden>Help desk (demo)</span></a></li><li><a href="/source/experiments/v5_ancho/"><span data-lang="es">Eje de ancho (V5)</span><span data-lang="en" hidden>Width axis (V5)</span></a></li><li><a href="/source/experiments/v1_tokens/"><span data-lang="es">Tokens (V1)</span><span data-lang="en" hidden>Tokens (V1)</span></a></li><li><a href="/source/experiments/v4_costos/"><span data-lang="es">Costos (V4)</span><span data-lang="en" hidden>Costs (V4)</span></a></li><li><a href="/docs/metodologia/"><span data-lang="es">Metodología</span><span data-lang="en" hidden>Methodology</span></a></li></ul></div><div><h3><span data-lang="es">Proyecto</span><span data-lang="en" hidden>Project</span></h3><ul><li><a href="/downloads/mini-format-1.2.1-source.zip"><span data-lang="es">Código fuente</span><span data-lang="en" hidden>Source code</span></a></li><li><a href="/playground/"><span data-lang="es">Playground</span><span data-lang="en" hidden>Playground</span></a></li><li><a href="/taller/"><span data-lang="es">Taller de integración</span><span data-lang="en" hidden>Integration workshop</span></a></li><li><a href="/ejemplo/"><span data-lang="es">Ejemplo a escala</span><span data-lang="en" hidden>Example at scale</span></a></li><li><a href="/sima/"><span data-lang="es">Caso SIMA</span><span data-lang="en" hidden>SIMA case</span></a></li><li><a href="/docs/licencia/"><span data-lang="es">Licencia MIT</span><span data-lang="en" hidden>MIT License</span></a></li><li><a href="/docs/contribuir/"><span data-lang="es">Contribuir</span><span data-lang="en" hidden>Contributing</span></a></li></ul></div></div><div class="colophon"><span data-lang="es">mini-format 1.2.1 · SPEC 1.1 · Adrián Palma Obispo y Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.</span><span data-lang="en" hidden>mini-format 1.2.1 · SPEC 1.1 · Adrián Palma Obispo and Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Every published figure comes from a repository script and archived data.</span></div></div></footer>
+<!-- ═══════════ /PIE ═══════════ -->
+<script src="/docs.js?v=b05931cb469441e9"></script>
 <script src="/app.js?v=d37176930a7646eb"></script>
 </body>
 </html>
