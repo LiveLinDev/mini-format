@@ -79,6 +79,9 @@ ETIQUETAS = {"correctos": "Correctos", "incorrectos_sin_aviso": "Incorrectos ace
 TINTA, TINTA2, REJILLA = "#0b0b0b", "#52514e", "#e4e3df"
 
 
+NL_ = chr(10)
+
+
 def _orden_brazo(b: str) -> int:
     return ORDEN_BRAZOS.index(b) if b in ORDEN_BRAZOS else 99
 
@@ -485,6 +488,7 @@ def figuras(salida: Path, res_brazos: List[Dict[str, Any]], v3a: List[Dict[str, 
     import matplotlib.pyplot as plt
 
     sufijo = _sufijo(list(procs))
+    sub = sufijo.replace("  ·  ", "")                      # línea propia: los títulos largos se cortaban
     hechas = []
     plt.rcParams.update({"font.size": 10, "axes.titlesize": 11, "axes.titlecolor": TINTA, "text.color": TINTA})
 
@@ -540,9 +544,9 @@ def figuras(salida: Path, res_brazos: List[Dict[str, Any]], v3a: List[Dict[str, 
         ax.set_yticks(range(len(filas)))
         ax.set_yticklabels(etiquetas, fontsize=8, color=TINTA)
         ax.invert_yaxis()
-        ax.set_xlim(0, 100)
+        ax.set_xlim(0, 103)
         ax.set_xlabel("validez final % = registros válidos / registros solicitados (IC 95 % bootstrap por solicitud)", color=TINTA2)
-        ax.set_title("V2 · Validez final por brazo (línea punteada: 95 %)" + sufijo, loc="left")
+        ax.set_title("V2 · Validez final por brazo (línea punteada: 95 %)" + (NL_ + sub if sub else ""), loc="left")
         _estilo(ax)
         fig.tight_layout()
         p = salida / "fig_v2_validez_final.png"
@@ -574,12 +578,13 @@ def figuras(salida: Path, res_brazos: List[Dict[str, Any]], v3a: List[Dict[str, 
             ax.set_yticklabels([NOMBRE_BRAZO.get(b, b) for b in br], color=TINTA)
             ax.invert_yaxis()
             ax.set_xlabel("tokens medios por muestra (los que reporta el adaptador)", color=TINTA2)
-            ax.set_title("V2 · Tokens por muestra" + sufijo, loc="left")
-            ax.legend(frameon=False, fontsize=8, loc="lower right")
+            ax.set_title("V2 · Tokens por muestra" + (NL_ + sub if sub else ""), loc="left")
+            ax.set_xlim(0, max(entrada + salida_t) * 1.12)
+            ax.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=2)
             _estilo(ax)
             fig.tight_layout()
             p = salida / "fig_v2_tokens.png"
-            fig.savefig(p, dpi=160)
+            fig.savefig(p, dpi=160, bbox_inches="tight")
             plt.close(fig)
             hechas.append(p.name)
 
@@ -599,12 +604,12 @@ def figuras(salida: Path, res_brazos: List[Dict[str, Any]], v3a: List[Dict[str, 
         ax.set_yticklabels([NOMBRE_BRAZO.get(b, b) for b in br], color=TINTA)
         ax.invert_yaxis()
         ax.set_xlabel("segundos, flujo completo (generación + validación + reparación + entrega)", color=TINTA2)
-        ax.set_title("V4 · Latencia del flujo" + sufijo, loc="left")
-        ax.legend(frameon=False, fontsize=8, loc="lower right")
+        ax.set_title("V4 · Latencia del flujo" + (NL_ + sub if sub else ""), loc="left")
+        ax.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=2)
         _estilo(ax)
         fig.tight_layout()
         p = salida / "fig_v4_latencia.png"
-        fig.savefig(p, dpi=160)
+        fig.savefig(p, dpi=160, bbox_inches="tight")
         plt.close(fig)
         hechas.append(p.name)
 
@@ -644,7 +649,7 @@ def figuras(salida: Path, res_brazos: List[Dict[str, Any]], v3a: List[Dict[str, 
             ax.set_yticks(range(len(br)))
             ax.set_yticklabels([NOMBRE_BRAZO.get(b, b) for b in br], color=TINTA)
             ax.invert_yaxis()
-            ax.set_xlim(0, 100)
+            ax.set_xlim(-3, 103)
             ax.set_xlabel("validez final % sobre los solicitados", color=TINTA2)
             ax.set_title("V3b · Generación con límite de salida", loc="left")
             _estilo(ax)
@@ -679,6 +684,7 @@ def main(argv=None) -> int:
     ap.add_argument("--resultados", required=True, help="directorio con muestras.jsonl y manifiesto.json")
     ap.add_argument("--sin-figuras", action="store_true")
     ap.add_argument("--tarifas", default=None, help="archivo de tarifas (por defecto evidencia/tarifas/tarifas.json si existe)")
+    ap.add_argument("--sin-v3a", action="store_true", help="omite la V3a heredada (tarda en estudios grandes)")
     ap.add_argument("--bootstrap", type=int, default=1000, help="réplicas del bootstrap por conglomerados (0 = sin IC)")
     args = ap.parse_args(argv)
     res_dir = Path(args.resultados)
@@ -712,8 +718,8 @@ def main(argv=None) -> int:
     v3cfg = (cfg.get("experimentos") or {}).get("v3a") or {}
     tareas = T.cargar(sorted({s["tarea"] for s in muestras}))
     brazos_v3a = tuple(b for b in v3cfg.get("brazos", ["A", "B", "C", "D"]) if b in B.BRAZOS)
-    cortes = cortes_controlados(muestras, tareas, cortes=int(v3cfg.get("cortes_por_muestra", 20)),
-                                semilla=int(v3cfg.get("semilla", 7)), brazos=brazos_v3a)
+    cortes = [] if args.sin_v3a else cortes_controlados(muestras, tareas, cortes=int(v3cfg.get("cortes_por_muestra", 20)),
+                                                        semilla=int(v3cfg.get("semilla", 7)), brazos=brazos_v3a)
     v3a = resumen_v3a(cortes)
     v3a_modelo = resumen_v3a(cortes, por_modelo=True)
 

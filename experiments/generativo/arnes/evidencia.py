@@ -10,6 +10,7 @@ import csv
 import json
 import shutil
 import sys
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
@@ -46,6 +47,16 @@ def _filtrar_csv(origen: Path, destino: Path, experimento: str) -> int:
         w.writeheader()
         w.writerows(filas)
     return len(filas)
+
+
+def _filtrar_jsonl(origen: Path, destino: Path, experimento: str) -> int:
+    n = 0
+    with open(origen, encoding="utf-8") as fh, open(destino, "w", encoding="utf-8", newline="\n") as out:
+        for linea in fh:
+            if json.loads(linea).get("experimento") == experimento:
+                out.write(linea.rstrip("\r\n") + "\n")
+                n += 1
+    return n
 
 
 def _tokenizadores() -> List[Dict[str, Any]]:
@@ -95,7 +106,7 @@ def emitir_corridas(res_dir: Path, *, procedencia: str, comando: str, etiqueta: 
                            "desenlaces.csv"):
                 if (an / nombre).exists() and _filtrar_csv(an / nombre, d / nombre, "v2"):
                     archivos.append(d / nombre)
-            shutil.copyfile(an / "solicitudes.jsonl", d / "solicitudes.jsonl")
+            _filtrar_jsonl(an / "solicitudes.jsonl", d / "solicitudes.jsonl", "v2")
             archivos.append(d / "solicitudes.jsonl")
             if meta_v2 is not None:
                 shutil.copyfile(an / "meta_v2.json", d / "meta_v2.json")
@@ -115,6 +126,8 @@ def emitir_corridas(res_dir: Path, *, procedencia: str, comando: str, etiqueta: 
                                              "validos_finales": s["metricas"].get("validos_finales"),
                                              "solicitados": s["metricas"].get("solicitados")}, ensure_ascii=False, sort_keys=True) + "\n")
             archivos.append(d / "v3b_muestras.jsonl")
+            _filtrar_jsonl(an / "solicitudes.jsonl", d / "v3b_solicitudes.jsonl", "v3b")
+            archivos.append(d / "v3b_solicitudes.jsonl")
         else:  # V4
             nombre = "latencia_costo.csv"
             if (an / nombre).exists() and _filtrar_csv(an / nombre, d / nombre, "v2"):
@@ -124,9 +137,11 @@ def emitir_corridas(res_dir: Path, *, procedencia: str, comando: str, etiqueta: 
             continue
         simul = procedencia == "simulado"
         limit = [
-            "Procedencia " + procedencia + ": " + ("las tasas de falla, los tokens y las latencias son supuestos del simulador; "
+            ("Procedencia api_real: usage y latencia vienen del proveedor; la decisión cumple/no_cumple de la meta queda para quien "
+             "analiza (meta_v2.json), el arnés no la declara." if procedencia == "api_real" else
+             "Procedencia " + procedencia + ": " + ("las tasas de falla, los tokens y las latencias son supuestos del simulador; "
                                                    "valida el arnés, no dice nada de modelos reales." if simul else
-                                                   "respuestas de una IA en sesión, sin usage ni factura de API; los tokens locales son una aproximación."),
+                                                   "respuestas de una IA en sesión, sin usage ni factura de API; los tokens locales son una aproximación.")),
             "Costo: sin tarifa verificada es «tarifa no verificada» (vacío); no se usa ningún precio supuesto.",
             "El diseño completo del estudio NO se ha ejecutado ni está autorizado (presupuesto sin autorizar).",
         ]
@@ -141,6 +156,18 @@ def emitir_corridas(res_dir: Path, *, procedencia: str, comando: str, etiqueta: 
         m.update(_conjuntos_y_contratos(man))
         m["tokenizadores"] = _tokenizadores()
         m["modelo"] = None
+        gasto = 0.0
+        ejecucion = "ejecutado"
+        if procedencia == "api_real":
+            provs = sorted({x["proveedor"] for x in cfg.get("modelos", [])})
+            mods = sorted({x["modelo"] for x in cfg.get("modelos", [])})
+            devueltos = sorted({s["respuesta"].get("model") for s in muestras if s.get("respuesta") and s["respuesta"].get("model")})
+            m["modelo"] = {"proveedor": ", ".join(provs), "modelo_pedido": ", ".join(mods),
+                           "modelo_devuelto": ", ".join(devueltos) or None, "endpoint": None}
+            g = estado.get("gasto") or {}
+            # gasto real = lo facturado según el usage + el peor caso de las llamadas inciertas (cota superior)
+            gasto = float(Decimal(str(g.get("gastado_usd") or 0)) + Decimal(str(g.get("incierto_usd") or 0)))
+            ejecucion = "ejecutado" if estado.get("estado") == "completo" else "parcial"
         m["parametros"] = {"adaptador": man.get("adaptador"), "semilla": cfg.get("semilla"), "idioma": cfg.get("idioma"),
                            "temperatura": cfg.get("temperatura"), "repeticiones": cfg.get("repeticiones"),
                            "brazos": cfg.get("brazos"), "modelos": [f"{x.get('proveedor')}:{x.get('modelo')}" for x in cfg.get("modelos", [])],
@@ -163,10 +190,10 @@ def emitir_corridas(res_dir: Path, *, procedencia: str, comando: str, etiqueta: 
         m["resumen"] = resumen
         m["criterio"] = ({"meta": meta_v2["criterio"], "resultado_del_criterio": meta_v2["resultado"], "motivo": meta_v2["motivo"]}
                          if (est == "V2" and meta_v2) else None)
-        m["estado_ejecucion"] = "ejecutado"
-        m["resultado"] = "no_evaluable"
+        m["estado_ejecucion"] = ejecucion
+        m["resultado"] = "no_evaluable"      # cumple/no_cumple lo decide quien analiza con meta_v2.json; el arnés nunca lo declara solo
         m["limitaciones"] = limit
-        m["gasto_usd"] = 0.0
+        m["gasto_usd"] = gasto
         m["notas"] = ("registros_validos_finales queda null: depende del brazo (ver resumen_brazos.csv) y no se puede sumar entre "
                       "brazos sin contar dos veces una solicitud y su reparación. " +
                       ("V4 reutiliza solicitudes.jsonl de la corrida V2 (mismas solicitudes)." if est == "V4" and v2_dir else ""))

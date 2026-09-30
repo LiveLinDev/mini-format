@@ -500,3 +500,66 @@ def test_estado_inicial_no_dice_error_reintentable(tmp_path):
     cfg, ctx, en, ej, ad = montar(tmp_path, cfg)
     c, falt = ej._contadores(en, {"inicial": True}, None)
     assert c["pendiente"] == len(en.unidades) and all(f["motivo"] == "aún no ejecutada" for f in falt)
+
+
+def test_comando_con_api_autorizado_de_extremo_a_extremo_con_adaptador_falso(tmp_path, monkeypatch):
+    """El segundo comando documentado (con API) cuando SÍ está autorizado: todo el camino menos la red."""
+    import yaml
+    from arnes import evidencia as EVI
+    import evidencia_lib as EV
+    cfg = cfg_base(brazos=["A", "B", "D", "B+1", "D+1"], repeticiones=2,
+                   presupuesto={"autorizado_usd": 5, "firmado_por": "Responsable de prueba", "fecha": "2026-10-01"})
+    p = tmp_path / "api.yaml"
+    p.write_text(yaml.safe_dump(cfg, allow_unicode=True), encoding="utf-8")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-prueba-0123456789abcdefghij")
+    ctx = X.Contexto(cfg)
+    t = ctx.tareas["ext-cls"]
+    respuestas = {}
+    for arm in ("A", "B", "D"):
+        pr = ctx.prompt(t, arm)
+        texto = B.salida_referencia(t, arm)
+        if arm == "D":
+            lineas = texto.split("\n")
+            buena = lineas[3]
+            lineas[3] = "m4|roto"
+            texto = "\n".join(lineas)
+        respuestas[(pr.system, pr.user)] = texto
+    llamadas = []
+
+    class FalsoRef(Falso):
+        def generate(self, system, user, **kw):
+            llamadas.append((system[:20], kw.get("max_tokens")))
+            texto = respuestas.get((system, user))
+            if texto is None and system.startswith("Eres un corrector"):
+                texto = f"cls|n=1\n{buena}"
+            assert texto is not None
+            raw = {"usage": {"prompt_tokens": 1000, "completion_tokens": 500}, "choices": [{"message": {"content": texto}, "finish_reason": "stop"}]}
+            return result(texto, 1000, 500, 300.0, raw, stop_reason="stop", model="gpt-4.1-mini-2025-04", provider="openai")
+    monkeypatch.setattr(X, "get_adapter", lambda *a, **k: FalsoRef())
+    destino = tmp_path / "corridas"
+    original = EVI.emitir_corridas
+    monkeypatch.setattr(EVI, "emitir_corridas", lambda *a, **k: original(*a, **dict(k, directorio_corridas=destino)))
+    salida = tmp_path / "res"
+    rc = run.main(["ejecutar", "--config", str(p), "--adapter", "real", "--confirmar-real", "--max-costo-usd", "2",
+                   "--tarifas", str(TARIFAS), "--salida", str(salida), "--emitir-evidencia", "api-falso"])
+    assert rc == 0
+    ms = X.leer_muestras(salida / "muestras.jsonl")
+    assert len(ms) == 2 * 5 and all(m["procedencia"] == "api_real" and m["adaptador"] == "real" for m in ms)
+    d1 = next(m for m in ms if m["brazo"] == "D+1")
+    assert d1["reparacion_estado"] == "completa" and d1["metricas"]["validos_finales"] == d1["metricas"]["solicitados"]
+    assert [i["fase"] for i in d1["solicitud"]["intentos"]] == ["generacion", "reparacion"]
+    assert d1["solicitud"]["intentos"][0]["compartido_con"].endswith("/r001") or d1["solicitud"]["intentos"][0]["compartido_con"].endswith("/r002")
+    libro = Libro(salida / "libro.jsonl")
+    assert 0 < libro.gastado <= Decimal(2) and libro.llamadas == len(llamadas) and libro.huerfanas == 0
+    man = json.loads((salida / "manifiesto.json").read_text(encoding="utf-8"))
+    assert man["procedencia"] == "api_real" and man["presupuesto"]["autorizado_usd"] == "5" and man["max_costo_usd"] == 2.0
+    assert man["hashes"]["tarifas"]["sha256"] and man["hashes"]["tarifas"]["por_modelo"]["openai:gpt-4.1-mini"]["estado"] == "verificada"
+    ev = json.loads((destino / "v2-api-falso" / "manifiesto.json").read_text(encoding="utf-8"))
+    assert EV.validar_corrida(ev, destino / "v2-api-falso") == []
+    assert ev["procedencia"] == "api_real" and ev["modelo"]["proveedor"] == "openai" and ev["modelo"]["modelo_devuelto"] == "gpt-4.1-mini-2025-04"
+    assert ev["gasto_usd"] == pytest.approx(float(libro.gastado)) and ev["resultado"] == "no_evaluable" and ev["estado_ejecucion"] == "ejecutado"
+    assert ev["tarifas"]["sha256"] == man["hashes"]["tarifas"]["sha256"]
+    # la clave nunca se escribe en ningún archivo de resultados
+    for f in salida.rglob("*"):
+        if f.is_file() and f.suffix in (".json", ".jsonl", ".md", ".csv", ".log"):
+            assert "sk-prueba-0123456789abcdefghij" not in f.read_text(encoding="utf-8", errors="ignore"), f

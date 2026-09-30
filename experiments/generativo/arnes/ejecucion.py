@@ -445,7 +445,7 @@ class Ejecutor:
     def __init__(self, cfg: Dict[str, Any], ctx: Contexto, modo: str, salida: Path, tarifas: Optional[Tarifas] = None,
                  max_costo: Optional[float] = None, adaptadores: Optional[Dict[Tuple[str, str], Adapter]] = None,
                  autorizacion: Optional[Autorizacion] = None, dormir: Callable[[float], None] = time.sleep,
-                 reloj: Callable[[], float] = time.perf_counter):
+                 reloj: Optional[Callable[[], float]] = None):
         if modo not in ("simulado", "real"):
             raise ValueError(f"modo desconocido: {modo}")
         if modo == "real" and autorizacion is None:
@@ -466,7 +466,9 @@ class Ejecutor:
         self.fallos_seguidos = 0
         self.detener: Optional[str] = None
         self._dormir = dormir
-        self._reloj = reloj
+        # En simulado los tiempos locales (validación, entrega) no se miden: el reloj es constante para que el piloto sea
+        # reproducible bit a bit; la latencia de API ya es sintética y va marcada como simulada.
+        self._reloj = reloj if reloj is not None else (time.perf_counter if modo == "real" else (lambda: 0.0))
 
     # -- adaptadores ---------------------------------------------------------
     def adaptador(self, prov: str, mod: str) -> Adapter:
