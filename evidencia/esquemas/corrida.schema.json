@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mini-format.pmoluna.com/source/evidencia/esquemas/corrida.schema.json",
+  "title": "mini-format/corrida/1",
+  "description": "Manifiesto de UNA ejecución de un estudio. Vive en evidencia/corridas/<run_id>/manifiesto.json junto a sus resultados. Lo valida tools/evidencia_lib.py (sin dependencias) y, si hay jsonschema, este esquema.",
+  "type": "object",
+  "required": ["esquema", "run_id", "estudio", "procedencia", "fecha_utc", "codigo", "entorno", "comando", "estado_ejecucion", "resultado"],
+  "properties": {
+    "esquema": { "const": "mini-format/corrida/1" },
+    "run_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,80}$" },
+    "estudio": { "type": "string", "description": "V1..V6, V3a, V3b, V6a, V6b, V7, V8 o un estudio de apoyo (OPT optimización, CF «Cómo funciona»)." },
+    "pareja": { "type": ["string", "null"], "description": "Identificador del par de comparación (p. ej. el mismo documento en JSON y .mini)." },
+    "intento": { "type": ["integer", "null"], "minimum": 0, "description": "0 = primera solicitud; 1 = la reparación de esa misma respuesta." },
+    "procedencia": { "enum": ["reportado_historico", "reproducido_local", "simulado", "asistido_ia", "api_real", "participantes"] },
+    "fecha_utc": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$" },
+    "codigo": {
+      "type": "object",
+      "required": ["commit", "arbol_limpio"],
+      "properties": {
+        "commit": { "type": ["string", "null"] },
+        "rama": { "type": ["string", "null"] },
+        "arbol_limpio": { "type": ["boolean", "null"], "description": "false: el árbol tenía cambios; la corrida describe el snapshot, no el commit." },
+        "snapshot_sha256": { "type": ["string", "null"], "description": "Hash del contenido exacto del árbol (rastreados + nuevos no ignorados). Obligatorio si el árbol no estaba limpio." },
+        "archivos_modificados": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "entorno": {
+      "type": "object",
+      "properties": {
+        "so": { "type": "string" }, "arquitectura": { "type": "string" },
+        "python": { "type": ["string", "null"] }, "node": { "type": ["string", "null"] },
+        "dependencias": { "type": "object", "additionalProperties": { "type": ["string", "null"] } }
+      }
+    },
+    "comando": { "type": "string", "description": "Comando exacto que reproduce la corrida." },
+    "conjuntos": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["nombre", "ruta", "sha256"],
+        "properties": {
+          "nombre": { "type": "string" }, "ruta": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "sintetico": { "type": "boolean" }, "licencia": { "type": ["string", "null"] }, "fuente": { "type": ["string", "null"] },
+          "registros": { "type": ["integer", "null"] }, "semilla": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "contratos": {
+      "type": "array",
+      "items": { "type": "object", "required": ["prefijo", "ruta", "sha256"],
+        "properties": { "prefijo": { "type": "string" }, "ruta": { "type": "string" }, "sha256": { "type": "string" }, "version": { "type": ["string", "integer", "null"] } } }
+    },
+    "tokenizadores": {
+      "type": "array",
+      "items": { "type": "object", "required": ["nombre"],
+        "properties": { "nombre": { "type": "string" }, "paquete": { "type": ["string", "null"] }, "version": { "type": ["string", "null"] },
+          "vocabulario_sha256": { "type": ["string", "null"] },
+          "tipo": { "enum": ["exacto_local", "aproximacion", "conteo_solicitud_proveedor", "usage_respuesta"], "description": "conteo local de texto, conteo de solicitud y usage de una llamada real son cosas distintas." } } }
+    },
+    "modelo": {
+      "type": ["object", "null"],
+      "properties": { "proveedor": { "type": "string" }, "modelo_pedido": { "type": "string" }, "modelo_devuelto": { "type": ["string", "null"] }, "endpoint": { "type": ["string", "null"] } }
+    },
+    "parametros": { "type": "object" },
+    "prompts": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "ruta": { "type": "string" }, "sha256": { "type": "string" }, "tokens": { "type": ["integer", "null"] } } } },
+    "tarifas": { "type": ["object", "null"], "description": "Referencia a la consulta de tarifas usada (archivo, fecha UTC, fuente por modelo). Sin tarifa verificada: null y el costo queda 'tarifa no verificada'." },
+    "resultados": {
+      "type": "array",
+      "items": { "type": "object", "required": ["ruta", "sha256"], "properties": { "ruta": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }, "bytes": { "type": "integer" }, "formato": { "type": "string" } } }
+    },
+    "conteos": {
+      "type": ["object", "null"],
+      "properties": {
+        "registros_solicitados": { "type": ["integer", "null"], "minimum": 0 }, "registros_recibidos": { "type": ["integer", "null"], "minimum": 0 },
+        "registros_validos": { "type": ["integer", "null"], "minimum": 0 }, "registros_reparados": { "type": ["integer", "null"], "minimum": 0 },
+        "registros_validos_finales": { "type": ["integer", "null"], "minimum": 0, "description": "Sin sumar dos veces los válidos de una solicitud y de su reparación." }
+      }
+    },
+    "resumen": { "type": "object", "description": "Cifras derivadas de los resultados. Se regeneran con el comando; nunca se editan a mano." },
+    "criterio": { "type": ["object", "null"], "description": "Criterio aplicado y su interpretación FIJADA antes del análisis." },
+    "estado_ejecucion": { "enum": ["pendiente", "bloqueado", "parcial", "ejecutado"] },
+    "resultado": { "enum": ["no_evaluable", "cumple", "no_cumple"] },
+    "limitaciones": { "type": "array", "items": { "type": "string" } },
+    "gasto_usd": { "type": ["number", "null"], "minimum": 0, "description": "Gasto real de API. 0 en corridas locales, null si no aplica/desconocido." },
+    "notas": { "type": "string" }
+  },
+  "allOf": [
+    { "if": { "properties": { "resultado": { "enum": ["cumple", "no_cumple"] } } }, "then": { "properties": { "estado_ejecucion": { "const": "ejecutado" }, "procedencia": { "not": { "enum": ["simulado", "asistido_ia", "reportado_historico"] } } }, "required": ["criterio"] } },
+    { "if": { "properties": { "procedencia": { "const": "api_real" } } }, "then": { "required": ["modelo", "gasto_usd"] } }
+  ]
+}

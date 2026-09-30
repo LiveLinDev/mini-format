@@ -29,3 +29,7 @@ sitio/en/
 sitio/app.en.js
 .playwright-cli/
 output/
+
+# evidencia restringida (datos personales, claves, sesiones): nunca se publica
+evidencia/restringida/*
+!evidencia/restringida/README.md
