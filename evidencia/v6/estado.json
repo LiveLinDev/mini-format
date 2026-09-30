@@ -1,0 +1,79 @@
+{
+  "esquema": "mini-format/v6-estado/1",
+  "actualizado": "2026-09-30",
+  "resumen": "sin participantes: estudio pendiente, materiales listos",
+  "aviso": "Este registro no contiene resultados. Los campos con null son datos que no existen todavía: no son ceros. Un estudio solo pasa a 'ejecutado' con datos reales registrados como corrida (tools/evidencia_lib.py, procedencia 'participantes' en V6b).",
+  "meta_documental": {
+    "charter_indicador": "I4.4: dos sistemas; integración ≤ 30 min y SUS ≥ 70 con ≥ 8 participantes (Charter v5, tabla T4)",
+    "plan_de_validacion": "Plan de Validación v3, secciones 8 a 10",
+    "estado_de_la_meta": "no_evaluable"
+  },
+  "V6a": {
+    "clasificacion": "naturalista",
+    "estado_ejecucion": "pendiente",
+    "resultado": "no_evaluable",
+    "procedencia": null,
+    "sistemas_acreditados": null,
+    "que_hay": [
+      "v6a_plantilla.json y v6a_plantilla.md: ficha de evidencia contextual y lista de verificación, sin datos"
+    ],
+    "que_falta": [
+      "CIMA/SIMA: commit de la rama y de la integración, respuestas y condiciones de comparación conservadas, conciliación de 350 frente a 343 + 5 (P76)",
+      "CIMA/SIMA: acreditar (o descartar) que es ajeno al equipo; no se da por hecho",
+      "Segundo sistema de un dominio distinto, con mantenedor externo, autorización y operación real documentada",
+      "Fichas completas y confirmación real de cada mantenedor sobre lo ejecutado",
+      "Registro de la ejecución como corrida validada por tools/evidencia_lib.py"
+    ],
+    "no_cuenta_como_segunda_adopcion_externa": [
+      "CIMA/SIMA (reportada por el equipo)",
+      "demostrador interno de tickets (examples/mesa-de-ayuda)"
+    ]
+  },
+  "V6b": {
+    "clasificacion": "controlado con tareas",
+    "estado_ejecucion": "pendiente",
+    "resultado": "no_evaluable",
+    "procedencia": null,
+    "participantes": {
+      "pilotos_previstos": 2,
+      "pilotos_realizados": null,
+      "validos_minimo_previsto": 8,
+      "validos_maximo_previsto": 12,
+      "validos_realizados": null
+    },
+    "resultados": null,
+    "que_hay": [
+      "protocolo.md: protocolo operativo paso a paso y criterios de análisis fijados antes de recoger datos",
+      "tareas/: repositorio de tareas T1-T4 con respuestas congeladas, verificador objetivo y hoja de observación",
+      "consentimiento_borrador.md: BORRADOR pendiente de revisión; sin firmas ni aprobación",
+      "sus/: los 10 ítems de Brooke (1996) y una versión en español PROVISIONAL del equipo",
+      "herramienta/sesion.html: cronómetro por tarea con topes, registro, contrabalanceo y exportación, sin conexión",
+      "tools/analizar_v6.py: contrabalanceo y análisis (SUS, T1 con censura, éxito por tarea, pilotos), probado con fixtures",
+      "fixtures_de_prueba/: datos de prueba, no son datos de participantes"
+    ],
+    "que_falta": [
+      "Aprobación institucional del consentimiento y del manejo de datos (comité o asesor) antes de reclutar",
+      "Fijar y adjuntar la versión lingüística autorizada del SUS en español (la actual es provisional)",
+      "Decisiones del protocolo (sección 1, punto 5): librerías de validación JSON preinstaladas, política sobre asistentes de IA, guía congelada, semilla",
+      "Reclutar y realizar 2 pilotos (excluidos) y al menos 8 participantes válidos que sean personas reales",
+      "Guardar los datos de sesión en evidencia/restringida/v6/ y analizarlos con tools/analizar_v6.py",
+      "Registrar la corrida (estado, criterio fijado antes, procedencia 'participantes') con tools/evidencia_lib.py"
+    ],
+    "no_se_admite": [
+      "agentes o modelos que simulen participantes",
+      "completar datos faltantes con supuestos",
+      "mezclar pilotos con el estudio",
+      "tratar un tiempo agotado como éxito de 30 minutos"
+    ]
+  },
+  "materiales": {
+    "protocolo.md": "listo",
+    "tareas/": "listo: datasets de T1 variante B, T2, T3 y T4 sintéticos; T1 variante A con archivos reales del repositorio",
+    "tareas/observador/": "listo (solo observador)",
+    "consentimiento_borrador.md": "borrador_pendiente_de_revision",
+    "sus/sus_items.json": "ítems originales verificados; versión en español provisional",
+    "herramienta/sesion.html": "listo; probado con Playwright y con el núcleo en Node",
+    "tools/analizar_v6.py": "listo; probado con fixtures",
+    "v6a_plantilla.json": "plantilla_vacia"
+  }
+}
