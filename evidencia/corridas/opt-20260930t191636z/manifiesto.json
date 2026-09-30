@@ -1,0 +1,527 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "12f37c00c4a1b35cafa9a0bb36ee629460c337f5",
+    "rama": "stream/opt",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_opt.py",
+  "conjuntos": [
+    {
+      "fuente": "generador determinista con semilla registrada",
+      "licencia": "MIT (este repositorio)",
+      "nombre": "tickets (sintético determinista)",
+      "registros": 250,
+      "ruta": "experiments/optimizacion/datos.py",
+      "semilla": 20261001,
+      "semilla_desarrollo": 20260930,
+      "sha256": "ca367259b8170b7fef08915a79c8d32b9a9426760186bffac0abb7a3d4643109",
+      "sha256_registros_lote0": "08b66c59c531adc88d2a66c8c296b81559cc184eb75795892dac48738ccb1fa8",
+      "sintetico": true
+    },
+    {
+      "fuente": "generador determinista con semilla registrada",
+      "licencia": "MIT (este repositorio)",
+      "nombre": "eventos (sintético determinista)",
+      "registros": 250,
+      "ruta": "experiments/optimizacion/datos.py",
+      "semilla": 20261001,
+      "semilla_desarrollo": 20260930,
+      "sha256": "ca367259b8170b7fef08915a79c8d32b9a9426760186bffac0abb7a3d4643109",
+      "sha256_registros_lote0": "d3b466cd8260fa181d77279eda0c13a2524c113d170786b9d899a63588108180",
+      "sintetico": true
+    },
+    {
+      "fuente": "https://jsonplaceholder.typicode.com/comments (snapshot archivado en benchmark/public/data)",
+      "licencia": "MIT (typicode)",
+      "nombre": "comentarios (JSONPlaceholder, datos públicos de prueba)",
+      "particion": "desarrollo = registros 0..149; prueba = 150..499",
+      "registros": 500,
+      "ruta": "benchmark/public/data/comments.json",
+      "semilla": null,
+      "sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+      "sha256_registros_lote0": "feac1e95eb93bb7d5c195481d0a22c8833cf88758b199aacc4e4f8b7b82417e0",
+      "sintetico": false
+    }
+  ],
+  "conteos": {
+    "registros_recibidos": null,
+    "registros_reparados": null,
+    "registros_solicitados": null,
+    "registros_validos": null,
+    "registros_validos_finales": null
+  },
+  "contratos": [
+    {
+      "bytes": 1144,
+      "prefijo": "tk",
+      "ruta": "examples/optimizacion/tickets/contrato_general.json",
+      "sha256": "ce756927fa262b75ebe61c1651e2f40203e1d00bcf9099cd02b9fe3521df3a77",
+      "version": 1
+    },
+    {
+      "bytes": 1277,
+      "prefijo": "tke",
+      "ruta": "examples/optimizacion/tickets/contrato_especializado.json",
+      "sha256": "b2101652b6ebde36bad29cb0818f2fb03c379a03ff9d7833ae5db9b5c8cdd1ea",
+      "version": 1
+    },
+    {
+      "bytes": 994,
+      "prefijo": "tke",
+      "ruta": "examples/optimizacion/tickets/mapa.json",
+      "sha256": "b998bfbbf5f210207926ea079e64a2e677cf417fee1e981eea7eb7878e6b5801",
+      "version": 1
+    },
+    {
+      "bytes": 1951,
+      "prefijo": "ev",
+      "ruta": "examples/optimizacion/eventos/contrato_general.json",
+      "sha256": "0c839e5459d153deee5700b9d63ee9afda27f0f1d9b22058101834cac572f4e5",
+      "version": 1
+    },
+    {
+      "bytes": 2265,
+      "prefijo": "eve",
+      "ruta": "examples/optimizacion/eventos/contrato_especializado.json",
+      "sha256": "6549366de7c2cc43ac87227b820b8aa34958613f326ce067243b42cfd1bc0bee",
+      "version": 1
+    },
+    {
+      "bytes": 2188,
+      "prefijo": "eve",
+      "ruta": "examples/optimizacion/eventos/mapa.json",
+      "sha256": "393ee1330d6e8211dbb382d0c00ed84bfacdb45317ec580d682a3349e94c0316",
+      "version": 1
+    },
+    {
+      "bytes": 1027,
+      "prefijo": "cm",
+      "ruta": "examples/optimizacion/comentarios/contrato_general.json",
+      "sha256": "54554b10b0e8d992836ac5de445fce77d56f83e5387eb7dbd8c262c1ad3fb6d1",
+      "version": 1
+    },
+    {
+      "bytes": 1083,
+      "prefijo": "cme",
+      "ruta": "examples/optimizacion/comentarios/contrato_especializado.json",
+      "sha256": "c467aacb0092b060365d885d4f15a779269663eb73f4c3b74917f9ce307df2c6",
+      "version": 1
+    },
+    {
+      "bytes": 700,
+      "prefijo": "cme",
+      "ruta": "examples/optimizacion/comentarios/mapa.json",
+      "sha256": "8c2644446af1917d651ca91265e6d58676c8edfb6720b68ef2d67e7e91202c58",
+      "version": 1
+    },
+    {
+      "bytes": 12861,
+      "nota": "registro de la búsqueda de diseño sobre el conjunto de desarrollo",
+      "prefijo": "tke",
+      "ruta": "experiments/optimizacion/diseno/tickets.json",
+      "sha256": "020c873c541da9b4752d9dedc6571747355ad5251b706ddb45abede950d4863a",
+      "version": 1
+    },
+    {
+      "bytes": 49185,
+      "nota": "registro de la búsqueda de diseño sobre el conjunto de desarrollo",
+      "prefijo": "eve",
+      "ruta": "experiments/optimizacion/diseno/eventos.json",
+      "sha256": "280ed4fa5c6e9285f617dcb7975003876895c65926263501c61504870ab3e632",
+      "version": 1
+    },
+    {
+      "bytes": 5158,
+      "nota": "registro de la búsqueda de diseño sobre el conjunto de desarrollo",
+      "prefijo": "cme",
+      "ruta": "experiments/optimizacion/diseno/comentarios.json",
+      "sha256": "6f81dcaf8e25735d3bc3ef143f54025beed6de6f5c1a482fa20865b8838d4651",
+      "version": 1
+    }
+  ],
+  "criterio": {
+    "C1_ahorro_salida_ge_30_en_los_tres_tokenizadores": true,
+    "C1_por_tokenizador": {
+      "cl100k_base": true,
+      "o200k_base": true,
+      "r50k_base": true
+    },
+    "C2_por_tokenizador": {
+      "cl100k_base": true,
+      "o200k_base": true,
+      "r50k_base": true
+    },
+    "C2_total_menor_que_json_en_los_tres_tokenizadores": true,
+    "C3_equivalencia_exacta_sin_fallos": true,
+    "C3_fallos_en_alcance": 0,
+    "archivo": "experiments/optimizacion/criterio.json",
+    "detalle": {
+      "cl100k_base": {
+        "ahorro_salida_pct": 37.808,
+        "ahorro_total_pct": 32.148,
+        "json_compacto_total_sin_instruccion": 4258.4,
+        "mini_total": 2889.4
+      },
+      "o200k_base": {
+        "ahorro_salida_pct": 40.203,
+        "ahorro_total_pct": 34.772,
+        "json_compacto_total_sin_instruccion": 4068.8,
+        "mini_total": 2654.0
+      },
+      "r50k_base": {
+        "ahorro_salida_pct": 38.113,
+        "ahorro_total_pct": 32.427,
+        "json_compacto_total_sin_instruccion": 5346.8,
+        "mini_total": 3613.0
+      }
+    },
+    "fallos_general_dominio_descriptivos": 0,
+    "fijado_en_los_commits": [
+      "c196ec9",
+      "42b3c91"
+    ],
+    "n": 100,
+    "resultado": "cumple",
+    "sha256": "13539261fbfee040ffb1246ff97f9485d549ddbfb7fd8c3644fcc8022d662b43"
+  },
+  "duracion_s": 153.6,
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": "6.0.3",
+      "coverage": "7.16.2",
+      "hypothesis": "6.168.3",
+      "jiter": "0.17.0",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1",
+      "regex": "2026.9.29",
+      "scipy": "1.17.1",
+      "tiktoken": "0.14.0"
+    },
+    "node": "v22.14.0",
+    "python": "3.11.9",
+    "so": "Windows 10"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "OPT",
+  "fecha_utc": "2026-09-30T19:16:36Z",
+  "gasto_usd": 0,
+  "intento": null,
+  "limitaciones": [
+    "Sin llamadas a modelos: no se midió si un modelo real sigue la instrucción compacta ni con qué tasa de validez; solo se midió texto.",
+    "Los tokenizadores son tres BPE de OpenAI con vocabulario local: aproximan, no son usage ni conteo de solicitud de ningún proveedor, y son una aproximación para Anthropic, Google o DeepSeek.",
+    "El total suma tokens de entrada y de salida sin ponderar por precio; el costo en dinero depende de la tarifa de cada proveedor (no se calcula aquí).",
+    "Dos de los tres dominios son sintéticos; el de eventos es un caso FAVORABLE por diseño y su ahorro no es una promesa general.",
+    "El perfil mini build (mini-domain/1) infiere el contrato de 100 registros de desarrollo; con otra muestra puede cambiar.",
+    "La configuración especializada se diseñó con un conjunto de desarrollo y se midió con otro, pero ambos vienen del mismo generador.",
+    "Los registros de ejemplo de «Cómo funciona» provienen de grabaciones de procedencia no verificable (asistido_ia)."
+  ],
+  "modelo": null,
+  "notas": "Estudio OPT: optimización especializada, reversible y medible. Mapas explícitos y contabilizados en la instrucción; equivalencia exacta verificada antes de contar. Criterio fijado antes de medir en los commits c196ec9 y 42b3c91.",
+  "parametros": {
+    "gasto": "sin llamadas de API ni claves",
+    "idioma_instrucciones": "es",
+    "json_linea_base": "compacto (separadores , y :), UTF-8 sin escapes, envuelto en {clave:[...]}; instrucción 0 en la lectura primaria",
+    "lotes_por_tamano": "hasta 5 lotes disjuntos (comentarios: los que caben en el tramo de prueba)",
+    "muestras_de_mini_build": 100,
+    "nmax_equilibrio": 250,
+    "registros_del_ejemplo_de_instruccion": 2,
+    "semilla_desarrollo": 20260930,
+    "semilla_prueba": 20261001,
+    "separador_del_total": "salto de línea doble",
+    "tamanos_de_lote": [
+      1,
+      5,
+      10,
+      25,
+      50,
+      100,
+      250
+    ],
+    "tokens_de_prompts": "o200k_base sobre el texto del archivo sin salto final"
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [
+    {
+      "id": "tickets/instruccion_general_con_ejemplo.es.txt",
+      "ruta": "examples/optimizacion/tickets/instruccion_general_con_ejemplo.es.txt",
+      "sha256": "1cdfe2132c7ba92fc5a0953763138bb9ff4f61e9bd6a043a79850b7013d655ce",
+      "tokens": 410
+    },
+    {
+      "id": "tickets/instruccion_especializada_compacta_con_ejemplo.es.txt",
+      "ruta": "examples/optimizacion/tickets/instruccion_especializada_compacta_con_ejemplo.es.txt",
+      "sha256": "c5a8d4b4f2372d771f98822c068102fe7d857cf4bd83ed7f2c3ef19f3facd391",
+      "tokens": 220
+    },
+    {
+      "id": "tickets/instruccion_json_con_ejemplo.txt",
+      "ruta": "examples/optimizacion/tickets/instruccion_json_con_ejemplo.txt",
+      "sha256": "a5c155c9120ce5097c899c0d566b00a14beac490afb31dbece3e358b2a19b8d5",
+      "tokens": 252
+    },
+    {
+      "id": "eventos/instruccion_general_con_ejemplo.es.txt",
+      "ruta": "examples/optimizacion/eventos/instruccion_general_con_ejemplo.es.txt",
+      "sha256": "372ad7de597f812fddd68722d358ae080df39748f82ea9625158558546b825eb",
+      "tokens": 582
+    },
+    {
+      "id": "eventos/instruccion_especializada_compacta_con_ejemplo.es.txt",
+      "ruta": "examples/optimizacion/eventos/instruccion_especializada_compacta_con_ejemplo.es.txt",
+      "sha256": "a37c39bce5d150f1a96834b70ce0fc4c51b69737eeadf4fb877380fa2d311de5",
+      "tokens": 363
+    },
+    {
+      "id": "eventos/instruccion_json_con_ejemplo.txt",
+      "ruta": "examples/optimizacion/eventos/instruccion_json_con_ejemplo.txt",
+      "sha256": "941014d8d7b72032930ad403ee9e259b9a29b00b57a1b7e2983d2393a6ec0358",
+      "tokens": 464
+    },
+    {
+      "id": "comentarios/instruccion_general_con_ejemplo.es.txt",
+      "ruta": "examples/optimizacion/comentarios/instruccion_general_con_ejemplo.es.txt",
+      "sha256": "9ed50c87b3c0fb9c306f57a4ce3b560728f3494c111a15a467627c6989575a53",
+      "tokens": 461
+    },
+    {
+      "id": "comentarios/instruccion_especializada_compacta_con_ejemplo.es.txt",
+      "ruta": "examples/optimizacion/comentarios/instruccion_especializada_compacta_con_ejemplo.es.txt",
+      "sha256": "b1bf40017470b1085d66f574436461d456c72ee8355b234dcc16473f3b148716",
+      "tokens": 270
+    },
+    {
+      "id": "comentarios/instruccion_json_con_ejemplo.txt",
+      "ruta": "examples/optimizacion/comentarios/instruccion_json_con_ejemplo.txt",
+      "sha256": "c9dc10fbb96106f5957a45c8008813adcb10404c9445a7dd4fbfc4552308ed74",
+      "tokens": 290
+    }
+  ],
+  "resultado": "cumple",
+  "resultados": [
+    {
+      "bytes": 300322,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/resultados_por_lote.csv",
+      "sha256": "f8e16ae47c3f4ceed4d52226a0ec13ac095b1d6ebc96874b4c36c0424a7f78ff"
+    },
+    {
+      "bytes": 74709,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/resultados_resumen.csv",
+      "sha256": "5876641a2f7045efccd10787f6b94369a6de79a6b10b40bc3abcef2cbe94cc75"
+    },
+    {
+      "bytes": 72021,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/comparacion.csv",
+      "sha256": "c32afc0367a95a8151c648577737fd14388ae2f4f66e63eb241204a7c46feff7"
+    },
+    {
+      "bytes": 15590,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/equilibrio.csv",
+      "sha256": "c45bf23bc4d93d3bab83d4b7c21d36974283d1818ec749100605b50edaf3ce27"
+    },
+    {
+      "bytes": 192966,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/curva_equilibrio.csv",
+      "sha256": "ba14114dbfaa8d249d7808564b6df8b6da84cfadffa0a6fb24b5d56bdf13a195"
+    },
+    {
+      "bytes": 7581,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/propuesta_simulacion.csv",
+      "sha256": "c3cf2239571eb4ec92c2e2655530c85fbde5cbf1fb9289e764bed97c1bc597e7"
+    },
+    {
+      "bytes": 3,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/fallos_de_equivalencia.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "bytes": 1228,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/criterio_evaluado.json",
+      "sha256": "a52d17c6090575a4c60ccdf802e0a19f4d4936a9087ccc4f9b372451b8b726d9"
+    },
+    {
+      "bytes": 81091,
+      "ruta": "evidencia/corridas/opt-20260930t191636z/ejemplo_tickets.json",
+      "sha256": "a81af8fd6623e4ef79c6c93eb5629864f3001a7e8a4222093d5f5d8df71bdbd8"
+    }
+  ],
+  "resumen": {
+    "dominios": {
+      "comentarios": {
+        "etiqueta": "ahorro_pequeno",
+        "tokenizadores": {
+          "cl100k_base": {
+            "ahorro_salida_especializado_pct": 12.17,
+            "ahorro_salida_general_pct": 12.18,
+            "ahorro_total_especializado_pct": 8.53,
+            "ahorro_total_general_pct": 6.05,
+            "instruccion_especializado_tokens": 301.0,
+            "instruccion_general_tokens": 508.0,
+            "n": 100,
+            "n_estrella_total_especializado": 30,
+            "n_estrella_total_general": 51
+          },
+          "o200k_base": {
+            "ahorro_salida_especializado_pct": 15.33,
+            "ahorro_salida_general_pct": 15.34,
+            "ahorro_total_especializado_pct": 11.56,
+            "ahorro_total_general_pct": 8.91,
+            "instruccion_especializado_tokens": 270.0,
+            "instruccion_general_tokens": 461.0,
+            "n": 100,
+            "n_estrella_total_especializado": 25,
+            "n_estrella_total_general": 42
+          },
+          "r50k_base": {
+            "ahorro_salida_especializado_pct": 11.31,
+            "ahorro_salida_general_pct": 11.32,
+            "ahorro_total_especializado_pct": 7.29,
+            "ahorro_total_general_pct": 4.6,
+            "instruccion_especializado_tokens": 388.0,
+            "instruccion_general_tokens": 650.0,
+            "n": 100,
+            "n_estrella_total_especializado": 36,
+            "n_estrella_total_general": 60
+          }
+        }
+      },
+      "eventos": {
+        "etiqueta": "favorable",
+        "tokenizadores": {
+          "cl100k_base": {
+            "ahorro_salida_especializado_pct": 77.46,
+            "ahorro_salida_general_pct": 39.11,
+            "ahorro_total_especializado_pct": 71.85,
+            "ahorro_total_general_pct": 29.87,
+            "instruccion_especializado_tokens": 377.0,
+            "instruccion_general_tokens": 621.0,
+            "n": 100,
+            "n_estrella_total_especializado": 8,
+            "n_estrella_total_general": 24
+          },
+          "o200k_base": {
+            "ahorro_salida_especializado_pct": 75.39,
+            "ahorro_salida_general_pct": 39.73,
+            "ahorro_total_especializado_pct": 69.87,
+            "ahorro_total_general_pct": 30.89,
+            "instruccion_especializado_tokens": 363.0,
+            "instruccion_general_tokens": 582.0,
+            "n": 100,
+            "n_estrella_total_especializado": 8,
+            "n_estrella_total_general": 23
+          },
+          "r50k_base": {
+            "ahorro_salida_especializado_pct": 80.24,
+            "ahorro_salida_general_pct": 42.73,
+            "ahorro_total_especializado_pct": 74.43,
+            "ahorro_total_general_pct": 33.11,
+            "instruccion_especializado_tokens": 477.0,
+            "instruccion_general_tokens": 791.0,
+            "n": 100,
+            "n_estrella_total_especializado": 8,
+            "n_estrella_total_general": 23
+          }
+        }
+      },
+      "tickets": {
+        "etiqueta": "representativo",
+        "tokenizadores": {
+          "cl100k_base": {
+            "ahorro_salida_especializado_pct": 37.81,
+            "ahorro_salida_general_pct": 30.5,
+            "ahorro_total_especializado_pct": 32.15,
+            "ahorro_total_general_pct": 20.01,
+            "instruccion_especializado_tokens": 240.0,
+            "instruccion_general_tokens": 446.0,
+            "n": 100,
+            "n_estrella_total_especializado": 15,
+            "n_estrella_total_general": 35
+          },
+          "o200k_base": {
+            "ahorro_salida_especializado_pct": 40.2,
+            "ahorro_salida_general_pct": 33.56,
+            "ahorro_total_especializado_pct": 34.77,
+            "ahorro_total_general_pct": 23.46,
+            "instruccion_especializado_tokens": 220.0,
+            "instruccion_general_tokens": 410.0,
+            "n": 100,
+            "n_estrella_total_especializado": 14,
+            "n_estrella_total_general": 31
+          },
+          "r50k_base": {
+            "ahorro_salida_especializado_pct": 38.11,
+            "ahorro_salida_general_pct": 31.15,
+            "ahorro_total_especializado_pct": 32.43,
+            "ahorro_total_general_pct": 20.42,
+            "instruccion_especializado_tokens": 302.0,
+            "instruccion_general_tokens": 572.0,
+            "n": 100,
+            "n_estrella_total_especializado": 15,
+            "n_estrella_total_general": 35
+          }
+        }
+      }
+    },
+    "fallos_de_equivalencia": 0,
+    "lectura_primaria": "salida y total frente a JSON compacto con instrucción 0; n=100; media de lotes",
+    "registros_con_ida_y_vuelta_verificada": {
+      "comentarios": {
+        "especializado": 1005,
+        "general_dominio": 1005,
+        "general_fromschema": 1005,
+        "json_abreviado": 1005,
+        "json_compacto": 1005,
+        "json_legible": 1005
+      },
+      "eventos": {
+        "especializado": 2205,
+        "general_dominio": 2205,
+        "general_fromschema": 2205,
+        "json_abreviado": 2205,
+        "json_compacto": 2205,
+        "json_legible": 2205
+      },
+      "tickets": {
+        "especializado": 2205,
+        "general_dominio": 2205,
+        "general_fromschema": 2205,
+        "json_abreviado": 2205,
+        "json_compacto": 2205,
+        "json_legible": 2205
+      }
+    },
+    "resultado_del_criterio": "cumple"
+  },
+  "run_id": "opt-20260930t191636z",
+  "tarifas": null,
+  "tokenizadores": [
+    {
+      "backend": "tiktoken(vocabulario local)",
+      "nombre": "o200k_base",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+    },
+    {
+      "backend": "tiktoken(vocabulario local)",
+      "nombre": "cl100k_base",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_sha256": "223921b76ee99bde995b7ff738513eef100fb51d18c93597a113bcffe865b2a7"
+    },
+    {
+      "backend": "tiktoken(vocabulario local)",
+      "nombre": "r50k_base",
+      "paquete": "tiktoken",
+      "tipo": "exacto_local",
+      "version": "0.14.0",
+      "vocabulario_sha256": "306cd27f03c1a714eca7108e03d66b7dc042abe8c258b44c199a7ed9838dd930"
+    }
+  ]
+}

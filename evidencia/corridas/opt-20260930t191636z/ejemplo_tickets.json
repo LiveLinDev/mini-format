@@ -1,0 +1,1765 @@
+{
+  "esquema": "mini-format/ejemplo-tickets/1",
+  "estudio": "OPT",
+  "uso": "Ejemplo concreto de «Cómo funciona»: 10 tickets. Las cifras de este archivo las produce experiments/optimizacion/ejemplo.py; no se editan a mano.",
+  "procedencia": "reproducido_local",
+  "origen_de_los_registros": {
+    "ruta": "examples/mesa-de-ayuda/grabaciones/mini/ok.mini",
+    "comentario": "Los 10 tickets del hilo de la mesa de ayuda del sitio (T-1041 a T-1050).",
+    "procedencia_del_origen": "asistido_ia",
+    "nota_de_procedencia": "Incorporado en el commit c5e6605 (2026-09-17, sesión asistida por IA). No hay registro de modelo, fecha de llamada ni usage; el README de la carpeta lo llama «respuesta grabada de un modelo» y eso no se puede verificar. No es una medición de un modelo: solo contenido de ejemplo."
+  },
+  "mensajes": [
+    {
+      "id": "T-1041",
+      "mensaje": "Hola, cambié mi contraseña ayer y desde entonces no puedo entrar a mi cuenta. Necesito acceder hoy."
+    },
+    {
+      "id": "T-1042",
+      "mensaje": "En el estado de cuenta de septiembre me cobraron dos veces la suscripción."
+    },
+    {
+      "id": "T-1043",
+      "mensaje": "Cada vez que intento adjuntar un PDF la aplicación se cierra sola."
+    },
+    {
+      "id": "T-1044",
+      "mensaje": "Quisiera saber cómo exportar mi historial de pedidos a Excel."
+    },
+    {
+      "id": "T-1045",
+      "mensaje": "No me llega el código de verificación por SMS para confirmar mi número."
+    },
+    {
+      "id": "T-1046",
+      "mensaje": "Hice una transferencia hace tres días y el pago todavía no aparece."
+    },
+    {
+      "id": "T-1047",
+      "mensaje": "El buscador no muestra resultados cuando escribo palabras con tilde."
+    },
+    {
+      "id": "T-1048",
+      "mensaje": "¿Es posible cambiar el correo electrónico asociado a mi cuenta?"
+    },
+    {
+      "id": "T-1049",
+      "mensaje": "Al generar la factura electrónica aparece un error 500."
+    },
+    {
+      "id": "T-1050",
+      "mensaje": "Nuestro equipo necesita una capacitación sobre el nuevo módulo de reportes."
+    }
+  ],
+  "registros_canonicos": [
+    {
+      "id": "T-1041",
+      "prioridad": "alta",
+      "categoria": "acceso",
+      "resumen": "No puede iniciar sesión tras cambiar la contraseña",
+      "horas": 2
+    },
+    {
+      "id": "T-1042",
+      "prioridad": "media",
+      "categoria": "pago",
+      "resumen": "Cobro duplicado de la suscripción de septiembre",
+      "horas": 3
+    },
+    {
+      "id": "T-1043",
+      "prioridad": "alta",
+      "categoria": "error",
+      "resumen": "La aplicación se cierra al adjuntar un PDF",
+      "horas": 5
+    },
+    {
+      "id": "T-1044",
+      "prioridad": "baja",
+      "categoria": "consulta",
+      "resumen": "Cómo exportar el historial de pedidos a Excel",
+      "horas": 1
+    },
+    {
+      "id": "T-1045",
+      "prioridad": "media",
+      "categoria": "acceso",
+      "resumen": "No llega el código de verificación por SMS",
+      "horas": 2
+    },
+    {
+      "id": "T-1046",
+      "prioridad": "alta",
+      "categoria": "pago",
+      "resumen": "Transferencia no reflejada después de tres días",
+      "horas": 4
+    },
+    {
+      "id": "T-1047",
+      "prioridad": "media",
+      "categoria": "error",
+      "resumen": "El buscador ignora palabras con tilde",
+      "horas": 3
+    },
+    {
+      "id": "T-1048",
+      "prioridad": "baja",
+      "categoria": "consulta",
+      "resumen": "Cambio del correo asociado a la cuenta",
+      "horas": 1
+    },
+    {
+      "id": "T-1049",
+      "prioridad": "alta",
+      "categoria": "error",
+      "resumen": "Error 500 al generar la factura electrónica",
+      "horas": 6
+    },
+    {
+      "id": "T-1050",
+      "prioridad": "media",
+      "categoria": "consulta",
+      "resumen": "Capacitación sobre el módulo de reportes",
+      "horas": 8
+    }
+  ],
+  "json": {
+    "legible": "{\n  \"tickets\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"Cobro duplicado de la suscripción de septiembre\",\n      \"horas\": 3\n    },\n    {\n      \"id\": \"T-1043\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"La aplicación se cierra al adjuntar un PDF\",\n      \"horas\": 5\n    },\n    {\n      \"id\": \"T-1044\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Cómo exportar el historial de pedidos a Excel\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-1045\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No llega el código de verificación por SMS\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1046\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"pago\",\n      \"resumen\": \"Transferencia no reflejada después de tres días\",\n      \"horas\": 4\n    },\n    {\n      \"id\": \"T-1047\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"error\",\n      \"resumen\": \"El buscador ignora palabras con tilde\",\n      \"horas\": 3\n    },\n    {\n      \"id\": \"T-1048\",\n      \"prioridad\": \"baja\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Cambio del correo asociado a la cuenta\",\n      \"horas\": 1\n    },\n    {\n      \"id\": \"T-1049\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"error\",\n      \"resumen\": \"Error 500 al generar la factura electrónica\",\n      \"horas\": 6\n    },\n    {\n      \"id\": \"T-1050\",\n      \"prioridad\": \"media\",\n      \"categoria\": \"consulta\",\n      \"resumen\": \"Capacitación sobre el módulo de reportes\",\n      \"horas\": 8\n    }\n  ]\n}",
+    "compacto": "{\"tickets\":[{\"id\":\"T-1041\",\"prioridad\":\"alta\",\"categoria\":\"acceso\",\"resumen\":\"No puede iniciar sesión tras cambiar la contraseña\",\"horas\":2},{\"id\":\"T-1042\",\"prioridad\":\"media\",\"categoria\":\"pago\",\"resumen\":\"Cobro duplicado de la suscripción de septiembre\",\"horas\":3},{\"id\":\"T-1043\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"La aplicación se cierra al adjuntar un PDF\",\"horas\":5},{\"id\":\"T-1044\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cómo exportar el historial de pedidos a Excel\",\"horas\":1},{\"id\":\"T-1045\",\"prioridad\":\"media\",\"categoria\":\"acceso\",\"resumen\":\"No llega el código de verificación por SMS\",\"horas\":2},{\"id\":\"T-1046\",\"prioridad\":\"alta\",\"categoria\":\"pago\",\"resumen\":\"Transferencia no reflejada después de tres días\",\"horas\":4},{\"id\":\"T-1047\",\"prioridad\":\"media\",\"categoria\":\"error\",\"resumen\":\"El buscador ignora palabras con tilde\",\"horas\":3},{\"id\":\"T-1048\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cambio del correo asociado a la cuenta\",\"horas\":1},{\"id\":\"T-1049\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"Error 500 al generar la factura electrónica\",\"horas\":6},{\"id\":\"T-1050\",\"prioridad\":\"media\",\"categoria\":\"consulta\",\"resumen\":\"Capacitación sobre el módulo de reportes\",\"horas\":8}]}",
+    "abreviado_control": "{\"tickets\":[{\"id\":1041,\"prioridad\":\"a\",\"categoria\":\"a\",\"resumen\":\"No puede iniciar sesión tras cambiar la contraseña\",\"horas\":2},{\"id\":1042,\"prioridad\":\"m\",\"categoria\":\"p\",\"resumen\":\"Cobro duplicado de la suscripción de septiembre\",\"horas\":3},{\"id\":1043,\"prioridad\":\"a\",\"categoria\":\"e\",\"resumen\":\"La aplicación se cierra al adjuntar un PDF\",\"horas\":5},{\"id\":1044,\"prioridad\":\"b\",\"categoria\":\"c\",\"resumen\":\"Cómo exportar el historial de pedidos a Excel\",\"horas\":1},{\"id\":1045,\"prioridad\":\"m\",\"categoria\":\"a\",\"resumen\":\"No llega el código de verificación por SMS\",\"horas\":2},{\"id\":1046,\"prioridad\":\"a\",\"categoria\":\"p\",\"resumen\":\"Transferencia no reflejada después de tres días\",\"horas\":4},{\"id\":1047,\"prioridad\":\"m\",\"categoria\":\"e\",\"resumen\":\"El buscador ignora palabras con tilde\",\"horas\":3},{\"id\":1048,\"prioridad\":\"b\",\"categoria\":\"c\",\"resumen\":\"Cambio del correo asociado a la cuenta\",\"horas\":1},{\"id\":1049,\"prioridad\":\"a\",\"categoria\":\"e\",\"resumen\":\"Error 500 al generar la factura electrónica\",\"horas\":6},{\"id\":1050,\"prioridad\":\"m\",\"categoria\":\"c\",\"resumen\":\"Capacitación sobre el módulo de reportes\",\"horas\":8}]}"
+  },
+  "mini": {
+    "general": "tk|n=10\nT-1041|alta|acceso|No puede iniciar sesión tras cambiar la contraseña|2\nT-1042|media|pago|Cobro duplicado de la suscripción de septiembre|3\nT-1043|alta|error|La aplicación se cierra al adjuntar un PDF|5\nT-1044|baja|consulta|Cómo exportar el historial de pedidos a Excel|1\nT-1045|media|acceso|No llega el código de verificación por SMS|2\nT-1046|alta|pago|Transferencia no reflejada después de tres días|4\nT-1047|media|error|El buscador ignora palabras con tilde|3\nT-1048|baja|consulta|Cambio del correo asociado a la cuenta|1\nT-1049|alta|error|Error 500 al generar la factura electrónica|6\nT-1050|media|consulta|Capacitación sobre el módulo de reportes|8",
+    "dominio_mini_build": "tkd|v=1|n=10|h=9e9a0b51d50e|m=[[]]\nT-1041|alta|acceso|No puede iniciar sesión tras cambiar la contraseña|2\nT-1042|media|pago|Cobro duplicado de la suscripción de septiembre|3\nT-1043|alta|error|La aplicación se cierra al adjuntar un PDF|5\nT-1044|baja|consulta|Cómo exportar el historial de pedidos a Excel|1\nT-1045|media|acceso|No llega el código de verificación por SMS|2\nT-1046|alta|pago|Transferencia no reflejada después de tres días|4\nT-1047|media|error|El buscador ignora palabras con tilde|3\nT-1048|baja|consulta|Cambio del correo asociado a la cuenta|1\nT-1049|alta|error|Error 500 al generar la factura electrónica|6\nT-1050|media|consulta|Capacitación sobre el módulo de reportes|8",
+    "especializado": "tke|n=10\n1041|a|a|No puede iniciar sesión tras cambiar la contraseña|2\n1042|m|p|Cobro duplicado de la suscripción de septiembre|3\n1043|a|e|La aplicación se cierra al adjuntar un PDF|5\n1044|b|c|Cómo exportar el historial de pedidos a Excel|1\n1045|m|a|No llega el código de verificación por SMS|2\n1046|a|p|Transferencia no reflejada después de tres días|4\n1047|m|e|El buscador ignora palabras con tilde|3\n1048|b|c|Cambio del correo asociado a la cuenta|1\n1049|a|e|Error 500 al generar la factura electrónica|6\n1050|m|c|Capacitación sobre el módulo de reportes|8"
+  },
+  "instrucciones": {
+    "json": {
+      "sin_ejemplo": "Responde SOLO con un objeto JSON válido conforme a este JSON Schema, sin Markdown ni texto adicional:\n{\"type\":\"object\",\"properties\":{\"tickets\":{\"type\":\"array\",\"items\":{\"title\":\"Tickets de soporte\",\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"código del ticket\"},\"prioridad\":{\"type\":\"string\",\"enum\":[\"baja\",\"media\",\"alta\"]},\"categoria\":{\"type\":\"string\",\"enum\":[\"acceso\",\"pago\",\"error\",\"consulta\"]},\"resumen\":{\"type\":\"string\",\"description\":\"resumen breve de la solicitud\"},\"horas\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":40,\"description\":\"horas estimadas de atención\"}},\"required\":[\"id\",\"prioridad\",\"categoria\",\"resumen\",\"horas\"]}}},\"required\":[\"tickets\"]}",
+      "con_ejemplo": "Responde SOLO con un objeto JSON válido conforme a este JSON Schema, sin Markdown ni texto adicional:\n{\"type\":\"object\",\"properties\":{\"tickets\":{\"type\":\"array\",\"items\":{\"title\":\"Tickets de soporte\",\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"código del ticket\"},\"prioridad\":{\"type\":\"string\",\"enum\":[\"baja\",\"media\",\"alta\"]},\"categoria\":{\"type\":\"string\",\"enum\":[\"acceso\",\"pago\",\"error\",\"consulta\"]},\"resumen\":{\"type\":\"string\",\"description\":\"resumen breve de la solicitud\"},\"horas\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":40,\"description\":\"horas estimadas de atención\"}},\"required\":[\"id\",\"prioridad\",\"categoria\",\"resumen\",\"horas\"]}}},\"required\":[\"tickets\"]}\nEjemplo válido:\n{\"tickets\":[{\"id\":\"T-1100\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"la app de escritorio ignora las palabras con tilde (desde el martes)\",\"horas\":5},{\"id\":\"T-1101\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"la pasarela de pagos se queda cargando sin terminar (tras la última actualización)\",\"horas\":2}]}"
+    },
+    "general_fromschema": {
+      "sin_ejemplo": "FORMATO .mini — familia 'tk' v1 (Tickets de soporte)\nReglas:\n- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tk|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.\n- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).\n- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):\n  1. id: str — código del ticket\n  2. prioridad: uno de {baja|media|alta}\n  3. categoria: uno de {acceso|pago|error|consulta}\n  4. resumen: str — resumen breve de la solicitud\n  5. horas: int [0..40] — horas estimadas de atención\n- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV (\"impacto, justicia y evidencia\"; el marcador * va después de la comilla de cierre) o escapa el separador como '\\,'. Un asterisco final literal se escribe '\\*'.\n- Escapes válidos en cualquier valor: '\\|' para una barra vertical literal, '\\\\' para una barra invertida, '\\n' para un salto de línea.\n- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.\n- Un campo vacío significa nulo (solo permitido en campos opcionales).\n- Registro: 5 campos núcleo.",
+      "con_ejemplo": "FORMATO .mini — familia 'tk' v1 (Tickets de soporte)\nReglas:\n- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tk|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.\n- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).\n- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):\n  1. id: str — código del ticket\n  2. prioridad: uno de {baja|media|alta}\n  3. categoria: uno de {acceso|pago|error|consulta}\n  4. resumen: str — resumen breve de la solicitud\n  5. horas: int [0..40] — horas estimadas de atención\n- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV (\"impacto, justicia y evidencia\"; el marcador * va después de la comilla de cierre) o escapa el separador como '\\,'. Un asterisco final literal se escribe '\\*'.\n- Escapes válidos en cualquier valor: '\\|' para una barra vertical literal, '\\\\' para una barra invertida, '\\n' para un salto de línea.\n- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.\n- Un campo vacío significa nulo (solo permitido en campos opcionales).\n- Registro: 5 campos núcleo.\nEjemplo válido:\ntk|n=2\nT-1100|alta|error|la app de escritorio ignora las palabras con tilde (desde el martes)|5\nT-1101|alta|error|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2"
+    },
+    "general_dominio": {
+      "sin_ejemplo": "# Contrato de dominio .mini\n\nDevuelve solamente un documento .mini conforme a este contrato, sin Markdown ni explicaciones.\n\nProfile: mini-domain/1\nHeader: `tkd|v=1|n=<record count>|h=9e9a0b51d50e`\nLa cabecera requiere m=<JSON posicional del documento completo con la colección de registros sustituida por []>. record_path=[\"tickets\"]. Escape m using the same field rules.\n\n1. Una cabecera seguida de una línea por registro. Conserva el orden de columnas indicado.\n2. Usa ? sólo para un campo opcional ausente y ~ para null; no son equivalentes. No inventes valores ausentes.\n3. Las cadenas se escriben sin comillas; cadena vacía, ? literal, ~ literal o cadena que empieza con comillas usa una cadena JSON.\n4. Escapa barra inversa como \\\\, separador como \\|, salto de línea como \\n y retorno como \\r. No recortes espacios.\n5. Los objetos obligatorios no-nullables se aplanan en columnas según las rutas indicadas. Otros objetos anidados son arrays posicionales según schema; {} representa un miembro opcional ausente.\n6. Números y booleanos usan sintaxis JSON.\n7. Las listas contienen valores transformados recursivamente. Un nodo de tipo json envuelve su valor en [valor]; null sigue siendo null.\n8. No agregues claves ni cambies tipos. Si faltan muestras para un tipo, pide reconstruir el contrato con más ejemplos.\n9. No uses d salvo que agrupes columnas constantes: d es un array JSON de [índice de columna, celda codificada] y esas columnas se omiten de todas las filas.\n10. Opcionalmente e=[ [índice de columna,[celda0,celda1,...]],...] declara un diccionario de cadenas del documento; la columna usa índices enteros desde 0. Una columna no puede estar en d y e.\n11. Si no queda ninguna columna en una fila, escribe -. n cuenta todas las filas, incluso esas filas vacías.\n\nColumns (zero-based; paths use JSON Pointer escaping):\n0: id (string)\n1: prioridad (string)\n2: categoria (string)\n3: resumen (string)\n4: horas (integer)\n\nSchema:\n```json\n{\"type\":\"object\",\"fields\":[{\"name\":\"tickets\",\"optional\":false,\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"fields\":[{\"name\":\"id\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"prioridad\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"categoria\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"resumen\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"horas\",\"optional\":false,\"schema\":{\"type\":\"integer\"}}]}}}]}\n```\n",
+      "con_ejemplo": "# Contrato de dominio .mini\n\nDevuelve solamente un documento .mini conforme a este contrato, sin Markdown ni explicaciones.\n\nProfile: mini-domain/1\nHeader: `tkd|v=1|n=<record count>|h=9e9a0b51d50e`\nLa cabecera requiere m=<JSON posicional del documento completo con la colección de registros sustituida por []>. record_path=[\"tickets\"]. Escape m using the same field rules.\n\n1. Una cabecera seguida de una línea por registro. Conserva el orden de columnas indicado.\n2. Usa ? sólo para un campo opcional ausente y ~ para null; no son equivalentes. No inventes valores ausentes.\n3. Las cadenas se escriben sin comillas; cadena vacía, ? literal, ~ literal o cadena que empieza con comillas usa una cadena JSON.\n4. Escapa barra inversa como \\\\, separador como \\|, salto de línea como \\n y retorno como \\r. No recortes espacios.\n5. Los objetos obligatorios no-nullables se aplanan en columnas según las rutas indicadas. Otros objetos anidados son arrays posicionales según schema; {} representa un miembro opcional ausente.\n6. Números y booleanos usan sintaxis JSON.\n7. Las listas contienen valores transformados recursivamente. Un nodo de tipo json envuelve su valor en [valor]; null sigue siendo null.\n8. No agregues claves ni cambies tipos. Si faltan muestras para un tipo, pide reconstruir el contrato con más ejemplos.\n9. No uses d salvo que agrupes columnas constantes: d es un array JSON de [índice de columna, celda codificada] y esas columnas se omiten de todas las filas.\n10. Opcionalmente e=[ [índice de columna,[celda0,celda1,...]],...] declara un diccionario de cadenas del documento; la columna usa índices enteros desde 0. Una columna no puede estar en d y e.\n11. Si no queda ninguna columna en una fila, escribe -. n cuenta todas las filas, incluso esas filas vacías.\n\nColumns (zero-based; paths use JSON Pointer escaping):\n0: id (string)\n1: prioridad (string)\n2: categoria (string)\n3: resumen (string)\n4: horas (integer)\n\nSchema:\n```json\n{\"type\":\"object\",\"fields\":[{\"name\":\"tickets\",\"optional\":false,\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"fields\":[{\"name\":\"id\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"prioridad\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"categoria\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"resumen\",\"optional\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"horas\",\"optional\":false,\"schema\":{\"type\":\"integer\"}}]}}}]}\n```\n\nExample / Ejemplo:\n```mini\ntkd|v=1|n=2|h=9e9a0b51d50e|m=[[]]\nT-1100|alta|error|la app de escritorio ignora las palabras con tilde (desde el martes)|5\nT-1101|alta|error|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2\n```\n"
+    },
+    "especializado": {
+      "compacta_sin_ejemplo": "Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.\nLínea 1 (cabecera): tke|n=<nº de registros>\nLuego UNA línea por registro, campos separados por |, en este orden:\n1. id: entero (número sin el prefijo T-)\n2. prioridad: b=baja m=media a=alta\n3. categoria: a=acceso p=pago e=error c=consulta\n4. resumen: texto (resumen breve de la solicitud)\n5. horas: entero 0..40 (horas estimadas de atención)\nEscapes: \\| = barra vertical, \\\\ = barra invertida, \\n = salto de línea. n = número exacto de líneas de registro.",
+      "compacta_con_ejemplo": "Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.\nLínea 1 (cabecera): tke|n=<nº de registros>\nLuego UNA línea por registro, campos separados por |, en este orden:\n1. id: entero (número sin el prefijo T-)\n2. prioridad: b=baja m=media a=alta\n3. categoria: a=acceso p=pago e=error c=consulta\n4. resumen: texto (resumen breve de la solicitud)\n5. horas: entero 0..40 (horas estimadas de atención)\nEscapes: \\| = barra vertical, \\\\ = barra invertida, \\n = salto de línea. n = número exacto de líneas de registro.\nEjemplo válido:\ntke|n=2\n1100|a|e|la app de escritorio ignora las palabras con tilde (desde el martes)|5\n1101|a|e|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2",
+      "spec_block_sin_ejemplo": "FORMATO .mini — familia 'tke' v1 (Tickets de soporte (hilo de «Cómo funciona»))\nTickets de soporte. id: número del identificador sin el prefijo T-. prioridad: b=baja m=media a=alta. categoria: a=acceso p=pago e=error c=consulta.\nReglas:\n- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tke|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.\n- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).\n- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):\n  1. id: int [0..]\n  2. prioridad: uno de {b|m|a}\n  3. categoria: uno de {a|p|e|c}\n  4. resumen: str — resumen breve de la solicitud\n  5. horas: int [0..40] — horas estimadas de atención\n- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV (\"impacto, justicia y evidencia\"; el marcador * va después de la comilla de cierre) o escapa el separador como '\\,'. Un asterisco final literal se escribe '\\*'.\n- Escapes válidos en cualquier valor: '\\|' para una barra vertical literal, '\\\\' para una barra invertida, '\\n' para un salto de línea.\n- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.\n- Un campo vacío significa nulo (solo permitido en campos opcionales).\n- Registro: 5 campos núcleo.",
+      "spec_block_con_ejemplo": "FORMATO .mini — familia 'tke' v1 (Tickets de soporte (hilo de «Cómo funciona»))\nTickets de soporte. id: número del identificador sin el prefijo T-. prioridad: b=baja m=media a=alta. categoria: a=acceso p=pago e=error c=consulta.\nReglas:\n- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tke|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.\n- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).\n- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):\n  1. id: int [0..]\n  2. prioridad: uno de {b|m|a}\n  3. categoria: uno de {a|p|e|c}\n  4. resumen: str — resumen breve de la solicitud\n  5. horas: int [0..40] — horas estimadas de atención\n- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV (\"impacto, justicia y evidencia\"; el marcador * va después de la comilla de cierre) o escapa el separador como '\\,'. Un asterisco final literal se escribe '\\*'.\n- Escapes válidos en cualquier valor: '\\|' para una barra vertical literal, '\\\\' para una barra invertida, '\\n' para un salto de línea.\n- Valores numéricos sin comillas; booleanos true/false. Los campos escalares no llevan comillas.\n- Un campo vacío significa nulo (solo permitido en campos opcionales).\n- Registro: 5 campos núcleo.\nEjemplo válido:\ntke|n=2\n1100|a|e|la app de escritorio ignora las palabras con tilde (desde el martes)|5\n1101|a|e|la pasarela de pagos se queda cargando sin terminar (tras la última actualización)|2"
+    }
+  },
+  "mapa_explicito": {
+    "esquema": "mini-format/mapa-opt/1",
+    "prefijo": "tke",
+    "clave_json": "tickets",
+    "orden_contractual": [
+      "id",
+      "prioridad",
+      "categoria",
+      "resumen",
+      "horas"
+    ],
+    "campos": [
+      {
+        "campo": "id",
+        "tratamiento": "id_prefijo",
+        "nombre_en_contrato": "id",
+        "prefijo": "T-",
+        "ancho": 0
+      },
+      {
+        "campo": "prioridad",
+        "tratamiento": "codigos",
+        "nombre_en_contrato": "prioridad",
+        "codigos": {
+          "baja": "b",
+          "media": "m",
+          "alta": "a"
+        }
+      },
+      {
+        "campo": "categoria",
+        "tratamiento": "codigos",
+        "nombre_en_contrato": "categoria",
+        "codigos": {
+          "acceso": "a",
+          "pago": "p",
+          "error": "e",
+          "consulta": "c"
+        }
+      },
+      {
+        "campo": "resumen",
+        "tratamiento": "pasa",
+        "nombre_en_contrato": "resumen"
+      },
+      {
+        "campo": "horas",
+        "tratamiento": "pasa",
+        "nombre_en_contrato": "horas"
+      }
+    ]
+  },
+  "contratos": {
+    "general": {
+      "prefix": "tk",
+      "version": 1,
+      "name": "Tickets de soporte",
+      "description": "",
+      "parent": null,
+      "domain": "",
+      "list_separator": ",",
+      "records_key": "records",
+      "header": {
+        "required": [
+          "n"
+        ],
+        "keys": {
+          "n": {
+            "type": "int",
+            "desc": "number of records"
+          },
+          "v": {
+            "type": "int",
+            "default": 1,
+            "desc": "contract version"
+          }
+        }
+      },
+      "core": [
+        {
+          "name": "id",
+          "type": "str",
+          "desc": "código del ticket"
+        },
+        {
+          "name": "prioridad",
+          "type": "enum",
+          "values": [
+            "baja",
+            "media",
+            "alta"
+          ]
+        },
+        {
+          "name": "categoria",
+          "type": "enum",
+          "values": [
+            "acceso",
+            "pago",
+            "error",
+            "consulta"
+          ]
+        },
+        {
+          "name": "resumen",
+          "type": "str",
+          "desc": "resumen breve de la solicitud"
+        },
+        {
+          "name": "horas",
+          "type": "int",
+          "min": 0,
+          "max": 40,
+          "desc": "horas estimadas de atención"
+        }
+      ],
+      "extensions": [],
+      "author": "",
+      "license": "MIT",
+      "source": ""
+    },
+    "especializado": {
+      "prefix": "tke",
+      "version": 1,
+      "name": "Tickets de soporte (hilo de «Cómo funciona»)",
+      "description": "Tickets de soporte. id: número del identificador sin el prefijo T-. prioridad: b=baja m=media a=alta. categoria: a=acceso p=pago e=error c=consulta.",
+      "list_separator": ",",
+      "header": {
+        "required": [
+          "n"
+        ],
+        "keys": {
+          "n": {
+            "type": "int",
+            "desc": "número de registros"
+          }
+        }
+      },
+      "core": [
+        {
+          "name": "id",
+          "type": "int",
+          "min": 0
+        },
+        {
+          "name": "prioridad",
+          "type": "enum",
+          "values": [
+            "b",
+            "m",
+            "a"
+          ]
+        },
+        {
+          "name": "categoria",
+          "type": "enum",
+          "values": [
+            "a",
+            "p",
+            "e",
+            "c"
+          ]
+        },
+        {
+          "name": "resumen",
+          "type": "str",
+          "desc": "resumen breve de la solicitud"
+        },
+        {
+          "name": "horas",
+          "type": "int",
+          "min": 0,
+          "max": 40,
+          "desc": "horas estimadas de atención"
+        }
+      ],
+      "extensions": []
+    }
+  },
+  "conteos": {
+    "tokens_por_texto_completo": {
+      "o200k_base": {
+        "salida.json_compacto": 349,
+        "salida.json_legible": 543,
+        "salida.json_abreviado": 323,
+        "salida.mini_general": 219,
+        "salida.mini_dominio": 241,
+        "salida.mini_especializado": 194,
+        "instruccion.json.schema_sin_ejemplo": 161,
+        "instruccion.json.schema_con_ejemplo": 252,
+        "instruccion.general_fromschema.sin_ejemplo": 346,
+        "instruccion.general_fromschema.con_ejemplo": 410,
+        "instruccion.general_dominio.sin_ejemplo": 600,
+        "instruccion.general_dominio.con_ejemplo": 693,
+        "instruccion.especializado.compacta_sin_ejemplo": 159,
+        "instruccion.especializado.compacta_con_ejemplo": 220,
+        "instruccion.especializado.spec_block_sin_ejemplo": 396,
+        "instruccion.especializado.spec_block_con_ejemplo": 457
+      },
+      "cl100k_base": {
+        "salida.json_compacto": 363,
+        "salida.json_legible": 558,
+        "salida.json_abreviado": 337,
+        "salida.mini_general": 234,
+        "salida.mini_dominio": 254,
+        "salida.mini_especializado": 205,
+        "instruccion.json.schema_sin_ejemplo": 161,
+        "instruccion.json.schema_con_ejemplo": 258,
+        "instruccion.general_fromschema.sin_ejemplo": 374,
+        "instruccion.general_fromschema.con_ejemplo": 446,
+        "instruccion.general_dominio.sin_ejemplo": 645,
+        "instruccion.general_dominio.con_ejemplo": 743,
+        "instruccion.especializado.compacta_sin_ejemplo": 171,
+        "instruccion.especializado.compacta_con_ejemplo": 240,
+        "instruccion.especializado.spec_block_sin_ejemplo": 425,
+        "instruccion.especializado.spec_block_con_ejemplo": 494
+      },
+      "r50k_base": {
+        "salida.json_compacto": 456,
+        "salida.json_legible": 944,
+        "salida.json_abreviado": 418,
+        "salida.mini_general": 296,
+        "salida.mini_dominio": 319,
+        "salida.mini_especializado": 259,
+        "instruccion.json.schema_sin_ejemplo": 193,
+        "instruccion.json.schema_con_ejemplo": 317,
+        "instruccion.general_fromschema.sin_ejemplo": 482,
+        "instruccion.general_fromschema.con_ejemplo": 572,
+        "instruccion.general_dominio.sin_ejemplo": 826,
+        "instruccion.general_dominio.con_ejemplo": 945,
+        "instruccion.especializado.compacta_sin_ejemplo": 217,
+        "instruccion.especializado.compacta_con_ejemplo": 302,
+        "instruccion.especializado.spec_block_sin_ejemplo": 546,
+        "instruccion.especializado.spec_block_con_ejemplo": 631
+      }
+    },
+    "tokens_total_instruccion_mas_salida": {
+      "o200k_base": {
+        "json_compacto.ninguna": 349,
+        "json_compacto.schema_sin_ejemplo": 510,
+        "json_compacto.schema_con_ejemplo": 601,
+        "general_fromschema.sin_ejemplo": 565,
+        "general_fromschema.con_ejemplo": 630,
+        "general_dominio.sin_ejemplo": 841,
+        "general_dominio.con_ejemplo": 934,
+        "especializado.compacta_sin_ejemplo": 353,
+        "especializado.compacta_con_ejemplo": 415,
+        "especializado.spec_block_sin_ejemplo": 590,
+        "especializado.spec_block_con_ejemplo": 652
+      },
+      "cl100k_base": {
+        "json_compacto.ninguna": 363,
+        "json_compacto.schema_sin_ejemplo": 525,
+        "json_compacto.schema_con_ejemplo": 621,
+        "general_fromschema.sin_ejemplo": 608,
+        "general_fromschema.con_ejemplo": 681,
+        "general_dominio.sin_ejemplo": 899,
+        "general_dominio.con_ejemplo": 997,
+        "especializado.compacta_sin_ejemplo": 376,
+        "especializado.compacta_con_ejemplo": 446,
+        "especializado.spec_block_sin_ejemplo": 630,
+        "especializado.spec_block_con_ejemplo": 700
+      },
+      "r50k_base": {
+        "json_compacto.ninguna": 456,
+        "json_compacto.schema_sin_ejemplo": 651,
+        "json_compacto.schema_con_ejemplo": 775,
+        "general_fromschema.sin_ejemplo": 780,
+        "general_fromschema.con_ejemplo": 870,
+        "general_dominio.sin_ejemplo": 1146,
+        "general_dominio.con_ejemplo": 1265,
+        "especializado.compacta_sin_ejemplo": 478,
+        "especializado.compacta_con_ejemplo": 563,
+        "especializado.spec_block_sin_ejemplo": 807,
+        "especializado.spec_block_con_ejemplo": 892
+      }
+    },
+    "componentes_del_mini": {
+      "o200k_base": {
+        "especializado.cabecera": 6,
+        "especializado.registros_juntos": 187,
+        "general.cabecera": 5,
+        "general.registros_juntos": 213,
+        "nota": "cada componente es un texto completo tokenizado aparte; no suman exactamente el conteo del documento"
+      },
+      "cl100k_base": {
+        "especializado.cabecera": 6,
+        "especializado.registros_juntos": 198,
+        "general.cabecera": 5,
+        "general.registros_juntos": 228,
+        "nota": "cada componente es un texto completo tokenizado aparte; no suman exactamente el conteo del documento"
+      },
+      "r50k_base": {
+        "especializado.cabecera": 6,
+        "especializado.registros_juntos": 252,
+        "general.cabecera": 5,
+        "general.registros_juntos": 290,
+        "nota": "cada componente es un texto completo tokenizado aparte; no suman exactamente el conteo del documento"
+      }
+    },
+    "componentes_de_la_instruccion_especializada_compacta": {
+      "o200k_base": [
+        {
+          "linea": 1,
+          "texto": "Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.",
+          "tokens": 17
+        },
+        {
+          "linea": 2,
+          "texto": "Línea 1 (cabecera): tke|n=<nº de registros>",
+          "tokens": 18
+        },
+        {
+          "linea": 3,
+          "texto": "Luego UNA línea por registro, campos separados por |, en este orden:",
+          "tokens": 15
+        },
+        {
+          "linea": 4,
+          "texto": "1. id: entero (número sin el prefijo T-)",
+          "tokens": 14
+        },
+        {
+          "linea": 5,
+          "texto": "2. prioridad: b=baja m=media a=alta",
+          "tokens": 13
+        },
+        {
+          "linea": 6,
+          "texto": "3. categoria: a=acceso p=pago e=error c=consulta",
+          "tokens": 17
+        },
+        {
+          "linea": 7,
+          "texto": "4. resumen: texto (resumen breve de la solicitud)",
+          "tokens": 13
+        },
+        {
+          "linea": 8,
+          "texto": "5. horas: entero 0..40 (horas estimadas de atención)",
+          "tokens": 17
+        },
+        {
+          "linea": 9,
+          "texto": "Escapes: \\| = barra vertical, \\\\ = barra invertida, \\n = salto de línea. n = número exacto de líneas de registro.",
+          "tokens": 32
+        }
+      ],
+      "cl100k_base": [
+        {
+          "linea": 1,
+          "texto": "Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.",
+          "tokens": 18
+        },
+        {
+          "linea": 2,
+          "texto": "Línea 1 (cabecera): tke|n=<nº de registros>",
+          "tokens": 19
+        },
+        {
+          "linea": 3,
+          "texto": "Luego UNA línea por registro, campos separados por |, en este orden:",
+          "tokens": 18
+        },
+        {
+          "linea": 4,
+          "texto": "1. id: entero (número sin el prefijo T-)",
+          "tokens": 15
+        },
+        {
+          "linea": 5,
+          "texto": "2. prioridad: b=baja m=media a=alta",
+          "tokens": 14
+        },
+        {
+          "linea": 6,
+          "texto": "3. categoria: a=acceso p=pago e=error c=consulta",
+          "tokens": 17
+        },
+        {
+          "linea": 7,
+          "texto": "4. resumen: texto (resumen breve de la solicitud)",
+          "tokens": 14
+        },
+        {
+          "linea": 8,
+          "texto": "5. horas: entero 0..40 (horas estimadas de atención)",
+          "tokens": 18
+        },
+        {
+          "linea": 9,
+          "texto": "Escapes: \\| = barra vertical, \\\\ = barra invertida, \\n = salto de línea. n = número exacto de líneas de registro.",
+          "tokens": 35
+        }
+      ],
+      "r50k_base": [
+        {
+          "linea": 1,
+          "texto": "Responde SOLO con un documento .mini: texto plano, sin Markdown ni comentarios.",
+          "tokens": 24
+        },
+        {
+          "linea": 2,
+          "texto": "Línea 1 (cabecera): tke|n=<nº de registros>",
+          "tokens": 22
+        },
+        {
+          "linea": 3,
+          "texto": "Luego UNA línea por registro, campos separados por |, en este orden:",
+          "tokens": 24
+        },
+        {
+          "linea": 4,
+          "texto": "1. id: entero (número sin el prefijo T-)",
+          "tokens": 18
+        },
+        {
+          "linea": 5,
+          "texto": "2. prioridad: b=baja m=media a=alta",
+          "tokens": 16
+        },
+        {
+          "linea": 6,
+          "texto": "3. categoria: a=acceso p=pago e=error c=consulta",
+          "tokens": 22
+        },
+        {
+          "linea": 7,
+          "texto": "4. resumen: texto (resumen breve de la solicitud)",
+          "tokens": 17
+        },
+        {
+          "linea": 8,
+          "texto": "5. horas: entero 0..40 (horas estimadas de atención)",
+          "tokens": 21
+        },
+        {
+          "linea": 9,
+          "texto": "Escapes: \\| = barra vertical, \\\\ = barra invertida, \\n = salto de línea. n = número exacto de líneas de registro.",
+          "tokens": 45
+        }
+      ]
+    },
+    "separador_del_total": "salto de línea doble"
+  },
+  "lectura": {
+    "o200k_base": {
+      "ahorro_salida_general_vs_json_compacto_pct": 37.25,
+      "ahorro_salida_especializado_vs_json_compacto_pct": 44.41,
+      "ahorro_salida_especializado_vs_json_abreviado_pct": 39.94,
+      "ahorro_total_general_con_ejemplo_vs_json_sin_instruccion_pct": -80.52,
+      "ahorro_total_especializado_compacta_con_ejemplo_vs_json_sin_instruccion_pct": -18.91,
+      "ahorro_total_especializado_compacta_con_ejemplo_vs_json_con_esquema_y_ejemplo_pct": 30.95,
+      "instruccion_especializado_menos_general_con_ejemplo_tokens": -190
+    },
+    "cl100k_base": {
+      "ahorro_salida_general_vs_json_compacto_pct": 35.54,
+      "ahorro_salida_especializado_vs_json_compacto_pct": 43.53,
+      "ahorro_salida_especializado_vs_json_abreviado_pct": 39.17,
+      "ahorro_total_general_con_ejemplo_vs_json_sin_instruccion_pct": -87.6,
+      "ahorro_total_especializado_compacta_con_ejemplo_vs_json_sin_instruccion_pct": -22.87,
+      "ahorro_total_especializado_compacta_con_ejemplo_vs_json_con_esquema_y_ejemplo_pct": 28.18,
+      "instruccion_especializado_menos_general_con_ejemplo_tokens": -206
+    },
+    "r50k_base": {
+      "ahorro_salida_general_vs_json_compacto_pct": 35.09,
+      "ahorro_salida_especializado_vs_json_compacto_pct": 43.2,
+      "ahorro_salida_especializado_vs_json_abreviado_pct": 38.04,
+      "ahorro_total_general_con_ejemplo_vs_json_sin_instruccion_pct": -90.79,
+      "ahorro_total_especializado_compacta_con_ejemplo_vs_json_sin_instruccion_pct": -23.46,
+      "ahorro_total_especializado_compacta_con_ejemplo_vs_json_con_esquema_y_ejemplo_pct": 27.35,
+      "instruccion_especializado_menos_general_con_ejemplo_tokens": -270
+    }
+  },
+  "conversion_a_json_canonico": {
+    "paso_1_parse_del_mini_especializado": {
+      "prefix": "tke",
+      "header": {
+        "n": 10,
+        "v": 1
+      },
+      "records": [
+        {
+          "id": 1041,
+          "prioridad": "a",
+          "categoria": "a",
+          "resumen": "No puede iniciar sesión tras cambiar la contraseña",
+          "horas": 2
+        },
+        {
+          "id": 1042,
+          "prioridad": "m",
+          "categoria": "p",
+          "resumen": "Cobro duplicado de la suscripción de septiembre",
+          "horas": 3
+        },
+        {
+          "id": 1043,
+          "prioridad": "a",
+          "categoria": "e",
+          "resumen": "La aplicación se cierra al adjuntar un PDF",
+          "horas": 5
+        },
+        {
+          "id": 1044,
+          "prioridad": "b",
+          "categoria": "c",
+          "resumen": "Cómo exportar el historial de pedidos a Excel",
+          "horas": 1
+        },
+        {
+          "id": 1045,
+          "prioridad": "m",
+          "categoria": "a",
+          "resumen": "No llega el código de verificación por SMS",
+          "horas": 2
+        },
+        {
+          "id": 1046,
+          "prioridad": "a",
+          "categoria": "p",
+          "resumen": "Transferencia no reflejada después de tres días",
+          "horas": 4
+        },
+        {
+          "id": 1047,
+          "prioridad": "m",
+          "categoria": "e",
+          "resumen": "El buscador ignora palabras con tilde",
+          "horas": 3
+        },
+        {
+          "id": 1048,
+          "prioridad": "b",
+          "categoria": "c",
+          "resumen": "Cambio del correo asociado a la cuenta",
+          "horas": 1
+        },
+        {
+          "id": 1049,
+          "prioridad": "a",
+          "categoria": "e",
+          "resumen": "Error 500 al generar la factura electrónica",
+          "horas": 6
+        },
+        {
+          "id": 1050,
+          "prioridad": "m",
+          "categoria": "c",
+          "resumen": "Capacitación sobre el módulo de reportes",
+          "horas": 8
+        }
+      ]
+    },
+    "paso_2_reconstruir_con_el_mapa": {
+      "tickets": [
+        {
+          "id": "T-1041",
+          "prioridad": "alta",
+          "categoria": "acceso",
+          "resumen": "No puede iniciar sesión tras cambiar la contraseña",
+          "horas": 2
+        },
+        {
+          "id": "T-1042",
+          "prioridad": "media",
+          "categoria": "pago",
+          "resumen": "Cobro duplicado de la suscripción de septiembre",
+          "horas": 3
+        },
+        {
+          "id": "T-1043",
+          "prioridad": "alta",
+          "categoria": "error",
+          "resumen": "La aplicación se cierra al adjuntar un PDF",
+          "horas": 5
+        },
+        {
+          "id": "T-1044",
+          "prioridad": "baja",
+          "categoria": "consulta",
+          "resumen": "Cómo exportar el historial de pedidos a Excel",
+          "horas": 1
+        },
+        {
+          "id": "T-1045",
+          "prioridad": "media",
+          "categoria": "acceso",
+          "resumen": "No llega el código de verificación por SMS",
+          "horas": 2
+        },
+        {
+          "id": "T-1046",
+          "prioridad": "alta",
+          "categoria": "pago",
+          "resumen": "Transferencia no reflejada después de tres días",
+          "horas": 4
+        },
+        {
+          "id": "T-1047",
+          "prioridad": "media",
+          "categoria": "error",
+          "resumen": "El buscador ignora palabras con tilde",
+          "horas": 3
+        },
+        {
+          "id": "T-1048",
+          "prioridad": "baja",
+          "categoria": "consulta",
+          "resumen": "Cambio del correo asociado a la cuenta",
+          "horas": 1
+        },
+        {
+          "id": "T-1049",
+          "prioridad": "alta",
+          "categoria": "error",
+          "resumen": "Error 500 al generar la factura electrónica",
+          "horas": 6
+        },
+        {
+          "id": "T-1050",
+          "prioridad": "media",
+          "categoria": "consulta",
+          "resumen": "Capacitación sobre el módulo de reportes",
+          "horas": 8
+        }
+      ]
+    },
+    "json_canonico_de_la_aplicacion": "{\"tickets\":[{\"id\":\"T-1041\",\"prioridad\":\"alta\",\"categoria\":\"acceso\",\"resumen\":\"No puede iniciar sesión tras cambiar la contraseña\",\"horas\":2},{\"id\":\"T-1042\",\"prioridad\":\"media\",\"categoria\":\"pago\",\"resumen\":\"Cobro duplicado de la suscripción de septiembre\",\"horas\":3},{\"id\":\"T-1043\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"La aplicación se cierra al adjuntar un PDF\",\"horas\":5},{\"id\":\"T-1044\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cómo exportar el historial de pedidos a Excel\",\"horas\":1},{\"id\":\"T-1045\",\"prioridad\":\"media\",\"categoria\":\"acceso\",\"resumen\":\"No llega el código de verificación por SMS\",\"horas\":2},{\"id\":\"T-1046\",\"prioridad\":\"alta\",\"categoria\":\"pago\",\"resumen\":\"Transferencia no reflejada después de tres días\",\"horas\":4},{\"id\":\"T-1047\",\"prioridad\":\"media\",\"categoria\":\"error\",\"resumen\":\"El buscador ignora palabras con tilde\",\"horas\":3},{\"id\":\"T-1048\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cambio del correo asociado a la cuenta\",\"horas\":1},{\"id\":\"T-1049\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"Error 500 al generar la factura electrónica\",\"horas\":6},{\"id\":\"T-1050\",\"prioridad\":\"media\",\"categoria\":\"consulta\",\"resumen\":\"Capacitación sobre el módulo de reportes\",\"horas\":8}]}",
+    "identico_al_original": true,
+    "nota": "El objeto del paso 1 lleva los códigos cortos tal cual: el núcleo de .mini no conoce el mapa. Solo el paso 2, que es de la aplicación, devuelve las etiquetas, el identificador T-… y el tipo original."
+  },
+  "registro_erroneo": {
+    "descripcion": "Una línea trae un código de categoría que no existe (en el general, una etiqueta que no existe), como la grabación «error» del sitio.",
+    "mini_especializado": "tke|n=10\n1041|a|a|No puede iniciar sesión tras cambiar la contraseña|2\n1042|m|p|Cobro duplicado de la suscripción de septiembre|3\n1043|a|e|La aplicación se cierra al adjuntar un PDF|5\n1044|b|c|Cómo exportar el historial de pedidos a Excel|1\n1045|m|f|No llega el código de verificación por SMS|2\n1046|a|p|Transferencia no reflejada después de tres días|4\n1047|m|e|El buscador ignora palabras con tilde|3\n1048|b|c|Cambio del correo asociado a la cuenta|1\n1049|a|e|Error 500 al generar la factura electrónica|6\n1050|m|c|Capacitación sobre el módulo de reportes|8",
+    "diagnostico_especializado": {
+      "ok": false,
+      "prefix": "tke",
+      "declared_n": 10,
+      "record_lines": 10,
+      "valid_records": 9,
+      "valid_lines": [
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "invalid_lines": [
+        6
+      ],
+      "missing_records": 0,
+      "truncated": false,
+      "errors": [
+        {
+          "code": "E10",
+          "line": 6,
+          "field": "categoria",
+          "message": "'f' not in {a|p|e|c}"
+        }
+      ]
+    },
+    "mini_general": "tk|n=10\nT-1041|alta|acceso|No puede iniciar sesión tras cambiar la contraseña|2\nT-1042|media|pago|Cobro duplicado de la suscripción de septiembre|3\nT-1043|alta|error|La aplicación se cierra al adjuntar un PDF|5\nT-1044|baja|consulta|Cómo exportar el historial de pedidos a Excel|1\nT-1045|media|facturacion|No llega el código de verificación por SMS|2\nT-1046|alta|pago|Transferencia no reflejada después de tres días|4\nT-1047|media|error|El buscador ignora palabras con tilde|3\nT-1048|baja|consulta|Cambio del correo asociado a la cuenta|1\nT-1049|alta|error|Error 500 al generar la factura electrónica|6\nT-1050|media|consulta|Capacitación sobre el módulo de reportes|8",
+    "diagnostico_general": {
+      "ok": false,
+      "prefix": "tk",
+      "declared_n": 10,
+      "record_lines": 10,
+      "valid_records": 9,
+      "valid_lines": [
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "invalid_lines": [
+        6
+      ],
+      "missing_records": 0,
+      "truncated": false,
+      "errors": [
+        {
+          "code": "E10",
+          "line": 6,
+          "field": "categoria",
+          "message": "'facturacion' not in {acceso|pago|error|consulta}"
+        }
+      ]
+    },
+    "json_compacto": "{\"tickets\":[{\"id\":\"T-1041\",\"prioridad\":\"alta\",\"categoria\":\"acceso\",\"resumen\":\"No puede iniciar sesión tras cambiar la contraseña\",\"horas\":2},{\"id\":\"T-1042\",\"prioridad\":\"media\",\"categoria\":\"pago\",\"resumen\":\"Cobro duplicado de la suscripción de septiembre\",\"horas\":3},{\"id\":\"T-1043\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"La aplicación se cierra al adjuntar un PDF\",\"horas\":5},{\"id\":\"T-1044\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cómo exportar el historial de pedidos a Excel\",\"horas\":1},{\"id\":\"T-1045\",\"prioridad\":\"media\",\"categoria\":\"facturacion\",\"resumen\":\"No llega el código de verificación por SMS\",\"horas\":2},{\"id\":\"T-1046\",\"prioridad\":\"alta\",\"categoria\":\"pago\",\"resumen\":\"Transferencia no reflejada después de tres días\",\"horas\":4},{\"id\":\"T-1047\",\"prioridad\":\"media\",\"categoria\":\"error\",\"resumen\":\"El buscador ignora palabras con tilde\",\"horas\":3},{\"id\":\"T-1048\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cambio del correo asociado a la cuenta\",\"horas\":1},{\"id\":\"T-1049\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"Error 500 al generar la factura electrónica\",\"horas\":6},{\"id\":\"T-1050\",\"prioridad\":\"media\",\"categoria\":\"consulta\",\"resumen\":\"Capacitación sobre el módulo de reportes\",\"horas\":8}]}",
+    "json_loads": "sin error: es JSON válido; el valor fuera de la enumeración solo lo detecta una validación de esquema (no incluida)",
+    "lineas_a_regenerar": [
+      6
+    ],
+    "peticion_de_reparacion_usuario": "Un documento .mini de la familia 'tke' tiene 1 línea(s) inválida(s). Corrige SOLO esas líneas.\nCabecera del documento (contexto): tke|n=10\nLíneas inválidas (número de línea, contenido y errores del validador):\n[L6] 1045|m|f|No llega el código de verificación por SMS|2\n    - E10 [categoria]: 'f' not in {a|p|e|c}\n\nResponde solo con un documento .mini: primera línea 'tke|n=1', seguida de exactamente 1 línea(s), una corrección por cada línea inválida y en el mismo orden. Si una línea corregida es la cabecera, escribe la cabecera completa. Si una línea no es un registro (texto explicativo), escribe solo '-'. No repitas las líneas válidas ni añadas explicaciones ni bloques de código.",
+    "reparacion": {
+      "respuesta_de_reparacion": "tke|n=1\n1045|m|a|No llega el código de verificación por SMS|2",
+      "nota_de_procedencia": "la línea corregida es la original del documento: demuestra el mecanismo, no es salida de un modelo",
+      "documento_reparado_identico_al_original": true,
+      "ok": true
+    }
+  },
+  "registro_cortado": {
+    "descripcion": "La respuesta se interrumpe al 75 % de su longitud (como la grabación «cortada» del sitio).",
+    "mini_especializado": "tke|n=10\n1041|a|a|No puede iniciar sesión tras cambiar la contraseña|2\n1042|m|p|Cobro duplicado de la suscripción de septiembre|3\n1043|a|e|La aplicación se cierra al adjuntar un PDF|5\n1044|b|c|Cómo exportar el historial de pedidos a Excel|1\n1045|m|a|No llega el código de verificación por SMS|2\n1046|a|p|Transferencia no reflejada después de tres días|4\n1047|m|e|El buscador ignora palabras con tilde|3\n1048|b|c|Cambio ",
+    "diagnostico_especializado": {
+      "ok": false,
+      "prefix": "tke",
+      "declared_n": 10,
+      "record_lines": 8,
+      "valid_records": 7,
+      "valid_lines": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "invalid_lines": [
+        9
+      ],
+      "missing_records": 2,
+      "truncated": true,
+      "errors": [
+        {
+          "code": "E05",
+          "line": 9,
+          "field": "",
+          "message": "record has 4 fields, core requires 5"
+        },
+        {
+          "code": "E04",
+          "line": 0,
+          "field": "",
+          "message": "header declares n=10 but document has 8 record lines"
+        }
+      ]
+    },
+    "mini_general": "tk|n=10\nT-1041|alta|acceso|No puede iniciar sesión tras cambiar la contraseña|2\nT-1042|media|pago|Cobro duplicado de la suscripción de septiembre|3\nT-1043|alta|error|La aplicación se cierra al adjuntar un PDF|5\nT-1044|baja|consulta|Cómo exportar el historial de pedidos a Excel|1\nT-1045|media|acceso|No llega el código de verificación por SMS|2\nT-1046|alta|pago|Transferencia no reflejada después de tres días|4\nT-1047|media|error|El buscador ignora palabras con tilde|3\nT-1048|baja|consulta|Cam",
+    "diagnostico_general": {
+      "ok": false,
+      "prefix": "tk",
+      "declared_n": 10,
+      "record_lines": 8,
+      "valid_records": 7,
+      "valid_lines": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "invalid_lines": [
+        9
+      ],
+      "missing_records": 2,
+      "truncated": true,
+      "errors": [
+        {
+          "code": "E05",
+          "line": 9,
+          "field": "",
+          "message": "record has 4 fields, core requires 5"
+        },
+        {
+          "code": "E04",
+          "line": 0,
+          "field": "",
+          "message": "header declares n=10 but document has 8 record lines"
+        }
+      ]
+    },
+    "json_compacto": {
+      "texto": "{\"tickets\":[{\"id\":\"T-1041\",\"prioridad\":\"alta\",\"categoria\":\"acceso\",\"resumen\":\"No puede iniciar sesión tras cambiar la contraseña\",\"horas\":2},{\"id\":\"T-1042\",\"prioridad\":\"media\",\"categoria\":\"pago\",\"resumen\":\"Cobro duplicado de la suscripción de septiembre\",\"horas\":3},{\"id\":\"T-1043\",\"prioridad\":\"alta\",\"categoria\":\"error\",\"resumen\":\"La aplicación se cierra al adjuntar un PDF\",\"horas\":5},{\"id\":\"T-1044\",\"prioridad\":\"baja\",\"categoria\":\"consulta\",\"resumen\":\"Cómo exportar el historial de pedidos a Excel\",\"horas\":1},{\"id\":\"T-1045\",\"prioridad\":\"media\",\"categoria\":\"acceso\",\"resumen\":\"No llega el código de verificación por SMS\",\"horas\":2},{\"id\":\"T-1046\",\"prioridad\":\"alta\",\"categoria\":\"pago\",\"resumen\":\"Transferencia no reflejada después de tres días\",\"horas\":4},{\"id\":\"T-1047\",\"prioridad\":\"media\",\"categoria\":\"error\",\"resumen\":\"El buscador ignora palabras con tilde\",\"horas\":3},{\"id\":\"T-1048\",\"prioridad\":\"baja\",\"categoria\":\"consul",
+      "json_loads": "JSONDecodeError: Unterminated string starting at: line 1 column 921 (char 920)",
+      "objetos_completos_en_el_texto": 7,
+      "registros_utilizables_sin_reparar": 0
+    },
+    "registros_recuperados_y_reconstruidos": [
+      {
+        "id": "T-1041",
+        "prioridad": "alta",
+        "categoria": "acceso",
+        "resumen": "No puede iniciar sesión tras cambiar la contraseña",
+        "horas": 2
+      },
+      {
+        "id": "T-1042",
+        "prioridad": "media",
+        "categoria": "pago",
+        "resumen": "Cobro duplicado de la suscripción de septiembre",
+        "horas": 3
+      },
+      {
+        "id": "T-1043",
+        "prioridad": "alta",
+        "categoria": "error",
+        "resumen": "La aplicación se cierra al adjuntar un PDF",
+        "horas": 5
+      },
+      {
+        "id": "T-1044",
+        "prioridad": "baja",
+        "categoria": "consulta",
+        "resumen": "Cómo exportar el historial de pedidos a Excel",
+        "horas": 1
+      },
+      {
+        "id": "T-1045",
+        "prioridad": "media",
+        "categoria": "acceso",
+        "resumen": "No llega el código de verificación por SMS",
+        "horas": 2
+      },
+      {
+        "id": "T-1046",
+        "prioridad": "alta",
+        "categoria": "pago",
+        "resumen": "Transferencia no reflejada después de tres días",
+        "horas": 4
+      },
+      {
+        "id": "T-1047",
+        "prioridad": "media",
+        "categoria": "error",
+        "resumen": "El buscador ignora palabras con tilde",
+        "horas": 3
+      }
+    ],
+    "mini_con_n_declarado": 10
+  },
+  "advertencias": [
+    "Los conteos son locales (tiktoken con vocabulario archivado): aproximan, no son usage ni conteo de solicitud de ningún proveedor.",
+    "Con 10 tickets el total con instrucción puede no compensar; el punto de equilibrio está en la serie por lote.",
+    "La instrucción compacta es una plantilla propia del estudio y no se validó con un modelo real (sin llamadas de API)."
+  ],
+  "serie_tickets_por_lote": [
+    {
+      "tokenizador": "cl100k_base",
+      "n": 1,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 30.04291845493562,
+      "ahorro_total_pct": -487.12446351931334,
+      "ahorro_total_con_esquema_pct": 10.17728168089297,
+      "mini_instruccion": 240.0,
+      "mini_total": 273.6
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 1,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 25.75107296137339,
+      "ahorro_total_pct": -933.4763948497855,
+      "ahorro_total_con_esquema_pct": -58.10899540380827,
+      "mini_instruccion": 446.0,
+      "mini_total": 481.6
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 5,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 36.296975252062325,
+      "ahorro_total_pct": -74.15215398716775,
+      "ahorro_total_con_esquema_pct": 20.201595968080632,
+      "mini_instruccion": 240.0,
+      "mini_total": 380.0
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 5,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 29.330889092575617,
+      "ahorro_total_pct": -175.52703941338223,
+      "ahorro_total_con_esquema_pct": -26.24947501049981,
+      "mini_instruccion": 446.0,
+      "mini_total": 601.2
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 10,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.14020427112349,
+      "ahorro_total_pct": -18.802228412256273,
+      "ahorro_total_con_esquema_pct": 25.69686411149825,
+      "mini_instruccion": 240.0,
+      "mini_total": 511.8
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 10,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 29.94428969359332,
+      "ahorro_total_pct": -73.81615598885793,
+      "ahorro_total_con_esquema_pct": -8.710801393728218,
+      "mini_instruccion": 446.0,
+      "mini_total": 748.8
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 25,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.1916156557225,
+      "ahorro_total_pct": 14.839547393804487,
+      "ahorro_total_con_esquema_pct": 31.282742104475382,
+      "mini_instruccion": 240.0,
+      "mini_total": 918.2
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 25,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.05008347245409,
+      "ahorro_total_pct": -11.407902058987208,
+      "ahorro_total_con_esquema_pct": 10.103277952402333,
+      "mini_instruccion": 446.0,
+      "mini_total": 1201.2
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 50,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.59447606606328,
+      "ahorro_total_pct": 26.35065783334889,
+      "ahorro_total_con_esquema_pct": 34.26334638127759,
+      "mini_instruccion": 240.0,
+      "mini_total": 1578.6
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 50,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.27899598768312,
+      "ahorro_total_pct": 9.424279182607076,
+      "ahorro_total_con_esquema_pct": 19.155492629299577,
+      "mini_instruccion": 446.0,
+      "mini_total": 1941.4
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 100,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.80762727785083,
+      "ahorro_total_pct": 32.14822468532782,
+      "ahorro_total_con_esquema_pct": 36.02426711540164,
+      "mini_instruccion": 240.0,
+      "mini_total": 2889.4
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 100,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.504414803682124,
+      "ahorro_total_pct": 20.00751455945894,
+      "ahorro_total_con_esquema_pct": 24.577096802763254,
+      "mini_instruccion": 446.0,
+      "mini_total": 3406.4
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 250,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.80494686353805,
+      "ahorro_total_pct": 35.53841813222986,
+      "ahorro_total_con_esquema_pct": 37.06546689927463,
+      "mini_instruccion": 240.0,
+      "mini_total": 6854.2
+    },
+    {
+      "tokenizador": "cl100k_base",
+      "n": 250,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.55581679676479,
+      "ahorro_total_pct": 26.351923257782374,
+      "ahorro_total_con_esquema_pct": 28.096593517583322,
+      "mini_instruccion": 446.0,
+      "mini_total": 7831.0
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 1,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 33.77192982456141,
+      "ahorro_total_pct": -450.87719298245605,
+      "ahorro_total_con_esquema_pct": 15.591397849462375,
+      "mini_instruccion": 220.0,
+      "mini_total": 251.2
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 1,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 29.824561403508774,
+      "ahorro_total_pct": -871.4912280701753,
+      "ahorro_total_con_esquema_pct": -48.857526881720425,
+      "mini_instruccion": 410.0,
+      "mini_total": 443.0
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 5,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 38.33017077798861,
+      "ahorro_total_pct": -66.50853889943073,
+      "ahorro_total_con_esquema_pct": 24.157303370786522,
+      "mini_instruccion": 220.0,
+      "mini_total": 351.0
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 5,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 32.44781783681214,
+      "ahorro_total_pct": -162.52371916508537,
+      "ahorro_total_con_esquema_pct": -19.576490924805533,
+      "mini_instruccion": 410.0,
+      "mini_total": 553.4
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 10,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 39.602520601066416,
+      "ahorro_total_pct": -13.960252060106626,
+      "ahorro_total_con_esquema_pct": 29.25067709900693,
+      "mini_instruccion": 220.0,
+      "mini_total": 470.2
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 10,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 33.10712554532235,
+      "ahorro_total_pct": -66.50508967523024,
+      "ahorro_total_con_esquema_pct": -3.3704483900090176,
+      "mini_instruccion": 410.0,
+      "mini_total": 687.0
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 25,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 39.744086855370284,
+      "ahorro_total_pct": 18.321054672353622,
+      "ahorro_total_con_esquema_pct": 34.35649735119974,
+      "mini_instruccion": 220.0,
+      "mini_total": 842.6
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 25,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 33.1911593640946,
+      "ahorro_total_pct": -6.649864288483931,
+      "ahorro_total_con_esquema_pct": 14.287940168276714,
+      "mini_instruccion": 410.0,
+      "mini_total": 1100.2
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 50,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 39.996088402112264,
+      "ahorro_total_pct": 29.190299237238413,
+      "ahorro_total_con_esquema_pct": 36.95803586975448,
+      "mini_instruccion": 220.0,
+      "mini_total": 1448.2
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 50,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 33.37570897711716,
+      "ahorro_total_pct": 13.2798748288676,
+      "ahorro_total_con_esquema_pct": 22.792965349120664,
+      "mini_instruccion": 410.0,
+      "mini_total": 1773.6
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 100,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 40.20349980338184,
+      "ahorro_total_pct": 34.77192292567833,
+      "ahorro_total_con_esquema_pct": 38.57618959451954,
+      "mini_instruccion": 220.0,
+      "mini_total": 2654.0
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 100,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 33.56272119543846,
+      "ahorro_total_pct": 23.461462839166348,
+      "ahorro_total_con_esquema_pct": 27.925384188113323,
+      "mini_instruccion": 410.0,
+      "mini_total": 3114.2
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 250,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 40.29480156071414,
+      "ahorro_total_pct": 38.117290032711935,
+      "ahorro_total_con_esquema_pct": 39.61658270199593,
+      "mini_instruccion": 220.0,
+      "mini_total": 6280.6
+    },
+    {
+      "tokenizador": "o200k_base",
+      "n": 250,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 33.64797225397076,
+      "ahorro_total_pct": 29.598391991487016,
+      "ahorro_total_con_esquema_pct": 31.304080298427106,
+      "mini_instruccion": 410.0,
+      "mini_total": 7145.2
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 1,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 33.11258278145696,
+      "ahorro_total_pct": -470.1986754966887,
+      "ahorro_total_con_esquema_pct": 9.225092250922506,
+      "mini_instruccion": 302.0,
+      "mini_total": 344.4
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 1,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 27.48344370860928,
+      "ahorro_total_pct": -922.8476821192052,
+      "ahorro_total_con_esquema_pct": -62.836056931997895,
+      "mini_instruccion": 572.0,
+      "mini_total": 617.8
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 5,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 36.53001464128843,
+      "ahorro_total_pct": -74.7437774524158,
+      "ahorro_total_con_esquema_pct": 19.385342789598113,
+      "mini_instruccion": 302.0,
+      "mini_total": 477.4
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 5,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.527086383601755,
+      "ahorro_total_pct": -179.5754026354319,
+      "ahorro_total_con_esquema_pct": -28.976697061803435,
+      "mini_instruccion": 572.0,
+      "mini_total": 763.8
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 10,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.18042366691016,
+      "ahorro_total_pct": -18.334550766983206,
+      "ahorro_total_con_esquema_pct": 25.225017309023777,
+      "mini_instruccion": 302.0,
+      "mini_total": 648.0
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 10,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.4236669101534,
+      "ahorro_total_pct": -74.39737034331628,
+      "ahorro_total_con_esquema_pct": -10.200784675744279,
+      "mini_instruccion": 572.0,
+      "mini_total": 955.0
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 25,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.37551259519625,
+      "ahorro_total_pct": 15.114235500878726,
+      "ahorro_total_con_esquema_pct": 31.188412679567847,
+      "mini_instruccion": 302.0,
+      "mini_total": 1159.2
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 25,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.565319273579373,
+      "ahorro_total_pct": -11.467486818980689,
+      "ahorro_total_con_esquema_pct": 9.640270687403529,
+      "mini_instruccion": 572.0,
+      "mini_total": 1522.2
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 50,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 37.79112891262424,
+      "ahorro_total_pct": 26.516837264500815,
+      "ahorro_total_con_esquema_pct": 34.2906413742787,
+      "mini_instruccion": 302.0,
+      "mini_total": 1981.4
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 50,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 30.87820798101172,
+      "ahorro_total_pct": 9.590565198041833,
+      "ahorro_total_con_esquema_pct": 19.155004311202497,
+      "mini_instruccion": 572.0,
+      "mini_total": 2437.8
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 100,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 38.11251589735917,
+      "ahorro_total_pct": 32.426872147826735,
+      "ahorro_total_con_esquema_pct": 36.23142362949628,
+      "mini_instruccion": 302.0,
+      "mini_total": 3613.0
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 100,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 31.15134285928032,
+      "ahorro_total_pct": 20.415949726939488,
+      "ahorro_total_con_esquema_pct": 24.896748914539877,
+      "mini_instruccion": 572.0,
+      "mini_total": 4255.2
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 250,
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "ahorro_salida_pct": 38.22703027571181,
+      "ahorro_total_pct": 35.943204868154154,
+      "ahorro_total_con_esquema_pct": 37.44240645634629,
+      "mini_instruccion": 302.0,
+      "mini_total": 8526.6
+    },
+    {
+      "tokenizador": "r50k_base",
+      "n": 250,
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "ahorro_salida_pct": 31.289910600255432,
+      "ahorro_total_pct": 26.97768762677485,
+      "ahorro_total_con_esquema_pct": 28.686720469552462,
+      "mini_instruccion": 572.0,
+      "mini_total": 9720.0
+    }
+  ],
+  "equilibrio_tickets": [
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 3249,
+      "pendiente_ahorro_por_registro": 13.0,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "comparador": "total",
+      "n_estrella": 35,
+      "primer_n_con_ahorro": 35,
+      "ahorro_tokens_en_nmax": 2802,
+      "pendiente_ahorro_por_registro": 13.0,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "comparador": "total_con_esquema",
+      "n_estrella": 15,
+      "primer_n_con_ahorro": 15,
+      "ahorro_tokens_en_nmax": 3060,
+      "pendiente_ahorro_por_registro": 13.0,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "general_dominio",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 2,
+      "primer_n_con_ahorro": 2,
+      "ahorro_tokens_en_nmax": 3229,
+      "pendiente_ahorro_por_registro": 13.0,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "especializado",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 4013,
+      "pendiente_ahorro_por_registro": 15.98,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "comparador": "total",
+      "n_estrella": 15,
+      "primer_n_con_ahorro": 15,
+      "ahorro_tokens_en_nmax": 3772,
+      "pendiente_ahorro_por_registro": 15.98,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "cl100k_base",
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "comparador": "total_con_esquema",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 4030,
+      "pendiente_ahorro_por_registro": 15.98,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 3408,
+      "pendiente_ahorro_por_registro": 13.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "comparador": "total",
+      "n_estrella": 31,
+      "primer_n_con_ahorro": 31,
+      "ahorro_tokens_en_nmax": 2997,
+      "pendiente_ahorro_por_registro": 13.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "comparador": "total_con_esquema",
+      "n_estrella": 12,
+      "primer_n_con_ahorro": 12,
+      "ahorro_tokens_en_nmax": 3249,
+      "pendiente_ahorro_por_registro": 13.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "general_dominio",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 2,
+      "primer_n_con_ahorro": 2,
+      "ahorro_tokens_en_nmax": 3386,
+      "pendiente_ahorro_por_registro": 13.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "especializado",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 4075,
+      "pendiente_ahorro_por_registro": 16.313,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "comparador": "total",
+      "n_estrella": 14,
+      "primer_n_con_ahorro": 14,
+      "ahorro_tokens_en_nmax": 3854,
+      "pendiente_ahorro_por_registro": 16.313,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "o200k_base",
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "comparador": "total_con_esquema",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 4106,
+      "pendiente_ahorro_por_registro": 16.313,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 4158,
+      "pendiente_ahorro_por_registro": 16.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "comparador": "total",
+      "n_estrella": 35,
+      "primer_n_con_ahorro": 35,
+      "ahorro_tokens_en_nmax": 3584,
+      "pendiente_ahorro_por_registro": 16.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "general_fromschema",
+      "instruccion": "con_ejemplo",
+      "comparador": "total_con_esquema",
+      "n_estrella": 16,
+      "primer_n_con_ahorro": 16,
+      "ahorro_tokens_en_nmax": 3903,
+      "pendiente_ahorro_por_registro": 16.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "general_dominio",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 2,
+      "primer_n_con_ahorro": 2,
+      "ahorro_tokens_en_nmax": 4135,
+      "pendiente_ahorro_por_registro": 16.667,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "especializado",
+      "instruccion": "no_aplica",
+      "comparador": "salida",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 5062,
+      "pendiente_ahorro_por_registro": 20.233,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "comparador": "total",
+      "n_estrella": 15,
+      "primer_n_con_ahorro": 15,
+      "ahorro_tokens_en_nmax": 4758,
+      "pendiente_ahorro_por_registro": 20.233,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    },
+    {
+      "dominio": "tickets",
+      "tokenizador": "r50k_base",
+      "perfil": "especializado",
+      "instruccion": "compacta_con_ejemplo",
+      "comparador": "total_con_esquema",
+      "n_estrella": 1,
+      "primer_n_con_ahorro": 1,
+      "ahorro_tokens_en_nmax": 5077,
+      "pendiente_ahorro_por_registro": 20.233,
+      "n_extrapolado_no_medido": null,
+      "nmax_medido": 250,
+      "existe": true
+    }
+  ]
+}
