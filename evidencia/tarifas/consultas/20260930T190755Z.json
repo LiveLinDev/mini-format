@@ -1,0 +1,921 @@
+{
+  "esquema": "mini-format/tarifas-consulta/1",
+  "consulta_utc": "2026-09-30T19:07:55Z",
+  "agente": "Mozilla/5.0 (compatible; mini-format-tarifas/1.0; +https://mini-format.pmoluna.com; consulta de tarifas publicas, solo lectura)",
+  "solo_comprobar": false,
+  "resumen": {
+    "entradas": 30,
+    "verificadas": 27,
+    "no_verificadas": 3,
+    "con_cambio_de_precio": 0
+  },
+  "entradas": [
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-5.4 (<272K context length) | $2.50 | $0.25 | - | $15.00 | $5.00 | $0.50 | - | $22.50 |",
+          "extracto_sha256": "d68a493e1a29d0691a6e31a3b48d87333081fe2cfb5628b12eea562e98d1f002",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2.5",
+        "entrada_cache_lectura_por_millon": "0.25",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "15"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-5.4 (<272K context length) | $2.50 | $0.25 | - | $15.00 | $5.00 | $0.50 | - | $22.50 |",
+      "extracto_sha256": "d68a493e1a29d0691a6e31a3b48d87333081fe2cfb5628b12eea562e98d1f002"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-5.4-mini | $0.75 | $0.075 | - | $4.50 | - | - | - | - |",
+          "extracto_sha256": "6061b72c2bc140deae3a767bc9cc81c82d3fad499f6ddbfef5b4ea42393e84f4",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.75",
+        "entrada_cache_lectura_por_millon": "0.075",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "4.5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-5.4-mini | $0.75 | $0.075 | - | $4.50 | - | - | - | - |",
+      "extracto_sha256": "6061b72c2bc140deae3a767bc9cc81c82d3fad499f6ddbfef5b4ea42393e84f4"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-nano",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-5.4-nano | $0.20 | $0.02 | - | $1.25 | - | - | - | - |",
+          "extracto_sha256": "c25ce15426ae5bb3b738240dba3424526a09a34f5869046e7afa29241e656b6d",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.2",
+        "entrada_cache_lectura_por_millon": "0.02",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "1.25"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-5.4-nano | $0.20 | $0.02 | - | $1.25 | - | - | - | - |",
+      "extracto_sha256": "c25ce15426ae5bb3b738240dba3424526a09a34f5869046e7afa29241e656b6d"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-5-mini | $0.25 | $0.025 | - | $2.00 | - | - | - | - |",
+          "extracto_sha256": "790add71bd98f5d6cba19f99801c09a8dc510df434e2b5c90865f947c5751a6a",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.25",
+        "entrada_cache_lectura_por_millon": "0.025",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "2"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-5-mini | $0.25 | $0.025 | - | $2.00 | - | - | - | - |",
+      "extracto_sha256": "790add71bd98f5d6cba19f99801c09a8dc510df434e2b5c90865f947c5751a6a"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-4.1-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-4.1-mini | $0.40 | $0.10 | - | $1.60 | - | - | - | - |",
+          "extracto_sha256": "90f78eaa6f9409fcb1ff2503632b4d5ab3b7ca39ff784b82f748553d3c26ed28",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.4",
+        "entrada_cache_lectura_por_millon": "0.1",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "1.6"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-4.1-mini | $0.40 | $0.10 | - | $1.60 | - | - | - | - |",
+      "extracto_sha256": "90f78eaa6f9409fcb1ff2503632b4d5ab3b7ca39ff784b82f748553d3c26ed28"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-4.1",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-4.1 | $2.00 | $0.50 | - | $8.00 | - | - | - | - |",
+          "extracto_sha256": "d90938d9829f1b67cbb88bb58c081161df9d7169b7a9d73e5fc6c38d250bfbf0",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2",
+        "entrada_cache_lectura_por_millon": "0.5",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "8"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-4.1 | $2.00 | $0.50 | - | $8.00 | - | - | - | - |",
+      "extracto_sha256": "d90938d9829f1b67cbb88bb58c081161df9d7169b7a9d73e5fc6c38d250bfbf0"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-4o-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-4o-mini | $0.15 | $0.075 | - | $0.60 | - | - | - | - |",
+          "extracto_sha256": "ad891cf94b9e73ea56285f77cb7c1a206c60373e232ef83d415416b7a808c114",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.15",
+        "entrada_cache_lectura_por_millon": "0.075",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "0.6"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-4o-mini | $0.15 | $0.075 | - | $0.60 | - | - | - | - |",
+      "extracto_sha256": "ad891cf94b9e73ea56285f77cb7c1a206c60373e232ef83d415416b7a808c114"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.6-terra",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-5.6-terra | $2.00 | $0.20 | $2.50 | $12.00 | $4.00 | $0.40 | $5.00 | $18.00 |",
+          "extracto_sha256": "522449cc28eff0713df6d1953e95fb56a623b305c13e6bc3df0e1c6e2004ce02",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2",
+        "entrada_cache_lectura_por_millon": "0.2",
+        "entrada_cache_escritura_por_millon": "2.5",
+        "salida_por_millon": "12"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-5.6-terra | $2.00 | $0.20 | $2.50 | $12.00 | $4.00 | $0.40 | $5.00 | $18.00 |",
+      "extracto_sha256": "522449cc28eff0713df6d1953e95fb56a623b305c13e6bc3df0e1c6e2004ce02"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.6-luna",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-5.6-luna | $0.20 | $0.02 | $0.25 | $1.20 | $0.40 | $0.04 | $0.50 | $1.80 |",
+          "extracto_sha256": "5ad10aabe2ef5d06b871b1b889909cec09252e13543c9335da695c78001323a6",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.2",
+        "entrada_cache_lectura_por_millon": "0.02",
+        "entrada_cache_escritura_por_millon": "0.25",
+        "salida_por_millon": "1.2"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-5.6-luna | $0.20 | $0.02 | $0.25 | $1.20 | $0.40 | $0.04 | $0.50 | $1.80 |",
+      "extracto_sha256": "5ad10aabe2ef5d06b871b1b889909cec09252e13543c9335da695c78001323a6"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-6-luna",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-6-luna | $0.10 | $0.01 | $0.125 | $0.50 | $0.20 | $0.02 | $0.25 | $0.75 |",
+          "extracto_sha256": "51290fad4a5eb2c0504a6e1a9ec6c7ce938ffec2e72d9ccb03cdfd37dde1ef9f",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.1",
+        "entrada_cache_lectura_por_millon": "0.01",
+        "entrada_cache_escritura_por_millon": "0.125",
+        "salida_por_millon": "0.5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-6-luna | $0.10 | $0.01 | $0.125 | $0.50 | $0.20 | $0.02 | $0.25 | $0.75 |",
+      "extracto_sha256": "51290fad4a5eb2c0504a6e1a9ec6c7ce938ffec2e72d9ccb03cdfd37dde1ef9f"
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-6.1-sol",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "url_final": "https://developers.openai.com/api/docs/pricing.md",
+          "http_status": 200,
+          "bytes": 22631,
+          "sha256": "0d9fb6b240209bb7b5a05d1d6ce0b8a796e0924b7e34c5ab183a3f1f890febe6",
+          "encontrado": true,
+          "extracto": "| gpt-6.1-sol | $2.00 | $0.10 | $2.50 | $10.00 | $4.00 | $0.20 | $5.00 | $15.00 |",
+          "extracto_sha256": "5cae5129c8f84b565de1eb692099958f17ff6969904bb4f44e053fb05ac89dc9",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2",
+        "entrada_cache_lectura_por_millon": "0.1",
+        "entrada_cache_escritura_por_millon": "2.5",
+        "salida_por_millon": "10"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| gpt-6.1-sol | $2.00 | $0.10 | $2.50 | $10.00 | $4.00 | $0.20 | $5.00 | $15.00 |",
+      "extracto_sha256": "5cae5129c8f84b565de1eb692099958f17ff6969904bb4f44e053fb05ac89dc9"
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-haiku-4-5-20251001",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 47954,
+          "sha256": "245b5d0472659075015551126902de479990475fa61deb58c5fc20ef5e51a909",
+          "encontrado": true,
+          "extracto": "| Claude Haiku 4.5 | $1 / MTok | $1.25 / MTok | $2 / MTok | $0.10 / MTok | $5 / MTok |",
+          "extracto_sha256": "be26c3c58c2fcfea5f47ef9031d0b3859396faf75b2e834e304893c8218021d2",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "1",
+        "entrada_cache_lectura_por_millon": "0.1",
+        "entrada_cache_escritura_por_millon": "1.25",
+        "salida_por_millon": "5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Haiku 4.5 | $1 / MTok | $1.25 / MTok | $2 / MTok | $0.10 / MTok | $5 / MTok |",
+      "extracto_sha256": "be26c3c58c2fcfea5f47ef9031d0b3859396faf75b2e834e304893c8218021d2"
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 47954,
+          "sha256": "245b5d0472659075015551126902de479990475fa61deb58c5fc20ef5e51a909",
+          "encontrado": true,
+          "extracto": "| Claude Sonnet 5 | $2 / MTok<sup>3</sup> | $2.50 / MTok | $4 / MTok | $0.20 / MTok | $10 / MTok<sup>3</sup> |",
+          "extracto_sha256": "53ae2ccea148779d81f0e294e9c2e05bd14065769d0cecde2ea96af94baa7094",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2",
+        "entrada_cache_lectura_por_millon": "0.2",
+        "entrada_cache_escritura_por_millon": "2.5",
+        "salida_por_millon": "10"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Sonnet 5 | $2 / MTok<sup>3</sup> | $2.50 / MTok | $4 / MTok | $0.20 / MTok | $10 / MTok<sup>3</sup> |",
+      "extracto_sha256": "53ae2ccea148779d81f0e294e9c2e05bd14065769d0cecde2ea96af94baa7094"
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 47954,
+          "sha256": "245b5d0472659075015551126902de479990475fa61deb58c5fc20ef5e51a909",
+          "encontrado": true,
+          "extracto": "| Claude Sonnet 5.5 | $2 / MTok | $2.50 / MTok | $4 / MTok | $0.20 / MTok | $10 / MTok |",
+          "extracto_sha256": "24c625f771d34d8497de98639d8593b808918e97824f258d168754c5bea78df5",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2",
+        "entrada_cache_lectura_por_millon": "0.2",
+        "entrada_cache_escritura_por_millon": "2.5",
+        "salida_por_millon": "10"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Sonnet 5.5 | $2 / MTok | $2.50 / MTok | $4 / MTok | $0.20 / MTok | $10 / MTok |",
+      "extracto_sha256": "24c625f771d34d8497de98639d8593b808918e97824f258d168754c5bea78df5"
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-opus-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 47954,
+          "sha256": "245b5d0472659075015551126902de479990475fa61deb58c5fc20ef5e51a909",
+          "encontrado": true,
+          "extracto": "| Claude Opus 5 | $5 / MTok | $6.25 / MTok | $10 / MTok | $0.50 / MTok | $25 / MTok |",
+          "extracto_sha256": "309f511372655bd0fcffb1b5fddaa2fca46913af5c14b952e0b2d1e89f56f370",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "5",
+        "entrada_cache_lectura_por_millon": "0.5",
+        "entrada_cache_escritura_por_millon": "6.25",
+        "salida_por_millon": "25"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Opus 5 | $5 / MTok | $6.25 / MTok | $10 / MTok | $0.50 / MTok | $25 / MTok |",
+      "extracto_sha256": "309f511372655bd0fcffb1b5fddaa2fca46913af5c14b952e0b2d1e89f56f370"
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-opus-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 47954,
+          "sha256": "245b5d0472659075015551126902de479990475fa61deb58c5fc20ef5e51a909",
+          "encontrado": true,
+          "extracto": "| Claude Opus 5.5 | $4 / MTok | $5 / MTok | $8 / MTok | $0.20 / MTok<sup>2</sup> | $20 / MTok |",
+          "extracto_sha256": "a5f81ea0e73dba52bbfa437c7582953433cf9640226abe333f37964dd6da9a77",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "4",
+        "entrada_cache_lectura_por_millon": "0.2",
+        "entrada_cache_escritura_por_millon": "5",
+        "salida_por_millon": "20"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Opus 5.5 | $4 / MTok | $5 / MTok | $8 / MTok | $0.20 / MTok<sup>2</sup> | $20 / MTok |",
+      "extracto_sha256": "a5f81ea0e73dba52bbfa437c7582953433cf9640226abe333f37964dd6da9a77"
+    },
+    {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://api-docs.deepseek.com/quick_start/pricing",
+          "url_final": "https://api-docs.deepseek.com/quick_start/pricing/",
+          "http_status": 200,
+          "bytes": 23982,
+          "sha256": "210f102275ccf1a6542f08a3bc9e4b4c7c83278cb74b35217bffa112df6363b2",
+          "encontrado": true,
+          "extracto": "1M INPUT TOKENS (CACHE HIT) OFF-PEAK $0.003 $0.022 PEAK $0.006 $0.044 1M INPUT TOKENS (CACHE MISS) OFF-PEAK $0.15 $0.66 PEAK $0.3 $1.32 1M OUTPUT TOKENS OFF-PEAK $0.6 $1.98 PEAK $1.2 $3.96",
+          "extracto_sha256": "a82e4b6e1a3dcf461a9d359f3f1b04e83325da5921891f6695d56894e1a3159c",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.3",
+        "entrada_cache_lectura_por_millon": "0.006",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "1.2"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "1M INPUT TOKENS (CACHE HIT) OFF-PEAK $0.003 $0.022 PEAK $0.006 $0.044 1M INPUT TOKENS (CACHE MISS) OFF-PEAK $0.15 $0.66 PEAK $0.3 $1.32 1M OUTPUT TOKENS OFF-PEAK $0.6 $1.98 PEAK $1.2 $3.96",
+      "extracto_sha256": "a82e4b6e1a3dcf461a9d359f3f1b04e83325da5921891f6695d56894e1a3159c"
+    },
+    {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-v4-pro",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://api-docs.deepseek.com/quick_start/pricing",
+          "url_final": "https://api-docs.deepseek.com/quick_start/pricing/",
+          "http_status": 200,
+          "bytes": 23982,
+          "sha256": "210f102275ccf1a6542f08a3bc9e4b4c7c83278cb74b35217bffa112df6363b2",
+          "encontrado": true,
+          "extracto": "1M INPUT TOKENS (CACHE HIT) OFF-PEAK $0.003 $0.022 PEAK $0.006 $0.044 1M INPUT TOKENS (CACHE MISS) OFF-PEAK $0.15 $0.66 PEAK $0.3 $1.32 1M OUTPUT TOKENS OFF-PEAK $0.6 $1.98 PEAK $1.2 $3.96",
+          "extracto_sha256": "a82e4b6e1a3dcf461a9d359f3f1b04e83325da5921891f6695d56894e1a3159c",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "1.32",
+        "entrada_cache_lectura_por_millon": "0.044",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "3.96"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "1M INPUT TOKENS (CACHE HIT) OFF-PEAK $0.003 $0.022 PEAK $0.006 $0.044 1M INPUT TOKENS (CACHE MISS) OFF-PEAK $0.15 $0.66 PEAK $0.3 $1.32 1M OUTPUT TOKENS OFF-PEAK $0.6 $1.98 PEAK $1.2 $3.96",
+      "extracto_sha256": "a82e4b6e1a3dcf461a9d359f3f1b04e83325da5921891f6695d56894e1a3159c"
+    },
+    {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-chat",
+      "tipo": "retiro",
+      "paginas": [
+        {
+          "url": "https://api-docs.deepseek.com/updates",
+          "url_final": "https://api-docs.deepseek.com/updates/",
+          "http_status": 200,
+          "bytes": 48079,
+          "sha256": "2922113bc4e0e970fa6d3c4065c3cff3ec661a4db03d671cc2310545c5b5bb71",
+          "encontrado": true,
+          "extracto": "The two legacy API model names, deepseek-chat and deepseek-reasoner , will be discontinued in three months (2026-07-24).",
+          "extracto_sha256": "56de47b5e95d1d5116351d554c79756db5ac10436ec926fa107fb6ea42dbb94e",
+          "motivo": null
+        }
+      ],
+      "precios": null,
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "no_verificada",
+      "motivo": "retirado_segun_pagina_oficial: cierre 2026-07-24",
+      "extracto": "The two legacy API model names, deepseek-chat and deepseek-reasoner , will be discontinued in three months (2026-07-24).",
+      "extracto_sha256": "56de47b5e95d1d5116351d554c79756db5ac10436ec926fa107fb6ea42dbb94e"
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "openai/gpt-oss-120b",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/models",
+          "url_final": "https://console.groq.com/docs/models",
+          "http_status": 200,
+          "bytes": 369843,
+          "sha256": "04681995056c69c4a97855b00cd88d8eeea0fe31b1da8bb6281667ff1353ef8f",
+          "encontrado": true,
+          "extracto": "openai/gpt-oss-120b 500 $0.15 input $0.60 output",
+          "extracto_sha256": "7006ad1a058fb124fe4399c8568822ad52f90574445a28744f73668abf42d619",
+          "motivo": null
+        },
+        {
+          "url": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+          "url_final": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+          "http_status": 200,
+          "bytes": 351671,
+          "sha256": "6c5ed020d78acaf2cfe963e95db0913e479c5d0336e59515079490cf08323167",
+          "encontrado": true,
+          "extracto": "PRICING Input $0.15 6.7M / $1 Cached Input $0.075 13M / $1 Output $0.60",
+          "extracto_sha256": "fe76896cf2017621437b039102df34d71ef039b359de19f13c933cb3f947cebd",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.15",
+        "entrada_cache_lectura_por_millon": "0.075",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "0.6"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "openai/gpt-oss-120b 500 $0.15 input $0.60 output | PRICING Input $0.15 6.7M / $1 Cached Input $0.075 13M / $1 Output $0.60",
+      "extracto_sha256": "aac0bc975a47410273fdc9ae66b1fc5913aa26982cb46f90722afa0679b9dcac"
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "openai/gpt-oss-20b",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/models",
+          "url_final": "https://console.groq.com/docs/models",
+          "http_status": 200,
+          "bytes": 369843,
+          "sha256": "04681995056c69c4a97855b00cd88d8eeea0fe31b1da8bb6281667ff1353ef8f",
+          "encontrado": true,
+          "extracto": "openai/gpt-oss-20b 1000 $0.075 input $0.30 output",
+          "extracto_sha256": "4c5aa283428563c50fb5612528a50c10f3981efc01b31a438780a13819548715",
+          "motivo": null
+        },
+        {
+          "url": "https://console.groq.com/docs/model/openai/gpt-oss-20b",
+          "url_final": "https://console.groq.com/docs/model/openai/gpt-oss-20b",
+          "http_status": 200,
+          "bytes": 351397,
+          "sha256": "522243a7baa59b0d7da9019514ead9762689e0fd16ac83ba663f72586fb7c74e",
+          "encontrado": true,
+          "extracto": "PRICING Input $0.075 13M / $1 Cached Input $0.037 27M / $1 Output $0.30",
+          "extracto_sha256": "accfc43d04b9fafb74967f0e5ef88120b45ffc2aad9ed2eba0d0760346c52366",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.075",
+        "entrada_cache_lectura_por_millon": "0.037",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "0.3"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "openai/gpt-oss-20b 1000 $0.075 input $0.30 output | PRICING Input $0.075 13M / $1 Cached Input $0.037 27M / $1 Output $0.30",
+      "extracto_sha256": "ac57952021ed130085c26e796c75abe690886ea6515432b375cfc8972194629d"
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "qwen/qwen3.8-27b",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/models",
+          "url_final": "https://console.groq.com/docs/models",
+          "http_status": 200,
+          "bytes": 369843,
+          "sha256": "04681995056c69c4a97855b00cd88d8eeea0fe31b1da8bb6281667ff1353ef8f",
+          "encontrado": true,
+          "extracto": "qwen/qwen3.8-27b 450 $0.80 input $4.00 output",
+          "extracto_sha256": "b1c14be5aa58c899d7aee8973266d3aa2cba9905388a9e5997ad47ae50ed9fa7",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.8",
+        "entrada_cache_lectura_por_millon": null,
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "4"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "qwen/qwen3.8-27b 450 $0.80 input $4.00 output",
+      "extracto_sha256": "b1c14be5aa58c899d7aee8973266d3aa2cba9905388a9e5997ad47ae50ed9fa7"
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "llama-3.3-70b-versatile",
+      "tipo": "retiro",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/deprecations",
+          "url_final": "https://console.groq.com/docs/deprecations",
+          "http_status": 200,
+          "bytes": 505774,
+          "sha256": "594256856e50a389bb8efc9a393d2e5bd03f68493d9049bdf519c45608361623",
+          "encontrado": true,
+          "extracto": "llama-3.3-70b-versatile 08/16/26 openai/gpt-oss-120b",
+          "extracto_sha256": "5cf2ec3ea1218b5f78e32fd8fb7f4fa87222ee48e4bd4759ff6f4d5eb579c3a2",
+          "motivo": null
+        }
+      ],
+      "precios": null,
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "no_verificada",
+      "motivo": "retirado_segun_pagina_oficial: cierre 08/16/26",
+      "extracto": "llama-3.3-70b-versatile 08/16/26 openai/gpt-oss-120b",
+      "extracto_sha256": "5cf2ec3ea1218b5f78e32fd8fb7f4fa87222ee48e4bd4759ff6f4d5eb579c3a2"
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "llama-3.1-8b-instant",
+      "tipo": "retiro",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/deprecations",
+          "url_final": "https://console.groq.com/docs/deprecations",
+          "http_status": 200,
+          "bytes": 505774,
+          "sha256": "594256856e50a389bb8efc9a393d2e5bd03f68493d9049bdf519c45608361623",
+          "encontrado": true,
+          "extracto": "llama-3.1-8b-instant 08/16/26 openai/gpt-oss-20b",
+          "extracto_sha256": "518f2c91a0cb029d2e1115c543322f2ed6b46364ddc37e0b45151e8310af0833",
+          "motivo": null
+        }
+      ],
+      "precios": null,
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "no_verificada",
+      "motivo": "retirado_segun_pagina_oficial: cierre 08/16/26",
+      "extracto": "llama-3.1-8b-instant 08/16/26 openai/gpt-oss-20b",
+      "extracto_sha256": "518f2c91a0cb029d2e1115c543322f2ed6b46364ddc37e0b45151e8310af0833"
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.5-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "url_final": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "http_status": 200,
+          "bytes": 82230,
+          "sha256": "d316bc4b2e4c427e412e74efdd239dd019092c8479c9a6a20ad35c9e59545ed5",
+          "encontrado": true,
+          "extracto": "| Input price | Free of charge | $1.50 | || | Output price (including thinking tokens) | Free of charge | $9.00 | || | Context caching price | Free of charge | $0.15 $1.00 / 1,000,000 tokens per hour (storage price) |",
+          "extracto_sha256": "60fd84dfc6a5205d4a6d518338325e988cac839f3552f2bbdfc47e30ca406891",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "1.5",
+        "entrada_cache_lectura_por_millon": "0.15",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "9"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Input price | Free of charge | $1.50 | || | Output price (including thinking tokens) | Free of charge | $9.00 | || | Context caching price | Free of charge | $0.15 $1.00 / 1,000,000 tokens per hour (storage price) |",
+      "extracto_sha256": "60fd84dfc6a5205d4a6d518338325e988cac839f3552f2bbdfc47e30ca406891"
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.8-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "url_final": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "http_status": 200,
+          "bytes": 82230,
+          "sha256": "d316bc4b2e4c427e412e74efdd239dd019092c8479c9a6a20ad35c9e59545ed5",
+          "encontrado": true,
+          "extracto": "| Input price | Free of charge | $0.75 through December 31, 2026. $1.50 starting January 1, 2027. | || | Output price (including thinking tokens) | Free of charge | $3.75 through December 31, 2026. $7.50 starting January 1, 2027. | || | Context caching price | Free of charge | $0.075 through December 31, 2026. $0.15 starting January 1, 2027. $0.50 / 1,000,000 tokens per hour (storage price) through December 31, 2026. $1.00 / 1,000,000 tokens per hour (storage price) starting January 1, 2027. |",
+          "extracto_sha256": "9ee5d77932d7a01b27becb14a81429865dc9ef4709434ec85a63a8ea56cb7933",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.75",
+        "entrada_cache_lectura_por_millon": "0.075",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "3.75"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Input price | Free of charge | $0.75 through December 31, 2026. $1.50 starting January 1, 2027. | || | Output price (including thinking tokens) | Free of charge | $3.75 through December 31, 2026. $7.50 starting January 1, 2027. | || | Context caching price | Free of charge | $0.075 through December 31, 2026. $0.15 starting January 1, 2027. $0.50 / 1,000,000 tokens per hour (storage price) through December 31, 2026. $1.00 / 1,000,000 tokens per hour (storage price) starting January 1, 2027. |",
+      "extracto_sha256": "9ee5d77932d7a01b27becb14a81429865dc9ef4709434ec85a63a8ea56cb7933"
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.1-pro-preview",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "url_final": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "http_status": 200,
+          "bytes": 82230,
+          "sha256": "d316bc4b2e4c427e412e74efdd239dd019092c8479c9a6a20ad35c9e59545ed5",
+          "encontrado": true,
+          "extracto": "| Input price | Not available | $2.00, prompts \\<= 200k tokens $4.00, prompts \\> 200k tokens | || | Output price (including thinking tokens) | Not available | $12.00, prompts \\<= 200k tokens $18.00, prompts \\> 200k | || | Context caching price | Not available | $0.20, prompts \\<= 200k tokens $0.40, prompts \\> 200k $4.50 / 1,000,000 tokens per hour (storage price) |",
+          "extracto_sha256": "1315d130e1d625f23931a99b5c8eb5a40792d0a692c26d6440379d0192a81e6d",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "2",
+        "entrada_cache_lectura_por_millon": "0.2",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "12"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Input price | Not available | $2.00, prompts \\<= 200k tokens $4.00, prompts \\> 200k tokens | || | Output price (including thinking tokens) | Not available | $12.00, prompts \\<= 200k tokens $18.00, prompts \\> 200k | || | Context caching price | Not available | $0.20, prompts \\<= 200k tokens $0.40, prompts \\> 200k $4.50 / 1,000,000 tokens per hour (storage price) |",
+      "extracto_sha256": "1315d130e1d625f23931a99b5c8eb5a40792d0a692c26d6440379d0192a81e6d"
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-2.5-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "url_final": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "http_status": 200,
+          "bytes": 82230,
+          "sha256": "d316bc4b2e4c427e412e74efdd239dd019092c8479c9a6a20ad35c9e59545ed5",
+          "encontrado": true,
+          "extracto": "| Input price | Free of charge | $0.30 (text / image / video) $1.00 (audio) | || | Output price (including thinking tokens) | Free of charge | $2.50 | || | Context caching price | Not available | $0.03 (text / image / video) $0.1 (audio) $1.00 / 1,000,000 tokens per hour (storage price) |",
+          "extracto_sha256": "74bf161745f868d884f161b1d07628db2a2a96d54ec494e4f38f899e3c6b158e",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.3",
+        "entrada_cache_lectura_por_millon": "0.03",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "2.5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Input price | Free of charge | $0.30 (text / image / video) $1.00 (audio) | || | Output price (including thinking tokens) | Free of charge | $2.50 | || | Context caching price | Not available | $0.03 (text / image / video) $0.1 (audio) $1.00 / 1,000,000 tokens per hour (storage price) |",
+      "extracto_sha256": "74bf161745f868d884f161b1d07628db2a2a96d54ec494e4f38f899e3c6b158e"
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.5-flash-lite",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "url_final": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "http_status": 200,
+          "bytes": 82230,
+          "sha256": "d316bc4b2e4c427e412e74efdd239dd019092c8479c9a6a20ad35c9e59545ed5",
+          "encontrado": true,
+          "extracto": "| Input price | Free of charge | $0.30 (text / image / video / audio) | || | Output price (including thinking tokens) | Free of charge | $2.50 | || | Context caching price | Not available | $0.03 $1.00 / 1,000,000 tokens per hour (storage price) |",
+          "extracto_sha256": "00260168aa3925a546854e6d071d1be8da562304ecb6c7891154bb73769e2f99",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.3",
+        "entrada_cache_lectura_por_millon": "0.03",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "2.5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Input price | Free of charge | $0.30 (text / image / video / audio) | || | Output price (including thinking tokens) | Free of charge | $2.50 | || | Context caching price | Not available | $0.03 $1.00 / 1,000,000 tokens per hour (storage price) |",
+      "extracto_sha256": "00260168aa3925a546854e6d071d1be8da562304ecb6c7891154bb73769e2f99"
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.1-flash-lite",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "url_final": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "http_status": 200,
+          "bytes": 82230,
+          "sha256": "d316bc4b2e4c427e412e74efdd239dd019092c8479c9a6a20ad35c9e59545ed5",
+          "encontrado": true,
+          "extracto": "| Input price | Free of charge | $0.25 (text / image / video) $0.50 (audio) | || | Output price (including thinking tokens) | Free of charge | $1.50 | || | Context caching price | Not available | $0.025 (text / image / video) $0.05 (audio) $1.00 / 1,000,000 tokens per hour (storage price) |",
+          "extracto_sha256": "c5a0b30efe348510a7affe1862efbb48c18af01479808361d153aaade40b4ca6",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.25",
+        "entrada_cache_lectura_por_millon": "0.025",
+        "entrada_cache_escritura_por_millon": null,
+        "salida_por_millon": "1.5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Input price | Free of charge | $0.25 (text / image / video) $0.50 (audio) | || | Output price (including thinking tokens) | Free of charge | $1.50 | || | Context caching price | Not available | $0.025 (text / image / video) $0.05 (audio) $1.00 / 1,000,000 tokens per hour (storage price) |",
+      "extracto_sha256": "c5a0b30efe348510a7affe1862efbb48c18af01479808361d153aaade40b4ca6"
+    }
+  ]
+}

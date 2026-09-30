@@ -1,0 +1,3709 @@
+{
+ "esquema": "mini-format/vectores-economia/1",
+ "descripcion": "Vectores dorados del calculo de economia. Entradas escritas a mano; las salidas son cadenas exactas. Los prueban tests/test_infra_economia.py (Python) y tests/test_economia_js.mjs (Node): ambas implementaciones deben coincidir EXACTAMENTE.",
+ "politica": {
+  "aritmetica": "racional exacta (enteros); sin float",
+  "redondeo": "ROUND_HALF_UP (empates hacia la mayor magnitud), una vez por cifra de salida",
+  "decimales": {
+   "usd": 6,
+   "usd_fino": 9,
+   "porcentaje": 4,
+   "razon": 6,
+   "lotes": 4,
+   "tokens": 0
+  },
+  "cantidades_contables": "hacia abajo (floor)"
+ },
+ "vectores": [
+  {
+   "id": "redondeo_limite_half_up",
+   "descripcion": "0.0000005 con 6 decimales sube a 0.000001 (ROUND_HALF_UP; el redondeo bancario daria 0.000000)",
+   "operacion": "redondear",
+   "entrada": {
+    "valor": "0.0000005",
+    "decimales": 6
+   },
+   "salida": "0.000001"
+  },
+  {
+   "id": "redondeo_limite_negativo",
+   "descripcion": "los empates negativos se van a la mayor magnitud",
+   "operacion": "redondear",
+   "entrada": {
+    "valor": "-0.0000005",
+    "decimales": 6
+   },
+   "salida": "-0.000001"
+  },
+  {
+   "id": "redondeo_sin_cero_negativo",
+   "descripcion": "-0.0000004 redondea a 0.000000 sin signo",
+   "operacion": "redondear",
+   "entrada": {
+    "valor": "-0.0000004",
+    "decimales": 6
+   },
+   "salida": "0.000000"
+  },
+  {
+   "id": "redondeo_pct_empate",
+   "descripcion": "12.34565 con 4 decimales -> 12.3457",
+   "operacion": "redondear",
+   "entrada": {
+    "valor": "12.34565",
+    "decimales": 4
+   },
+   "salida": "12.3457"
+  },
+  {
+   "id": "redondeo_pct_justo_debajo",
+   "descripcion": "12.345649999 con 4 decimales -> 12.3456",
+   "operacion": "redondear",
+   "entrada": {
+    "valor": "12.345649999",
+    "decimales": 4
+   },
+   "salida": "12.3456"
+  },
+  {
+   "id": "redondeo_entero",
+   "descripcion": "2.5 sin decimales -> 3 (no al par)",
+   "operacion": "redondear",
+   "entrada": {
+    "valor": "2.5",
+    "decimales": 0
+   },
+   "salida": "3"
+  },
+  {
+   "id": "razon_ahorro_normal",
+   "descripcion": "650 tokens .mini frente a 1000 JSON: r = 0.65, ahorro 35 %",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": 650,
+    "t_json": 1000
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "razon": "0.650000",
+    "ahorro_salida_pct": "35.0000",
+    "hay_ahorro": true
+   }
+  },
+  {
+   "id": "razon_periodica",
+   "descripcion": "1/3: la razon no es decimal exacta, se redondea una sola vez",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": 1,
+    "t_json": 3
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "razon": "0.333333",
+    "ahorro_salida_pct": "66.6667",
+    "hay_ahorro": true
+   }
+  },
+  {
+   "id": "razon_sin_ahorro",
+   "descripcion": ".mini mas largo que JSON: ahorro negativo y hay_ahorro=false",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": 1200,
+    "t_json": 1000
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "razon": "1.200000",
+    "ahorro_salida_pct": "-20.0000",
+    "hay_ahorro": false
+   }
+  },
+  {
+   "id": "razon_igual",
+   "descripcion": "mismos tokens: ahorro 0 y hay_ahorro=false",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": 1000,
+    "t_json": 1000
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "razon": "1.000000",
+    "ahorro_salida_pct": "0.0000",
+    "hay_ahorro": false
+   }
+  },
+  {
+   "id": "razon_json_cero",
+   "descripcion": "T_JSON = 0: razon no definida (None), nunca 0 ni infinito",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": 10,
+    "t_json": 0
+   },
+   "salida": {
+    "estado": "no_definido",
+    "motivo": "T_JSON = 0: la razón no está definida",
+    "razon": null,
+    "ahorro_salida_pct": null,
+    "hay_ahorro": null
+   }
+  },
+  {
+   "id": "razon_dato_faltante",
+   "descripcion": "T_MINI ausente: no definido",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": null,
+    "t_json": 100
+   },
+   "salida": {
+    "estado": "no_definido",
+    "motivo": "falta T_MINI o T_JSON",
+    "razon": null,
+    "ahorro_salida_pct": null,
+    "hay_ahorro": null
+   }
+  },
+  {
+   "id": "razon_limite_redondeo_pct",
+   "descripcion": "5/80 -> r=0.0625, ahorro 93.75; 4 decimales exactos",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": 5,
+    "t_json": 80
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "razon": "0.062500",
+    "ahorro_salida_pct": "93.7500",
+    "hay_ahorro": true
+   }
+  },
+  {
+   "id": "solicitud_categorias_sin_solape_razonamiento_incluido",
+   "descripcion": "razonamiento YA incluido en salida: no se cobra dos veces (categoria razonamiento = 0)",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s1",
+     "grupo": "s1",
+     "registros_solicitados": 10,
+     "registros_validos_finales": 10,
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "OpenAI",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 1000,
+        "entrada_cache_lectura": 500,
+        "entrada_cache_escritura": 0,
+        "salida": 300,
+        "razonamiento": 100,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s1",
+    "grupo": "s1",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gpt-5.4-mini",
+      "proveedor": "OpenAI",
+      "estado": "calculado",
+      "motivo": null,
+      "costo_usd": "0.002138",
+      "categorias": {
+       "entrada_sin_cache": "0.000750",
+       "entrada_cache_lectura": "0.000038",
+       "entrada_cache_escritura": "0.000000",
+       "salida": "0.001350",
+       "razonamiento": "0.000000",
+       "otros": "0.000000"
+      }
+     }
+    ],
+    "estado": "calculado",
+    "motivo": null,
+    "costo_usd": "0.002138",
+    "categorias": {
+     "entrada_sin_cache": "0.000750",
+     "entrada_cache_lectura": "0.000038",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.001350",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_razonamiento_aparte",
+   "descripcion": "razonamiento NO incluido en salida: se factura aparte al precio de salida",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s2",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "openai",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 1000,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 300,
+        "razonamiento": 100,
+        "razonamiento_incluido_en_salida": false
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s2",
+    "grupo": "s2",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gpt-5.4-mini",
+      "proveedor": "openai",
+      "estado": "calculado",
+      "motivo": null,
+      "costo_usd": "0.002550",
+      "categorias": {
+       "entrada_sin_cache": "0.000750",
+       "entrada_cache_lectura": "0.000000",
+       "entrada_cache_escritura": "0.000000",
+       "salida": "0.001350",
+       "razonamiento": "0.000450",
+       "otros": "0.000000"
+      }
+     }
+    ],
+    "estado": "calculado",
+    "motivo": null,
+    "costo_usd": "0.002550",
+    "categorias": {
+     "entrada_sin_cache": "0.000750",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.001350",
+     "razonamiento": "0.000450",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_cache_lectura_y_escritura",
+   "descripcion": "entrada sin cache, lectura y escritura de cache y salida, cada una a su precio, mas un cargo adicional",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s3",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "claude-sonnet-5-5",
+       "proveedor": "Anthropic",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 1000,
+        "entrada_cache_lectura": 4000,
+        "entrada_cache_escritura": 2000,
+        "salida": 500,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": false,
+        "otros_usd": {
+         "busqueda_web": "0.010000"
+        }
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "alias": [
+       "claude-sonnet-5-5-latest"
+      ],
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "2",
+      "entrada_cache_lectura_por_millon": "0.2",
+      "entrada_cache_escritura_por_millon": "2.5",
+      "salida_por_millon": "10",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s3",
+    "grupo": "s3",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "claude-sonnet-5-5",
+      "proveedor": "Anthropic",
+      "estado": "calculado",
+      "motivo": null,
+      "costo_usd": "0.022800",
+      "categorias": {
+       "entrada_sin_cache": "0.002000",
+       "entrada_cache_lectura": "0.000800",
+       "entrada_cache_escritura": "0.005000",
+       "salida": "0.005000",
+       "razonamiento": "0.000000",
+       "otros": "0.010000"
+      }
+     }
+    ],
+    "estado": "calculado",
+    "motivo": null,
+    "costo_usd": "0.022800",
+    "categorias": {
+     "entrada_sin_cache": "0.002000",
+     "entrada_cache_lectura": "0.000800",
+     "entrada_cache_escritura": "0.005000",
+     "salida": "0.005000",
+     "razonamiento": "0.000000",
+     "otros": "0.010000"
+    },
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_alias_de_modelo",
+   "descripcion": "la tarifa se encuentra tambien por alias",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s3b",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "claude-sonnet-5-5-latest",
+       "proveedor": "anthropic",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 1000,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 1000,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": false
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "alias": [
+       "claude-sonnet-5-5-latest"
+      ],
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "2",
+      "entrada_cache_lectura_por_millon": "0.2",
+      "entrada_cache_escritura_por_millon": "2.5",
+      "salida_por_millon": "10",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s3b",
+    "grupo": "s3b",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "claude-sonnet-5-5-latest",
+      "proveedor": "anthropic",
+      "estado": "calculado",
+      "motivo": null,
+      "costo_usd": "0.012000",
+      "categorias": {
+       "entrada_sin_cache": "0.002000",
+       "entrada_cache_lectura": "0.000000",
+       "entrada_cache_escritura": "0.000000",
+       "salida": "0.010000",
+       "razonamiento": "0.000000",
+       "otros": "0.000000"
+      }
+     }
+    ],
+    "estado": "calculado",
+    "motivo": null,
+    "costo_usd": "0.012000",
+    "categorias": {
+     "entrada_sin_cache": "0.002000",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.010000",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_tarifa_no_verificada",
+   "descripcion": "deepseek-chat figura no_verificada: costo None con motivo, no un precio inventado",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s4",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "deepseek-chat",
+       "proveedor": "DeepSeek",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 1000,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 500,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-chat",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": null,
+      "entrada_cache_lectura_por_millon": null,
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": null,
+      "estado": "no_verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     },
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s4",
+    "grupo": "s4",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "deepseek-chat",
+      "proveedor": "DeepSeek",
+      "estado": "tarifa_no_verificada",
+      "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+      "costo_usd": null,
+      "categorias": null
+     }
+    ],
+    "estado": "tarifa_no_verificada",
+    "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+    "costo_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_modelo_sin_tarifa",
+   "descripcion": "modelo que no esta en la lista de tarifas",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s5",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gemini-x",
+       "proveedor": "Google",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 10,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 10,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s5",
+    "grupo": "s5",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gemini-x",
+      "proveedor": "Google",
+      "estado": "tarifa_no_verificada",
+      "motivo": "tarifa no verificada: no hay tarifa para Google/gemini-x",
+      "costo_usd": null,
+      "categorias": null
+     }
+    ],
+    "estado": "tarifa_no_verificada",
+    "motivo": "tarifa no verificada: no hay tarifa para Google/gemini-x",
+    "costo_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_usage_no_informado",
+   "descripcion": "cache con precio publicado y usage null: no informado, no cero",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s6",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "OpenAI",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 100,
+        "entrada_cache_lectura": null,
+        "entrada_cache_escritura": null,
+        "salida": 50,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s6",
+    "grupo": "s6",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gpt-5.4-mini",
+      "proveedor": "OpenAI",
+      "estado": "usage_no_informado",
+      "motivo": "usage no informado: entrada_cache_lectura",
+      "costo_usd": null,
+      "categorias": null
+     }
+    ],
+    "estado": "usage_no_informado",
+    "motivo": "usage no informado: entrada_cache_lectura",
+    "costo_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_cache_escritura_sin_precio",
+   "descripcion": "escritura de cache usada pero la tarifa no tiene precio (OpenAI: '-')",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s7",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "OpenAI",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 100,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 40,
+        "salida": 50,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s7",
+    "grupo": "s7",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gpt-5.4-mini",
+      "proveedor": "OpenAI",
+      "estado": "tarifa_no_verificada",
+      "motivo": "tarifa no verificada: falta el precio de entrada_cache_escritura_por_millon y el intento usó 40 tokens",
+      "costo_usd": null,
+      "categorias": null
+     }
+    ],
+    "estado": "tarifa_no_verificada",
+    "motivo": "tarifa no verificada: falta el precio de entrada_cache_escritura_por_millon y el intento usó 40 tokens",
+    "costo_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_razonamiento_no_informado",
+   "descripcion": "razonamiento_incluido_en_salida=false sin conteo de razonamiento",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s8",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "OpenAI",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 100,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 50,
+        "razonamiento": null,
+        "razonamiento_incluido_en_salida": false
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s8",
+    "grupo": "s8",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gpt-5.4-mini",
+      "proveedor": "OpenAI",
+      "estado": "usage_no_informado",
+      "motivo": "usage no informado: razonamiento",
+      "costo_usd": null,
+      "categorias": null
+     }
+    ],
+    "estado": "usage_no_informado",
+    "motivo": "usage no informado: razonamiento",
+    "costo_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_razonamiento_ambiguo",
+   "descripcion": "hay tokens de razonamiento y no se declara si van dentro de salida",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s9",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "OpenAI",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 100,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 50,
+        "razonamiento": 20,
+        "razonamiento_incluido_en_salida": null
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s9",
+    "grupo": "s9",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "gpt-5.4-mini",
+      "proveedor": "OpenAI",
+      "estado": "usage_no_informado",
+      "motivo": "usage no informado: razonamiento_incluido_en_salida (hay tokens de razonamiento y no se sabe si ya están en salida)",
+      "costo_usd": null,
+      "categorias": null
+     }
+    ],
+    "estado": "usage_no_informado",
+    "motivo": "usage no informado: razonamiento_incluido_en_salida (hay tokens de razonamiento y no se sabe si ya están en salida)",
+    "costo_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_redondeo_en_el_limite",
+   "descripcion": "1 token de entrada a 0.5 USD/M = 0.0000005 -> 0.000001",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s10",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "m",
+       "proveedor": "X",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 1,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 0,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "X",
+      "modelo_api_id": "m",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.5",
+      "entrada_cache_lectura_por_millon": null,
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "1",
+      "estado": "verificada"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s10",
+    "grupo": "s10",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "m",
+      "proveedor": "X",
+      "estado": "calculado",
+      "motivo": null,
+      "costo_usd": "0.000001",
+      "categorias": {
+       "entrada_sin_cache": "0.000001",
+       "entrada_cache_lectura": "0.000000",
+       "entrada_cache_escritura": "0.000000",
+       "salida": "0.000000",
+       "razonamiento": "0.000000",
+       "otros": "0.000000"
+      }
+     }
+    ],
+    "estado": "calculado",
+    "motivo": null,
+    "costo_usd": "0.000001",
+    "categorias": {
+     "entrada_sin_cache": "0.000001",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.000000",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "solicitud_precio_cero_no_es_faltante",
+   "descripcion": "precio 0 verificado (gratis): cuesta 0, distinto de precio ausente",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "s11",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "m",
+       "proveedor": "X",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 100,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 100,
+        "razonamiento": 0,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "X",
+      "modelo_api_id": "m",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0",
+      "entrada_cache_lectura_por_millon": "0",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "0",
+      "estado": "verificada"
+     }
+    ]
+   },
+   "salida": {
+    "id": "s11",
+    "grupo": "s11",
+    "n_intentos": 1,
+    "intentos": [
+     {
+      "fase": "generacion",
+      "modelo": "m",
+      "proveedor": "X",
+      "estado": "calculado",
+      "motivo": null,
+      "costo_usd": "0.000000",
+      "categorias": {
+       "entrada_sin_cache": "0.000000",
+       "entrada_cache_lectura": "0.000000",
+       "entrada_cache_escritura": "0.000000",
+       "salida": "0.000000",
+       "razonamiento": "0.000000",
+       "otros": "0.000000"
+      }
+     }
+    ],
+    "estado": "calculado",
+    "motivo": null,
+    "costo_usd": "0.000000",
+    "categorias": {
+     "entrada_sin_cache": "0.000000",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.000000",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null
+   }
+  },
+  {
+   "id": "total_con_reparacion_en_la_misma_solicitud",
+   "descripcion": "la reparacion es un intento mas de la solicitud original: se suma y no se cuentan dos veces los validos",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "g1",
+      "grupo": "g1",
+      "registros_solicitados": 10,
+      "registros_validos_finales": 10,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 1000,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 400,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       },
+       {
+        "fase": "reparacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 300,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 60,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     },
+     {
+      "id": "g2",
+      "registros_solicitados": 10,
+      "registros_validos_finales": 8,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 1000,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 380,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 2,
+    "n_intentos": 3,
+    "grupos": [
+     {
+      "grupo": "g1",
+      "n_solicitudes": 1,
+      "n_intentos": 2,
+      "estado": "calculado",
+      "costo_usd": "0.003045",
+      "registros_solicitados": "10",
+      "registros_validos_finales": "10"
+     },
+     {
+      "grupo": "g2",
+      "n_solicitudes": 1,
+      "n_intentos": 1,
+      "estado": "calculado",
+      "costo_usd": "0.002460",
+      "registros_solicitados": "10",
+      "registros_validos_finales": "8"
+     }
+    ],
+    "registros_solicitados": "20",
+    "registros_validos_finales": "18",
+    "estado": "calculado",
+    "motivo": null,
+    "costo_total_usd": "0.005505",
+    "categorias": {
+     "entrada_sin_cache": "0.001725",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.003780",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null,
+    "costo_por_1000_validos": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_por_1000_validos_usd": "0.305833",
+     "costo_incurrido_usd": "0.005505"
+    }
+   }
+  },
+  {
+   "id": "total_reparacion_como_solicitud_aparte",
+   "descripcion": "la reparacion viene como otra solicitud del mismo grupo: manda el conteo de la ORIGINAL (id == grupo)",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "g1",
+      "grupo": "g1",
+      "registros_solicitados": 10,
+      "registros_validos_finales": 10,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 1000,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 400,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     },
+     {
+      "id": "g1-rep",
+      "grupo": "g1",
+      "registros_solicitados": 2,
+      "registros_validos_finales": 2,
+      "intentos": [
+       {
+        "fase": "reparacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 300,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 60,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 2,
+    "n_intentos": 2,
+    "grupos": [
+     {
+      "grupo": "g1",
+      "n_solicitudes": 2,
+      "n_intentos": 2,
+      "estado": "calculado",
+      "costo_usd": "0.003045",
+      "registros_solicitados": "10",
+      "registros_validos_finales": "10"
+     }
+    ],
+    "registros_solicitados": "10",
+    "registros_validos_finales": "10",
+    "estado": "calculado",
+    "motivo": null,
+    "costo_total_usd": "0.003045",
+    "categorias": {
+     "entrada_sin_cache": "0.000975",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.002070",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null,
+    "costo_por_1000_validos": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_por_1000_validos_usd": "0.304500",
+     "costo_incurrido_usd": "0.003045"
+    }
+   }
+  },
+  {
+   "id": "total_cero_validos",
+   "descripcion": "0 validos finales: costo por 1000 validos NO DEFINIDO (None) y se informa el costo incurrido, nunca 0",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "g9",
+      "registros_solicitados": 10,
+      "registros_validos_finales": 0,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 1000,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 400,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       },
+       {
+        "fase": "reparacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 300,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 60,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 1,
+    "n_intentos": 2,
+    "grupos": [
+     {
+      "grupo": "g9",
+      "n_solicitudes": 1,
+      "n_intentos": 2,
+      "estado": "calculado",
+      "costo_usd": "0.003045",
+      "registros_solicitados": "10",
+      "registros_validos_finales": "0"
+     }
+    ],
+    "registros_solicitados": "10",
+    "registros_validos_finales": "0",
+    "estado": "calculado",
+    "motivo": null,
+    "costo_total_usd": "0.003045",
+    "categorias": {
+     "entrada_sin_cache": "0.000975",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.002070",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null,
+    "costo_por_1000_validos": {
+     "estado": "no_definido",
+     "motivo": "0 registros válidos finales: el costo por 1000 válidos no está definido",
+     "costo_por_1000_validos_usd": null,
+     "costo_incurrido_usd": "0.003045"
+    }
+   }
+  },
+  {
+   "id": "total_validos_no_informados",
+   "descripcion": "registros_validos_finales ausente: no se asume 0",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "g10",
+      "registros_solicitados": 10,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 1000,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 400,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 1,
+    "n_intentos": 1,
+    "grupos": [
+     {
+      "grupo": "g10",
+      "n_solicitudes": 1,
+      "n_intentos": 1,
+      "estado": "calculado",
+      "costo_usd": "0.002550",
+      "registros_solicitados": "10",
+      "registros_validos_finales": null
+     }
+    ],
+    "registros_solicitados": "10",
+    "registros_validos_finales": null,
+    "estado": "calculado",
+    "motivo": null,
+    "costo_total_usd": "0.002550",
+    "categorias": {
+     "entrada_sin_cache": "0.000750",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.001800",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null,
+    "costo_por_1000_validos": {
+     "estado": "no_definido",
+     "motivo": "registros_validos_finales no informado",
+     "costo_por_1000_validos_usd": null,
+     "costo_incurrido_usd": "0.002550"
+    }
+   }
+  },
+  {
+   "id": "total_una_tarifa_no_verificada",
+   "descripcion": "un intento sin tarifa verificada: total None, costo parcial verificado aparte y por-1000 no definido",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "g2",
+      "registros_solicitados": 10,
+      "registros_validos_finales": 8,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "gpt-5.4-mini",
+        "proveedor": "OpenAI",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 1000,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 380,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     },
+     {
+      "id": "g3",
+      "registros_solicitados": 5,
+      "registros_validos_finales": 5,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "deepseek-chat",
+        "proveedor": "DeepSeek",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 500,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 200,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     },
+     {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-chat",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": null,
+      "entrada_cache_lectura_por_millon": null,
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": null,
+      "estado": "no_verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 2,
+    "n_intentos": 2,
+    "grupos": [
+     {
+      "grupo": "g2",
+      "n_solicitudes": 1,
+      "n_intentos": 1,
+      "estado": "calculado",
+      "costo_usd": "0.002460",
+      "registros_solicitados": "10",
+      "registros_validos_finales": "8"
+     },
+     {
+      "grupo": "g3",
+      "n_solicitudes": 1,
+      "n_intentos": 1,
+      "estado": "tarifa_no_verificada",
+      "costo_usd": null,
+      "registros_solicitados": "5",
+      "registros_validos_finales": "5"
+     }
+    ],
+    "registros_solicitados": "15",
+    "registros_validos_finales": "13",
+    "estado": "tarifa_no_verificada",
+    "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+    "costo_total_usd": null,
+    "categorias": null,
+    "costo_parcial_verificado_usd": "0.002460",
+    "costo_por_1000_validos": {
+     "estado": "no_definido",
+     "motivo": "el costo total no está calculado (tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada)",
+     "costo_por_1000_validos_usd": null,
+     "costo_incurrido_usd": null
+    }
+   }
+  },
+  {
+   "id": "total_proveedores_mezclados",
+   "descripcion": "dos proveedores, con cache, razonamiento aparte y otros cargos",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "a",
+      "registros_solicitados": 20,
+      "registros_validos_finales": 19,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "claude-sonnet-5-5",
+        "proveedor": "Anthropic",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 2000,
+         "entrada_cache_lectura": 8000,
+         "entrada_cache_escritura": 0,
+         "salida": 900,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": false,
+         "otros_usd": {
+          "busqueda_web": "0.010000"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "id": "b",
+      "registros_solicitados": 20,
+      "registros_validos_finales": 20,
+      "intentos": [
+       {
+        "fase": "generacion",
+        "modelo": "openai/gpt-oss-20b",
+        "proveedor": "Groq",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 2000,
+         "entrada_cache_lectura": 1000,
+         "entrada_cache_escritura": 0,
+         "salida": 1500,
+         "razonamiento": 300,
+         "razonamiento_incluido_en_salida": true
+        }
+       },
+       {
+        "fase": "validacion",
+        "modelo": "openai/gpt-oss-20b",
+        "proveedor": "Groq",
+        "latencia_s": "1.25",
+        "usage": {
+         "entrada_sin_cache": 100,
+         "entrada_cache_lectura": 0,
+         "entrada_cache_escritura": 0,
+         "salida": 10,
+         "razonamiento": 0,
+         "razonamiento_incluido_en_salida": true
+        }
+       }
+      ]
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "alias": [
+       "claude-sonnet-5-5-latest"
+      ],
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "2",
+      "entrada_cache_lectura_por_millon": "0.2",
+      "entrada_cache_escritura_por_millon": "2.5",
+      "salida_por_millon": "10",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     },
+     {
+      "proveedor": "Groq",
+      "modelo_api_id": "openai/gpt-oss-20b",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.075",
+      "entrada_cache_lectura_por_millon": "0.037",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "0.3",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 2,
+    "n_intentos": 3,
+    "grupos": [
+     {
+      "grupo": "a",
+      "n_solicitudes": 1,
+      "n_intentos": 1,
+      "estado": "calculado",
+      "costo_usd": "0.024600",
+      "registros_solicitados": "20",
+      "registros_validos_finales": "19"
+     },
+     {
+      "grupo": "b",
+      "n_solicitudes": 1,
+      "n_intentos": 2,
+      "estado": "calculado",
+      "costo_usd": "0.000648",
+      "registros_solicitados": "20",
+      "registros_validos_finales": "20"
+     }
+    ],
+    "registros_solicitados": "40",
+    "registros_validos_finales": "39",
+    "estado": "calculado",
+    "motivo": null,
+    "costo_total_usd": "0.025248",
+    "categorias": {
+     "entrada_sin_cache": "0.004158",
+     "entrada_cache_lectura": "0.001637",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.009453",
+     "razonamiento": "0.000000",
+     "otros": "0.010000"
+    },
+    "costo_parcial_verificado_usd": null,
+    "costo_por_1000_validos": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_por_1000_validos_usd": "0.647372",
+     "costo_incurrido_usd": "0.025248"
+    }
+   }
+  },
+  {
+   "id": "total_sin_solicitudes",
+   "descripcion": "lista vacia: costo 0 real (no hay gasto) y por-1000 no definido (0 validos)",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "salida": {
+    "moneda": "USD",
+    "n_solicitudes": 0,
+    "n_intentos": 0,
+    "grupos": [],
+    "registros_solicitados": "0",
+    "registros_validos_finales": "0",
+    "estado": "calculado",
+    "motivo": null,
+    "costo_total_usd": "0.000000",
+    "categorias": {
+     "entrada_sin_cache": "0.000000",
+     "entrada_cache_lectura": "0.000000",
+     "entrada_cache_escritura": "0.000000",
+     "salida": "0.000000",
+     "razonamiento": "0.000000",
+     "otros": "0.000000"
+    },
+    "costo_parcial_verificado_usd": null,
+    "costo_por_1000_validos": {
+     "estado": "no_definido",
+     "motivo": "0 registros válidos finales: el costo por 1000 válidos no está definido",
+     "costo_por_1000_validos_usd": null,
+     "costo_incurrido_usd": "0.000000"
+    }
+   }
+  },
+  {
+   "id": "por_1000_redondeo",
+   "descripcion": "1000 x costo / validos con un empate en el sexto decimal",
+   "operacion": "costo_por_1000_validos",
+   "entrada": {
+    "costo_total_usd": "0.0000125",
+    "registros_validos_finales": 2
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "costo_por_1000_validos_usd": "0.006250",
+    "costo_incurrido_usd": "0.000013"
+   }
+  },
+  {
+   "id": "por_1000_cero_validos",
+   "descripcion": "0 validos: no definido; se informa lo gastado",
+   "operacion": "costo_por_1000_validos",
+   "entrada": {
+    "costo_total_usd": "0.004600",
+    "registros_validos_finales": 0
+   },
+   "salida": {
+    "estado": "no_definido",
+    "motivo": "0 registros válidos finales: el costo por 1000 válidos no está definido",
+    "costo_por_1000_validos_usd": null,
+    "costo_incurrido_usd": "0.004600"
+   }
+  },
+  {
+   "id": "por_1000_costo_no_calculado",
+   "descripcion": "costo total None: no definido",
+   "operacion": "costo_por_1000_validos",
+   "entrada": {
+    "costo_total_usd": null,
+    "registros_validos_finales": 10
+   },
+   "salida": {
+    "estado": "no_definido",
+    "motivo": "el costo total no está calculado",
+    "costo_por_1000_validos_usd": null,
+    "costo_incurrido_usd": null
+   }
+  },
+  {
+   "id": "lote_json_25",
+   "descripcion": "costo por lote JSON con instruccion, salida y reintentos",
+   "operacion": "costo_lote",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "k": 25,
+    "perfil": {
+     "nombre": "JSON compacto",
+     "tokens_instruccion": 289,
+     "tokens_salida_por_registro": "40",
+     "tokens_salida_fijos": 6,
+     "reintentos_por_lote": "0.1",
+     "fraccion_reparada": "1",
+     "fraccion_validos": "0.96"
+    }
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "costo_lote_usd": "0.005218",
+    "entrada_usd": "0.000217",
+    "salida_usd": "0.004527",
+    "reintentos_usd": "0.000474",
+    "tokens_salida_por_lote": "1006.0000",
+    "registros_validos_por_lote": "24.0000"
+   }
+  },
+  {
+   "id": "lote_mini_25_instruccion_en_cache",
+   "descripcion": "la instruccion se lee de cache (precio de lectura)",
+   "operacion": "costo_lote",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "k": 25,
+    "perfil": {
+     "nombre": ".mini",
+     "tokens_instruccion": 416,
+     "tokens_salida_por_registro": "26",
+     "tokens_salida_fijos": 2,
+     "reintentos_por_lote": "0.05",
+     "fraccion_reparada": "0.1",
+     "fraccion_validos": "0.99",
+     "instruccion_en_cache": true
+    }
+   },
+   "salida": {
+    "estado": "calculado",
+    "motivo": null,
+    "costo_lote_usd": "0.002981",
+    "entrada_usd": "0.000031",
+    "salida_usd": "0.002934",
+    "reintentos_usd": "0.000016",
+    "tokens_salida_por_lote": "652.0000",
+    "registros_validos_por_lote": "24.7500"
+   }
+  },
+  {
+   "id": "lote_sin_precio_de_salida",
+   "descripcion": "salida con tokens y sin precio: tarifa no verificada",
+   "operacion": "costo_lote",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Groq",
+     "modelo_api_id": "sin-precio-salida",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.075",
+     "entrada_cache_lectura_por_millon": "0.037",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": null,
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "k": 10,
+    "perfil": {
+     "nombre": ".mini",
+     "tokens_instruccion": 416,
+     "tokens_salida_por_registro": "26",
+     "tokens_salida_fijos": 2,
+     "reintentos_por_lote": "0.05",
+     "fraccion_reparada": "0.1",
+     "fraccion_validos": "0.99"
+    }
+   },
+   "salida": {
+    "estado": "tarifa_no_verificada",
+    "motivo": "tarifa no verificada: falta el precio de salida_por_millon",
+    "costo_lote_usd": null
+   }
+  },
+  {
+   "id": "lote_tarifa_no_verificada",
+   "descripcion": "estado no_verificada",
+   "operacion": "costo_lote",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "DeepSeek",
+     "modelo_api_id": "deepseek-chat",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": null,
+     "entrada_cache_lectura_por_millon": null,
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": null,
+     "estado": "no_verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "k": 10,
+    "perfil": {
+     "nombre": ".mini",
+     "tokens_instruccion": 416,
+     "tokens_salida_por_registro": "26",
+     "tokens_salida_fijos": 2,
+     "reintentos_por_lote": "0.05",
+     "fraccion_reparada": "0.1",
+     "fraccion_validos": "0.99"
+    }
+   },
+   "salida": {
+    "estado": "tarifa_no_verificada",
+    "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+    "costo_lote_usd": null
+   }
+  },
+  {
+   "id": "escenario_a_solo_salida",
+   "descripcion": "Con 1.000.000 de tokens JSON de salida como referencia: proyeccion segun la razon medida 650/1000",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 650,
+    "t_json": 1000
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "1000000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": "0.650000",
+    "tokens_mini_equivalentes": "650000",
+    "solo_salida": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_json_usd": "4.500000",
+     "costo_mini_usd": "2.925000",
+     "ahorro_usd": "1.575000",
+     "ahorro_pct": "35.0000",
+     "hay_ahorro": true
+    },
+    "total": null,
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_a_razon_periodica",
+   "descripcion": "razon 1/3 con precio no divisible: un unico redondeo",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Anthropic",
+     "modelo_api_id": "claude-sonnet-5-5",
+     "alias": [
+      "claude-sonnet-5-5-latest"
+     ],
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "2",
+     "entrada_cache_lectura_por_millon": "0.2",
+     "entrada_cache_escritura_por_millon": "2.5",
+     "salida_por_millon": "10",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 1,
+    "t_json": 3
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "1000000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": "0.333333",
+    "tokens_mini_equivalentes": "333333",
+    "solo_salida": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_json_usd": "10.000000",
+     "costo_mini_usd": "3.333333",
+     "ahorro_usd": "6.666667",
+     "ahorro_pct": "66.6667",
+     "hay_ahorro": true
+    },
+    "total": null,
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_a_sin_ahorro",
+   "descripcion": ".mini mas largo: la proyeccion muestra sobrecosto y hay_ahorro=false",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 1200,
+    "t_json": 1000
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "1000000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": "1.200000",
+    "tokens_mini_equivalentes": "1200000",
+    "solo_salida": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_json_usd": "4.500000",
+     "costo_mini_usd": "5.400000",
+     "ahorro_usd": "-0.900000",
+     "ahorro_pct": "-20.0000",
+     "hay_ahorro": false
+    },
+    "total": null,
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_a_total_con_instruccion_y_reintentos",
+   "descripcion": "variante total: lotes equivalentes, instruccion, entrada y reintentos",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 652,
+    "t_json": 1006,
+    "total": {
+     "k": 25,
+     "perfil_json": {
+      "nombre": "JSON compacto",
+      "tokens_instruccion": 289,
+      "tokens_salida_por_registro": "40",
+      "tokens_salida_fijos": 6,
+      "reintentos_por_lote": "0.1",
+      "fraccion_reparada": "1",
+      "fraccion_validos": "0.96"
+     },
+     "perfil_mini": {
+      "nombre": ".mini",
+      "tokens_instruccion": 416,
+      "tokens_salida_por_registro": "26",
+      "tokens_salida_fijos": 2,
+      "reintentos_por_lote": "0.05",
+      "fraccion_reparada": "0.1",
+      "fraccion_validos": "0.99"
+     }
+    }
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "1000000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": "0.648111",
+    "tokens_mini_equivalentes": "648111",
+    "solo_salida": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_json_usd": "4.500000",
+     "costo_mini_usd": "2.916501",
+     "ahorro_usd": "1.583499",
+     "ahorro_pct": "35.1889",
+     "hay_ahorro": true
+    },
+    "total": {
+     "estado": "calculado",
+     "motivo": null,
+     "lotes_equivalentes": "994.0358",
+     "costo_json_usd": "5.187003",
+     "costo_mini_usd": "3.256730",
+     "ahorro_usd": "1.930273",
+     "ahorro_pct": "37.2137",
+     "hay_ahorro": true,
+     "razon_salida_implicita": "0.648111",
+     "k": "25.0000"
+    },
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_a_tarifa_no_verificada",
+   "descripcion": "sin tarifa verificada no hay costo",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "DeepSeek",
+     "modelo_api_id": "deepseek-chat",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": null,
+     "entrada_cache_lectura_por_millon": null,
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": null,
+     "estado": "no_verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 650,
+    "t_json": 1000
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "1000000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": "0.650000",
+    "tokens_mini_equivalentes": "650000",
+    "solo_salida": {
+     "estado": "tarifa_no_verificada",
+     "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+     "costo_json_usd": null,
+     "costo_mini_usd": null,
+     "ahorro_usd": null,
+     "ahorro_pct": null,
+     "hay_ahorro": null
+    },
+    "total": null,
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "no_verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_a_json_cero",
+   "descripcion": "sin tokens JSON medidos la razon no esta definida",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 10,
+    "t_json": 0
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "1000000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": null,
+    "tokens_mini_equivalentes": null,
+    "solo_salida": {
+     "estado": "no_definido",
+     "motivo": "T_JSON = 0: la razón no está definida",
+     "costo_json_usd": null,
+     "costo_mini_usd": null,
+     "ahorro_usd": null,
+     "ahorro_pct": null,
+     "hay_ahorro": null
+    },
+    "total": null,
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_a_referencia_personalizada",
+   "descripcion": "referencia de 250.000 tokens en vez de 1.000.000",
+   "operacion": "escenario_a",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Groq",
+     "modelo_api_id": "openai/gpt-oss-20b",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.075",
+     "entrada_cache_lectura_por_millon": "0.037",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "0.3",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "t_mini": 7,
+    "t_json": 9,
+    "tokens_json_referencia": 250000
+   },
+   "salida": {
+    "tipo": "proyeccion",
+    "aviso_es": "Proyección aritmética según la proporción medida; no es la respuesta real de un modelo con un millón de tokens.",
+    "aviso_en": "Arithmetic projection from the measured ratio; it is not the real response of a model producing one million tokens.",
+    "tokens_json_referencia": "250000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "razon": "0.777778",
+    "tokens_mini_equivalentes": "194444",
+    "solo_salida": {
+     "estado": "calculado",
+     "motivo": null,
+     "costo_json_usd": "0.075000",
+     "costo_mini_usd": "0.058333",
+     "ahorro_usd": "0.016667",
+     "ahorro_pct": "22.2222",
+     "hay_ahorro": true
+    },
+    "total": null,
+    "supuestos": {
+     "misma_tarifa_ambos_formatos": true,
+     "total_incluye": "entrada (instrucción y tarea), salida y reintentos por lote",
+     "solo_salida_incluye": "únicamente tokens de salida x precio de salida",
+     "mismo_trabajo": "los dos formatos producen los mismos registros (mismos lotes)",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_perfiles_1000_usd",
+   "descripcion": "Con US$ 1.000 ilustrativos: lotes y registros utiles por alternativa (JSON frente a .mini)",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "k": 25,
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "alternativas": [
+     {
+      "nombre": "JSON compacto",
+      "perfil": {
+       "nombre": "JSON compacto",
+       "tokens_instruccion": 289,
+       "tokens_salida_por_registro": "40",
+       "tokens_salida_fijos": 6,
+       "reintentos_por_lote": "0.1",
+       "fraccion_reparada": "1",
+       "fraccion_validos": "0.96"
+      }
+     },
+     {
+      "nombre": ".mini",
+      "perfil": {
+       "nombre": ".mini",
+       "tokens_instruccion": 416,
+       "tokens_salida_por_registro": "26",
+       "tokens_salida_fijos": 2,
+       "reintentos_por_lote": "0.05",
+       "fraccion_reparada": "0.1",
+       "fraccion_validos": "0.99"
+      }
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "1000.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "JSON compacto",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "25.0000",
+      "costo_lote_usd": "0.005218",
+      "tokens_salida_por_lote": "1006.0000",
+      "registros_validos_por_lote": "24.0000",
+      "lotes": "191639",
+      "registros_utiles": "4599336",
+      "tokens_salida_capacidad": "192788834",
+      "gasto_usd": "999.996257",
+      "sobrante_usd": "0.003743"
+     },
+     {
+      "nombre": ".mini",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "25.0000",
+      "costo_lote_usd": "0.003276",
+      "tokens_salida_por_lote": "652.0000",
+      "registros_validos_por_lote": "24.7500",
+      "lotes": "305225",
+      "registros_utiles": "7554318",
+      "tokens_salida_capacidad": "199006700",
+      "gasto_usd": "999.999511",
+      "sobrante_usd": "0.000489"
+     }
+    ],
+    "comparacion": [
+     {
+      "nombre": ".mini",
+      "referencia": "JSON compacto",
+      "diferencia_registros_utiles": "2954982",
+      "registros_utiles_vs_referencia_pct": "64.2480"
+     }
+    ],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_solo_salida",
+   "descripcion": "variante solo salida: sin instruccion, entrada ni reintentos; el mismo presupuesto rinde mas lotes",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "k": 25,
+    "variante": "solo_salida",
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "alternativas": [
+     {
+      "nombre": "JSON compacto",
+      "perfil": {
+       "nombre": "JSON compacto",
+       "tokens_instruccion": 289,
+       "tokens_salida_por_registro": "40",
+       "tokens_salida_fijos": 6,
+       "reintentos_por_lote": "0.1",
+       "fraccion_reparada": "1",
+       "fraccion_validos": "0.96"
+      }
+     },
+     {
+      "nombre": ".mini",
+      "perfil": {
+       "nombre": ".mini",
+       "tokens_instruccion": 416,
+       "tokens_salida_por_registro": "26",
+       "tokens_salida_fijos": 2,
+       "reintentos_por_lote": "0.05",
+       "fraccion_reparada": "0.1",
+       "fraccion_validos": "0.99"
+      }
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "1000.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "solo_salida",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "JSON compacto",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "25.0000",
+      "costo_lote_usd": "0.004527",
+      "tokens_salida_por_lote": "1006.0000",
+      "registros_validos_por_lote": "24.0000",
+      "lotes": "220896",
+      "registros_utiles": "5301504",
+      "tokens_salida_capacidad": "222221376",
+      "gasto_usd": "999.996192",
+      "sobrante_usd": "0.003808"
+     },
+     {
+      "nombre": ".mini",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "25.0000",
+      "costo_lote_usd": "0.002934",
+      "tokens_salida_por_lote": "652.0000",
+      "registros_validos_por_lote": "24.7500",
+      "lotes": "340831",
+      "registros_utiles": "8435567",
+      "tokens_salida_capacidad": "222221812",
+      "gasto_usd": "999.998154",
+      "sobrante_usd": "0.001846"
+     }
+    ],
+    "comparacion": [
+     {
+      "nombre": ".mini",
+      "referencia": "JSON compacto",
+      "diferencia_registros_utiles": "3134063",
+      "registros_utiles_vs_referencia_pct": "59.1165"
+     }
+    ],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "únicamente tokens de salida x precio de salida (sin instrucción, entrada ni reintentos)"
+    }
+   }
+  },
+  {
+   "id": "error_b_solo_salida_con_costo_medido",
+   "descripcion": "un costo por lote medido no se puede separar en solo salida",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "variante": "solo_salida",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "costo_lote_usd": "0.5",
+      "registros_validos_por_lote": "10"
+     }
+    ]
+   },
+   "error": true
+  },
+  {
+   "id": "escenario_b_medido_explicito",
+   "descripcion": "alternativas con costo por lote y validos medidos (no derivados de perfiles)",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "alternativas": [
+     {
+      "nombre": "JSON",
+      "costo_lote_usd": "0.005218",
+      "tokens_salida_por_lote": "1006",
+      "registros_validos_por_lote": "24"
+     },
+     {
+      "nombre": ".mini",
+      "costo_lote_usd": "0.003276",
+      "tokens_salida_por_lote": "652",
+      "registros_validos_por_lote": "24.75"
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "1000.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "JSON",
+      "estado": "calculado",
+      "motivo": null,
+      "k": null,
+      "costo_lote_usd": "0.005218",
+      "tokens_salida_por_lote": "1006.0000",
+      "registros_validos_por_lote": "24.0000",
+      "lotes": "191644",
+      "registros_utiles": "4599456",
+      "tokens_salida_capacidad": "192793864",
+      "gasto_usd": "999.998392",
+      "sobrante_usd": "0.001608"
+     },
+     {
+      "nombre": ".mini",
+      "estado": "calculado",
+      "motivo": null,
+      "k": null,
+      "costo_lote_usd": "0.003276",
+      "tokens_salida_por_lote": "652.0000",
+      "registros_validos_por_lote": "24.7500",
+      "lotes": "305250",
+      "registros_utiles": "7554937",
+      "tokens_salida_capacidad": "199023000",
+      "gasto_usd": "999.999000",
+      "sobrante_usd": "0.001000"
+     }
+    ],
+    "comparacion": [
+     {
+      "nombre": ".mini",
+      "referencia": "JSON",
+      "diferencia_registros_utiles": "2955481",
+      "registros_utiles_vs_referencia_pct": "64.2572"
+     }
+    ],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_cero_validos_por_lote",
+   "descripcion": "0 registros validos por lote medidos: 0 utiles reales (medido), no un dato faltante",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "10",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "costo_lote_usd": "0.5",
+      "registros_validos_por_lote": "0"
+     },
+     {
+      "nombre": "B",
+      "costo_lote_usd": "0.5",
+      "registros_validos_por_lote": "10"
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "10.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "estado": "calculado",
+      "motivo": null,
+      "k": null,
+      "costo_lote_usd": "0.500000",
+      "tokens_salida_por_lote": null,
+      "registros_validos_por_lote": "0.0000",
+      "lotes": "20",
+      "registros_utiles": "0",
+      "tokens_salida_capacidad": null,
+      "gasto_usd": "10.000000",
+      "sobrante_usd": "0.000000"
+     },
+     {
+      "nombre": "B",
+      "estado": "calculado",
+      "motivo": null,
+      "k": null,
+      "costo_lote_usd": "0.500000",
+      "tokens_salida_por_lote": null,
+      "registros_validos_por_lote": "10.0000",
+      "lotes": "20",
+      "registros_utiles": "200",
+      "tokens_salida_capacidad": null,
+      "gasto_usd": "10.000000",
+      "sobrante_usd": "0.000000"
+     }
+    ],
+    "comparacion": [
+     {
+      "nombre": "B",
+      "referencia": "A",
+      "diferencia_registros_utiles": "200",
+      "registros_utiles_vs_referencia_pct": null
+     }
+    ],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_validos_no_informados",
+   "descripcion": "registros validos por lote ausentes: registros utiles None",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "10",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "costo_lote_usd": "0.5"
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "10.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "estado": "calculado",
+      "motivo": null,
+      "k": null,
+      "costo_lote_usd": "0.500000",
+      "tokens_salida_por_lote": null,
+      "registros_validos_por_lote": null,
+      "lotes": "20",
+      "registros_utiles": null,
+      "tokens_salida_capacidad": null,
+      "gasto_usd": "10.000000",
+      "sobrante_usd": "0.000000"
+     }
+    ],
+    "comparacion": [],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_tarifa_no_verificada",
+   "descripcion": "una alternativa sin tarifa verificada no inventa capacidad",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "k": 10,
+    "alternativas": [
+     {
+      "nombre": "JSON",
+      "perfil": {
+       "nombre": "JSON compacto",
+       "tokens_instruccion": 289,
+       "tokens_salida_por_registro": "40",
+       "tokens_salida_fijos": 6,
+       "reintentos_por_lote": "0.1",
+       "fraccion_reparada": "1",
+       "fraccion_validos": "0.96"
+      },
+      "tarifa": {
+       "proveedor": "OpenAI",
+       "modelo_api_id": "gpt-5.4-mini",
+       "moneda": "USD",
+       "entrada_sin_cache_por_millon": "0.75",
+       "entrada_cache_lectura_por_millon": "0.075",
+       "entrada_cache_escritura_por_millon": null,
+       "salida_por_millon": "4.5",
+       "estado": "verificada",
+       "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+      }
+     },
+     {
+      "nombre": ".mini",
+      "perfil": {
+       "nombre": ".mini",
+       "tokens_instruccion": 416,
+       "tokens_salida_por_registro": "26",
+       "tokens_salida_fijos": 2,
+       "reintentos_por_lote": "0.05",
+       "fraccion_reparada": "0.1",
+       "fraccion_validos": "0.99"
+      },
+      "tarifa": {
+       "proveedor": "DeepSeek",
+       "modelo_api_id": "deepseek-chat",
+       "moneda": "USD",
+       "entrada_sin_cache_por_millon": null,
+       "entrada_cache_lectura_por_millon": null,
+       "entrada_cache_escritura_por_millon": null,
+       "salida_por_millon": null,
+       "estado": "no_verificada",
+       "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+      }
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "1000.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "JSON",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "10.0000",
+      "costo_lote_usd": "0.002248",
+      "tokens_salida_por_lote": "406.0000",
+      "registros_validos_por_lote": "9.6000",
+      "lotes": "444815",
+      "registros_utiles": "4270224",
+      "tokens_salida_capacidad": "180594890",
+      "gasto_usd": "999.999722",
+      "sobrante_usd": "0.000278"
+     },
+     {
+      "nombre": ".mini",
+      "estado": "tarifa_no_verificada",
+      "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+      "k": "10.0000",
+      "costo_lote_usd": null,
+      "tokens_salida_por_lote": null,
+      "registros_validos_por_lote": null,
+      "lotes": null,
+      "registros_utiles": null,
+      "tokens_salida_capacidad": null,
+      "gasto_usd": null,
+      "sobrante_usd": null
+     }
+    ],
+    "comparacion": [
+     {
+      "nombre": ".mini",
+      "referencia": "JSON",
+      "diferencia_registros_utiles": null,
+      "registros_utiles_vs_referencia_pct": null
+     }
+    ],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_costo_lote_cero",
+   "descripcion": "costo por lote 0: no se divide el presupuesto",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "10",
+    "alternativas": [
+     {
+      "nombre": "gratis",
+      "costo_lote_usd": "0",
+      "registros_validos_por_lote": "10"
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "10.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "gratis",
+      "estado": "costo_lote_cero",
+      "motivo": "el costo por lote es 0: no se puede dividir el presupuesto",
+      "k": null,
+      "costo_lote_usd": "0.000000",
+      "tokens_salida_por_lote": null,
+      "registros_validos_por_lote": "10.0000",
+      "lotes": null,
+      "registros_utiles": null,
+      "tokens_salida_capacidad": null,
+      "gasto_usd": null,
+      "sobrante_usd": null
+     }
+    ],
+    "comparacion": [],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "escenario_b_redondeo_hacia_abajo",
+   "descripcion": "lotes = floor(1000/0.3) = 3333, sobrante 0.1",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "costo_lote_usd": "0.3",
+      "tokens_salida_por_lote": "100.5",
+      "registros_validos_por_lote": "9.99"
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "1000.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "estado": "calculado",
+      "motivo": null,
+      "k": null,
+      "costo_lote_usd": "0.300000",
+      "tokens_salida_por_lote": "100.5000",
+      "registros_validos_por_lote": "9.9900",
+      "lotes": "3333",
+      "registros_utiles": "33296",
+      "tokens_salida_capacidad": "334966",
+      "gasto_usd": "999.900000",
+      "sobrante_usd": "0.100000"
+     }
+    ],
+    "comparacion": [],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
+    }
+   }
+  },
+  {
+   "id": "equilibrio_desde_k",
+   "descripcion": "la instruccion de .mini cuesta 300 tokens mas; cada registro ahorra 4 tokens de salida: el equilibrio cae entre 18 y 19",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 400,
+     "tokens_salida_por_registro": "6"
+    },
+    "k_referencia": 25
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": "0.000400",
+     "ahorro_en_k_referencia_pct": "40.0000",
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "total": {
+     "estado": "desde_k",
+     "motivo": null,
+     "k_minimo": "19",
+     "k_maximo": null,
+     "k_equilibrio_exacto": "18.7500",
+     "delta_fijo_usd": "-0.000300000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": "0.000100",
+     "ahorro_en_k_referencia_pct": "9.0909",
+     "mensaje_es": "Hay ahorro neto desde 19 registros por lote; con lotes menores no compensa el costo fijo adicional.",
+     "mensaje_en": "There is a net saving from 19 records per batch; smaller batches do not offset the extra fixed cost."
+    },
+    "k_referencia": "25.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_empate_exacto_no_es_ahorro",
+   "descripcion": "raiz exacta en k=20: con k=20 el costo es igual (no hay ahorro), el ahorro empieza en 21",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 420,
+     "tokens_salida_por_registro": "6"
+    }
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "total": {
+     "estado": "desde_k",
+     "motivo": null,
+     "k_minimo": "21",
+     "k_maximo": null,
+     "k_equilibrio_exacto": "20.0000",
+     "delta_fijo_usd": "-0.000320000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "Hay ahorro neto desde 21 registros por lote; con lotes menores no compensa el costo fijo adicional.",
+     "mensaje_en": "There is a net saving from 21 records per batch; smaller batches do not offset the extra fixed cost."
+    },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_siempre_ahorra",
+   "descripcion": "sin costo fijo adicional: ahorro desde 1 registro",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "6"
+    },
+    "k_referencia": 10
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": "0.000160",
+     "ahorro_en_k_referencia_pct": "40.0000",
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "total": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": "0.000160",
+     "ahorro_en_k_referencia_pct": "32.0000",
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "k_referencia": "10.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_inexistente",
+   "descripcion": ".mini produce MAS tokens por registro y ademas tiene mas instruccion: nunca hay ahorro neto",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 150,
+     "tokens_salida_por_registro": "12"
+    },
+    "k_referencia": 10
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "sin_ahorro_neto",
+     "motivo": null,
+     "k_minimo": null,
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "-0.000008000",
+     "delta_en_k_referencia_usd": "-0.000080",
+     "ahorro_en_k_referencia_pct": "-20.0000",
+     "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
+     "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
+    },
+    "total": {
+     "estado": "sin_ahorro_neto",
+     "motivo": null,
+     "k_minimo": null,
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "-0.000050000",
+     "delta_por_registro_usd": "-0.000008000",
+     "delta_en_k_referencia_usd": "-0.000130",
+     "ahorro_en_k_referencia_pct": "-26.0000",
+     "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
+     "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
+    },
+    "k_referencia": "10.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_solo_hasta_k",
+   "descripcion": "menos instruccion pero mas salida por registro: el ahorro solo vale para lotes pequenos",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 500,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "11"
+    }
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "sin_ahorro_neto",
+     "motivo": null,
+     "k_minimo": null,
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "-0.000004000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
+     "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
+    },
+    "total": {
+     "estado": "solo_hasta_k",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": "99",
+     "k_equilibrio_exacto": "100.0000",
+     "delta_fijo_usd": "0.000400000",
+     "delta_por_registro_usd": "-0.000004000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "Hay ahorro neto solo hasta 99 registros por lote; con lotes mayores .mini cuesta más que JSON.",
+     "mensaje_en": "There is a net saving only up to 99 records per batch; with larger batches .mini costs more than JSON."
+    },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_constante_sin_pendiente",
+   "descripcion": "mismos tokens por registro, .mini con menos instruccion: ahorro constante",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 500,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    }
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "sin_ahorro_neto",
+     "motivo": null,
+     "k_minimo": null,
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000000000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
+     "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
+    },
+    "total": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000400000",
+     "delta_por_registro_usd": "0.000000000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_misma_instruccion_misma_salida",
+   "descripcion": "formatos identicos: sin ahorro neto",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    }
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "sin_ahorro_neto",
+     "motivo": null,
+     "k_minimo": null,
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000000000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
+     "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
+    },
+    "total": {
+     "estado": "sin_ahorro_neto",
+     "motivo": null,
+     "k_minimo": null,
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000000000",
+     "delta_en_k_referencia_usd": null,
+     "ahorro_en_k_referencia_pct": null,
+     "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
+     "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
+    },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_instruccion_en_cache",
+   "descripcion": "con la instruccion en cache el costo fijo adicional pesa 10 veces menos",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10",
+     "instruccion_en_cache": true
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 400,
+     "tokens_salida_por_registro": "6",
+     "instruccion_en_cache": true
+    },
+    "k_referencia": 25
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": "0.000400",
+     "ahorro_en_k_referencia_pct": "40.0000",
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "total": {
+     "estado": "desde_k",
+     "motivo": null,
+     "k_minimo": "2",
+     "k_maximo": null,
+     "k_equilibrio_exacto": "1.8750",
+     "delta_fijo_usd": "-0.000030000",
+     "delta_por_registro_usd": "0.000016000",
+     "delta_en_k_referencia_usd": "0.000370",
+     "ahorro_en_k_referencia_pct": "36.6337",
+     "mensaje_es": "Hay ahorro neto desde 2 registros por lote; con lotes menores no compensa el costo fijo adicional.",
+     "mensaje_en": "There is a net saving from 2 records per batch; smaller batches do not offset the extra fixed cost."
+    },
+    "k_referencia": "25.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_con_reintentos",
+   "descripcion": "JSON repite todo al reintentar; .mini solo una decima (reparacion selectiva)",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "Demo",
+     "modelo_api_id": "demo",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "1",
+     "entrada_cache_lectura_por_millon": "0.1",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4",
+     "estado": "verificada"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10",
+     "reintentos_por_lote": "0.2"
+    },
+    "perfil_mini": {
+     "nombre": ".mini",
+     "tokens_instruccion": 400,
+     "tokens_salida_por_registro": "8",
+     "reintentos_por_lote": "0.05",
+     "fraccion_reparada": "0.1"
+    },
+    "k_referencia": 50
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "siempre_ahorra",
+     "motivo": null,
+     "k_minimo": "1",
+     "k_maximo": null,
+     "k_equilibrio_exacto": null,
+     "delta_fijo_usd": "0.000000000",
+     "delta_por_registro_usd": "0.000008000",
+     "delta_en_k_referencia_usd": "0.000400",
+     "ahorro_en_k_referencia_pct": "20.0000",
+     "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
+     "mensaje_en": "There is a net saving for any batch size from 1 record."
+    },
+    "total": {
+     "estado": "desde_k",
+     "motivo": null,
+     "k_minimo": "19",
+     "k_maximo": null,
+     "k_equilibrio_exacto": "18.9394",
+     "delta_fijo_usd": "-0.000300000",
+     "delta_por_registro_usd": "0.000015840",
+     "delta_en_k_referencia_usd": "0.000492",
+     "ahorro_en_k_referencia_pct": "19.5238",
+     "mensaje_es": "Hay ahorro neto desde 19 registros por lote; con lotes menores no compensa el costo fijo adicional.",
+     "mensaje_en": "There is a net saving from 19 records per batch; smaller batches do not offset the extra fixed cost."
+    },
+    "k_referencia": "50.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "verificada",
+     "tarifa_fecha_consulta_utc": null
+    }
+   }
+  },
+  {
+   "id": "equilibrio_tarifa_no_verificada",
+   "descripcion": "sin tarifa verificada no hay punto de equilibrio en dinero",
+   "operacion": "punto_equilibrio",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "DeepSeek",
+     "modelo_api_id": "deepseek-chat",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": null,
+     "entrada_cache_lectura_por_millon": null,
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": null,
+     "estado": "no_verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "perfil_json": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    },
+    "perfil_mini": {
+     "nombre": "JSON",
+     "tokens_instruccion": 100,
+     "tokens_salida_por_registro": "10"
+    }
+   },
+   "salida": {
+    "solo_salida": {
+     "estado": "tarifa_no_verificada",
+     "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada"
+    },
+    "total": {
+     "estado": "tarifa_no_verificada",
+     "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada"
+    },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
+    "supuestos": {
+     "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
+     "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
+     "k": "registros por lote, enteros desde 1",
+     "tarifa_estado": "no_verificada",
+     "tarifa_fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    }
+   }
+  },
+  {
+   "id": "buscar_tarifa_alias_y_mayusculas",
+   "descripcion": "proveedor sin distinguir mayusculas; modelo exacto o alias",
+   "operacion": "buscar_tarifa",
+   "entrada": {
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     },
+     {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "alias": [
+       "claude-sonnet-5-5-latest"
+      ],
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "2",
+      "entrada_cache_lectura_por_millon": "0.2",
+      "entrada_cache_escritura_por_millon": "2.5",
+      "salida_por_millon": "10",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ],
+    "proveedor": "ANTHROPIC",
+    "modelo_api_id": "claude-sonnet-5-5-latest"
+   },
+   "salida": {
+    "encontrada": true,
+    "modelo_api_id": "claude-sonnet-5-5",
+    "estado": "verificada"
+   }
+  },
+  {
+   "id": "buscar_tarifa_inexistente",
+   "descripcion": "modelo distinto: no se inventa",
+   "operacion": "buscar_tarifa",
+   "entrada": {
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     },
+     {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "alias": [
+       "claude-sonnet-5-5-latest"
+      ],
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "2",
+      "entrada_cache_lectura_por_millon": "0.2",
+      "entrada_cache_escritura_por_millon": "2.5",
+      "salida_por_millon": "10",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ],
+    "proveedor": "OpenAI",
+    "modelo_api_id": "gpt-9"
+   },
+   "salida": {
+    "encontrada": false,
+    "modelo_api_id": null,
+    "estado": null
+   }
+  },
+  {
+   "id": "error_float_no_admitido",
+   "descripcion": "un float (0.075) se rechaza: los decimales entran como cadena",
+   "operacion": "costo_lote",
+   "entrada": {
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": 0.075,
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "k": 10,
+    "perfil": {
+     "nombre": ".mini",
+     "tokens_instruccion": 416,
+     "tokens_salida_por_registro": "26",
+     "tokens_salida_fijos": 2,
+     "reintentos_por_lote": "0.05",
+     "fraccion_reparada": "0.1",
+     "fraccion_validos": "0.99"
+    }
+   },
+   "error": true
+  },
+  {
+   "id": "error_tokens_negativos",
+   "descripcion": "tokens negativos",
+   "operacion": "razon_y_ahorro",
+   "entrada": {
+    "t_mini": -1,
+    "t_json": 10
+   },
+   "error": true
+  },
+  {
+   "id": "error_razonamiento_mayor_que_salida",
+   "descripcion": "razonamiento 500 > salida 300 con razonamiento_incluido_en_salida=true",
+   "operacion": "costo_solicitud",
+   "entrada": {
+    "solicitud": {
+     "id": "e1",
+     "intentos": [
+      {
+       "fase": "generacion",
+       "modelo": "gpt-5.4-mini",
+       "proveedor": "OpenAI",
+       "latencia_s": "1.25",
+       "usage": {
+        "entrada_sin_cache": 10,
+        "entrada_cache_lectura": 0,
+        "entrada_cache_escritura": 0,
+        "salida": 300,
+        "razonamiento": 500,
+        "razonamiento_incluido_en_salida": true
+       }
+      }
+     ]
+    },
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "error": true
+  },
+  {
+   "id": "error_grupo_inconsistente",
+   "descripcion": "dos solicitudes del mismo grupo declaran validos distintos y ninguna es la original",
+   "operacion": "costo_total",
+   "entrada": {
+    "solicitudes": [
+     {
+      "id": "x1",
+      "grupo": "x",
+      "registros_validos_finales": 5,
+      "intentos": []
+     },
+     {
+      "id": "x2",
+      "grupo": "x",
+      "registros_validos_finales": 6,
+      "intentos": []
+     }
+    ],
+    "tarifas": [
+     {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.75",
+      "entrada_cache_lectura_por_millon": "0.075",
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": "4.5",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+     }
+    ]
+   },
+   "error": true
+  },
+  {
+   "id": "error_operacion_desconocida",
+   "descripcion": "operacion que no existe",
+   "operacion": "no_existe",
+   "entrada": {},
+   "error": true
+  }
+ ]
+}

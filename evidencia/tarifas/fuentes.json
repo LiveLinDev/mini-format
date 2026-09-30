@@ -1,0 +1,423 @@
+{
+  "esquema": "mini-format/tarifas-fuentes/1",
+  "descripcion": "Como consultar cada tarifa: paginas oficiales, formato y expresion regular con grupos con nombre (entrada_sin_cache, entrada_cache_lectura, entrada_cache_escritura, salida, extracto; retiro en los avisos de descontinuacion). tools/tarifas.py consultar aplica estos patrones; si una pagina cambia de formato el patron deja de coincidir y la tarifa pasa a no_verificada (nunca se conserva un precio sin confirmar).",
+  "paginas_bloqueadas": [
+    {
+      "url": "https://groq.com/pricing",
+      "motivo": "redirige a la portada de groq.com (sin tabla de precios); la tarifa de Groq se consulta en console.groq.com/docs/models",
+      "registrado_por": "auditoria 2026-09-30"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/pricing",
+      "motivo": "el HTML estatico solo trae la seccion Flagship (tablas por JavaScript); se usa la version .md oficial",
+      "registrado_por": "auditoria 2026-09-30"
+    },
+    {
+      "url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "motivo": "tablas por JavaScript; se usa la version pricing.md.txt oficial",
+      "registrado_por": "auditoria 2026-09-30"
+    }
+  ],
+  "fuentes": [
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-5\\.4 \\(<272K context length\\) +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-5\\.4-mini +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.4-nano",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-5\\.4-nano +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-5-mini +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-4.1-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-4\\.1-mini +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-4.1",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-4\\.1 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-4o-mini",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-4o-mini +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.6-terra",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-5\\.6-terra +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-5.6-luna",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-5\\.6-luna +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-6-luna",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-6-luna +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "OpenAI",
+      "modelo_api_id": "gpt-6.1-sol",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://developers.openai.com/api/docs/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| gpt-6\\.1-sol +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) +\\| (?:-|\\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)) +\\| (?:-|\\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?)) +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) +\\|[^\\n]*)$"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (nivel Standard, contexto corto). La tabla completa solo existe en la version .md; el HTML estatico muestra solo la seccion Flagship."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-haiku-4-5-20251001",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Haiku 4\\.5 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (precios base del modelo). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Sonnet 5 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (precios base del modelo). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-sonnet-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Sonnet 5\\.5 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (precios base del modelo). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-opus-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Opus 5 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (precios base del modelo). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-opus-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Opus 5\\.5 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (precios base del modelo). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://api-docs.deepseek.com/quick_start/pricing",
+          "formato": "html",
+          "patron": "(?s)MODEL deepseek-flash \\(1\\) deepseek-v4-pro.*?(?P<extracto>1M INPUT TOKENS \\(CACHE HIT\\) OFF-PEAK \\$[0-9.]+ \\$[0-9.]+ PEAK \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) \\$[0-9]+(?:\\.[0-9]+)? 1M INPUT TOKENS \\(CACHE MISS\\) OFF-PEAK \\$[0-9.]+ \\$[0-9.]+ PEAK \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) \\$[0-9]+(?:\\.[0-9]+)? 1M OUTPUT TOKENS OFF-PEAK \\$[0-9.]+ \\$[0-9.]+ PEAK \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) \\$[0-9]+(?:\\.[0-9]+)?)"
+        }
+      ],
+      "nota": "Tabla HTML sin version Markdown: se convierte a texto plano. Precios de HORARIO PICO (fuera de pico es la mitad)."
+    },
+    {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-v4-pro",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://api-docs.deepseek.com/quick_start/pricing",
+          "formato": "html",
+          "patron": "(?s)MODEL deepseek-flash \\(1\\) deepseek-v4-pro.*?(?P<extracto>1M INPUT TOKENS \\(CACHE HIT\\) OFF-PEAK \\$[0-9.]+ \\$[0-9.]+ PEAK \\$[0-9]+(?:\\.[0-9]+)? \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) 1M INPUT TOKENS \\(CACHE MISS\\) OFF-PEAK \\$[0-9.]+ \\$[0-9.]+ PEAK \\$[0-9]+(?:\\.[0-9]+)? \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) 1M OUTPUT TOKENS OFF-PEAK \\$[0-9.]+ \\$[0-9.]+ PEAK \\$[0-9]+(?:\\.[0-9]+)? \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?))"
+        }
+      ],
+      "nota": "Tabla HTML sin version Markdown: se convierte a texto plano. Precios de HORARIO PICO (fuera de pico es la mitad)."
+    },
+    {
+      "proveedor": "DeepSeek",
+      "modelo_api_id": "deepseek-chat",
+      "tipo": "retiro",
+      "paginas": [
+        {
+          "url": "https://api-docs.deepseek.com/updates",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>The two legacy API model names, deepseek-chat and deepseek-reasoner ?, will be discontinued in three months \\((?P<retiro>\\d{4}-\\d{2}-\\d{2})\\)\\.)"
+        }
+      ],
+      "nota": "No aparece en la pagina de precios: la pagina de cambios lo da por descontinuado. Que el patron siga presente confirma el aviso; el estado sigue siendo no_verificada."
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "openai/gpt-oss-120b",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/models",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>openai/gpt\\-oss\\-120b \\d+ \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) input \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) output)"
+        },
+        {
+          "url": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>PRICING Input \\$[0-9]+(?:\\.[0-9]+)? \\S+ / \\$1 Cached Input \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) \\S+ / \\$1 Output \\$[0-9]+(?:\\.[0-9]+)?)"
+        }
+      ],
+      "nota": "La tarifa sale de la tabla de modelos y la cache de la pagina del modelo. groq.com/pricing redirige a la portada: no se usa."
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "openai/gpt-oss-20b",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/models",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>openai/gpt\\-oss\\-20b \\d+ \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) input \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) output)"
+        },
+        {
+          "url": "https://console.groq.com/docs/model/openai/gpt-oss-20b",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>PRICING Input \\$[0-9]+(?:\\.[0-9]+)? \\S+ / \\$1 Cached Input \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) \\S+ / \\$1 Output \\$[0-9]+(?:\\.[0-9]+)?)"
+        }
+      ],
+      "nota": "La tarifa sale de la tabla de modelos y la cache de la pagina del modelo. groq.com/pricing redirige a la portada: no se usa."
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "qwen/qwen3.8-27b",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/models",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>qwen/qwen3\\.8\\-27b \\d+ \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) input \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) output)"
+        }
+      ],
+      "nota": "La tarifa sale de la tabla de modelos y la cache de la pagina del modelo. groq.com/pricing redirige a la portada: no se usa."
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "llama-3.3-70b-versatile",
+      "tipo": "retiro",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/deprecations",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>llama\\-3\\.3\\-70b\\-versatile (?P<retiro>\\d{2}/\\d{2}/\\d{2}) [^ ]+)"
+        }
+      ],
+      "nota": "Fecha de cierre segun la pagina de deprecaciones; sin precio publico (Enterprise / Contact Sales)."
+    },
+    {
+      "proveedor": "Groq",
+      "modelo_api_id": "llama-3.1-8b-instant",
+      "tipo": "retiro",
+      "paginas": [
+        {
+          "url": "https://console.groq.com/docs/deprecations",
+          "formato": "html",
+          "patron": "(?s)(?P<extracto>llama\\-3\\.1\\-8b\\-instant (?P<retiro>\\d{2}/\\d{2}/\\d{2}) [^ ]+)"
+        }
+      ],
+      "nota": "Fecha de cierre segun la pagina de deprecaciones; sin precio publico (Enterprise / Contact Sales)."
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.5-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "formato": "markdown",
+          "patron": "(?ms)^## Gemini\\ 3\\.5\\ Flash\\n(?:(?!^## ).)*?(?P<extracto>^\\| Input price \\| [^|\\n]*\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Output price \\(including thinking tokens\\) \\| [^|\\n]*\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Context caching price \\| [^|\\n]*\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\|)"
+        }
+      ],
+      "nota": "Tabla Standard de pago. Hay precios con vigencia (promocional hasta 2026-12-31 en los Flash 3.6 a 3.8): el patron toma la cifra vigente hoy, que es la primera."
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.8-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "formato": "markdown",
+          "patron": "(?ms)^## Gemini\\ 3\\.8\\ Flash\\n(?:(?!^## ).)*?(?P<extracto>^\\| Input price \\| [^|\\n]*\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Output price \\(including thinking tokens\\) \\| [^|\\n]*\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Context caching price \\| [^|\\n]*\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\|)"
+        }
+      ],
+      "nota": "Tabla Standard de pago. Hay precios con vigencia (promocional hasta 2026-12-31 en los Flash 3.6 a 3.8): el patron toma la cifra vigente hoy, que es la primera."
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.1-pro-preview",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "formato": "markdown",
+          "patron": "(?ms)^## Gemini\\ 3\\.1\\ Pro\\ Preview\\n(?:(?!^## ).)*?(?P<extracto>^\\| Input price \\| [^|\\n]*\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Output price \\(including thinking tokens\\) \\| [^|\\n]*\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Context caching price \\| [^|\\n]*\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\|)"
+        }
+      ],
+      "nota": "Tabla Standard de pago. Hay precios con vigencia (promocional hasta 2026-12-31 en los Flash 3.6 a 3.8): el patron toma la cifra vigente hoy, que es la primera."
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-2.5-flash",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "formato": "markdown",
+          "patron": "(?ms)^## Gemini\\ 2\\.5\\ Flash\\n(?:(?!^## ).)*?(?P<extracto>^\\| Input price \\| [^|\\n]*\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Output price \\(including thinking tokens\\) \\| [^|\\n]*\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Context caching price \\| [^|\\n]*\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\|)"
+        }
+      ],
+      "nota": "Tabla Standard de pago. Hay precios con vigencia (promocional hasta 2026-12-31 en los Flash 3.6 a 3.8): el patron toma la cifra vigente hoy, que es la primera."
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.5-flash-lite",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "formato": "markdown",
+          "patron": "(?ms)^## Gemini\\ 3\\.5\\ Flash\\-Lite\\n(?:(?!^## ).)*?(?P<extracto>^\\| Input price \\| [^|\\n]*\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Output price \\(including thinking tokens\\) \\| [^|\\n]*\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Context caching price \\| [^|\\n]*\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\|)"
+        }
+      ],
+      "nota": "Tabla Standard de pago. Hay precios con vigencia (promocional hasta 2026-12-31 en los Flash 3.6 a 3.8): el patron toma la cifra vigente hoy, que es la primera."
+    },
+    {
+      "proveedor": "Google",
+      "modelo_api_id": "gemini-3.1-flash-lite",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing.md.txt",
+          "formato": "markdown",
+          "patron": "(?ms)^## Gemini\\ 3\\.1\\ Flash\\-Lite\\n(?:(?!^## ).)*?(?P<extracto>^\\| Input price \\| [^|\\n]*\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Output price \\(including thinking tokens\\) \\| [^|\\n]*\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?)[^|\\n]*\\|\\n^\\| Context caching price \\| [^|\\n]*\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\|)"
+        }
+      ],
+      "nota": "Tabla Standard de pago. Hay precios con vigencia (promocional hasta 2026-12-31 en los Flash 3.6 a 3.8): el patron toma la cifra vigente hoy, que es la primera."
+    }
+  ]
+}
