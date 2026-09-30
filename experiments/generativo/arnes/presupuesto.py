@@ -192,7 +192,7 @@ class Libro:
 
     def iniciar(self, celda: str, fase: str, peor_caso: Optional[Decimal]) -> str:
         self._n += 1
-        lid = f"{os.getpid()}-{self._n}"
+        lid = f"L{self._n:07d}"               # determinista: el contador sigue el número de eventos del libro (también al reanudar)
         peor = peor_caso if peor_caso is not None else Decimal(0)
         self._abiertas[lid] = peor
         self.llamadas += 1

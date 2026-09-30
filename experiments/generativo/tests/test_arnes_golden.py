@@ -124,3 +124,21 @@ def test_las_corridas_emitidas_del_piloto_validan():
     for k, v in m["resumen"]["validez_final_pct_por_brazo_y_tipo"].items():
         tipo, brazo = k.split("/")
         assert v == float(viejo[("v2", tipo, brazo)]["validez_final_pct"])
+
+
+def test_dos_procesos_distintos_dan_las_mismas_solicitudes(tmp_path):
+    """Las solicitudes (que la evidencia referencia por SHA-256) no dependen del proceso: sin pid ni reloj en los identificadores."""
+    import os
+    import subprocess
+    salidas = []
+    for d in ("a", "b"):
+        r = subprocess.run([sys.executable, str(ROOT / "experiments" / "generativo" / "run.py"), "ejecutar", "--config",
+                            "configs/piloto.yaml", "--adapter", "simulado", "--salida", str(tmp_path / d), "--limite", "30"],
+                           capture_output=True, text=True, encoding="utf-8", env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+        assert r.returncode == 0, r.stderr[-400:]
+        a = subprocess.run([sys.executable, str(ROOT / "experiments" / "generativo" / "analyze.py"), "--resultados", str(tmp_path / d),
+                            "--sin-figuras", "--sin-v3a", "--bootstrap", "0"], capture_output=True, text=True, encoding="utf-8",
+                           env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+        assert a.returncode == 0, a.stderr[-400:]
+        salidas.append((tmp_path / d / "analisis" / "solicitudes.jsonl").read_bytes())
+    assert salidas[0] == salidas[1] and len(salidas[0]) > 1000
