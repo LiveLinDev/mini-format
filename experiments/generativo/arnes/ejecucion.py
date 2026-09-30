@@ -315,7 +315,7 @@ class Almacen:
 
     def agregar(self, s: Dict[str, Any]) -> None:
         with open(self.muestras, "a", encoding="utf-8", newline="\n") as fh:
-            fh.write(json.dumps(s, ensure_ascii=False) + "\n")
+            fh.write(json.dumps(s, ensure_ascii=False, default=str) + "\n")
             fh.flush()
             os.fsync(fh.fileno())
         self._registrar(s)
@@ -549,7 +549,8 @@ class Ejecutor:
             except KeyboardInterrupt:
                 self.libro.terminar(lid, ok=False, costo=None, incierto=peor or Decimal(0), nota="interrumpida en vuelo")
                 raise
-            except AdapterError as e:
+            except Exception as e0:  # noqa: BLE001 - cualquier fallo del adaptador: la respuesta pudo facturarse, se cuenta como incierto
+                e = e0 if isinstance(e0, AdapterError) else AdapterError(f"{type(e0).__name__}: {e0}", retryable=False)
                 lat = self._reloj() - t0
                 incierto = peor if (e.status is None and peor is not None) else Decimal(0)
                 self.libro.terminar(lid, ok=False, costo=None, incierto=incierto, nota=redact(e)[:200])

@@ -623,3 +623,34 @@ def test_la_autorizacion_de_prueba_no_existe_fuera_de_pytest(monkeypatch):
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
     with pytest.raises(ErrorAutorizacion, match="solo existe para las pruebas"):
         autorizacion_de_prueba()
+
+
+def test_una_excepcion_inesperada_del_adaptador_se_cuenta_como_error_incierto_y_no_aborta_el_guardado(tmp_path):
+    cfg = cfg_base(brazos=["A"], repeticiones=1)
+    cfg, ctx, en, ej, ad = montar(tmp_path, cfg)
+
+    def roto(system, user, **kw):
+        raise KeyError("choices")                   # p. ej. una respuesta con una forma que el adaptador no esperaba
+    ad.generate = roto
+    res = ej.ejecutar_estudio(en)
+    assert res["estado"] in ("parcial", "completo") and res["celdas"]["error_tecnico"] == 1
+    s = X.leer_muestras(tmp_path / "res" / "muestras.jsonl")[0]
+    assert s["desenlace"] == "error_tecnico" and "KeyError" in s["solicitud"]["intentos"][0]["error"]
+    assert s["solicitud"]["intentos"][0]["costo_incierto"] is True and ej.libro.incierto > 0 and ej.libro.huerfanas == 0
+
+
+def test_una_respuesta_con_objetos_no_serializables_no_hace_perder_la_muestra(tmp_path):
+    import datetime
+    cfg = cfg_base(brazos=["A"], repeticiones=1)
+    cfg, ctx, en, ej, ad = montar(tmp_path, cfg)
+    t = ctx.tareas["ext-cls"]
+
+    def generate(system, user, **kw):
+        texto = B.salida_referencia(t, "A")
+        raw = {"usage": {"prompt_tokens": 10, "completion_tokens": 5}, "creado": datetime.datetime(2026, 9, 30),
+               "choices": [{"message": {"content": texto}, "finish_reason": "stop"}]}
+        return result(texto, 10, 5, 100.0, raw, stop_reason="stop", model="m", provider="openai")
+    ad.generate = generate
+    ej.ejecutar_estudio(en)
+    (s,) = X.leer_muestras(tmp_path / "res" / "muestras.jsonl")
+    assert s["desenlace"] == "ok" and "2026" in s["respuesta"]["raw"]["creado"]
