@@ -40,5 +40,5 @@ Convenciones:
 | [0014](0014-lista-opcional-vacia-es-null.md) | La lista opcional vacía es null | aceptada | 1.1, §6 |
 | [0015](0015-errores-del-serializador.md) | Códigos de error del serializador | aceptada | 1.1, §9 |
 | [0016](0016-tipos-date-y-decimal.md) | Tipos `date` y `decimal` | aceptada | 1.1, §6 |
-| [0017](0017-espacio-exterior-decimal-canonico-y-blancos.md) | Espacio exterior, escape de elementos de lista, decimal canónico y conjunto de blancos | **propuesta (no vigente)** | §3.4, §3.5, §6, §9 |
+| [0017](0017-espacio-exterior-decimal-canonico-y-blancos.md) | Espacio exterior, escape de elementos de lista, decimal canónico, valores por omisión, registros vacíos y conjunto de blancos | **propuesta (no vigente)** | §3.4, §3.5, §6, §9 |
 | [0018](0018-enteros-grandes-en-typescript.md) | Enteros fuera de ±2^53 en TypeScript y en el navegador | **propuesta (no vigente)** | §4, §6 |

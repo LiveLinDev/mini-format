@@ -51,7 +51,7 @@ class RoundTripOfOuterWhitespace(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_non_breaking_space_is_preserved(self):
-        self.assertEqual(read_back(obj(id=" x"))["id"], " x")
+        self.assertEqual(read_back(obj(id="\u00a0x"))["id"], "\u00a0x")
 
     @unittest.expectedFailure
     def test_empty_string_in_an_optional_field_is_preserved(self):
@@ -94,6 +94,49 @@ class DecimalStabilityOfTheEmittedText(unittest.TestCase):
     def test_current_behaviour_the_object_read_back_is_canonical(self):
         self.assertEqual(read_back(obj(dec="007.50"))["dec"], "7.50")
         self.assertEqual(read_back(obj(dec="-0.0"))["dec"], "0.0")
+
+
+class EmptyRecords(unittest.TestCase):
+    """D-11 (ADR 0017): un registro de campos vacíos es una línea en blanco; una tupla de un componente opcional null, una tupla vacía."""
+
+    SOLO_LISTA = Contract.from_dict({"prefix": "p", "records_key": "rows", "core": [{"name": "xs", "type": "list", "item": "str"}]})
+    TUPLA_1 = Contract.from_dict({"prefix": "p", "records_key": "rows", "core": [
+        {"name": "t", "type": "tuple", "items": [{"name": "a", "type": "str", "optional": True}]}, {"name": "id", "type": "str"}]})
+
+    @unittest.expectedFailure
+    def test_a_record_with_only_an_empty_list_survives(self):
+        texto = dumps({"prefix": "p", "header": {"n": 1}, "rows": [{"xs": []}]}, self.SOLO_LISTA)
+        self.assertEqual(parse(texto, self.SOLO_LISTA).to_canonical()["rows"], [{"xs": []}])
+
+    @unittest.expectedFailure
+    def test_a_tuple_of_one_optional_component_set_to_null_survives(self):
+        obj = {"prefix": "p", "header": {"n": 1}, "rows": [{"t": {"a": None}, "id": "x"}]}
+        self.assertEqual(parse(dumps(obj, self.TUPLA_1), self.TUPLA_1).to_canonical()["rows"], obj["rows"])
+
+    def test_current_behaviour_dumps_fails_with_the_parser_code(self):
+        with self.assertRaises(MiniError) as cm:
+            dumps({"prefix": "p", "header": {"n": 1}, "rows": [{"xs": []}]}, self.SOLO_LISTA)
+        self.assertEqual(cm.exception.code, "E04")
+        with self.assertRaises(MiniError) as cm:
+            dumps({"prefix": "p", "header": {"n": 1}, "rows": [{"t": {"a": None}, "id": "x"}]}, self.TUPLA_1)
+        self.assertEqual(cm.exception.code, "E07")
+
+
+class HeaderDefaultStability(unittest.TestCase):
+    """D-10 (ADR 0017): una clave de cabecera con ``default`` hace que dumps(parse(t)) != t."""
+
+    CON_DEFECTO = Contract.from_dict({
+        "prefix": "p", "records_key": "rows", "core": [{"name": "id", "type": "str"}],
+        "header": {"keys": {"lang": {"type": "str", "default": "es"}}},
+    })
+
+    @unittest.expectedFailure
+    def test_emitted_text_is_stable_when_the_key_with_default_is_absent(self):
+        texto = dumps({"prefix": "p", "header": {"n": 0}, "rows": []}, self.CON_DEFECTO)
+        self.assertEqual(dumps(parse(texto, self.CON_DEFECTO).to_canonical(), self.CON_DEFECTO), texto)
+
+    def test_current_behaviour_the_parser_adds_the_default(self):
+        self.assertEqual(parse("p|n=0", self.CON_DEFECTO).header["lang"], "es")
 
 
 # Conjunto que hoy recortan las dos implementaciones (Python: str.isspace; TypeScript: lista copiada
