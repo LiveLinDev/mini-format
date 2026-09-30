@@ -61,6 +61,7 @@ class Base(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.tmp, True)
         for n in ("tarifas.json", "fuentes.json"):
             shutil.copy(REAL / n, self.tmp / n)
+        shutil.copytree(REAL / "consultas", self.tmp / "consultas")
 
     def tarifas(self):
         return {(t["proveedor"], t["modelo_api_id"]): t for t in json.loads((self.tmp / "tarifas.json").read_text(encoding="utf-8"))["tarifas"]}
@@ -137,6 +138,7 @@ class ConsultaSimulada(Base):
                 self.addCleanup(shutil.rmtree, tmp, True)
                 for n in ("tarifas.json", "fuentes.json"):
                     shutil.copy(REAL / n, tmp / n)
+                shutil.copytree(REAL / "consultas", tmp / "consultas")
                 doc = T.consultar(tmp, descargar=Web(respuestas={u: resp}), ahora=AHORA, modelos=["gpt-5.4-mini"])
                 e = doc["entradas"][0]
                 self.assertEqual(e["estado"], "no_verificada")
@@ -275,6 +277,11 @@ class Verificar(Base):
         self.assertIn("debe declarar los grupos", texto)
         self.assertIn("falta la fuente de", texto)
         self.assertIn("no tiene entrada en tarifas.json", texto)
+
+    def test_la_consulta_citada_debe_existir(self):
+        self._editar(lambda d: d["tarifas"][0].update(consulta="19990101T000000Z.json"))
+        errores, _ = T.verificar(self.tmp, ahora=AHORA)
+        self.assertTrue(any("19990101T000000Z.json no existe" in e for e in errores))
 
     def test_falta_la_nota_de_tokenizadores(self):
         self._editar(lambda d: d.update(nota_tokenizadores=""))

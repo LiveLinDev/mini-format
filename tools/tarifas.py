@@ -394,6 +394,8 @@ def verificar(directorio: Path, ahora: Optional[str] = None, dias: int = DIAS_MA
         vistos.add((t.get("proveedor"), t.get("modelo_api_id")))
         if t.get("moneda") != "USD":
             e.append(f"{etq}: moneda debe ser USD")
+        if t.get("consulta") and not (directorio / "consultas" / str(t["consulta"])).exists():
+            e.append(f"{etq}: la consulta {t['consulta']} no existe en consultas/")
         if t.get("estado") not in ESTADOS:
             e.append(f"{etq}: estado debe ser uno de {ESTADOS}")
         if not str(t.get("url_oficial", "")).startswith("https://"):
