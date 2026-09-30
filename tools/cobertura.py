@@ -67,10 +67,10 @@ def medir_python(timeout: int = 1800) -> Dict[str, Any]:
                        PYTHONPATH=str(RAIZ / "src") + os.pathsep + os.environ.get("PYTHONPATH", ""))
         orden = [sys.executable, "-m", "coverage", "run", "--branch", "--source=minifmt", "-m", "pytest", "-q", "-p", "no:cacheprovider",
                  "tests", "experiments/generativo/tests"]
-        prueba = subprocess.run(orden, cwd=RAIZ, env=entorno, capture_output=True, text=True, encoding="utf-8", timeout=timeout)
+        prueba = subprocess.run(orden, cwd=RAIZ, env=entorno, capture_output=True, stdin=subprocess.DEVNULL, text=True, encoding="utf-8", timeout=timeout)
         informe = tmp / "cov.json"
         json_ = subprocess.run([sys.executable, "-m", "coverage", "json", "-o", str(informe)], cwd=RAIZ, env=entorno,
-                               capture_output=True, text=True, encoding="utf-8")
+                               capture_output=True, stdin=subprocess.DEVNULL, text=True, encoding="utf-8")
         if not informe.is_file():
             return {"estado": "error", "motivo": "coverage no produjo el informe: " + (json_.stderr or json_.stdout)[-400:],
                     "pytest": _resumen_pytest(prueba.stdout), "salida_pytest": prueba.stdout[-1500:]}
@@ -115,7 +115,7 @@ def medir_ts(timeout: int = 900) -> Dict[str, Any]:
                  "--test-coverage-include=src/**", "--test-reporter=lcov", f"--test-reporter-destination={lcov}",
                  "--test-reporter=spec", "--test-reporter-destination=stdout"]
         archivos = sorted(str(p.relative_to(RAIZ / "ts")).replace("\\", "/") for p in (RAIZ / "ts" / "test").glob("*.test.ts"))
-        prueba = subprocess.run(orden + archivos, cwd=RAIZ / "ts", capture_output=True, text=True, encoding="utf-8", timeout=timeout)
+        prueba = subprocess.run(orden + archivos, cwd=RAIZ / "ts", capture_output=True, stdin=subprocess.DEVNULL, text=True, encoding="utf-8", timeout=timeout)
         if not lcov.is_file():
             return {"estado": "error", "motivo": "node no produjo el informe lcov", "salida": (prueba.stdout + prueba.stderr)[-1500:]}
         resultado = leer_lcov(lcov.read_text(encoding="utf-8"))

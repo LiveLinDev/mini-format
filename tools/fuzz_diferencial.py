@@ -134,7 +134,7 @@ def analizar_js(lote: List[Dict[str, Any]], contratos: Dict[str, dict], tmp: Pat
     entrada.write_text(json.dumps({"contracts": {k: contratos[k] for k in usados}, "inputs": lote}, ensure_ascii=False),
                        encoding="utf-8")
     proc = subprocess.run([node, "--no-warnings", str(RAIZ / "tools" / "fuzz_motor_js.mjs"), str(entrada), str(salida)],
-                          capture_output=True, text=True, encoding="utf-8")
+                          capture_output=True, stdin=subprocess.DEVNULL, text=True, encoding="utf-8")
     if proc.returncode != 0:
         raise RuntimeError(f"node falló: {proc.stderr[:400]}")
     resultado = json.loads(salida.read_text(encoding="utf-8"))

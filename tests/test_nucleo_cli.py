@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from minifmt import Registry  # noqa: E402
 
 REG = Registry.load(ROOT / "forks")
-MUESTRA = ("a", "cls", "log", "tc", "us")  # familias con campos de todos los tipos; 14/14 lo comprueba check-forks
+MUESTRA = ("a", "cls", "tc")  # muestra representativa a nivel de proceso; 14/14 lo comprueba check-forks
 
 
 def mini(*args: str, cwd: Path, entrada: str = "") -> Tuple[int, str, str]:

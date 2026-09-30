@@ -1,6 +1,6 @@
 # @mini-format/core — `.mini` TypeScript library
 
-Software release 1.2.0. Modular, typed TypeScript implementation of the `.mini`
+Software release 1.2.1. Modular, typed TypeScript implementation of the `.mini`
 core notation (SPEC 1.1):
 parser, serializer, specification block for prompts, family (fork) registry, a
 streaming read API for token-by-token model responses, selective repair,
@@ -18,11 +18,11 @@ Authors: A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC). MIT license.
 
 ## Install the package
 
-Requires Node.js ≥ 22.6. Download `mini-format-core-1.2.0.tgz` from Downloads or
+Requires Node.js ≥ 22.6. Download `mini-format-core-1.2.1.tgz` from Downloads or
 extract it from the toolkit ZIP. Install the local file:
 
 ```sh
-npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.2.0.tgz
+npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.2.1.tgz
 ```
 
 The archive contains compiled JavaScript ESM and `.d.ts` declarations in `dist/`
@@ -80,6 +80,11 @@ ts/
     ├── stream.test.ts       random 1–7 character chunks == parse
     ├── truncation.test.ts   truncated outputs
     ├── conformance.test.ts  ../conformance/ runner (skipped if missing)
+    ├── cortes.test.ts       byte cuts at every boundary (ts/src and js/mini.js) == parse
+    ├── defectos.test.ts     defects fixed after the V5 audit (unique in repair, max 0, finalRecords) and ADR 0017 proposals
+    ├── bigint.test.ts       current behaviour with integers beyond ±2^53 (ADR 0018, proposal)
+    ├── esquema_ramas.test.ts  branches of fromJsonSchema/fromZod
+    ├── registro.test.ts     Registry on disk and in memory, roundtripOk
     └── helpers.ts
 ```
 

@@ -24,6 +24,7 @@ La suite también corre dentro de `pytest` (`tests/test_conformance.py`), de
 | `generate.py` | Fuente de los casos. Las expectativas salen de los fixtures publicados en `forks/*/fixtures` o están escritas a mano desde `SPEC.md`; **nunca** se calculan ejecutando la implementación. |
 | `run_python.py` | Runner de referencia contra `minifmt`. |
 | `run_js.mjs` | Runner contra `js/mini.js`, el motor del playground generado desde `ts/src`. |
+| `oraculo/` | Decodificador de referencia independiente, escrito desde la gramática de la SPEC sin importar `minifmt` (`decodificador.py`), y su runner sobre este corpus (`ejecutar.py`). |
 
 Los casos que usan `family` leen `forks/<family>/contract.json` desde la raíz
 del repositorio.
@@ -126,3 +127,24 @@ Además, la suite 1.1 cubre los tipos `date` y `decimal`
 Los 303 casos de la suite 1.0 se conservan con las mismas expectativas; cinco casos
 `dumps-reject-*` ahora también fijan el código de error y `contract-unknown-type`
 usa `datetime` como tipo desconocido.
+
+## Casos añadidos después de 1.1 (376 en total)
+
+| Caso | Regla (SPEC) |
+|---|---|
+| `hdr-escaped-eq-key`, `hdr-escaped-eq-key-lenient` | `key\=value` en la cabecera: `\=` es un escape inválido (E09, §3.3) y su `=` está escapado, así que la entrada no tiene separador (E12, §3.2 y §5) |
+| `hdr-escaped-eq-n` | `n\=1` no declara `n`: E09, E12 y E03 |
+| `hdr-escaped-eq-in-value` | `\=` dentro de un valor: solo E09 |
+
+Las expectativas se escribieron desde la norma, no ejecutando ninguna implementación. Los tres ejecutores
+(`run_python.py`, `run_js.mjs` y `ts/test/conformance.test.ts`) las cumplen; antes de corregir el parser Python, tres de ellas fallaban.
+
+## Origen de las expectativas y oráculo independiente
+
+De los 376 casos, 128 (`fx-*`: fixtures, `dumps`, `escaping` y `lenient` de las 14 familias) salen de `forks/*/fixtures`, que
+`benchmark/make_forks.py` genera con `dumps`/`parse` de la implementación Python: respecto de Python son circulares. El resto está
+escrito a mano desde `SPEC.md`. Para no depender solo de eso, `oraculo/decodificador.py` reimplementa la lectura desde la gramática
+de la especificación con otra estructura y sin importar `minifmt`; `python conformance/oraculo/ejecutar.py` comprueba que cumple los
+307 casos `strict` y `lenient` (los modos `dumps`, `contract` y `fork` no los decodifica). `tests/test_nucleo_propiedades.py`,
+`tests/test_nucleo_oraculo.py` y `tools/fuzz_diferencial.py` lo usan para comparar Python y `js/mini.js` sobre documentos generados.
+Las zonas en las que la SPEC calla y el oráculo adopta una lectura están declaradas al principio de su código y en el ADR 0017.

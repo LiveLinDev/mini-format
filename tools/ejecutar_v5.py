@@ -67,7 +67,7 @@ def _ejecutar(orden: List[str], cwd: Path = RAIZ, timeout: int = 900, entorno: O
     env = dict(os.environ, PYTHONIOENCODING="utf-8")
     env["PYTHONPATH"] = str(RAIZ / "src") + os.pathsep + env.get("PYTHONPATH", "")
     env.update(entorno or {})
-    return subprocess.run(orden, cwd=cwd, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout)
+    return subprocess.run(orden, cwd=cwd, env=env, capture_output=True, stdin=subprocess.DEVNULL, text=True, encoding="utf-8", errors="replace", timeout=timeout)
 
 
 def _node() -> Optional[str]:
@@ -201,7 +201,7 @@ def paso_instalacion_limpia() -> Dict[str, Any]:
 
 
 def paso_adaptadores() -> Dict[str, Any]:
-    p = _ejecutar([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/test_nucleo_adaptadores.py",
+    p = _ejecutar([sys.executable, "-m", "pytest", "-p", "no:cacheprovider", "tests/test_nucleo_adaptadores.py",
                    "experiments/generativo/tests/test_adapters.py", "-v"], timeout=600)
     pruebas = [l for l in p.stdout.splitlines() if "::" in l and ("PASSED" in l or "FAILED" in l)]
     resumen = cobertura._resumen_pytest(p.stdout)
@@ -306,7 +306,7 @@ def manifiesto(resumen: Dict[str, Any], pasos: Dict[str, Dict[str, Any]], comand
         estado, resultado = "parcial", "no_evaluable"
     limitaciones = []
     if ci_estado not in ("verde", "rojo"):
-        limitaciones.append("CI en Linux, Windows y macOS no verificado: " + resumen["ci"].get("motivo", ""))
+        limitaciones.append(resumen["ci"].get("motivo") or "CI en Linux, Windows y macOS no verificado")
     if sin_ejecutar:
         limitaciones.append("pasos no ejecutados o con error: " + ", ".join(sin_ejecutar))
     limitaciones.append("ejecutado en un solo sistema operativo y una versión de Python; las cifras de otros sistemas no se infieren")
