@@ -1,0 +1,2620 @@
+{
+ "dominio": "eventos",
+ "semilla": 20260930,
+ "n": 50,
+ "J_inicial": 7408,
+ "J_inicial_por_tokenizador": {
+  "o200k_base": 2282,
+  "cl100k_base": 2363,
+  "r50k_base": 2763
+ },
+ "rondas": [
+  {
+   "ronda": 1,
+   "tipo": "tratamiento",
+   "J_antes": 7408,
+   "candidatos": [
+    {
+     "campo": "id_equipo",
+     "decision": {
+      "tratamiento": "id_prefijo",
+      "prefijo": "EQ-",
+      "ancho": 4,
+      "minimo": 0
+     },
+     "estado": "evaluada",
+     "J": 6912,
+     "J_por_tokenizador": {
+      "o200k_base": 2134,
+      "cl100k_base": 2216,
+      "r50k_base": 2562
+     },
+     "mejora_pct": 6.695
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 6991,
+     "J_por_tokenizador": {
+      "o200k_base": 2161,
+      "cl100k_base": 2233,
+      "r50k_base": 2597
+     },
+     "mejora_pct": 5.629
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 6778,
+     "J_por_tokenizador": {
+      "o200k_base": 2105,
+      "cl100k_base": 2177,
+      "r50k_base": 2496
+     },
+     "mejora_pct": 8.504
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 6782,
+     "J_por_tokenizador": {
+      "o200k_base": 2105,
+      "cl100k_base": 2181,
+      "r50k_base": 2496
+     },
+     "mejora_pct": 8.45
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 6798,
+     "J_por_tokenizador": {
+      "o200k_base": 2113,
+      "cl100k_base": 2189,
+      "r50k_base": 2496
+     },
+     "mejora_pct": 8.234
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 6698,
+     "J_por_tokenizador": {
+      "o200k_base": 2096,
+      "cl100k_base": 2158,
+      "r50k_base": 2444
+     },
+     "mejora_pct": 9.584
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 6745,
+     "J_por_tokenizador": {
+      "o200k_base": 2110,
+      "cl100k_base": 2175,
+      "r50k_base": 2460
+     },
+     "mejora_pct": 8.95
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 6704,
+     "J_por_tokenizador": {
+      "o200k_base": 2096,
+      "cl100k_base": 2164,
+      "r50k_base": 2444
+     },
+     "mejora_pct": 9.503
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 6704,
+     "J_por_tokenizador": {
+      "o200k_base": 2096,
+      "cl100k_base": 2164,
+      "r50k_base": 2444
+     },
+     "mejora_pct": 9.503
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 6718,
+     "J_por_tokenizador": {
+      "o200k_base": 2103,
+      "cl100k_base": 2171,
+      "r50k_base": 2444
+     },
+     "mejora_pct": 9.314
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 7165,
+     "J_por_tokenizador": {
+      "o200k_base": 2234,
+      "cl100k_base": 2271,
+      "r50k_base": 2660
+     },
+     "mejora_pct": 3.28
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 7187,
+     "J_por_tokenizador": {
+      "o200k_base": 2234,
+      "cl100k_base": 2293,
+      "r50k_base": 2660
+     },
+     "mejora_pct": 2.983
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 7187,
+     "J_por_tokenizador": {
+      "o200k_base": 2234,
+      "cl100k_base": 2293,
+      "r50k_base": 2660
+     },
+     "mejora_pct": 2.983
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 7193,
+     "J_por_tokenizador": {
+      "o200k_base": 2237,
+      "cl100k_base": 2296,
+      "r50k_base": 2660
+     },
+     "mejora_pct": 2.902
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 7119,
+     "J_por_tokenizador": {
+      "o200k_base": 2214,
+      "cl100k_base": 2244,
+      "r50k_base": 2661
+     },
+     "mejora_pct": 3.901
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 7119,
+     "J_por_tokenizador": {
+      "o200k_base": 2214,
+      "cl100k_base": 2244,
+      "r50k_base": 2661
+     },
+     "mejora_pct": 3.901
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 7144,
+     "J_por_tokenizador": {
+      "o200k_base": 2214,
+      "cl100k_base": 2269,
+      "r50k_base": 2661
+     },
+     "mejora_pct": 3.564
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 7144,
+     "J_por_tokenizador": {
+      "o200k_base": 2214,
+      "cl100k_base": 2269,
+      "r50k_base": 2661
+     },
+     "mejora_pct": 3.564
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 7152,
+     "J_por_tokenizador": {
+      "o200k_base": 2218,
+      "cl100k_base": 2273,
+      "r50k_base": 2661
+     },
+     "mejora_pct": 3.456
+    },
+    {
+     "campo": "fecha",
+     "decision": {
+      "tratamiento": "constante",
+      "clave_cabecera": "f"
+     },
+     "estado": "evaluada",
+     "J": 6358,
+     "J_por_tokenizador": {
+      "o200k_base": 1933,
+      "cl100k_base": 2014,
+      "r50k_base": 2411
+     },
+     "mejora_pct": 14.174
+    },
+    {
+     "campo": "hora",
+     "decision": {
+      "tratamiento": "hhmm"
+     },
+     "estado": "evaluada",
+     "J": 7132,
+     "J_por_tokenizador": {
+      "o200k_base": 2190,
+      "cl100k_base": 2272,
+      "r50k_base": 2670
+     },
+     "mejora_pct": 3.726
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 7159,
+     "J_por_tokenizador": {
+      "o200k_base": 2199,
+      "cl100k_base": 2281,
+      "r50k_base": 2679
+     },
+     "mejora_pct": 3.361
+    }
+   ]
+  },
+  {
+   "ronda": 2,
+   "tipo": "tratamiento",
+   "J_antes": 6358,
+   "candidatos": [
+    {
+     "campo": "id_equipo",
+     "decision": {
+      "tratamiento": "id_prefijo",
+      "prefijo": "EQ-",
+      "ancho": 4,
+      "minimo": 0
+     },
+     "estado": "evaluada",
+     "J": 5862,
+     "J_por_tokenizador": {
+      "o200k_base": 1785,
+      "cl100k_base": 1867,
+      "r50k_base": 2210
+     },
+     "mejora_pct": 7.801
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 5941,
+     "J_por_tokenizador": {
+      "o200k_base": 1812,
+      "cl100k_base": 1884,
+      "r50k_base": 2245
+     },
+     "mejora_pct": 6.559
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 5728,
+     "J_por_tokenizador": {
+      "o200k_base": 1756,
+      "cl100k_base": 1828,
+      "r50k_base": 2144
+     },
+     "mejora_pct": 9.909
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 5732,
+     "J_por_tokenizador": {
+      "o200k_base": 1756,
+      "cl100k_base": 1832,
+      "r50k_base": 2144
+     },
+     "mejora_pct": 9.846
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 5748,
+     "J_por_tokenizador": {
+      "o200k_base": 1764,
+      "cl100k_base": 1840,
+      "r50k_base": 2144
+     },
+     "mejora_pct": 9.594
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 5648,
+     "J_por_tokenizador": {
+      "o200k_base": 1747,
+      "cl100k_base": 1809,
+      "r50k_base": 2092
+     },
+     "mejora_pct": 11.167
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 5695,
+     "J_por_tokenizador": {
+      "o200k_base": 1761,
+      "cl100k_base": 1826,
+      "r50k_base": 2108
+     },
+     "mejora_pct": 10.428
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 5654,
+     "J_por_tokenizador": {
+      "o200k_base": 1747,
+      "cl100k_base": 1815,
+      "r50k_base": 2092
+     },
+     "mejora_pct": 11.073
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 5654,
+     "J_por_tokenizador": {
+      "o200k_base": 1747,
+      "cl100k_base": 1815,
+      "r50k_base": 2092
+     },
+     "mejora_pct": 11.073
+    },
+    {
+     "campo": "tipo_evento",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 5668,
+     "J_por_tokenizador": {
+      "o200k_base": 1754,
+      "cl100k_base": 1822,
+      "r50k_base": 2092
+     },
+     "mejora_pct": 10.852
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 6115,
+     "J_por_tokenizador": {
+      "o200k_base": 1885,
+      "cl100k_base": 1922,
+      "r50k_base": 2308
+     },
+     "mejora_pct": 3.822
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 6137,
+     "J_por_tokenizador": {
+      "o200k_base": 1885,
+      "cl100k_base": 1944,
+      "r50k_base": 2308
+     },
+     "mejora_pct": 3.476
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 6137,
+     "J_por_tokenizador": {
+      "o200k_base": 1885,
+      "cl100k_base": 1944,
+      "r50k_base": 2308
+     },
+     "mejora_pct": 3.476
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 6143,
+     "J_por_tokenizador": {
+      "o200k_base": 1888,
+      "cl100k_base": 1947,
+      "r50k_base": 2308
+     },
+     "mejora_pct": 3.382
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 6069,
+     "J_por_tokenizador": {
+      "o200k_base": 1865,
+      "cl100k_base": 1895,
+      "r50k_base": 2309
+     },
+     "mejora_pct": 4.545
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 6069,
+     "J_por_tokenizador": {
+      "o200k_base": 1865,
+      "cl100k_base": 1895,
+      "r50k_base": 2309
+     },
+     "mejora_pct": 4.545
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 6094,
+     "J_por_tokenizador": {
+      "o200k_base": 1865,
+      "cl100k_base": 1920,
+      "r50k_base": 2309
+     },
+     "mejora_pct": 4.152
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 6094,
+     "J_por_tokenizador": {
+      "o200k_base": 1865,
+      "cl100k_base": 1920,
+      "r50k_base": 2309
+     },
+     "mejora_pct": 4.152
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 6102,
+     "J_por_tokenizador": {
+      "o200k_base": 1869,
+      "cl100k_base": 1924,
+      "r50k_base": 2309
+     },
+     "mejora_pct": 4.026
+    },
+    {
+     "campo": "hora",
+     "decision": {
+      "tratamiento": "hhmm"
+     },
+     "estado": "evaluada",
+     "J": 6082,
+     "J_por_tokenizador": {
+      "o200k_base": 1841,
+      "cl100k_base": 1923,
+      "r50k_base": 2318
+     },
+     "mejora_pct": 4.341
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 6109,
+     "J_por_tokenizador": {
+      "o200k_base": 1850,
+      "cl100k_base": 1932,
+      "r50k_base": 2327
+     },
+     "mejora_pct": 3.916
+    }
+   ]
+  },
+  {
+   "ronda": 3,
+   "tipo": "tratamiento",
+   "J_antes": 5648,
+   "candidatos": [
+    {
+     "campo": "id_equipo",
+     "decision": {
+      "tratamiento": "id_prefijo",
+      "prefijo": "EQ-",
+      "ancho": 4,
+      "minimo": 0
+     },
+     "estado": "evaluada",
+     "J": 5152,
+     "J_por_tokenizador": {
+      "o200k_base": 1599,
+      "cl100k_base": 1662,
+      "r50k_base": 1891
+     },
+     "mejora_pct": 8.782
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 5231,
+     "J_por_tokenizador": {
+      "o200k_base": 1626,
+      "cl100k_base": 1679,
+      "r50k_base": 1926
+     },
+     "mejora_pct": 7.383
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 5018,
+     "J_por_tokenizador": {
+      "o200k_base": 1570,
+      "cl100k_base": 1623,
+      "r50k_base": 1825
+     },
+     "mejora_pct": 11.154
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 5022,
+     "J_por_tokenizador": {
+      "o200k_base": 1570,
+      "cl100k_base": 1627,
+      "r50k_base": 1825
+     },
+     "mejora_pct": 11.084
+    },
+    {
+     "campo": "planta",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 5038,
+     "J_por_tokenizador": {
+      "o200k_base": 1578,
+      "cl100k_base": 1635,
+      "r50k_base": 1825
+     },
+     "mejora_pct": 10.8
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 5405,
+     "J_por_tokenizador": {
+      "o200k_base": 1699,
+      "cl100k_base": 1717,
+      "r50k_base": 1989
+     },
+     "mejora_pct": 4.302
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 5427,
+     "J_por_tokenizador": {
+      "o200k_base": 1699,
+      "cl100k_base": 1739,
+      "r50k_base": 1989
+     },
+     "mejora_pct": 3.913
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 5427,
+     "J_por_tokenizador": {
+      "o200k_base": 1699,
+      "cl100k_base": 1739,
+      "r50k_base": 1989
+     },
+     "mejora_pct": 3.913
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 5433,
+     "J_por_tokenizador": {
+      "o200k_base": 1702,
+      "cl100k_base": 1742,
+      "r50k_base": 1989
+     },
+     "mejora_pct": 3.807
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 5359,
+     "J_por_tokenizador": {
+      "o200k_base": 1679,
+      "cl100k_base": 1690,
+      "r50k_base": 1990
+     },
+     "mejora_pct": 5.117
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 5359,
+     "J_por_tokenizador": {
+      "o200k_base": 1679,
+      "cl100k_base": 1690,
+      "r50k_base": 1990
+     },
+     "mejora_pct": 5.117
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 5384,
+     "J_por_tokenizador": {
+      "o200k_base": 1679,
+      "cl100k_base": 1715,
+      "r50k_base": 1990
+     },
+     "mejora_pct": 4.674
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 5384,
+     "J_por_tokenizador": {
+      "o200k_base": 1679,
+      "cl100k_base": 1715,
+      "r50k_base": 1990
+     },
+     "mejora_pct": 4.674
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 5392,
+     "J_por_tokenizador": {
+      "o200k_base": 1683,
+      "cl100k_base": 1719,
+      "r50k_base": 1990
+     },
+     "mejora_pct": 4.533
+    },
+    {
+     "campo": "hora",
+     "decision": {
+      "tratamiento": "hhmm"
+     },
+     "estado": "evaluada",
+     "J": 5372,
+     "J_por_tokenizador": {
+      "o200k_base": 1655,
+      "cl100k_base": 1718,
+      "r50k_base": 1999
+     },
+     "mejora_pct": 4.887
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 5399,
+     "J_por_tokenizador": {
+      "o200k_base": 1664,
+      "cl100k_base": 1727,
+      "r50k_base": 2008
+     },
+     "mejora_pct": 4.409
+    }
+   ]
+  },
+  {
+   "ronda": 4,
+   "tipo": "tratamiento",
+   "J_antes": 5018,
+   "candidatos": [
+    {
+     "campo": "id_equipo",
+     "decision": {
+      "tratamiento": "id_prefijo",
+      "prefijo": "EQ-",
+      "ancho": 4,
+      "minimo": 0
+     },
+     "estado": "evaluada",
+     "J": 4522,
+     "J_por_tokenizador": {
+      "o200k_base": 1422,
+      "cl100k_base": 1476,
+      "r50k_base": 1624
+     },
+     "mejora_pct": 9.884
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 4775,
+     "J_por_tokenizador": {
+      "o200k_base": 1522,
+      "cl100k_base": 1531,
+      "r50k_base": 1722
+     },
+     "mejora_pct": 4.843
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 4797,
+     "J_por_tokenizador": {
+      "o200k_base": 1522,
+      "cl100k_base": 1553,
+      "r50k_base": 1722
+     },
+     "mejora_pct": 4.404
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 4797,
+     "J_por_tokenizador": {
+      "o200k_base": 1522,
+      "cl100k_base": 1553,
+      "r50k_base": 1722
+     },
+     "mejora_pct": 4.404
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 4803,
+     "J_por_tokenizador": {
+      "o200k_base": 1525,
+      "cl100k_base": 1556,
+      "r50k_base": 1722
+     },
+     "mejora_pct": 4.285
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 4729,
+     "J_por_tokenizador": {
+      "o200k_base": 1502,
+      "cl100k_base": 1504,
+      "r50k_base": 1723
+     },
+     "mejora_pct": 5.759
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 4729,
+     "J_por_tokenizador": {
+      "o200k_base": 1502,
+      "cl100k_base": 1504,
+      "r50k_base": 1723
+     },
+     "mejora_pct": 5.759
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 4754,
+     "J_por_tokenizador": {
+      "o200k_base": 1502,
+      "cl100k_base": 1529,
+      "r50k_base": 1723
+     },
+     "mejora_pct": 5.261
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 4754,
+     "J_por_tokenizador": {
+      "o200k_base": 1502,
+      "cl100k_base": 1529,
+      "r50k_base": 1723
+     },
+     "mejora_pct": 5.261
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 4762,
+     "J_por_tokenizador": {
+      "o200k_base": 1506,
+      "cl100k_base": 1533,
+      "r50k_base": 1723
+     },
+     "mejora_pct": 5.102
+    },
+    {
+     "campo": "hora",
+     "decision": {
+      "tratamiento": "hhmm"
+     },
+     "estado": "evaluada",
+     "J": 4742,
+     "J_por_tokenizador": {
+      "o200k_base": 1478,
+      "cl100k_base": 1532,
+      "r50k_base": 1732
+     },
+     "mejora_pct": 5.5
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 4769,
+     "J_por_tokenizador": {
+      "o200k_base": 1487,
+      "cl100k_base": 1541,
+      "r50k_base": 1741
+     },
+     "mejora_pct": 4.962
+    }
+   ]
+  },
+  {
+   "ronda": 5,
+   "tipo": "tratamiento",
+   "J_antes": 4522,
+   "candidatos": [
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 4279,
+     "J_por_tokenizador": {
+      "o200k_base": 1374,
+      "cl100k_base": 1384,
+      "r50k_base": 1521
+     },
+     "mejora_pct": 5.374
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 4301,
+     "J_por_tokenizador": {
+      "o200k_base": 1374,
+      "cl100k_base": 1406,
+      "r50k_base": 1521
+     },
+     "mejora_pct": 4.887
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 4301,
+     "J_por_tokenizador": {
+      "o200k_base": 1374,
+      "cl100k_base": 1406,
+      "r50k_base": 1521
+     },
+     "mejora_pct": 4.887
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 4307,
+     "J_por_tokenizador": {
+      "o200k_base": 1377,
+      "cl100k_base": 1409,
+      "r50k_base": 1521
+     },
+     "mejora_pct": 4.755
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 4233,
+     "J_por_tokenizador": {
+      "o200k_base": 1354,
+      "cl100k_base": 1357,
+      "r50k_base": 1522
+     },
+     "mejora_pct": 6.391
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "iniciales"
+     },
+     "estado": "evaluada",
+     "J": 4233,
+     "J_por_tokenizador": {
+      "o200k_base": 1354,
+      "cl100k_base": 1357,
+      "r50k_base": 1522
+     },
+     "mejora_pct": 6.391
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 4258,
+     "J_por_tokenizador": {
+      "o200k_base": 1354,
+      "cl100k_base": 1382,
+      "r50k_base": 1522
+     },
+     "mejora_pct": 5.838
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 4258,
+     "J_por_tokenizador": {
+      "o200k_base": 1354,
+      "cl100k_base": 1382,
+      "r50k_base": 1522
+     },
+     "mejora_pct": 5.838
+    },
+    {
+     "campo": "estado",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 4266,
+     "J_por_tokenizador": {
+      "o200k_base": 1358,
+      "cl100k_base": 1386,
+      "r50k_base": 1522
+     },
+     "mejora_pct": 5.661
+    },
+    {
+     "campo": "hora",
+     "decision": {
+      "tratamiento": "hhmm"
+     },
+     "estado": "evaluada",
+     "J": 4246,
+     "J_por_tokenizador": {
+      "o200k_base": 1330,
+      "cl100k_base": 1385,
+      "r50k_base": 1531
+     },
+     "mejora_pct": 6.103
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 4273,
+     "J_por_tokenizador": {
+      "o200k_base": 1339,
+      "cl100k_base": 1394,
+      "r50k_base": 1540
+     },
+     "mejora_pct": 5.506
+    }
+   ]
+  },
+  {
+   "ronda": 6,
+   "tipo": "tratamiento",
+   "J_antes": 4233,
+   "candidatos": [
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 3990,
+     "J_por_tokenizador": {
+      "o200k_base": 1306,
+      "cl100k_base": 1265,
+      "r50k_base": 1419
+     },
+     "mejora_pct": 5.741
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 4012,
+     "J_por_tokenizador": {
+      "o200k_base": 1306,
+      "cl100k_base": 1287,
+      "r50k_base": 1419
+     },
+     "mejora_pct": 5.221
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 4012,
+     "J_por_tokenizador": {
+      "o200k_base": 1306,
+      "cl100k_base": 1287,
+      "r50k_base": 1419
+     },
+     "mejora_pct": 5.221
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 4018,
+     "J_por_tokenizador": {
+      "o200k_base": 1309,
+      "cl100k_base": 1290,
+      "r50k_base": 1419
+     },
+     "mejora_pct": 5.079
+    },
+    {
+     "campo": "hora",
+     "decision": {
+      "tratamiento": "hhmm"
+     },
+     "estado": "evaluada",
+     "J": 3957,
+     "J_por_tokenizador": {
+      "o200k_base": 1262,
+      "cl100k_base": 1266,
+      "r50k_base": 1429
+     },
+     "mejora_pct": 6.52
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 3984,
+     "J_por_tokenizador": {
+      "o200k_base": 1271,
+      "cl100k_base": 1275,
+      "r50k_base": 1438
+     },
+     "mejora_pct": 5.882
+    }
+   ]
+  },
+  {
+   "ronda": 7,
+   "tipo": "tratamiento",
+   "J_antes": 3957,
+   "candidatos": [
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 3714,
+     "J_por_tokenizador": {
+      "o200k_base": 1214,
+      "cl100k_base": 1174,
+      "r50k_base": 1326
+     },
+     "mejora_pct": 6.141
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 3736,
+     "J_por_tokenizador": {
+      "o200k_base": 1214,
+      "cl100k_base": 1196,
+      "r50k_base": 1326
+     },
+     "mejora_pct": 5.585
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 3736,
+     "J_por_tokenizador": {
+      "o200k_base": 1214,
+      "cl100k_base": 1196,
+      "r50k_base": 1326
+     },
+     "mejora_pct": 5.585
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 3742,
+     "J_por_tokenizador": {
+      "o200k_base": 1217,
+      "cl100k_base": 1199,
+      "r50k_base": 1326
+     },
+     "mejora_pct": 5.433
+    },
+    {
+     "campo": "valor",
+     "decision": {
+      "tratamiento": "escalado",
+      "factor": 10
+     },
+     "estado": "evaluada",
+     "J": 3708,
+     "J_por_tokenizador": {
+      "o200k_base": 1179,
+      "cl100k_base": 1184,
+      "r50k_base": 1345
+     },
+     "mejora_pct": 6.293
+    }
+   ]
+  },
+  {
+   "ronda": 8,
+   "tipo": "tratamiento",
+   "J_antes": 3708,
+   "candidatos": [
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "abrev"
+     },
+     "estado": "evaluada",
+     "J": 3465,
+     "J_por_tokenizador": {
+      "o200k_base": 1131,
+      "cl100k_base": 1092,
+      "r50k_base": 1242
+     },
+     "mejora_pct": 6.553
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_letra"
+     },
+     "estado": "evaluada",
+     "J": 3487,
+     "J_por_tokenizador": {
+      "o200k_base": 1131,
+      "cl100k_base": 1114,
+      "r50k_base": 1242
+     },
+     "mejora_pct": 5.96
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_LETRA"
+     },
+     "estado": "evaluada",
+     "J": 3487,
+     "J_por_tokenizador": {
+      "o200k_base": 1131,
+      "cl100k_base": 1114,
+      "r50k_base": 1242
+     },
+     "mejora_pct": 5.96
+    },
+    {
+     "campo": "severidad",
+     "decision": {
+      "tratamiento": "codigos",
+      "esquema": "seq_digito"
+     },
+     "estado": "evaluada",
+     "J": 3493,
+     "J_por_tokenizador": {
+      "o200k_base": 1134,
+      "cl100k_base": 1117,
+      "r50k_base": 1242
+     },
+     "mejora_pct": 5.798
+    }
+   ]
+  },
+  {
+   "ronda": 9,
+   "tipo": "tratamiento",
+   "J_antes": 3465,
+   "candidatos": []
+  },
+  {
+   "ronda": 10,
+   "tipo": "orden",
+   "J_antes": 3465,
+   "candidatos": [
+    {
+     "mover": "id_equipo",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "id_equipo",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "tipo_evento",
+      "id_equipo",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "id_equipo",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "id_equipo",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "id_equipo",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "id_equipo",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "id_equipo",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "id_equipo",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "id_equipo",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "id_equipo",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "id_equipo",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado",
+      "id_equipo"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3469,
+     "mejora_pct": -0.115,
+     "orden": [
+      "planta",
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "planta",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "planta",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "planta",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "planta",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "planta",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "planta",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado",
+      "planta"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3471,
+     "mejora_pct": -0.173,
+     "orden": [
+      "tipo_evento",
+      "id_equipo",
+      "planta",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "tipo_evento",
+      "planta",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "severidad",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "severidad",
+      "estado",
+      "tipo_evento",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "severidad",
+      "estado",
+      "hora",
+      "tipo_evento",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "tipo_evento",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "tipo_evento",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "severidad",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado",
+      "tipo_evento"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3487,
+     "mejora_pct": -0.635,
+     "orden": [
+      "severidad",
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "severidad",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "severidad",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "severidad",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "severidad",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "valor",
+      "severidad",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "severidad",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "hora",
+      "valor",
+      "confirmado",
+      "severidad"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3490,
+     "mejora_pct": -0.722,
+     "orden": [
+      "estado",
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "estado",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "estado",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "estado",
+      "severidad",
+      "hora",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "estado",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "valor",
+      "estado",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "estado",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "valor",
+      "confirmado",
+      "estado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "hora",
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "hora",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "hora",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "hora",
+      "severidad",
+      "estado",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "hora",
+      "estado",
+      "valor",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "valor",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "hora",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "valor",
+      "confirmado",
+      "hora"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "valor",
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "valor",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "valor",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "valor",
+      "severidad",
+      "estado",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "valor",
+      "estado",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "valor",
+      "hora",
+      "confirmado"
+     ]
+    },
+    {
+     "mover": "valor",
+     "a_posicion": 7,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "confirmado",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "confirmado",
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "confirmado",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "confirmado",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "confirmado",
+      "severidad",
+      "estado",
+      "hora",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "confirmado",
+      "estado",
+      "hora",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 5,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "confirmado",
+      "hora",
+      "valor"
+     ]
+    },
+    {
+     "mover": "confirmado",
+     "a_posicion": 6,
+     "estado": "evaluada",
+     "J": 3465,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id_equipo",
+      "planta",
+      "tipo_evento",
+      "severidad",
+      "estado",
+      "hora",
+      "confirmado",
+      "valor"
+     ]
+    }
+   ]
+  }
+ ],
+ "aceptadas": [
+  {
+   "ronda": 1,
+   "campo": "fecha",
+   "decision": {
+    "tratamiento": "constante",
+    "clave_cabecera": "f"
+   },
+   "J_despues": 6358,
+   "mejora_pct": 14.174
+  },
+  {
+   "ronda": 2,
+   "campo": "tipo_evento",
+   "decision": {
+    "tratamiento": "codigos",
+    "esquema": "abrev"
+   },
+   "J_despues": 5648,
+   "mejora_pct": 11.167
+  },
+  {
+   "ronda": 3,
+   "campo": "planta",
+   "decision": {
+    "tratamiento": "codigos",
+    "esquema": "seq_letra"
+   },
+   "J_despues": 5018,
+   "mejora_pct": 11.154
+  },
+  {
+   "ronda": 4,
+   "campo": "id_equipo",
+   "decision": {
+    "tratamiento": "id_prefijo",
+    "prefijo": "EQ-",
+    "ancho": 4,
+    "minimo": 0
+   },
+   "J_despues": 4522,
+   "mejora_pct": 9.884
+  },
+  {
+   "ronda": 5,
+   "campo": "estado",
+   "decision": {
+    "tratamiento": "codigos",
+    "esquema": "abrev"
+   },
+   "J_despues": 4233,
+   "mejora_pct": 6.391
+  },
+  {
+   "ronda": 6,
+   "campo": "hora",
+   "decision": {
+    "tratamiento": "hhmm"
+   },
+   "J_despues": 3957,
+   "mejora_pct": 6.52
+  },
+  {
+   "ronda": 7,
+   "campo": "valor",
+   "decision": {
+    "tratamiento": "escalado",
+    "factor": 10
+   },
+   "J_despues": 3708,
+   "mejora_pct": 6.293
+  },
+  {
+   "ronda": 8,
+   "campo": "severidad",
+   "decision": {
+    "tratamiento": "codigos",
+    "esquema": "abrev"
+   },
+   "J_despues": 3465,
+   "mejora_pct": 6.553
+  }
+ ],
+ "decisiones": {
+  "id_equipo": {
+   "tratamiento": "id_prefijo",
+   "prefijo": "EQ-",
+   "ancho": 4,
+   "minimo": 0
+  },
+  "planta": {
+   "tratamiento": "codigos",
+   "esquema": "seq_letra"
+  },
+  "tipo_evento": {
+   "tratamiento": "codigos",
+   "esquema": "abrev"
+  },
+  "severidad": {
+   "tratamiento": "codigos",
+   "esquema": "abrev"
+  },
+  "estado": {
+   "tratamiento": "codigos",
+   "esquema": "abrev"
+  },
+  "fecha": {
+   "tratamiento": "constante",
+   "clave_cabecera": "f"
+  },
+  "hora": {
+   "tratamiento": "hhmm"
+  },
+  "valor": {
+   "tratamiento": "escalado",
+   "factor": 10
+  },
+  "confirmado": {
+   "tratamiento": "pasa"
+  }
+ },
+ "orden": null,
+ "J_final": 3465,
+ "J_final_por_tokenizador": {
+  "o200k_base": 1131,
+  "cl100k_base": 1092,
+  "r50k_base": 1242
+ },
+ "mejora_total_pct": 53.226
+}

@@ -1,0 +1,332 @@
+{
+ "dominio": "comentarios",
+ "semilla": 20260930,
+ "n": 50,
+ "J_inicial": 10975,
+ "J_inicial_por_tokenizador": {
+  "o200k_base": 3051,
+  "cl100k_base": 3629,
+  "r50k_base": 4295
+ },
+ "rondas": [
+  {
+   "ronda": 1,
+   "tipo": "tratamiento",
+   "J_antes": 10975,
+   "candidatos": []
+  },
+  {
+   "ronda": 2,
+   "tipo": "orden",
+   "J_antes": 10975,
+   "candidatos": [
+    {
+     "mover": "postId",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id",
+      "postId",
+      "name",
+      "email",
+      "body"
+     ]
+    },
+    {
+     "mover": "postId",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id",
+      "name",
+      "postId",
+      "email",
+      "body"
+     ]
+    },
+    {
+     "mover": "postId",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id",
+      "name",
+      "email",
+      "postId",
+      "body"
+     ]
+    },
+    {
+     "mover": "postId",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id",
+      "name",
+      "email",
+      "body",
+      "postId"
+     ]
+    },
+    {
+     "mover": "id",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "id",
+      "postId",
+      "name",
+      "email",
+      "body"
+     ]
+    },
+    {
+     "mover": "id",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "name",
+      "id",
+      "email",
+      "body"
+     ]
+    },
+    {
+     "mover": "id",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "name",
+      "email",
+      "id",
+      "body"
+     ]
+    },
+    {
+     "mover": "id",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "name",
+      "email",
+      "body",
+      "id"
+     ]
+    },
+    {
+     "mover": "name",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 10977,
+     "mejora_pct": -0.018,
+     "orden": [
+      "name",
+      "postId",
+      "id",
+      "email",
+      "body"
+     ]
+    },
+    {
+     "mover": "name",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "name",
+      "id",
+      "email",
+      "body"
+     ]
+    },
+    {
+     "mover": "name",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "id",
+      "email",
+      "name",
+      "body"
+     ]
+    },
+    {
+     "mover": "name",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "id",
+      "email",
+      "body",
+      "name"
+     ]
+    },
+    {
+     "mover": "email",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 10977,
+     "mejora_pct": -0.018,
+     "orden": [
+      "email",
+      "postId",
+      "id",
+      "name",
+      "body"
+     ]
+    },
+    {
+     "mover": "email",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "email",
+      "id",
+      "name",
+      "body"
+     ]
+    },
+    {
+     "mover": "email",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "id",
+      "email",
+      "name",
+      "body"
+     ]
+    },
+    {
+     "mover": "email",
+     "a_posicion": 4,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "id",
+      "name",
+      "body",
+      "email"
+     ]
+    },
+    {
+     "mover": "body",
+     "a_posicion": 0,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "body",
+      "postId",
+      "id",
+      "name",
+      "email"
+     ]
+    },
+    {
+     "mover": "body",
+     "a_posicion": 1,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "body",
+      "id",
+      "name",
+      "email"
+     ]
+    },
+    {
+     "mover": "body",
+     "a_posicion": 2,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "id",
+      "body",
+      "name",
+      "email"
+     ]
+    },
+    {
+     "mover": "body",
+     "a_posicion": 3,
+     "estado": "evaluada",
+     "J": 10975,
+     "mejora_pct": 0.0,
+     "orden": [
+      "postId",
+      "id",
+      "name",
+      "body",
+      "email"
+     ]
+    }
+   ]
+  }
+ ],
+ "aceptadas": [],
+ "decisiones": {
+  "postId": {
+   "tratamiento": "pasa"
+  },
+  "id": {
+   "tratamiento": "pasa"
+  },
+  "name": {
+   "tratamiento": "pasa"
+  },
+  "email": {
+   "tratamiento": "pasa"
+  },
+  "body": {
+   "tratamiento": "pasa"
+  }
+ },
+ "orden": null,
+ "J_final": 10975,
+ "J_final_por_tokenizador": {
+  "o200k_base": 3051,
+  "cl100k_base": 3629,
+  "r50k_base": 4295
+ },
+ "mejora_total_pct": 0.0
+}
