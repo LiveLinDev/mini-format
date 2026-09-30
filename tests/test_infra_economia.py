@@ -294,6 +294,34 @@ class Escenarios(unittest.TestCase):
             self.assertEqual(fila["tokens_salida_capacidad"], str(lotes * tok))
             self.assertLessEqual(d(fila["gasto_usd"]), d(presupuesto))
 
+    def test_escenario_b_variantes_y_supuestos_expuestos(self):
+        t = _tarifa(pin="0.75", pca="0.075", pout="4.5")
+        pj = {"tokens_instruccion": 289, "tokens_salida_por_registro": "40", "tokens_salida_fijos": 6, "reintentos_por_lote": "0.1"}
+        pm = {"tokens_instruccion": 416, "tokens_salida_por_registro": "26", "tokens_salida_fijos": 2, "reintentos_por_lote": "0.05", "fraccion_reparada": "0.1"}
+        base = {"presupuesto_usd": "1000", "k": 25, "tarifa": t, "alternativas": [{"nombre": "J", "perfil": pj}, {"nombre": "M", "perfil": pm}]}
+        total = C.escenario_b(base)
+        solo = C.escenario_b(dict(base, variante="solo_salida"))
+        self.assertEqual((total["variante"], solo["variante"]), ("total", "solo_salida"))
+        self.assertEqual(total["politica_redondeo"], "ROUND_HALF_UP")
+        self.assertEqual([a["k"] for a in total["alternativas"]], ["25.0000", "25.0000"])      # tamaño de lote a la vista
+        # solo salida: costo del lote = tokens de salida x precio de salida, sin instrucción ni reintentos
+        self.assertEqual(solo["alternativas"][0]["costo_lote_usd"], q(d(40 * 25 + 6) * d("4.5") / 10**6, Q6))   # 0.004527
+        self.assertEqual(solo["alternativas"][1]["costo_lote_usd"], q(d(26 * 25 + 2) * d("4.5") / 10**6, Q6))   # 0.002934
+        self.assertEqual(solo["alternativas"][0]["lotes"], str(int(Decimal(1000) / (d(1006) * d("4.5") / 10**6))))
+        self.assertGreater(int(solo["alternativas"][0]["lotes"]), int(total["alternativas"][0]["lotes"]))   # sin instrucción ni reintentos rinde más
+        with self.assertRaises(ValueError):
+            C.escenario_b({"presupuesto_usd": "10", "variante": "solo_salida", "alternativas": [{"nombre": "A", "costo_lote_usd": "1"}]})
+        with self.assertRaises(ValueError):
+            C.escenario_b(dict(base, variante="otra"))
+
+    def test_punto_de_equilibrio_expone_k_de_referencia(self):
+        t = _tarifa(pin="1", pca="0.1", pout="4")
+        r = C.punto_equilibrio({"tarifa": t, "perfil_json": {"tokens_instruccion": 100, "tokens_salida_por_registro": "10"},
+                                "perfil_mini": {"tokens_instruccion": 400, "tokens_salida_por_registro": "6"}, "k_referencia": 25})
+        self.assertEqual(r["k_referencia"], "25.0000")
+        self.assertEqual(r["politica_redondeo"], "ROUND_HALF_UP")
+        self.assertIsNone(C.punto_equilibrio({"tarifa": t, "perfil_json": {}, "perfil_mini": {}})["k_referencia"])
+
     def test_escenario_b_es_ilustrativo(self):
         r = C.escenario_b({"presupuesto_usd": "1000", "alternativas": [{"nombre": "A", "costo_lote_usd": "1", "registros_validos_por_lote": "1"}]})
         self.assertTrue(r["presupuesto_ilustrativo"])

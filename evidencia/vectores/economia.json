@@ -2313,11 +2313,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "JSON compacto",
       "estado": "calculado",
       "motivo": null,
+      "k": "25.0000",
       "costo_lote_usd": "0.005218",
       "tokens_salida_por_lote": "1006.0000",
       "registros_validos_por_lote": "24.0000",
@@ -2331,6 +2334,7 @@
       "nombre": ".mini",
       "estado": "calculado",
       "motivo": null,
+      "k": "25.0000",
       "costo_lote_usd": "0.003276",
       "tokens_salida_por_lote": "652.0000",
       "registros_validos_por_lote": "24.7500",
@@ -2355,6 +2359,122 @@
      "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"
     }
    }
+  },
+  {
+   "id": "escenario_b_solo_salida",
+   "descripcion": "variante solo salida: sin instruccion, entrada ni reintentos; el mismo presupuesto rinde mas lotes",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "k": 25,
+    "variante": "solo_salida",
+    "tarifa": {
+     "proveedor": "OpenAI",
+     "modelo_api_id": "gpt-5.4-mini",
+     "moneda": "USD",
+     "entrada_sin_cache_por_millon": "0.75",
+     "entrada_cache_lectura_por_millon": "0.075",
+     "entrada_cache_escritura_por_millon": null,
+     "salida_por_millon": "4.5",
+     "estado": "verificada",
+     "fecha_consulta_utc": "2026-09-30T18:10:00Z"
+    },
+    "alternativas": [
+     {
+      "nombre": "JSON compacto",
+      "perfil": {
+       "nombre": "JSON compacto",
+       "tokens_instruccion": 289,
+       "tokens_salida_por_registro": "40",
+       "tokens_salida_fijos": 6,
+       "reintentos_por_lote": "0.1",
+       "fraccion_reparada": "1",
+       "fraccion_validos": "0.96"
+      }
+     },
+     {
+      "nombre": ".mini",
+      "perfil": {
+       "nombre": ".mini",
+       "tokens_instruccion": 416,
+       "tokens_salida_por_registro": "26",
+       "tokens_salida_fijos": 2,
+       "reintentos_por_lote": "0.05",
+       "fraccion_reparada": "0.1",
+       "fraccion_validos": "0.99"
+      }
+     }
+    ]
+   },
+   "salida": {
+    "tipo": "capacidad",
+    "presupuesto_usd": "1000.00",
+    "presupuesto_ilustrativo": true,
+    "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
+    "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "solo_salida",
+    "politica_redondeo": "ROUND_HALF_UP",
+    "alternativas": [
+     {
+      "nombre": "JSON compacto",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "25.0000",
+      "costo_lote_usd": "0.004527",
+      "tokens_salida_por_lote": "1006.0000",
+      "registros_validos_por_lote": "24.0000",
+      "lotes": "220896",
+      "registros_utiles": "5301504",
+      "tokens_salida_capacidad": "222221376",
+      "gasto_usd": "999.996192",
+      "sobrante_usd": "0.003808"
+     },
+     {
+      "nombre": ".mini",
+      "estado": "calculado",
+      "motivo": null,
+      "k": "25.0000",
+      "costo_lote_usd": "0.002934",
+      "tokens_salida_por_lote": "652.0000",
+      "registros_validos_por_lote": "24.7500",
+      "lotes": "340831",
+      "registros_utiles": "8435567",
+      "tokens_salida_capacidad": "222221812",
+      "gasto_usd": "999.998154",
+      "sobrante_usd": "0.001846"
+     }
+    ],
+    "comparacion": [
+     {
+      "nombre": ".mini",
+      "referencia": "JSON compacto",
+      "diferencia_registros_utiles": "3134063",
+      "registros_utiles_vs_referencia_pct": "59.1165"
+     }
+    ],
+    "supuestos": {
+     "lotes": "floor(presupuesto / costo exacto por lote)",
+     "registros_utiles": "floor(lotes x registros válidos por lote)",
+     "costo_lote": "únicamente tokens de salida x precio de salida (sin instrucción, entrada ni reintentos)"
+    }
+   }
+  },
+  {
+   "id": "error_b_solo_salida_con_costo_medido",
+   "descripcion": "un costo por lote medido no se puede separar en solo salida",
+   "operacion": "escenario_b",
+   "entrada": {
+    "presupuesto_usd": "1000",
+    "variante": "solo_salida",
+    "alternativas": [
+     {
+      "nombre": "A",
+      "costo_lote_usd": "0.5",
+      "registros_validos_por_lote": "10"
+     }
+    ]
+   },
+   "error": true
   },
   {
    "id": "escenario_b_medido_explicito",
@@ -2383,11 +2503,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "JSON",
       "estado": "calculado",
       "motivo": null,
+      "k": null,
       "costo_lote_usd": "0.005218",
       "tokens_salida_por_lote": "1006.0000",
       "registros_validos_por_lote": "24.0000",
@@ -2401,6 +2524,7 @@
       "nombre": ".mini",
       "estado": "calculado",
       "motivo": null,
+      "k": null,
       "costo_lote_usd": "0.003276",
       "tokens_salida_por_lote": "652.0000",
       "registros_validos_por_lote": "24.7500",
@@ -2451,11 +2575,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "A",
       "estado": "calculado",
       "motivo": null,
+      "k": null,
       "costo_lote_usd": "0.500000",
       "tokens_salida_por_lote": null,
       "registros_validos_por_lote": "0.0000",
@@ -2469,6 +2596,7 @@
       "nombre": "B",
       "estado": "calculado",
       "motivo": null,
+      "k": null,
       "costo_lote_usd": "0.500000",
       "tokens_salida_por_lote": null,
       "registros_validos_por_lote": "10.0000",
@@ -2513,11 +2641,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "A",
       "estado": "calculado",
       "motivo": null,
+      "k": null,
       "costo_lote_usd": "0.500000",
       "tokens_salida_por_lote": null,
       "registros_validos_por_lote": null,
@@ -2598,11 +2729,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "JSON",
       "estado": "calculado",
       "motivo": null,
+      "k": "10.0000",
       "costo_lote_usd": "0.002248",
       "tokens_salida_por_lote": "406.0000",
       "registros_validos_por_lote": "9.6000",
@@ -2616,6 +2750,7 @@
       "nombre": ".mini",
       "estado": "tarifa_no_verificada",
       "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada",
+      "k": "10.0000",
       "costo_lote_usd": null,
       "tokens_salida_por_lote": null,
       "registros_validos_por_lote": null,
@@ -2661,11 +2796,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "gratis",
       "estado": "costo_lote_cero",
       "motivo": "el costo por lote es 0: no se puede dividir el presupuesto",
+      "k": null,
       "costo_lote_usd": "0.000000",
       "tokens_salida_por_lote": null,
       "registros_validos_por_lote": "10.0000",
@@ -2705,11 +2843,14 @@
     "presupuesto_ilustrativo": true,
     "aviso_es": "El presupuesto es un valor ilustrativo de la interfaz: no autoriza gastar nada ni implica que exista ese dinero.",
     "aviso_en": "The budget is an illustrative interface value: it does not authorize spending anything nor imply that the money exists.",
+    "variante": "total",
+    "politica_redondeo": "ROUND_HALF_UP",
     "alternativas": [
      {
       "nombre": "A",
       "estado": "calculado",
       "motivo": null,
+      "k": null,
       "costo_lote_usd": "0.300000",
       "tokens_salida_por_lote": "100.5000",
       "registros_validos_por_lote": "9.9900",
@@ -2782,6 +2923,8 @@
      "mensaje_es": "Hay ahorro neto desde 19 registros por lote; con lotes menores no compensa el costo fijo adicional.",
      "mensaje_en": "There is a net saving from 19 records per batch; smaller batches do not offset the extra fixed cost."
     },
+    "k_referencia": "25.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -2844,6 +2987,8 @@
      "mensaje_es": "Hay ahorro neto desde 21 registros por lote; con lotes menores no compensa el costo fijo adicional.",
      "mensaje_en": "There is a net saving from 21 records per batch; smaller batches do not offset the extra fixed cost."
     },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -2907,6 +3052,8 @@
      "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
      "mensaje_en": "There is a net saving for any batch size from 1 record."
     },
+    "k_referencia": "10.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -2970,6 +3117,8 @@
      "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
      "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
     },
+    "k_referencia": "10.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -3032,6 +3181,8 @@
      "mensaje_es": "Hay ahorro neto solo hasta 99 registros por lote; con lotes mayores .mini cuesta más que JSON.",
      "mensaje_en": "There is a net saving only up to 99 records per batch; with larger batches .mini costs more than JSON."
     },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -3094,6 +3245,8 @@
      "mensaje_es": "Hay ahorro neto para cualquier tamaño de lote desde 1 registro.",
      "mensaje_en": "There is a net saving for any batch size from 1 record."
     },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -3156,6 +3309,8 @@
      "mensaje_es": "No hay ahorro neto para ningún tamaño de lote: con estos supuestos .mini cuesta igual o más que JSON.",
      "mensaje_en": "There is no net saving for any batch size: under these assumptions .mini costs the same or more than JSON."
     },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -3221,6 +3376,8 @@
      "mensaje_es": "Hay ahorro neto desde 2 registros por lote; con lotes menores no compensa el costo fijo adicional.",
      "mensaje_en": "There is a net saving from 2 records per batch; smaller batches do not offset the extra fixed cost."
     },
+    "k_referencia": "25.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -3287,6 +3444,8 @@
      "mensaje_es": "Hay ahorro neto desde 19 registros por lote; con lotes menores no compensa el costo fijo adicional.",
      "mensaje_en": "There is a net saving from 19 records per batch; smaller batches do not offset the extra fixed cost."
     },
+    "k_referencia": "50.0000",
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
@@ -3332,6 +3491,8 @@
      "estado": "tarifa_no_verificada",
      "motivo": "tarifa no verificada: DeepSeek/deepseek-chat figura como no_verificada"
     },
+    "k_referencia": null,
+    "politica_redondeo": "ROUND_HALF_UP",
     "supuestos": {
      "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
      "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",

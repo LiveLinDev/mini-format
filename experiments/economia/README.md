@@ -68,7 +68,7 @@ salida), `T_MINI` y `T_JSON` los tokens de salida medidos.
 | Costo de un lote de `k` registros | `entrada = (I x p_instr + k x e x p_e)/M` ; `salida = (o x k + c) x p_s/M` ; `reintentos = R x (entrada + fr x salida)` ; `costo_lote = entrada + salida + reintentos` (`p_instr = p_c` si la instrucción va en caché) |
 | Escenario A, solo salida | `costo_JSON = Tref x p_s/M` ; `costo_MINI = Tref x r x p_s/M` (`Tref` = 1 000 000 tokens JSON de referencia) |
 | Escenario A, total | `lotes = Tref / tokens_salida_lote_JSON` ; `costo_formato = lotes x costo_lote_formato` (mismos lotes y registros: el mismo trabajo) |
-| Escenario B | `lotes = floor(presupuesto / costo_lote)` ; `registros_utiles = floor(lotes x k x fraccion_validos)` |
+| Escenario B | `lotes = floor(presupuesto / costo_lote)` ; `registros_utiles = floor(lotes x k x fraccion_validos)` ; variante `solo_salida`: `costo_lote = (o x k + c) x p_s/M` (sin instrucción, entrada ni reintentos) |
 | Punto de equilibrio | `costo(k) = A + B k` (lineal); `Delta(k) = costo_JSON(k) - costo_MINI(k) = a k + b`; ahorro neto si `Delta(k) > 0` (un empate no cuenta) |
 
 Punto de equilibrio: `a > 0` y `Delta(1) > 0` -> ahorra desde 1 registro; `a > 0` y `Delta(1) <= 0` -> ahorra desde

@@ -461,11 +461,13 @@
   // -------------------------------------------------------------- escenario B
   function escenarioB(entrada) {
     const presupuesto = noNeg(dflt(entrada, 'presupuesto_usd', '1000'), 'presupuesto_usd');
+    const variante = dflt(entrada, 'variante', 'total');
+    if (variante !== 'total' && variante !== 'solo_salida') throw new Error("variante debe ser 'total' o 'solo_salida'");
     const kDef = entrada.k;
     const altsOut = [];
     const calculados = [];
     for (const alt of (entrada.alternativas || [])) {
-      const fila = { nombre: falta(alt.nombre) ? null : alt.nombre, estado: null, motivo: null, costo_lote_usd: null, tokens_salida_por_lote: null,
+      const fila = { nombre: falta(alt.nombre) ? null : alt.nombre, estado: null, motivo: null, k: null, costo_lote_usd: null, tokens_salida_por_lote: null,
         registros_validos_por_lote: null, lotes: null, registros_utiles: null, tokens_salida_capacidad: null, gasto_usd: null, sobrante_usd: null };
       let costo = null, tok = null, rv = null;
       if (!falta(alt.perfil)) {
@@ -473,13 +475,17 @@
         const bloqueo = tarifaUtilizable(tarifa, tarifa.proveedor, tarifa.modelo_api_id);
         const k = noNeg(dflt(alt, 'k', kDef), 'k');
         if (esCero(k)) throw new Error('k debe ser mayor que 0');
+        fila.k = fmt(k, DEC_LOTES);
         if (bloqueo) { fila.estado = bloqueo[0]; fila.motivo = bloqueo[1]; }
         else {
-          const [c, err] = costoLoteInterno(perfil(alt.perfil), tarifa, k);
+          let perfilAlt = perfil(alt.perfil);
+          if (variante === 'solo_salida') perfilAlt = soloSalida(perfilAlt);
+          const [c, err] = costoLoteInterno(perfilAlt, tarifa, k);
           if (err) { fila.estado = err[0]; fila.motivo = err[1]; }
           else { costo = c.total; tok = c.tokens_salida; rv = c.registros_validos; }
         }
       } else {
+        if (variante === 'solo_salida') throw new Error('la variante solo_salida exige alternativas con perfil (un costo por lote medido no se puede separar)');
         costo = noNeg(alt.costo_lote_usd, 'costo_lote_usd');
         tok = falta(alt.tokens_salida_por_lote) ? null : noNeg(alt.tokens_salida_por_lote, 'tokens_salida_por_lote');
         rv = falta(alt.registros_validos_por_lote) ? null : noNeg(alt.registros_validos_por_lote, 'registros_validos_por_lote');
@@ -515,8 +521,10 @@
     return {
       tipo: 'capacidad', presupuesto_usd: cien.d === 1n ? fmt(presupuesto, 2) : fmt(presupuesto, DEC_USD),
       presupuesto_ilustrativo: true, aviso_es: AVISO_PRESUPUESTO_ES, aviso_en: AVISO_PRESUPUESTO_EN,
+      variante: variante, politica_redondeo: 'ROUND_HALF_UP',
       alternativas: altsOut, comparacion: comparacion,
-      supuestos: { lotes: 'floor(presupuesto / costo exacto por lote)', registros_utiles: 'floor(lotes x registros válidos por lote)', costo_lote: 'entrada (instrucción y tarea) + salida + reintentos' },
+      supuestos: { lotes: 'floor(presupuesto / costo exacto por lote)', registros_utiles: 'floor(lotes x registros válidos por lote)',
+        costo_lote: variante === 'total' ? 'entrada (instrucción y tarea) + salida + reintentos' : 'únicamente tokens de salida x precio de salida (sin instrucción, entrada ni reintentos)' },
     };
   }
 
@@ -575,6 +583,8 @@
     let res;
     if (bloqueo) res = { solo_salida: { estado: bloqueo[0], motivo: bloqueo[1] }, total: { estado: bloqueo[0], motivo: bloqueo[1] } };
     else res = { solo_salida: equilibrio(soloSalida(pj), soloSalida(pm), tarifa, kRef), total: equilibrio(pj, pm, tarifa, kRef) };
+    res.k_referencia = kRef === null ? null : fmt(kRef, DEC_LOTES);
+    res.politica_redondeo = 'ROUND_HALF_UP';
     res.supuestos = {
       modelo: 'costo por lote lineal en k: costo(k) = A + B x k',
       ahorro_neto: 'costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)',

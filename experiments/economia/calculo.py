@@ -593,11 +593,14 @@ def escenario_b(entrada: Dict[str, Any]) -> Dict[str, Any]:
     cada alternativa? Usa el costo POR LOTE (entrada + salida + reintentos) y los registros válidos
     por lote; no compara tokens de formatos distintos como si fueran el mismo trabajo."""
     presupuesto = _no_neg(entrada.get("presupuesto_usd", "1000"), "presupuesto_usd")
+    variante = entrada.get("variante", "total")
+    if variante not in ("total", "solo_salida"):
+        raise ValueError("variante debe ser 'total' o 'solo_salida'")
     k_def = entrada.get("k")
     alts_out: List[Dict[str, Any]] = []
     calculados: List[Optional[int]] = []
     for alt in entrada.get("alternativas") or []:
-        fila: Dict[str, Any] = {"nombre": alt.get("nombre"), "estado": None, "motivo": None,
+        fila: Dict[str, Any] = {"nombre": alt.get("nombre"), "estado": None, "motivo": None, "k": None,
                                 "costo_lote_usd": None, "tokens_salida_por_lote": None,
                                 "registros_validos_por_lote": None, "lotes": None, "registros_utiles": None,
                                 "tokens_salida_capacidad": None, "gasto_usd": None, "sobrante_usd": None}
@@ -608,15 +611,21 @@ def escenario_b(entrada: Dict[str, Any]) -> Dict[str, Any]:
             k = _no_neg(alt.get("k", k_def), "k")
             if k == 0:
                 raise ValueError("k debe ser mayor que 0")
+            fila["k"] = fmt(k, DEC_LOTES)
             if bloqueo:
                 fila.update({"estado": bloqueo[0], "motivo": bloqueo[1]})
             else:
-                c, err = _costo_lote(_perfil(alt["perfil"]), tarifa, k)
+                perfil_alt = _perfil(alt["perfil"])
+                if variante == "solo_salida":
+                    perfil_alt = _solo_salida(perfil_alt)
+                c, err = _costo_lote(perfil_alt, tarifa, k)
                 if err:
                     fila.update({"estado": err[0], "motivo": err[1]})
                 else:
                     costo, tok, rv = c["total"], c["tokens_salida"], c["registros_validos"]
         else:
+            if variante == "solo_salida":
+                raise ValueError("la variante solo_salida exige alternativas con perfil (un costo por lote medido no se puede separar)")
             costo = _no_neg(alt["costo_lote_usd"], "costo_lote_usd")
             tok = None if alt.get("tokens_salida_por_lote") is None else _no_neg(alt["tokens_salida_por_lote"], "tokens_salida_por_lote")
             rv = None if alt.get("registros_validos_por_lote") is None else _no_neg(alt["registros_validos_por_lote"], "registros_validos_por_lote")
@@ -647,10 +656,12 @@ def escenario_b(entrada: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "tipo": "capacidad", "presupuesto_usd": fmt(presupuesto, 2) if (presupuesto * 100).denominator == 1 else fmt(presupuesto, DEC_USD),
         "presupuesto_ilustrativo": True, "aviso_es": AVISO_PRESUPUESTO_ES, "aviso_en": AVISO_PRESUPUESTO_EN,
+        "variante": variante, "politica_redondeo": "ROUND_HALF_UP",
         "alternativas": alts_out, "comparacion": comparacion,
         "supuestos": {"lotes": "floor(presupuesto / costo exacto por lote)",
                       "registros_utiles": "floor(lotes x registros válidos por lote)",
-                      "costo_lote": "entrada (instrucción y tarea) + salida + reintentos"},
+                      "costo_lote": ("entrada (instrucción y tarea) + salida + reintentos" if variante == "total"
+                                     else "únicamente tokens de salida x precio de salida (sin instrucción, entrada ni reintentos)")},
     }
 
 
@@ -740,6 +751,8 @@ def punto_equilibrio(entrada: Dict[str, Any]) -> Dict[str, Any]:
     else:
         res = {"solo_salida": _equilibrio(_solo_salida(pj), _solo_salida(pm), tarifa, k_ref),
                "total": _equilibrio(pj, pm, tarifa, k_ref)}
+    res["k_referencia"] = None if k_ref is None else fmt(k_ref, DEC_LOTES)
+    res["politica_redondeo"] = "ROUND_HALF_UP"
     res["supuestos"] = {
         "modelo": "costo por lote lineal en k: costo(k) = A + B x k",
         "ahorro_neto": "costo_json(k) - costo_mini(k) > 0 (un empate no cuenta como ahorro)",
