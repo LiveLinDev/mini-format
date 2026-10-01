@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/base.css?v=5f6a4fa80e7c6ec4">
 <link rel="stylesheet" href="/landing.css?v=3057cd918d60e8cc">
+<link rel="stylesheet" href="/comofunciona.css?v=8d6b15ecb703a21b">
 <link rel="icon" href="/favicon.svg?v=1496ea04e852d75e" type="image/svg+xml">
 <meta name="description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.">
 <link rel="canonical" href="https://mini-format.pmoluna.com/">
@@ -54,7 +55,7 @@
         validado</a> desde respuestas compactas de IA. Detecta errores y aplica
         reparaciones seguras con un <a href="/docs/errors/">informe verificable</a>.
       </p>
-      <p class="hero-examples"><a class="btn btn-ghost" href="/ejemplo/">Ver ejemplos de .mini →</a></p>
+      <p class="hero-examples"><a class="btn btn-ghost" href="/ejemplo/#como-funciona">Cómo funciona · ver los ejemplos →</a></p>
       <div id="instalar">
         <p class="install-label">Instalar mini-format 1.2.2</p>
         <div class="cmd" data-install="py">
@@ -96,6 +97,21 @@
 </div></div>
 
 <!-- ═══════════ COMO FUNCIONA ═══════════ -->
+<section class="section cf-preview" id="como-funciona">
+  <div class="frame">
+    <p class="eyebrow"><span data-lang="es">Cómo funciona</span><span data-lang="en" hidden>How it works</span></p>
+    <div class="split-head">
+      <h2><span data-lang="es">Tus datos.<br><span class="dim">Tu propio .mini.</span></span><span data-lang="en" hidden>Your data.<br><span class="dim">Your own .mini.</span></span></h2>
+      <p class="aside"><span data-lang="es">Decides qué información necesita tu aplicación. mini-format crea las reglas y las instrucciones para que la IA responda en .mini; después comprueba la respuesta y te devuelve los datos para usarlos.</span><span data-lang="en" hidden>Decide what information your application needs. mini-format creates the rules and instructions for the AI to reply in .mini, then checks the answer and returns data you can use.</span></p>
+    </div>
+    <ol class="cf-flow">
+      <li><span class="cf-number">01</span><h3><span data-lang="es">Describe tus datos</span><span data-lang="en" hidden>Describe your data</span></h3><p><span data-lang="es">Partes de muestras JSON o del esquema de tu aplicación.</span><span data-lang="en" hidden>Start with JSON samples or your application's schema.</span></p></li>
+      <li><span class="cf-number">02</span><h3><span data-lang="es">Crea tu formato</span><span data-lang="en" hidden>Create your format</span></h3><p><span data-lang="es">El contrato fija los campos y tipos. El prompt explica a la IA cómo responder.</span><span data-lang="en" hidden>The contract defines fields and types. The prompt tells the AI how to respond.</span></p></li>
+      <li><span class="cf-number">03</span><h3><span data-lang="es">Valida y usa la respuesta</span><span data-lang="en" hidden>Validate and use the answer</span></h3><p><span data-lang="es">Recuperas los registros válidos y detectas lo que debes corregir o volver a pedir.</span><span data-lang="en" hidden>Recover valid records and identify what to correct or request again.</span></p></li>
+    </ol>
+    <div class="cf-preview-action"><a class="btn btn-solid btn-lg" href="/ejemplo/#como-funciona"><span data-lang="es">Cómo funciona · ver los ejemplos →</span><span data-lang="en" hidden>How it works · explore the examples →</span></a><p><span data-lang="es">Sigue el proceso, prueba la Mesa de ayuda y compara un lote de tickets en la misma página.</span><span data-lang="en" hidden>Follow the process, try the help desk and compare a ticket batch on the same page.</span></p></div>
+  </div>
+</section>
 <!-- ═══════════ /COMO FUNCIONA ═══════════ -->
 
 <!-- ═══════════ CUATRO PIEZAS ═══════════ -->
@@ -112,7 +128,7 @@
         <h3>Especificación</h3>
         <p class="replaces">sustituye a JSON Schema · prompts a mano</p>
         <p>Gramática EBNF, 15 códigos de error estables y protocolo de extensión. La norma se escribe antes que el código y decide cuando las implementaciones difieren.</p>
-        <div class="cmdlite"><b>$</b> mini prompt log --lang es</div>
+        <div class="cmdlite"><b>$</b> mini prompt --contract contrato.json --lang es</div>
       </article>
       <article class="tool rv">
         <span class="burst burst-2" aria-hidden="true">sustituye a<br>parsers ad hoc</span>
@@ -127,8 +143,8 @@
         <span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 10 3 2-3 2M13 14h4"/></svg></span>
         <h3>Herramienta</h3>
         <p class="replaces">sustituye a jq · scripts de validación</p>
-        <p>Construye tu toolkit, valida, diagnostica, convierte en ambos sentidos, genera prompts, cuenta tokens y comprueba familias.</p>
-        <div class="cmdlite"><b>$</b> mini diagnose respuesta.mini</div>
+        <p>Construye tu toolkit, valida, diagnostica, convierte en ambos sentidos, genera prompts y cuenta tokens con tu propio contrato.</p>
+        <div class="cmdlite"><b>$</b> mini diagnose respuesta.mini --contract contrato.json</div>
       </article>
       <article class="tool rv">
         <span class="burst burst-4" aria-hidden="true">sustituye a<br>«en mi máquina»</span>
@@ -138,122 +154,6 @@
         <p>376 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 376/376.</p>
         <div class="cmdlite"><b>$</b> python conformance/run_python.py</div>
       </article>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ RECORRIDO ═══════════ -->
-<section class="section">
-  <div class="frame g2 walk" id="walk">
-    <div>
-      <p class="eyebrow">Un minuto con mini-format</p>
-      <h2 style="margin-bottom:1.2rem">Del contrato<br>al registro<br>tipado.</h2>
-      <p class="lead" style="margin-bottom:1.75rem">Declarar, instruir, llamar, validar, reparar y usar con la misma herramienta. Cada paso es un comando real; la salida está abreviada. Pulsa uno, o solo mira.</p>
-      <ol class="walk-steps" id="steps">
-        <li class="active"><button type="button" data-step="0"><span class="num">01</span><span><span class="t">Crear tu contrato</span><span class="cl"><b>$</b> mini from-schema eventos.schema.json -p log --out contrato.json</span><span class="d">Partes del esquema JSON de tu aplicación. Si tienes muestras JSON, también puedes usar <code>mini build</code>. <a href="/docs/build/">Crear tu toolkit →</a></span><span class="progress"></span></span></button></li>
-        <li><button type="button" data-step="1"><span class="num">02</span><span><span class="t">Generar la instrucción</span><span class="cl"><b>$</b> mini prompt --contract contrato.json --lang es</span><span class="d">El bloque para el prompt se deriva de tu contrato. Lo vuelves a generar cuando cambie. <a href="/docs/cli/">Herramienta →</a></span><span class="progress"></span></span></button></li>
-        <li><button type="button" data-step="2"><span class="num">03</span><span><span class="t">Llamar a la API y leer</span><span class="cl"><b>&gt;&gt;&gt;</b> parse(respuesta, c, strict=False)</span><span class="d">Cualquier proveedor. mini-format no se interpone en la llamada: prepara la entrada y procesa la salida. <a href="/docs/python/">Biblioteca Python →</a></span><span class="progress"></span></span></button></li>
-        <li><button type="button" data-step="3"><span class="num">04</span><span><span class="t">Diagnosticar</span><span class="cl"><b>$</b> mini diagnose respuesta.mini</span><span class="d">Cada error trae código estable, línea y campo. Los códigos son parte de la norma, así que valen igual en Python y en TypeScript. <a href="/docs/errors/">Índice de errores →</a></span><span class="progress"></span></span></button></li>
-        <li><button type="button" data-step="4"><span class="num">05</span><span><span class="t">Reparar solo lo que falló</span><span class="cl"><b>&gt;&gt;&gt;</b> doc.errors · lenient.invalidLines()</span><span class="d">En modo tolerante se conservan los registros válidos y se reintenta solo la línea rechazada, en vez de descartar la respuesta entera. <a href="/docs/typescript/">Biblioteca TypeScript →</a></span><span class="progress"></span></span></button></li>
-        <li><button type="button" data-step="5"><span class="num">06</span><span><span class="t">Usar registros tipados</span><span class="cl"><b>&gt;&gt;&gt;</b> doc.records · doc.to_canonical()</span><span class="d">Objetos del lenguaje anfitrión con los tipos del contrato. Desde aquí es código normal. <a href="/docs/quickstart/">Inicio rápido →</a></span><span class="progress"></span></span></button></li>
-      </ol>
-    </div>
-    <div>
-      <div class="term">
-        <div class="bar-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span id="term-title">~/proyecto — mini</span><span class="counter" id="term-pos">01 / 06</span></div>
-        <pre id="term-out" aria-live="polite"></pre>
-      </div>
-      <div class="term-foot">
-        <span>Recorrido reproducible del toolkit. Salida abreviada para facilitar la lectura. Pasa el ratón para pausar.</span>
-        <span class="term-ctrls"><button type="button" data-term="prev" aria-label="Paso anterior">‹</button><button type="button" data-term="replay">repetir</button><button type="button" data-term="next" aria-label="Paso siguiente">›</button></span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ TOOLKIT DE DOMINIO ═══════════ -->
-<section class="section">
-  <div class="frame g2">
-    <div>
-      <p class="eyebrow">Un build por dominio</p>
-      <h2 style="margin-bottom:1.1rem">Tus muestras.<br>Tu .mini.</h2>
-      <p class="lead" style="margin-bottom:1.6rem">Reúne los JSON que tu aplicación necesita. Un comando genera una carpeta <code>.mini</code> reutilizable en tu flujo de trabajo.</p>
-      <ul style="color:rgb(var(--fg-muted));font-size:.92rem;line-height:1.95;padding-left:1.15rem;margin:0 0 1.9rem">
-        <li><strong>Contrato de tu dominio.</strong> Aprende la estructura, los tipos y los campos opcionales de varias muestras.</li>
-        <li><strong>Prompt y parser.</strong> Instrucciones en español e inglés y herramientas ejecutables para recuperar JSON.</li>
-        <li><strong>Validación y reparación.</strong> Detecta el problema, corrige lo inequívoco y prepara el reintento de lo que requiere al modelo.</li>
-        <li><strong>Más cobertura, mejor contrato.</strong> Incluye ejemplos representativos, valores nulos, listas y casos poco frecuentes.</li>
-      </ul>
-      <div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>mini build phones.json more.json --prefix phone --out .mini</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
-    </div>
-    <div class="demo-video" id="demo-release">
-      <div class="dv-screen">
-        <div class="dv-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-dv-title>De JSON a tu toolkit</span><span class="dv-time" data-dv-time>0:00 / 0:24</span></div>
-        <pre class="dv-body" data-dv-body></pre>
-        <p class="dv-cap" data-dv-cap></p>
-        <div class="dv-progress" aria-hidden="true"><span data-dv-fill></span></div>
-      </div>
-      <div class="dv-controls">
-        <button type="button" class="dv-btn" data-dv-toggle aria-label="Reproducir el vídeo">
-          <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-        </button>
-        <div class="dv-dots" role="group" aria-label="Saltar a un paso del vídeo">
-          <button type="button" data-dv-goto="0" aria-label="Paso 1: muestras JSON">1</button>
-          <button type="button" data-dv-goto="1" aria-label="Paso 2: toolkit generado">2</button>
-          <button type="button" data-dv-goto="2" aria-label="Paso 3: validar y decodificar">3</button>
-          <button type="button" data-dv-goto="3" aria-label="Paso 4: detectar y reparar">4</button>
-        </div>
-        <button type="button" class="dv-btn" data-dv-restart aria-label="Reiniciar el vídeo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-        </button>
-      </div>
-      <details class="film"><summary>Ver el vídeo del flujo · 24 s</summary><video controls muted playsinline preload="none" aria-label="De muestras JSON a un toolkit mini-format"><source src="/assets/workflow.mp4?v=63466c7e38032480" type="video/mp4"><a href="/assets/workflow.mp4?v=63466c7e38032480">Descargar vídeo</a></video><p>Grabación de esta demostración. Comandos reales; salida abreviada.</p></details>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ EN USO ═══════════ -->
-<section class="section">
-  <div class="frame">
-    <div class="feature rv">
-      <div class="demo-video" id="demo-integracion">
-        <div class="dv-screen">
-          <div class="dv-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-dv-title>Integración en Django</span><span class="dv-time" data-dv-time>0:00 / 0:26</span></div>
-          <pre class="dv-body" data-dv-body></pre>
-          <p class="dv-cap" data-dv-cap></p>
-          <div class="dv-progress" aria-hidden="true"><span data-dv-fill></span></div>
-        </div>
-        <div class="dv-controls">
-          <button type="button" class="dv-btn" data-dv-toggle aria-label="Reproducir el vídeo">
-            <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <div class="dv-dots" role="group" aria-label="Saltar a un paso del vídeo">
-            <button type="button" data-dv-goto="0" aria-label="Paso 1: instalar">1</button>
-            <button type="button" data-dv-goto="1" aria-label="Paso 2: instruir y llamar">2</button>
-            <button type="button" data-dv-goto="2" aria-label="Paso 3: diagnosticar">3</button>
-            <button type="button" data-dv-goto="3" aria-label="Paso 4: usar registros">4</button>
-          </div>
-          <button type="button" class="dv-btn" data-dv-restart aria-label="Reiniciar el vídeo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="body">
-        <p class="eyebrow sq">Integración</p>
-        <h3>Entra en Django, FastAPI, Express, Next.js y lo que ya tengas.</h3>
-        <p>Es una biblioteca que usa el contrato de tu aplicación. Generas el bloque de prompt con <code>spec_block()</code>, llamas a tu proveedor como siempre y pasas la respuesta por <code>parse()</code>.</p>
-        <div class="codeblock light"><div class="tb"><span>servicios/evaluacion.py</span><span>python</span></div><pre><code><span class="k">from</span> minifmt <span class="k">import</span> Contract, parse, spec_block
-
-c <span class="p">=</span> Contract<span class="p">.</span><span class="f">load</span><span class="p">(</span><span class="s">"contrato.json"</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="f">generar_items</span><span class="p">(</span>tema<span class="p">):</span>
-    respuesta <span class="p">=</span> cliente<span class="p">.</span><span class="f">completar</span><span class="p">(</span>sistema<span class="p">=</span><span class="f">spec_block</span><span class="p">(</span>c<span class="p">,</span> lang<span class="p">=</span><span class="s">"es"</span><span class="p">),</span> usuario<span class="p">=</span>tema<span class="p">)</span>
-    doc <span class="p">=</span> <span class="f">parse</span><span class="p">(</span>respuesta<span class="p">,</span> c<span class="p">,</span> strict<span class="p">=</span><span class="k">False</span><span class="p">)</span>      <span class="c"># tolerante: acumula errores</span>
-    <span class="k">return</span> doc<span class="p">.</span>records<span class="p">,</span> doc<span class="p">.</span>errors                <span class="c"># válidos tipados, rechazados con código</span></code></pre></div>
-        <div class="actions"><a class="btn btn-solid btn-sm" href="/docs/python/">Biblioteca Python →</a><a class="btn btn-ghost btn-sm" href="/docs/typescript/">Biblioteca TypeScript</a><a class="txt" href="/docs/quickstart/">Guía de inicio</a></div>
-      </div>
     </div>
   </div>
 </section>
@@ -359,17 +259,6 @@ $ cd ts &amp;&amp; npm test
   </div>
 </section>
 
-<!-- ═══════════ EJEMPLOS ═══════════ -->
-<section class="section section--tint">
-  <div class="frame">
-    <div class="split-head">
-      <h2 class="rv">Tu aplicación.<br><span class="dim">Tu propio .mini.</span></h2>
-      <p class="aside rv">Los ejemplos muestran cómo funciona el formato con tickets de soporte. Después creas tu contrato a partir de tus datos. Las 14 familias publicadas son muestras opcionales para estudiar.</p>
-    </div>
-    <a class="btn btn-solid btn-lg" href="/ejemplo/">Ver ejemplos de .mini →</a>
-  </div>
-</section>
-
 <!-- ═══════════ PLAYGROUND ═══════════ -->
 <section class="section">
   <div class="frame g2">
@@ -397,7 +286,7 @@ $ cd ts &amp;&amp; npm test
           <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
         </button>
         <div class="dv-dots" role="group" aria-label="Saltar a un paso del vídeo">
-          <button type="button" data-dv-goto="0" aria-label="Paso 1: familias">1</button>
+          <button type="button" data-dv-goto="0" aria-label="Paso 1: contrato de muestra">1</button>
           <button type="button" data-dv-goto="1" aria-label="Paso 2: editor">2</button>
           <button type="button" data-dv-goto="2" aria-label="Paso 3: comparar">3</button>
           <button type="button" data-dv-goto="3" aria-label="Paso 4: contrato">4</button>

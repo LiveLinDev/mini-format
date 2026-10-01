@@ -164,6 +164,7 @@ __CABECERA__
     </p>
   </header>
 
+  <!-- MESA DEMO -->
   <section class="mesa-mandos" aria-label="Controles">
     <div class="grupo">
       <span class="et"><span data-lang="es">Cómo lee la respuesta</span><span data-lang="en" hidden>How the answer is read</span></span>
@@ -323,6 +324,7 @@ __CABECERA__
     <p class="fina" id="v7Metodo"></p>
   </section>
 
+  <!-- /MESA DEMO -->
   <section class="mesa-sec">
     <h2><span data-lang="es">Cómo se integra</span><span data-lang="en" hidden>How to integrate it</span></h2>
     <p>
@@ -376,7 +378,7 @@ __PIE__
   var TICKETS_OK = {};
   JSON.parse(DATOS.grabaciones.json.ok).tickets.forEach(function (t) { TICKETS_OK[t.id] = t; });
 
-  var T = {
+  var IDIOMAS = {
     es: {
       creados: function (n, m) { return n + " de " + m + " mensajes convertidos en tickets."; },
       nada: "Ningún ticket: la aplicación descarta la respuesta y la vuelve a pedir entera.",
@@ -529,7 +531,8 @@ __PIE__
       latencia: function (ms) { return (ms / 1000).toFixed(1) + " s in the model"; },
       real: ["Reading", "Token limit", "Tickets", "Calls", "Output tokens (median)", "What happened"]
     }
-  }[ES ? "es" : "en"];
+  };
+  var T = IDIOMAS[ES ? "es" : "en"];
 
   var estado = { formato: "mini", escenario: "ok", proveedor: "grabado", limite: 2000 };
 
@@ -1408,6 +1411,18 @@ __PIE__
   tablaReal();
   v7();
   modo();
+  new MutationObserver(function () {
+    var nuevo = document.documentElement.lang !== "en";
+    if (nuevo === ES) return;
+    ES = nuevo;
+    T = IDIOMAS[ES ? "es" : "en"];
+    $("#promptMini").textContent = ES ? DATOS.prompt.es : DATOS.prompt.en;
+    $("#notaModo").textContent = estado.proveedor === "grabado" ? T.modoGrabado : T.modoReal(PROVEEDORES[estado.proveedor]);
+    pintarMensajes();
+    tablaReal();
+    v7();
+    if (!$("#ejecutar").disabled) reiniciar();
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 })();
 </script>
 <script src="/docs.js"></script>

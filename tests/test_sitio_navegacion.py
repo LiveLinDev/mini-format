@@ -39,15 +39,15 @@ def region_de(html: str, nombre: str) -> str:
 def test_el_menu_tiene_validacion_junto_a_documentacion():
     rutas = [r for r, _, _ in construir.NAV]
     assert rutas[:2] == ["docs", "validacion"]
-    assert len(rutas) == 10 and {"taller", "ejemplo", "sima", "docs/spec", "docs/errors", "docs/forks", "playground", "mesa-de-ayuda"} <= set(rutas)
+    assert rutas == ["docs", "validacion", "docs/spec", "docs/errors", "playground", "ejemplo"]
     es, en = {r: e for r, e, _ in construir.NAV}, {r: e for r, _, e in construir.NAV}
     assert (es["validacion"], en["validacion"]) == ("Validación", "Validation")
 
 
 @pytest.mark.parametrize("activo, esperado", [
     ("docs", "docs"), ("docs/spec", "docs/spec"), ("docs/spec/cambios", "docs/spec"), ("docs/errors/E06", "docs/errors"),
-    ("docs/forks/a", "docs/forks"), ("docs/quickstart", "docs"), ("validacion", "validacion"), ("playground", "playground"),
-    ("mesa-de-ayuda", "mesa-de-ayuda"), ("taller", "taller"), ("docsx", ""), ("", ""), ("economia", ""),
+    ("docs/forks/a", "docs"), ("docs/quickstart", "docs"), ("validacion", "validacion"), ("playground", "playground"),
+    ("mesa-de-ayuda", ""), ("taller", ""), ("ejemplo", "ejemplo"), ("docsx", ""), ("", ""), ("economia", ""),
 ])
 def test_ruta_activa_es_la_mas_especifica_por_segmentos(activo, esperado):
     assert construir.ruta_activa(activo) == esperado
@@ -78,7 +78,7 @@ def test_portada_y_resto_de_paginas_comparten_menu_y_solo_difieren_en_lo_previst
 
 def test_el_pie_enlaza_validacion_economia_y_las_paginas_de_integracion():
     pie = construir.pie()
-    for destino in ("/validacion/", "/economia/", "/taller/", "/ejemplo/", "/sima/", "/mesa-de-ayuda/", "/docs/metodologia/"):
+    for destino in ("/validacion/", "/economia/", "/ejemplo/", "/docs/metodologia/"):
         assert f'href="{destino}"' in pie, destino
     assert "mini-format " + construir.__version__ in pie and "SPEC " + construir.SPEC_VERSION in pie
     assert 'data-lang="en"' in pie
@@ -114,7 +114,7 @@ def test_sincronizar_es_idempotente_sobre_las_fuentes(tmp_path, monkeypatch):
 
 def test_la_portada_enlaza_las_paginas_que_antes_no_enlazaba():
     portada = (SITIO / "index.html").read_text(encoding="utf-8")
-    for destino in ("/validacion/", "/taller/", "/sima/", "/ejemplo/", "/docs/"):
+    for destino in ("/validacion/", "/ejemplo/", "/docs/"):
         assert f'href="{destino}"' in region_de(portada, "CABECERA"), destino
         assert f'href="{destino}"' in region_de(portada, "PIE") or destino == "/docs/", destino
     assert '<script>document.documentElement.classList.add("js")</script>' in portada.split("</head>")[0]
@@ -248,7 +248,7 @@ def test_menu_movil_abre_cierra_con_esc_al_elegir_y_al_hacer_clic_fuera(navegado
     assert boton.get_attribute("aria-expanded") == "true" and lista.is_visible()
     enlaces = pagina.locator("#nav-links a:visible")
     assert [a for a in enlaces.evaluate_all("els => els.map(e => e.getAttribute('href'))")][:2] == ["/docs/", "/validacion/"]
-    assert enlaces.count() >= 10
+    assert enlaces.count() >= len(construir.NAV)
     # Esc cierra y devuelve el foco al botón
     pagina.locator("#nav-links a").first.focus()
     pagina.keyboard.press("Escape")
@@ -278,7 +278,7 @@ def test_menu_movil_abre_cierra_con_esc_al_elegir_y_al_hacer_clic_fuera(navegado
 
 @pytest.mark.skipif(not CONSTRUIDO, reason="el sitio no está construido")
 @pytest.mark.parametrize("ancho", [1340, 1366, 1440, 1600, 1920])
-def test_en_escritorio_los_diez_enlaces_caben_en_una_linea_sin_boton(navegador, base_url, ancho):
+def test_en_escritorio_el_menu_cabe_en_una_linea_sin_boton(navegador, base_url, ancho):
     contexto = navegador.new_context(viewport={"width": ancho, "height": 700})
     for ruta in ("/", "/taller/", "/validacion/"):
         pagina = contexto.new_page()
@@ -286,7 +286,7 @@ def test_en_escritorio_los_diez_enlaces_caben_en_una_linea_sin_boton(navegador, 
         pagina.goto(base_url + ruta)
         assert not pagina.locator(".nav-toggle").is_visible(), (ruta, ancho)
         enlaces = pagina.locator("#nav-links > li:not(.nav-cta) a")
-        assert enlaces.count() == 10
+        assert enlaces.count() == len(construir.NAV)
         alturas = enlaces.evaluate_all("els => els.map(e => Math.round(e.getBoundingClientRect().height))")
         assert max(alturas) < 40, f"{ruta} a {ancho}px: algún enlace se parte en dos líneas"
         assert pagina.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth")
@@ -377,7 +377,7 @@ def test_la_portada_con_javascript_desactivado_muestra_todo_el_texto(navegador, 
     assert pagina.evaluate("Array.from(document.querySelectorAll('[role=tabpanel]')).every(e => e.getClientRects().length > 0)")
     # y hay navegación: a 375 px los enlaces salen en línea (no hay botón que dependa de JS)
     assert not pagina.locator(".nav-toggle").is_visible()
-    assert pagina.locator("#nav-links a:visible").count() >= 10
+    assert pagina.locator("#nav-links a:visible").count() >= len(construir.NAV)
     if ancho == 375:
         assert pagina.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth")
     contexto.close()
@@ -390,6 +390,6 @@ def test_las_demas_paginas_se_leen_y_navegan_sin_javascript(navegador, base_url,
     pagina = contexto.new_page()
     pagina.goto(base_url + ruta)
     assert len(pagina.inner_text("main").strip()) > 100
-    assert pagina.locator("#nav-links a:visible").count() >= 10
+    assert pagina.locator("#nav-links a:visible").count() >= len(construir.NAV)
     assert pagina.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth")
     contexto.close()

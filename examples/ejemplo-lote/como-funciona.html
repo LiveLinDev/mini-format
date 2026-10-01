@@ -1,0 +1,65 @@
+<section class="ej-hero" id="como-funciona">
+  <p class="eyebrow"><span data-lang="es">Cómo funciona · ejemplos</span><span data-lang="en" hidden>How it works · examples</span></p>
+  <h1><span data-lang="es">¿Cómo funciona .mini?</span><span data-lang="en" hidden>How does .mini work?</span></h1>
+  <p class="lead"><span data-lang="es">Tú decides qué información necesitas: tickets, productos, pedidos o los datos de tu aplicación. mini-format te ayuda a definir cómo debe responder la IA, comprobar su respuesta y convertirla en datos que puedas usar.</span><span data-lang="en" hidden>You decide what information you need: tickets, products, orders or your application's data. mini-format helps you define how the AI should respond, check its answer and turn it into data you can use.</span></p>
+  <div class="ej-links"><a class="btn btn-solid" href="#mesa-de-ayuda"><span data-lang="es">Probar la Mesa de ayuda ↓</span><span data-lang="en" hidden>Try the help desk ↓</span></a><a class="btn btn-ghost" href="#tu-formato"><span data-lang="es">Crear mi propio .mini ↓</span><span data-lang="en" hidden>Create my own .mini ↓</span></a></div>
+</section>
+<nav class="ej-contents" aria-label="En esta página">
+  <a href="#proceso"><span data-lang="es">01 · Cómo funciona</span><span data-lang="en" hidden>01 · How it works</span></a>
+  <a href="#mesa-de-ayuda"><span data-lang="es">02 · Mesa de ayuda</span><span data-lang="en" hidden>02 · Help desk</span></a>
+  <a href="#comparacion"><span data-lang="es">03 · Comparar lotes</span><span data-lang="en" hidden>03 · Compare batches</span></a>
+  <a href="#tu-formato"><span data-lang="es">04 · Crear el tuyo</span><span data-lang="en" hidden>04 · Create your own</span></a>
+</nav>
+<section class="ej-section" id="proceso">
+  <p class="eyebrow"><span data-lang="es">01 · Entiende el proceso</span><span data-lang="en" hidden>01 · Understand the process</span></p>
+  <h2><span data-lang="es">De tus datos a registros validados.</span><span data-lang="en" hidden>From your data to validated records.</span></h2>
+  <p class="ej-definition"><span data-lang="es"><strong>.mini es un formato de texto para intercambiar datos.</strong> Un <strong>contrato</strong> es el archivo que define sus reglas: qué campos hay, en qué orden aparecen y qué valores aceptan. Tú lo creas para tu aplicación. El <strong>prompt</strong> explica esas reglas a la IA; el <strong>parser</strong> lee y comprueba lo que devuelve.</span><span data-lang="en" hidden><strong>.mini is a text format for exchanging data.</strong> A <strong>contract</strong> is the file that defines its rules: which fields exist, their order and the values they accept. You create it for your application. The <strong>prompt</strong> explains these rules to the AI; the <strong>parser</strong> reads and checks its response.</span></p>
+  <div class="ej-walk">
+    <div class="ej-steps" role="tablist" aria-label="Pasos del formato">
+      <button class="ej-step" id="paso-datos" role="tab" aria-selected="true" aria-controls="como-datos"><span class="n">01</span><span><b><span data-lang="es">Tus datos</span><span data-lang="en" hidden>Your data</span></b><small><span data-lang="es">Qué necesita tu aplicación</span><span data-lang="en" hidden>What your application needs</span></small></span></button>
+      <button class="ej-step" id="paso-contrato" role="tab" aria-selected="false" aria-controls="como-contrato"><span class="n">02</span><span><b><span data-lang="es">Tu contrato</span><span data-lang="en" hidden>Your contract</span></b><small><span data-lang="es">Las reglas de tu formato</span><span data-lang="en" hidden>Your format's rules</span></small></span></button>
+      <button class="ej-step" id="paso-respuesta" role="tab" aria-selected="false" aria-controls="como-respuesta"><span class="n">03</span><span><b><span data-lang="es">La respuesta de IA</span><span data-lang="en" hidden>The AI's response</span></b><small><span data-lang="es">Los mismos datos en .mini</span><span data-lang="en" hidden>The same data in .mini</span></small></span></button>
+      <button class="ej-step" id="paso-validacion" role="tab" aria-selected="false" aria-controls="como-validacion"><span class="n">04</span><span><b><span data-lang="es">Datos validados</span><span data-lang="en" hidden>Validated data</span></b><small><span data-lang="es">Listos para tu aplicación</span><span data-lang="en" hidden>Ready for your application</span></small></span></button>
+    </div>
+    <section class="ej-how-panel" role="tabpanel" id="como-datos" aria-labelledby="paso-datos" tabindex="0">
+      <h3><span data-lang="es">Empieza por lo que necesitas guardar.</span><span data-lang="en" hidden>Start with what you need to store.</span></h3>
+      <p><span data-lang="es">Imagina una aplicación que convierte mensajes de clientes en tickets. Cada ticket necesita un identificador, prioridad, categoría, resumen y horas estimadas. Este JSON muestra la información que queremos obtener.</span><span data-lang="en" hidden>Imagine an application that turns customer messages into tickets. Each ticket needs an ID, priority, category, summary and estimated hours. This JSON shows the information we want to obtain.</span></p>
+      <div class="ej-code"><span class="label">tickets.json · <span data-lang="es">datos de muestra</span><span data-lang="en" hidden>sample data</span></span><pre>__MUESTRA_JSON__</pre></div>
+      <p><span data-lang="es">Si tu aplicación maneja productos o pedidos, eliges sus campos. Puedes repetir este proceso con tu propia estructura.</span><span data-lang="en" hidden>If your application handles products or orders, choose their fields. You can repeat this process with your own structure.</span></p>
+    </section>
+    <section class="ej-how-panel" role="tabpanel" id="como-contrato" aria-labelledby="paso-contrato" tabindex="0">
+      <h3><span data-lang="es">Define una vez cómo se lee cada registro.</span><span data-lang="en" hidden>Define once how to read each record.</span></h3>
+      <p><span data-lang="es">En este ejemplo el contrato se llama <code>tk</code>. Fija estos cinco campos, su orden y los valores permitidos. Así, la IA y tu aplicación comparten las mismas reglas.</span><span data-lang="en" hidden>In this example the contract is named <code>tk</code>. It defines these five fields, their order and allowed values, so the AI and your application share the same rules.</span></p>
+      <dl class="ej-fields"><dt>id</dt><dd><span data-lang="es">Texto · identificador del ticket</span><span data-lang="en" hidden>Text · ticket ID</span></dd><dt>prioridad</dt><dd>alta · media · baja</dd><dt>categoria</dt><dd>acceso · pago · error · consulta</dd><dt>resumen</dt><dd><span data-lang="es">Texto · descripción del problema</span><span data-lang="en" hidden>Text · problem description</span></dd><dt>horas</dt><dd><span data-lang="es">Número entero · tiempo estimado</span><span data-lang="en" hidden>Integer · estimated time</span></dd></dl>
+      <div class="ej-code"><span class="label"><span data-lang="es">La demo parte de un JSON Schema</span><span data-lang="en" hidden>The demo starts from a JSON Schema</span></span><pre>mini from-schema ticket.schema.json -p tk --out contrato.json
+mini prompt --contract contrato.json --lang es</pre></div>
+      <p><span data-lang="es">¿Tienes muestras JSON en vez de un esquema? <code>mini build</code> crea tu toolkit con contrato, prompt, parser y validador. Más abajo puedes crear el tuyo.</span><span data-lang="en" hidden>Have JSON samples instead of a schema? <code>mini build</code> creates your toolkit with a contract, prompt, parser and validator. You can create your own below.</span></p>
+    </section>
+    <section class="ej-how-panel" role="tabpanel" id="como-respuesta" aria-labelledby="paso-respuesta" tabindex="0">
+      <h3><span data-lang="es">Pide los datos a la IA con esas reglas.</span><span data-lang="en" hidden>Ask the AI for data using these rules.</span></h3>
+      <p><span data-lang="es">Añades el prompt generado a tu petición. La primera línea identifica el contrato y el número de registros; cada línea siguiente contiene un ticket. Los valores siguen el orden acordado y se separan con <code>|</code>.</span><span data-lang="en" hidden>Add the generated prompt to your request. The first line identifies the contract and record count; each following line contains a ticket. Values follow the agreed order and are separated by <code>|</code>.</span></p>
+      <div class="ej-code"><span class="label">respuesta.mini · <span data-lang="es">los mismos dos tickets</span><span data-lang="en" hidden>the same two tickets</span></span><pre>__MUESTRA_MINI__</pre></div>
+      <details class="ej-prompt"><summary><span data-lang="es">Ver las instrucciones que recibe la IA</span><span data-lang="en" hidden>See the instructions the AI receives</span></summary><div class="ej-code"><pre data-lang="es">__PROMPT_MUESTRA_ES__</pre><pre data-lang="en" hidden>__PROMPT_MUESTRA_EN__</pre></div></details>
+      <p><span data-lang="es">Los nombres de los campos ya están en el contrato, así que la respuesta puede centrarse en los valores. El ahorro depende de tus datos y de las instrucciones que añadas.</span><span data-lang="en" hidden>Field names are already in the contract, so the response can focus on values. Savings depend on your data and the instructions you include.</span></p>
+    </section>
+    <section class="ej-how-panel" role="tabpanel" id="como-validacion" aria-labelledby="paso-validacion" tabindex="0">
+      <h3><span data-lang="es">Comprueba la respuesta y recupera tus datos.</span><span data-lang="en" hidden>Check the response and recover your data.</span></h3>
+      <div class="ej-code"><span class="label">Python · <span data-lang="es">leer con el contrato de la demo</span><span data-lang="en" hidden>read using the demo's contract</span></span><pre>from minifmt import Contract, parse
+
+contrato = Contract.load("contrato.json")
+doc = parse(respuesta, contrato, strict=False)
+registros = doc.records
+errores = doc.errors</pre></div>
+      <p><span data-lang="es">La muestra produce <strong>2 registros válidos y 0 errores</strong>, con los campos y tipos del JSON original. Puedes guardarlos en tu base de datos o devolverlos desde tu API.</span><span data-lang="en" hidden>The sample produces <strong>2 valid records and 0 errors</strong>, with the fields and types of the original JSON. You can store them in your database or return them from your API.</span></p>
+      <p><span data-lang="es">Si la IA escribe un valor inválido o corta la respuesta, el parser indica qué falló. Tu aplicación conserva los registros válidos y puede volver a pedir los que faltan. La demo de abajo muestra ese proceso.</span><span data-lang="en" hidden>If the AI writes an invalid value or truncates its answer, the parser reports what failed. Your application keeps valid records and can request missing ones again. The demo below shows that process.</span></p>
+    </section>
+    <div class="ej-how-next"><span><span data-lang="es">El mismo ejemplo, de principio a fin.</span><span data-lang="en" hidden>The same example, from start to finish.</span></span><a href="#mesa-de-ayuda"><span data-lang="es">Ahora pruébalo ↓</span><span data-lang="en" hidden>Now try it ↓</span></a></div>
+  </div>
+</section>
+<section class="ej-section mesa" id="mesa-de-ayuda">
+  <p class="eyebrow"><span data-lang="es">02 · Ejemplo interactivo</span><span data-lang="en" hidden>02 · Interactive example</span></p>
+  <h2><span data-lang="es">Mesa de ayuda: de mensajes a tickets.</span><span data-lang="en" hidden>Help desk: from messages to tickets.</span></h2>
+  <p class="lead"><span data-lang="es">Esta es una aplicación de muestra para entender cómo integrar .mini. Recibe diez mensajes, pide a la IA que los convierta en tickets y valida la respuesta. Tú puedes aplicar el mismo proceso a los datos de tu proyecto.</span><span data-lang="en" hidden>This sample application shows how to integrate .mini. It receives ten messages, asks the AI to turn them into tickets and validates the response. You can apply the same process to your project's data.</span></p>
+  <p class="ej-demo-hint"><span data-lang="es"><strong>Empieza sin clave:</strong> usa el modo Grabado, elige “Un valor inválido” o “Respuesta cortada” y pulsa “Crear tickets con IA”. Después cambia entre .mini y JSON para ver qué aprovecha esta aplicación. Las respuestas están guardadas; la validación se ejecuta aquí.</span><span data-lang="en" hidden><strong>Start without a key:</strong> use Recorded mode, select “One invalid value” or “Truncated answer” and press “Create tickets with AI”. Then switch between .mini and JSON to see what this application can use. Responses are stored; validation runs here.</span></p>
+  __MESA_DEMO__
+</section>

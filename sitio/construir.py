@@ -900,18 +900,14 @@ def datos_escalamiento() -> dict:
 
 
 # --------------------------------------------------------------------------- caso de integración
-def construir_mesa() -> None:
-    """Página /mesa-de-ayuda/: el caso de integración corriendo en el navegador con js/mini.js.
-
-    Los datos (esquema, mensajes y respuestas grabadas) están en examples/mesa-de-ayuda/; el contrato
-    no se escribe a mano: se genera aquí con la misma conversión que `mini from-schema`.
-    """
+def datos_mesa() -> dict:
+    """Una sola fuente para la demo integrada y su URL anterior."""
     from minifmt import from_json_schema, spec_block
     base = RAIZ / "examples" / "mesa-de-ayuda"
     esquema = (base / "ticket.schema.json").read_text(encoding="utf-8")
     contrato = from_json_schema(json.loads(esquema), "tk")
     grabacion = lambda formato, escenario: (base / "grabaciones" / formato / f"{escenario}.{formato}").read_text(encoding="utf-8")
-    datos = {
+    return {
         "contrato": contrato.to_dict(),
         "esquema": esquema.strip(),
         "mensajes": json.loads((base / "mensajes.json").read_text(encoding="utf-8")),
@@ -924,6 +920,12 @@ def construir_mesa() -> None:
         "escalamiento": datos_escalamiento(),
         "precios": precios_proveedores(),
     }
+
+
+def construir_mesa() -> None:
+    """URL anterior de la demo; comparte datos y componentes con /ejemplo/."""
+    base = RAIZ / "examples" / "mesa-de-ayuda"
+    datos = datos_mesa()
     safe = lambda js: js.replace("</script", "<\\/script")
     pagina = (base / "plantilla.html").read_text(encoding="utf-8")
     for marca, valor in [("__CABEZA__", cabeza()),
@@ -938,21 +940,52 @@ def construir_mesa() -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(pagina, encoding="utf-8")
     esc = datos.get("escalamiento") or {}
-    print(f"  mesa de ayuda: {len(pagina.encode('utf-8'))//1024} KB, contrato tk con {len(contrato.core)} campos"
+    print(f"  mesa de ayuda: {len(pagina.encode('utf-8'))//1024} KB, contrato tk con {len(datos['contrato']['core'])} campos"
           + (f", V7 con {len(esc['barrido'])} celdas y volumen de "
              f"{sum(v['registros'] for v in esc['volumen'].values()):,} registros" if esc else ", sin datos de V7"))
 
 
 def construir_ejemplo() -> None:
-    """Página /ejemplo/: el mismo lote de tickets en .mini y en JSON, con tokens y corte simulado."""
+    """Recorrido completo: formato propio, demo de soporte y comparación de lotes."""
     sys.path.insert(0, str(SITIO))
     from ejemplo_lote import datos_publicados
+    from minifmt import Contract, dumps, parse
+    import html
     datos = datos_publicados()
-    pagina = (RAIZ / "examples" / "ejemplo-lote" / "plantilla.html").read_text(encoding="utf-8")
+    origen = RAIZ / "examples" / "ejemplo-lote"
+    pagina = (origen / "plantilla.html").read_text(encoding="utf-8")
+    pagina = pagina.replace("__RECORRIDO__", (origen / "como-funciona.html").read_text(encoding="utf-8"))
+    pagina = pagina.replace("__TU_FORMATO__", (origen / "tu-formato.html").read_text(encoding="utf-8"))
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
+
+    mesa = datos_mesa()
+    plantilla_mesa = (RAIZ / "examples" / "mesa-de-ayuda" / "plantilla.html").read_text(encoding="utf-8")
+    estilos = re.search(r"<style>(.*?)</style>", plantilla_mesa, re.S).group(1)
+    demo = re.search(r"<!-- MESA DEMO -->(.*?)<!-- /MESA DEMO -->", plantilla_mesa, re.S).group(1)
+    # Las mediciones siguen disponibles sin interrumpir el primer recorrido.
+    mediciones = demo.index('<section class="mesa-sec">')
+    demo = demo[:mediciones] + '<details class="ej-measurements"><summary>' + ambos(
+        "Ver las mediciones con un modelo real", "See measurements with a real model") + '</summary>' + demo[mediciones:] + '</details>'
+    controlador = re.search(r'<script>const DATOS = __DATOS__;</script>\s*<script>(.*?)</script>', plantilla_mesa, re.S).group(1)
+    # DATOS queda en un ámbito propio: ambos ejemplos pueden usar sus controladores originales.
+    scripts = '<script>' + safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8")) + '</script>\n<script>(function () {\nconst DATOS = ' + safe(json.dumps(mesa, ensure_ascii=False)) + ';\n' + controlador + '\n})();</script>'
+    muestra = {"tickets": json.loads(mesa["grabaciones"]["json"]["ok"])["tickets"][:2]}
+    contrato = Contract.from_dict(mesa["contrato"])
+    texto = dumps({"header": {}, contrato.records_key: muestra["tickets"]}, contrato)
+    doc = parse(texto, contrato, strict=False)
+    if doc.errors or doc.records != muestra["tickets"]:
+        raise SystemExit("el ejemplo de Cómo funciona no conserva sus dos tickets")
     for marca, valor in [("__CABEZA__", cabeza()),
                          ("__CABECERA__", cabecera("ejemplo")),
                          ("__PIE__", pie()),
+                         ("__MESA_ESTILOS__", estilos),
+                         ("__MESA_DEMO__", demo),
+                         ("__MESA_SCRIPTS__", scripts),
+                         ("__MUESTRA_JSON__", html.escape(json.dumps(muestra, ensure_ascii=False, indent=2))),
+                         ("__MUESTRA_MINI__", html.escape(texto)),
+                         ("__PROMPT_MUESTRA_ES__", html.escape(mesa["prompt"]["es"])),
+                         ("__PROMPT_MUESTRA_EN__", html.escape(mesa["prompt"]["en"])),
+                         ("__VERSION__", __version__),
                          ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
         if marca not in pagina:
             raise SystemExit(f"plantilla del ejemplo: falta la marca {marca}")
