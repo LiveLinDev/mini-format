@@ -281,7 +281,7 @@ def paso_criterio(d: Path, filas: List[Dict[str, Any]], filas_rev: List[Dict[str
     ev.escribir_json(d / "criterio_v1_resultado.json", e)
     refs = K.tabla_referencias(filas, filas_rev, float(crit["interpretacion_primaria"]["umbral_pct"]), B=500 if rapido else 2000)
     escribir_csv(d / "ahorro_por_referencia.csv", refs)
-    (d / "criterio_v1_resultado.md").write_text(K.informe_md(e), encoding="utf-8", newline="\n")
+    (d / "criterio_v1_resultado.md").write_bytes(K.informe_md(e).encode("utf-8"))
     return {"evaluacion": e, "archivos": [d / "criterio_v1_resultado.json", d / "criterio_v1_resultado.md", d / "ahorro_por_referencia.csv"], "tiempo_s": round(time.time() - t0, 1)}
 
 
@@ -317,7 +317,7 @@ def paso_conciliacion(d: Path, toks: Dict[str, Any], dirs: Dict[str, Path], rapi
     doc = {"definiciones": Q.DEFINICIONES, "cifras": cifras, "ahorro_por_unidad": resumen_unidades,
            "alcance": "rapido (subconjunto de dominios: las cifras NO son las publicadas)" if rapido else "completo"}
     ev.escribir_json(d / "conciliacion_cifras.json", doc)
-    (d / "conciliacion_cifras.md").write_text(Q.informe_md(cifras, resumen_unidades), encoding="utf-8", newline="\n")
+    (d / "conciliacion_cifras.md").write_bytes(Q.informe_md(cifras, resumen_unidades).encode("utf-8"))
     archivos = [d / "conciliacion_cifras.json", d / "conciliacion_cifras.md", escribir_csv(d / "desglose_dominio_tokenizador.csv", desg)]
     errata = E.verificar()
     ev.escribir_json(d / "errata_v7_v8_verificacion.json", errata)

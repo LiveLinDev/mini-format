@@ -89,7 +89,7 @@ def registros_verificados(filas: List[Dict[str, Any]]) -> Dict[str, Dict[str, in
 def escribir_json_ordenado(ruta: Path, obj: Any) -> None:
     """JSON legible que CONSERVA el orden de claves (el de los objetos de la aplicación importa)."""
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    ruta.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+    ruta.write_bytes((json.dumps(obj, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
 
 
 def evaluar_criterio(comparacion: List[Dict[str, Any]], fallos: List[Dict[str, Any]], n: int = 100) -> Dict[str, Any]:
@@ -255,7 +255,7 @@ def correr(salida: Path, run_id: str, tamanos, nmax: int, con_ejemplos: bool, of
     if oficial:
         # documentos derivados de los resultados que acaban de validarse (nunca cifras escritas a mano)
         documentos.insertar_bloque(README, documentos.bloque_readme(salida))
-        ADR.write_text(documentos.adr(salida), encoding="utf-8", newline="\n")
+        ADR.write_bytes(documentos.adr(salida).encode("utf-8"))
     return destino
 
 
