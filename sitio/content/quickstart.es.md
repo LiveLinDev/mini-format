@@ -4,18 +4,20 @@ Construye una vez el toolkit de tu dominio. Después, coloca su prompt en tu flu
 
 ## 1. Instalar
 
-[Descargar toolkit 1.2.2 (.zip)](/downloads/mini-format-1.2.2.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.2-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.2-source.zip)
+[Descargar toolkit 1.2.3 (.zip)](/downloads/mini-format-1.2.3.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.3-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.3-source.zip)
 
 Requiere Python 3.9 o posterior. El núcleo y el toolkit generado usan la biblioteca estándar.
 
 ```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.2-py3-none-any.whl
-mini
+pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.3-py3-none-any.whl
+mini setup
 ```
 
-El asistente te pregunta si ya tienes un archivo de datos (JSON, CSV, TSV o XML) o si prefieres definir los campos allí mismo. Crea la carpeta `.mini/` y una `GUIA.md` con los pasos para pedir, validar y convertir respuestas. En una terminal no interactiva, usa `mini init` o los comandos de abajo.
+El asistente te pregunta si ya tienes un archivo de datos (JSON, CSV, TSV o XML) o si prefieres definir los campos allí mismo. Crea la carpeta `.mini/` y una `GUIA.md` con los pasos para pedir, validar y convertir respuestas. Para automatizar la creación sin preguntas, usa `mini build` como se explica abajo. `mini init` y `mini` en una terminal siguen abriendo el mismo asistente.
 
-Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.2.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.2.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
+Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.3.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.3.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
+
+Si ya completaste `mini setup`, tu carpeta está lista: puedes continuar en **4. Integrar**. Los pasos 2 y 3 explican la alternativa por comando.
 
 ## 2. Opcional: construir desde muestras por comando
 

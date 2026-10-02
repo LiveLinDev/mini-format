@@ -124,8 +124,9 @@ def _new_sample():
 def run() -> int:
     """Guide the user through a first toolkit; return 130 on interruption."""
     try:
-        print(_style("\n  ╭──────────────────────────────────────────╮\n  │  .mini  ·  crea un formato para tus datos  │\n  ╰──────────────────────────────────────────╯", "36"))
-        print("\n  Un toolkit incluye el formato, instrucciones para IA, conversor y validador.")
+        print(_style("\n  ╭──────────────────────────────────────────╮\n  │  mini setup  ·  tu .mini, paso a paso      │\n  ╰──────────────────────────────────────────╯", "35"))
+        print("\n  Tú eliges los datos. mini prepara las instrucciones para la IA")
+        print("  y las herramientas para comprobar y leer sus respuestas.")
         print("\n  ¿Cómo quieres empezar?\n  1  Tengo un archivo con datos\n  2  Quiero definir mis campos aquí\n  3  Salir\n")
         mode = _choice("Elige una opción", ("1", "2", "3"))
         if mode == "3":
@@ -145,18 +146,23 @@ def run() -> int:
             sample = _new_sample()
             suggested = "mi-formato"
             sources = ["campos definidos en el asistente"]
-        print(_style("\n  Paso 2/3  ·  Nombre y carpeta", "1;36"))
+        print(_style("\n  Paso 2/3  ·  Nombre y carpeta", "1;35"))
         print("  El nombre corto identifica tu formato dentro de cada documento .mini.")
         while True:
-            prefix = _ask("Nombre corto", suggested)
+            prefix = _ask("¿Cómo se llama tu formato?", suggested)
             if re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", prefix):
                 break
             print("  Usa letras, números, guion o guion bajo; empieza con una letra.")
-        destination = Path(_ask("Carpeta nueva para el toolkit", ".mini"))
-        print(_style("\n  Paso 3/3  ·  Construir", "1;36"))
+        destination = Path(_ask("¿Dónde guardamos los archivos?", ".mini"))
+        print(_style("\n  Paso 3/3  ·  Preparando tu .mini", "1;35"))
         contract = build_bundle([sample], prefix, destination, source_names=sources)
         print(_style(f"\n  ✓ Toolkit creado en {destination}", "1;32"))
         print(f"  {contract['sample_records']} registro(s) de muestra · {len(contract['record_fields'])} campo(s)")
+        print("\n  Tus datos → reglas e instrucciones → respuesta .mini → datos comprobados")
+        print("  contract.json    las reglas de tus datos")
+        print("  prompt.es.md     las instrucciones que añades a tu petición de IA")
+        print("  parser.py        convierte la respuesta en datos de tu aplicación")
+        print("  validator.py     avisa si falta algo o un valor no es válido")
         print(f"\n  Empieza por {destination / 'GUIA.md'} y {destination / 'example.mini'}")
         print(f'  Para validar una respuesta de IA: python "{destination / "validator.py"}" respuesta.mini')
         print(f'  Para convertirla a datos: python "{destination / "parser.py"}" decode respuesta.mini')

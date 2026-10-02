@@ -8,26 +8,26 @@ your model for `.mini`, then recover your original JSON structure.
 
 ## Download and install
 
-Download the [complete toolkit](https://mini-format.pmoluna.com/downloads/mini-format-1.2.2.zip)
+Download the [complete toolkit](https://mini-format.pmoluna.com/downloads/mini-format-1.2.3.zip)
 and extract it. Python 3.9 or later is required; the wheel installs offline without
 runtime dependencies:
 
 ```bash
-python -m pip install --no-index mini_format-1.2.2-py3-none-any.whl
-mini
+python -m pip install --no-index mini_format-1.2.3-py3-none-any.whl
+mini setup
 ```
 
 Or install directly from the site:
 
 ```bash
-python -m pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.2-py3-none-any.whl
+python -m pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.3-py3-none-any.whl
 ```
 
 `mini` starts an interactive guide: use your data (JSON, CSV, TSV or XML) or define fields without a file. It creates `.mini/` and a `GUIA.md` for the next steps. For automation, use `mini build`.
 
 The ZIP contains the Python wheel, a Node package, examples, documentation and the
 MIT license. [SHA-256 checksums](https://mini-format.pmoluna.com/downloads/SHA256SUMS.txt)
-and [source code](https://mini-format.pmoluna.com/downloads/mini-format-1.2.2-source.zip)
+and [source code](https://mini-format.pmoluna.com/downloads/mini-format-1.2.3-source.zip)
 are available on the same site. No GitHub account is required.
 
 ## Build once, reuse
@@ -66,7 +66,7 @@ canonical_json = document.to_canonical()
 Node 22.6+ can install the compiled ESM package, including TypeScript source types:
 
 ```bash
-npm install ./mini-format-core-1.2.2.tgz
+npm install ./mini-format-core-1.2.3.tgz
 ```
 
 ```javascript

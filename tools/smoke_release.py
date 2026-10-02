@@ -46,9 +46,9 @@ def main(directory):
         python = bindir / ("python.exe" if os.name == "nt" else "python")
         mini = bindir / ("mini.exe" if os.name == "nt" else "mini")
         run([python, "-m", "pip", "install", "--no-index", kit / f"mini_format-{version}-py3-none-any.whl"], work)
-        assert "mini init" in run([mini], work, input_text="")
+        assert "mini setup" in run([mini], work, input_text="")
         (work / "incidentes.csv").write_text("id,titulo\n101,Error de acceso\n", encoding="utf-8")
-        guide = run([mini, "init"], work, input_text="1\nincidentes.csv\ninc\nmi-formato\n")
+        guide = run([mini, "setup"], work, input_text="1\nincidentes.csv\ninc\nmi-formato\n")
         assert "Toolkit creado" in guide
         assert (work / "mi-formato/GUIA.md").is_file()
         run([python, work / "mi-formato/validator.py", work / "mi-formato/example.mini"], work)

@@ -7,7 +7,7 @@
 Descomprime el ZIP de la sección Descargas. Con Python 3.9 o posterior:
 
 ```sh
-python -m pip install --no-index mini_format-1.2.2-py3-none-any.whl
+python -m pip install --no-index mini_format-1.2.3-py3-none-any.whl
 mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini
 ```
 

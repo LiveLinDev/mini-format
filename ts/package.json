@@ -1,6 +1,6 @@
 {
   "name": "@mini-format/core",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Biblioteca TypeScript de la notación .mini (SPEC 1.1): parser, serializador, bloque de especificación, registro de familias, lectura en streaming, reparación selectiva, contratos desde Zod/JSON Schema y adaptadores de modelos.",
   "type": "module",
   "license": "MIT",

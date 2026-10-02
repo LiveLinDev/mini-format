@@ -74,6 +74,9 @@ def test_recorrido_se_navega_con_teclado_y_conserva_la_muestra(page, base_url):
     pw.expect(page.locator("#como-datos")).to_be_hidden()
     page.locator("#paso-contrato").press("ArrowRight")
     pw.expect(page.locator("#como-respuesta pre").first).to_contain_text("tk|n=2")
+    page.locator('[data-token="horas"]').click()
+    pw.expect(page.locator('[data-token-description]')).to_contain_text("número entero")
+    assert page.locator(".ej-wire-path").get_attribute("d")
     page.locator(".ej-prompt summary").click()
     pw.expect(page.locator('#como-respuesta pre[data-lang="es"]')).to_be_visible()
     page.locator("#paso-respuesta").press("End")
@@ -100,11 +103,11 @@ def test_idioma_actualiza_la_explicacion_y_ambas_demos(page, base_url):
     page.goto(base_url + "/ejemplo/")
     page.locator('[data-lang-btn="en"]').click()
     pw.expect(page.get_by_role("heading", level=1)).to_have_text("How does .mini work?", use_inner_text=True)
-    pw.expect(page.locator("#respuesta")).to_contain_text("Create tickets with AI")
+    pw.expect(page.locator("#respuesta")).to_contain_text("See the example in action")
     pw.expect(page.locator("#notaModo")).to_contain_text("Recorded model answers")
     pw.expect(page.locator("#cifras")).to_contain_text("Tokens in .mini")
     page.locator('[data-lang-btn="es"]').click()
-    pw.expect(page.locator("#respuesta")).to_contain_text("Crear tickets con IA")
+    pw.expect(page.locator("#respuesta")).to_contain_text("Ver el ejemplo en acción")
 
 
 def test_movil_y_movimiento_reducido(page, base_url, tmp_path):
@@ -114,6 +117,8 @@ def test_movil_y_movimiento_reducido(page, base_url, tmp_path):
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), "desbordamiento en móvil"
     page.locator("#paso-respuesta").click()
     pw.expect(page.locator("#como-respuesta")).to_be_visible()
+    assert page.locator(".ej-walk").get_attribute("data-playing") == "false"
+    assert page.locator('.ej-connector i').first.evaluate("e => getComputedStyle(e).animationName") == "none"
     page.locator("#ejecutar").click()
     pw.expect(page.locator("#resultado")).to_be_visible(timeout=8000)
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
@@ -132,3 +137,31 @@ def test_explicacion_disponible_sin_javascript(browser, base_url):
         pw.expect(page.locator("#" + panel)).to_be_visible()
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     context.close()
+
+
+def test_recorrido_se_anima_se_pausa_y_se_puede_avanzar(page, base_url):
+    page.goto(base_url + "/ejemplo/#proceso")
+    page.locator("#recorrido-play").click()
+    pw.expect(page.locator("#recorrido-play")).to_have_attribute("aria-pressed", "true")
+    pw.expect(page.locator("#como-contrato")).to_be_visible(timeout=6500)
+    page.locator("#recorrido-play").click()
+    pw.expect(page.locator(".ej-walk")).to_have_attribute("data-playing", "false")
+    page.locator("#recorrido-next").click()
+    pw.expect(page.locator("#como-respuesta")).to_be_visible()
+    page.locator("#recorrido-prev").click()
+    pw.expect(page.locator("#como-contrato")).to_be_visible()
+
+
+def test_setup_es_visible_y_build_explicado_por_partes(page, base_url):
+    page.goto(base_url + "/")
+    pw.expect(page.locator(".hero-setup code")).to_have_text("mini setup")
+    page.goto(base_url + "/ejemplo/#tu-formato")
+    pw.expect(page.locator(".ej-setup-command code")).to_have_text("mini setup")
+    assert page.locator(".ej-build").get_attribute("open") is None
+    page.locator(".ej-build summary").click()
+    page.locator('[data-build-part="nombre"]').click()
+    pw.expect(page.locator("[data-build-description]")).to_contain_text("nombre app")
+    page.locator('[data-build-part="carpeta"]').click()
+    pw.expect(page.locator("[data-build-description]")).to_contain_text("carpeta nueva")
+    page.locator('[data-lang-btn="en"]').click()
+    pw.expect(page.locator("[data-build-description]")).to_contain_text("new folder")

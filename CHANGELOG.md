@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.3
+
+- `mini setup` starts the guided creation flow explicitly. `mini init` and running `mini` in a terminal remain supported. The wizard uses the same builder as `mini build`.
+- The home page introduces the guided command. Examples now follow messages through rules, an annotated .mini response and validated records, with controlled animation and a reduced-motion alternative.
+- The help-desk demo explains what support requests are and uses a clear "See the example in action" action. The direct build command is still available, with each argument explained.
+
 ## 1.2.2
 
 Running `mini` now opens a first-run wizard in a terminal; `mini init` starts it explicitly. It can build a toolkit from JSON, CSV, TSV or XML, or from fields entered interactively. Each generated toolkit includes `GUIA.md` with validation, repair and conversion steps. `mini help` also works.

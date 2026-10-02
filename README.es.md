@@ -8,26 +8,26 @@ de reparación. Pide `.mini` a la IA y recupera la estructura JSON original.
 
 ## Descargar e instalar
 
-Descarga el [kit completo](https://mini-format.pmoluna.com/downloads/mini-format-1.2.2.zip)
+Descarga el [kit completo](https://mini-format.pmoluna.com/downloads/mini-format-1.2.3.zip)
 y descomprímelo. Necesitas Python 3.9 o posterior; el paquete se instala sin conexión
 y no tiene dependencias de ejecución:
 
 ```bash
-python -m pip install --no-index mini_format-1.2.2-py3-none-any.whl
-mini
+python -m pip install --no-index mini_format-1.2.3-py3-none-any.whl
+mini setup
 ```
 
 También puedes instalar directamente desde la web:
 
 ```bash
-python -m pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.2-py3-none-any.whl
+python -m pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.3-py3-none-any.whl
 ```
 
-`mini` abre un asistente para partir de tus datos (JSON, CSV, TSV o XML) o definir campos sin archivo. Crea tu carpeta `.mini/` y una `GUIA.md` para empezar. Si prefieres automatizarlo, usa `mini build`.
+`mini setup` abre un asistente para partir de tus datos (JSON, CSV, TSV o XML) o definir campos sin archivo. Crea tu carpeta `.mini/` y una `GUIA.md` para empezar. Si prefieres automatizarlo, usa `mini build`.
 
 El ZIP contiene el paquete Python, un paquete Node, ejemplos, documentación y
 licencia MIT. Las [sumas SHA-256](https://mini-format.pmoluna.com/downloads/SHA256SUMS.txt)
-y el [código fuente](https://mini-format.pmoluna.com/downloads/mini-format-1.2.2-source.zip)
+y el [código fuente](https://mini-format.pmoluna.com/downloads/mini-format-1.2.3-source.zip)
 están en la misma web. No necesitas una cuenta de GitHub.
 
 ## Construye una vez y reutiliza
@@ -66,7 +66,7 @@ json_canonico = documento.to_canonical()
 Node 22.6+ puede instalar el paquete ESM compilado, con tipos TypeScript:
 
 ```bash
-npm install ./mini-format-core-1.2.2.tgz
+npm install ./mini-format-core-1.2.3.tgz
 ```
 
 ```javascript

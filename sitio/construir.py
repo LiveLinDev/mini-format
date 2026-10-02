@@ -975,6 +975,11 @@ def construir_ejemplo() -> None:
     doc = parse(texto, contrato, strict=False)
     if doc.errors or doc.records != muestra["tickets"]:
         raise SystemExit("el ejemplo de Cómo funciona no conserva sus dos tickets")
+    encabezados = [("Solicitud", "Request"), ("Urgencia", "Urgency"), ("Tipo", "Type"),
+                   ("Qué ocurrió", "What happened"), ("Horas", "Hours")]
+    tabla = '<table><thead><tr>' + ''.join('<th scope="col">' + ambos(es, en) + '</th>' for es, en in encabezados)
+    tabla += '</tr></thead><tbody>' + ''.join('<tr>' + ''.join('<td>' + html.escape(str(r[c])) + '</td>'
+                 for c in ("id", "prioridad", "categoria", "resumen", "horas")) + '</tr>' for r in doc.records) + '</tbody></table>'
     for marca, valor in [("__CABEZA__", cabeza()),
                          ("__CABECERA__", cabecera("ejemplo")),
                          ("__PIE__", pie()),
@@ -983,6 +988,7 @@ def construir_ejemplo() -> None:
                          ("__MESA_SCRIPTS__", scripts),
                          ("__MUESTRA_JSON__", html.escape(json.dumps(muestra, ensure_ascii=False, indent=2))),
                          ("__MUESTRA_MINI__", html.escape(texto)),
+                         ("__MUESTRA_TABLA__", tabla),
                          ("__PROMPT_MUESTRA_ES__", html.escape(mesa["prompt"]["es"])),
                          ("__PROMPT_MUESTRA_EN__", html.escape(mesa["prompt"]["en"])),
                          ("__VERSION__", __version__),

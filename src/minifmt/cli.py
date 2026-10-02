@@ -368,7 +368,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="mini", description="Crea tu propio formato .mini y úsalo con IA")
     ap.add_argument("--forks", help="directory of your contracts or the optional example families")
     sub = ap.add_subparsers(dest="cmd")
-    sub.add_parser("init", help="asistente interactivo para crear tu toolkit").set_defaults(fn=lambda args: _onboard())
+    sub.add_parser("setup", aliases=["init"], help="crea tu .mini paso a paso: datos, nombre y carpeta").set_defaults(fn=lambda args: _onboard())
     sub.add_parser("forks").set_defaults(fn=cmd_forks)
     p = sub.add_parser("validate"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.set_defaults(fn=cmd_validate)
     p = sub.add_parser("diagnose"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract"); p.set_defaults(fn=cmd_diagnose)
@@ -391,7 +391,8 @@ def main(argv=None) -> int:
     if not argv:
         if sys.stdin.isatty():
             return _onboard()
-        print("Bienvenido a .mini. Abre una terminal y ejecuta 'mini' para crear tu toolkit interactivo.")
+        print("Bienvenido a .mini. Ejecuta 'mini setup' para crear tu formato paso a paso.")
+        print("El asistente te pregunta por tus datos, su nombre y la carpeta de salida.")
         print("También puedes ejecutar 'mini init' o consultar 'mini --help'.")
         return 0
     args = ap.parse_args(argv)

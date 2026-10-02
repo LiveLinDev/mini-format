@@ -14,7 +14,7 @@ def inyectar_portada(html, ctx):
     <p class="eyebrow">{a("Cómo funciona", "How it works")}</p>
     <div class="split-head">
       <h2>{titulo}</h2>
-      <p class="aside">{a("Decides qué información necesita tu aplicación. mini-format crea las reglas y las instrucciones para que la IA responda en .mini; después comprueba la respuesta y te devuelve los datos para usarlos.", "Decide what information your application needs. mini-format creates the rules and instructions for the AI to reply in .mini, then checks the answer and returns data you can use.")}</p>
+      <p class="aside">{a("Empiezas con mini setup: el asistente te pregunta por tus datos y prepara tu formato. En el recorrido visual puedes seguir un mensaje, ver cómo responde la IA y entender qué recibe tu aplicación.", "Start with mini setup: the wizard asks about your data and prepares your format. Follow a message in the visual journey, see how the AI replies and understand what your application receives.")}</p>
     </div>
     <ol class="cf-flow">
       <li><span class="cf-number">01</span><h3>{a("Describe tus datos", "Describe your data")}</h3><p>{a("Partes de muestras JSON o del esquema de tu aplicación.", "Start with JSON samples or your application's schema.")}</p></li>

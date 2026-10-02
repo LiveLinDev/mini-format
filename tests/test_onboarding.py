@@ -14,10 +14,10 @@ from minifmt import cli
 from minifmt.onboarding import _read_sample
 
 
-def _wizard(answers):
+def _wizard(answers, command="setup"):
     output = io.StringIO()
     with mock.patch("builtins.input", side_effect=answers), contextlib.redirect_stdout(output):
-        result = cli.main(["init"])
+        result = cli.main([command])
     return result, output.getvalue()
 
 
@@ -73,7 +73,25 @@ def test_plain_invocation_in_a_pipe_and_help_alias():
     with mock.patch("sys.stdin", io.StringIO()), contextlib.redirect_stdout(output):
         assert cli.main([]) == 0
     assert "mini init" in output.getvalue()
+    assert "mini setup" in output.getvalue()
     output = io.StringIO()
     with contextlib.redirect_stdout(output):
         assert cli.main(["help"]) == 0
     assert "init" in output.getvalue()
+
+
+def test_setup_and_init_keep_the_same_guided_entry():
+    for command in ("setup", "init"):
+        result, output = _wizard(["3"], command)
+        assert result == 0
+        assert "mini setup" in output
+
+
+def test_setup_toolkit_matches_build_for_the_same_data(tmp_path):
+    source = tmp_path / "productos.json"
+    source.write_text('[{"id":1,"nombre":"Cuaderno","precio":8.5}]', encoding="utf-8")
+    guided, scripted = tmp_path / "guiado", tmp_path / "comando"
+    assert _wizard(["1", str(source), "prod", str(guided)])[0] == 0
+    assert cli.main(["build", str(source), "--prefix", "prod", "--out", str(scripted)]) == 0
+    for name in ("contract.json", "example.mini", "prompt.es.md", "parser.py", "validator.py"):
+        assert (guided / name).read_bytes() == (scripted / name).read_bytes()

@@ -4,18 +4,20 @@ Build your domain toolkit once. Then add its prompt to your AI workflow and conv
 
 ## 1. Install
 
-[Download toolkit 1.2.2 (.zip)](/downloads/mini-format-1.2.2.zip) · [Python package (.whl)](/downloads/mini_format-1.2.2-py3-none-any.whl) · [Source code (.zip)](/downloads/mini-format-1.2.2-source.zip)
+[Download toolkit 1.2.3 (.zip)](/downloads/mini-format-1.2.3.zip) · [Python package (.whl)](/downloads/mini_format-1.2.3-py3-none-any.whl) · [Source code (.zip)](/downloads/mini-format-1.2.3-source.zip)
 
 Requires Python 3.9 or later. The core and generated toolkit use the standard library.
 
 ```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.2-py3-none-any.whl
-mini
+pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.3-py3-none-any.whl
+mini setup
 ```
 
-The interactive guide asks whether you have a data file (JSON, CSV, TSV or XML) or want to define fields directly. It creates `.mini/` and a `GUIA.md` with the next steps for prompting, validating and converting responses. In a non-interactive terminal, use `mini init` or the commands below.
+The interactive guide asks whether you have a data file (JSON, CSV, TSV or XML) or want to define fields directly. It creates `.mini/` and a `GUIA.md` with the next steps for prompting, validating and converting responses. To automate creation without questions, use `mini build` as shown below. `mini init` and `mini` in a terminal still open the same wizard.
 
-To install offline, download and extract the ZIP, then run `pip install` on the included `.whl` file. With Node 22.6 or later, install the base-profile package: `npm install ./mini-format-core-1.2.2.tgz`. You can also [download it separately](/downloads/mini-format-core-1.2.2.tgz). The generated domain toolkit is Python; the TypeScript and JavaScript libraries implement the base profile.
+To install offline, download and extract the ZIP, then run `pip install` on the included `.whl` file. With Node 22.6 or later, install the base-profile package: `npm install ./mini-format-core-1.2.3.tgz`. You can also [download it separately](/downloads/mini-format-core-1.2.3.tgz). The generated domain toolkit is Python; the TypeScript and JavaScript libraries implement the base profile.
+
+If you have completed `mini setup`, your folder is ready: continue with **4. Integrate**. Steps 2 and 3 explain the command alternative.
 
 ## 2. Optional: build from samples with a command
 

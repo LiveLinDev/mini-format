@@ -174,9 +174,9 @@ __CABECERA__
       </div>
     </div>
     <div class="grupo">
-      <span class="et"><span data-lang="es">Modelo</span><span data-lang="en" hidden>Model</span></span>
+      <span class="et"><span data-lang="es">Usar</span><span data-lang="en" hidden>Use</span></span>
       <div class="seg" role="group" id="segProveedor">
-        <button type="button" data-proveedor="grabado" aria-pressed="true"><span data-lang="es">Grabado</span><span data-lang="en" hidden>Recorded</span></button>
+        <button type="button" data-proveedor="grabado" aria-pressed="true"><span data-lang="es">Demo sin clave</span><span data-lang="en" hidden>Demo without a key</span></button>
         <button type="button" data-proveedor="deepseek" aria-pressed="false">DeepSeek</button>
         <button type="button" data-proveedor="groq" aria-pressed="false">Groq</button>
       </div>
@@ -189,7 +189,7 @@ __CABECERA__
         <button type="button" data-escenario="cortada" aria-pressed="false"><span data-lang="es">Respuesta cortada</span><span data-lang="en" hidden>Truncated answer</span></button>
       </div>
     </div>
-    <button type="button" class="btn btn-solid" id="ejecutar"><span data-lang="es">Crear tickets con IA</span><span data-lang="en" hidden>Create tickets with AI</span></button>
+    <button type="button" class="btn btn-solid" id="ejecutar"><span data-lang="es">Ver el ejemplo en acción</span><span data-lang="en" hidden>See the example in action</span></button>
     <button type="button" class="btn btn-ghost" id="detener" hidden><span data-lang="es">Detener</span><span data-lang="en" hidden>Stop</span></button>
     <button type="button" class="btn btn-ghost" id="reiniciar"><span data-lang="es">Reiniciar</span><span data-lang="en" hidden>Reset</span></button>
     <div class="mesa-clave" id="panelClave" hidden>
@@ -248,7 +248,7 @@ __CABECERA__
       <pre class="salida" id="respuesta"></pre>
     </section>
     <section class="mesa-caja">
-      <h2><span data-lang="es">Tickets registrados</span><span data-lang="en" hidden>Registered tickets</span>
+      <h2><span data-lang="es">Solicitudes organizadas</span><span data-lang="en" hidden>Organized requests</span>
         <span class="cuenta" id="cuentaTickets">0</span></h2>
       <div id="tablaTickets"></div>
     </section>
@@ -281,10 +281,10 @@ __CABECERA__
   <section class="mesa-sec">
     <h2><span data-lang="es">Con un modelo real</span><span data-lang="en" hidden>With a real model</span></h2>
     <p>
-      <span data-lang="es">En modo <b>Grabado</b> la simulación de arriba reproduce respuestas guardadas, para que el resultado sea
+      <span data-lang="es">En modo <b>Demo sin clave</b> la simulación de arriba reproduce respuestas guardadas, para que el resultado sea
         siempre el mismo; eligiendo DeepSeek o Groq con tu clave, esas mismas llamadas salen de verdad. Estas cifras son de la
         aplicación de escritorio equivalente, con los mismos diez mensajes y temperatura 0.</span>
-      <span data-lang="en" hidden>In <b>Recorded</b> mode the simulation above replays stored answers, so the result is always the same;
+      <span data-lang="en" hidden>In <b>Demo without a key</b> mode the simulation above replays stored answers, so the result is always the same;
         picking DeepSeek or Groq with your key makes those same calls for real. These figures come from the equivalent desktop
         application, with the same ten messages and temperature 0.</span>
     </p>
@@ -380,14 +380,14 @@ __PIE__
 
   var IDIOMAS = {
     es: {
-      creados: function (n, m) { return n + " de " + m + " mensajes convertidos en tickets."; },
+      creados: function (n, m) { return n + " de " + m + " mensajes convertidos en solicitudes organizadas."; },
       nada: "Ningún ticket: la aplicación descarta la respuesta y la vuelve a pedir entera.",
       linea: function (e) { return "Línea " + e.line + ": " + e.code + " " + (DATOS.errores[e.code] || e.message) + (e.field ? ", campo " + e.field : ""); },
       reparacion: function (ls) { return ls.length === 1 ? "Reparación: se reenvió solo la línea " + ls[0] + " y se fusionó corregida." : "Reparación: se reenviaron solo las líneas " + ls.join(", ") + " y se fusionaron corregidas."; },
       faltan: function (ids) { return "Respuesta incompleta: se pide aparte solo " + ids.join(", ") + (ids.length === 1 ? "." : ", sin repetir lo que ya llegó."); },
       jsonRoto: function (msg) { return "La respuesta del modelo no es JSON válido (" + msg + "). Se descarta completa."; },
       jsonInvalido: function (msg) { return "Ticket inválido en la respuesta (" + msg + "). Un solo valor fuera del esquema invalida el lote."; },
-      metricas: ["tickets creados", "llamadas al modelo", "tokens de salida", "registros completos recibidos", "de ellos aprovechados sin volver a pedir"],
+      metricas: ["solicitudes listas", "llamadas al modelo", "tokens de salida", "registros completos recibidos", "de ellos aprovechados sin volver a pedir"],
       motivo: {
         ok: "La respuesta llegó completa y cada línea se validó contra el contrato.",
         error: "Cada línea es un registro independiente: la inválida se reenvía sola y las buenas se conservan.",
@@ -397,7 +397,7 @@ __PIE__
         jsonCortada: "El JSON es un único valor: hasta que no llega la llave final, ninguna parte se puede leer."
       },
       corte: "◄ aquí termina lo que envió el modelo",
-      sinTickets: "Aún no hay tickets.",
+      sinTickets: "Aquí aparecerán las solicitudes organizadas.",
       cabeceras: ["Ticket", "Prioridad", "Categoría", "Resumen", "Horas"],
       notaReal: function (r) { return "Medido el " + r.fecha + " con " + r.modelo + " (" + r.proveedor + "), temperatura 0, " + DATOS.mediciones.mensajes + " mensajes. Los tokens de salida son los que informa el proveedor."; },
       sinLimite: "sin límite",
@@ -456,14 +456,14 @@ __PIE__
       real: ["Lectura", "Límite de tokens", "Tickets", "Llamadas", "Tokens de salida (mediana)", "Qué pasó"]
     },
     en: {
-      creados: function (n, m) { return n + " of " + m + " messages turned into tickets."; },
+      creados: function (n, m) { return n + " of " + m + " messages turned into organized requests."; },
       nada: "No tickets: the application discards the answer and asks for it again in full.",
       linea: function (e) { return "Line " + e.line + ": " + e.code + " " + (DATOS.erroresEn[e.code] || e.message) + (e.field ? ", field " + e.field : ""); },
       reparacion: function (ls) { return ls.length === 1 ? "Repair: only line " + ls[0] + " was sent back and merged once corrected." : "Repair: only lines " + ls.join(", ") + " were sent back and merged once corrected."; },
       faltan: function (ids) { return "Incomplete answer: only " + ids.join(", ") + " are requested separately."; },
       jsonRoto: function (msg) { return "The model's answer is not valid JSON (" + msg + "). It is discarded in full."; },
       jsonInvalido: function (msg) { return "Invalid ticket in the answer (" + msg + "). A single out-of-schema value invalidates the batch."; },
-      metricas: ["tickets created", "model calls", "output tokens", "complete records received", "usable without asking again"],
+      metricas: ["requests ready", "model calls", "output tokens", "complete records received", "usable without asking again"],
       motivo: {
         ok: "The answer arrived complete and every line was validated against the contract.",
         error: "Every line is an independent record: the invalid one is sent back alone and the good ones are kept.",
@@ -473,7 +473,7 @@ __PIE__
         jsonCortada: "JSON is a single value: until the closing brace arrives, no part of it can be read."
       },
       corte: "◄ this is where the model stopped",
-      sinTickets: "No tickets yet.",
+      sinTickets: "Organized requests will appear here.",
       cabeceras: ["Ticket", "Priority", "Category", "Summary", "Hours"],
       notaReal: function (r) { return "Measured on " + r.fecha + " with " + r.modelo + " (" + r.proveedor + "), temperature 0, " + DATOS.mediciones.mensajes + " messages. Output tokens are the ones reported by the provider."; },
       sinLimite: "no limit",
@@ -1220,7 +1220,7 @@ __PIE__
     $("#resultado").innerHTML = "";
     $("#formatoChip").textContent = estado.formato === "mini" ? ".mini" : "JSON";
     $("#porque").textContent = "";
-    $("#respuesta").textContent = ES ? "Pulsa \u00abCrear tickets con IA\u00bb." : "Press \u201cCreate tickets with AI\u201d.";
+    $("#respuesta").textContent = ES ? "Pulsa \u00abVer el ejemplo en acción\u00bb." : "Press \u201cSee the example in action\u201d.";
     $("#cuentaTickets").textContent = "0";
     $("#tablaTickets").innerHTML = '<p class="mesa-vacio">' + T.sinTickets + "</p>";
   }
