@@ -17,8 +17,9 @@ Qué sale de archivos REALES del repositorio y qué se redactó aquí:
   ``minifmt.dumps`` a partir de las listas de registros de este archivo; los defectos se introducen
   a propósito y se documentan en ``observador/*.referencia.json``.
 * T4 parte de ``forks/cat/contract.json`` (contrato real de otro dominio: catálogo de productos).
-* ``participante/guia_mini.md`` es copia literal de ``sitio/content/quickstart.es.md`` (la guía
-  pública). Qué guía se entrega en la sesión la decide el equipo antes del piloto.
+* ``participante/guia_mini.md`` usa la copia congelada de la guía pública guardada en
+  ``fuentes/quickstart.es.md``. Su commit de origen y SHA-256 quedan fijados aquí: editar la
+  documentación pública no cambia los materiales del estudio.
 
 Las respuestas "esperadas" son las LISTAS de registros escritas aquí a mano: son el oráculo
 independiente contra el que se comprueba después el analizador de minifmt (ver
@@ -41,6 +42,12 @@ from minifmt import Contract, dumps  # noqa: E402
 from minifmt.schema import from_json_schema  # noqa: E402
 
 EJ = RAIZ / "examples" / "mesa-de-ayuda"
+GUIA_ORIGEN = {
+    "ruta": "sitio/content/quickstart.es.md",
+    "commit": "67d99eb5372719e8d83580f5ed74cb3d977a4220",
+    "copia": "fuentes/quickstart.es.md",
+    "sha256": "204e6d5cc83279ad8ae9105687fe5ae6ad93b4372c0195c9eaaf7055be540e8b",
+}
 
 # Topes en minutos (Plan de Validación v3, tabla T10): 30 + 30 + 15 + 10 + 15 = 100.
 TOPES_MIN = {"T1_json": 30, "T1_mini": 30, "T2": 15, "T3": 10, "T4": 15}
@@ -402,8 +409,10 @@ def construir() -> Dict[str, bytes]:
     contrato_tk_txt = bonito(tk.to_dict())
     contrato_inc_txt = bonito(inc.to_dict())
 
-    # Guía pública: copia literal.
-    copiar("participante/guia_mini.md", RAIZ / "sitio" / "content" / "quickstart.es.md")
+    # La guía del estudio conserva los bytes del commit congelado.
+    guia = copiar("participante/guia_mini.md", AQUI / GUIA_ORIGEN["copia"])
+    if sha(guia) != GUIA_ORIGEN["sha256"]:
+        raise ValueError("La guía congelada de V6b no coincide con su SHA-256 de origen")
 
     # --- T1 variante A: archivos reales del repositorio -----------------------------------
     resp_a_json = (EJ / "grabaciones" / "json" / "error.json").read_bytes()
@@ -545,15 +554,15 @@ def construir() -> Dict[str, bytes]:
             "T1 variante B, T2, T3, T4 (casos)": "dataset sintético redactado por el equipo (no es salida de un modelo)",
             "contratos tk e inc": "generados con minifmt.from_json_schema",
             "T4 contrato de partida": "forks/cat/contract.json, copia literal",
-            "guia_mini.md": "sitio/content/quickstart.es.md, copia literal",
+            "guia_mini.md": "copia literal de la guía pública en el commit fijado en guia_congelada",
         },
         "origen_real": {
             "examples/mesa-de-ayuda/grabaciones/json/error.json": sha(resp_a_json),
             "examples/mesa-de-ayuda/grabaciones/mini/error.mini": sha(resp_a_mini),
             "examples/mesa-de-ayuda/ticket.schema.json": sha((EJ / "ticket.schema.json").read_bytes()),
             "forks/cat/contract.json": sha(cat_bytes),
-            "sitio/content/quickstart.es.md": sha((RAIZ / "sitio" / "content" / "quickstart.es.md").read_bytes()),
         },
+        "guia_congelada": GUIA_ORIGEN,
         "archivos": {ruta: sha(datos) for ruta, datos in sorted(out.items())},
     }
     poner("respuestas_congeladas.json", bonito(manifiesto))

@@ -43,7 +43,7 @@ La sesión 1 no empieza hasta cumplir todo este apartado.
    |---|---|
    | Validación de JSON disponible en la condición JSON | `jsonschema` (Python) y `ajv` (TypeScript), preinstalados: es lo que un desarrollador usaría de forma natural; sin ellos la condición JSON no sería una comparación razonable |
    | Componentes de la condición .mini | `minifmt` (Python) o el paquete TypeScript del perfil base, preinstalados, más la guía |
-   | Guía entregada en la condición .mini | `sitio/content/quickstart.es.md` tal como está en el commit congelado (copia en `tareas/participante/guia_mini.md`) |
+   | Guía entregada en la condición .mini | Copia congelada de `sitio/content/quickstart.es.md` en `tareas/fuentes/quickstart.es.md`; el commit y SHA-256 de origen figuran en `tareas/respuestas_congeladas.json` y se entrega `tareas/participante/guia_mini.md` |
    | Asistentes de IA generativa durante las tareas | No permitidos (confundirían el tiempo); sí documentación oficial y búsqueda de documentación |
    | Acceso a internet | Solo para documentación; sin credenciales personales ni datos de terceros (Plan v3, A.1) |
    | Grabación de pantalla | No, salvo consentimiento específico aparte (Plan v3, P101) |

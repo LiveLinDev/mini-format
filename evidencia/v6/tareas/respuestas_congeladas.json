@@ -15,14 +15,19 @@
     "T1 variante B, T2, T3, T4 (casos)": "dataset sintético redactado por el equipo (no es salida de un modelo)",
     "contratos tk e inc": "generados con minifmt.from_json_schema",
     "T4 contrato de partida": "forks/cat/contract.json, copia literal",
-    "guia_mini.md": "sitio/content/quickstart.es.md, copia literal"
+    "guia_mini.md": "copia literal de la guía pública en el commit fijado en guia_congelada"
   },
   "origen_real": {
     "examples/mesa-de-ayuda/grabaciones/json/error.json": "9d67515265b321a3d8ee685a4fed4afdd49313e335847ef6209069f2af006458",
     "examples/mesa-de-ayuda/grabaciones/mini/error.mini": "aaf61d1730b1b55cfe1cf77d03eea7616c8f39dae7fd7549b9509135629a4129",
     "examples/mesa-de-ayuda/ticket.schema.json": "a1094cd47d46451cab64a67fa0cc94e72c9face44ba55991b0e216a86724afbd",
-    "forks/cat/contract.json": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338",
-    "sitio/content/quickstart.es.md": "204e6d5cc83279ad8ae9105687fe5ae6ad93b4372c0195c9eaaf7055be540e8b"
+    "forks/cat/contract.json": "f34db66dfacd986352b53654434ffefef66556204996f4bec350d82541f18338"
+  },
+  "guia_congelada": {
+    "ruta": "sitio/content/quickstart.es.md",
+    "commit": "67d99eb5372719e8d83580f5ed74cb3d977a4220",
+    "copia": "fuentes/quickstart.es.md",
+    "sha256": "204e6d5cc83279ad8ae9105687fe5ae6ad93b4372c0195c9eaaf7055be540e8b"
   },
   "archivos": {
     "observador/T1A.referencia.json": "4707b49948a2a947d1dcaac003d29ba1ff3404d1116f4af5af9dd498862af499",

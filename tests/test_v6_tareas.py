@@ -77,7 +77,7 @@ def test_manifiesto_hashes_y_origen_real():
         if ruta == "respuestas_congeladas.json":
             continue
         assert hashlib.sha256((TAREAS / ruta).read_bytes()).hexdigest() == sha, ruta
-    # los archivos "reales del repositorio" siguen siendo los mismos bytes
+    # Las respuestas y los contratos de origen siguen siendo los mismos bytes.
     for ruta, sha in man["origen_real"].items():
         assert hashlib.sha256((RAIZ / ruta).read_bytes()).hexdigest() == sha, ruta
     # copias literales
@@ -85,8 +85,22 @@ def test_manifiesto_hashes_y_origen_real():
     assert (PART / "T1A_mini" / "respuesta.mini").read_bytes() == (RAIZ / "examples/mesa-de-ayuda/grabaciones/mini/error.mini").read_bytes()
     assert (PART / "T1A_json" / "ticket.schema.json").read_bytes() == (RAIZ / "examples/mesa-de-ayuda/ticket.schema.json").read_bytes()
     assert (PART / "T4" / "contrato_origen_cat.json").read_bytes() == (RAIZ / "forks/cat/contract.json").read_bytes()
-    assert (PART / "guia_mini.md").read_bytes() == (RAIZ / "sitio/content/quickstart.es.md").read_bytes()
+    # La guía se compara con su fuente congelada, no con la documentación pública mutable.
+    guia = man["guia_congelada"]
+    assert guia == CT.GUIA_ORIGEN
+    fuente = (TAREAS / guia["copia"]).read_bytes()
+    assert hashlib.sha256(fuente).hexdigest() == guia["sha256"]
+    assert (PART / "guia_mini.md").read_bytes() == fuente
     assert man["suma_topes_min"] == 100 and man["sesion_max_min"] == 120
+
+
+def test_el_constructor_rechaza_una_guia_congelada_alterada(tmp_path, monkeypatch):
+    fuente = tmp_path / CT.GUIA_ORIGEN["copia"]
+    fuente.parent.mkdir()
+    fuente.write_bytes((PART / "guia_mini.md").read_bytes() + b"\nCambio no autorizado\n")
+    monkeypatch.setattr(CT, "AQUI", tmp_path)
+    with pytest.raises(ValueError, match="SHA-256 de origen"):
+        CT.construir()
 
 
 def test_topes_del_plan_coinciden_en_todos_los_materiales():

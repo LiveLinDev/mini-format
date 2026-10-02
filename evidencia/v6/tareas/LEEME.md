@@ -20,6 +20,7 @@ cuestionario, la sesión llega a 120 como máximo.
 tareas/
   participante/    lo único que recibe el participante (una copia limpia por sesión, con entrega/ vacía)
   observador/      referencias, soluciones y contrato solución; NO se entregan
+  fuentes/        copia congelada de la guía pública; entrada del constructor
   respuestas_congeladas.json   manifiesto con el SHA-256 de cada archivo y su origen
   construir_tareas.py          regenera todo; --verificar falla si el disco difiere
   verificar_entrega.py         verificador objetivo (solo observador)
@@ -36,7 +37,7 @@ Regenerar y comprobar: `PYTHONPATH=src python evidencia/v6/tareas/construir_tare
 | Contratos `tk` e `inc` | Generados con `minifmt.from_json_schema` (el mismo código de `mini from-schema`) |
 | T1 variante B, T2, T3 y los casos de T4 | **Dataset sintético** redactado por el equipo. No son salida de ningún modelo ni datos de un sistema real |
 | T4, contrato de partida | `forks/cat/contract.json` (catálogo de productos, otro dominio), copia literal |
-| `participante/guia_mini.md` | Copia literal de `sitio/content/quickstart.es.md`; la guía que se entrega la fija el equipo |
+| `participante/guia_mini.md` | Copia literal de la guía pública del commit `67d99eb5372719e8d83580f5ed74cb3d977a4220`, conservada en `fuentes/quickstart.es.md`; su SHA-256 se fija en el constructor y en `respuestas_congeladas.json` |
 | `observador/T2.corregido_esperado.mini`, `T3.completo_esperado.mini`, `*.referencia.json` | Derivados de las listas de registros escritas en `construir_tareas.py` (oráculo independiente de los analizadores) |
 | `participante/T2/correccion_modelo.mini` | Respuesta de reparación **redactada por el equipo** con el formato de reparación de la biblioteca; no es de un modelo real |
 
