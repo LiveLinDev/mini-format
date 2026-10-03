@@ -8,6 +8,27 @@ from test_examples_flow import base_url, browser, page, pw
 OUTPUT = Path(__file__).resolve().parents[1] / "output" / "playwright"
 
 
+@pytest.mark.parametrize('language', ['es', 'en'])
+@pytest.mark.parametrize('width', [390, 1440])
+@pytest.mark.parametrize('theme', ['light', 'dark'])
+def test_hero_explains_the_format_change_without_overflow(page, base_url, language, width, theme):
+    page.set_viewport_size({'width': width, 'height': 900})
+    page.emulate_media(color_scheme=theme, reduced_motion='reduce')
+    page.goto(base_url + '/')
+    page.locator(f'[data-lang-btn="{language}"]').click()
+    steps = page.locator('.hero-format-steps li')
+    assert steps.count() == 3
+    original = steps.nth(0).locator('pre').inner_text()
+    compact = steps.nth(1).locator('pre').inner_text()
+    assert len(compact) < len(original)
+    assert 'JSON' in steps.nth(2).inner_text()
+    contract_word = 'contrato' if language == 'es' else 'contract'
+    assert contract_word in steps.nth(1).inner_text()
+    assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(OUTPUT / f'hero-{language}-{theme}-{width}.png'))
+
+
 def test_landing_leads_to_the_real_recorded_workflow(page, base_url):
     OUTPUT.mkdir(parents=True, exist_ok=True)
     page.goto(base_url + "/")

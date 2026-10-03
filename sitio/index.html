@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/base.css?v=5f6a4fa80e7c6ec4">
 <link rel="stylesheet" href="/landing.css?v=3057cd918d60e8cc">
 <link rel="stylesheet" href="/comofunciona.css?v=da3548ecd04a219b">
-<link rel="stylesheet" href="/flujo.css?v=db008fa7a1dbb938">
+<link rel="stylesheet" href="/flujo.css?v=d748508a91dd5e0e">
 <link rel="icon" href="/favicon.svg?v=1496ea04e852d75e" type="image/svg+xml">
 <meta name="description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.">
 <link rel="canonical" href="https://mini-format.pmoluna.com/">
@@ -46,23 +46,23 @@
 <section class="frame hero"><div class="hero-grid">
 <div><p class="eyebrow"><span class="badge">1.3.1</span> .mini · <span data-lang="es">Para aplicaciones que piden JSON a una IA</span><span data-lang="en" hidden>For apps that request JSON from AI</span></p>
 <h1><span data-lang="es">Tu IA puede<br><span style="color:rgb(var(--accent))">costar menos.</span></span><span data-lang="en" hidden>Your AI can<br><span style="color:rgb(var(--accent))">cost less.</span></span></h1>
-<p class="lead"><span data-lang="es">Cuando tu IA genera datos para tu aplicación, puede escribirlos en .mini: un formato compacto adaptado a tus campos. El código los comprueba y los convierte al mismo JSON que ya usas.</span><span data-lang="en" hidden>When AI generates data for your app, it can write .mini: a compact format tailored to your fields. The code checks it and converts it to the same JSON you already use.</span></p>
-<p class="hero-setup-note"><span data-lang="es">Los tokens son fragmentos de texto que la API de IA cuenta para cobrar. Menos tokens en la respuesta significa pagar menos por esa salida, con el mismo modelo y tarifa. El coste total también incluye las instrucciones y los reintentos.</span><span data-lang="en" hidden>Tokens are pieces of text counted for AI API billing. Fewer response tokens cost less for that output, at the same model and rate. Total cost also includes instructions and retries.</span></p>
+<p class="lead"><span data-lang="es">Si le pides 20 tickets en JSON, tu IA escribe los nombres de los campos 20 veces. Ese texto repetido también se cobra. <strong>.mini es un formato de respuesta que usa las reglas de tus datos para escribir menos.</strong></span><span data-lang="en" hidden>Ask your AI for 20 tickets in JSON and it writes the field names 20 times. That repeated text is billed too. <strong>.mini is a response format that uses your data rules to write less.</strong></span></p>
+<p class="hero-setup-note"><span data-lang="es">Acuerdas los campos una vez en un contrato; la IA responde en .mini y el código lo comprueba y convierte a JSON para tu aplicación. Menos tokens —los fragmentos de texto que cobra la IA— puede reducir el coste de la respuesta. El total también depende de las instrucciones y los reintentos.</span><span data-lang="en" hidden>You define the fields once in a contract; AI replies in .mini and the code checks it and converts it to JSON for your app. Fewer tokens—the pieces of text AI bills—can reduce response cost. Total cost also depends on instructions and retries.</span></p>
 <div class="story-actions"><a class="btn btn-solid btn-lg" href="/flujo/"><span data-lang="es">Cómo automatizar el soporte →</span><span data-lang="en" hidden>How to automate support →</span></a><a class="btn btn-ghost" href="#instalar"><span data-lang="es">Descargar y empezar</span><span data-lang="en" hidden>Download and get started</span></a></div>
 </div>
-<aside class="simple-proof"><p class="eyebrow"><span data-lang="es">Automatización de soporte</span><span data-lang="en" hidden>Support automation</span></p><h2><span data-lang="es">De una queja<br>a un ticket.</span><span data-lang="en" hidden>From a complaint<br>to a ticket.</span></h2>
-<p><span data-lang="es">Una empresa recibe quejas y consultas. Para evitar crear cada ticket a mano, la IA interpreta el mensaje. Devuelve un ticket: un objeto con asunto, categoría y prioridad que la aplicación puede guardar y asignar.</span><span data-lang="en" hidden>A company receives complaints and questions. To avoid creating each ticket by hand, AI interprets the message. It returns a ticket: an object with a title, category and priority that the app can store and assign.</span></p>
-<pre><span data-lang="es">«No puedo entrar a mi cuenta»
-↓ La IA interpreta el mensaje
-{"titulo":"Error al iniciar sesión",
- "categoria":"acceso", "prioridad":"alta"}</span><span data-lang="en" hidden>“I cannot sign in to my account”
-↓ AI interprets the message
-{"title":"Sign-in error",
- "category":"access", "priority":"high"}</span></pre>
+<aside class="simple-proof"><p class="eyebrow"><span data-lang="es">Automatización de soporte</span><span data-lang="en" hidden>Support automation</span></p><h2><span data-lang="es">Los mismos tickets.<br>Menos texto que pagar.</span><span data-lang="en" hidden>The same tickets.<br>Less text to pay for.</span></h2>
+<p><span data-lang="es">Una empresa usa IA para convertir las quejas de sus clientes en tickets. Así cambia la respuesta a «No puedo entrar a mi cuenta»:</span><span data-lang="en" hidden>A company uses AI to turn customer complaints into tickets. Here is how the response to “I cannot sign in” changes:</span></p>
+<ol class="hero-format-steps">
+<li><h3><span data-lang="es">1. Con JSON, repites los campos en cada ticket</span><span data-lang="en" hidden>1. JSON repeats the fields in every ticket</span></h3><pre><span data-lang="es">{"<mark>titulo</mark>":"Error al iniciar sesión",
+ "<mark>categoria</mark>":"acceso", "<mark>prioridad</mark>":"alta"}</span><span data-lang="en" hidden>{"<mark>title</mark>":"Sign-in error",
+ "<mark>category</mark>":"access", "<mark>priority</mark>":"high"}</span></pre></li>
+<li><h3><span data-lang="es">2. Con .mini, la IA escribe los valores</span><span data-lang="en" hidden>2. With .mini, AI writes the values</span></h3><p><span data-lang="es">El contrato ya define el orden: título, categoría, prioridad.</span><span data-lang="en" hidden>The contract already defines the order: title, category, priority.</span></p><pre class="hero-mini-record"><span data-lang="es">Error al iniciar sesión|acceso|alta</span><span data-lang="en" hidden>Sign-in error|access|high</span></pre><small><span data-lang="es">Una línea del ticket; cabecera del formato omitida.</span><span data-lang="en" hidden>One ticket line; format header omitted.</span></small></li>
+<li><h3><span data-lang="es">3. Tu aplicación sigue recibiendo JSON</span><span data-lang="en" hidden>3. Your app still receives JSON</span></h3><p><span data-lang="es">Validar → reparar si hace falta → volver a validar → convertir a JSON. El ticket conserva los mismos datos.</span><span data-lang="en" hidden>Validate → repair if needed → validate again → convert to JSON. The ticket keeps the same data.</span></p></li>
+</ol>
 <div class="proof-bars js-chart" aria-label="Tokens de salida">
 <div class="bar" style="--w:100%"><span class="name">JSON</span><span class="track"><span class="fill"></span></span><span class="val">443</span></div>
 <div class="bar" style="--w:68.6%"><span class="name">TOON</span><span class="track"><span class="fill"></span></span><span class="val">304</span></div>
-<div class="bar is-mini" style="--w:62.8%"><span class="name">.mini</span><span class="track"><span class="fill"></span></span><span class="val">278</span></div></div><p class="aside"><span data-lang="es">Mismo lote de 20 tickets: fragmentos de texto facturables en la respuesta. .mini necesita menos en este caso. Instrucciones y reintentos aparte.</span><span data-lang="en" hidden>Same batch of 20 tickets: billable pieces of response text. .mini uses fewer in this case. Instructions and retries counted separately.</span></p><a href="/flujo/#ahorro"><span data-lang="es">Ver qué se midió →</span><span data-lang="en" hidden>See what was measured →</span></a></aside>
+<div class="bar is-mini" style="--w:62.8%"><span class="name">.mini</span><span class="track"><span class="fill"></span></span><span class="val">278</span></div></div><p class="aside"><span data-lang="es">Medición de un lote de 20 tickets: tokens de respuesta. .mini usa un 37 % menos que JSON en este caso. Instrucciones y reintentos aparte.</span><span data-lang="en" hidden>Measured batch of 20 tickets: response tokens. .mini uses 37% fewer than JSON in this case. Instructions and retries counted separately.</span></p><a href="/flujo/#ahorro"><span data-lang="es">Ver qué se midió →</span><span data-lang="en" hidden>See what was measured →</span></a></aside>
 </div></section>
 <!-- ═══════════ COMO FUNCIONA ═══════════ -->
 <section class="section" id="por-que"><div class="frame">
