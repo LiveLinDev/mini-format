@@ -1,15 +1,17 @@
 # From your JSON to a .mini workflow
 
-A support app receives messages. AI extracts one ticket per message. The app needs **JSON** to store and assign tickets; `.mini` reduces repetition in the AI response and then converts to that same JSON.
+A company receives complaints and questions. Its app asks AI to interpret each message and create a **ticket**: an object with a title, category and priority. It needs **JSON** to store and assign those objects.
+
+`.mini` changes how AI writes the data. A **contract** declares fields, order and types. A **prompt** is instruction text teaching AI that format. The **workflow** is code that validates the response, uses Repair and delivers the same JSON to your app.
 
 [See the 20-ticket use case first](/flujo/). Replay it without an API key and inspect validation and repair.
 
 ## 1. Install and open the wizard
 
-[Download the package](/downloads/mini-format-1.3.0.zip) and extract it. From that directory:
+[Download the package](/downloads/mini-format-1.3.1.zip) and extract it. From that directory:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.0-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.1-py3-none-any.whl
 mini setup
 ```
 
@@ -37,7 +39,9 @@ Pending errors mean no usable repaired response was produced. [The complete exam
 
 ## 3. Connect your application workflow
 
-Choose **Integration** in `mini setup`, or run:
+`mini setup` offers **I do not have a workflow yet**, **Select my file** or **Search my project**. Choose the file where your code calls AI. Setup prepares integration instructions and, for supported Python, offers to review or apply the change with an original backup.
+
+No code yet? Keep the toolkit. The resume command is saved in `README.md` and `GUIA.md`. Once you have the file, replace its path in:
 
 ```sh
 mini integrate path/to/app.py --bundle .mini --lang en
@@ -70,6 +74,8 @@ python examples/flujo-soporte/run.py --serve
 Open the printed address. The form asks for an API key and model only in live mode. The key stays in memory and is not stored in history. Real calls and corrections have provider costs. Integrate your own callback to keep your provider.
 
 ## What about savings?
+
+**Tokens** are pieces of text counted for API billing. At the same model and rate, fewer response tokens mean lower output cost. Total cost also includes instructions and corrections.
 
 The same 20-ticket output takes 443 JSON tokens, 304 TOON tokens and 278 .mini tokens with `o200k_base`. The .mini prompt has 571 tokens; retries are extra. Fewer output tokens alone do not prove lower total cost, especially for small batches. [Explore costs](/economia/).
 

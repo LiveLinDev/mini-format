@@ -53,33 +53,32 @@ svg text{fill:var(--ink)}
 
 <!-- ============================================================ EDITOR -->
 <section class="tab active" id="tab-editor">
-  <p class="note">This editor starts with a sample help-desk contract. Change the document, or design a contract for your own data in the wizard. The sample is not required to use .mini. <a href="https://mini-format.pmoluna.com/ejemplo/">Explore explained examples →</a></p>
+  <p class="note">Each line on the left is one support ticket. On the right, the parser turns it into a JSON object your application can use. Edit a value to see validation; “Inject errors” shows what gets rejected.</p>
   <div class="row">
     <label>Contract <select id="forkSel"></select></label>
     <button class="ghost" id="loadExample">Load example</button>
-    <button class="ghost" id="loadEscaping">Load escaping example</button>
     <button class="ghost" id="breakIt">Inject errors</button>
     <span id="status" class="muted"></span>
   </div>
   <div class="grid">
-    <div class="panel"><h2>.mini document</h2><textarea id="miniText" spellcheck="false"></textarea><ul class="errors" id="errList"></ul></div>
-    <div class="panel"><h2>Canonical JSON <span class="muted">(edit and press “JSON → .mini”)</span></h2><textarea id="jsonText" spellcheck="false"></textarea>
+    <div class="panel"><h2>1 · AI response in .mini</h2><textarea id="miniText" aria-label=".mini response" spellcheck="false" wrap="soft"></textarea><ul class="errors" id="errList"></ul></div>
+    <div class="panel"><h2>2 · JSON for your application</h2><textarea id="jsonText" aria-label="Application JSON" spellcheck="false" wrap="soft"></textarea>
       <div class="row" style="margin-top:8px"><button class="primary" id="toMini">JSON → .mini</button><span id="jsonStatus" class="muted"></span></div>
     </div>
   </div>
-  <div class="panel" style="margin-top:16px"><h2>Contract signature</h2><pre id="sigBox"></pre>
+  <details class="panel" style="margin-top:16px"><summary>Field rules and AI instructions</summary><button class="ghost" id="loadEscaping">Load escaping example</button><h2>Contract signature</h2><pre id="sigBox"></pre>
     <details style="margin-top:8px"><summary>Prompt block for a generative model (EN)</summary><pre id="promptEn"></pre></details>
     <details style="margin-top:8px"><summary>Bloque de especificación para un modelo generativo (ES)</summary><pre id="promptEs"></pre></details>
     <details style="margin-top:8px"><summary>contract.json</summary><pre id="contractBox"></pre></details>
-  </div>
+  </details>
 </section>
 
 <!-- ============================================================ COMPARE -->
 <section class="tab" id="tab-compare">
-  <p class="note">The current editor document (canonical object) serialized into every format from the <em>same</em> data. TOON is encoded with the <b>official TOON reference implementation</b> (v4.1.1, bundled). Token counts use <span id="tokBackend">…</span>.</p>
+  <p class="note">Same tickets, three ways to write them. Tokens are billable pieces of text: a smaller bar means less response cost at the same model and rate. Instructions and retries are extra.</p>
   <div class="grid">
-    <div class="panel"><h2>Tokens per format</h2><div id="tokChart"></div><div id="tokTable"></div></div>
-    <div class="panel"><h2>Serialized output</h2>
+    <div class="panel"><h2>How much response text does AI write?</h2><p id="compareSummary" role="status"></p><div id="tokChart"></div><details class="compare-details"><summary>All formats and measurement details</summary><div id="tokTable"></div><p class="note">TOON reference v4.1.1. Token counting: <span id="tokBackend">…</span>. Response serialization only; generation quality and total API cost are not measured here.</p></details></div>
+    <div class="panel"><h2>See the same data in another format</h2>
       <div class="row"><label>Show <select id="fmtSel"><option value="mini">.mini</option><option value="toon">TOON (official, as-is)</option><option value="toon_flat">TOON (flattened, tabular)</option><option value="csv">CSV (flattened)</option><option value="json">JSON compact</option><option value="json_pretty">JSON pretty</option><option value="yaml">YAML</option><option value="xml">XML</option></select></label></div>
       <pre id="fmtOut"></pre></div>
   </div>
@@ -147,6 +146,8 @@ I3 inherited core never changes      (breaking change ⇒ new prefix)</pre>
 'use strict';
 const FORKS = JSON.parse(document.getElementById('forksData').textContent);
 const $ = s => document.querySelector(s);
+const inSpanish = () => document.documentElement.lang.startsWith('es');
+const say = (es,en) => inSpanish() ? es : en;
 const contracts = {}; for (const f of FORKS) contracts[f.prefix] = MINI.normalizeContract(f.contract);
 let current = 'tk';
 
@@ -162,8 +163,8 @@ function showTab(name){ document.querySelectorAll('nav button').forEach(x=>x.cla
 let tokenize = null, tokBackend = '';
 function initTokens(){
   const g = window.GPTTokenizer_o200k_base;
-  if (g && typeof g.encode === 'function') { tokenize = t => g.encode(t).length; tokBackend = 'gpt-tokenizer o200k_base (exact, GPT-4o tokenizer)'; }
-  else { tokenize = t => { const b = new TextEncoder().encode(t).length; return Math.round(b/3.6); }; tokBackend = 'an estimate (≈ bytes/3.6) — the exact tokenizer could not be loaded from the CDN; run benchmark/run_benchmark.py for exact counts'; }
+  if (g && typeof g.encode === 'function') { tokenize = t => g.encode(t).length; tokBackend = 'o200k_base'; }
+  else { tokenize = t => { const b = new TextEncoder().encode(t).length; return Math.round(b/3.6); }; tokBackend = say('estimación por bytes: no cargó el tokenizador exacto','byte estimate: exact tokenizer unavailable'); }
   $('#tokBackend').textContent = tokBackend;
 }
 
@@ -190,13 +191,17 @@ $('#breakIt').onclick = () => {
 $('#miniText').addEventListener('input', validate);
 function validate(){
   const c = contracts[current]; const text = $('#miniText').value; const errBox = $('#errList'); errBox.innerHTML = '';
-  let doc; try { doc = MINI.parse(text, c, {strict:false}); } catch (e) { $('#status').innerHTML = `<span class="err">${e.message}</span>`; return; }
+  let doc; try { doc = MINI.parse(text, c, {strict:false}); } catch (e) { $('#status').textContent=say('Respuesta no válida','Invalid response');const li=document.createElement('li');li.textContent=e.message;errBox.appendChild(li);$('#jsonText').value='';return; }
   const nTok = tokenize ? tokenize(text) : '?';
-  if (doc.errors.length) { $('#status').innerHTML = `<span class="err">✗ ${doc.errors.length} error(s)</span> · ${doc.records.length} valid record(s) recovered · ${nTok} tokens`; for (const e of doc.errors) { const li = document.createElement('li'); li.textContent = String(e); errBox.appendChild(li); } }
-  else $('#status').innerHTML = `<span class="ok">✓ valid</span> · ${doc.records.length} records · n=${doc.header.n} · ${nTok} tokens`;
-  $('#jsonText').value = JSON.stringify(doc.canonical(), null, 1);
+  if (doc.errors.length) { $('#status').innerHTML = `<span class="err">✗ ${doc.errors.length} ${say('errores: respuesta incompleta, no lista para guardar','errors: incomplete reply, not ready to save')}</span> · ${doc.records.length} ${say('objetos válidos recuperados','valid objects recovered')}`; for (const e of doc.errors) { const li = document.createElement('li'); li.textContent = String(e); errBox.appendChild(li); } }
+  else $('#status').innerHTML = `<span class="ok">✓ ${say('Respuesta válida','Valid response')}</span> · ${doc.records.length} ${say('objetos JSON','JSON objects')} · ${nTok} tokens`;
+  // One object per line preserves editable JSON without a tiny scrolling novel.
+  const obj = doc.canonical();
+  $('#jsonText').value = '{\n' + Object.entries(obj).map(([key,value]) =>
+    '  '+JSON.stringify(key)+': '+(Array.isArray(value) ? '[\n'+value.map(record=>'    '+JSON.stringify(record)).join(',\n')+'\n  ]' : JSON.stringify(value))).join(',\n')+'\n}';
+  for (const area of [$('#miniText'),$('#jsonText')]) {area.style.height='auto';area.style.height=Math.min(920,Math.max(440,area.scrollHeight+4))+'px';}
 }
-$('#toMini').onclick = () => { const c = contracts[current]; try { const obj = JSON.parse($('#jsonText').value); $('#miniText').value = MINI.dumps(obj, c); $('#jsonStatus').innerHTML = '<span class="ok">serialized</span>'; validate(); } catch (e) { $('#jsonStatus').innerHTML = `<span class="err">${e.message}</span>`; } };
+$('#toMini').onclick = () => { const c = contracts[current]; try { const obj = JSON.parse($('#jsonText').value); $('#miniText').value = MINI.dumps(obj, c); $('#jsonStatus').textContent=say('Conversión lista','Conversion ready'); validate(); } catch (e) { $('#jsonStatus').textContent=say('No se pudo convertir: ','Could not convert: ')+e.message; } };
 function renderContractPanels(){ const c = contracts[current]; const f = fork(); $('#sigBox').textContent = MINI.signature(c); const ex = f.example.split('\n').slice(0,3).join('\n').replace(/n=\d+/, 'n=2'); $('#promptEn').textContent = MINI.specBlock(c,'en',ex); $('#promptEs').textContent = MINI.specBlock(c,'es',ex); $('#contractBox').textContent = JSON.stringify(f.contract, null, 2); }
 
 // ---------------------------------------------------------------- formats (compare)
@@ -226,16 +231,23 @@ function allFormats(obj, c){ const out = { mini: MINI.dumps(obj,c), json: JSON.s
 const LABELS = { mini:'.mini', toon_flat:'TOON (flattened)', toon:'TOON (official, as-is)', csv:'CSV (flattened)', json:'JSON compact', yaml:'YAML', xml:'XML', json_pretty:'JSON pretty' };
 let lastFormats = null;
 function renderCompare(){
-  const c = contracts[current]; let obj; try { obj = JSON.parse($('#jsonText').value); } catch(e) { $('#tokTable').innerHTML = '<span class="err">Fix the JSON in the editor first.</span>'; return; }
-  const F = allFormats(obj, c); lastFormats = F;
+  const c = contracts[current]; let obj; try { obj = JSON.parse($('#jsonText').value); } catch(e) { $('#compareSummary').textContent = say('Corrige el JSON del editor antes de comparar.','Fix the editor JSON before comparing.'); $('#tokChart').replaceChildren(); $('#tokTable').replaceChildren(); $('#fmtOut').textContent=''; lastFormats=null; return; }
+  if ($('#errList').children.length) { $('#compareSummary').textContent=say('La respuesta tiene errores. Esta comparación sólo incluye los objetos válidos recuperados.','The reply has errors. This comparison only includes recovered valid objects.'); } else $('#compareSummary').textContent='';
+  let F; try { F = allFormats(obj, c); } catch(e) { $('#compareSummary').textContent=say('El JSON no cumple el contrato. Vuelve al editor y comprueba sus campos.','JSON does not match the contract. Return to the editor and check its fields.');$('#tokChart').replaceChildren();$('#tokTable').replaceChildren();$('#fmtOut').textContent='';lastFormats=null;return; } lastFormats = F;
   const rows = Object.keys(LABELS).map(k => ({k, label: LABELS[k], tokens: tokenize(F[k]), bytes: new TextEncoder().encode(F[k]).length}));
-  const max = Math.max(...rows.map(r=>r.tokens)); const base = rows.find(r=>r.k==='json').tokens;
-  $('#tokChart').innerHTML = rows.map(r => `<div style="display:grid;grid-template-columns:150px 1fr 70px;gap:8px;align-items:center;margin:4px 0"><span style="font-size:12px">${r.label}</span><div class="bar ${r.k==='mini'?'mini':''}" style="width:${(100*r.tokens/max).toFixed(1)}%"></div><span class="mono" style="font-size:12px">${r.tokens}</span></div>`).join('');
-  $('#tokTable').innerHTML = `<table><tr><th>Format</th><th>Tokens</th><th>vs JSON compact</th><th>Bytes</th></tr>${rows.map(r=>`<tr><td>${r.label}</td><td class="mono">${r.tokens}</td><td class="mono">${(100*(1-r.tokens/base)).toFixed(1)}%</td><td class="mono">${r.bytes}</td></tr>`).join('')}</table>`;
+  const primary = ['json','toon','mini'].map(k=>rows.find(r=>r.k===k));
+  const max = Math.max(...primary.map(r=>r.tokens),1); const base = Math.max(rows.find(r=>r.k==='json').tokens,1);
+  const miniTokens = rows.find(r=>r.k==='mini').tokens;
+  const difference = (100*Math.abs(1-miniTokens/base)).toFixed(1);
+  const saving = say(`${difference} % ${miniTokens<=base?'menos':'más'} texto facturable en .mini que en JSON.`,`${difference}% ${miniTokens<=base?'less':'more'} billable text in .mini than JSON.`);
+  $('#compareSummary').textContent += ' ' + (tokBackend==='o200k_base' ? saving : say('Recuento estimado. ','Estimated count. ')+saving);
+  $('#tokChart').innerHTML = primary.map(r => `<div class="pg-bar-row"><strong>${r.k==='json'?'JSON':r.k==='toon'?'TOON':'.mini'}</strong><div class="pg-track"><div class="bar ${r.k==='mini'?'mini':''}" style="width:${(100*r.tokens/max).toFixed(1)}%"></div></div><span class="mono">${r.tokens} tokens</span></div>`).join('');
+  $('#tokTable').innerHTML = `<table><tr><th>${say('Formato','Format')}</th><th>Tokens</th><th>${say('Reducción frente a JSON','Reduction vs JSON')}</th><th>Bytes</th></tr>${rows.map(r=>`<tr><td>${r.label}</td><td class="mono">${r.tokens}</td><td class="mono">${(100*(1-r.tokens/base)).toFixed(1)}%</td><td class="mono">${r.bytes}</td></tr>`).join('')}</table>`;
   renderFmtOut();
 }
 function renderFmtOut(){ if (!lastFormats) return; $('#fmtOut').textContent = lastFormats[$('#fmtSel').value]; }
 $('#fmtSel').onchange = renderFmtOut;
+new MutationObserver(() => {initTokens();validate();if($('#tab-compare').classList.contains('active'))renderCompare();}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 
 // ---------------------------------------------------------------- wizard
 let wFields = [];

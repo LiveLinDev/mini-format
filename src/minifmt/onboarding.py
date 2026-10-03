@@ -6,6 +6,7 @@ dependencies and never changes an existing toolkit directory.
 from __future__ import annotations
 
 import csv
+import json
 import os
 import re
 import sys
@@ -164,25 +165,73 @@ def run() -> int:
         destination = Path(_ask(t("Carpeta de salida", "Output folder"), ".mini"))
         contract = build_bundle([sample], prefix, destination, source_names=sources, lang=lang)
         print(_style(t(f"\n  ✓ Toolkit creado en {destination}", f"\n  ✓ Toolkit created in {destination}"), "1;32"))
-        print(t("  Contrato → prompt → .mini → validar → reparar → JSON",
-                "  Contract → prompt → .mini → validate → repair → JSON"))
+        print(t("  contract.json: reglas de los campos y sus tipos.", "  contract.json: field and type rules."))
+        print(t(f"  prompt.{lang}.md: instrucciones que tu código enviará a la IA.",
+                f"  prompt.{lang}.md: instructions your code will send to AI."))
+        print(t("  workflow.py: valida, repara, vuelve a comprobar y entrega JSON a tu aplicación.",
+                "  workflow.py: validates, repairs, checks again and delivers JSON to your application."))
         print(t(f"  Prueba: copia el contenido de {destination / 'try-prompt.md'} a tu IA. Ya incluye el formato.",
                 f"  Test: paste the contents of {destination / 'try-prompt.md'} into your AI. The format is included."))
         print(f'  python "{destination / "workflow.py"}" response.mini --out result.json')
-        print(t("\n  ¿Lo conectamos a la llamada a IA de tu aplicación?", "\n  Connect your existing application AI call?"))
-        print(t("  1 Más tarde   2 Localizar y preparar   3 Conectar Python compatible (con copia)",
-                "  1 Later   2 Locate and prepare   3 Connect supported Python (with backup)"))
-        integration = _choice(t("Integración", "Integration"), ("1", "2", "3"), lang)
+        print(t("\n  Ahora conectamos el formato al código que llama a tu IA.",
+                "\n  Now connect the format to the code that calls your AI."))
+        print(t("  1 Todavía no tengo un flujo   2 Elegir mi archivo   3 Buscar en mi proyecto",
+                "  1 I do not have a workflow yet   2 Select my file   3 Search my project"))
+        integration = _choice(t("¿Ya tienes esa llamada a IA?", "Do you already have that AI call?"), ("1", "2", "3"), lang)
+        project = "ruta/a/tu/app.py" if lang == "es" else "path/to/app.py"
         if integration != "1":
             from .integration import prepare
-            project = _ask(t("Archivo o carpeta de tu proyecto", "Project file or directory"), ".")
-            report = prepare(project, destination, lang=lang, apply=integration == "3")
+            while True:
+                project = _ask(t("Archivo que llama a la IA" if integration == "2" else "Carpeta de tu proyecto",
+                                 "File that calls AI" if integration == "2" else "Project directory")).strip('"\'')
+                candidate = Path(project)
+                if (candidate.is_file() if integration == "2" else candidate.is_dir()):
+                    break
+                print(t("  Esa ruta no existe o no es del tipo elegido. Inténtalo otra vez.",
+                        "  That path does not exist or has the wrong type. Try again."))
+            report = prepare(project, destination, lang=lang, apply=False)
             print(t("  Guía de integración: ", "  Integration guide: ") + report["plan"])
-            print(t("  Código conectado.", "  Code connected.") if report["applied"] else
-                  t("  Preparado. Revisa el diff o entrega INTEGRATE.md a tu IA de código.",
-                    "  Prepared. Review the diff or give INTEGRATE.md to your coding AI."))
+            if report["supported"]:
+                print(t("  Encontré una llamada Python compatible. El diff muestra el cambio propuesto.",
+                        "  Found a supported Python call. The diff shows the proposed change."))
+                print(t("  1 Dejar preparado   2 Conectar ahora (guarda una copia del original)",
+                        "  1 Keep prepared   2 Connect now (backs up the original)"))
+                if _choice(t("Cambio de código", "Code change"), ("1", "2"), lang) == "2":
+                    report = prepare(project, destination, lang=lang, apply=True)
+                    print(t("  Código conectado: la IA responde en .mini; tu aplicación recibe JSON.",
+                            "  Code connected: AI responds in .mini; your application receives JSON."))
+            else:
+                print(t("  Entrega INTEGRATE.md a tu IA de código para adaptar esta llamada y conectar el workflow.",
+                        "  Give INTEGRATE.md to your coding AI to adapt this call and connect the workflow."))
+        resume = f'mini integrate "{project}" --bundle "{destination}" --lang {lang}'
+        if integration == "1":
+            print(t("  Tu kit está listo. Cuando tengas el archivo que llama a la IA, sustituye la ruta en:",
+                    "  Your toolkit is ready. Once you have the AI call file, replace the path in:"))
+        else:
+            print(t("  Puedes retomar la integración con:", "  You can resume integration with:"))
+        print("  " + resume)
+        _save_integration_choice(destination, project, lang, integration == "1")
         print(t(f"  Guía: {destination / 'GUIA.md'}", f"  Guide: {destination / 'README.md'}"))
         return 0
     except (EOFError, KeyboardInterrupt):
         print("\n  Asistente cancelado." if lang == "es" else "\n  Setup cancelled.")
         return 130
+
+
+def _save_integration_choice(destination, project, lang, deferred):
+    """Keep the chosen next action in the offline guides and their integrity manifest."""
+    import hashlib
+    command = f'mini integrate "{project}" --bundle "{destination}" --lang {lang}'
+    for name, heading, text in (
+        ("GUIA.md", "Tu siguiente paso", "Todavía no tienes un flujo. Cuando crees el archivo que llama a la IA, sustituye la ruta y ejecuta:" if deferred else "Archivo o proyecto elegido durante setup. Para retomar la integración, ejecuta:"),
+        ("README.md", "Your next step", "You do not have a workflow yet. Once you create the file that calls AI, replace the path and run:" if deferred else "File or project selected during setup. To resume integration, run:"),
+    ):
+        path = destination / name
+        path.write_bytes((path.read_text(encoding="utf-8") + f"\n## {heading}\n\n{text}\n\n```sh\n{command}\n```\n").encode("utf-8"))
+    settings = destination / "setup.json"
+    settings.write_bytes((json.dumps({"language": lang, "integration": {"deferred": deferred, "project": None if deferred else project, "resume_command": command}}, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    manifest_path = destination / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for name in ("README.md", "GUIA.md", "setup.json"):
+        manifest["files"][name] = hashlib.sha256((destination / name).read_bytes()).hexdigest()
+    manifest_path.write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))

@@ -800,6 +800,10 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
     files["GUIA.md"] = (
         f"# Tu .mini: {prefix}\n\nTu aplicación ya pide datos estructurados a una IA. "
         "Ahora la IA responde en .mini y el flujo devuelve el mismo JSON que tu aplicación necesita.\n\n"
+        "## Qué ha creado setup\n\nUn contrato es la lista de campos, su orden y sus tipos: "
+        "`contract.json` guarda esas reglas. Un prompt son instrucciones para la IA: tu código lee "
+        "`prompt.es.md` y envía su contenido junto con la tarea. `workflow.py` conecta la generación "
+        "con validación, Repair y conversión a JSON. Un registro es un objeto de tu JSON; en soporte, un ticket.\n\n"
         "## 1. Prueba sin API key\n\n`example.json` y `example.mini` representan los mismos datos. "
         "Copia el contenido de `try-prompt.md` a tu IA: ya incluye las reglas para generar 20 registros ficticios. "
         "No basta con dar una ruta a la IA: tu código debe leer el archivo e incluir su contenido.\n\n"
@@ -813,6 +817,9 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "Revisa `integration/INTEGRATE.md` y el diff preparado. Si el patrón Python es compatible, "
         "añade `--apply` para conectarlo automáticamente; se conserva una copia del archivo. "
         "Otros SDK o lenguajes reciben instrucciones concretas para tu IA de código.\n\n"
+        "¿Todavía no tienes un flujo? Conserva este kit. Cuando crees el archivo que llama a la IA, "
+        "ejecuta el comando anterior con la ruta de ese archivo. También puedes volver a usar `mini setup` "
+        "para otro contrato en una carpeta nueva.\n\n"
         "`workflow.py` acepta cualquier función síncrona `generate(prompt) -> texto`. "
         "Conecta tu llamada con `Workflow(carpeta).run(generate, tarea, expected_records=20)`: "
         "incluye el prompt, valida, repara, pide como máximo una corrección, vuelve a validar y entrega JSON. "
@@ -831,10 +838,15 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
     files["README.md"] = (
         f"# Your .mini: {prefix}\n\nThe AI returns .mini; your application receives its usual JSON. "
         "Python 3.9+, standard library only.\n\n"
+        "Setup creates `contract.json` (field order and types), `prompt.en.md` (instructions your code reads "
+        "and sends to AI), and `workflow.py` (generation, validation, Repair and JSON delivery). "
+        "A record means one object in your JSON: in support, one ticket.\n\n"
         "1. Inspect example.json and example.mini. Paste try-prompt.md into your AI: it includes the format and asks for 20 fictional records.\n"
         "2. Validate the reply; Repair removes safe wrappers, BOM and CRLF (D_ENVELOPE). Wrong types or missing data require a model correction.\n"
         f'3. Run `mini integrate path/to/app.py --bundle "{folder}" --lang en`; inspect integration/INTEGRATE.md and change.diff. '
         "Use --apply for the supported synchronous Python chat/JSON pattern; other providers/languages get coding-AI instructions.\n\n"
+        "No workflow yet? Keep this toolkit. Once you create your AI call file, run the integration command above "
+        "with its path. Setup also saves your selected next step at the end of this guide.\n\n"
         f'```sh\npython "{folder}/workflow.py" response.mini --out result.json\n```\n\n'
         "Import Workflow from workflow.py using importlib.util. `Workflow(bundle, lang='en').run(generate, task, expected_records=20)` "
         "accepts any synchronous text callback. It reads prompt.en.md, generates, validates, repairs, optionally requests one model correction, "

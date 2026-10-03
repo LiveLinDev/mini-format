@@ -4,6 +4,10 @@ Empieza con [mini setup](https://mini-format.pmoluna.com/docs/quickstart/): idio
 
 ## Desde el asistente o por comando
 
+En `mini setup`, elige **Elegir mi archivo** para señalar el código que llama a la IA, o **Buscar en mi proyecto** para localizarlo. Puedes revisar el cambio propuesto o conectar Python compatible con una copia del original. Si eliges **Todavía no tengo un flujo**, el kit conserva el comando para retomarlo en `README.md` y `GUIA.md`.
+
+Cuando tengas el archivo, también puedes conectarlo con:
+
 ```sh
 mini integrate app.py --bundle .mini --lang es
 ```

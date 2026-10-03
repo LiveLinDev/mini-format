@@ -6,8 +6,10 @@ import io
 import json
 import subprocess
 import sys
+import hashlib
 from pathlib import Path
 from unittest import mock
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from minifmt import cli
@@ -36,6 +38,11 @@ def test_existing_data_builds_a_valid_guide_and_toolkit(tmp_path):
                                 capture_output=True, text=True, cwd=tmp_path)
     assert validation.returncode == 0, validation.stderr
     assert json.loads(validation.stdout)["ok"] is True
+    settings = json.loads((destination / "setup.json").read_text(encoding="utf-8"))
+    assert settings["integration"]["deferred"] is True
+    assert settings["integration"]["resume_command"] in output
+    for name, digest in json.loads((destination / "manifest.json").read_text(encoding="utf-8"))["files"].items():
+        assert hashlib.sha256((destination / name).read_bytes()).hexdigest() == digest
 
 
 def test_no_data_flow_creates_own_fields(tmp_path):
@@ -95,3 +102,58 @@ def test_setup_toolkit_matches_build_for_the_same_data(tmp_path):
     assert cli.main(["build", str(source), "--prefix", "prod", "--out", str(scripted)]) == 0
     for name in ("contract.json", "example.mini", "prompt.es.md", "parser.py", "validator.py"):
         assert (guided / name).read_bytes() == (scripted / name).read_bytes()
+
+
+@pytest.mark.parametrize("lang", ["es", "en"])
+def test_no_workflow_yet_can_be_resumed_from_the_offline_readme(tmp_path, lang):
+    bundle = tmp_path / "kit con espacios"
+    code, output = _wizard([lang, "4", "ticket", str(bundle), "1"])
+    assert code == 0
+    settings = json.loads((bundle / "setup.json").read_text(encoding="utf-8"))
+    command = settings["integration"]["resume_command"]
+    assert command in output
+    assert f'--bundle "{bundle}" --lang {lang}' in command
+    assert settings["integration"]["deferred"] and settings["integration"]["project"] is None
+    for guide in ("README.md", "GUIA.md"):
+        assert command in (bundle / guide).read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("mode,apply", [("2", "1"), ("2", "2"), ("3", "2")])
+def test_setup_connects_selected_python_file_or_located_project(tmp_path, monkeypatch, mode, apply):
+    from minifmt.domain import encode
+    from types import SimpleNamespace
+    import importlib.util
+    project = tmp_path / "mi app"
+    project.mkdir()
+    source = project / "support.py"
+    original = ('import json\ndef tickets(client):\n'
+                '    response = client.chat.completions.create(model="existing", messages=[{"role":"user","content":"Create tickets"}], response_format={"type":"json_object"})\n'
+                '    data = json.loads(response.choices[0].message.content)\n'
+                '    return data\n')
+    source.write_text(original, encoding="utf-8")
+    bundle = tmp_path / ".mini"
+    chosen = str(source if mode == "2" else project)
+    code, output = _wizard(["es", "4", "ticket", str(bundle), mode, str(tmp_path / "missing"), chosen, apply])
+    assert code == 0 and "Esa ruta no existe" in output
+    assert chosen in (bundle / "README.md").read_text(encoding="utf-8")
+    report = json.loads((bundle / "integration/report.json").read_text(encoding="utf-8"))
+    assert report["supported"] and report["applied"] == (apply == "2")
+    if apply == "1":
+        assert source.read_text(encoding="utf-8") == original
+        assert (bundle / "integration/change.diff").is_file()
+        return
+    assert Path(report["backup"]).read_text(encoding="utf-8") == original
+    monkeypatch.syspath_prepend(str(project))
+    spec = importlib.util.spec_from_file_location("user_support", source)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    sample = json.loads((bundle / "example.json").read_text(encoding="utf-8"))
+    contract = json.loads((bundle / "contract.json").read_text(encoding="utf-8"))
+    calls = []
+    def generate(**kwargs):
+        calls.append(kwargs)
+        return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=encode(sample, contract)))])
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=generate)))
+    assert module.tickets(client) == sample
+    assert calls[0]["model"] == "existing" and "response_format" not in calls[0]
+    assert contract["schema_id"] in calls[0]["messages"][-1]["content"]

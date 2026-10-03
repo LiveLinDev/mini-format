@@ -1,15 +1,17 @@
 # De tu JSON a un flujo con .mini
 
-Una aplicación de soporte recibe mensajes. La IA extrae un ticket por mensaje. La aplicación necesita **JSON** para guardar y asignar los tickets; `.mini` reduce la repetición en la respuesta de la IA y después se convierte a ese mismo JSON.
+Una empresa recibe quejas y consultas. Su aplicación pide a la IA que interprete cada mensaje y cree un **ticket**: un objeto con asunto, categoría y prioridad. Necesita recibir esos objetos en **JSON** para guardarlos y asignarlos.
+
+`.mini` cambia cómo escribe la IA esos datos. Un **contrato** declara los campos, su orden y sus tipos. Un **prompt** es el texto de instrucciones que enseña ese formato a la IA. El **workflow** es el código que valida su respuesta, usa Repair y devuelve el mismo JSON para la aplicación.
 
 [Mira primero el caso de 20 tickets](/flujo/). Puedes repetirlo sin API key y ver qué se validó y reparó.
 
 ## 1. Instala y abre el asistente
 
-[Descarga el paquete](/downloads/mini-format-1.3.0.zip) y extráelo. Desde esa carpeta:
+[Descarga el paquete](/downloads/mini-format-1.3.1.zip) y extráelo. Desde esa carpeta:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.0-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.1-py3-none-any.whl
 mini setup
 ```
 
@@ -37,7 +39,9 @@ Si Repair informa de errores pendientes, revisa sus diagnósticos: no ha produci
 
 ## 3. Conecta el flujo de tu aplicación
 
-Elige **Integración** dentro de `mini setup`, o ejecuta:
+En `mini setup` tienes tres opciones: **Todavía no tengo un flujo**, **Elegir mi archivo** o **Buscar en mi proyecto**. Elige el archivo donde tu código llama a la IA. Setup prepara las instrucciones de integración y, para Python compatible, te ofrece revisar o aplicar el cambio con una copia del original.
+
+Si todavía no tienes ese código, conserva el kit. El comando para retomarlo queda en `README.md` y `GUIA.md`. Cuando tengas el archivo, sustituye su ruta en:
 
 ```sh
 mini integrate ruta/a/tu/app.py --bundle .mini --lang es
@@ -70,6 +74,8 @@ python examples/flujo-soporte/run.py --serve
 Abre la dirección que imprime. El formulario pide API key y modelo sólo al elegir una IA real. La clave se usa en memoria y no va al historial. Las llamadas reales y las correcciones tienen coste. Puedes conservar tu proveedor al integrar tu propia función.
 
 ## ¿Y el ahorro?
+
+Los **tokens** son fragmentos de texto que la API cuenta para cobrar. Con el mismo modelo y tarifa, menos tokens en la respuesta significa menos coste de salida. El coste total también suma las instrucciones que envías y las correcciones.
 
 El resultado de estos 20 tickets usa 443 tokens JSON, 304 TOON y 278 .mini con `o200k_base`. El prompt .mini tiene 571 tokens; los reintentos se cuentan aparte. Menos salida no demuestra por sí sola menor coste total, sobre todo con lotes pequeños. [Explorar costes](/economia/).
 

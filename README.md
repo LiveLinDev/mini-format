@@ -1,17 +1,19 @@
 # .mini: shorter AI responses, JSON for your application
 
-If your app asks AI for lists of structured data, `.mini` can reduce response tokens. A contract defines the fields once; AI returns their values in a compact format. The workflow validates, repairs and converts the result to the JSON your app uses.
+A company receives complaints and questions. To avoid creating support tickets by hand, its app asks AI to interpret each message and generate a record with a title, category and priority. That record is a ticket; the code needs **JSON** to store and assign it.
 
-**One use case:** turn 20 support messages into 20 tickets with a title, category and priority. The app needs JSON to store, filter and assign them. [See the complete workflow](https://mini-format.pmoluna.com/flujo/): input, response, correction and history.
+JSON repeats field names in every ticket. The API counts that text in **tokens**, pieces used to calculate the bill. Fewer response tokens cost less at the same model and rate. TOON also reduces repetition; `.mini` tailors the rules to your domain through a **contract**: fields, order and types declared once. The workflow validates the compact response, repairs it when possible and recovers the same JSON objects.
+
+[Follow support automation](https://mini-format.pmoluna.com/flujo/): 20 customer messages become 20 JSON objects, with a recorded run you can inspect without a key.
 
 In this example, the same output takes 443 JSON tokens, 304 TOON tokens and 278 .mini tokens (`o200k_base`). These are output counts. The .mini prompt has 571 tokens and corrections also cost tokens; measure the full workflow before claiming monetary savings.
 
 ## Start here
 
-[Download and extract the package](https://mini-format.pmoluna.com/downloads/mini-format-1.3.0.zip). From the extracted directory:
+[Download and extract the package](https://mini-format.pmoluna.com/downloads/mini-format-1.3.1.zip). From the extracted directory:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.0-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.1-py3-none-any.whl
 mini setup
 ```
 
@@ -19,11 +21,17 @@ The wizard guides you through:
 
 1. Spanish or English.
 2. A sample JSON response from your AI, your own fields or the included support example.
-3. Name and directory: generate a contract, prompt, validator, Repair and `workflow.py`.
-4. Test: ask your AI for 20 fictional records with the generated prompt and validate the reply.
-5. Integration: locate your project's AI call and prepare its workflow connection.
+3. Name and directory: create `contract.json` (rules), `prompt.es.md` / `prompt.en.md` (AI instructions) and `workflow.py` (validation, Repair and JSON conversion).
+4. Integration: select the file that calls AI, search your project or choose **I do not have a workflow yet**. The resume command is saved in `README.md` and `GUIA.md`.
+5. Test: paste `try-prompt.md` into your AI; it asks for 20 fictional objects. Check the reply before saving real data.
 
 Automatic editing covers a synchronous Python chat completions + `json.loads` pattern. Other SDKs/languages receive a coding-AI guide with actual paths. `Workflow.run` accepts any synchronous callback that takes a prompt and returns text; a CLI bridge is available for other languages.
+
+No workflow yet? Keep the toolkit. Once you create your AI call file, run:
+
+```sh
+mini integrate path/to/app.py --bundle .mini --lang en
+```
 
 ## Try the workflow without a key
 

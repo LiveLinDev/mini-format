@@ -735,17 +735,23 @@ TRADUCCIONES = [
     ('<html lang="en">', '<html lang="es">'),
     ("<title>.mini Playground</title>", "<title>Playground — mini-format</title>"),
     # (las pestañas se traducen al sustituir la cabecera, más arriba)
-    ("This editor starts with a sample help-desk contract. Change the document, or design a contract for your own data in the wizard. The sample is not required to use .mini. <a href=\"https://mini-format.pmoluna.com/ejemplo/\">Explore explained examples →</a>",
-     "Este editor empieza con un contrato de muestra para tickets. Cambia el documento o diseña un contrato para tus datos en el asistente. La muestra no es necesaria para usar .mini. <a href=\"/ejemplo/\">Ver los ejemplos explicados →</a>"),
+    ("Each line on the left is one support ticket. On the right, the parser turns it into a JSON object your application can use. Edit a value to see validation; “Inject errors” shows what gets rejected.",
+     "Cada línea de la izquierda es un ticket de soporte. A la derecha, el parser lo convierte a un objeto JSON para tu aplicación. Cambia un valor para comprobarlo; «Inyectar errores» muestra qué se rechaza."),
     ("<label>Contract <select", "<label>Contrato <select"),
     (">Load example<", ">Cargar ejemplo<"), (">Load escaping example<", ">Cargar ejemplo con escapes<"), (">Inject errors<", ">Inyectar errores<"),
-    ("<h2>.mini document</h2>", "<h2>Documento .mini</h2>"),
-    ("<h2>Canonical JSON <span class=\"muted\">(edit and press “JSON → .mini”)</span></h2>", "<h2>JSON canónico <span class=\"muted\">(edita y pulsa «JSON → .mini»)</span></h2>"),
+    ("<h2>1 · AI response in .mini</h2>", "<h2>1 · Respuesta de la IA en .mini</h2>"),
+    ("<h2>2 · JSON for your application</h2>", "<h2>2 · JSON para tu aplicación</h2>"),
+    ('aria-label=".mini response"', 'aria-label="Respuesta .mini"'),
+    ('aria-label="Application JSON"', 'aria-label="JSON para la aplicación"'),
+    ('<summary>Field rules and AI instructions</summary>', '<summary>Reglas de los campos e instrucciones para la IA</summary>'),
     ("<h2>Contract signature</h2>", "<h2>Firma del contrato</h2>"),
     ("<summary>Prompt block for a generative model (EN)</summary>", "<summary>Bloque de prompt para un modelo generativo (EN)</summary>"),
-    ("The current editor document (canonical object) serialized into every format from the <em>same</em> data. TOON is encoded with the <b>official TOON reference implementation</b> (v4.1.1, bundled). Token counts use",
-     "El documento actual del editor (objeto canónico) serializado en todos los formatos a partir de los <em>mismos</em> datos. TOON se codifica con la <b>implementación oficial de referencia de TOON</b> (v4.1.1, incluida). El recuento de tokens usa"),
-    ("<h2>Tokens per format</h2>", "<h2>Tokens por formato</h2>"), ("<h2>Serialized output</h2>", "<h2>Salida serializada</h2>"),
+    ("Same tickets, three ways to write them. Tokens are billable pieces of text: a smaller bar means less response cost at the same model and rate. Instructions and retries are extra.", "Mismos tickets, tres formas de escribirlos. Los tokens son fragmentos de texto facturables: una barra menor cuesta menos en la respuesta, con el mismo modelo y tarifa. Instrucciones y reintentos aparte."),
+    ("<h2>How much response text does AI write?</h2>", "<h2>¿Cuánto texto escribe la IA en su respuesta?</h2>"),
+    ("<h2>See the same data in another format</h2>", "<h2>Ver los mismos datos en otro formato</h2>"),
+    ("<summary>All formats and measurement details</summary>", "<summary>Todos los formatos y detalles de medición</summary>"),
+    ("TOON reference v4.1.1. Token counting:", "Referencia TOON v4.1.1. Recuento de tokens:"),
+    ("Response serialization only; generation quality and total API cost are not measured here.", "Sólo se mide la respuesta serializada; aquí no se mide la calidad de generación ni el coste total de la API."),
     ("<label>Show <select", "<label>Mostrar <select"),
     ('<option value="toon">TOON (official, as-is)</option><option value="toon_flat">TOON (flattened, tabular)</option><option value="csv">CSV (flattened)</option><option value="json">JSON compact</option><option value="json_pretty">JSON pretty</option>',
      '<option value="toon">TOON (oficial, tal cual)</option><option value="toon_flat">TOON (aplanado, tabular)</option><option value="csv">CSV (aplanado)</option><option value="json">JSON compacto</option><option value="json_pretty">JSON indentado</option>'),
@@ -783,7 +789,7 @@ def construir_playground() -> None:
   <button class="toggle" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
 </div></div>
 <main id="contenido">
-<div class="pg-intro"><div><h1>Playground</h1><p>Prueba un contrato de muestra de tickets, valida documentos, convierte JSON ↔ .mini y diseña el tuyo. Todo corre en tu navegador. <a href="/ejemplo/">Ver los ejemplos explicados →</a></p></div>
+<div class="pg-intro"><div><h1>Playground</h1><p>''' + ambos('Prueba cómo una respuesta .mini se convierte a JSON. Después compara cuánto texto necesita cada formato.', 'Try converting a .mini response to JSON. Then compare how much text each format needs.') + '''</p><p class="note">''' + ambos('Práctica del formato base en tu navegador. Para conectar tu propio contrato generado por setup, sigue la', 'Base-format practice in your browser. To connect your own setup-generated contract, follow the') + ''' <a href="/docs/quickstart/">''' + ambos('guía de integración', 'integration guide') + ''' →</a></p></div>
 <p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js</p></div>'''
     tpl = re.sub(r"<header>.*?</header>\s*<main>", cab, tpl, count=1, flags=re.S)
     # 3) pie del sitio

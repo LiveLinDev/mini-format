@@ -4,6 +4,10 @@ Start with [mini setup](https://mini-format.pmoluna.com/docs/quickstart/): langu
 
 ## Wizard or command
 
+In `mini setup`, choose **Select my file** to locate your AI-call code or **Search my project** to find it. Review the proposed change or connect supported Python with an original backup. **I do not have a workflow yet** keeps the resume command in `README.md` and `GUIA.md`.
+
+Once you have the file, you can also run:
+
 ```sh
 mini integrate app.py --bundle .mini --lang en
 ```

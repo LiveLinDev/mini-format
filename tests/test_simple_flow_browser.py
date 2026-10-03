@@ -11,7 +11,7 @@ OUTPUT = Path(__file__).resolve().parents[1] / "output" / "playwright"
 def test_landing_leads_to_the_real_recorded_workflow(page, base_url):
     OUTPUT.mkdir(parents=True, exist_ok=True)
     page.goto(base_url + "/")
-    pw.expect(page.locator("h1")).to_contain_text("Menos tokens de salida")
+    pw.expect(page.locator("h1")).to_contain_text("costar menos")
     assert page.locator('.landing-more').get_attribute('open') is None
     page.screenshot(path=str(OUTPUT / "landing-overview.png"))
     page.locator('[data-dv-goto="5"]').click()

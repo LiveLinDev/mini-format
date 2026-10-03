@@ -82,7 +82,7 @@ def test_la_portada_simplificada_conserva_las_anclas_antes_de_instalar():
     portada = (SITIO / "index.html").read_text(encoding="utf-8")
     abre, cierra = f"<!-- {A} COMO FUNCIONA {A} -->", f"<!-- {A} /COMO FUNCIONA {A} -->"
     assert portada.count(abre) == portada.count(cierra) == 1
-    tira = portada.index("20 mensajes.")
+    tira = portada.index('class="frame hero"')
     piezas = portada.index('id="instalar"')
     assert tira < portada.index(abre) < portada.index(cierra) < piezas
     # las anclas de benchmarks.py no se han tocado ni movido

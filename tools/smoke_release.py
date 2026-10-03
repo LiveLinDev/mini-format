@@ -51,7 +51,22 @@ def main(directory):
         guide = run([mini, "setup"], work, input_text="es\n1\nincidentes.csv\ninc\nmi-formato\n1\n")
         assert "Toolkit creado" in guide
         assert (work / "mi-formato/GUIA.md").is_file()
+        settings = json.loads((work / "mi-formato/setup.json").read_text(encoding="utf-8"))
+        assert settings["integration"]["deferred"]
+        assert settings["integration"]["resume_command"] in (work / "mi-formato/README.md").read_text(encoding="utf-8")
+        toolkit_manifest = json.loads((work / "mi-formato/manifest.json").read_text(encoding="utf-8"))
+        for name, digest in toolkit_manifest["files"].items():
+            assert hashlib.sha256((work / "mi-formato" / name).read_bytes()).hexdigest() == digest
         run([python, work / "mi-formato/validator.py", work / "mi-formato/example.mini"], work)
+        # Exercise the installed setup, selected source, safe auto patch and JSON delivery.
+        app = work / "existing_app.py"
+        app.write_bytes(b'import json\ndef tickets(client):\n    response = client.chat.completions.create(model="existing", messages=[{"role":"user","content":"Create tickets"}], response_format={"type":"json_object"})\n    data = json.loads(response.choices[0].message.content)\n    return data\n')
+        connected = run([mini, "setup"], work, input_text="en\n4\nticket\nconnected-kit\n2\nexisting_app.py\n2\n")
+        assert "Code connected" in connected
+        assert (work / "connected-kit/integration/existing_app.py.before").is_file()
+        runner = work / "verify_app.py"
+        runner.write_bytes(b'from types import SimpleNamespace\nfrom pathlib import Path\nimport json\nfrom existing_app import tickets\nreply = Path("connected-kit/example.mini").read_text(encoding="utf-8")\ndef create(**kwargs):\n    assert kwargs["model"] == "existing" and "response_format" not in kwargs\n    assert "ticket|" in kwargs["messages"][-1]["content"]\n    return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=reply))])\nclient = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))\nassert tickets(client) == json.loads(Path("connected-kit/example.json").read_text(encoding="utf-8"))\nprint("Installed setup integration returns exact JSON")\n')
+        run([python, runner], work)
         assert "No contracts loaded" in run([mini, "forks"], work)
         with zipfile.ZipFile(directory / f"mini-format-{version}-example-families.zip") as archive:
             archive.extractall(work / "optional")

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.1 — 2026-10-03
+
+- Explain support automation before introducing tokens, JSON, TOON and domain contracts. Preserve the animated landing.
+- Widen the playground, wrap code and show one JSON object per line; compare three primary formats with optional technical details.
+- Setup explicitly selects an existing AI-call file, searches a project or defers integration. Both offline guides retain the exact resume command; their manifest hashes stay valid.
+- Review or apply supported Python integration from setup, with an original backup. Other calls receive a provider-specific coding guide.
+
 ## 1.3.0 — 2026-10-03
 
 - A simpler application-first landing and bilingual quickstart, with a 20-ticket support workflow.

@@ -188,9 +188,9 @@
       { titulo: "mi-django — terminal", dur: 5000,
         cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
         lineas: [
-          [["p", "$ "], ["", "pip install mini_format-1.3.0-py3-none-any.whl\n"]],
-          [["c", "… instalando mini-format 1.3.0\n"]],
-          [["s", "mini-format 1.3.0 instalado\n"]],
+          [["p", "$ "], ["", "pip install mini_format-1.3.1-py3-none-any.whl\n"]],
+          [["c", "… instalando mini-format 1.3.1\n"]],
+          [["s", "mini-format 1.3.1 instalado\n"]],
           [["", "\n"]],
           [["p", "$ "], ["", "mini from-schema eventos.schema.json -p log --out contrato.json\n"]],
           [["s", "contrato.json creado para tus datos\n"]]
@@ -380,14 +380,14 @@
 
   var DV_PLAYGROUND = document.documentElement.lang === "en" ? [
     {"titulo": "01 · AI generates .mini", "dur": 6000, "cap": "1 · The contract explains how to return 20 tickets.", "lineas": [[["c", "Input: 20 support messages\n"]], [["f", "Requested output: .mini\n\n"]], [["", "ticket|v=1|n=20|h=79a88ccdd100\n1|Error al iniciar sesión|acceso|alta\n2|Cobro duplicado|facturacion|alta\n"]], [["e", "tres|Panel lento|rendimiento|media\n"]], [["c", "… 17 more tickets\n"]]]},
-    {"titulo": "02 · Validate", "dur": 6000, "cap": "2 · Validation finds an ID that is not a number.", "lineas": [[["c", "Initial validation\n\n"]], [["E", "Invalid ID in the third ticket\n"]], [["", "Field id: expected an integer\n\n"]], [["c", "The app has not received any data yet.\n"]]]},
+    {"titulo": "02 · Validate", "dur": 6000, "cap": "2 · Validation detects Markdown marks around the data.", "lineas": [[["c", "Initial validation\n\n"]], [["E", "Markdown wrapper detected\n"]], [["", "The ```mini marks are not part of the format.\n\n"]], [["c", "The app has not received any data yet.\n"]]]},
     {"titulo": "03 · Repair", "dur": 6000, "cap": "3 · Repair cleans formatting marks without inventing data.", "lineas": [[["f", "Local Repair\n\n"]], [["", "Remove ```mini and ``` fences\nNormalize line endings\n\n"]], [["e", "The ID \"tres\" still needs a correction.\n"]]]},
     {"titulo": "04 · Ask AI to correct", "dur": 6000, "cap": "4 · AI corrects the rejected line, keeping all others.", "lineas": [[["c", "Only the invalid line is replaced.\n\n"]], [["s", "3|Panel lento|rendimiento|media\n\n"]], [["", "19 valid tickets preserved\n1 ticket corrected\n"]]]},
     {"titulo": "05 · Validate again", "dur": 6000, "cap": "5 · All 20 records must follow the contract.", "lineas": [[["f", "Second validation\n\n"]], [["s", "20 valid tickets\n0 errors\n\n"]], [["c", "The expected count is checked too.\n"]]]},
     {"titulo": "06 · Deliver JSON", "dur": 6000, "cap": "6 · The parser returns the objects your app already uses.", "lineas": [[["s", "JSON ready to store and assign\n\n"]], [["", "[\n  {\"id\": 1, \"titulo\": \"…\",\n   \"categoria\": \"acceso\", \"prioridad\": \"alta\"},\n  … 19 more objects\n]\n\n"]], [["c", "History saved: reply → correction → JSON\n"]]]}
   ] : [
     {"titulo": "01 · La IA genera .mini", "dur": 6000, "cap": "1 · El contrato explica cómo devolver 20 tickets.", "lineas": [[["c", "Entrada: 20 mensajes de soporte\n"]], [["f", "Salida pedida: .mini\n\n"]], [["", "ticket|v=1|n=20|h=79a88ccdd100\n1|Error al iniciar sesión|acceso|alta\n2|Cobro duplicado|facturacion|alta\n"]], [["e", "tres|Panel lento|rendimiento|media\n"]], [["c", "… 17 tickets más\n"]]]},
-    {"titulo": "02 · Validar", "dur": 6000, "cap": "2 · El validador encuentra un ID que no es un número.", "lineas": [[["c", "Validación inicial\n\n"]], [["E", "ID inválido en el tercer ticket\n"]], [["", "Campo id: se esperaba un entero\n\n"]], [["c", "La aplicación aún no recibe datos.\n"]]]},
+    {"titulo": "02 · Validar", "dur": 6000, "cap": "2 · El validador detecta marcas Markdown alrededor de los datos.", "lineas": [[["c", "Validación inicial\n\n"]], [["E", "Envoltorio Markdown detectado\n"]], [["", "Las marcas ```mini no forman parte del formato.\n\n"]], [["c", "La aplicación aún no recibe datos.\n"]]]},
     {"titulo": "03 · Repair", "dur": 6000, "cap": "3 · Repair limpia las marcas de formato, sin inventar datos.", "lineas": [[["f", "Repair local\n\n"]], [["", "Quitar las marcas ```mini y ```\nNormalizar los saltos de línea\n\n"]], [["e", "El ID \"tres\" todavía necesita corrección.\n"]]]},
     {"titulo": "04 · Corregir con la IA", "dur": 6000, "cap": "4 · La IA corrige la línea rechazada; conserva las demás.", "lineas": [[["c", "Solo se reemplaza la línea inválida.\n\n"]], [["s", "3|Panel lento|rendimiento|media\n\n"]], [["", "19 tickets válidos conservados\n1 ticket corregido\n"]]]},
     {"titulo": "05 · Volver a validar", "dur": 6000, "cap": "5 · Los 20 registros deben cumplir el contrato.", "lineas": [[["f", "Segunda validación\n\n"]], [["s", "20 tickets válidos\n0 errores\n\n"]], [["c", "Se comprueba también la cantidad esperada.\n"]]]},
