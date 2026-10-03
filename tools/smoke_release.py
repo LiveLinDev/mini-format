@@ -48,7 +48,7 @@ def main(directory):
         run([python, "-m", "pip", "install", "--no-index", kit / f"mini_format-{version}-py3-none-any.whl"], work)
         assert "mini setup" in run([mini], work, input_text="")
         (work / "incidentes.csv").write_text("id,titulo\n101,Error de acceso\n", encoding="utf-8")
-        guide = run([mini, "setup"], work, input_text="1\nincidentes.csv\ninc\nmi-formato\n")
+        guide = run([mini, "setup"], work, input_text="es\n1\nincidentes.csv\ninc\nmi-formato\n1\n")
         assert "Toolkit creado" in guide
         assert (work / "mi-formato/GUIA.md").is_file()
         run([python, work / "mi-formato/validator.py", work / "mi-formato/example.mini"], work)
@@ -65,6 +65,14 @@ def main(directory):
         run([mini, "to-json", "phones.mini", "--contract", contract, "--out", "roundtrip.json"], work)
         original = json.loads((kit / "examples/phones.json").read_text(encoding="utf-8"))
         assert json.loads((work / "roundtrip.json").read_text(encoding="utf-8")) == original
+        # The downloaded support example executes the real generated workflow.
+        support = kit / "examples/flujo-soporte"
+        run([python, support / "run.py", "--out", work / "support-run"], work)
+        expected_support = json.loads((support / "expected.json").read_text(encoding="utf-8"))
+        assert json.loads((work / "support-run/result.json").read_text(encoding="utf-8")) == expected_support
+        trace = json.loads((work / "support-run/history.json").read_text(encoding="utf-8"))["trace"]
+        assert [entry["stage"] for entry in trace] == ["generate", "validate", "repair", "model_repair", "revalidate", "parse"]
+        run([mini, "build", support / "expected.json", "--prefix", "ticket", "--out", work / "support-bundle"], work)
         # Remove the installed package. The generated runtime must still work.
         run([python, "-m", "pip", "uninstall", "-y", "mini-format"], work)
         parser = work / ".mini/parser.py"
@@ -82,6 +90,24 @@ def main(directory):
         (work / "corrections.json").write_text(json.dumps({"2": text.splitlines()[1]}), encoding="utf-8")
         run([python, parser, "apply", "invalid.mini", "corrections.json", "--out", "corrected.mini"], work)
         run([python, parser, "validate", "corrected.mini"], work)
+        # The generated workflow remains portable after uninstalling mini-format,
+        # including its provider-neutral async Node callback and selective correction.
+        node_workflow = """
+import { readFileSync } from 'node:fs';
+import { Workflow } from './support-bundle/workflow.mjs';
+const workflow = new Workflow({ python: process.argv[1] });
+let calls = 0;
+const result = await workflow.run(async prompt => {
+  if (!prompt.includes('ticket|')) throw Error('Generated format prompt missing');
+  return readFileSync(calls++ ? 'support-correction.json' : 'support-raw.mini', 'utf8');
+}, 'Create one support ticket per message', { expectedRecords: 20 });
+if (calls !== 2 || result.length !== 20 || result[2].id !== 3) throw Error('Workflow did not repair the saved output');
+if (JSON.stringify(result) !== JSON.stringify(JSON.parse(readFileSync('support-expected.json', 'utf8')))) throw Error('JSON differs');
+console.log('Standalone async Node workflow: 20 exact records');
+"""
+        for source, target in (("raw.mini", "support-raw.mini"), ("correction.json", "support-correction.json"), ("expected.json", "support-expected.json")):
+            shutil.copyfile(support / source, work / target)
+        run(["node", "--input-type=module", "-e", node_workflow, python], work)
 
         npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
         # Proyecto npm propio: sin él, npm busca un package.json en carpetas superiores
@@ -104,7 +130,7 @@ if (JSON.stringify(reader.end().document.toCanonical()) !== JSON.stringify(doc.t
 console.log('Installed ESM and streaming OK', VERSION);
 """
         run(["node", "--input-type=module", "-e", code], work)
-    print("PASS: checksums, offline wheel + npm install, first-run wizard, optional families, JSON round-trip, standalone runtime, safe repair, selective repair, ESM streaming")
+    print("PASS: checksums, offline wheel + npm install, first-run wizard, optional families, JSON round-trip, standalone runtime, safe repair, selective repair, recorded 20-ticket workflow, async Node bridge, ESM streaming")
 
 
 if __name__ == "__main__":

@@ -78,12 +78,12 @@ def test_recursos_se_añaden_una_sola_vez_aunque_el_sellado_ponga_v():
     assert modulos.recursos(una, css=["/cf.css"], js=["/cf.js"]) == una
 
 
-def test_la_portada_real_tiene_las_anclas_entre_la_tira_y_cuatro_piezas():
+def test_la_portada_simplificada_conserva_las_anclas_antes_de_instalar():
     portada = (SITIO / "index.html").read_text(encoding="utf-8")
     abre, cierra = f"<!-- {A} COMO FUNCIONA {A} -->", f"<!-- {A} /COMO FUNCIONA {A} -->"
     assert portada.count(abre) == portada.count(cierra) == 1
-    tira = portada.index("Para tu aplicación")
-    piezas = portada.index(f"<!-- {A} CUATRO PIEZAS {A} -->")
+    tira = portada.index("20 mensajes.")
+    piezas = portada.index('id="instalar"')
     assert tira < portada.index(abre) < portada.index(cierra) < piezas
     # las anclas de benchmarks.py no se han tocado ni movido
     assert portada.count('    <div class="bench">') == 1 and portada.count(f"<!-- {A} BENCHMARK COMPLETO {A} -->") == 1
@@ -95,7 +95,7 @@ def test_un_modulo_ausente_se_omite_con_un_aviso_claro(tmp_path):
     avisos = []
     estado = modulos.ejecutar(ctx_falso(tmp_path), salida=avisos.append)
     assert estado == {n: "omitido" for n in modulos.MODULOS}
-    assert len(avisos) == 3 and all("aviso" in a and "se omite" in a for a in avisos)
+    assert len(avisos) == len(modulos.MODULOS) and all("aviso" in a and "se omite" in a for a in avisos)
     assert "comofunciona" in avisos[0] and "sitio/comofunciona.py" in avisos[0]
 
 
@@ -151,7 +151,7 @@ def test_camino_feliz_inyecta_en_la_portada_y_escribe_paginas(tmp_path):
     """)
     ctx = ctx_falso(tmp_path)
     estado = modulos.ejecutar(ctx, salida=lambda *_: None)
-    assert estado == {"comofunciona": "ok", "validacion": "ok", "economia": "omitido"}
+    assert estado == {"comofunciona": "ok", "validacion": "ok", "economia": "omitido", "flujo": "omitido"}
     portada = (tmp_path / "index.html").read_text(encoding="utf-8")
     assert '<section id="como-funciona">Hola|Hi</section>' in portada and "/comofunciona.css" in portada
     pagina = (tmp_path / "validacion" / "index.html").read_text(encoding="utf-8")
@@ -216,4 +216,4 @@ def test_los_marcadores_de_validacion_y_economia_son_modulos_validos(tmp_path):
         assert "en construcción" in pagina and "under construction" in pagina
         assert "<h1>" in pagina and f'data-title-es=' in pagina
         assert not re.search(r"[☀-➿\U0001F300-\U0001FAFF]", pagina), "sin emojis ni dingbats"
-    assert 'aria-current="page"' in destino["validacion"].split('id="nav-links"')[1].split("</ul>")[0]
+    assert construir.ruta_activa("validacion") == ""

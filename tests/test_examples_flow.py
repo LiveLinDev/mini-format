@@ -49,9 +49,7 @@ def page(browser):
 
 def test_inicio_lleva_a_un_recorrido_con_las_dos_demos(page, base_url, tmp_path):
     page.emulate_media(color_scheme="dark")
-    page.goto(base_url + "/")
-    page.locator(".cf-preview a").click()
-    pw.expect(page).to_have_url(base_url + "/ejemplo/#como-funciona")
+    page.goto(base_url + "/ejemplo/#como-funciona")
     pw.expect(page.get_by_role("heading", level=1)).to_have_text("¿Cómo funciona .mini?", use_inner_text=True)
     heading = page.get_by_role("heading", level=1).bounding_box()
     header = page.locator(".site-header").bounding_box()
@@ -154,7 +152,7 @@ def test_recorrido_se_anima_se_pausa_y_se_puede_avanzar(page, base_url):
 
 def test_setup_es_visible_y_build_explicado_por_partes(page, base_url):
     page.goto(base_url + "/")
-    pw.expect(page.locator(".hero-setup code")).to_have_text("mini setup")
+    pw.expect(page.locator("#instalar .cmd code").last).to_have_text("mini setup")
     page.goto(base_url + "/ejemplo/#tu-formato")
     pw.expect(page.locator(".ej-setup-command code")).to_have_text("mini setup")
     assert page.locator(".ej-build").get_attribute("open") is None

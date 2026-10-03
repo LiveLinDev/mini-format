@@ -25,7 +25,7 @@ def test_existing_data_builds_a_valid_guide_and_toolkit(tmp_path):
     source = tmp_path / "incidentes.json"
     source.write_text(json.dumps({"incidentes": [{"id": 101, "titulo": "No puedo entrar"}]}), encoding="utf-8")
     destination = tmp_path / "mi-kit"
-    result, output = _wizard(["1", str(source), "inc", str(destination)])
+    result, output = _wizard(["es", "1", str(source), "inc", str(destination), "1"])
     assert result == 0
     assert "Toolkit creado" in output
     guide = (destination / "GUIA.md").read_text(encoding="utf-8")
@@ -40,7 +40,7 @@ def test_existing_data_builds_a_valid_guide_and_toolkit(tmp_path):
 
 def test_no_data_flow_creates_own_fields(tmp_path):
     destination = tmp_path / ".mini"
-    result, _ = _wizard(["2", "incidentes", "id", "2", "101", "titulo", "1", "Error de acceso", "", "inc", str(destination)])
+    result, _ = _wizard(["es", "2", "incidentes", "id", "2", "101", "titulo", "1", "Error de acceso", "", "inc", str(destination), "1"])
     assert result == 0
     assert json.loads((destination / "example.json").read_text(encoding="utf-8")) == {
         "incidentes": [{"id": 101, "titulo": "Error de acceso"}]}
@@ -63,7 +63,7 @@ def test_existing_toolkit_is_not_overwritten(tmp_path):
     destination.mkdir()
     marker = destination / "keep.txt"
     marker.write_text("keep", encoding="utf-8")
-    with mock.patch("builtins.input", side_effect=["1", str(source), "data", str(destination)]), contextlib.redirect_stdout(io.StringIO()):
+    with mock.patch("builtins.input", side_effect=["es", "1", str(source), "data", str(destination)]), contextlib.redirect_stdout(io.StringIO()):
         assert cli.main(["init"]) == 2
     assert marker.read_text(encoding="utf-8") == "keep"
 
@@ -82,7 +82,7 @@ def test_plain_invocation_in_a_pipe_and_help_alias():
 
 def test_setup_and_init_keep_the_same_guided_entry():
     for command in ("setup", "init"):
-        result, output = _wizard(["3"], command)
+        result, output = _wizard(["es", "3"], command)
         assert result == 0
         assert "mini setup" in output
 
@@ -91,7 +91,7 @@ def test_setup_toolkit_matches_build_for_the_same_data(tmp_path):
     source = tmp_path / "productos.json"
     source.write_text('[{"id":1,"nombre":"Cuaderno","precio":8.5}]', encoding="utf-8")
     guided, scripted = tmp_path / "guiado", tmp_path / "comando"
-    assert _wizard(["1", str(source), "prod", str(guided)])[0] == 0
+    assert _wizard(["es", "1", str(source), "prod", str(guided), "1"])[0] == 0
     assert cli.main(["build", str(source), "--prefix", "prod", "--out", str(scripted)]) == 0
     for name in ("contract.json", "example.mini", "prompt.es.md", "parser.py", "validator.py"):
         assert (guided / name).read_bytes() == (scripted / name).read_bytes()

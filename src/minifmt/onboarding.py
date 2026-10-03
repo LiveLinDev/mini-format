@@ -28,12 +28,12 @@ def _ask(label: str, default: str = "") -> str:
     return answer or default
 
 
-def _choice(label: str, choices: tuple[str, ...]) -> str:
+def _choice(label: str, choices: tuple[str, ...], lang="es") -> str:
     while True:
         value = _ask(label)
         if value in choices:
             return value
-        print(f"  Elige {' o '.join(choices)}.")
+        print(f"  {'Elige' if lang == 'es' else 'Choose'} {' / '.join(choices)}.")
 
 
 def _slug(text: str) -> str:
@@ -94,79 +94,95 @@ def _value(kind: str, raw: str):
     return answer in ("sí", "si", "s", "true", "1")
 
 
-def _new_sample():
-    print("\n  Define un registro. Puedes ampliar el formato más adelante con otras muestras.")
-    collection = _ask("Nombre del conjunto de registros", "registros")
+def _new_sample(lang="es"):
+    t = lambda es, en: es if lang == "es" else en
+    print(t("\n  Define un registro. Puedes ampliar el formato con otras muestras.", "\n  Define one record. You can extend the format with more samples."))
+    collection = _ask(t("Nombre del conjunto de registros", "Record collection name"), t("registros", "records"))
     row = {}
     while True:
-        name = _ask("Campo (Enter para terminar)" if row else "Primer campo")
+        name = _ask(t("Campo (Enter para terminar)", "Field (Enter to finish)") if row else t("Primer campo", "First field"))
         if not name:
             if row:
                 break
-            print("  Añade al menos un campo.")
+            print(t("  Añade al menos un campo.", "  Add at least one field."))
             continue
         if name in row:
-            print("  Ese campo ya existe.")
+            print(t("  Ese campo ya existe.", "  That field already exists."))
             continue
-        print("  1 Texto    2 Entero    3 Decimal    4 Sí/No")
-        kind = _choice("Tipo", ("1", "2", "3", "4"))
-        default = {"1": "ejemplo", "2": "1", "3": "1.5", "4": "sí"}[kind]
+        print(t("  1 Texto    2 Entero    3 Decimal    4 Sí/No", "  1 Text    2 Integer    3 Decimal    4 Yes/No"))
+        kind = _choice(t("Tipo", "Type"), ("1", "2", "3", "4"), lang)
+        default = {"1": t("ejemplo", "example"), "2": "1", "3": "1.5", "4": t("sí", "yes")}[kind]
         while True:
             try:
-                row[name] = _value(kind, _ask("Valor de muestra", default))
+                raw = _ask(t("Valor de muestra", "Sample value"), default)
+                row[name] = _value(kind, "sí" if raw.lower() in ("yes", "y") else raw)
                 break
             except ValueError:
-                print("  Ese valor no corresponde al tipo elegido. Inténtalo de nuevo.")
-        print(f"  ✓ {name} añadido")
+                print(t("  Ese valor no corresponde al tipo elegido.", "  That value does not match the selected type."))
+        print(f"  ✓ {name} {t('añadido', 'added')}")
     return {collection: [row]}
 
 
 def run() -> int:
-    """Guide the user through a first toolkit; return 130 on interruption."""
+    """Guide through language, contract, test and application integration."""
+    lang = "es"
     try:
-        print(_style("\n  ╭──────────────────────────────────────────╮\n  │  mini setup  ·  tu .mini, paso a paso      │\n  ╰──────────────────────────────────────────╯", "35"))
-        print("\n  Tú eliges los datos. mini prepara las instrucciones para la IA")
-        print("  y las herramientas para comprobar y leer sus respuestas.")
-        print("\n  ¿Cómo quieres empezar?\n  1  Tengo un archivo con datos\n  2  Quiero definir mis campos aquí\n  3  Salir\n")
-        mode = _choice("Elige una opción", ("1", "2", "3"))
+        print(_style("\n  mini setup · .mini → JSON", "1;35"))
+        while True:
+            lang = _ask("Idioma / Language: es / en", "es").lower()
+            if lang in ("es", "en"):
+                break
+        t = lambda es, en: es if lang == "es" else en
+        print(t("\n  Tu IA genera .mini. Tu aplicación sigue recibiendo JSON.",
+                "\n  Your AI generates .mini. Your application still receives JSON."))
+        print(t("  1 Tengo un JSON de mi IA   2 Definir campos   3 Salir   4 Probar con tickets",
+                "  1 I have AI-generated JSON   2 Define fields   3 Exit   4 Try support tickets"))
+        mode = _choice(t("¿Cómo empezamos?", "Where do we start?"), ("1", "2", "3", "4"), lang)
         if mode == "3":
             return 0
-        print(_style("\n  Paso 1/3  ·  Tu punto de partida", "1;36"))
         if mode == "1":
             while True:
-                source = Path(_ask("Ruta del archivo con tus datos").strip('"\''))
+                source = Path(_ask(t("Ruta de tu JSON de muestra (también CSV/XML)", "Sample JSON path (CSV/XML also accepted)")).strip('"\''))
                 try:
                     sample = _read_sample(source)
                     break
                 except (OSError, ValueError, ET.ParseError) as exc:
-                    print(f"  No pude leerlo: {exc}")
-            suggested = _slug(source.stem)
-            sources = [source.name]
+                    print(t("  No pude leerlo: ", "  Could not read it: ") + str(exc))
+            suggested, sources = _slug(source.stem), [source.name]
+        elif mode == "2":
+            sample = _new_sample(lang)
+            suggested, sources = "data", ["wizard fields"]
         else:
-            sample = _new_sample()
-            suggested = "mi-formato"
-            sources = ["campos definidos en el asistente"]
-        print(_style("\n  Paso 2/3  ·  Nombre y carpeta", "1;35"))
-        print("  El nombre corto identifica tu formato dentro de cada documento .mini.")
+            sample = [{"id": 1, "titulo": "No puedo entrar", "categoria": "acceso", "prioridad": "alta"},
+                      {"id": 2, "titulo": "Factura duplicada", "categoria": "facturacion", "prioridad": "media"}]
+            suggested, sources = "ticket", ["support example"]
         while True:
-            prefix = _ask("¿Cómo se llama tu formato?", suggested)
+            prefix = _ask(t("Nombre corto de tu formato", "Short format name"), suggested)
             if re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", prefix):
                 break
-            print("  Usa letras, números, guion o guion bajo; empieza con una letra.")
-        destination = Path(_ask("¿Dónde guardamos los archivos?", ".mini"))
-        print(_style("\n  Paso 3/3  ·  Preparando tu .mini", "1;35"))
-        contract = build_bundle([sample], prefix, destination, source_names=sources)
-        print(_style(f"\n  ✓ Toolkit creado en {destination}", "1;32"))
-        print(f"  {contract['sample_records']} registro(s) de muestra · {len(contract['record_fields'])} campo(s)")
-        print("\n  Tus datos → reglas e instrucciones → respuesta .mini → datos comprobados")
-        print("  contract.json    las reglas de tus datos")
-        print("  prompt.es.md     las instrucciones que añades a tu petición de IA")
-        print("  parser.py        convierte la respuesta en datos de tu aplicación")
-        print("  validator.py     avisa si falta algo o un valor no es válido")
-        print(f"\n  Empieza por {destination / 'GUIA.md'} y {destination / 'example.mini'}")
-        print(f'  Para validar una respuesta de IA: python "{destination / "validator.py"}" respuesta.mini')
-        print(f'  Para convertirla a datos: python "{destination / "parser.py"}" decode respuesta.mini')
+            print(t("  Empieza con una letra; usa letras, números o guiones.", "  Start with a letter; use letters, numbers or dashes."))
+        destination = Path(_ask(t("Carpeta de salida", "Output folder"), ".mini"))
+        contract = build_bundle([sample], prefix, destination, source_names=sources, lang=lang)
+        print(_style(t(f"\n  ✓ Toolkit creado en {destination}", f"\n  ✓ Toolkit created in {destination}"), "1;32"))
+        print(t("  Contrato → prompt → .mini → validar → reparar → JSON",
+                "  Contract → prompt → .mini → validate → repair → JSON"))
+        print(t(f"  Prueba: copia el contenido de {destination / 'try-prompt.md'} a tu IA. Ya incluye el formato.",
+                f"  Test: paste the contents of {destination / 'try-prompt.md'} into your AI. The format is included."))
+        print(f'  python "{destination / "workflow.py"}" response.mini --out result.json')
+        print(t("\n  ¿Lo conectamos a la llamada a IA de tu aplicación?", "\n  Connect your existing application AI call?"))
+        print(t("  1 Más tarde   2 Localizar y preparar   3 Conectar Python compatible (con copia)",
+                "  1 Later   2 Locate and prepare   3 Connect supported Python (with backup)"))
+        integration = _choice(t("Integración", "Integration"), ("1", "2", "3"), lang)
+        if integration != "1":
+            from .integration import prepare
+            project = _ask(t("Archivo o carpeta de tu proyecto", "Project file or directory"), ".")
+            report = prepare(project, destination, lang=lang, apply=integration == "3")
+            print(t("  Guía de integración: ", "  Integration guide: ") + report["plan"])
+            print(t("  Código conectado.", "  Code connected.") if report["applied"] else
+                  t("  Preparado. Revisa el diff o entrega INTEGRATE.md a tu IA de código.",
+                    "  Prepared. Review the diff or give INTEGRATE.md to your coding AI."))
+        print(t(f"  Guía: {destination / 'GUIA.md'}", f"  Guide: {destination / 'README.md'}"))
         return 0
     except (EOFError, KeyboardInterrupt):
-        print("\n  Asistente cancelado.")
+        print("\n  Asistente cancelado." if lang == "es" else "\n  Setup cancelled.")
         return 130

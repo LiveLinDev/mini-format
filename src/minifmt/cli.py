@@ -292,7 +292,7 @@ def cmd_build(args):
         if args.records and not args.records.startswith("/"):
             sys.exit("--records must be a JSON Pointer, for example /products")
         path = [part.replace("~1", "/").replace("~0", "~") for part in args.records[1:].split("/")] if args.records else []
-    contract = build_bundle(samples, args.prefix, args.out, source_names=[Path(name).name for name in args.samples], record_path=path)
+    contract = build_bundle(samples, args.prefix, args.out, source_names=[Path(name).name for name in args.samples], record_path=path, lang=args.lang)
     print(f"Built {args.out}: {contract['profile']}, {contract['sample_documents']} samples, {contract['sample_records']} records, schema={contract['schema_id']}")
     print(f"Start with {Path(args.out) / 'GUIA.md'}")
     print(f"Validate: python \"{Path(args.out) / 'validator.py'}\" response.mini")
@@ -301,6 +301,13 @@ def cmd_build(args):
 
 def cmd_repair(args):
     return _domain_command(args, "repair")
+
+
+def cmd_integrate(args):
+    from .integration import prepare
+    report = prepare(args.project, args.bundle, lang=args.lang, apply=args.apply)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
 
 
 def cmd_bench(args) -> int:
@@ -365,6 +372,9 @@ def cmd_to_schema(args) -> int:
 
 
 def main(argv=None) -> int:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="mini", description="Crea tu propio formato .mini y úsalo con IA")
     ap.add_argument("--forks", help="directory of your contracts or the optional example families")
     sub = ap.add_subparsers(dest="cmd")
@@ -378,7 +388,8 @@ def main(argv=None) -> int:
     p = sub.add_parser("tokens"); p.add_argument("file"); p.add_argument("--enc", default="o200k_base"); p.set_defaults(fn=cmd_tokens)
     p = sub.add_parser("check-forks"); p.add_argument("dir", nargs="?"); p.set_defaults(fn=cmd_check_forks)
     p = sub.add_parser("new-fork"); p.add_argument("prefix"); p.add_argument("--from", dest="parent"); p.add_argument("--name"); p.add_argument("--add", nargs="*"); p.set_defaults(fn=cmd_new_fork)
-    p = sub.add_parser("build", help="create a standalone domain toolkit from JSON samples"); p.add_argument("samples", nargs="+"); p.add_argument("--prefix", required=True); p.add_argument("--out", default=".mini"); p.add_argument("--records", help="JSON Pointer selecting the record array (auto-detected by default)"); p.set_defaults(fn=cmd_build)
+    p = sub.add_parser("build", help="create a standalone domain toolkit from JSON samples"); p.add_argument("samples", nargs="+"); p.add_argument("--prefix", required=True); p.add_argument("--out", default=".mini"); p.add_argument("--lang", default="es", choices=["es", "en"]); p.add_argument("--records", help="JSON Pointer selecting the record array (auto-detected by default)"); p.set_defaults(fn=cmd_build)
+    p = sub.add_parser("integrate", help="locate your AI/JSON call and prepare or apply its .mini integration"); p.add_argument("project", nargs="?", default="."); p.add_argument("--bundle", default=".mini"); p.add_argument("--lang", choices=["es", "en"]); p.add_argument("--apply", action="store_true", help="apply a supported Python patch, keeping a backup"); p.set_defaults(fn=cmd_integrate)
     p = sub.add_parser("repair", help="repair a generated-domain response without guessing data"); p.add_argument("file"); p.add_argument("--contract", required=True); p.add_argument("--out"); p.add_argument("--fix-count", action="store_true"); p.set_defaults(fn=cmd_repair)
     p = sub.add_parser("bench", help="compare tokens of a document across formats"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract", help="domain-profile contract (mini build)"); p.add_argument("--enc", default="o200k_base"); p.add_argument("--format", default="table", choices=["table", "json"]); p.set_defaults(fn=cmd_bench)
     p = sub.add_parser("from-schema", help="convert a JSON Schema or Pydantic model into a contract"); p.add_argument("schema", nargs="?"); p.add_argument("-p", "--prefix", required=True); p.add_argument("--pydantic", metavar="MODULE:MODEL"); p.add_argument("--name"); p.add_argument("--records-key"); p.add_argument("--strict", action="store_true", help="fail on keywords without contract equivalent"); p.add_argument("--out"); p.set_defaults(fn=cmd_from_schema)

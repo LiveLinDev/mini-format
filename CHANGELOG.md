@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 — 2026-10-03
+
+- A simpler application-first landing and bilingual quickstart, with a 20-ticket support workflow.
+- `mini setup` starts with language selection and offers project integration.
+- Generated `workflow.py` reads the format prompt, validates, repairs, optionally requests one bounded model correction, revalidates and returns JSON. Incomplete or invalid output is blocked.
+- `mini integrate` locates AI/JSON calls and prepares coding-AI instructions; a supported synchronous Python chat/JSON pattern can be applied with a backup.
+- Download includes saved responses, reproducible history, JSON/TOON/.mini output measurements and a local optional API-key form.
+
+
 ## 1.2.3
 
 - `mini setup` starts the guided creation flow explicitly. `mini init` and running `mini` in a terminal remain supported. The wizard uses the same builder as `mini build`.

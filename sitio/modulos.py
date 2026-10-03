@@ -69,7 +69,7 @@ import re
 from pathlib import Path
 from types import SimpleNamespace
 
-MODULOS = ("comofunciona", "validacion", "economia")
+MODULOS = ("comofunciona", "validacion", "economia", "flujo")
 ANCLA = "═══════════"
 # Carpetas que el build ya posee: un módulo no puede escribir ahí.
 RESERVADAS = {"en", "source", "downloads", "docs", "playground", "mesa-de-ayuda", "servidor"}

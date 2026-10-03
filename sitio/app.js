@@ -188,9 +188,9 @@
       { titulo: "mi-django — terminal", dur: 5000,
         cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
         lineas: [
-          [["p", "$ "], ["", "pip install mini_format-1.2.3-py3-none-any.whl\n"]],
-          [["c", "… instalando mini-format 1.2.3\n"]],
-          [["s", "mini-format 1.2.3 instalado\n"]],
+          [["p", "$ "], ["", "pip install mini_format-1.3.0-py3-none-any.whl\n"]],
+          [["c", "… instalando mini-format 1.3.0\n"]],
+          [["s", "mini-format 1.3.0 instalado\n"]],
           [["", "\n"]],
           [["p", "$ "], ["", "mini from-schema eventos.schema.json -p log --out contrato.json\n"]],
           [["s", "contrato.json creado para tus datos\n"]]
@@ -378,51 +378,20 @@
       ]}
   ];
 
-  var DV_PLAYGROUND = [
-    { titulo: "playground — ticket de muestra", dur: 6000,
-      cap: "1 · Abre un ticket de muestra y observa su contrato .mini.",
-      lineas: [
-        [["f", "contrato: "], ["", "tk — tickets de soporte\n"]],
-        [["", "ejemplo: 10 tickets grabados\n"]],
-        [["", "\n"]],
-        [["", "tk|n=10\n"]],
-        [["", "T-1041|alta|acceso|No puede iniciar sesión|2\n"]],
-        [["", "T-1042|media|pago|Cobro duplicado|3\n"]],
-        [["", "\n"]],
-        [["s", "10 tickets · 0 errores\n"]]
-      ]},
-    { titulo: "playground — editor", dur: 7000,
-      cap: "2 · Inyecta errores y lee el diagnóstico: código, línea y campo.",
-      lineas: [
-        [["p", "> "], ["", "inyectar errores\n"]],
-        [["", "\n"]],
-        [["E", "E04"], ["", " document: n=11, 9 válidos\n"]],
-        [["E", "E05"], ["", " línea 2: falta un campo\n"]],
-        [["E", "E09"], ["", " línea 4: escape inválido\n"]],
-        [["", "\n"]],
-        [["c", "líneas a regenerar: [2, 4]\n"]]
-      ]},
-    { titulo: "playground — comparar", dur: 7000,
-      cap: "3 · Compara el documento actual en varios formatos.",
-      lineas: [
-        [["c", "tokens del documento en el editor\n"]],
-        [["", "\n"]],
-        [["f", "mini "], ["", "   ← validación con contrato\n"]],
-        [["", "toon   ← codificador oficial\n"]],
-        [["", "json   ← objeto canónico\n"]],
-        [["", "yaml   ← representación equivalente\n"]],
-        [["", "xml    ← representación equivalente\n"]]
-      ]},
-    { titulo: "playground — tu contrato", dur: 4000,
-      cap: "4 · Diseña tu propio contrato y descárgalo.",
-      lineas: [
-        [["p", "> "], ["", "descargar contract.json\n"]],
-        [["p", "> "], ["", "probar en el editor\n"]],
-        [["", "\n"]],
-        [["s", "listo para adaptar a tus datos\n"]],
-        [["", "\n"]],
-        [["c", "(fin · la demo va en bucle)\n"]]
-      ]}
+  var DV_PLAYGROUND = document.documentElement.lang === "en" ? [
+    {"titulo": "01 · AI generates .mini", "dur": 6000, "cap": "1 · The contract explains how to return 20 tickets.", "lineas": [[["c", "Input: 20 support messages\n"]], [["f", "Requested output: .mini\n\n"]], [["", "ticket|v=1|n=20|h=79a88ccdd100\n1|Error al iniciar sesión|acceso|alta\n2|Cobro duplicado|facturacion|alta\n"]], [["e", "tres|Panel lento|rendimiento|media\n"]], [["c", "… 17 more tickets\n"]]]},
+    {"titulo": "02 · Validate", "dur": 6000, "cap": "2 · Validation finds an ID that is not a number.", "lineas": [[["c", "Initial validation\n\n"]], [["E", "Invalid ID in the third ticket\n"]], [["", "Field id: expected an integer\n\n"]], [["c", "The app has not received any data yet.\n"]]]},
+    {"titulo": "03 · Repair", "dur": 6000, "cap": "3 · Repair cleans formatting marks without inventing data.", "lineas": [[["f", "Local Repair\n\n"]], [["", "Remove ```mini and ``` fences\nNormalize line endings\n\n"]], [["e", "The ID \"tres\" still needs a correction.\n"]]]},
+    {"titulo": "04 · Ask AI to correct", "dur": 6000, "cap": "4 · AI corrects the rejected line, keeping all others.", "lineas": [[["c", "Only the invalid line is replaced.\n\n"]], [["s", "3|Panel lento|rendimiento|media\n\n"]], [["", "19 valid tickets preserved\n1 ticket corrected\n"]]]},
+    {"titulo": "05 · Validate again", "dur": 6000, "cap": "5 · All 20 records must follow the contract.", "lineas": [[["f", "Second validation\n\n"]], [["s", "20 valid tickets\n0 errors\n\n"]], [["c", "The expected count is checked too.\n"]]]},
+    {"titulo": "06 · Deliver JSON", "dur": 6000, "cap": "6 · The parser returns the objects your app already uses.", "lineas": [[["s", "JSON ready to store and assign\n\n"]], [["", "[\n  {\"id\": 1, \"titulo\": \"…\",\n   \"categoria\": \"acceso\", \"prioridad\": \"alta\"},\n  … 19 more objects\n]\n\n"]], [["c", "History saved: reply → correction → JSON\n"]]]}
+  ] : [
+    {"titulo": "01 · La IA genera .mini", "dur": 6000, "cap": "1 · El contrato explica cómo devolver 20 tickets.", "lineas": [[["c", "Entrada: 20 mensajes de soporte\n"]], [["f", "Salida pedida: .mini\n\n"]], [["", "ticket|v=1|n=20|h=79a88ccdd100\n1|Error al iniciar sesión|acceso|alta\n2|Cobro duplicado|facturacion|alta\n"]], [["e", "tres|Panel lento|rendimiento|media\n"]], [["c", "… 17 tickets más\n"]]]},
+    {"titulo": "02 · Validar", "dur": 6000, "cap": "2 · El validador encuentra un ID que no es un número.", "lineas": [[["c", "Validación inicial\n\n"]], [["E", "ID inválido en el tercer ticket\n"]], [["", "Campo id: se esperaba un entero\n\n"]], [["c", "La aplicación aún no recibe datos.\n"]]]},
+    {"titulo": "03 · Repair", "dur": 6000, "cap": "3 · Repair limpia las marcas de formato, sin inventar datos.", "lineas": [[["f", "Repair local\n\n"]], [["", "Quitar las marcas ```mini y ```\nNormalizar los saltos de línea\n\n"]], [["e", "El ID \"tres\" todavía necesita corrección.\n"]]]},
+    {"titulo": "04 · Corregir con la IA", "dur": 6000, "cap": "4 · La IA corrige la línea rechazada; conserva las demás.", "lineas": [[["c", "Solo se reemplaza la línea inválida.\n\n"]], [["s", "3|Panel lento|rendimiento|media\n\n"]], [["", "19 tickets válidos conservados\n1 ticket corregido\n"]]]},
+    {"titulo": "05 · Volver a validar", "dur": 6000, "cap": "5 · Los 20 registros deben cumplir el contrato.", "lineas": [[["f", "Segunda validación\n\n"]], [["s", "20 tickets válidos\n0 errores\n\n"]], [["c", "Se comprueba también la cantidad esperada.\n"]]]},
+    {"titulo": "06 · Entregar JSON", "dur": 6000, "cap": "6 · El parser entrega los objetos que tu aplicación ya usa.", "lineas": [[["s", "JSON listo para guardar y asignar\n\n"]], [["", "[\n  {\"id\": 1, \"titulo\": \"…\",\n   \"categoria\": \"acceso\", \"prioridad\": \"alta\"},\n  … 19 objetos más\n]\n\n"]], [["c", "Historial guardado: respuesta → corrección → JSON\n"]]]}
   ];
 
   function dvInit(id, ESCENAS, bucle) {

@@ -34,7 +34,7 @@ SITE = ROOT / "sitio"
 ORIGIN = "https://mini-format.pmoluna.com"
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 MIN_TEXTO_VISIBLE = 120  # caracteres de texto visible sin JavaScript que debe tener toda página
-RUTAS_EN_LINEA = ("taller", "sima", "ejemplo", "validacion", "economia")
+RUTAS_EN_LINEA = ("taller", "sima", "ejemplo", "validacion", "economia", "flujo")
 
 
 class Page(HTMLParser):
@@ -193,8 +193,8 @@ def comprobar(site: Path = SITE) -> list[str]:
         problems.append("index.html: sin menú de navegación")
     else:
         esperado = _nav_sin_idioma(home.nav_links)
-        if "/validacion/" not in esperado:
-            problems.append("index.html: el menú no enlaza /validacion/")
+        if "/flujo/" not in esperado:
+            problems.append("index.html: el menú no enlaza /flujo/")
         for path, page in pages.items():
             relative = path.relative_to(site).as_posix()
             if page.nav_links is None:

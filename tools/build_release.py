@@ -154,7 +154,11 @@ def build(output: Path) -> dict:
         (kit / "INSTALL.txt").write_text(
             "mini-format " + VERSION + "\n\nPython >=3.9 (offline, no runtime dependencies):\n"
             f"  python -m pip install --no-index {wheel.name}\n"
-            "  mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini\n\n"
+            "  mini setup\n\n"
+            "Replay the complete support workflow (no API key):\n"
+            "  python examples/flujo-soporte/run.py\n"
+            "Optional local form with an API-key field:\n"
+            "  python examples/flujo-soporte/run.py --serve\n\n"
             "Node >=22.6 (offline, no runtime dependencies):\n"
             f"  npm install ./{node_name}\n\n"
             "See BUILD_GUIDE.md / BUILD_GUIDE.es.md. The generated Python parser is standalone.\n"

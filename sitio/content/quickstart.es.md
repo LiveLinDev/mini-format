@@ -1,100 +1,82 @@
-# Inicio rápido
+# De tu JSON a un flujo con .mini
 
-Construye una vez el toolkit de tu dominio. Después, coloca su prompt en tu flujo de IA y convierte cada respuesta `.mini` de vuelta al JSON que consume tu aplicación.
+Una aplicación de soporte recibe mensajes. La IA extrae un ticket por mensaje. La aplicación necesita **JSON** para guardar y asignar los tickets; `.mini` reduce la repetición en la respuesta de la IA y después se convierte a ese mismo JSON.
 
-## 1. Instalar
+[Mira primero el caso de 20 tickets](/flujo/). Puedes repetirlo sin API key y ver qué se validó y reparó.
 
-[Descargar toolkit 1.2.3 (.zip)](/downloads/mini-format-1.2.3.zip) · [Paquete Python (.whl)](/downloads/mini_format-1.2.3-py3-none-any.whl) · [Código fuente (.zip)](/downloads/mini-format-1.2.3-source.zip)
+## 1. Instala y abre el asistente
 
-Requiere Python 3.9 o posterior. El núcleo y el toolkit generado usan la biblioteca estándar.
+[Descarga el paquete](/downloads/mini-format-1.3.0.zip) y extráelo. Desde esa carpeta:
 
-```bash
-pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.3-py3-none-any.whl
+```sh
+python -m pip install --no-index mini_format-1.3.0-py3-none-any.whl
 mini setup
 ```
 
-El asistente te pregunta si ya tienes un archivo de datos (JSON, CSV, TSV o XML) o si prefieres definir los campos allí mismo. Crea la carpeta `.mini/` y una `GUIA.md` con los pasos para pedir, validar y convertir respuestas. Para automatizar la creación sin preguntas, usa `mini build` como se explica abajo. `mini init` y `mini` en una terminal siguen abriendo el mismo asistente.
+El asistente pregunta primero **español o inglés**. Después puedes elegir un JSON que tu IA ya haya generado, definir tus campos o usar el ejemplo de tickets. Tu muestra debe incluir los campos y tipos que espera la aplicación; añade muestras si tienes campos opcionales o estructuras diferentes.
 
-Para instalar sin conexión, descarga el ZIP, extráelo y ejecuta `pip install` sobre el archivo `.whl` incluido. Con Node 22.6 o posterior, instala el paquete del perfil base: `npm install ./mini-format-core-1.2.3.tgz`. Puedes [descargarlo por separado](/downloads/mini-format-core-1.2.3.tgz). El toolkit de dominio generado es Python; las bibliotecas TypeScript y JavaScript implementan el perfil base.
+Elige un nombre y una carpeta nueva, por ejemplo `.mini`. El contrato define los campos y tipos; el prompt indica a la IA cómo devolverlos. No necesitas escribir ninguno a mano.
 
-Si ya completaste `mini setup`, tu carpeta está lista: puedes continuar en **4. Integrar**. Los pasos 2 y 3 explican la alternativa por comando.
+## 2. Prueba antes de integrar
 
-## 2. Opcional: construir desde muestras por comando
+Abre `.mini/try-prompt.md` y copia su **contenido** a tu IA. Ya incluye el formato en el idioma elegido y pide 20 registros ficticios del mismo caso. Una ruta sola no enseña las instrucciones a la IA.
 
-Guarda esto como `phones.json`:
+Guarda la respuesta como `response.mini`. Compruébala:
 
-```json
-[
-  {"id": 1, "brand": "Acme", "model": "One", "price": 299, "available": true},
-  {"id": 2, "brand": "Acme", "model": "Pro", "price": 499, "available": false}
-]
-```
-
-Incluye en archivos adicionales ejemplos de campos opcionales, listas, objetos anidados y valores nulos. La diversidad de casos importa más que repetir la misma muestra.
-
-## 3. Crear tu .mini
-
-```bash
-mini build phones.json --prefix phone --out .mini
-```
-
-Para combinar muestras: `mini build phones.json more-phones.json --prefix phone --out .mini`.
-
-La carpeta `.mini` contiene el contrato, el esquema JSON, prompts en ambos idiomas, parser, validador, reparación, ejemplos y manifiesto. Lee [Crear tu toolkit](/docs/build/) para conocer el perfil generado y sus reglas.
-
-## 3b. ¿Tu aplicación ya tiene un JSON Schema?
-
-Entonces no necesitas reunir muestras: el contrato se genera desde el esquema en un solo comando, sin carpeta de salida.
-
-```bash
-mini from-schema ticket.schema.json -p tk --out contrato_tk.json
-mini to-schema contrato_tk.json
-mini prompt --contract contrato_tk.json --lang es
-mini validate respuesta.mini --contract contrato_tk.json
-mini diagnose respuesta.mini --contract contrato_tk.json
-```
-
-Con un modelo Pydantic: `mini from-schema --pydantic modelos:Ticket -p tk --out contrato_tk.json`. El contrato resultante sigue el perfil base SPEC 1.1 y se usa con la biblioteca:
-
-```python
-from minifmt import Contract, parse, spec_block
-from minifmt.ai import merge_repair, repair_request
-
-contrato = Contract.load("contrato_tk.json")
-
-# bloque de formato que se añade al prompt del modelo
-instruccion = spec_block(contrato, "es")
-
-# registros válidos y errores con su código y su línea
-documento = parse(respuesta, contrato, strict=False)
-
-# reenvía al modelo solo las líneas inválidas y fusiona la corrección
-solicitud = repair_request(respuesta, contrato, "es")
-fusion = merge_repair(respuesta, correccion, contrato, solicitud)
-```
-
-## 4. Integrar
-
-Usa `.mini/prompt.es.md` como instrucción de formato para tu modelo. Guarda su respuesta en `response.mini`.
-
-```bash
+```sh
 python .mini/validator.py response.mini
-python .mini/parser.py decode response.mini
 ```
 
-El segundo comando imprime el JSON reconstruido. También puedes usar `loads(texto)` y `dumps(objeto)` al importar el módulo generado `parser.py` desde tu aplicación.
+Puede salir bien a la primera. Si hay errores, Repair elimina envoltorios Markdown, BOM y saltos de línea de Windows. Para un tipo incorrecto o datos ausentes, hay que pedir una corrección a la IA.
 
-## 5. Detectar y reparar
-
-```bash
-python .mini/parser.py diagnose response.mini
+```sh
 python .mini/repair.py response.mini --out corrected.mini
 ```
 
-La reparación normaliza envoltorios y saltos de línea seguros. Nunca inventa valores que faltan. Cambiar el recuento declarado exige `--fix-count`; úsalo solo si has comprobado que el lote recibido está completo. Los errores semánticos necesitan una corrección de tu aplicación o un reintento del modelo.
+Si Repair informa de errores pendientes, revisa sus diagnósticos: no ha producido una respuesta utilizable. [El ejemplo completo](/flujo/) muestra cómo el flujo pide a la IA sólo la línea incorrecta y comprueba otra vez el resultado.
 
-## Familias de muestra opcionales
+## 3. Conecta el flujo de tu aplicación
 
-Puedes descargar [14 contratos de muestra](/docs/forks/) para estudiarlos. No se instalan con Python o Node: tu `.mini` se construye con tus propios datos. Tras extraer el ZIP, usa `mini --forks forks forks` para listarlos.
+Elige **Integración** dentro de `mini setup`, o ejecuta:
 
-El [playground](/playground/) incluye un ejemplo de tickets y permite probar el perfil base sin instalar nada. Mira también los [ejemplos explicados](/ejemplo/).
+```sh
+mini integrate ruta/a/tu/app.py --bundle .mini --lang es
+```
+
+Localiza la llamada que pide JSON. Prepara `integration/INTEGRATE.md` con las rutas del contrato y del prompt y, si el código es compatible, un diff. Para aplicar el patrón Python síncrono de chat completions seguido de `json.loads`, añade `--apply`; conserva una copia del archivo original.
+
+Para otros SDK, código asíncrono o lenguajes, entrega la guía a tu IA de código. Debe leer el prompt generado, cambiar el formato de salida de la llamada y conectar el callback a `Workflow.run`. Si tu API fuerza respuestas JSON, desactiva ese modo para recibir .mini.
+
+**El recorrido completo:** tu tarea → IA → .mini → validar → Repair → corrección de IA si hace falta → volver a validar → JSON. La aplicación recibe datos sólo si la respuesta entera es válida. Puedes exigir el número de registros esperado para bloquear lotes incompletos.
+
+[Ver código de integración](/docs/build/).
+
+## 4. Repite una ejecución completa
+
+Desde la carpeta del paquete:
+
+```sh
+python examples/flujo-soporte/run.py
+```
+
+Hay 20 mensajes, una respuesta .mini guardada y una corrección de una línea. El flujo real entrega `output/soporte/result.json` y guarda `history.json`. Las respuestas son ilustrativas, escritas por Muse; los fallos se introdujeron para enseñar Repair, no para medir la fiabilidad de una IA.
+
+Para el formulario local con modo grabado y modo IA real:
+
+```sh
+python examples/flujo-soporte/run.py --serve
+```
+
+Abre la dirección que imprime. El formulario pide API key y modelo sólo al elegir una IA real. La clave se usa en memoria y no va al historial. Las llamadas reales y las correcciones tienen coste. Puedes conservar tu proveedor al integrar tu propia función.
+
+## ¿Y el ahorro?
+
+El resultado de estos 20 tickets usa 443 tokens JSON, 304 TOON y 278 .mini con `o200k_base`. El prompt .mini tiene 571 tokens; los reintentos se cuentan aparte. Menos salida no demuestra por sí sola menor coste total, sobre todo con lotes pequeños. [Explorar costes](/economia/).
+
+<details><summary>Ya conozco .mini: alternativas por comando y referencias</summary>
+
+`mini build muestra.json --prefix ticket --out .mini --lang es` crea el mismo toolkit sin asistente. Puedes pasar varias muestras. Si ya tienes un JSON Schema, consulta `mini from-schema --help` y el [perfil base](/docs/spec/).
+
+Las [14 familias de muestra](/docs/forks/) son opcionales. El [playground](/playground/) sirve para practicar el formato base. El toolkit generado usa Python; [Node/TypeScript](/docs/typescript/) implementa el perfil base SPEC 1.1.
+
+</details>

@@ -135,7 +135,7 @@ def test_familias_en_la_portada_y_sus_traducciones():
     n = C["familias"]
     html = sin_etiquetas(leer(PUBLICADOS["index.html"]))
     assert "familias publicadas" not in html
-    assert "Cómo funciona · ver los ejemplos" in html
+    assert "Ver el caso de los 20 tickets" in html
     assert re.findall(r"(\d+) dominios", html) == [str(n)]
     # «Mostrar las N filas» cuenta las filas de la tabla comparativa (no son familias): debe coincidir con la tabla
     fuente = leer(PUBLICADOS["index.html"])

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "mensaje": "No puedo entrar: mi contraseña dejó de funcionar."
+  },
+  {
+    "id": 2,
+    "mensaje": "Tengo dos cobros iguales en la factura de septiembre."
+  },
+  {
+    "id": 3,
+    "mensaje": "La aplicación tarda un minuto en abrir el panel."
+  },
+  {
+    "id": 4,
+    "mensaje": "Quiero actualizar la dirección de mi cuenta."
+  },
+  {
+    "id": 5,
+    "mensaje": "Al descargar el informe aparece un error 500."
+  },
+  {
+    "id": 6,
+    "mensaje": "El enlace para restablecer mi contraseña caducó."
+  },
+  {
+    "id": 7,
+    "mensaje": "No veo el pago que hice ayer en mi cuenta."
+  },
+  {
+    "id": 8,
+    "mensaje": "No llegan las notificaciones por correo."
+  },
+  {
+    "id": 9,
+    "mensaje": "Necesito invitar a dos compañeros a mi equipo."
+  },
+  {
+    "id": 10,
+    "mensaje": "El buscador no encuentra un ticket que existe."
+  },
+  {
+    "id": 11,
+    "mensaje": "La pantalla se queda en blanco al abrir un adjunto."
+  },
+  {
+    "id": 12,
+    "mensaje": "Necesito cambiar el nombre de mi empresa."
+  },
+  {
+    "id": 13,
+    "mensaje": "La exportación CSV pierde los acentos de los nombres."
+  },
+  {
+    "id": 14,
+    "mensaje": "Mi sesión se cierra cada cinco minutos."
+  },
+  {
+    "id": 15,
+    "mensaje": "La factura tiene un número fiscal antiguo."
+  },
+  {
+    "id": 16,
+    "mensaje": "El botón de guardar no responde desde el móvil."
+  },
+  {
+    "id": 17,
+    "mensaje": "Quiero dejar de recibir el resumen semanal."
+  },
+  {
+    "id": 18,
+    "mensaje": "No puedo subir un PDF de dos megabytes."
+  },
+  {
+    "id": 19,
+    "mensaje": "Los filtros del panel se reinician al volver."
+  },
+  {
+    "id": 20,
+    "mensaje": "Necesito descargar todas mis facturas del año."
+  }
+]

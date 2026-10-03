@@ -65,3 +65,4 @@
 .wip h1{ font-size:clamp(2.2rem,5vw,3.6rem); line-height:.95; margin-bottom:1.1rem }
 .wip .lead{ max-width:44rem }
 .wip-links{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.75rem }
+.docs-side details{margin-block:18px}.docs-side summary{cursor:pointer;font-size:.8rem;font-weight:700;letter-spacing:.02em}.docs-flow-link{display:block;margin-bottom:24px;color:rgb(var(--accent));font-weight:600}

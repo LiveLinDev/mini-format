@@ -10,6 +10,8 @@ js/mini.js text eol=lf
 *.json text eol=lf
 # Archived HTTP response bytes are authenticated by sources.json SHA-256.
 benchmark/public/data/*.json -text
+# Recorded AI reply deliberately contains CRLF for the Repair demonstration.
+examples/flujo-soporte/raw.mini -text whitespace=cr-at-eol
 *.mp4 binary
 *.png binary
 *.pdf binary

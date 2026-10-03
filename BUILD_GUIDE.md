@@ -1,136 +1,78 @@
-# From JSON samples to a production workflow
+# Connect .mini to your AI call
 
-[Español](BUILD_GUIDE.es.md) · [Domain profile](DOMAIN_PROFILE.md)
+Start with [mini setup](https://mini-format.pmoluna.com/docs/quickstart/): language, sample JSON, name and directory. The toolkit contains a contract, prompts and a portable Python workflow with no external runtime dependencies.
 
-## 1. Install locally
-
-Extract the toolkit ZIP from the site's Downloads section. With Python 3.9+:
+## Wizard or command
 
 ```sh
-python -m pip install --no-index mini_format-1.2.3-py3-none-any.whl
-mini build examples/phones.json examples/phones-extra.json --prefix phone --out .mini
+mini integrate app.py --bundle .mini --lang en
 ```
 
-The builder reads local files. It does not send samples to a model or external
-service and does not require an API key, Git or a hosted repository. A build
-refuses to overwrite a nonempty output directory.
+Locate AI calls and JSON parsing. The command writes `integration/INTEGRATE.md` with actual paths and `change.diff` for compatible code. Repeat with `--apply` to apply it.
 
-## 2. Use representative samples
+Automatic editing recognizes a synchronous Python `client.chat.completions.create(...)` assignment followed by `json.loads(response.choices[0].message.content)`. The response must have no other uses. It keeps the client, model, messages and parameters, removes `response_format`, reads the generated prompt and connects the workflow. A backup is kept in `integration/app.py.before`; a bridge is created beside the source file.
 
-Pass complete JSON documents, not fragments with metadata removed. Include the
-different shapes you expect: optional members, nulls, empty arrays, Unicode,
-different numeric values and nested objects. Sample order determines field order.
-Missing members are different from `null`, `false`, `0` and `""`.
+Other SDKs/languages, streaming, tools and asynchronous functions receive a coding-AI guide and need an application-specific callback or bridge.
 
-Root arrays are treated as record collections. For an object wrapping several
-arrays, automatic selection chooses the object collection with the largest total
-record count across the samples, among paths present in every sample. Select the
-intended collection explicitly when needed:
+## Keep your provider with a callback
 
-```sh
-mini build first.json second.json --prefix product --records /data/products --out .mini-products
-```
-
-`--records` is a JSON Pointer through object members (`~1` for `/`, `~0` for `~`).
-Wrapper metadata and nested lists are preserved. A scalar or object without a
-selected record array is still supported as a single-record document.
-
-## 3. Keep the generated bundle together
-
-| File | Purpose |
-|---|---|
-| `contract.json` | Positional schema, selected collection and contract fingerprint |
-| `schema.json` | JSON Schema 2020-12 for integration with other validators |
-| `prompt.en.md`, `prompt.es.md` | Model instructions and a small encoding example |
-| `parser.py` | Standalone encoder, strict decoder, diagnosis and selective repair |
-| `validator.py`, `repair.py` | Convenient validation and safe-repair commands |
-| `example.json`, `example.mini` | Matching sample input/output |
-| `manifest.json` | Sample counts, filenames and generated-file SHA-256 checksums |
-
-Review examples and prompts before sharing: they can contain your original
-private data. Keep the matching contract with the runtime. The fingerprint detects
-an accidental schema mismatch; it is not an authentication mechanism.
-
-## 4. Integrate with your model
-
-Add `prompt.en.md` or `prompt.es.md` to your model's instructions alongside your
-original task. State the expected record count and business requirements. Receive
-plain `.mini` output and decode it using the generated runtime:
-
-```sh
-python .mini/parser.py decode response.mini --out response.json
-python .mini/validator.py response.mini
-```
-
-The runtime uses only Python's standard library; mini-format does not need to be
-installed on the receiving machine. For an import-based integration:
+A function receives a prompt and returns text. Use your existing AI call without JSON-only output mode:
 
 ```python
 import importlib.util
 from pathlib import Path
 
-spec = importlib.util.spec_from_file_location("phone_parser", ".mini/parser.py")
-parser = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(parser)
-text = Path("response.mini").read_text(encoding="utf-8")
-data = parser.loads(text)  # raises DomainError; never returns invalid JSON
+bundle = Path('.mini').resolve()
+spec = importlib.util.spec_from_file_location('my_mini_flow', bundle / 'workflow.py')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+flow = module.Workflow(bundle, lang='en')
+
+def generate(prompt):
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{'role': 'user', 'content': prompt}],
+    )
+    return response.choices[0].message.content
+
+data = flow.run(generate, task, expected_records=20)
+# data: JSON-compatible application data.
+# flow.last_run: response, diagnostics, correction and result.
 ```
 
-Before calling a paid model, test serialization with your own JSON:
+`task` includes actual inputs and business instructions. Credentials remain in your application. The callback is used for generation and correction; keep necessary business instructions in both calls.
+
+## What happens
+
+1. Read prompt.en.md and append it to the task.
+2. Obtain .mini from AI and validate.
+3. Repair safe wrappers, BOM and CRLF.
+4. Ask the same callback to replace invalid lines, preserving valid lines. Header/count errors request a complete regeneration.
+5. Revalidate and check expected_records when provided.
+6. Return JSON only on success.
+
+At most one correction is requested by default. `max_repairs=0` disables it. Pending errors raise `WorkflowError`; `error.report` and `flow.last_run` expose diagnostics. No invented data or silent count reduction. Validation checks structure/types, not the truth of the AI interpretation.
+
+## Async Python and Node
+
+Use `await flow.run_async(generate, task, expected_records=20)` with an async Python callback.
+
+In Node, import `Workflow` from `./.mini/workflow.mjs` and call `await new Workflow().run(generate, task, {expectedRecords: 20})`. The callback keeps any SDK. This bridge runs the same generated Python runtime and requires Python. It validates, repairs, requests a correction and returns JSON. `lastRun` holds the history.
+
+## Other languages
+
+Pipe text to `python .mini/workflow.py -`. Exit 0 yields JSON on stdout; exit 1 yields history and diagnostics on stderr. Connect semantic retries in the calling application; the CLI only repairs safe wrappers and parses, without AI calls.
 
 ```sh
-python .mini/parser.py encode input.json --out input.mini
-python .mini/parser.py decode input.mini --out restored.json
+python .mini/workflow.py response.mini --out result.json --expected-records 20
 ```
 
-## 5. Detect and repair without guessing
+`--history file.json` optionally saves the run. It may contain application data, but no API key: the runtime never receives credentials.
 
-```sh
-python .mini/parser.py diagnose response.mini
-python .mini/repair.py response.mini --out repaired.mini
-```
+## Reproducible test
 
-Safe automatic repair removes a UTF-8 BOM, normalizes CRLF and unwraps a complete
-Markdown code fence. It does not fabricate missing fields, choose business values
-or silently discard records. A failed repair exits nonzero and does not write an
-output file. Diagnostics identify physical line numbers, errors, valid lines and
-recoverable record counts.
+`python examples/flujo-soporte/run.py` replays the 20 illustrative tickets and correction with the actual tools. `--serve` opens the local form with optional live AI and an API key held in memory. [See the history](https://mini-format.pmoluna.com/flujo/).
 
-If record lines remain invalid, use the returned `repair_prompt`, original task,
-original response and contract with your model or a human reviewer. Save the
-returned JSON map of line numbers to corrected `.mini` lines as `corrections.json`:
+Rebuild in a new directory for changing data: `mini build sample.json more.json --prefix ticket --out .mini-v2 --lang en`. Do not edit the contract by hand. Samples cannot prove unobserved rules.
 
-```sh
-python .mini/parser.py apply response.mini corrections.json --out corrected.mini
-```
-
-Only diagnosed invalid lines may change. The complete merged document must pass
-validation before a file is written. Header/schema failures require checking the
-whole response. `--fix-count` is an explicit opt-in to accept the records actually
-present; it cannot prove that a truncated model response is complete.
-
-Exit status: `0` success, `1` invalid diagnosis/unresolved repair, `2` input,
-contract or command failure. Use `--out` to write UTF-8 files safely on Windows.
-
-## 6. Evolve and measure
-
-Unseen fields in inferred objects or incompatible types fail clearly. Rebuild into a new directory
-with the old and new representative samples, then update prompt and parser
-together. Null-only and mixed-type fields remain open JSON because the samples
-do not establish a narrower type. Samples infer shape, not business constraints
-such as stock limits, unique identifiers or semantic correctness.
-
-An empty object remains a closed object with no known members; add samples with
-its intended fields before using it with populated objects. An array observed
-only empty has open JSON items, and mixed-type nodes accept arbitrary JSON rather
-than enforcing a union of the observed types. Review `schema.json` to decide
-whether that permissiveness matches your application's validation needs.
-
-Compare against your best existing format using the actual tokenizer and complete
-request: reusable prompt/schema cost plus generated output. Measure model accuracy,
-retry rate and latency in your own integration. Public token benchmarks demonstrate
-serialization efficiency, not that every model generates this notation perfectly.
-
-The generated `mini-domain/1` profile is supported by the Python toolkit. The
-separate TypeScript/browser core supports the fourteen SPEC 1.1 families; do not
-pass generated-domain files to that parser. See [profile compatibility](DOMAIN_PROFILE.md).
+The generated mini-domain/1 profile uses its own Python parser. Base Python/TypeScript libraries implement SPEC 1.1. Families are optional. [Domain reference](DOMAIN_PROFILE.md).

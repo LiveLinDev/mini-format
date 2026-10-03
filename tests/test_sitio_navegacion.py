@@ -36,17 +36,17 @@ def region_de(html: str, nombre: str) -> str:
 
 
 # --------------------------------------------------------------------------- menú y pie: un solo contrato
-def test_el_menu_tiene_validacion_junto_a_documentacion():
+def test_el_menu_prioriza_el_flujo_junto_a_documentacion():
     rutas = [r for r, _, _ in construir.NAV]
-    assert rutas[:2] == ["docs", "validacion"]
-    assert rutas == ["docs", "validacion", "docs/spec", "docs/errors", "playground", "ejemplo"]
+    assert rutas[:2] == ["docs", "flujo"]
+    assert rutas == ["docs", "flujo", "playground", "ejemplo"]
     es, en = {r: e for r, e, _ in construir.NAV}, {r: e for r, _, e in construir.NAV}
-    assert (es["validacion"], en["validacion"]) == ("Validación", "Validation")
+    assert (es["flujo"], en["flujo"]) == ("Cómo funciona", "How it works")
 
 
 @pytest.mark.parametrize("activo, esperado", [
-    ("docs", "docs"), ("docs/spec", "docs/spec"), ("docs/spec/cambios", "docs/spec"), ("docs/errors/E06", "docs/errors"),
-    ("docs/forks/a", "docs"), ("docs/quickstart", "docs"), ("validacion", "validacion"), ("playground", "playground"),
+    ("docs", "docs"), ("docs/spec", "docs"), ("docs/spec/cambios", "docs"), ("docs/errors/E06", "docs"),
+    ("docs/forks/a", "docs"), ("docs/quickstart", "docs"), ("validacion", ""), ("playground", "playground"),
     ("mesa-de-ayuda", ""), ("taller", ""), ("ejemplo", "ejemplo"), ("docsx", ""), ("", ""), ("economia", ""),
 ])
 def test_ruta_activa_es_la_mas_especifica_por_segmentos(activo, esperado):
@@ -107,14 +107,14 @@ def test_sincronizar_es_idempotente_sobre_las_fuentes(tmp_path, monkeypatch):
     construir.sincronizar_portada(), construir.sincronizar_404()      # la primera vez puede reescribir los enlaces de evidencia
     assert construir.sincronizar_portada() is False and construir.sincronizar_404() is False, "sincronizar dos veces no cambia nada"
     # y si alguien las desincroniza a mano, el build las repara
-    texto = (tmp_path / "index.html").read_text(encoding="utf-8").replace(">Validación</span>", ">VALIDACION</span>", 1)
+    texto = (tmp_path / "index.html").read_text(encoding="utf-8").replace(">Cómo funciona</span>", ">COMO FUNCIONA</span>", 1)
     (tmp_path / "index.html").write_text(texto, encoding="utf-8")
-    assert construir.sincronizar_portada() is True and ">VALIDACION<" not in (tmp_path / "index.html").read_text(encoding="utf-8")
+    assert construir.sincronizar_portada() is True and ">COMO FUNCIONA<" not in (tmp_path / "index.html").read_text(encoding="utf-8")
 
 
 def test_la_portada_enlaza_las_paginas_que_antes_no_enlazaba():
     portada = (SITIO / "index.html").read_text(encoding="utf-8")
-    for destino in ("/validacion/", "/ejemplo/", "/docs/"):
+    for destino in ("/flujo/", "/ejemplo/", "/docs/"):
         assert f'href="{destino}"' in region_de(portada, "CABECERA"), destino
         assert f'href="{destino}"' in region_de(portada, "PIE") or destino == "/docs/", destino
     assert '<script>document.documentElement.classList.add("js")</script>' in portada.split("</head>")[0]
@@ -247,7 +247,7 @@ def test_menu_movil_abre_cierra_con_esc_al_elegir_y_al_hacer_clic_fuera(navegado
     boton.click()
     assert boton.get_attribute("aria-expanded") == "true" and lista.is_visible()
     enlaces = pagina.locator("#nav-links a:visible")
-    assert [a for a in enlaces.evaluate_all("els => els.map(e => e.getAttribute('href'))")][:2] == ["/docs/", "/validacion/"]
+    assert [a for a in enlaces.evaluate_all("els => els.map(e => e.getAttribute('href'))")][:2] == ["/docs/", "/flujo/"]
     assert enlaces.count() >= len(construir.NAV)
     # Esc cierra y devuelve el foco al botón
     pagina.locator("#nav-links a").first.focus()
@@ -304,7 +304,7 @@ def test_selector_de_idioma_buscador_y_descargar_siguen_funcionando(navegador, b
     assert pagina.locator('#nav-links li:first-child a span:visible').inner_text() == "Documentación"
     pagina.click('[data-lang-btn="en"]')
     assert pagina.evaluate("document.documentElement.lang") == "en"
-    assert pagina.locator('#nav-links li:nth-child(2) a span:visible').inner_text() == "Validation"
+    assert pagina.locator('#nav-links li:nth-child(2) a span:visible').inner_text() == "How it works"
     assert pagina.locator(".nav > .btn span:visible").inner_text() == "Install"
     # portada: EN navega a la copia /en/, y «Descargar» lleva al bloque de instalación
     pagina.evaluate("localStorage.clear()")
@@ -313,7 +313,7 @@ def test_selector_de_idioma_buscador_y_descargar_siguen_funcionando(navegador, b
     pagina.click('[data-lang-btn="en"]')
     pagina.wait_for_url("**/en/")
     assert pagina.locator(".nav > .btn span:visible").inner_text() == "Download"
-    assert pagina.locator("#nav-links li:nth-child(2) a").get_attribute("href") == "/validacion/", "las páginas en línea no tienen copia /en/"
+    assert pagina.locator("#nav-links li:nth-child(2) a").get_attribute("href") == "/flujo/", "las páginas en línea no tienen copia /en/"
     # buscador: solo hay sitio en pantallas muy anchas; apunta a la documentación
     pagina.set_viewport_size({"width": 1920, "height": 800})
     assert pagina.locator("a.search").is_visible() and pagina.locator("a.search").get_attribute("href") == "/en/docs/"
@@ -369,6 +369,8 @@ def test_la_portada_con_javascript_desactivado_muestra_todo_el_texto(navegador, 
     pagina = contexto.new_page()
     pagina.goto(base_url + ruta)
     assert pagina.evaluate("document.documentElement.classList.contains('js')") is False
+    # Native disclosure works with JavaScript disabled; inspect the optional evidence too.
+    pagina.locator(".landing-more > summary").click()
     assert pagina.evaluate(JS_OCULTOS) == [], "texto oculto sin JavaScript"
     # cada elemento de aparición (.rv) es opaco y las barras tienen ancho
     assert pagina.evaluate("Array.from(document.querySelectorAll('.rv')).every(e => getComputedStyle(e).opacity === '1')")

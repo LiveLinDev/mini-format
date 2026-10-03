@@ -28,7 +28,7 @@ from urllib import error, request
 
 BASE = "https://mini-format.pmoluna.com"
 RUTAS_CLAVE = ("/", "/docs/", "/docs/spec/", "/docs/errors/E06/", "/playground/", "/mesa-de-ayuda/",
-               "/taller/", "/ejemplo/", "/sima/", "/validacion/", "/economia/", "/base.css", "/app.js",
+               "/taller/", "/ejemplo/", "/sima/", "/validacion/", "/economia/", "/flujo/", "/base.css", "/app.js",
                "/sitemap.xml", "/version.json")
 # Rutas cuya ausencia no impide usar el sitio (p. ej. 404.html puede estar protegida como `internal` en nginx).
 RUTAS_AVISO = ("/404.html",)

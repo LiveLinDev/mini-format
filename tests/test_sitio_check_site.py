@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import check_site  # noqa: E402
 
 TEXTO = "Texto estático de la página que se ve sin JavaScript. " * 5
-MENU = ["/docs/", "/validacion/", "/docs/spec/", "/playground/"]
+MENU = ["/docs/", "/flujo/", "/playground/"]
 
 
 def cabecera(menu=MENU, toggle=True, controla="nav-links", extra_cta=True) -> str:
@@ -36,7 +36,7 @@ def sitio_valido(tmp_path: Path) -> Path:
     (s / "downloads").mkdir()
     (s / "validacion").mkdir()
     (s / "index.html").write_text(pagina(clases="rv"), encoding="utf-8")
-    for ruta in ("docs", "validacion", "docs/spec", "playground", "docs/quickstart"):
+    for ruta in ("docs", "validacion", "flujo", "docs/spec", "playground", "docs/quickstart"):
         (s / ruta).mkdir(parents=True, exist_ok=True)
         (s / ruta / "index.html").write_text(pagina(), encoding="utf-8")
     (s / "404.html").write_text(
@@ -48,7 +48,7 @@ def sitio_valido(tmp_path: Path) -> Path:
     (s / "version.json").write_text(json.dumps({"commit": "x", "construido": "y", "mini_format": "1", "spec": "1"}), encoding="utf-8")
     (s / "sitemap.xml").write_text(
         '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-        + "".join(f"<url><loc>{check_site.ORIGIN}{r}</loc></url>" for r in ("/", "/docs/", "/validacion/")) + "</urlset>", encoding="utf-8")
+        + "".join(f"<url><loc>{check_site.ORIGIN}{r}</loc></url>" for r in ("/", "/docs/", "/validacion/", "/flujo/")) + "</urlset>", encoding="utf-8")
     return s
 
 
@@ -120,12 +120,12 @@ def test_una_pagina_con_otro_menu(tmp_path):
     assert any("docs/index.html: el menú difiere" in x for x in problemas(s))
 
 
-def test_la_portada_sin_validacion(tmp_path):
+def test_la_portada_sin_flujo(tmp_path):
     s = sitio_valido(tmp_path)
     sin = ["/docs/", "/docs/spec/"]
     for ruta in ("index.html", "docs/index.html", "validacion/index.html"):
         (s / ruta).write_text(pagina(menu=sin), encoding="utf-8")
-    assert any("no enlaza /validacion/" in x for x in problemas(s))
+    assert any("no enlaza /flujo/" in x for x in problemas(s))
 
 
 def test_el_boton_de_menu_debe_controlar_una_lista_existente(tmp_path):
@@ -154,8 +154,8 @@ def test_el_boton_de_instalar_del_menu_no_cuenta_como_enlace_de_menu(tmp_path):
 
 def test_el_menu_en_ingles_se_compara_sin_el_prefijo_en(tmp_path):
     s = sitio_valido(tmp_path)
-    en = ["/en/docs/", "/en/validacion/", "/en/docs/spec/", "/en/playground/"]
-    for ruta in ["en", "en/docs", "en/validacion", "en/docs/spec", "en/playground"]:
+    en = ["/en/docs/", "/en/flujo/", "/en/playground/"]
+    for ruta in ["en", "en/docs", "en/flujo", "en/playground"]:
         (s / ruta).mkdir(parents=True, exist_ok=True)
         (s / ruta / "index.html").write_text(pagina(menu=en), encoding="utf-8")
     (s / "en" / "docs" / "quickstart").mkdir(parents=True)   # el CTA de la copia EN apunta a la ruta sin /en/: existe arriba

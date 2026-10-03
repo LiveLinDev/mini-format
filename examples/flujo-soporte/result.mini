@@ -1,0 +1,21 @@
+ticket|v=1|n=20|h=79a88ccdd100
+1|Error al iniciar sesión|acceso|alta
+2|Cobro duplicado|facturacion|alta
+3|Panel lento|rendimiento|media
+4|Cambiar dirección|cuenta|baja
+5|Error al descargar informe|informes|alta
+6|Enlace de recuperación caducado|acceso|media
+7|Pago sin reflejar|facturacion|alta
+8|Correos de aviso ausentes|notificaciones|media
+9|Invitar compañeros|cuenta|baja
+10|Ticket ausente en búsqueda|busqueda|media
+11|Adjunto muestra pantalla en blanco|archivos|alta
+12|Actualizar nombre de empresa|cuenta|baja
+13|Acentos incorrectos en CSV|informes|media
+14|Cierre frecuente de sesión|acceso|alta
+15|Número fiscal incorrecto|facturacion|media
+16|No guarda desde móvil|aplicacion|alta
+17|Desactivar resumen semanal|notificaciones|baja
+18|Error al subir PDF|archivos|media
+19|Filtros del panel se pierden|aplicacion|media
+20|Descargar facturas anuales|facturacion|baja

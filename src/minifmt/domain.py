@@ -758,7 +758,7 @@ _WRAPPER_IMPORT = (
 )
 
 
-def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, record_path=None):
+def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, record_path=None, lang="es"):
     """Write a portable bundle to a new/empty directory; never overwrite work."""
     destination = Path(out)
     folder = destination.name
@@ -774,6 +774,9 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         if decode(encode(sample, contract), contract) != sample:
             raise DomainError("D_ROUNDTRIP", "internal round-trip verification failed")
     source = Path(__file__).read_text(encoding="utf-8")
+    if lang not in ("es", "en"):
+        raise ValueError("lang must be es or en")
+    workflow_source = Path(__file__).with_name("workflow.py").read_text(encoding="utf-8")
     files = {
         "contract.json": json.dumps(contract, ensure_ascii=False, indent=2) + "\n",
         "schema.json": json.dumps(json_schema(contract), ensure_ascii=False, indent=2) + "\n",
@@ -782,58 +785,70 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "parser.py": source,
         "validator.py": '"""Validate a .mini response with the bundled contract."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["validate", *sys.argv[1:]]))\n',
         "repair.py": '"""Repair only unambiguous transport wrappers; never fabricate data."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["repair", *sys.argv[1:]]))\n',
+        "workflow.py": workflow_source,
+        "workflow.mjs": Path(__file__).with_name("workflow.mjs").read_text(encoding="utf-8"),
+        "setup.json": json.dumps({"language": lang}, indent=2) + "\n",
+        "try-prompt.md": ("Genera exactamente 20 registros ficticios del mismo caso que la muestra para probar mi aplicación. "
+                          "Respeta los campos, tipos y formato siguientes. Devuelve sólo .mini.\n\n" if lang == "es" else
+                          "Generate exactly 20 fictional records for the same use case as the sample to test my application. "
+                          "Follow the fields, types and output format below. Return only .mini.\n\n") + make_prompt(contract, lang, example),
         "example.json": json.dumps(example, ensure_ascii=False, indent=2) + "\n",
         "example.mini": encode(example, contract) + "\n",
-        "GUIA.md": f"# Tu formato .mini: {prefix}\n\n"
-                   "Este toolkit es tuyo: describe tus datos y funciona sin las familias de muestra. "
-                   f"Los comandos siguientes se ejecutan desde la carpeta que contiene `{folder}`.\n\n"
-                   "## 1. Mira el ejemplo\n\n"
-                   "`example.json` contiene datos de muestra y `example.mini` muestra los mismos datos en .mini. "
-                   "`contract.json` fija los campos y tipos observados; `schema.json` sirve para herramientas compatibles con JSON Schema.\n\n"
-                   "## 2. Pide una respuesta a tu IA\n\n"
-                   "Añade `prompt.es.md` a las instrucciones de tu IA y describe la tarea y el número de registros esperado. "
-                   "Pídele que responda solo con .mini. Guarda la respuesta como `respuesta.mini`.\n\n"
-                   "## 3. Comprueba y usa la respuesta\n\n"
-                   "```powershell\n"
-                   f"python \"{folder}/validator.py\" respuesta.mini\n"
-                   f"python \"{folder}/parser.py\" decode respuesta.mini --out respuesta.json\n"
-                   "```\n\n"
-                   "Si el validador devuelve `ok: false`, revisa `errors`. "
-                   "`D_ENVELOPE` por saltos de línea de Windows o BOM se puede corregir sin inventar datos:\n\n"
-                   "```powershell\n"
-                   f"python \"{folder}/repair.py\" respuesta.mini --out respuesta-corregida.mini\n"
-                   f"python \"{folder}/validator.py\" respuesta-corregida.mini\n"
-                   "```\n\n"
-                   "Si falta información, vuelve a pedirla a la IA; la reparación no inventa registros.\n\n"
-                   "## Archivos de este toolkit\n\n"
-                   "| Archivo | Para qué sirve |\n| --- | --- |\n"
-                   "| `contract.json` | Reglas de tu formato. |\n"
-                   "| `schema.json` | Esquema interoperable. |\n"
-                   "| `example.json`, `example.mini` | El mismo ejemplo en dos representaciones. |\n"
-                   "| `prompt.es.md`, `prompt.en.md` | Instrucciones de formato para IA. |\n"
-                   "| `parser.py` | Convierte entre datos y .mini. |\n"
-                   "| `validator.py`, `repair.py` | Comprueba y corrige envoltorios seguros. |\n"
-                   "| `manifest.json` | Huellas de los archivos generados. |\n\n"
-                   "Si cambian tus campos o tipos, reúne muestras representativas y crea un toolkit nuevo. "
-                   "No edites el contrato generado a mano. Revisa los ejemplos y prompts antes de compartirlos si contienen datos privados.\n",
-        "README.md": f"# {prefix} · .mini domain bundle\n\nProfile `{PROFILE}`. Python 3.9+; standard library only.\n"
-                     "This generated profile uses its own bundled parser; it is not a core .mini 1.0 family.\n\n"
-                     "```sh\npython parser.py encode input.json --out request.mini\npython parser.py decode response.mini --out response.json\n"
-                     "python validator.py response.mini\npython parser.py diagnose response.mini\npython repair.py response.mini --out corrected.mini\n```\n\n"
-                     "Use prompt.en.md or prompt.es.md in your model's instructions. Keep the original task and expected record count in the workflow.\n"
-                     "API: `loads(text)`, `dumps(value)`, `diagnose(text)`, `repair(text, fix_count=False)`, `apply_replacements(text, replacements)` from parser.py.\n"
-                     "`schema.json` exports JSON Schema 2020-12 for validation and integration.\n\n"
-                     "Missing members, null, false, zero and empty strings remain distinct. More representative samples improve coverage; "
-                     "they cannot prove constraints for unseen data. New fields/types are rejected: rebuild in a new directory with additional samples.\n"
-                     "Observed constants are never silently frozen. Shared columns and repeated-string vocabularies are declared explicitly in each document.\n"
-                     "Repair removes complete Markdown fences, BOM and CRLF only. It never fills values or guesses records. "
-                     "`--fix-count` explicitly accepts the records present and resets n after every record validates; check completeness yourself.\n"
-                     "Failed repair returns per-line diagnostics and a selective regeneration prompt. Apply returned line replacements with "
-                     "`python parser.py apply response.mini corrections.json --out corrected.mini`; every unchanged line is preserved and the complete result must validate. "
-                     "No invalid output file is written.\n\n"
-                     "Training examples can contain private data: review example.json/mini, prompts and contract before sharing this bundle.\n"
-                     "Measure tokens with the actual tokenizer, prompt and request pattern; no encoding wins on every JSON document.\n",
+
     }
+    # The short guide leads with the application flow; reference files remain available.
+    files["GUIA.md"] = (
+        f"# Tu .mini: {prefix}\n\nTu aplicación ya pide datos estructurados a una IA. "
+        "Ahora la IA responde en .mini y el flujo devuelve el mismo JSON que tu aplicación necesita.\n\n"
+        "## 1. Prueba sin API key\n\n`example.json` y `example.mini` representan los mismos datos. "
+        "Copia el contenido de `try-prompt.md` a tu IA: ya incluye las reglas para generar 20 registros ficticios. "
+        "No basta con dar una ruta a la IA: tu código debe leer el archivo e incluir su contenido.\n\n"
+        f'```sh\npython "{folder}/validator.py" respuesta.mini\n'
+        f'python "{folder}/repair.py" respuesta.mini --out corregida.mini\n'
+        f'python "{folder}/workflow.py" corregida.mini --out resultado.json\n```\n\n'
+        "Repair corrige envoltorios, BOM y saltos de línea (D_ENVELOPE). Si faltan datos o un tipo es incorrecto, "
+        "hay que pedir una corrección a la IA. No inventa datos ni reduce el número esperado.\n\n"
+        "## 2. Integra tu llamada existente\n\n"
+        f'```sh\nmini integrate ruta/a/tu/app.py --bundle "{folder}" --lang es\n```\n\n'
+        "Revisa `integration/INTEGRATE.md` y el diff preparado. Si el patrón Python es compatible, "
+        "añade `--apply` para conectarlo automáticamente; se conserva una copia del archivo. "
+        "Otros SDK o lenguajes reciben instrucciones concretas para tu IA de código.\n\n"
+        "`workflow.py` acepta cualquier función síncrona `generate(prompt) -> texto`. "
+        "Conecta tu llamada con `Workflow(carpeta).run(generate, tarea, expected_records=20)`: "
+        "incluye el prompt, valida, repara, pide como máximo una corrección, vuelve a validar y entrega JSON. "
+        "Los errores pendientes bloquean la entrega. La API key sigue en tu proveedor; no se guarda en el toolkit.\n\n"
+        "Python asíncrono: `await flow.run_async(generate, tarea)`. Node: importa `Workflow` desde `workflow.mjs` "
+        "y usa `await flow.run(generate, tarea, {expectedRecords: 20})`; necesita Python para ejecutar el mismo parser.\n\n"
+        "En otros lenguajes puedes ejecutar `python workflow.py -` y pasar la respuesta por stdin. "
+        "Código 0: JSON por stdout. Código 1: diagnósticos por stderr; conecta el reintento en tu aplicación.\n\n"
+        "`Workflow.last_run` permite inspeccionar lo ocurrido. Guarda un historial sólo si quieres conservar tus datos. "
+        "La demostración de 20 tickets del paquete está en `examples/flujo-soporte`.\n\n"
+        "## Referencia\n\n`contract.json`: campos y tipos. `parser.py`: conversión. `schema.json`: esquema JSON. "
+        "`prompt.es.md` / `prompt.en.md`: instrucciones. `manifest.json`: hashes. "
+        "Si cambian los datos, reconstruye el contrato con muestras representativas en una carpeta nueva. "
+        "Mide el prompt, la salida y los reintentos antes de calcular el ahorro de dinero.\n"
+    )
+    files["README.md"] = (
+        f"# Your .mini: {prefix}\n\nThe AI returns .mini; your application receives its usual JSON. "
+        "Python 3.9+, standard library only.\n\n"
+        "1. Inspect example.json and example.mini. Paste try-prompt.md into your AI: it includes the format and asks for 20 fictional records.\n"
+        "2. Validate the reply; Repair removes safe wrappers, BOM and CRLF (D_ENVELOPE). Wrong types or missing data require a model correction.\n"
+        f'3. Run `mini integrate path/to/app.py --bundle "{folder}" --lang en`; inspect integration/INTEGRATE.md and change.diff. '
+        "Use --apply for the supported synchronous Python chat/JSON pattern; other providers/languages get coding-AI instructions.\n\n"
+        f'```sh\npython "{folder}/workflow.py" response.mini --out result.json\n```\n\n'
+        "Import Workflow from workflow.py using importlib.util. `Workflow(bundle, lang='en').run(generate, task, expected_records=20)` "
+        "accepts any synchronous text callback. It reads prompt.en.md, generates, validates, repairs, optionally requests one model correction, "
+        "revalidates and returns JSON-compatible data. last_run holds the inspectable trace. Pending errors block delivery. "
+        "Keep credentials with your provider and disable its JSON-only output mode.\n\n"
+        "Async Python: `await flow.run_async(generate, task)`. Node: import Workflow from workflow.mjs and call "
+        "`await flow.run(generate, task, {expectedRecords: 20})`; Python is required for the same parser runtime.\n\n"
+        "Other languages can pipe text to `python workflow.py -`: exit 0 yields JSON on stdout; exit 1 yields diagnostics on stderr. "
+        "Connect semantic retries in the calling application.\n\n"
+        "Parser API: loads(text), dumps(value), diagnose(text), repair(text), apply_replacements(text, replacements). "
+        "No guessing, no silent count adjustment. See examples/flujo-soporte in the download for a complete recorded run. "
+        "Review samples before sharing. Rebuild in a new directory for new fields/types. "
+        "Measure prompt, output and retries with your tokenizer before estimating monetary savings.\n"
+    )
     manifest = {"profile": PROFILE, "schema_id": contract["schema_id"], "sample_documents": len(samples),
                 "sample_records": contract["sample_records"], "sources": list(source_names or []),
                 "files": {name: hashlib.sha256(content.encode("utf-8")).hexdigest() for name, content in files.items()}}

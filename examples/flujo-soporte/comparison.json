@@ -1,0 +1,11 @@
+{
+  "encoding": "o200k_base",
+  "scope": "output only; same 20 tickets",
+  "tokens": {
+    "json": 443,
+    "toon": 304,
+    "mini": 278
+  },
+  "mini_prompt_tokens": 571,
+  "note": "Prompt and repair calls are extra; these output counts do not measure end-to-end cost."
+}

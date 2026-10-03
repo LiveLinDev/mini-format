@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "titulo": "Error al iniciar sesión",
+    "categoria": "acceso",
+    "prioridad": "alta"
+  },
+  {
+    "id": 2,
+    "titulo": "Cobro duplicado",
+    "categoria": "facturacion",
+    "prioridad": "alta"
+  },
+  {
+    "id": 3,
+    "titulo": "Panel lento",
+    "categoria": "rendimiento",
+    "prioridad": "media"
+  },
+  {
+    "id": 4,
+    "titulo": "Cambiar dirección",
+    "categoria": "cuenta",
+    "prioridad": "baja"
+  },
+  {
+    "id": 5,
+    "titulo": "Error al descargar informe",
+    "categoria": "informes",
+    "prioridad": "alta"
+  },
+  {
+    "id": 6,
+    "titulo": "Enlace de recuperación caducado",
+    "categoria": "acceso",
+    "prioridad": "media"
+  },
+  {
+    "id": 7,
+    "titulo": "Pago sin reflejar",
+    "categoria": "facturacion",
+    "prioridad": "alta"
+  },
+  {
+    "id": 8,
+    "titulo": "Correos de aviso ausentes",
+    "categoria": "notificaciones",
+    "prioridad": "media"
+  },
+  {
+    "id": 9,
+    "titulo": "Invitar compañeros",
+    "categoria": "cuenta",
+    "prioridad": "baja"
+  },
+  {
+    "id": 10,
+    "titulo": "Ticket ausente en búsqueda",
+    "categoria": "busqueda",
+    "prioridad": "media"
+  },
+  {
+    "id": 11,
+    "titulo": "Adjunto muestra pantalla en blanco",
+    "categoria": "archivos",
+    "prioridad": "alta"
+  },
+  {
+    "id": 12,
+    "titulo": "Actualizar nombre de empresa",
+    "categoria": "cuenta",
+    "prioridad": "baja"
+  },
+  {
+    "id": 13,
+    "titulo": "Acentos incorrectos en CSV",
+    "categoria": "informes",
+    "prioridad": "media"
+  },
+  {
+    "id": 14,
+    "titulo": "Cierre frecuente de sesión",
+    "categoria": "acceso",
+    "prioridad": "alta"
+  },
+  {
+    "id": 15,
+    "titulo": "Número fiscal incorrecto",
+    "categoria": "facturacion",
+    "prioridad": "media"
+  },
+  {
+    "id": 16,
+    "titulo": "No guarda desde móvil",
+    "categoria": "aplicacion",
+    "prioridad": "alta"
+  },
+  {
+    "id": 17,
+    "titulo": "Desactivar resumen semanal",
+    "categoria": "notificaciones",
+    "prioridad": "baja"
+  },
+  {
+    "id": 18,
+    "titulo": "Error al subir PDF",
+    "categoria": "archivos",
+    "prioridad": "media"
+  },
+  {
+    "id": 19,
+    "titulo": "Filtros del panel se pierden",
+    "categoria": "aplicacion",
+    "prioridad": "media"
+  },
+  {
+    "id": 20,
+    "titulo": "Descargar facturas anuales",
+    "categoria": "facturacion",
+    "prioridad": "baja"
+  }
+]

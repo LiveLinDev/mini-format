@@ -177,11 +177,9 @@ def reescribir_enlaces(h: str, origin_dir: Path = Path(".")) -> str:
 # economía, 404 y la portada): el menú se define aquí y nadie lo copia a mano.
 NAV = [
     ("docs", "Documentación", "Documentation"),
-    ("validacion", "Validación", "Validation"),
-    ("docs/spec", "Especificación", "Specification"),
-    ("docs/errors", "Errores", "Errors"),
+    ("flujo", "Cómo funciona", "How it works"),
     ("playground", "Playground", "Playground"),
-    ("ejemplo", "Ejemplos", "Examples"),
+    ("ejemplo", "Más ejemplos", "More examples"),
 ]
 ICONO_MENU = ('<svg class="ico-abrir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
               '<svg class="ico-cerrar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>')
@@ -236,7 +234,7 @@ def pie() -> str:
     def col(es, en, enlaces):
         items = "".join(f'<li><a href="{h}">{ambos(t_es, t_en)}</a></li>' for h, t_es, t_en in enlaces)
         return f"<div><h3>{ambos(es, en)}</h3><ul>{items}</ul></div>"
-    c1 = col("Aprender", "Learn", [("/docs/", "Introducción", "Introduction"),
+    c1 = col("Aprender", "Learn", [("/flujo/", "Cómo funciona", "How it works"), ("/docs/", "Introducción", "Introduction"),
                                    ("/docs/quickstart/", "Inicio rápido", "Quickstart"),
                                    (f"/docs/spec/", f"Especificación {SPEC_VERSION}", f"Specification {SPEC_VERSION}"),
                                    ("/docs/errors/", "Índice de errores", "Error index")])
@@ -264,14 +262,15 @@ def pie() -> str:
 
 
 def lateral(activo: str) -> str:
-    out = []
+    out = [f'<a class="docs-flow-link" href="/flujo/">{ambos("Ver un flujo completo", "See a complete workflow")}</a>']
     for (titulo_es, items_es), (titulo_en, items_en) in zip(GRUPOS_ES, GRUPOS_EN):
-        out.append(f"<h4>{ambos(titulo_es, titulo_en)}</h4><ul>")
+        expandido = titulo_es == "Empezar" or activo in {ruta for ruta, _ in items_es}
+        out.append(f'<details{" open" if expandido else ""}><summary>{ambos(titulo_es, titulo_en)}</summary><ul>')
         for (ruta_es, txt_es), (ruta_en, txt_en) in zip(items_es, items_en):
             assert ruta_es == ruta_en
             cur = ' aria-current="page"' if ruta_es == activo else ""
             out.append(f'<li><a href="/{ruta_es}/"{cur}>{ambos(txt_es, txt_en)}</a></li>')
-        out.append("</ul>")
+        out.append("</ul></details>")
     return "".join(out)
 def pagina_docs(ruta: str, titulo_es: str, titulo_en: str, cuerpo_es: str, cuerpo_en: str,
                 crumbs_es: str = "", crumbs_en: str = "", aviso_es: str = "", aviso_en: str = "") -> None:
@@ -618,7 +617,8 @@ Se instala con el [paquete Python](/docs/quickstart/). Ejecuta `mini` en una ter
 
 | Comando | Qué hace |
 |---|---|
-| `mini` / `mini init` | Asistente para construir tu toolkit propio desde datos o campos. |
+| `mini setup` / `mini init` | Asistente para construir tu toolkit propio desde datos o campos. |
+| `mini integrate PROYECTO --bundle .mini [--apply]` | Localiza la llamada a IA, prepara una guía y conecta código Python compatible con copia. |
 | `mini forks` | Lista las familias del registro. |
 | `mini validate ARCHIVO` | Validación estricta; sale con 1 si hay errores. |
 | `mini diagnose ARCHIVO` | Validación tolerante; imprime un informe JSON con errores y líneas a regenerar. |
@@ -649,7 +649,8 @@ Installed with the [Python package](/docs/quickstart/). Run `mini` in a terminal
 
 | Command | What it does |
 |---|---|
-| `mini` / `mini init` | Interactive guide to build your toolkit from data or fields. |
+| `mini setup` / `mini init` | Interactive guide to build your toolkit from data or fields. |
+| `mini integrate PROJECT --bundle .mini [--apply]` | Locate the AI call, prepare a guide and connect supported Python with a backup. |
 | `mini forks` | Lists the registry families. |
 | `mini validate FILE` | Strict validation; exits 1 on errors. |
 | `mini diagnose FILE` | Lenient validation; prints a JSON report with errors and lines to regenerate. |

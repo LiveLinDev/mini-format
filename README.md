@@ -1,144 +1,43 @@
-# mini-format
+# .mini: shorter AI responses, JSON for your application
 
-Build a compact output format for your JSON domain. Supply representative samples
-once; get a reusable contract, prompts, parser, validator and repair tools. Ask
-your model for `.mini`, then recover your original JSON structure.
+If your app asks AI for lists of structured data, `.mini` can reduce response tokens. A contract defines the fields once; AI returns their values in a compact format. The workflow validates, repairs and converts the result to the JSON your app uses.
 
-[Website](https://mini-format.pmoluna.com) · [Documentation](https://mini-format.pmoluna.com/docs/) · [Downloads](https://mini-format.pmoluna.com/downloads/) · [Español](README.es.md)
+**One use case:** turn 20 support messages into 20 tickets with a title, category and priority. The app needs JSON to store, filter and assign them. [See the complete workflow](https://mini-format.pmoluna.com/flujo/): input, response, correction and history.
 
-## Download and install
+In this example, the same output takes 443 JSON tokens, 304 TOON tokens and 278 .mini tokens (`o200k_base`). These are output counts. The .mini prompt has 571 tokens and corrections also cost tokens; measure the full workflow before claiming monetary savings.
 
-Download the [complete toolkit](https://mini-format.pmoluna.com/downloads/mini-format-1.2.3.zip)
-and extract it. Python 3.9 or later is required; the wheel installs offline without
-runtime dependencies:
+## Start here
 
-```bash
-python -m pip install --no-index mini_format-1.2.3-py3-none-any.whl
+[Download and extract the package](https://mini-format.pmoluna.com/downloads/mini-format-1.3.0.zip). From the extracted directory:
+
+```sh
+python -m pip install --no-index mini_format-1.3.0-py3-none-any.whl
 mini setup
 ```
 
-Or install directly from the site:
+The wizard guides you through:
 
-```bash
-python -m pip install https://mini-format.pmoluna.com/downloads/mini_format-1.2.3-py3-none-any.whl
+1. Spanish or English.
+2. A sample JSON response from your AI, your own fields or the included support example.
+3. Name and directory: generate a contract, prompt, validator, Repair and `workflow.py`.
+4. Test: ask your AI for 20 fictional records with the generated prompt and validate the reply.
+5. Integration: locate your project's AI call and prepare its workflow connection.
+
+Automatic editing covers a synchronous Python chat completions + `json.loads` pattern. Other SDKs/languages receive a coding-AI guide with actual paths. `Workflow.run` accepts any synchronous callback that takes a prompt and returns text; a CLI bridge is available for other languages.
+
+## Try the workflow without a key
+
+```sh
+python examples/flujo-soporte/run.py
 ```
 
-`mini` starts an interactive guide: use your data (JSON, CSV, TSV or XML) or define fields without a file. It creates `.mini/` and a `GUIA.md` for the next steps. For automation, use `mini build`.
+Replay 20 tickets authored by Muse with deliberately inserted demonstration errors. It executes the actual tools and saves `output/soporte/result.json` and `history.json`. No API call is made. For the local form and optional live OpenAI API-key mode: `python examples/flujo-soporte/run.py --serve`.
 
-The ZIP contains the Python wheel, a Node package, examples, documentation and the
-MIT license. [SHA-256 checksums](https://mini-format.pmoluna.com/downloads/SHA256SUMS.txt)
-and [source code](https://mini-format.pmoluna.com/downloads/mini-format-1.2.3-source.zip)
-are available on the same site. No GitHub account is required.
+## Continue when needed
 
-## Build once, reuse
+- [Quickstart](https://mini-format.pmoluna.com/docs/quickstart/): from your JSON to your application.
+- [Integration and toolkit](BUILD_GUIDE.md): callbacks, repair and command integration.
+- [Downloads](https://mini-format.pmoluna.com/downloads/): Python, Node and examples.
+- [Specification](SPEC.md) and [toolkit profile](DOMAIN_PROFILE.md): technical reference.
 
-`mini build` combines samples to infer field order, types, nested objects, arrays
-and optional values. More representative examples cover more cases in your domain;
-samples cannot guarantee that every possible future value has been observed.
-
-The generated `.mini/` folder includes a contract, English/Spanish prompts, a
-standalone Python parser, validation, diagnostics, repair tools and example
-round-trips. The receiving system can run the parser without installing mini-format.
-
-```bash
-mini from-json examples/phones.json --contract .mini/contract.json --out phones.mini
-mini validate phones.mini --contract .mini/contract.json
-mini to-json phones.mini --contract .mini/contract.json --out phones.roundtrip.json
-mini diagnose phones.mini --contract .mini/contract.json
-```
-
-Put the generated prompt in your model instructions. Repair fixes only unambiguous
-formatting and prepares targeted regeneration for unresolved errors; it never
-invents missing business data. See the [integration guide](BUILD_GUIDE.md).
-
-## Python and TypeScript
-
-The core supports your own contracts. The [14 sample contracts](https://mini-format.pmoluna.com/docs/forks/)
-are a separate, optional download for study or adaptation.
-
-```python
-from minifmt import Registry, parse, dumps
-contract = Registry.load("forks").get("a")  # only after extracting the optional ZIP
-document = parse(text, contract)
-canonical_json = document.to_canonical()
-```
-
-Node 22.6+ can install the compiled ESM package, including TypeScript source types:
-
-```bash
-npm install ./mini-format-core-1.2.3.tgz
-```
-
-```javascript
-import { Registry, parse, createReader } from '@mini-format/core';
-const contract = Registry.load('./forks').get('a'); // extracted optional ZIP
-const document = parse(text, contract);
-```
-
-The Python library also provides an incremental reader, conversion between
-contracts and JSON Schema or Pydantic models, and a token comparison command:
-
-```python
-from minifmt import read_records, from_json_schema, to_json_schema
-for item in read_records(response_chunks, contract):   # str or UTF-8 bytes fragments
-    handle(item.record, item.line)                     # emitted when its line closes
-contract = from_json_schema(schema, "tk")              # one level of nesting (SPEC §12)
-```
-
-```bash
-mini from-schema ticket.schema.json -p tk --out contract.json
-mini from-schema --pydantic models:Postings -p job   # pydantic is optional
-mini to-schema a --out a.schema.json
-mini bench response.mini --enc o200k_base --format table
-```
-
-`read_records` yields the same records and errors as `parse` and does not retain
-records, so its memory use does not grow with the document. `mini bench` reports
-tokens and bytes for .mini, compact and indented JSON, YAML, flattened CSV and
-official TOON, with the saving relative to compact JSON; a format whose dependency
-(PyYAML, Node.js or the vendored TOON bundle) is missing is reported as unavailable.
-
-A dependency-free browser build of the TypeScript library is in `js/mini.js`
-(generated by `tools/build_js.mjs` and checked against the conformance suite). The
-generated domain toolkit uses its own standalone runtime and explicit
-`mini-domain/1` profile. Core families follow [SPEC 1.1](SPEC.md), which keeps
-every 1.0 document valid; design decisions are recorded in [docs/adr](docs/adr/README.md).
-See the [domain profile](DOMAIN_PROFILE.md) and [forking protocol](FORKING.md).
-
-## Measured efficiency
-
-A shared contract removes repeated field names. Savings depend on record shape,
-escaping, repeated values and tokenizer. The [public benchmark](benchmark/public/README.md)
-compares complete, reversible JSON against compact/pretty JSON, official nested
-and flattened TOON, YAML, XML and CSV, reporting contract/prompt overhead separately.
-The [original 14-domain results](benchmark/results/summary_12.csv) remain a separate
-core-format experiment. Token savings alone do not establish model accuracy,
-lower latency or an advantage for every possible JSON document.
-
-## Development
-
-Extract the source archive, then run:
-
-```bash
-python -m pip install -e ".[bench,release]"
-python -m unittest discover -s tests
-python conformance/run_python.py
-node tests/test_js_port.mjs
-node --experimental-strip-types --test ts/test/*.test.ts
-mini check-forks
-python tools/build_release.py --output dist
-python sitio/construir.py
-```
-
-Release construction requires Node 22.13+. The core and generated Python parser
-use the standard library. The optional `bench` extra installs exact tokenization
-(`tiktoken` and a local `regex` fallback), YAML and plotting; `release` installs
-build tools. See [contributing](CONTRIBUTING.md) and [changes](CHANGELOG.md).
-
-## Research and license
-
-A. E. J. Palma Obispo and E. J. Palomino Santa Cruz, Universidad Peruana de Ciencias
-Aplicadas, 2026. Advisors: Jorge Luis Mayta Guillermo and Ronald Mejía Tarazona.
-
-MIT. Tokenizer vocabularies, official TOON 4.1.1 and public datasets retain their
-own licenses and provenance recorded alongside each resource.
+`.mini` adapts to your data. The 14 families are optional examples. Generated toolkits use Python 3.9+ and the `mini-domain/1` profile; the Node/TypeScript library implements base SPEC 1.1. [MIT](LICENSE).

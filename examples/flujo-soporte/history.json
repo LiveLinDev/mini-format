@@ -1,0 +1,211 @@
+{
+  "mode": "replay",
+  "author": "Muse",
+  "recorded_date": "2026-10-03",
+  "note": "Recorded illustrative output; errors were deliberately inserted for the repair demonstration.",
+  "ok": true,
+  "trace": [
+    {
+      "stage": "generate",
+      "text": "```mini\r\nticket|v=1|n=20|h=79a88ccdd100\r\n1|Error al iniciar sesión|acceso|alta\r\n2|Cobro duplicado|facturacion|alta\r\ntres|Panel lento|rendimiento|media\r\n4|Cambiar dirección|cuenta|baja\r\n5|Error al descargar informe|informes|alta\r\n6|Enlace de recuperación caducado|acceso|media\r\n7|Pago sin reflejar|facturacion|alta\r\n8|Correos de aviso ausentes|notificaciones|media\r\n9|Invitar compañeros|cuenta|baja\r\n10|Ticket ausente en búsqueda|busqueda|media\r\n11|Adjunto muestra pantalla en blanco|archivos|alta\r\n12|Actualizar nombre de empresa|cuenta|baja\r\n13|Acentos incorrectos en CSV|informes|media\r\n14|Cierre frecuente de sesión|acceso|alta\r\n15|Número fiscal incorrecto|facturacion|media\r\n16|No guarda desde móvil|aplicacion|alta\r\n17|Desactivar resumen semanal|notificaciones|baja\r\n18|Error al subir PDF|archivos|media\r\n19|Filtros del panel se pierden|aplicacion|media\r\n20|Descargar facturas anuales|facturacion|baja\r\n```"
+    },
+    {
+      "stage": "validate",
+      "ok": false,
+      "profile": "mini-domain/1",
+      "errors": [
+        {
+          "code": "D_ENVELOPE",
+          "line": 1,
+          "path": "$",
+          "message": "normalize CRLF/BOM with the repair command"
+        }
+      ],
+      "valid_lines": [],
+      "invalid_lines": [],
+      "recoverable_records": 0,
+      "repair_prompt": "Using the original task and attached .mini contract, verify completeness and regenerate the response. Never invent missing facts or records. Errors: [{\"code\":\"D_ENVELOPE\",\"line\":1,\"path\":\"$\",\"message\":\"normalize CRLF/BOM with the repair command\"}]"
+    },
+    {
+      "stage": "repair",
+      "ok": false,
+      "changes": [
+        "normalized CRLF to LF",
+        "removed complete Markdown code fence"
+      ],
+      "errors": [
+        {
+          "code": "D_VALUE",
+          "line": 4,
+          "path": "$/0/id",
+          "message": "Expecting value: line 1 column 1 (char 0)"
+        }
+      ]
+    },
+    {
+      "stage": "model_repair",
+      "attempt": 1,
+      "selective": true,
+      "text": "{\"4\": \"3|Panel lento|rendimiento|media\"}\n"
+    },
+    {
+      "stage": "revalidate",
+      "ok": true,
+      "profile": "mini-domain/1",
+      "records": 20,
+      "recoverable_records": 20,
+      "valid_lines": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "invalid_lines": [],
+      "errors": []
+    },
+    {
+      "stage": "parse",
+      "ok": true,
+      "records": 20
+    }
+  ],
+  "mini": "ticket|v=1|n=20|h=79a88ccdd100\n1|Error al iniciar sesión|acceso|alta\n2|Cobro duplicado|facturacion|alta\n3|Panel lento|rendimiento|media\n4|Cambiar dirección|cuenta|baja\n5|Error al descargar informe|informes|alta\n6|Enlace de recuperación caducado|acceso|media\n7|Pago sin reflejar|facturacion|alta\n8|Correos de aviso ausentes|notificaciones|media\n9|Invitar compañeros|cuenta|baja\n10|Ticket ausente en búsqueda|busqueda|media\n11|Adjunto muestra pantalla en blanco|archivos|alta\n12|Actualizar nombre de empresa|cuenta|baja\n13|Acentos incorrectos en CSV|informes|media\n14|Cierre frecuente de sesión|acceso|alta\n15|Número fiscal incorrecto|facturacion|media\n16|No guarda desde móvil|aplicacion|alta\n17|Desactivar resumen semanal|notificaciones|baja\n18|Error al subir PDF|archivos|media\n19|Filtros del panel se pierden|aplicacion|media\n20|Descargar facturas anuales|facturacion|baja",
+  "data": [
+    {
+      "id": 1,
+      "titulo": "Error al iniciar sesión",
+      "categoria": "acceso",
+      "prioridad": "alta"
+    },
+    {
+      "id": 2,
+      "titulo": "Cobro duplicado",
+      "categoria": "facturacion",
+      "prioridad": "alta"
+    },
+    {
+      "id": 3,
+      "titulo": "Panel lento",
+      "categoria": "rendimiento",
+      "prioridad": "media"
+    },
+    {
+      "id": 4,
+      "titulo": "Cambiar dirección",
+      "categoria": "cuenta",
+      "prioridad": "baja"
+    },
+    {
+      "id": 5,
+      "titulo": "Error al descargar informe",
+      "categoria": "informes",
+      "prioridad": "alta"
+    },
+    {
+      "id": 6,
+      "titulo": "Enlace de recuperación caducado",
+      "categoria": "acceso",
+      "prioridad": "media"
+    },
+    {
+      "id": 7,
+      "titulo": "Pago sin reflejar",
+      "categoria": "facturacion",
+      "prioridad": "alta"
+    },
+    {
+      "id": 8,
+      "titulo": "Correos de aviso ausentes",
+      "categoria": "notificaciones",
+      "prioridad": "media"
+    },
+    {
+      "id": 9,
+      "titulo": "Invitar compañeros",
+      "categoria": "cuenta",
+      "prioridad": "baja"
+    },
+    {
+      "id": 10,
+      "titulo": "Ticket ausente en búsqueda",
+      "categoria": "busqueda",
+      "prioridad": "media"
+    },
+    {
+      "id": 11,
+      "titulo": "Adjunto muestra pantalla en blanco",
+      "categoria": "archivos",
+      "prioridad": "alta"
+    },
+    {
+      "id": 12,
+      "titulo": "Actualizar nombre de empresa",
+      "categoria": "cuenta",
+      "prioridad": "baja"
+    },
+    {
+      "id": 13,
+      "titulo": "Acentos incorrectos en CSV",
+      "categoria": "informes",
+      "prioridad": "media"
+    },
+    {
+      "id": 14,
+      "titulo": "Cierre frecuente de sesión",
+      "categoria": "acceso",
+      "prioridad": "alta"
+    },
+    {
+      "id": 15,
+      "titulo": "Número fiscal incorrecto",
+      "categoria": "facturacion",
+      "prioridad": "media"
+    },
+    {
+      "id": 16,
+      "titulo": "No guarda desde móvil",
+      "categoria": "aplicacion",
+      "prioridad": "alta"
+    },
+    {
+      "id": 17,
+      "titulo": "Desactivar resumen semanal",
+      "categoria": "notificaciones",
+      "prioridad": "baja"
+    },
+    {
+      "id": 18,
+      "titulo": "Error al subir PDF",
+      "categoria": "archivos",
+      "prioridad": "media"
+    },
+    {
+      "id": 19,
+      "titulo": "Filtros del panel se pierden",
+      "categoria": "aplicacion",
+      "prioridad": "media"
+    },
+    {
+      "id": 20,
+      "titulo": "Descargar facturas anuales",
+      "categoria": "facturacion",
+      "prioridad": "baja"
+    }
+  ]
+}
