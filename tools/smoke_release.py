@@ -70,7 +70,9 @@ def main(directory):
         run([python, support / "run.py", "--out", work / "support-run"], work)
         expected_support = json.loads((support / "expected.json").read_text(encoding="utf-8"))
         assert json.loads((work / "support-run/result.json").read_text(encoding="utf-8")) == expected_support
-        trace = json.loads((work / "support-run/history.json").read_text(encoding="utf-8"))["trace"]
+        replay = json.loads((work / "support-run/history.json").read_text(encoding="utf-8"))
+        assert replay == json.loads((support / "history.json").read_text(encoding="utf-8")), "Downloaded replay must reproduce its saved history exactly"
+        trace = replay["trace"]
         assert [entry["stage"] for entry in trace] == ["generate", "validate", "repair", "model_repair", "revalidate", "parse"]
         run([mini, "build", support / "expected.json", "--prefix", "ticket", "--out", work / "support-bundle"], work)
         # Remove the installed package. The generated runtime must still work.
