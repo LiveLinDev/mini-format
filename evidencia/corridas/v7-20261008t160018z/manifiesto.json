@@ -1,0 +1,224 @@
+{
+  "codigo": {
+    "arbol_limpio": true,
+    "archivos_modificados": [],
+    "commit": "1fc6f396192ca8903beb4d49056d963469659a31",
+    "rama": "main",
+    "snapshot_sha256": null
+  },
+  "comando": "python tools/ejecutar_v7.py",
+  "conjuntos": [
+    {
+      "bytes": 104969,
+      "ruta": "experiments/v7_escalamiento/results/deepseek_volumen/llamadas.jsonl",
+      "sha256": "a480a722b24cb0f49c24c1c8776c8acf77dc21e7324ee5baf4ca24cee494ea1a"
+    },
+    {
+      "bytes": 1216,
+      "ruta": "experiments/v7_escalamiento/results/deepseek/por_lote.csv",
+      "sha256": "f049837bc859a0db89cf0f9cf6722d014a8500ed82fdd77aa2e4fa64706d297f"
+    }
+  ],
+  "conteos": null,
+  "contratos": [],
+  "criterio": null,
+  "entorno": {
+    "arquitectura": "AMD64",
+    "dependencias": {
+      "PyYAML": null,
+      "coverage": null,
+      "hypothesis": null,
+      "jiter": "0.14.0",
+      "numpy": "2.4.4",
+      "pytest": null,
+      "regex": "2026.4.4",
+      "scipy": null,
+      "tiktoken": "0.12.0"
+    },
+    "node": "v22.23.1",
+    "python": "3.14.4",
+    "so": "Windows 11"
+  },
+  "esquema": "mini-format/corrida/1",
+  "estado_ejecucion": "ejecutado",
+  "estudio": "V7",
+  "fecha_utc": "2026-10-08T16:00:18Z",
+  "gasto_usd": null,
+  "intento": null,
+  "limitaciones": [
+    "Reanálisis de respuestas archivadas: las llamadas son anteriores a los manifiestos de corrida.",
+    "Un solo proveedor y un solo modelo (deepseek-chat); un dominio (tickets de soporte).",
+    "Lotes distintos por formato: JSON en lotes de 100 y .mini en lotes de 200 (el mayor lote sin pérdida de cada uno en el barrido).",
+    "El costo es una estimación con las tarifas archivadas; el consumo real informado (0,78 USD) no se concilia con ellas."
+  ],
+  "modelo": {
+    "modelo_pedido": "deepseek-chat",
+    "nota": "respuestas archivadas del 17/09/2026; no se llamó a la API",
+    "proveedor": "DeepSeek"
+  },
+  "notas": "Formaliza V7 como estudio de escala. La replicación confirmatoria con API (componente replicacion_volumen_api) queda pendiente de autorización de gasto.",
+  "parametros": {
+    "componente": "reanalisis_volumen",
+    "fuente": "experiments/v7_escalamiento/results/deepseek_volumen/llamadas.jsonl"
+  },
+  "pareja": null,
+  "procedencia": "reproducido_local",
+  "prompts": [],
+  "resultado": "no_evaluable",
+  "resultados": [
+    {
+      "bytes": 3581,
+      "ruta": "evidencia/corridas/v7-20261008t160018z/resumen_v7.json",
+      "sha256": "1b4051c45ab5cfa3e3a1538142941aa62323fb192d067fb96455cef551214970"
+    }
+  ],
+  "resumen": {
+    "aprovechables_con_corte": {
+      "json": 0,
+      "mini": 2951
+    },
+    "aprovechables_con_corte_pct_mini": 93.68,
+    "aprovechables_pct_json": 100.0,
+    "aprovechables_pct_mini": 100.0,
+    "barrido_por_lote": {
+      "json": {
+        "10": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 63.8
+        },
+        "100": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 63.39
+        },
+        "150": {
+          "aprovechamiento_pct": 0.0,
+          "llamadas_cortadas": 3,
+          "tokens_por_registro": 54.61
+        },
+        "200": {
+          "aprovechamiento_pct": 0.0,
+          "llamadas_cortadas": 3,
+          "tokens_por_registro": 40.96
+        },
+        "25": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 63.72
+        },
+        "300": {
+          "aprovechamiento_pct": 0.0,
+          "llamadas_cortadas": 3,
+          "tokens_por_registro": 27.31
+        },
+        "400": {
+          "aprovechamiento_pct": 0.0,
+          "llamadas_cortadas": 3,
+          "tokens_por_registro": 20.48
+        },
+        "50": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 63.22
+        }
+      },
+      "mini": {
+        "10": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 23.9
+        },
+        "100": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 23.02
+        },
+        "150": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 23.21
+        },
+        "200": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 23.32
+        },
+        "25": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 23.48
+        },
+        "300": {
+          "aprovechamiento_pct": 93.3,
+          "llamadas_cortadas": 2,
+          "tokens_por_registro": 27.31
+        },
+        "400": {
+          "aprovechamiento_pct": 88.4,
+          "llamadas_cortadas": 3,
+          "tokens_por_registro": 20.48
+        },
+        "50": {
+          "aprovechamiento_pct": 100.0,
+          "llamadas_cortadas": 0,
+          "tokens_por_registro": 23.1
+        }
+      }
+    },
+    "llamadas_por_formato": {
+      "json": 200,
+      "mini": 100
+    },
+    "lote_maximo_sin_perdida": {
+      "json": 100,
+      "mini": 200
+    },
+    "lotes_con_corte_json": [
+      150,
+      200,
+      300,
+      400
+    ],
+    "por_formato": {
+      "json": {
+        "aprovechables_pct": 100.0,
+        "llamadas": 200,
+        "lote": [
+          100
+        ],
+        "registros_aprovechables": 20000,
+        "registros_solicitados": 20000,
+        "registros_validos": 20000,
+        "respuestas_cortadas": 0,
+        "tokens_entrada": 577479,
+        "tokens_salida": 1257535,
+        "tokens_salida_por_registro": 62.877,
+        "usd_estimado_tarifas_archivadas": 1.6823
+      },
+      "mini": {
+        "aprovechables_pct": 100.0,
+        "llamadas": 100,
+        "lote": [
+          200
+        ],
+        "registros_aprovechables": 20000,
+        "registros_solicitados": 20000,
+        "registros_validos": 20000,
+        "respuestas_cortadas": 0,
+        "tokens_entrada": 560563,
+        "tokens_salida": 473106,
+        "tokens_salida_por_registro": 23.655,
+        "usd_estimado_tarifas_archivadas": 0.7359
+      }
+    },
+    "reduccion_costo_estimado_pct": 56.26,
+    "reduccion_tokens_salida_pct": 62.38,
+    "registros_minimo_por_formato": 20000,
+    "registros_solicitados_con_corte": 3150,
+    "registros_totales": 40000
+  },
+  "run_id": "v7-20261008t160018z",
+  "tarifas": null,
+  "tokenizadores": []
+}

@@ -1385,44 +1385,58 @@
         {
           "etiqueta": "Registros procesados con modelo real",
           "id": "registros_totales",
-          "procedencias": [],
-          "run_ids": [],
+          "procedencias": [
+            "reproducido_local"
+          ],
+          "run_ids": [
+            "v7-20261008t160018z"
+          ],
           "unidad": "registros",
-          "valor": null
+          "valor": 40000
         },
         {
           "etiqueta": "Reducción de tokens de salida por registro frente a JSON",
           "id": "reduccion_salida",
-          "procedencias": [],
-          "run_ids": [],
+          "procedencias": [
+            "reproducido_local"
+          ],
+          "run_ids": [
+            "v7-20261008t160018z"
+          ],
           "unidad": "%",
-          "valor": null
+          "valor": 62.38
         },
         {
           "etiqueta": "Registros de .mini aprovechados en lotes donde JSON se corta",
           "id": "aprovechables_corte_mini",
-          "procedencias": [],
-          "run_ids": [],
+          "procedencias": [
+            "reproducido_local"
+          ],
+          "run_ids": [
+            "v7-20261008t160018z"
+          ],
           "unidad": "%",
-          "valor": null
+          "valor": 93.68
         }
       ],
       "clasificacion": {
         "formativo_sumativo": "sumativo sobre datos archivados; confirmatorio con la replicación",
         "tipo": "controlado"
       },
-      "commit_ultima_corrida": null,
+      "commit_ultima_corrida": "1fc6f396192ca8903beb4d49056d963469659a31",
       "comparadores": [
         "JSON con el JSON Schema en la instrucción, leído con json.loads",
         "mini con el bloque de especificación del contrato, leído en modo tolerante"
       ],
       "componentes": [
         {
-          "corridas_que_cuentan": [],
+          "corridas_que_cuentan": [
+            "v7-20261008t160018z"
+          ],
           "descripcion": "Reanálisis local reproducible de las 300 llamadas archivadas de volumen y del barrido por lote",
           "id": "reanalisis_volumen",
           "minimo_corridas": 1,
-          "satisfecho": false
+          "satisfecho": true
         },
         {
           "corridas_que_cuentan": [],
@@ -1432,16 +1446,43 @@
           "satisfecho": false
         }
       ],
-      "corridas": [],
+      "corridas": [
+        {
+          "arbol_limpio": true,
+          "commit": "1fc6f396192ca8903beb4d49056d963469659a31",
+          "componente": "reanalisis_volumen",
+          "cuenta": true,
+          "datos": [
+            {
+              "ruta": "evidencia/corridas/v7-20261008t160018z/resumen_v7.json",
+              "sha256": "1b4051c45ab5cfa3e3a1538142941aa62323fb192d067fb96455cef551214970"
+            }
+          ],
+          "estado_ejecucion": "ejecutado",
+          "fecha_utc": "2026-10-08T16:00:18Z",
+          "gasto_usd": null,
+          "manifiesto": "evidencia/corridas/v7-20261008t160018z/manifiesto.json",
+          "modelo": {
+            "modelo_pedido": "deepseek-chat",
+            "nota": "respuestas archivadas del 17/09/2026; no se llamó a la API",
+            "proveedor": "DeepSeek"
+          },
+          "motivo": null,
+          "procedencia": "reproducido_local",
+          "resultado": "no_evaluable",
+          "run_id": "v7-20261008t160018z",
+          "snapshot_sha256": null
+        }
+      ],
       "criterio": {
         "aprobado_por_equipo": false,
         "fijado_utc": "2026-10-08T15:00:00Z",
         "interpretacion": "Registros por formato = registros solicitados en la corrida de volumen (el menor de los dos formatos). Aprovechables = registros que la aplicación usa sin otra llamada, sobre los solicitados. Reducción = 100 x (1 - tokens de salida por registro de .mini / de JSON), con los tokens que informa el proveedor. Este criterio se fijó el 08/10/2026, DESPUÉS de conocer los datos archivados del 17/09/2026: el reanálisis es descriptivo y el criterio solo es confirmatorio sobre la replicación con API.",
         "texto": "I4.5 (escala): procesar >= 10 000 registros por formato con un modelo real, con >= 99 % de registros aprovechables en .mini y una reducción de tokens de salida por registro >= 30 % frente a JSON."
       },
-      "estado_calculado": "pendiente",
+      "estado_calculado": "parcial",
       "estado_ejecucion": "parcial",
-      "fecha_ultima_corrida": null,
+      "fecha_ultima_corrida": "2026-10-08T16:00:18Z",
       "hay_simulado_o_asistido": false,
       "hu_relacionadas": [
         "HU108",
@@ -1456,44 +1497,48 @@
         "deepseek-chat ya no figura en la página oficial de precios; el consumo real declarado (0,78 USD) no se concilia con las tarifas archivadas: no presentar el costo estimado como costo real."
       ],
       "meta_documental": "Pedido del asesor: validar con miles de registros. Propuesta de indicador I4.5 para el plan de validación (enmienda del 08/10/2026).",
-      "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
+      "motivo_resultado": "el estudio no está ejecutado (estado calculado: parcial)",
       "muestra": {
         "descripcion": "Volumen: 300 llamadas y 40 000 registros (20 000 por formato). Barrido: 48 llamadas, 8 tamaños de lote por formato. Un proveedor, un modelo y un dominio (tickets de soporte).",
         "unidad": "llamada a un modelo real"
       },
-      "n_corridas": 0,
-      "n_corridas_que_cuentan": 0,
+      "n_corridas": 1,
+      "n_corridas_que_cuentan": 1,
       "nombre": "Escala con modelo real: volumen y tamaño de lote",
       "objetivo": "OE4",
       "predicados": [
         {
-          "cumple": null,
+          "cumple": true,
           "descripcion": "Registros procesados por formato (el menor)",
           "id": "registros_por_formato",
           "op": ">=",
           "umbral": 10000,
-          "valor_observado": null
+          "valor_observado": 20000
         },
         {
-          "cumple": null,
+          "cumple": true,
           "descripcion": "Registros aprovechables de .mini (%)",
           "id": "aprovechables_mini",
           "op": ">=",
           "umbral": 99,
-          "valor_observado": null
+          "valor_observado": 100
         },
         {
-          "cumple": null,
+          "cumple": true,
           "descripcion": "Reducción de tokens de salida por registro frente a JSON (%)",
           "id": "reduccion_salida",
           "op": ">=",
           "umbral": 30,
-          "valor_observado": null
+          "valor_observado": 62.38
         }
       ],
       "pregunta": "PI1 y PI2 a escala: con miles de registros generados por un modelo real, ¿cuántos tokens de salida ahorra .mini frente a JSON, cuántos registros son aprovechables y qué se pierde cuando la respuesta se corta?",
-      "procedencias_que_cuentan": {},
-      "procedencias_todas": {},
+      "procedencias_que_cuentan": {
+        "reproducido_local": 1
+      },
+      "procedencias_todas": {
+        "reproducido_local": 1
+      },
       "reproduccion": {
         "comando": "python tools/ejecutar_v7.py",
         "nota": "Reanálisis sin red. La replicación usa experiments/v7_escalamiento/correr.py con --confirmar-real y requiere autorización de gasto (estimado < 3 USD)."
@@ -1599,7 +1644,7 @@
   "nota": "Derivado por tools/evidencia.py regenerar desde evidencia/estudios.json y evidencia/corridas/*/manifiesto.json. No editar a mano: python tools/evidencia.py verificar falla si difiere.",
   "objetivo": "OE4",
   "totales": {
-    "corridas": 10,
+    "corridas": 11,
     "corridas_invalidas": 0,
     "estudios": 10,
     "por_estado_ejecucion": {

@@ -7,5 +7,5 @@ V4,Costo por registro válido y latencia,controlado,bloqueado,pendiente,no_evalu
 V5,Conformidad y calidad del componente,controlado,parcial,pendiente,no_evaluable,no_evaluable,1,0,,,,HU104 HU116 HU118
 V6a,Integración en sistemas reales,naturalista,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU119 HU120 HU121 HU122 HU123 HU124 HU125 HU126 HU127 HU128 HU118
 V6b,Desempeño de desarrolladores externos,controlado,pendiente,pendiente,no_evaluable,no_evaluable,0,0,,,,HU117 HU118 HU129 HU130 HU131 HU132 HU133 HU134 HU135 HU136 HU137 HU138
-V7,Escala con modelo real: volumen y tamaño de lote,controlado,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU108 HU113
+V7,Escala con modelo real: volumen y tamaño de lote,controlado,parcial,parcial,no_evaluable,no_evaluable,1,1,reproducido_local:1,2026-10-08T16:00:18Z,1fc6f396192ca8903beb4d49056d963469659a31,HU108 HU113
 V8,Integración real en CIMA con comparación pareada (exploratorio),exploratorio,parcial,pendiente,no_evaluable,no_evaluable,0,0,,,,HU123 HU124 HU125 HU126 HU128

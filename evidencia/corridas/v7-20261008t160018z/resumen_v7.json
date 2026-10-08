@@ -1,0 +1,146 @@
+{
+  "aprovechables_con_corte": {
+    "json": 0,
+    "mini": 2951
+  },
+  "aprovechables_con_corte_pct_mini": 93.68,
+  "aprovechables_pct_json": 100.0,
+  "aprovechables_pct_mini": 100.0,
+  "barrido_por_lote": {
+    "json": {
+      "10": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 63.8
+      },
+      "100": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 63.39
+      },
+      "150": {
+        "aprovechamiento_pct": 0.0,
+        "llamadas_cortadas": 3,
+        "tokens_por_registro": 54.61
+      },
+      "200": {
+        "aprovechamiento_pct": 0.0,
+        "llamadas_cortadas": 3,
+        "tokens_por_registro": 40.96
+      },
+      "25": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 63.72
+      },
+      "300": {
+        "aprovechamiento_pct": 0.0,
+        "llamadas_cortadas": 3,
+        "tokens_por_registro": 27.31
+      },
+      "400": {
+        "aprovechamiento_pct": 0.0,
+        "llamadas_cortadas": 3,
+        "tokens_por_registro": 20.48
+      },
+      "50": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 63.22
+      }
+    },
+    "mini": {
+      "10": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 23.9
+      },
+      "100": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 23.02
+      },
+      "150": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 23.21
+      },
+      "200": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 23.32
+      },
+      "25": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 23.48
+      },
+      "300": {
+        "aprovechamiento_pct": 93.3,
+        "llamadas_cortadas": 2,
+        "tokens_por_registro": 27.31
+      },
+      "400": {
+        "aprovechamiento_pct": 88.4,
+        "llamadas_cortadas": 3,
+        "tokens_por_registro": 20.48
+      },
+      "50": {
+        "aprovechamiento_pct": 100.0,
+        "llamadas_cortadas": 0,
+        "tokens_por_registro": 23.1
+      }
+    }
+  },
+  "llamadas_por_formato": {
+    "json": 200,
+    "mini": 100
+  },
+  "lote_maximo_sin_perdida": {
+    "json": 100,
+    "mini": 200
+  },
+  "lotes_con_corte_json": [
+    150,
+    200,
+    300,
+    400
+  ],
+  "por_formato": {
+    "json": {
+      "aprovechables_pct": 100.0,
+      "llamadas": 200,
+      "lote": [
+        100
+      ],
+      "registros_aprovechables": 20000,
+      "registros_solicitados": 20000,
+      "registros_validos": 20000,
+      "respuestas_cortadas": 0,
+      "tokens_entrada": 577479,
+      "tokens_salida": 1257535,
+      "tokens_salida_por_registro": 62.877,
+      "usd_estimado_tarifas_archivadas": 1.6823
+    },
+    "mini": {
+      "aprovechables_pct": 100.0,
+      "llamadas": 100,
+      "lote": [
+        200
+      ],
+      "registros_aprovechables": 20000,
+      "registros_solicitados": 20000,
+      "registros_validos": 20000,
+      "respuestas_cortadas": 0,
+      "tokens_entrada": 560563,
+      "tokens_salida": 473106,
+      "tokens_salida_por_registro": 23.655,
+      "usd_estimado_tarifas_archivadas": 0.7359
+    }
+  },
+  "reduccion_costo_estimado_pct": 56.26,
+  "reduccion_tokens_salida_pct": 62.38,
+  "registros_minimo_por_formato": 20000,
+  "registros_solicitados_con_corte": 3150,
+  "registros_totales": 40000
+}
