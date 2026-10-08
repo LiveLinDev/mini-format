@@ -118,6 +118,12 @@ def test_no_workflow_yet_can_be_resumed_from_the_offline_readme(tmp_path, lang):
         assert command in (bundle / guide).read_text(encoding="utf-8")
 
 
+def test_piped_answers_with_a_byte_order_mark_are_accepted(tmp_path):
+    bundle = tmp_path / ".mini"
+    code, output = _wizard(["﻿es", "4", "ticket", str(bundle), "1"])
+    assert code == 0 and (bundle / "workflow.py").is_file() and "Toolkit creado" in output
+
+
 @pytest.mark.parametrize("mode,apply", [("2", "1"), ("2", "2"), ("3", "2")])
 def test_setup_connects_selected_python_file_or_located_project(tmp_path, monkeypatch, mode, apply):
     from minifmt.domain import encode

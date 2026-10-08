@@ -116,6 +116,78 @@ def _python_patch(source, bridge_name):
     return result
 
 
+def _json_mode_chat(node):
+    """A dict literal for an OpenAI-compatible chat request that asks for JSON mode."""
+    if not isinstance(node, ast.Dict):
+        return False
+    keys = {key.value for key in node.keys if isinstance(key, ast.Constant)}
+    stream = next((value for key, value in zip(node.keys, node.values) if isinstance(key, ast.Constant) and key.value == "stream"), None)
+    return {"messages", "response_format"} <= keys and not (isinstance(stream, ast.Constant) and stream.value)
+
+
+def _python_http_patch(source, bridge_name):
+    """Second supported pattern: ``requests.post``/``httpx.post`` to a chat endpoint with a JSON-mode payload.
+
+    Only the call itself changes (``requests.post`` -> ``<bridge>.post``) plus one import, so the application keeps
+    its URL, headers, timeout, error handling and the code that reads ``choices[0].message.content``.
+    """
+    tree = ast.parse(source)
+    targets = {}
+    for function in ast.walk(tree):
+        if not isinstance(function, ast.FunctionDef):
+            continue
+        payloads = {node.targets[0].id for node in ast.walk(function)
+                    if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)
+                    and _json_mode_chat(node.value)}
+        for node in ast.walk(function):
+            if not (isinstance(node, ast.Call) and ast.unparse(node.func) in ("requests.post", "httpx.post")):
+                continue
+            body = {keyword.arg: keyword.value for keyword in node.keywords}.get("json")
+            if (isinstance(body, ast.Name) and body.id in payloads) or _json_mode_chat(body):
+                targets[(node.lineno, node.col_offset)] = node  # nested functions are walked twice
+    if len(targets) != 1:
+        return None
+    call = next(iter(targets.values()))
+    library = ast.unparse(call.func).split(".")[0]
+    newline = "\r\n" if "\r\n" in source else "\n"
+    lines = source.splitlines(keepends=True)
+    if call.func.lineno != call.func.end_lineno:
+        return None
+    row = lines[call.func.lineno - 1].encode("utf-8")
+    start, end = call.func.col_offset, call.func.end_col_offset
+    if row[start:end] != f"{library}.post".encode():
+        return None
+    lines[call.func.lineno - 1] = (row[:start] + f"{bridge_name}.post".encode() + row[end:]).decode("utf-8")
+    insertion = 0
+    for node in tree.body:
+        if (isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)) or (
+                isinstance(node, ast.ImportFrom) and node.module == "__future__"):
+            insertion = node.end_lineno
+        else:
+            break
+    lines.insert(insertion, f"import {bridge_name}{newline}")
+    result = "".join(lines)
+    ast.parse(result)
+    return result, library
+
+
+def _bridge(kind, relative, lang):
+    head = ("from pathlib import Path\nimport importlib.util\n"
+            f"BUNDLE = (Path(__file__).resolve().parent / {relative!r}).resolve()\n"
+            "spec = importlib.util.spec_from_file_location('_app_mini_workflow', BUNDLE / 'workflow.py')\n"
+            "module = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(module)\n")
+    if kind == "sdk":
+        return head + f"def complete(create, **kwargs):\n    return module.Workflow(BUNDLE, lang={lang!r}).complete(create, **kwargs)\n"
+    return ("import sys\nimport " + kind + " as _http\n" + head +
+            "\n\ndef post(url, **kwargs):\n"
+            "    \"\"\"Same call as " + kind + ".post; JSON-mode chat requests answer in .mini and return validated JSON.\"\"\"\n"
+            f"    flow = module.Workflow(BUNDLE, lang={lang!r})\n"
+            "    response = flow.post(_http.post, url, **kwargs)\n"
+            "    if getattr(response, 'mini_summary', None):\n"
+            "        print(response.mini_summary, file=sys.stderr)\n"
+            "    return response\n")
+
+
 def prepare(project, bundle=".mini", *, lang=None, apply=False):
     bundle = Path(bundle).resolve()
     if not (bundle / "workflow.py").is_file():
@@ -163,7 +235,9 @@ def prepare(project, bundle=".mini", *, lang=None, apply=False):
         source = original_bytes.decode("utf-8-sig")
         bridge_name = "mini_bridge_" + hashlib.sha256(str(bundle).encode()).hexdigest()[:8]
         try:
-            patched = _python_patch(source, bridge_name)
+            patched, kind = _python_patch(source, bridge_name), "sdk"
+            if not patched:
+                patched, kind = _python_http_patch(source, bridge_name) or (None, None)
         except SyntaxError:
             patched = None
         if patched:
@@ -171,15 +245,11 @@ def prepare(project, bundle=".mini", *, lang=None, apply=False):
                 relative = Path(os.path.relpath(bundle, target.parent)).as_posix()
             except ValueError:  # Windows projects and toolkits may live on different drives.
                 relative = bundle.as_posix()
-            bridge = ("from pathlib import Path\nimport importlib.util\n"
-                      f"BUNDLE = (Path(__file__).resolve().parent / {relative!r}).resolve()\n"
-                      "spec = importlib.util.spec_from_file_location('_app_mini_workflow', BUNDLE / 'workflow.py')\n"
-                      "module = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(module)\n"
-                      f"def complete(create, **kwargs):\n    return module.Workflow(BUNDLE, lang={lang!r}).complete(create, **kwargs)\n")
+            bridge = _bridge(kind, relative, lang)
             bridge_path = target.with_name(bridge_name + ".py")
             patch = "".join(difflib.unified_diff(source.splitlines(True), patched.splitlines(True), fromfile=str(target), tofile=str(target)))
             (out / "change.diff").write_bytes(patch.encode("utf-8"))
-            report.update(supported=True, diff=str(out / "change.diff"), file=str(target))
+            report.update(supported=True, pattern="openai-sdk" if kind == "sdk" else f"{kind}-chat-json", diff=str(out / "change.diff"), file=str(target))
             if apply:
                 backup = out / (target.name + ".before")
                 if backup.exists() or bridge_path.exists():

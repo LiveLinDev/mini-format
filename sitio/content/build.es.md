@@ -16,6 +16,8 @@ Localiza llamadas de IA y lecturas JSON. Escribe `integration/INTEGRATE.md` con 
 
 La edición automática reconoce una llamada Python síncrona `client.chat.completions.create(...)`, asignada a una variable, seguida de `json.loads(response.choices[0].message.content)`. La respuesta no debe tener otros usos. Conserva cliente, modelo, mensajes y parámetros; elimina `response_format`, lee el prompt generado y conecta el flujo. Guarda el original en `integration/app.py.before` y crea un puente junto al archivo.
 
+También reconoce una llamada `requests.post(...)` o `httpx.post(...)` cuyo argumento `json=` es un diccionario de chat con `messages` y `response_format` (API compatibles con OpenAI, como DeepSeek). El cambio se limita a esa llamada, que pasa por el puente: la petición JSON se envía sin `response_format` y con el prompt .mini como último mensaje de sistema, y la aplicación recibe una respuesta con la misma forma cuyo contenido es el JSON validado; `usage` suma todas las llamadas. Las demás peticiones y los errores HTTP no cambian. Si el proveedor informa `finish_reason = "length"`, se descarta la última línea, se conservan los registros completos y se piden solo los que faltan.
+
 Otros SDK, lenguajes, streaming, herramientas o funciones asíncronas reciben una guía para tu IA de código: requieren adaptar el callback o el puente al flujo real.
 
 ## Con tu proveedor: un callback

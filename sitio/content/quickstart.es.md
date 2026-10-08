@@ -8,10 +8,10 @@ Una empresa recibe quejas y consultas. Su aplicación pide a la IA que interpret
 
 ## 1. Instala y abre el asistente
 
-[Descarga el paquete](/downloads/mini-format-1.3.1.zip) y extráelo. Desde esa carpeta:
+[Descarga el paquete](/downloads/mini-format-1.3.2.zip) y extráelo. Desde esa carpeta:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.1-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.2-py3-none-any.whl
 mini setup
 ```
 
@@ -47,7 +47,7 @@ Si todavía no tienes ese código, conserva el kit. El comando para retomarlo qu
 mini integrate ruta/a/tu/app.py --bundle .mini --lang es
 ```
 
-Localiza la llamada que pide JSON. Prepara `integration/INTEGRATE.md` con las rutas del contrato y del prompt y, si el código es compatible, un diff. Para aplicar el patrón Python síncrono de chat completions seguido de `json.loads`, añade `--apply`; conserva una copia del archivo original.
+Localiza la llamada que pide JSON. Prepara `integration/INTEGRATE.md` con las rutas del contrato y del prompt y, si el código es compatible, un diff. Para aplicar uno de los patrones Python compatibles, añade `--apply`; conserva una copia del archivo original. Son compatibles el SDK de OpenAI (`chat.completions.create` seguido de `json.loads`) y una llamada `requests.post` o `httpx.post` a un endpoint de chat que pide `response_format` JSON, como la API de DeepSeek. En ese caso solo cambia la llamada: la aplicación conserva su URL, cabeceras, manejo de errores y lectura del JSON. Si la respuesta se corta por el límite de tokens, se conservan los registros completos y solo se piden los que faltan.
 
 Para otros SDK, código asíncrono o lenguajes, entrega la guía a tu IA de código. Debe leer el prompt generado, cambiar el formato de salida de la llamada y conectar el callback a `Workflow.run`. Si tu API fuerza respuestas JSON, desactiva ese modo para recibir .mini.
 

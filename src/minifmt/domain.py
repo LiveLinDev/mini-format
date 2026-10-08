@@ -660,9 +660,14 @@ def repair(text, contract=None, *, fix_count=False):
         changes.append("normalized CRLF to LF")
     stripped = text.strip("\n")
     fence = re.fullmatch(r"```(?:mini|text)?[ \t]*\n([\s\S]*?)\n```", stripped)
+    opened = re.match(r"```(?:mini|text)?[ \t]*\n", stripped)
     if fence:
         text = fence.group(1)
         changes.append("removed complete Markdown code fence")
+    elif opened and "\n```" not in stripped[opened.end() - 1:]:
+        # A response cut by the output limit inside a fenced block never reaches its closing fence.
+        text = stripped[opened.end():]
+        changes.append("removed unclosed Markdown code fence")
     report = diagnose(text, contract)
     if fix_count and not report["ok"] and report["errors"][0]["code"] == "D_COUNT":
         # Validate every field and the full wrapper before changing n.  This
@@ -814,8 +819,10 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "hay que pedir una corrección a la IA. No inventa datos ni reduce el número esperado.\n\n"
         "## 2. Integra tu llamada existente\n\n"
         f'```sh\nmini integrate ruta/a/tu/app.py --bundle "{folder}" --lang es\n```\n\n'
-        "Revisa `integration/INTEGRATE.md` y el diff preparado. Si el patrón Python es compatible, "
-        "añade `--apply` para conectarlo automáticamente; se conserva una copia del archivo. "
+        "Revisa `integration/INTEGRATE.md` y el diff preparado. Si la llamada es compatible (SDK de OpenAI con "
+        "`chat.completions.create`, o `requests.post`/`httpx.post` a un endpoint de chat con `response_format` JSON, "
+        "como DeepSeek), añade `--apply` para conectarlo automáticamente; se conserva una copia del archivo. "
+        "Si la respuesta se corta por el límite de tokens, se conservan los registros completos y solo se piden los que faltan. "
         "Otros SDK o lenguajes reciben instrucciones concretas para tu IA de código.\n\n"
         "¿Todavía no tienes un flujo? Conserva este kit. Cuando crees el archivo que llama a la IA, "
         "ejecuta el comando anterior con la ruta de ese archivo. También puedes volver a usar `mini setup` "
@@ -844,7 +851,9 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "1. Inspect example.json and example.mini. Paste try-prompt.md into your AI: it includes the format and asks for 20 fictional records.\n"
         "2. Validate the reply; Repair removes safe wrappers, BOM and CRLF (D_ENVELOPE). Wrong types or missing data require a model correction.\n"
         f'3. Run `mini integrate path/to/app.py --bundle "{folder}" --lang en`; inspect integration/INTEGRATE.md and change.diff. '
-        "Use --apply for the supported synchronous Python chat/JSON pattern; other providers/languages get coding-AI instructions.\n\n"
+        "Use --apply for the supported synchronous Python patterns (OpenAI SDK chat.completions.create, or requests.post/httpx.post "
+        "to a chat endpoint with a JSON response_format, such as DeepSeek); other providers/languages get coding-AI instructions. "
+        "A response cut by the output limit keeps its complete records and only the missing ones are requested.\n\n"
         "No workflow yet? Keep this toolkit. Once you create your AI call file, run the integration command above "
         "with its path. Setup also saves your selected next step at the end of this guide.\n\n"
         f'```sh\npython "{folder}/workflow.py" response.mini --out result.json\n```\n\n'

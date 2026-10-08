@@ -1,12 +1,12 @@
 {
- "version": "1.3.1",
+ "version": "1.3.2",
  "contratoArchivo": "{\n  \"prefix\": \"tk\",\n  \"version\": 1,\n  \"name\": \"Tickets de soporte\",\n  \"description\": \"\",\n  \"parent\": null,\n  \"domain\": \"\",\n  \"list_separator\": \",\",\n  \"records_key\": \"records\",\n  \"header\": {\n    \"required\": [\n      \"n\"\n    ],\n    \"keys\": {\n      \"n\": {\n        \"type\": \"int\",\n        \"desc\": \"number of records\"\n      },\n      \"v\": {\n        \"type\": \"int\",\n        \"default\": 1,\n        \"desc\": \"contract version\"\n      }\n    }\n  },\n  \"core\": [\n    {\n      \"name\": \"id\",\n      \"type\": \"str\",\n      \"desc\": \"código del ticket\"\n    },\n    {\n      \"name\": \"prioridad\",\n      \"type\": \"enum\",\n      \"values\": [\n        \"baja\",\n        \"media\",\n        \"alta\"\n      ]\n    },\n    {\n      \"name\": \"categoria\",\n      \"type\": \"enum\",\n      \"values\": [\n        \"acceso\",\n        \"pago\",\n        \"error\",\n        \"consulta\"\n      ]\n    },\n    {\n      \"name\": \"resumen\",\n      \"type\": \"str\",\n      \"desc\": \"resumen breve de la solicitud\"\n    },\n    {\n      \"name\": \"horas\",\n      \"type\": \"int\",\n      \"min\": 0,\n      \"max\": 40,\n      \"desc\": \"horas estimadas de atención\"\n    }\n  ],\n  \"extensions\": [],\n  \"author\": \"\",\n  \"license\": \"MIT\",\n  \"source\": \"\"\n}\n",
  "es": {
   "comunes": {
    "instalar": [
     {
-     "cmd": "python -m pip install mini_format-1.3.1-py3-none-any.whl",
-     "out": "Processing ./mini_format-1.3.1-py3-none-any.whl\nInstalling collected packages: mini-format\nSuccessfully installed mini-format-1.3.1",
+     "cmd": "python -m pip install mini_format-1.3.2-py3-none-any.whl",
+     "out": "Processing ./mini_format-1.3.2-py3-none-any.whl\nInstalling collected packages: mini-format\nSuccessfully installed mini-format-1.3.2",
      "nota": "instalación del paquete publicado en mini-format.pmoluna.com"
     },
     {
@@ -30,7 +30,7 @@
    "setup": [
     {
      "cmd": "mini setup",
-     "out": "  mini setup · .mini → JSON\n  Idioma / Language: es / en [es]  › es\n  Tu IA genera .mini. Tu aplicación sigue recibiendo JSON.\n  1 Tengo un JSON de mi IA   2 Definir campos   3 Salir   4 Probar con tickets\n  ¿Cómo empezamos?  › 4\n  Nombre corto de tu formato [ticket]  › tk\n  Carpeta de salida [.mini]  › .mini\n  ✓ Toolkit creado en .mini\n  contract.json: reglas de los campos y sus tipos.\n  prompt.es.md: instrucciones que tu código enviará a la IA.\n  workflow.py: valida, repara, vuelve a comprobar y entrega JSON a tu aplicación.\n  Prueba: copia el contenido de .mini\\try-prompt.md a tu IA. Ya incluye el formato.\n  python \".mini\\workflow.py\" response.mini --out result.json\n\n  Ahora conectamos el formato al código que llama a tu IA.\n  1 Todavía no tengo un flujo   2 Elegir mi archivo   3 Buscar en mi proyecto\n  ¿Ya tienes esa llamada a IA?  › 1\n  Tu kit está listo. Cuando tengas el archivo que llama a la IA, sustituye la ruta en:\n  mini integrate \"ruta/a/tu/app.py\" --bundle \".mini\" --lang es\n  Guía: .mini\\GUIA.md",
+     "out": "  mini setup · .mini → JSON\n  Idioma / Language: es / en [es]  › es\n  Tu IA genera .mini. Tu aplicación sigue recibiendo JSON.\n  1 Tengo un JSON de mi IA   2 Definir campos   3 Salir   4 Probar con tickets\n  ¿Cómo empezamos?  › 4\n  Nombre corto de tu formato [ticket]  › tk\n  Carpeta de salida [.mini]  › .mini\n  ✓ Toolkit creado en .mini\n  contract.json: reglas de los campos y sus tipos.\n  prompt.es.md: instrucciones que tu código enviará a la IA.\n  workflow.py: valida, repara, vuelve a comprobar y entrega JSON a tu aplicación.\n\n  Ahora conectamos el formato al código que llama a tu IA.\n  1 Todavía no tengo un flujo   2 Elegir mi archivo   3 Buscar en mi proyecto\n  ¿Ya tienes esa llamada a IA?  › 1\n  Prueba sin código: copia el contenido de .mini\\try-prompt.md a tu IA y valida su respuesta con:\n  python \".mini\\workflow.py\" response.mini --out result.json\n  Tu kit está listo. Cuando tengas el archivo que llama a la IA, sustituye la ruta en:\n  mini integrate \"ruta/a/tu/app.py\" --bundle \".mini\" --lang es\n  Guía: .mini\\GUIA.md",
      "nota": "asistente guiado: crea el contrato, la instrucción y el kit de integración en .mini/"
     },
     {
@@ -199,8 +199,8 @@
   "comunes": {
    "instalar": [
     {
-     "cmd": "python -m pip install mini_format-1.3.1-py3-none-any.whl",
-     "out": "Processing ./mini_format-1.3.1-py3-none-any.whl\nInstalling collected packages: mini-format\nSuccessfully installed mini-format-1.3.1",
+     "cmd": "python -m pip install mini_format-1.3.2-py3-none-any.whl",
+     "out": "Processing ./mini_format-1.3.2-py3-none-any.whl\nInstalling collected packages: mini-format\nSuccessfully installed mini-format-1.3.2",
      "nota": "install the package published at mini-format.pmoluna.com"
     },
     {
@@ -224,7 +224,7 @@
    "setup": [
     {
      "cmd": "mini setup",
-     "out": "  mini setup · .mini → JSON\n  Idioma / Language: es / en [es]  › en\n  Your AI generates .mini. Your application still receives JSON.\n  1 I have AI-generated JSON   2 Define fields   3 Exit   4 Try support tickets\n  Where do we start?  › 4\n  Short format name [ticket]  › tk\n  Output folder [.mini]  › .mini\n  ✓ Toolkit created in .mini\n  contract.json: field and type rules.\n  prompt.en.md: instructions your code will send to AI.\n  workflow.py: validates, repairs, checks again and delivers JSON to your application.\n  Test: paste the contents of .mini\\try-prompt.md into your AI. The format is included.\n  python \".mini\\workflow.py\" response.mini --out result.json\n\n  Now connect the format to the code that calls your AI.\n  1 I do not have a workflow yet   2 Select my file   3 Search my project\n  Do you already have that AI call?  › 1\n  Your toolkit is ready. Once you have the AI call file, replace the path in:\n  mini integrate \"path/to/app.py\" --bundle \".mini\" --lang en\n  Guide: .mini\\README.md",
+     "out": "  mini setup · .mini → JSON\n  Idioma / Language: es / en [es]  › en\n  Your AI generates .mini. Your application still receives JSON.\n  1 I have AI-generated JSON   2 Define fields   3 Exit   4 Try support tickets\n  Where do we start?  › 4\n  Short format name [ticket]  › tk\n  Output folder [.mini]  › .mini\n  ✓ Toolkit created in .mini\n  contract.json: field and type rules.\n  prompt.en.md: instructions your code will send to AI.\n  workflow.py: validates, repairs, checks again and delivers JSON to your application.\n\n  Now connect the format to the code that calls your AI.\n  1 I do not have a workflow yet   2 Select my file   3 Search my project\n  Do you already have that AI call?  › 1\n  Test without code: paste the contents of .mini\\try-prompt.md into your AI and check its answer with:\n  python \".mini\\workflow.py\" response.mini --out result.json\n  Your toolkit is ready. Once you have the AI call file, replace the path in:\n  mini integrate \"path/to/app.py\" --bundle \".mini\" --lang en\n  Guide: .mini\\README.md",
      "nota": "guided assistant: creates the contract, the instruction and the integration kit in .mini/"
     },
     {

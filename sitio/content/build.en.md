@@ -16,6 +16,8 @@ Locate AI calls and JSON parsing. The command writes `integration/INTEGRATE.md` 
 
 Automatic editing recognizes a synchronous Python `client.chat.completions.create(...)` assignment followed by `json.loads(response.choices[0].message.content)`. The response must have no other uses. It keeps the client, model, messages and parameters, removes `response_format`, reads the generated prompt and connects the workflow. A backup is kept in `integration/app.py.before`; a bridge is created beside the source file.
 
+It also recognizes a `requests.post(...)` or `httpx.post(...)` call whose `json=` argument is a chat dictionary with `messages` and `response_format` (OpenAI-compatible APIs such as DeepSeek). Only that call changes and goes through the bridge: the request is sent without `response_format`, with the .mini prompt as a last system message, and the app receives a response of the same shape whose content is the validated JSON; `usage` adds up every call. Other requests and HTTP errors are unchanged. When the provider reports `finish_reason = "length"`, the last line is discarded, complete records are kept and only the missing ones are requested.
+
 Other SDKs/languages, streaming, tools and asynchronous functions receive a coding-AI guide and need an application-specific callback or bridge.
 
 ## Keep your provider with a callback

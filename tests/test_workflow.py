@@ -212,3 +212,150 @@ def test_live_example_uses_the_prompt_and_never_stores_the_key(monkeypatch):
     payload = json.loads(requests[0].data)
     assert payload["model"] == "fixture-model" and "20 mensajes" in payload["messages"][0]["content"]
     assert "mini-domain/1" in payload["messages"][0]["content"]
+
+
+# ---------------------------------------------------------------- HTTP chat calls (requests/httpx) and cut responses
+HTTP_APP = '''"""Generator that already asks an OpenAI-compatible chat endpoint for JSON."""
+import json
+import requests
+
+URL = "https://api.deepseek.com/chat/completions"
+
+
+def call_model(prompt, max_tokens):
+    payload = {
+        "model": "deepseek-chat",
+        "messages": [{"role": "system", "content": "Return only valid JSON."}, {"role": "user", "content": prompt}],
+        "response_format": {"type": "json_object"},
+        "max_tokens": max_tokens,
+    }
+    response = requests.post(URL, headers={"Authorization": "Bearer key"}, json=payload, timeout=180)
+    if response.status_code >= 400:
+        raise RuntimeError("API error " + str(response.status_code))
+    return response.json()
+
+
+def other_call(prompt):
+    return requests.post("https://api.example.com/v1/responses", json={"input": prompt}).json()
+
+
+def tickets(prompt, max_tokens=900):
+    raw = call_model(prompt, max_tokens)
+    return json.loads(raw["choices"][0]["message"]["content"]), raw["usage"]
+'''
+
+
+class _HttpReply:
+    def __init__(self, body, status_code=200):
+        self.body, self.status_code = body, status_code
+
+    def json(self):
+        return self.body
+
+
+def _fake_requests(monkeypatch, replies):
+    """Install a fake ``requests`` module: each reply is (content, finish_reason) or an _HttpReply."""
+    import types
+    sent = []
+
+    def post(url, json=None, **kwargs):
+        sent.append({"url": url, "json": json, **kwargs})
+        reply = replies.pop(0)
+        if isinstance(reply, _HttpReply):
+            return reply
+        content, finish = reply
+        return _HttpReply({"choices": [{"message": {"role": "assistant", "content": content}, "finish_reason": finish}],
+                           "usage": {"prompt_tokens": 100, "completion_tokens": 10, "total_tokens": 110}})
+    module = types.ModuleType("requests")
+    module.post = post
+    monkeypatch.setitem(sys.modules, "requests", module)
+    return sent
+
+
+def _load(source, name):
+    spec = importlib.util.spec_from_file_location(name, source)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.fixture
+def kit4(tmp_path):
+    sample = {"lote": "L1", "tickets": [{"id": i, "titulo": t} for i, t in enumerate(["Acceso", "Factura", "Clave", "Pago"], 1)]}
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([sample], "ticket", bundle)
+    return bundle, contract, sample
+
+
+def test_http_chat_json_call_is_patched_with_one_changed_call(kit4, tmp_path, monkeypatch):
+    bundle, contract, sample = kit4
+    source = tmp_path / "generator.py"
+    source.write_bytes(HTTP_APP.replace("\n", "\r\n").encode("utf-8"))
+    original = source.read_bytes()
+    prepared = prepare(source, bundle)
+    assert prepared["supported"] and prepared["pattern"] == "requests-chat-json" and source.read_bytes() == original
+    changed = [l for l in Path(prepared["diff"]).read_text(encoding="utf-8").splitlines() if l[:1] in "+-" and not l.startswith(("+++", "---"))]
+    assert len(changed) == 3  # one import added, one call replaced
+    applied = prepare(source, bundle, apply=True)
+    assert applied["applied"] and Path(applied["backup"]).read_bytes() == original
+    assert b"\n" not in source.read_bytes().replace(b"\r\n", b"")  # line endings preserved
+    sent = _fake_requests(monkeypatch, [(encode(sample, contract, shared=False, dictionaries=False), "stop"), ("plain", "stop")])
+    monkeypatch.syspath_prepend(str(tmp_path))
+    app = _load(source, "patched_generator")
+    data, usage = app.tickets("Create four tickets")
+    assert data == sample and usage["completion_tokens"] == 10
+    assert len(sent) == 1 and "response_format" not in sent[0]["json"]
+    assert sent[0]["headers"] == {"Authorization": "Bearer key"} and sent[0]["timeout"] == 180
+    assert sent[0]["json"]["messages"][:2] == [{"role": "system", "content": "Return only valid JSON."},
+                                                {"role": "user", "content": "Create four tickets"}]
+    assert contract["schema_id"] in sent[0]["json"]["messages"][-1]["content"]
+    # Requests that are not JSON-mode chat calls go through unchanged.
+    assert app.other_call("hi")["choices"][0]["message"]["content"] == "plain" and sent[1]["json"] == {"input": "hi"}
+
+
+def test_cut_response_keeps_complete_records_and_requests_only_the_missing_ones(kit4, monkeypatch):
+    bundle, contract, sample = kit4
+    lines = encode(sample, contract, shared=False, dictionaries=False).split("\n")
+    cut = "```mini\n" + "\n".join(lines[:3]) + "\n" + lines[3][:4]  # header + 2 records + a broken third; fence never closed
+    rest = encode(dict(sample, tickets=sample["tickets"][2:]), contract, shared=False, dictionaries=False)
+    sent = _fake_requests(monkeypatch, [(cut, "length"), (rest, "stop")])
+    flow = Workflow(bundle)
+    response = flow.post(sys.modules["requests"].post, "https://api.deepseek.com/chat/completions",
+                         json={"model": "m", "messages": [{"role": "user", "content": "four tickets"}], "response_format": {"type": "json_object"}})
+    body = response.json()
+    assert json.loads(body["choices"][0]["message"]["content"]) == sample
+    assert body["usage"] == {"prompt_tokens": 200, "completion_tokens": 20, "total_tokens": 220}
+    assert len(sent) == 2 and "CONTINUATION REQUEST" in sent[1]["json"]["messages"][-1]["content"]
+    assert "n=2" in sent[1]["json"]["messages"][-1]["content"]
+    stages = [step["stage"] for step in flow.last_run["trace"]]
+    assert "truncation" in stages and "continuation" in stages
+    assert "removed unclosed Markdown code fence" in flow.last_run["trace"][2]["changes"]
+    assert "2 conservados y 2 pedidos de nuevo" in response.mini_summary and "20 tokens de salida en 2 llamada(s)" in response.mini_summary
+
+
+def test_text_callback_cut_is_inferred_from_a_short_last_line(kit4):
+    bundle, contract, sample = kit4
+    lines = encode(sample, contract, shared=False, dictionaries=False).split("\n")
+    rest = encode(dict(sample, tickets=sample["tickets"][3:]), contract, shared=False, dictionaries=False)
+    replies = ["\n".join(lines[:4]) + "\n" + lines[4][:1], rest]  # the last record lost its separator and fields
+    prompts = []
+    flow = Workflow(bundle)
+    assert flow.run(lambda p: prompts.append(p) or replies.pop(0), "four tickets", expected_records=4) == sample
+    assert len(prompts) == 2 and "Return ONLY the 1 missing records" in prompts[1]
+
+
+def test_short_response_without_cut_is_still_blocked(kit4):
+    bundle, contract, sample = kit4
+    short = encode(dict(sample, tickets=sample["tickets"][:3]), contract, shared=False, dictionaries=False)
+    calls = []
+    with pytest.raises(WorkflowError):
+        Workflow(bundle).run(lambda p: calls.append(p) or short, "four tickets", expected_records=4)
+    assert len(calls) == 2  # one full regeneration, as before: a complete short document is not a cut
+
+
+def test_http_errors_are_returned_unchanged(kit4, monkeypatch):
+    bundle, _, _ = kit4
+    error = _HttpReply({"error": "bad key"}, status_code=401)
+    _fake_requests(monkeypatch, [error])
+    response = Workflow(bundle).post(sys.modules["requests"].post, "u", json={"messages": [], "response_format": {"type": "json_object"}})
+    assert response is error

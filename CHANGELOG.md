@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.2 — 2026-10-08
+
+- `mini integrate --apply` and `mini setup` connect a second Python pattern: `requests.post` or `httpx.post` to an OpenAI-compatible chat endpoint that requests a JSON `response_format` (for example DeepSeek). Only the call changes; the application keeps its URL, headers, timeout, error handling and JSON reader. The generated bridge prints a one-line summary of each run.
+- Generated workflows keep the complete records of a response cut by the output limit and request only the missing ones, at most twice. When the provider reports `finish_reason = "length"`, the last line is always discarded, because a cut field can still look valid.
+- Toolkit repair removes an opening Markdown code fence that a cut response never closed.
+- `mini setup` accepts piped answers that start with a byte order mark (PowerShell) and shows the copy-paste test only when no AI call is connected. Before connecting a file it prints the proposed change.
+
 ## 1.3.1 — 2026-10-03
 
 - Explain support automation before introducing tokens, JSON, TOON and domain contracts. Preserve the animated landing.

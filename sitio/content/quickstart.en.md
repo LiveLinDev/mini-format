@@ -8,10 +8,10 @@ A company receives complaints and questions. Its app asks AI to interpret each m
 
 ## 1. Install and open the wizard
 
-[Download the package](/downloads/mini-format-1.3.1.zip) and extract it. From that directory:
+[Download the package](/downloads/mini-format-1.3.2.zip) and extract it. From that directory:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.1-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.2-py3-none-any.whl
 mini setup
 ```
 
@@ -47,7 +47,7 @@ No code yet? Keep the toolkit. The resume command is saved in `README.md` and `G
 mini integrate path/to/app.py --bundle .mini --lang en
 ```
 
-Locate the call requesting JSON. The command prepares `integration/INTEGRATE.md` with actual contract and prompt paths and a diff for compatible code. Add `--apply` for the synchronous Python chat completions followed by `json.loads` pattern; it retains a backup.
+Locate the call requesting JSON. The command prepares `integration/INTEGRATE.md` with actual contract and prompt paths and a diff for compatible code. Add `--apply` for one of the supported Python patterns; it retains a backup. Supported: the OpenAI SDK (`chat.completions.create` followed by `json.loads`) and a `requests.post` or `httpx.post` call to a chat endpoint that requests a JSON `response_format`, such as the DeepSeek API. In that case only the call changes: the app keeps its URL, headers, error handling and JSON reader. A response cut by the output limit keeps its complete records and only the missing ones are requested.
 
 For other SDKs, asynchronous code or languages, give the guide to your coding AI. Read the generated prompt, change the call's output format and connect its callback to `Workflow.run`. Disable API JSON-only mode to receive .mini.
 

@@ -25,7 +25,8 @@ def _style(text: str, code: str) -> str:
 
 def _ask(label: str, default: str = "") -> str:
     suffix = f" [{default}]" if default else ""
-    answer = input(f"  {label}{suffix}  › ").strip()
+    # Some shells (PowerShell with UTF-8 output encoding) prefix piped answers with a BOM.
+    answer = input(f"  {label}{suffix}  › ").replace("﻿", "").strip()
     return answer or default
 
 
@@ -170,9 +171,6 @@ def run() -> int:
                 f"  prompt.{lang}.md: instructions your code will send to AI."))
         print(t("  workflow.py: valida, repara, vuelve a comprobar y entrega JSON a tu aplicación.",
                 "  workflow.py: validates, repairs, checks again and delivers JSON to your application."))
-        print(t(f"  Prueba: copia el contenido de {destination / 'try-prompt.md'} a tu IA. Ya incluye el formato.",
-                f"  Test: paste the contents of {destination / 'try-prompt.md'} into your AI. The format is included."))
-        print(f'  python "{destination / "workflow.py"}" response.mini --out result.json')
         print(t("\n  Ahora conectamos el formato al código que llama a tu IA.",
                 "\n  Now connect the format to the code that calls your AI."))
         print(t("  1 Todavía no tengo un flujo   2 Elegir mi archivo   3 Buscar en mi proyecto",
@@ -192,19 +190,26 @@ def run() -> int:
             report = prepare(project, destination, lang=lang, apply=False)
             print(t("  Guía de integración: ", "  Integration guide: ") + report["plan"])
             if report["supported"]:
-                print(t("  Encontré una llamada Python compatible. El diff muestra el cambio propuesto.",
-                        "  Found a supported Python call. The diff shows the proposed change."))
+                print(t(f"  Encontré la llamada a la IA en {report['file']}. Cambio propuesto:",
+                        f"  Found the AI call in {report['file']}. Proposed change:"))
+                diff = Path(report["diff"]).read_text(encoding="utf-8").splitlines()
+                for line in [l for l in diff if l[:1] in "+-" and not l.startswith(("+++", "---"))][:12]:
+                    print("    " + line.rstrip())
                 print(t("  1 Dejar preparado   2 Conectar ahora (guarda una copia del original)",
                         "  1 Keep prepared   2 Connect now (backs up the original)"))
                 if _choice(t("Cambio de código", "Code change"), ("1", "2"), lang) == "2":
                     report = prepare(project, destination, lang=lang, apply=True)
-                    print(t("  Código conectado: la IA responde en .mini; tu aplicación recibe JSON.",
-                            "  Code connected: AI responds in .mini; your application receives JSON."))
+                    print(_style(t("  ✓ Código conectado: la IA responde en .mini; tu aplicación recibe el mismo JSON.",
+                                   "  ✓ Code connected: AI responds in .mini; your application receives the same JSON."), "1;32"))
+                    print(t(f"  Copia del original: {report['backup']}", f"  Original backup: {report['backup']}"))
             else:
                 print(t("  Entrega INTEGRATE.md a tu IA de código para adaptar esta llamada y conectar el workflow.",
                         "  Give INTEGRATE.md to your coding AI to adapt this call and connect the workflow."))
         resume = f'mini integrate "{project}" --bundle "{destination}" --lang {lang}'
         if integration == "1":
+            print(t(f"  Prueba sin código: copia el contenido de {destination / 'try-prompt.md'} a tu IA y valida su respuesta con:",
+                    f"  Test without code: paste the contents of {destination / 'try-prompt.md'} into your AI and check its answer with:"))
+            print(f'  python "{destination / "workflow.py"}" response.mini --out result.json')
             print(t("  Tu kit está listo. Cuando tengas el archivo que llama a la IA, sustituye la ruta en:",
                     "  Your toolkit is ready. Once you have the AI call file, replace the path in:"))
         else:
