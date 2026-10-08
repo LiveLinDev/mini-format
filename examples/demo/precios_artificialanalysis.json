@@ -1,0 +1,742 @@
+{
+ "fuente": "Artificial Analysis · LLM Leaderboard",
+ "url": "https://artificialanalysis.ai/leaderboards/models",
+ "consultado": "2026-10-08",
+ "unidad": "USD por millón de tokens",
+ "nota": "Precio de referencia de la API publicado por Artificial Analysis (columnas Input Price y Output Price). Las variantes de esfuerzo de razonamiento de un mismo modelo comparten precio y se agrupan; se excluyen los modelos sin precio publicado.",
+ "equivalencias": {
+  "deepseek-chat": "DeepSeek V4.1 Flash"
+ },
+ "equivalencias_fuente": "GET https://api.deepseek.com/models del 08/10/2026: deepseek-chat responde como deepseek-flash (DeepSeek-V4.1-Flash).",
+ "defecto": "DeepSeek V4.1 Flash",
+ "seleccion": [
+  "DeepSeek V4.1 Flash",
+  "DeepSeek V4 Pro 0813",
+  "GPT-6 Luna",
+  "GPT-6.1 Sol",
+  "GPT-5.6 Terra",
+  "GPT-6 Astra",
+  "Claude Haiku 5.5",
+  "Claude Sonnet 5.5",
+  "Claude Opus 5.5",
+  "Gemini 3.8 Flash",
+  "Gemini 4 Argon",
+  "Grok 4.7",
+  "Qwen3.8 Max (0902)",
+  "Kimi K3",
+  "GLM-5.3",
+  "Mistral Large 4 Preview",
+  "Llama 4 Maverick",
+  "MiniMax-M3"
+ ],
+ "modelos": [
+  {
+   "modelo": "Claude Opus 5.5",
+   "creador": "Anthropic",
+   "entrada": 4,
+   "salida": 20
+  },
+  {
+   "modelo": "Claude Sonnet 5.5",
+   "creador": "Anthropic",
+   "entrada": 2,
+   "salida": 10
+  },
+  {
+   "modelo": "Claude Fable 5.1",
+   "creador": "Anthropic",
+   "entrada": 10,
+   "salida": 50
+  },
+  {
+   "modelo": "GPT-6 Astra",
+   "creador": "OpenAI",
+   "entrada": 10,
+   "salida": 50
+  },
+  {
+   "modelo": "Gemini 4 Argon",
+   "creador": "Google",
+   "entrada": 2,
+   "salida": 10
+  },
+  {
+   "modelo": "GPT-6.1 Sol",
+   "creador": "OpenAI",
+   "entrada": 2,
+   "salida": 10
+  },
+  {
+   "modelo": "Muse Spark 1.3",
+   "creador": "Meta",
+   "entrada": 1.25,
+   "salida": 4.25
+  },
+  {
+   "modelo": "Grok 4.7",
+   "creador": "SpaceXAI",
+   "entrada": 2,
+   "salida": 6
+  },
+  {
+   "modelo": "MiMo-V2.6-Pro",
+   "creador": "Xiaomi",
+   "entrada": 0.43,
+   "salida": 0.87
+  },
+  {
+   "modelo": "Qwen3.8 Max (0902)",
+   "creador": "Alibaba",
+   "entrada": 2,
+   "salida": 6
+  },
+  {
+   "modelo": "GLM-5.3",
+   "creador": "Z AI",
+   "entrada": 1.4,
+   "salida": 4.4
+  },
+  {
+   "modelo": "Step 5 Preview",
+   "creador": "StepFun",
+   "entrada": 1,
+   "salida": 2.7
+  },
+  {
+   "modelo": "Kimi K3",
+   "creador": "Kimi",
+   "entrada": 3,
+   "salida": 15
+  },
+  {
+   "modelo": "Claude Haiku 5.5",
+   "creador": "Anthropic",
+   "entrada": 0.1,
+   "salida": 0.5
+  },
+  {
+   "modelo": "GPT-5.6 Terra",
+   "creador": "OpenAI",
+   "entrada": 2,
+   "salida": 12
+  },
+  {
+   "modelo": "GLM-5.3-Flash",
+   "creador": "Z AI",
+   "entrada": 0.15,
+   "salida": 0.5
+  },
+  {
+   "modelo": "Ling 3.1 Flash",
+   "creador": "InclusionAI",
+   "entrada": 0.3,
+   "salida": 0.9
+  },
+  {
+   "modelo": "Gemini 3.8 Flash",
+   "creador": "Google",
+   "entrada": 0.75,
+   "salida": 3.75
+  },
+  {
+   "modelo": "Qwen3.8 2.4T A95B",
+   "creador": "Alibaba",
+   "entrada": 2,
+   "salida": 6
+  },
+  {
+   "modelo": "Qwen3.8-Flash-Next",
+   "creador": "Alibaba",
+   "entrada": 0.15,
+   "salida": 0.47
+  },
+  {
+   "modelo": "DeepSeek V4.1 Flash",
+   "creador": "DeepSeek",
+   "entrada": 0.3,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Mistral Large 4 Preview",
+   "creador": "Mistral",
+   "entrada": 1.36,
+   "salida": 4.18
+  },
+  {
+   "modelo": "GPT-6 Luna",
+   "creador": "OpenAI",
+   "entrada": 0.1,
+   "salida": 0.5
+  },
+  {
+   "modelo": "MiMo-V2.6-Flash",
+   "creador": "Xiaomi",
+   "entrada": 0.14,
+   "salida": 0.28
+  },
+  {
+   "modelo": "DeepSeek V4 Pro 0813",
+   "creador": "DeepSeek",
+   "entrada": 1.32,
+   "salida": 3.96
+  },
+  {
+   "modelo": "DeepSeek V4 Flash Vision",
+   "creador": "DeepSeek",
+   "entrada": 0.44,
+   "salida": 1.32
+  },
+  {
+   "modelo": "Qwen3.8 27B",
+   "creador": "Alibaba",
+   "entrada": 0.5,
+   "salida": 3
+  },
+  {
+   "modelo": "GPT-5.3 Codex",
+   "creador": "OpenAI",
+   "entrada": 1.75,
+   "salida": 14
+  },
+  {
+   "modelo": "K2 Horizon 375B A23B",
+   "creador": "Institute of Foundation Models",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Gemini 3.1 Pro Preview",
+   "creador": "Google",
+   "entrada": 2,
+   "salida": 12
+  },
+  {
+   "modelo": "MiniMax-M3",
+   "creador": "MiniMax",
+   "entrada": 0.3,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Solar Pro 4",
+   "creador": "Upstage",
+   "entrada": 0.3,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Quasar 438B",
+   "creador": "Multiverse Computing",
+   "entrada": 0.6,
+   "salida": 1.8
+  },
+  {
+   "modelo": "Apodex 1.1",
+   "creador": "Apodex",
+   "entrada": 0.3,
+   "salida": 3
+  },
+  {
+   "modelo": "GPT-5.5 Instant (June 2026)",
+   "creador": "OpenAI",
+   "entrada": 5,
+   "salida": 30
+  },
+  {
+   "modelo": "Kimi K2.7 Code",
+   "creador": "Kimi",
+   "entrada": 0.95,
+   "salida": 4
+  },
+  {
+   "modelo": "Inkling Small",
+   "creador": "Thinking Machines",
+   "entrada": 0.3,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Hy3",
+   "creador": "Tencent",
+   "entrada": 0.14,
+   "salida": 0.55
+  },
+  {
+   "modelo": "Qwen3.7 Plus",
+   "creador": "Alibaba",
+   "entrada": 0.4,
+   "salida": 1.6
+  },
+  {
+   "modelo": "Inkling",
+   "creador": "Thinking Machines",
+   "entrada": 1,
+   "salida": 4.05
+  },
+  {
+   "modelo": "Ling-3.0-flash-VL",
+   "creador": "InclusionAI",
+   "entrada": 0.07,
+   "salida": 0.22
+  },
+  {
+   "modelo": "Solar Mini 4",
+   "creador": "Upstage",
+   "entrada": 0.1,
+   "salida": 0.4
+  },
+  {
+   "modelo": "Nemotron 3 Ultra",
+   "creador": "NVIDIA",
+   "entrada": 0.6,
+   "salida": 2.5
+  },
+  {
+   "modelo": "Ling-3.0-flash-Fin",
+   "creador": "InclusionAI",
+   "entrada": 0.07,
+   "salida": 0.22
+  },
+  {
+   "modelo": "Gemini 3.5 Flash-Lite",
+   "creador": "Google",
+   "entrada": 0.3,
+   "salida": 2.5
+  },
+  {
+   "modelo": "G9v3-39A5B",
+   "creador": "AI9Stars",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "KAT-Coder-Pro V2",
+   "creador": "KwaiKAT",
+   "entrada": 0.3,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Qwen3.5 397B A17B",
+   "creador": "Alibaba",
+   "entrada": 0.6,
+   "salida": 3.6
+  },
+  {
+   "modelo": "Qwen3.5 Omni Plus",
+   "creador": "Alibaba",
+   "entrada": 0.4,
+   "salida": 4.8
+  },
+  {
+   "modelo": "o3",
+   "creador": "OpenAI",
+   "entrada": 2,
+   "salida": 8
+  },
+  {
+   "modelo": "LongCat 2.0",
+   "creador": "LongCat",
+   "entrada": 0.3,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Qwen3.6 35B A3B",
+   "creador": "Alibaba",
+   "entrada": 0.38,
+   "salida": 2.25
+  },
+  {
+   "modelo": "Qwen3.5 122B A10B",
+   "creador": "Alibaba",
+   "entrada": 0.4,
+   "salida": 3.2
+  },
+  {
+   "modelo": "Muse Glimmer",
+   "creador": "Meta",
+   "entrada": 0.32,
+   "salida": 1.35
+  },
+  {
+   "modelo": "Claude 4.5 Haiku",
+   "creador": "Anthropic",
+   "entrada": 1,
+   "salida": 5
+  },
+  {
+   "modelo": "Gemma 4 26B A4B",
+   "creador": "Google",
+   "entrada": 0.1,
+   "salida": 0.37
+  },
+  {
+   "modelo": "Ring-2.6-1T",
+   "creador": "InclusionAI",
+   "entrada": 0.3,
+   "salida": 2.5
+  },
+  {
+   "modelo": "Granite 4.2 30B",
+   "creador": "IBM",
+   "entrada": 0.16,
+   "salida": 0.65
+  },
+  {
+   "modelo": "Gemma 4 31B",
+   "creador": "Google",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Mistral Medium 3.5",
+   "creador": "Mistral",
+   "entrada": 1.5,
+   "salida": 7.5
+  },
+  {
+   "modelo": "Gemma 4 12B",
+   "creador": "Google",
+   "entrada": 0.1,
+   "salida": 0.3
+  },
+  {
+   "modelo": "Nova 2.0 Pro Preview",
+   "creador": "Amazon",
+   "entrada": 1.25,
+   "salida": 10
+  },
+  {
+   "modelo": "Nova 2.0 Omni",
+   "creador": "Amazon",
+   "entrada": 0.3,
+   "salida": 2.5
+  },
+  {
+   "modelo": "Apriel-v1.6-15B-Thinker",
+   "creador": "ServiceNow",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Nova 2.0 Lite",
+   "creador": "Amazon",
+   "entrada": 0.3,
+   "salida": 2.5
+  },
+  {
+   "modelo": "Qwen3.5 9B",
+   "creador": "Alibaba",
+   "entrada": 0.17,
+   "salida": 0.25
+  },
+  {
+   "modelo": "Command A+",
+   "creador": "Cohere",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Qwen3.5 4B",
+   "creador": "Alibaba",
+   "entrada": 0.03,
+   "salida": 0.15
+  },
+  {
+   "modelo": "Nemotron 3.5 Lightning",
+   "creador": "NVIDIA",
+   "entrada": 0.06,
+   "salida": 0.2
+  },
+  {
+   "modelo": "Nemotron 3 Super",
+   "creador": "NVIDIA",
+   "entrada": 0.3,
+   "salida": 0.9
+  },
+  {
+   "modelo": "Qwen3.5 Omni Flash",
+   "creador": "Alibaba",
+   "entrada": 0.1,
+   "salida": 0.8
+  },
+  {
+   "modelo": "Mercury 2.5",
+   "creador": "Inception",
+   "entrada": 0.25,
+   "salida": 0.75
+  },
+  {
+   "modelo": "gpt-oss-120b",
+   "creador": "OpenAI",
+   "entrada": 0.15,
+   "salida": 0.59
+  },
+  {
+   "modelo": "Mistral Small 4",
+   "creador": "Mistral",
+   "entrada": 0.15,
+   "salida": 0.6
+  },
+  {
+   "modelo": "Qwen3 Next 80B A3B",
+   "creador": "Alibaba",
+   "entrada": 0.15,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Granite 4.2 8B",
+   "creador": "IBM",
+   "entrada": 0.06,
+   "salida": 0.25
+  },
+  {
+   "modelo": "Ling 3.0 Tiny",
+   "creador": "InclusionAI",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "G9v3-3B",
+   "creador": "AI9Stars",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Trinity Large Thinking",
+   "creador": "Arcee AI",
+   "entrada": 0.25,
+   "salida": 0.8
+  },
+  {
+   "modelo": "Nemotron 3 Nano Omni 30B A3B",
+   "creador": "NVIDIA",
+   "entrada": 0.3,
+   "salida": 0.9
+  },
+  {
+   "modelo": "Llama 4 Maverick",
+   "creador": "Meta",
+   "entrada": 0.25,
+   "salida": 0.87
+  },
+  {
+   "modelo": "gpt-oss-20b",
+   "creador": "OpenAI",
+   "entrada": 0.07,
+   "salida": 0.21
+  },
+  {
+   "modelo": "North Mini Code",
+   "creador": "Cohere",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Qwen3 Coder Next",
+   "creador": "Alibaba",
+   "entrada": 0.35,
+   "salida": 1.2
+  },
+  {
+   "modelo": "Granite 4.2 3B",
+   "creador": "IBM",
+   "entrada": 0.03,
+   "salida": 0.12
+  },
+  {
+   "modelo": "Gemma 4 E4B",
+   "creador": "Google",
+   "entrada": 0.02,
+   "salida": 0.1
+  },
+  {
+   "modelo": "Nemotron 3 Nano",
+   "creador": "NVIDIA",
+   "entrada": 0.05,
+   "salida": 0.2
+  },
+  {
+   "modelo": "Sarvam 105B",
+   "creador": "Sarvam",
+   "entrada": 0.04,
+   "salida": 0.17
+  },
+  {
+   "modelo": "Magistral Small 1.2",
+   "creador": "Mistral",
+   "entrada": 0.5,
+   "salida": 1.5
+  },
+  {
+   "modelo": "LFM2.5-2.6B",
+   "creador": "Liquid AI",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Llama 4 Scout",
+   "creador": "Meta",
+   "entrada": 0.19,
+   "salida": 0.68
+  },
+  {
+   "modelo": "Qwen3 Omni 30B A3B",
+   "creador": "Alibaba",
+   "entrada": 0.25,
+   "salida": 0.97
+  },
+  {
+   "modelo": "Llama 3.3 70B",
+   "creador": "Meta",
+   "entrada": 0.71,
+   "salida": 0.72
+  },
+  {
+   "modelo": "ERNIE 4.5 300B A47B",
+   "creador": "Baidu",
+   "entrada": 0.28,
+   "salida": 1.1
+  },
+  {
+   "modelo": "Hermes 4 405B",
+   "creador": "Nous Research",
+   "entrada": 1,
+   "salida": 3
+  },
+  {
+   "modelo": "NVIDIA Nemotron Nano 9B V2",
+   "creador": "NVIDIA",
+   "entrada": 0.04,
+   "salida": 0.16
+  },
+  {
+   "modelo": "Ring-flash-2.0",
+   "creador": "InclusionAI",
+   "entrada": 0.14,
+   "salida": 0.57
+  },
+  {
+   "modelo": "Olmo 3.1 32B Think",
+   "creador": "Allen Institute for AI",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Command A",
+   "creador": "Cohere",
+   "entrada": 2.5,
+   "salida": 10
+  },
+  {
+   "modelo": "Sarvam 30B",
+   "creador": "Sarvam",
+   "entrada": 0.03,
+   "salida": 0.11
+  },
+  {
+   "modelo": "Celeris-1",
+   "creador": "Celeris",
+   "entrada": 0.2,
+   "salida": 0.7
+  },
+  {
+   "modelo": "Phi-4 Mini",
+   "creador": "Microsoft",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Granite 4.0 H Small",
+   "creador": "IBM",
+   "entrada": 0.06,
+   "salida": 0.25
+  },
+  {
+   "modelo": "Ministral 3 14B",
+   "creador": "Mistral",
+   "entrada": 0.2,
+   "salida": 0.2
+  },
+  {
+   "modelo": "Phi-4",
+   "creador": "Microsoft",
+   "entrada": 0.13,
+   "salida": 0.5
+  },
+  {
+   "modelo": "Nova Micro",
+   "creador": "Amazon",
+   "entrada": 0.04,
+   "salida": 0.14
+  },
+  {
+   "modelo": "NVIDIA Nemotron Nano 12B v2 VL",
+   "creador": "NVIDIA",
+   "entrada": 0.2,
+   "salida": 0.6
+  },
+  {
+   "modelo": "Phi-4 Multimodal",
+   "creador": "Microsoft",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Reka Flash 3",
+   "creador": "Reka AI",
+   "entrada": 0.2,
+   "salida": 0.8
+  },
+  {
+   "modelo": "Ministral 3 8B",
+   "creador": "Mistral",
+   "entrada": 0.15,
+   "salida": 0.15
+  },
+  {
+   "modelo": "Llama 3.2 11B (Vision)",
+   "creador": "Meta",
+   "entrada": 0.34,
+   "salida": 0.34
+  },
+  {
+   "modelo": "Olmo 3 7B",
+   "creador": "Allen Institute for AI",
+   "entrada": 0.1,
+   "salida": 0.2
+  },
+  {
+   "modelo": "Apertus 70B Instruct",
+   "creador": "Swiss AI Initiative",
+   "entrada": 0.82,
+   "salida": 2.92
+  },
+  {
+   "modelo": "Ministral 3 3B",
+   "creador": "Mistral",
+   "entrada": 0.1,
+   "salida": 0.1
+  },
+  {
+   "modelo": "Tiny Aya Global",
+   "creador": "Cohere",
+   "entrada": 0,
+   "salida": 0
+  },
+  {
+   "modelo": "Apertus 8B Instruct",
+   "creador": "Swiss AI Initiative",
+   "entrada": 0.1,
+   "salida": 0.2
+  },
+  {
+   "modelo": "GPT-6 Sol (Daybreak Blue, max)",
+   "creador": "OpenAI",
+   "entrada": 2,
+   "salida": 10
+  },
+  {
+   "modelo": "Cogito v2.1",
+   "creador": "Deep Cogito",
+   "entrada": 1.25,
+   "salida": 1.25
+  }
+ ]
+}

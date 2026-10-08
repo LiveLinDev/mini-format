@@ -1084,6 +1084,11 @@ def construir_demo() -> None:
     datos = {k: datos[k] for k in ("contrato", "esquema", "mensajes", "grabaciones", "prompt", "errores", "erroresEn")}
     # salidas reales de la CLI para el panel de terminal (examples/demo/generar_terminal.py)
     datos["terminal"] = json.loads((RAIZ / "examples" / "demo" / "terminal.json").read_text(encoding="utf-8"))
+    # precio de los tokens de salida por modelo (consulta fechada a Artificial Analysis)
+    precios = json.loads((RAIZ / "examples" / "demo" / "precios_artificialanalysis.json").read_text(encoding="utf-8"))
+    por_nombre = {m["modelo"]: m for m in precios["modelos"]}
+    datos["precios"] = {k: precios[k] for k in ("fuente", "url", "consultado", "defecto", "equivalencias")}
+    datos["precios"]["modelos"] = [por_nombre[n] for n in precios["seleccion"]]
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     pagina = (RAIZ / "examples" / "demo" / "plantilla.html").read_text(encoding="utf-8")
     for marca, valor in [("__CABEZA__", cabeza()),

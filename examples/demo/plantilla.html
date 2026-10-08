@@ -143,6 +143,19 @@ __CABEZA__
   .dm-reparo.hecho { border-color: rgb(var(--ok) / .4); background: rgb(var(--ok) / .07); }
 
   /* paso 5: resultado */
+  .dm-costo { margin-top: 1.2rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: 1rem; background: rgb(var(--subtle)); }
+  .dm-costo .cab { display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; margin-bottom: .8rem; }
+  .dm-costo label { font-size: .85rem; color: rgb(var(--fg-muted)); }
+  .dm-costo select { font: inherit; font-size: .85rem; padding: .35rem .5rem; border: 1px solid rgb(var(--line)); border-radius: var(--r);
+                     background: rgb(var(--raised)); color: rgb(var(--fg)); max-width: 100%; }
+  .dm-costo-cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+  .dm-costo-cifras > div { background: rgb(var(--raised)); border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .7rem .8rem; }
+  .dm-costo-cifras span { display: block; font-size: .75rem; color: rgb(var(--fg-muted)); }
+  .dm-costo-cifras b { display: block; font-family: var(--f-mono); font-size: 1.35rem; margin: .15rem 0; }
+  .dm-costo-cifras small { font-size: .72rem; color: rgb(var(--fg-faint)); }
+  .dm-costo-cifras .mini b { color: rgb(var(--accent)); }
+  .dm-costo-cifras .bien b { color: rgb(var(--ok)); }
+  .dm-costo .dm-nota a { color: rgb(var(--accent)); }
   .dm-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
   .dm-kpi { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: 1rem; background: rgb(var(--subtle)); }
   .dm-kpi b { display: block; font-family: var(--f-mono); font-size: clamp(1.7rem, 3.5vw, 2.4rem); line-height: 1.1; }
@@ -205,6 +218,7 @@ __CABEZA__
   @media (max-width: 860px) {
     .dm-campos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .dm-compara, .dm-situaciones, .dm-kpis, .dm-gen { grid-template-columns: 1fr; }
+    .dm-costo-cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .dm-gen .fl { transform: rotate(90deg); height: 1.2rem; }
     .dm-consola .bar { flex-wrap: wrap; } .dm-consola .titulo { flex-basis: calc(100% - 3rem); }
     .dm-progreso .t { display: none; }
@@ -778,6 +792,7 @@ __PIE__
       '<div class="dm-barra"><span>JSON</span><span class="b" data-w="' + (100 * tokJson / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokJson) + "</span></div></div>" +
       '<p class="dm-nota">' + t(["Tokens de respuesta en total" + (estado.rep ? ", incluida la reparación de .mini" : "") + (reintento ? " y el nuevo pedido completo que necesita JSON" : "") + ".",
                                 "Total answer tokens" + (estado.rep ? ", including the .mini repair" : "") + (reintento ? " and the full new request JSON needs" : "") + "."]) + "</p>" +
+      bloqueCosto(tokMini, tokJson) +
       '<div class="dm-tabla"><table><thead><tr><th>id</th><th>' + t(["Prioridad", "Priority"]) + "</th><th>" + t(["Categoría", "Category"]) + "</th><th>" +
       t(["Resumen", "Summary"]) + "</th><th>" + t(["Horas", "Hours"]) + "</th></tr></thead><tbody>" + filas + "</tbody></table></div>" +
       "<details><summary>" + t(["Ver el JSON que recibe la aplicación", "See the JSON the application receives"]) + "</summary><pre>" + esc(JSON.stringify(salida, null, 2)) + "</pre></details>" +
@@ -786,6 +801,50 @@ __PIE__
   function enganchar5() {
     requestAnimationFrame(() => document.querySelectorAll(".dm-barra .b").forEach((b) => { b.style.width = b.dataset.w + "%"; }));
     $("#otra").addEventListener("click", () => { estado.mini = estado.json = estado.rep = null; ir(3); });
+    $("#modeloPrecio").addEventListener("change", (ev) => {
+      try { localStorage.setItem(CLAVE_MODELO, ev.target.value); } catch (e) {}
+      $("#costoCifras").innerHTML = cifrasCosto(estado.costo.mini, estado.costo.json);
+    });
+  }
+
+  /* ============================================================ costo de la respuesta según el modelo
+     Precio de los tokens de salida publicado por Artificial Analysis (consulta fechada en precios_artificialanalysis.json). */
+  const PRECIOS = DATOS.precios;
+  const CLAVE_MODELO = "mini-demo-modelo-precio";
+  function modeloElegido() {
+    let nombre = PRECIOS.defecto;
+    try { nombre = localStorage.getItem(CLAVE_MODELO) || nombre; } catch (e) {}
+    return PRECIOS.modelos.find((m) => m.modelo === nombre) || PRECIOS.modelos[0];
+  }
+  function usd(x) {
+    const d = x >= 100 ? 0 : x >= 1 ? 2 : 4;
+    return "$" + x.toLocaleString(es() ? "es-PE" : "en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function cifrasCosto(tokMini, tokJson) {
+    const m = modeloElegido(), porToken = m.salida / 1e6;
+    const caja = (cls, titulo, grande, pie) => '<div class="' + cls + '"><span>' + titulo + "</span><b>" + grande + "</b><small>" + pie + "</small></div>";
+    const millon = t([" por un millón de respuestas", " per million answers"]);
+    return '<div class="dm-costo-cifras">' +
+      caja("", t(["Precio de salida", "Output price"]), usd(m.salida), t(["por millón de tokens", "per million tokens"])) +
+      caja("mini", t([".mini · por 1 000 respuestas", ".mini · per 1,000 answers"]), usd(tokMini * porToken * 1000), usd(tokMini * porToken * 1e6) + millon) +
+      caja("", t(["JSON · por 1 000 respuestas", "JSON · per 1,000 answers"]), usd(tokJson * porToken * 1000), usd(tokJson * porToken * 1e6) + millon) +
+      caja("bien", t(["Ahorro por un millón de respuestas", "Saving per million answers"]), usd((tokJson - tokMini) * porToken * 1e6),
+           Math.max(0, Math.round(100 * (1 - tokMini / tokJson))) + t([" % menos en tokens de salida", " % fewer output tokens"])) + "</div>";
+  }
+  function bloqueCosto(tokMini, tokJson) {
+    estado.costo = { mini: tokMini, json: tokJson };
+    const elegido = modeloElegido().modelo;
+    const opciones = PRECIOS.modelos.map((m) => '<option value="' + esc(m.modelo) + '"' + (m.modelo === elegido ? " selected" : "") + ">" +
+      esc(m.modelo) + " · " + esc(m.creador) + " — " + usd(m.salida) + "</option>").join("");
+    const fecha = PRECIOS.consultado.split("-").reverse().join("/");
+    return '<div class="dm-costo"><div class="cab"><b>' + t(["¿Cuánto cuesta esta respuesta?", "What does this answer cost?"]) + "</b><label>" +
+      t(["Modelo", "Model"]) + ' <select id="modeloPrecio">' + opciones + '</select></label></div><div id="costoCifras">' + cifrasCosto(tokMini, tokJson) + "</div>" +
+      '<p class="dm-nota">' + t(["Solo tokens de salida (la respuesta), con el precio de salida que publica ", "Output tokens only (the answer), at the output price published by "]) +
+      '<a href="' + esc(PRECIOS.url) + '" target="_blank" rel="noopener">Artificial Analysis</a>' +
+      t([" (consulta del " + fecha + "). La demostración usa deepseek-chat, que corresponde a " + PRECIOS.equivalencias["deepseek-chat"] +
+         ". Los tokens se cuentan con o200k y cada modelo cuenta distinto: el costo es una estimación.",
+         " (checked " + fecha + "). The demo uses deepseek-chat, which maps to " + PRECIOS.equivalencias["deepseek-chat"] +
+         ". Tokens are counted with o200k and each model counts differently: the cost is an estimate."]) + "</p></div>";
   }
 
   /* ============================================================ terminal: los comandos reales de cada paso
