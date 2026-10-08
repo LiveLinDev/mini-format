@@ -471,12 +471,17 @@ __PIE__
   function veredicto() {
     const m = estado.mini, j = estado.json;
     if (!m || !j) return "";
+    if (estado.escenario === "cortada" || m.cortada || j.cortada) {
+      const lm = leerMini(m.texto).records.length;
+      return '<div class="dm-veredicto">' + t(["Las dos respuestas se cortaron antes de terminar. En .mini llegaron completas " + lm + " de " + N +
+        " líneas; el JSON quedó abierto a la mitad. El siguiente paso muestra qué se puede usar de cada una.",
+        "Both answers were cut before finishing. In .mini, " + lm + " of " + N + " lines arrived complete; the JSON was left open halfway. " +
+        "The next step shows what can be used from each."]) + "</div>";
+    }
     const menos = j.tokens ? Math.round(100 * (1 - m.tokens / j.tokens)) : 0;
     return '<div class="dm-veredicto">' + t(["Para los mismos tickets, la IA escribió ", "For the same tickets, the AI wrote "]) + "<b>" + num(m.tokens) + " tokens " +
       t(["en .mini", "in .mini"]) + "</b>" + t([" frente a ", " versus "]) + "<b>" + num(j.tokens) + t([" en JSON", " in JSON"]) + "</b>" +
-      (menos > 0 ? t([": " + menos + " % menos texto que pagar.", ": " + menos + " % less text to pay for."]) : ".") +
-      (estado.escenario === "cortada" ? " " + t(["Las dos respuestas se cortaron al llegar al límite. El siguiente paso muestra qué se puede rescatar de cada una.",
-                                                 "Both answers were cut at the limit. The next step shows what can be rescued from each."]) : "") + "</div>";
+      (menos > 0 ? t([": " + menos + " % menos texto que pagar.", ": " + menos + " % less text to pay for."]) : ".") + "</div>";
   }
   function enganchar3() {
     document.querySelectorAll("[data-sit]").forEach((b) => b.addEventListener("click", () => {
@@ -538,8 +543,8 @@ __PIE__
     let jsonCuerpo;
     if (j.ilegible) {
       jsonCuerpo = '<div class="dm-json-roto"><span class="x">✗</span><b>' + t(["No se puede leer", "Cannot be read"]) + "</b><small>" +
-        t(["Al JSON cortado le falta el cierre. El programa no puede abrirlo y se pierden los diez tickets, incluso los que estaban completos.",
-           "The cut JSON lacks its closing. The program cannot open it and all ten tickets are lost, even the complete ones."]) + "</small></div>";
+        t(["Al JSON cortado le falta el cierre. El lector estándar de JSON no puede abrirlo, así que se pierden los diez tickets, incluso los que llegaron completos.",
+           "The cut JSON lacks its closing. A standard JSON reader cannot open it, so all ten tickets are lost, even the ones that arrived complete."]) + "</small></div>";
     } else if (j.malos.length) {
       jsonCuerpo = '<div class="dm-json-roto" style="color:rgb(190 110 0)"><span class="x">!</span><b>' + j.validos.length + t([" de ", " of "]) + N + t([" tickets válidos", " valid tickets"]) + "</b><small>" +
         j.malos.map((x) => esc(x.id + " · " + x.motivo)).join("<br>") + "<br>" + t(["Para corregirlo hay que volver a pedir la respuesta completa.", "Fixing it means requesting the whole answer again."]) + "</small></div>";
