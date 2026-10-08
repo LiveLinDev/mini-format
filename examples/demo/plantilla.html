@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="es" data-title-es="Demostración en vivo — mini-format" data-title-en="Live demo — mini-format">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demostración en vivo — mini-format</title>
+<meta name="description" content="El flujo completo de mini-format en una página: datos, reglas, respuesta de la IA en .mini y en JSON, validación, reparación selectiva y resultado.">
+__CABEZA__
+<style>
+  .dm { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
+  .dm, .dm * { box-sizing: border-box; }
+  .dm { max-width: 100%; overflow-wrap: anywhere; }
+  .dm-intro { max-width: 62rem; }
+  .dm-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .dm-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
+  .dm-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
+  .dm-ruta { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; margin: 1.6rem 0; padding: 0; list-style: none; }
+  .dm-ruta li { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .55rem .7rem; font-size: var(--fs-cap); background: rgb(var(--raised)); }
+  .dm-ruta li b { display: block; color: rgb(var(--accent)); font-family: var(--f-mono); }
+  .dm-ruta li.hecho { border-color: rgb(16 122 87 / .5); }
+  .dm-ruta li.hecho b { color: rgb(16 122 87); }
+  .dm-paso { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: clamp(1rem, 3vw, 1.5rem); background: rgb(var(--raised)); margin-top: 1.1rem; }
+  .dm-paso h2 { margin: 0 0 .3rem; font-size: var(--fs-h5); }
+  .dm-paso h2 .n { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: rgb(var(--accent)); color: #fff; font-size: .85rem; margin-right: .45rem; }
+  .dm-paso .sub { margin: 0 0 1rem; color: rgb(var(--fg-muted)); font-size: var(--fs-cap); max-width: 62rem; }
+  .dm-paso[aria-disabled="true"] { opacity: .45; }
+  .dm table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .dm th, .dm td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid rgb(var(--line)); vertical-align: top; }
+  .dm th { white-space: nowrap; font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em; color: rgb(var(--fg-muted)); }
+  .dm .tabla { overflow-x: auto; }
+  .dm pre { margin: 0; padding: .8rem 1rem; border-radius: var(--r); background: rgb(var(--subtle)); overflow: auto; font-size: .76rem; line-height: 1.5; max-height: 20rem; white-space: pre-wrap; word-break: break-word; }
+  .dm-fila { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .8rem 0; }
+  .dm-fila .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; }
+  .dm-seg { display: inline-flex; border: 1px solid rgb(var(--line)); border-radius: 99px; overflow: hidden; }
+  .dm-seg button { font: inherit; font-size: var(--fs-cap); padding: .4rem .8rem; border: 0; background: transparent; color: rgb(var(--fg-muted)); cursor: pointer; }
+  .dm-seg button[aria-pressed="true"] { background: rgb(var(--accent)); color: #fff; font-weight: 600; }
+  .dm input[type="password"] { font: inherit; font-size: .8rem; padding: .45rem .6rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle)); color: rgb(var(--fg)); min-width: 16rem; }
+  .dm .btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .dm-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .dm-col { min-width: 0; border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .8rem; }
+  .dm-col h3 { margin: 0 0 .5rem; font-size: 1rem; display: flex; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+  .dm-col h3 .tok { font-family: var(--f-mono); font-size: .8rem; color: rgb(var(--fg-muted)); font-weight: 600; }
+  .dm-col.mini { border-color: rgb(var(--accent) / .45); }
+  .dm-aviso { margin: .7rem 0; padding: .65rem .85rem; border-radius: var(--r); font-size: var(--fs-cap); }
+  .dm-aviso.bien { background: rgb(16 122 87 / .1); color: rgb(16 122 87); }
+  .dm-aviso.mal { background: rgb(220 38 38 / .1); color: rgb(185 28 28); }
+  .dm-aviso.info { background: rgb(var(--accent) / .08); color: rgb(var(--fg)); }
+  .dm-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .8rem; margin: 1rem 0; }
+  .dm-cifra { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .7rem .85rem; }
+  .dm-cifra .v { display: block; font-family: var(--f-mono); font-size: 1.5rem; font-weight: 700; }
+  .dm-cifra .k { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); }
+  .dm-cifra.bien .v { color: rgb(16 122 87); } .dm-cifra.mal .v { color: rgb(185 28 28); } .dm-cifra.acento .v { color: rgb(var(--accent)); }
+  .dm .cod { font-family: var(--f-mono); font-weight: 700; color: rgb(185 28 28); }
+  .dm .ok { color: rgb(16 122 87); font-weight: 700; }
+  .dm-barras { display: grid; gap: .5rem; margin: .8rem 0; }
+  .dm-barra { display: grid; grid-template-columns: 6.5rem 1fr 4.5rem; gap: .6rem; align-items: center; font-size: var(--fs-cap); }
+  .dm-barra .b { height: 1rem; border-radius: 4px; background: rgb(var(--fg-faint) / .5); }
+  .dm-barra.mini .b { background: rgb(var(--accent)); }
+  .dm-barra .num { font-family: var(--f-mono); text-align: right; }
+  .dm-nota { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); margin-top: .8rem; }
+  .dm details summary { cursor: pointer; font-size: var(--fs-cap); color: rgb(var(--accent)); margin: .5rem 0; }
+  [hidden] { display: none !important; }
+  @media (max-width: 760px) { .dm-dos { grid-template-columns: 1fr; } .dm-ruta { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .dm-fila .btn { width: 100%; } .dm input[type="password"] { min-width: 0; width: 100%; } }
+</style>
+</head>
+<body>
+__CABECERA__
+<main id="contenido" class="wrap dm">
+  <section class="dm-intro">
+    <p class="eyebrow"><span data-lang="es">Demostración en vivo</span><span data-lang="en" hidden>Live demo</span></p>
+    <h1><span data-lang="es">mini-format de principio a fin, en cinco pasos</span>
+        <span data-lang="en" hidden>mini-format end to end, in five steps</span></h1>
+    <p class="lead"><span data-lang="es">Una empresa recibe mensajes de sus clientes y le pide a una IA que los convierta en tickets. Aquí se pide lo mismo
+      dos veces: una en JSON, como se hace hoy, y otra en .mini. Se ve cuánto texto escribe la IA en cada caso, qué pasa cuando la respuesta
+      sale mal y cómo mini-format rescata y corrige solo lo necesario antes de entregar el JSON a la aplicación.</span>
+      <span data-lang="en" hidden>A company receives messages from its customers and asks an AI to turn them into tickets. The same request is made
+      twice: once in JSON, as it is done today, and once in .mini. You can see how much text the AI writes in each case, what happens when the
+      answer goes wrong and how mini-format rescues and fixes only what is needed before handing JSON to the application.</span></p>
+  </section>
+
+  <ol class="dm-ruta" id="ruta">
+    <li data-r="1"><b>1</b><span data-lang="es">Los datos que llegan</span><span data-lang="en" hidden>The incoming data</span></li>
+    <li data-r="2"><b>2</b><span data-lang="es">Las reglas (contrato)</span><span data-lang="en" hidden>The rules (contract)</span></li>
+    <li data-r="3"><b>3</b><span data-lang="es">La IA responde</span><span data-lang="en" hidden>The AI answers</span></li>
+    <li data-r="4"><b>4</b><span data-lang="es">Comprobar y reparar</span><span data-lang="en" hidden>Check and repair</span></li>
+    <li data-r="5"><b>5</b><span data-lang="es">Resultado</span><span data-lang="en" hidden>Result</span></li>
+  </ol>
+
+  <section class="dm-paso" id="paso1">
+    <h2><span class="n">1</span><span data-lang="es">Los datos que llegan</span><span data-lang="en" hidden>The incoming data</span></h2>
+    <p class="sub"><span data-lang="es">Diez mensajes escritos por clientes. La aplicación necesita convertir cada uno en un ticket organizado.</span>
+      <span data-lang="en" hidden>Ten messages written by customers. The application needs to turn each one into an organized ticket.</span></p>
+    <div class="tabla" id="mensajes"></div>
+  </section>
+
+  <section class="dm-paso" id="paso2">
+    <h2><span class="n">2</span><span data-lang="es">Las reglas: el contrato</span><span data-lang="en" hidden>The rules: the contract</span></h2>
+    <p class="sub"><span data-lang="es">El contrato dice, una sola vez, qué campos tiene cada ticket, en qué orden y qué valores acepta. Con él, la IA ya no
+      repite los nombres de los campos en cada ticket, y mini-format puede comprobar cada línea que recibe.</span>
+      <span data-lang="en" hidden>The contract states once which fields each ticket has, in which order and which values it accepts. With it, the AI no
+      longer repeats field names in every ticket, and mini-format can check every line it receives.</span></p>
+    <div class="tabla" id="campos"></div>
+    <details><summary><span data-lang="es">Ver la instrucción que recibe la IA en cada caso</span><span data-lang="en" hidden>See the instruction the AI receives in each case</span></summary>
+      <div class="dm-dos">
+        <div class="dm-col mini"><h3>.mini</h3><pre id="promptMini"></pre></div>
+        <div class="dm-col"><h3>JSON</h3><pre id="promptJson"></pre></div>
+      </div>
+    </details>
+  </section>
+
+  <section class="dm-paso" id="paso3">
+    <h2><span class="n">3</span><span data-lang="es">La IA responde, en .mini y en JSON</span><span data-lang="en" hidden>The AI answers, in .mini and in JSON</span></h2>
+    <p class="sub"><span data-lang="es">Se envía el mismo pedido dos veces. Elige si se usan respuestas grabadas de un modelo real (siempre iguales, sin clave) o
+      una llamada en vivo a DeepSeek con tu clave.</span>
+      <span data-lang="en" hidden>The same request is sent twice. Choose recorded answers from a real model (always the same, no key) or a live call to
+      DeepSeek with your key.</span></p>
+    <div class="dm-fila">
+      <span class="et"><span data-lang="es">Modelo:</span><span data-lang="en" hidden>Model:</span></span>
+      <span class="dm-seg" id="modo">
+        <button type="button" data-v="grabado" aria-pressed="true"><span data-lang="es">Respuestas grabadas</span><span data-lang="en" hidden>Recorded answers</span></button>
+        <button type="button" data-v="deepseek" aria-pressed="false"><span data-lang="es">DeepSeek en vivo</span><span data-lang="en" hidden>Live DeepSeek</span></button>
+      </span>
+    </div>
+    <div class="dm-fila" id="filaEscenario">
+      <span class="et"><span data-lang="es">Situación:</span><span data-lang="en" hidden>Situation:</span></span>
+      <span class="dm-seg" id="escenario">
+        <button type="button" data-v="ok" aria-pressed="false"><span data-lang="es">Todo sale bien</span><span data-lang="en" hidden>All goes well</span></button>
+        <button type="button" data-v="error" aria-pressed="true"><span data-lang="es">La IA comete un error</span><span data-lang="en" hidden>The AI makes a mistake</span></button>
+        <button type="button" data-v="cortada" aria-pressed="false"><span data-lang="es">La respuesta se corta</span><span data-lang="en" hidden>The answer gets cut</span></button>
+      </span>
+    </div>
+    <div class="dm-fila" id="filaVivo" hidden>
+      <label class="et" for="clave"><span data-lang="es">Clave de DeepSeek</span><span data-lang="en" hidden>DeepSeek key</span></label>
+      <input type="password" id="clave" autocomplete="off" spellcheck="false" placeholder="sk-...">
+      <span class="et"><span data-lang="es">Límite de respuesta:</span><span data-lang="en" hidden>Answer limit:</span></span>
+      <span class="dm-seg" id="limite">
+        <button type="button" data-v="2000" aria-pressed="true"><span data-lang="es">Normal (2 000 tokens)</span><span data-lang="en" hidden>Normal (2,000 tokens)</span></button>
+        <button type="button" data-v="250" aria-pressed="false"><span data-lang="es">Bajo (250): fuerza un corte</span><span data-lang="en" hidden>Low (250): forces a cut</span></button>
+      </span>
+    </div>
+    <p class="dm-nota" id="notaClave" hidden><span data-lang="es">La clave va solo de este navegador a DeepSeek; nunca a este sitio. Se guarda en la pestaña y se borra al cerrarla. Cada ejecución consume saldo de tu cuenta.</span>
+      <span data-lang="en" hidden>The key goes only from this browser to DeepSeek, never to this site. It is kept in this tab and cleared when it closes. Each run spends your account balance.</span></p>
+    <div class="dm-fila"><button type="button" class="btn btn-solid" id="pedir"><span data-lang="es">Pedir a la IA</span><span data-lang="en" hidden>Ask the AI</span></button></div>
+    <div id="res3"></div>
+  </section>
+
+  <section class="dm-paso" id="paso4" aria-disabled="true">
+    <h2><span class="n">4</span><span data-lang="es">mini-format comprueba y repara solo lo que falló</span><span data-lang="en" hidden>mini-format checks and repairs only what failed</span></h2>
+    <p class="sub"><span data-lang="es">Cada línea .mini se revisa contra el contrato. Las correctas se conservan; solo las que fallan, o las que faltan, se vuelven a pedir.
+      Con JSON, un solo problema obliga a leer o pedir de nuevo toda la respuesta.</span>
+      <span data-lang="en" hidden>Every .mini line is checked against the contract. Correct lines are kept; only failing or missing ones are requested again.
+      With JSON, a single problem forces reading or requesting the whole answer again.</span></p>
+    <div id="res4"><p class="dm-aviso info"><span data-lang="es">Primero pide la respuesta en el paso 3.</span><span data-lang="en" hidden>First request the answer in step 3.</span></p></div>
+  </section>
+
+  <section class="dm-paso" id="paso5" aria-disabled="true">
+    <h2><span class="n">5</span><span data-lang="es">Resultado para la aplicación</span><span data-lang="en" hidden>Result for the application</span></h2>
+    <p class="sub"><span data-lang="es">La aplicación recibe JSON, igual que antes. Lo que cambia es cuánto texto se pagó y cuántos tickets se salvaron.</span>
+      <span data-lang="en" hidden>The application receives JSON, as before. What changes is how much text was paid for and how many tickets were saved.</span></p>
+    <div id="res5"></div>
+  </section>
+</main>
+__PIE__
+<script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@3.0.1/dist/o200k_base.js" onerror="window.__tokFail=true"></script>
+<script>__MINI_JS__</script>
+<script>const DATOS = __DATOS__;</script>
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const es = () => document.documentElement.lang !== "en";
+  const t = (par) => par[es() ? 0 : 1];
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const C = MINI.normalizeContract(DATOS.contrato);
+  const CAMPOS = C.core;
+  const N = DATOS.mensajes.length;
+  const CLAVE_KEY = "mini-demo-clave";
+  const DEEPSEEK = { url: "https://api.deepseek.com/chat/completions", modelo: "deepseek-chat" };
+  const estado = { modo: "grabado", escenario: "error", limite: 2000, mini: null, json: null, rep: null };
+
+  const contar = (s) => (window.GPTTokenizer_o200k_base && window.GPTTokenizer_o200k_base.encode)
+    ? window.GPTTokenizer_o200k_base.encode(s || "").length : Math.round(new TextEncoder().encode(s || "").length / 3.6);
+  const num = (x) => Number(x).toLocaleString(es() ? "es-PE" : "en-US");
+
+  /* -------------------------------------------------------------- pasos 1 y 2 */
+  function pintarDatos() {
+    $("#mensajes").innerHTML = "<table><thead><tr><th>" + t(["Mensaje", "Message"]) + "</th><th>" + t(["Lo que escribió el cliente", "What the customer wrote"]) +
+      "</th></tr></thead><tbody>" + DATOS.mensajes.map((m) => "<tr><td><code>" + esc(m.id) + "</code></td><td>" + esc(m.mensaje) + "</td></tr>").join("") + "</tbody></table>";
+    const regla = (f) => f.type === "enum" ? t(["uno de: ", "one of: "]) + f.values.join(", ")
+      : f.type === "int" ? t(["número entero", "whole number"]) + (f.min !== undefined && f.min !== null ? t([" entre ", " between "]) + f.min + t([" y ", " and "]) + f.max : "")
+      : t(["texto", "text"]);
+    const explica = { id: ["código del ticket", "ticket code"], prioridad: ["urgencia", "urgency"], categoria: ["tipo de problema", "kind of problem"],
+                      resumen: ["qué pasó, en una frase", "what happened, in one sentence"], horas: ["horas estimadas de atención", "estimated hours of work"] };
+    $("#campos").innerHTML = "<table><thead><tr><th>#</th><th>" + t(["Campo", "Field"]) + "</th><th>" + t(["Qué significa", "Meaning"]) + "</th><th>" +
+      t(["Regla", "Rule"]) + "</th></tr></thead><tbody>" + CAMPOS.map((f, i) => "<tr><td>" + (i + 1) + "</td><td><code>" + esc(f.name) + "</code></td><td>" +
+      esc(t(explica[f.name] || ["", ""])) + "</td><td>" + esc(regla(f)) + "</td></tr>").join("") + "</tbody></table>" +
+      '<p class="dm-nota">' + t(["Así se ve un ticket en .mini, un valor tras otro en el orden del contrato:", "This is a ticket in .mini, one value after another in contract order:"]) +
+      " <code>T-1041|alta|acceso|No puede iniciar sesión|2</code></p>";
+    $("#promptMini").textContent = instruccionMini() + "\n\n" + pedido(DATOS.mensajes);
+    $("#promptJson").textContent = instruccionJson() + "\n\n" + pedido(DATOS.mensajes);
+  }
+  function instruccionMini() { return es() ? DATOS.prompt.es : DATOS.prompt.en; }
+  function instruccionJson() {
+    return (es() ? 'Eres el asistente de una mesa de ayuda. Responde únicamente con un objeto JSON de la forma {"tickets": [...]}, donde cada ticket cumple este JSON Schema:\n'
+                 : 'You are a help desk assistant. Answer only with a JSON object shaped {"tickets": [...]}, where every ticket satisfies this JSON Schema:\n') + DATOS.esquema;
+  }
+  function pedido(mensajes) {
+    return (es() ? "Convierte cada mensaje de cliente en un ticket de soporte. Usa el código del mensaje como id del ticket.\n"
+                 : "Turn each customer message into a support ticket. Use the message code as the ticket id.\n") +
+      mensajes.map((m) => m.id + ": " + m.mensaje).join("\n");
+  }
+
+  /* -------------------------------------------------------------- llamadas al modelo */
+  function clave() { try { return sessionStorage.getItem(CLAVE_KEY) || ""; } catch (e) { return $("#clave").value.trim(); } }
+  function llamar(sistema, usuario, maxTokens) {
+    const t0 = performance.now();
+    return fetch(DEEPSEEK.url, {
+      method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + ($("#clave").value.trim() || clave()) },
+      body: JSON.stringify({ model: DEEPSEEK.modelo, temperature: 0, max_tokens: maxTokens,
+                             messages: [{ role: "system", content: sistema }, { role: "user", content: usuario }] })
+    }).then((r) => r.text().then((crudo) => {
+      if (!r.ok) throw new Error("HTTP " + r.status + " · " + crudo.slice(0, 160));
+      const j = JSON.parse(crudo); const e = (j.choices || [{}])[0] || {};
+      return { texto: (e.message || {}).content || "", tokens: (j.usage || {}).completion_tokens || 0,
+               cortada: e.finish_reason === "length", ms: performance.now() - t0, real: true };
+    }));
+  }
+  function grabada(formato, escenario) {
+    const texto = DATOS.grabaciones[formato][escenario];
+    return new Promise((ok) => setTimeout(() => ok({ texto, tokens: contar(texto), cortada: escenario === "cortada", ms: 0, real: false }), 500));
+  }
+
+  /* -------------------------------------------------------------- lectura y validación */
+  function leerMini(texto) {
+    const doc = MINI.extractDocument(texto || "", C);
+    if (!doc.trim()) return { vacio: true, records: [], errores: [] };
+    const d = MINI.parse(doc, C, { strict: false });
+    return { doc, records: d.records, errores: (d.errors || []).filter((e) => e.line > 1), header: d.header || {} };
+  }
+  function validarTicket(tk) {
+    for (const f of CAMPOS) {
+      const v = tk[f.name];
+      if (v === undefined || v === null || v === "") return f.name + t([": falta el valor", ": missing value"]);
+      if (f.type === "enum" && f.values.indexOf(v) < 0) return f.name + ": '" + v + "' " + t(["no es un valor permitido", "is not an allowed value"]);
+      if (f.type === "int" && (typeof v !== "number" || Math.floor(v) !== v || (f.min != null && v < f.min) || (f.max != null && v > f.max)))
+        return f.name + ": '" + v + "' " + t(["está fuera de la regla", "breaks the rule"]);
+    }
+    return null;
+  }
+  function leerJson(texto) {
+    let limpio = (texto || "").trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
+    let obj;
+    try { obj = JSON.parse(limpio); } catch (e) { return { ilegible: true, motivo: e.message, validos: [], malos: [] }; }
+    const lista = Array.isArray(obj) ? obj : (obj.tickets || obj.records || []);
+    const validos = [], malos = [];
+    lista.forEach((tk) => { const m = validarTicket(tk); if (m) malos.push({ id: tk.id, motivo: m }); else validos.push(tk); });
+    return { ilegible: false, validos, malos };
+  }
+  const SIMPLE = {
+    E04: ["llegaron menos tickets de los anunciados", "fewer tickets arrived than announced"],
+    E05: ["la línea está incompleta o le sobran campos (por ejemplo, se cortó a la mitad)", "the line is incomplete or has extra fields (for example, it was cut in half)"],
+    E06: ["un valor no tiene el tipo esperado", "a value does not have the expected type"],
+    E07: ["una lista no tiene la cantidad de elementos esperada", "a list does not have the expected number of items"],
+    E10: ["un valor no está entre los permitidos por el contrato", "a value is not one of those the contract allows"],
+    E13: ["un número está fuera del rango permitido", "a number is outside the allowed range"]
+  };
+  const titulo = (cod) => SIMPLE[cod] ? t(SIMPLE[cod]) : ((es() ? DATOS.errores : DATOS.erroresEn)[cod] || "");
+
+  /* -------------------------------------------------------------- paso 3 */
+  function pedir() {
+    if (estado.modo === "deepseek" && !$("#clave").value.trim()) {
+      $("#res3").innerHTML = '<p class="dm-aviso mal">' + t(["Falta la clave de DeepSeek.", "The DeepSeek key is missing."]) + "</p>"; return;
+    }
+    if (estado.modo === "deepseek") { try { sessionStorage.setItem(CLAVE_KEY, $("#clave").value.trim()); } catch (e) {} }
+    $("#pedir").disabled = true; estado.rep = null;
+    $("#res3").innerHTML = '<p class="dm-aviso info">' + t(["Pidiendo a la IA las dos respuestas a la vez…", "Asking the AI for both answers at once…"]) + "</p>";
+    const usuario = pedido(DATOS.mensajes);
+    const p = estado.modo === "grabado"
+      ? Promise.all([grabada("mini", estado.escenario), grabada("json", estado.escenario)])
+      : Promise.all([llamar(instruccionMini(), usuario, estado.limite), llamar(instruccionJson(), usuario, estado.limite)]);
+    p.then(([m, j]) => { estado.mini = m; estado.json = j; pintar3(); pintar4(); pintar5(); })
+     .catch((e) => { $("#res3").innerHTML = '<p class="dm-aviso mal">' + t(["La llamada falló: ", "The call failed: "]) + esc(e.message) + "</p>"; })
+     .finally(() => { $("#pedir").disabled = false; });
+  }
+  function columna(clase, nombre, r) {
+    return '<div class="dm-col ' + clase + '"><h3>' + nombre + '<span class="tok">' + num(r.tokens) + " " + t(["tokens de respuesta", "answer tokens"]) +
+      (r.cortada ? " · " + t(["cortada", "cut"]) : "") + "</span></h3><pre>" + esc(r.texto || t(["(la IA no escribió nada)", "(the AI wrote nothing)"])) + "</pre></div>";
+  }
+  function pintar3() {
+    const m = estado.mini, j = estado.json;
+    const menos = j.tokens ? Math.round(100 * (1 - m.tokens / j.tokens)) : 0;
+    $("#res3").innerHTML = '<div class="dm-dos">' + columna("mini", ".mini", m) + columna("", "JSON", j) + "</div>" +
+      '<p class="dm-aviso info">' + t(["Para los mismos tickets, la IA escribió ", "For the same tickets, the AI wrote "]) + "<b>" + num(m.tokens) +
+      t([" tokens en .mini y ", " tokens in .mini and "]) + num(j.tokens) + t([" en JSON", " in JSON"]) + "</b>" +
+      (menos > 0 ? t([": " + menos + " % menos texto que pagar.", ": " + menos + " % less text to pay for."]) : ".") +
+      (m.real ? "" : " " + t(["(Respuestas grabadas de deepseek-chat; tokens contados con el tokenizador de GPT-4o.)", "(Recorded deepseek-chat answers; tokens counted with the GPT-4o tokenizer.)"])) + "</p>";
+    $("#ruta [data-r='3']").classList.add("hecho"); $("#ruta [data-r='1']").classList.add("hecho"); $("#ruta [data-r='2']").classList.add("hecho");
+  }
+
+  /* -------------------------------------------------------------- paso 4 */
+  function pintar4() {
+    $("#paso4").setAttribute("aria-disabled", "false");
+    const m = leerMini(estado.rep ? estado.rep.texto : estado.mini.texto), j = leerJson(estado.json.texto);
+    const lineas = (m.doc || "").split("\n");
+    const conError = new Set(m.errores.map((e) => (lineas[e.line - 1] || "").split("|")[0]));
+    const faltan = DATOS.mensajes.filter((x) => !m.records.some((r) => r.id === x.id) && !conError.has(x.id)).length;
+    let h = '<div class="dm-dos"><div class="dm-col mini"><h3>.mini</h3>';
+    h += '<div class="dm-cifras"><div class="dm-cifra bien"><span class="v">' + m.records.length + "/" + N + '</span><span class="k">' + t(["tickets correctos", "correct tickets"]) +
+         '</span></div><div class="dm-cifra ' + (m.errores.length ? "mal" : "") + '"><span class="v">' + m.errores.length + '</span><span class="k">' + t([m.errores.length === 1 ? "línea con error" : "líneas con error", m.errores.length === 1 ? "line with an error" : "lines with errors"]) +
+         '</span></div><div class="dm-cifra ' + (faltan ? "mal" : "") + '"><span class="v">' + faltan + '</span><span class="k">' + t(["tickets que faltan", "missing tickets"]) + "</span></div></div>";
+    if (m.errores.length) {
+      h += "<table><thead><tr><th>" + t(["Línea", "Line"]) + "</th><th>" + t(["Código", "Code"]) + "</th><th>" + t(["Qué pasó", "What happened"]) + "</th></tr></thead><tbody>" +
+        m.errores.map((e) => "<tr><td>" + e.line + '</td><td class="cod">' + esc(e.code) + "</td><td>" + esc(titulo(e.code) || e.message || "") + "</td></tr>").join("") + "</tbody></table>";
+    }
+    h += (m.errores.length || faltan)
+      ? '<p class="dm-aviso info">' + t(["Las " + m.records.length + " líneas correctas se guardan. Solo se volverá a pedir lo que falló o faltó.", "The " + m.records.length + " correct lines are kept. Only what failed or is missing will be requested again."]) + "</p>"
+      : '<p class="dm-aviso bien">' + t(["Todas las líneas cumplen el contrato.", "All lines meet the contract."]) + "</p>";
+    h += '</div><div class="dm-col"><h3>JSON</h3>';
+    if (j.ilegible) {
+      h += '<div class="dm-cifras"><div class="dm-cifra mal"><span class="v">0/' + N + '</span><span class="k">' + t(["tickets utilizables", "usable tickets"]) + "</span></div></div>" +
+        '<p class="dm-aviso mal">' + t(["El JSON no se puede leer (", "The JSON cannot be read ("]) + esc(j.motivo) + t(["): se pierde la respuesta completa, incluidos los tickets que estaban bien.", "): the whole answer is lost, including the tickets that were fine."]) + "</p>";
+    } else {
+      h += '<div class="dm-cifras"><div class="dm-cifra ' + (j.malos.length ? "mal" : "bien") + '"><span class="v">' + j.validos.length + "/" + N + '</span><span class="k">' + t(["tickets correctos", "correct tickets"]) + "</span></div></div>";
+      if (j.malos.length) h += '<p class="dm-aviso mal">' + j.malos.map((x) => esc(x.id + ": " + x.motivo)).join("<br>") + "<br>" +
+        t(["JSON no dice en qué parte del texto está el error: para corregirlo se vuelve a pedir la respuesta completa.", "JSON does not say where the error is in the text: fixing it means requesting the whole answer again."]) + "</p>";
+      else h += '<p class="dm-aviso bien">' + t(["Todos los tickets cumplen el esquema.", "All tickets meet the schema."]) + "</p>";
+    }
+    h += "</div></div>";
+    const hayQueReparar = (m.errores.length || faltan) && !estado.rep;
+    if (hayQueReparar) h += '<div class="dm-fila"><button type="button" class="btn btn-solid" id="reparar">' + t(["Reparar solo lo que falló", "Repair only what failed"]) + "</button></div>";
+    if (estado.rep) h += '<p class="dm-aviso bien">' + estado.rep.resumen + "</p>";
+    $("#res4").innerHTML = h;
+    if ($("#reparar")) $("#reparar").addEventListener("click", reparar);
+    if (!hayQueReparar) $("#ruta [data-r='4']").classList.add("hecho");
+  }
+
+  function reparar() {
+    $("#reparar").disabled = true;
+    const original = MINI.extractDocument(estado.mini.texto, C);
+    const sol = MINI.repairRequest(original, C, es() ? "es" : "en");
+    const lineasOk = {};
+    MINI.extractDocument(DATOS.grabaciones.mini.ok, C).split("\n").slice(1).forEach((l) => { lineasOk[l.split("|")[0]] = l; });
+    const vivo = estado.modo === "deepseek";
+    let tokens = 0, llamadas = 0;
+    const paso1 = !sol.needed ? Promise.resolve(original) : (() => {
+      llamadas++;
+      const pedirCorreccion = vivo ? llamar(sol.system, sol.user, 600)
+        : grabada("mini", "ok").then(() => {
+            const fisicas = original.split("\n");
+            const lineas = sol.lines.map((n) => lineasOk[(fisicas[n - 1] || "").split("|")[0]]).filter(Boolean);
+            const texto = C.prefix + "|n=" + lineas.length + "\n" + lineas.join("\n");
+            return { texto, tokens: contar(texto) };
+          });
+      return pedirCorreccion.then((r) => { tokens += r.tokens; return MINI.mergeRepair(original, r.texto, C, sol).text; });
+    })();
+    paso1.then((texto) => {
+      const d = leerMini(texto);
+      const faltan = DATOS.mensajes.filter((x) => !d.records.some((r) => r.id === x.id));
+      if (!faltan.length) return { texto, faltan: [] };
+      llamadas++;
+      const pedirFaltan = vivo ? llamar(instruccionMini(), pedido(faltan), 1000)
+        : grabada("mini", "ok").then(() => {
+            const lineas = faltan.map((x) => lineasOk[x.id]).filter(Boolean);
+            const t2 = C.prefix + "|n=" + lineas.length + "\n" + lineas.join("\n");
+            return { texto: t2, tokens: contar(t2) };
+          });
+      return pedirFaltan.then((r) => {
+        tokens += r.tokens;
+        const extra = leerMini(r.texto).records.filter((x) => faltan.some((f) => f.id === x.id));
+        const todos = d.records.concat(extra);
+        return { texto: MINI.dumps({ header: {}, [C.records_key || "tickets"]: todos }, C), faltan };
+      });
+    }).then(({ texto, faltan }) => {
+      const final = leerMini(texto);
+      estado.rep = { texto, tokens, llamadas,
+        resumen: t(["Se reenviaron solo ", "Only "]) + (sol.needed ? t([(sol.lines.length === 1 ? "la línea " : "las líneas ") + sol.lines.join(", "), (sol.lines.length === 1 ? "line " : "lines ") + sol.lines.join(", ")]) : "") +
+          (sol.needed && faltan.length ? t([" y ", " and "]) : "") + (faltan.length ? t(["los " + faltan.length + " tickets que faltaban", "the " + faltan.length + " missing tickets"]) : "") +
+          t([" (" + num(tokens) + " tokens más). Ahora hay " + final.records.length + " de " + N + " tickets correctos.",
+             ((sol.needed ? sol.lines.length : 0) + faltan.length === 1 ? " was" : " were") + " sent again (" + num(tokens) + " more tokens). Now " + final.records.length + " of " + N + " tickets are correct."]) };
+      pintar4(); pintar5();
+    }).catch((e) => { $("#res4").insertAdjacentHTML("beforeend", '<p class="dm-aviso mal">' + esc(e.message) + "</p>"); });
+  }
+
+  /* -------------------------------------------------------------- paso 5 */
+  function pintar5() {
+    $("#paso5").setAttribute("aria-disabled", "false");
+    const m = leerMini(estado.rep ? estado.rep.texto : estado.mini.texto), j = leerJson(estado.json.texto);
+    const jsonOk = !j.ilegible && !j.malos.length;
+    const tokMini = estado.mini.tokens + (estado.rep ? estado.rep.tokens : 0);
+    // Con JSON, cualquier problema obliga a pedir la respuesta completa otra vez (se estima con la respuesta correcta grabada).
+    const reintento = jsonOk ? 0 : (estado.json.real ? estado.json.tokens : contar(DATOS.grabaciones.json.ok));
+    const tokJson = estado.json.tokens + reintento;
+    const max = Math.max(tokMini, tokJson, 1);
+    const salida = { [C.records_key || "tickets"]: m.records };
+    let h = '<div class="dm-cifras"><div class="dm-cifra acento"><span class="v">' + m.records.length + "/" + N + '</span><span class="k">' + t(["tickets entregados con .mini", "tickets delivered with .mini"]) +
+      '</span></div><div class="dm-cifra ' + (jsonOk ? "" : "mal") + '"><span class="v">' + (j.ilegible ? 0 : j.validos.length) + "/" + N + '</span><span class="k">' +
+      t(["tickets correctos en el primer JSON", "correct tickets in the first JSON"]) + '</span></div><div class="dm-cifra bien"><span class="v">' +
+      Math.max(0, Math.round(100 * (1 - tokMini / tokJson))) + ' %</span><span class="k">' + t(["menos tokens de respuesta en total", "fewer answer tokens in total"]) + "</span></div></div>";
+    h += '<div class="dm-barras"><div class="dm-barra mini"><span>.mini</span><span class="b" style="width:' + (100 * tokMini / max) + '%"></span><span class="num">' + num(tokMini) + "</span></div>" +
+      '<div class="dm-barra"><span>JSON</span><span class="b" style="width:' + (100 * tokJson / max) + '%"></span><span class="num">' + num(tokJson) + "</span></div></div>" +
+      '<p class="dm-nota">' + t(["Tokens de respuesta, incluida la reparación de .mini" + (reintento ? " y el reintento completo que necesita JSON (" + num(reintento) + " tokens)" : "") + ".",
+                                "Answer tokens, including the .mini repair" + (reintento ? " and the full retry JSON needs (" + num(reintento) + " tokens)" : "") + "."]) + "</p>";
+    h += "<details open><summary>" + t(["JSON que recibe la aplicación", "JSON the application receives"]) + "</summary><pre>" + esc(JSON.stringify(salida, null, 2)) + "</pre></details>";
+    $("#res5").innerHTML = h;
+    if (!(m.errores.length) && m.records.length === N) $("#ruta [data-r='5']").classList.add("hecho");
+  }
+
+  /* -------------------------------------------------------------- controles */
+  function segmento(id, clave, alCambiar) {
+    $(id).addEventListener("click", (ev) => {
+      const b = ev.target.closest("button[data-v]"); if (!b) return;
+      $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      estado[clave] = clave === "limite" ? parseInt(b.dataset.v, 10) : b.dataset.v;
+      if (alCambiar) alCambiar();
+    });
+  }
+  segmento("#modo", "modo", () => {
+    const vivo = estado.modo === "deepseek";
+    $("#filaVivo").hidden = !vivo; $("#notaClave").hidden = !vivo; $("#filaEscenario").hidden = vivo;
+    if (vivo) { try { $("#clave").value = sessionStorage.getItem(CLAVE_KEY) || ""; } catch (e) {} }
+  });
+  segmento("#escenario", "escenario");
+  segmento("#limite", "limite");
+  $("#pedir").addEventListener("click", pedir);
+  document.querySelectorAll("[data-lang-btn]").forEach((b) => b.addEventListener("click", () => setTimeout(() => {
+    pintarDatos(); if (estado.mini) { pintar3(); pintar4(); pintar5(); }
+  }, 0)));
+  pintarDatos();
+})();
+</script>
+<script src="/docs.js"></script>
+</body>
+</html>

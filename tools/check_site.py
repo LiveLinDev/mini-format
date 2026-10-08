@@ -34,7 +34,7 @@ SITE = ROOT / "sitio"
 ORIGIN = "https://mini-format.pmoluna.com"
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 MIN_TEXTO_VISIBLE = 120  # caracteres de texto visible sin JavaScript que debe tener toda página
-RUTAS_EN_LINEA = ("taller", "sima", "ejemplo", "validacion", "economia", "flujo")
+RUTAS_EN_LINEA = ("demo", "taller", "sima", "ejemplo", "validacion", "economia", "flujo")
 
 
 class Page(HTMLParser):

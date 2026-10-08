@@ -176,6 +176,7 @@ def reescribir_enlaces(h: str, origin_dir: Path = Path(".")) -> str:
 # Un solo contrato para TODAS las páginas (docs, playground, demo, taller, ejemplo, SIMA, validación,
 # economía, 404 y la portada): el menú se define aquí y nadie lo copia a mano.
 NAV = [
+    ("demo", "Demo en vivo", "Live demo"),
     ("docs", "Documentación", "Documentation"),
     ("flujo", "Cómo funciona", "How it works"),
     ("playground", "Playground", "Playground"),
@@ -1076,6 +1077,27 @@ def construir_taller() -> None:
     print(f"  taller de integración: {len(pagina.encode('utf-8')) // 1024} KB, {len(datos['ejemplos'])} esquemas de ejemplo")
 
 
+def construir_demo() -> None:
+    """Página /demo/: el flujo completo en cinco pasos (datos, contrato, respuesta de la IA en .mini y JSON, validación con
+    reparación selectiva y resultado), con respuestas grabadas o una llamada en vivo a DeepSeek con la clave del visitante."""
+    datos = datos_mesa()
+    datos = {k: datos[k] for k in ("contrato", "esquema", "mensajes", "grabaciones", "prompt", "errores", "erroresEn")}
+    safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
+    pagina = (RAIZ / "examples" / "demo" / "plantilla.html").read_text(encoding="utf-8")
+    for marca, valor in [("__CABEZA__", cabeza()),
+                         ("__CABECERA__", cabecera("demo")),
+                         ("__PIE__", pie()),
+                         ("__MINI_JS__", safe((RAIZ / "js" / "mini.js").read_text(encoding="utf-8"))),
+                         ("__DATOS__", safe(json.dumps(datos, ensure_ascii=False)))]:
+        if marca not in pagina:
+            raise SystemExit(f"plantilla de la demo: falta la marca {marca}")
+        pagina = pagina.replace(marca, valor, 1)
+    destino = SITIO / "demo" / "index.html"
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_text(pagina, encoding="utf-8")
+    print(f"  demo en vivo: {len(pagina.encode('utf-8')) // 1024} KB, {len(datos['mensajes'])} mensajes, contrato {datos['contrato'].get('prefix')}")
+
+
 def construir_sima() -> None:
     """Página /sima/: el caso de integración en SIMA con datos archivados de llamadas reales (examples/sima/datos.json)."""
     import shutil
@@ -1143,6 +1165,7 @@ if __name__ == "__main__":
     construir_mesa()
     construir_ejemplo()
     construir_taller()
+    construir_demo()
     construir_sima()
     sincronizar_portada()
     sincronizar_404()

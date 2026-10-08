@@ -25,7 +25,7 @@ SOURCE_ZIP = f"/downloads/mini-format-{VERSION}-source.zip"
 # Páginas bilingües EN LÍNEA (los dos idiomas en el mismo HTML, docs.js conmuta sin cambiar de URL).
 # No tienen copia /en/: entran en el sitemap con su URL única, sin hreflang ni `data-localized-routes`.
 # Los módulos añaden las suyas con registrar_en_linea() (ver sitio/modulos.py).
-RUTAS_EN_LINEA: set[str] = {"taller", "sima", "ejemplo", "validacion", "economia"}
+RUTAS_EN_LINEA: set[str] = {"demo", "taller", "sima", "ejemplo", "validacion", "economia"}
 ALLOW_ROOTS = {"benchmark", "experiments", "conformance", "forks", "src", "ts", "js", "docs"}
 ALLOW_SUFFIX = {".md", ".json", ".csv", ".py", ".ts", ".js", ".mini", ".txt", ".toml", ".png", ".svg", ".yaml", ".yml"}
 EXCLUDE = {"node_modules", "__pycache__", ".venv", ".git", "vocab", "dist"}
