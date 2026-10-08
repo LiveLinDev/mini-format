@@ -264,7 +264,7 @@ class HonestidadDeEstudios(Base):
 
     def test_exploratorio_no_admite_criterio_ni_resultado(self):
         doc = self.registro()
-        self.estudio(doc, "V7")["criterio"] = copy.deepcopy(self.estudio(doc, "V1")["criterio"])
+        self.estudio(doc, "V8")["criterio"] = copy.deepcopy(self.estudio(doc, "V1")["criterio"])
         self.guardar_registro(doc)
         errores, _, _ = self.estudios()
         self.assertTrue(any("exploratorio no tiene criterio" in e for e in errores))

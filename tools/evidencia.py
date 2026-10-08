@@ -43,7 +43,7 @@ ESQUEMA_DERIVADO = "mini-format/estudios-derivado/1"
 ESQUEMA_TARIFAS_DERIVADO = "mini-format/tarifas-derivado/1"
 ESTUDIOS_REQUERIDOS = ("V1", "V2", "V3a", "V3b", "V4", "V5", "V6a", "V6b", "V7", "V8")
 TIPO_POR_ESTUDIO = {"V1": "controlado", "V2": "controlado", "V3a": "controlado", "V3b": "controlado", "V4": "controlado",
-                    "V5": "controlado", "V6a": "naturalista", "V6b": "controlado", "V7": "exploratorio", "V8": "exploratorio"}
+                    "V5": "controlado", "V6a": "naturalista", "V6b": "controlado", "V7": "controlado", "V8": "exploratorio"}  # V7 controlado desde la enmienda 01 del plan (08/10/2026)
 ESTUDIOS_DE_APOYO = ("OPT", "CF")
 PROCEDENCIAS_REALES = ("reproducido_local", "api_real", "participantes")
 PROCEDENCIAS_NO_ADMISIBLES = ("reportado_historico", "simulado", "asistido_ia")

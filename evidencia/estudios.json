@@ -8,69 +8,183 @@
       "id": "V1",
       "nombre": "Ahorro de tokens por formato",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"
+      },
       "pregunta": "PI1: ¿cuántos tokens ahorra .mini frente a JSON y a otros formatos de serialización?",
       "procedimiento": "Congelar el corpus con manifiesto SHA-256; serializar cada documento en todas las representaciones; contar tokens con cada tokenizador; comprobar la ida y vuelta sin pérdida; analizar por celda (dominio x tamaño de lote), por dominio y en agregado con IC 95 %.",
-      "muestra": {"unidad": "documento serializado (celda dominio x tamaño de lote x formato x tokenizador)", "descripcion": "14 dominios; lotes de 1, 5, 10, 25, 50, 100 y 250 registros más la línea base de n = 12; 4 conjuntos públicos congelados (1 902 objetos); 3 tokenizadores locales."},
-      "comparadores": ["JSON compacto (principal)", "JSON legible", "YAML", "XML tipado", "CSV reversible", "TOON nativo", "TOON plano"],
+      "muestra": {
+        "unidad": "documento serializado (celda dominio x tamaño de lote x formato x tokenizador)",
+        "descripcion": "14 dominios; lotes de 1, 5, 10, 25, 50, 100 y 250 registros más la línea base de n = 12; 4 conjuntos públicos congelados (1 902 objetos); 3 tokenizadores locales."
+      },
+      "comparadores": [
+        "JSON compacto (principal)",
+        "JSON legible",
+        "YAML",
+        "XML tipado",
+        "CSV reversible",
+        "TOON nativo",
+        "TOON plano"
+      ],
       "criterio": {
         "texto": "I4.1: ahorro de tokens >= 30 % en >= 10 dominios y con tres tokenizadores.",
         "interpretacion": "El ahorro de un dominio con un tokenizador es la media, sobre los tamaños de lote de la serie principal, de 100 x (1 - T_mini / T_json_compacto), con T medido como conteo LOCAL de texto. Un dominio supera el umbral si esa media es >= 30 %. La meta se cumple si, con cada uno de >= 3 tokenizadores, >= 10 dominios superan el umbral. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "dominios_que_superan", "descripcion": "Dominios con ahorro medio >= 30 % (el peor tokenizador)", "fuente": "resumen", "ruta": "dominios_que_superan_umbral_min_tokenizador", "agregacion": "min", "op": ">=", "valor": 10},
-          {"id": "tokenizadores", "descripcion": "Tokenizadores medidos", "fuente": "resumen", "ruta": "tokenizadores_medidos", "agregacion": "min", "op": ">=", "valor": 3},
-          {"id": "dominios_medidos", "descripcion": "Dominios medidos", "fuente": "resumen", "ruta": "dominios_medidos", "agregacion": "min", "op": ">=", "valor": 10}
+          {
+            "id": "dominios_que_superan",
+            "descripcion": "Dominios con ahorro medio >= 30 % (el peor tokenizador)",
+            "fuente": "resumen",
+            "ruta": "dominios_que_superan_umbral_min_tokenizador",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 10
+          },
+          {
+            "id": "tokenizadores",
+            "descripcion": "Tokenizadores medidos",
+            "fuente": "resumen",
+            "ruta": "tokenizadores_medidos",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 3
+          },
+          {
+            "id": "dominios_medidos",
+            "descripcion": "Dominios medidos",
+            "fuente": "resumen",
+            "ruta": "dominios_medidos",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 10
+          }
         ]
       },
       "meta_documental": "V1 >= 30 % de ahorro en >= 10 dominios y con tres tokenizadores (Charter v5, I4.1).",
       "componentes": [
-        {"id": "tokens_por_dominio_y_tokenizador", "descripcion": "Conteo de tokens de todos los formatos por dominio, tamaño de lote y tokenizador, con ida y vuelta", "procedencias_admitidas": ["reproducido_local"], "minimo_corridas": 1}
+        {
+          "id": "tokens_por_dominio_y_tokenizador",
+          "descripcion": "Conteo de tokens de todos los formatos por dominio, tamaño de lote y tokenizador, con ida y vuelta",
+          "procedencias_admitidas": [
+            "reproducido_local"
+          ],
+          "minimo_corridas": 1
+        }
       ],
       "cifras": [
-        {"id": "ahorro_medio_pct", "etiqueta": "Ahorro medio de tokens de .mini frente a JSON compacto", "ruta": "ahorro_medio_pct", "agregacion": "unico", "unidad": "%"}
+        {
+          "id": "ahorro_medio_pct",
+          "etiqueta": "Ahorro medio de tokens de .mini frente a JSON compacto",
+          "ruta": "ahorro_medio_pct",
+          "agregacion": "unico",
+          "unidad": "%"
+        }
       ],
       "limitaciones": [
         "tiktoken es una aproximación para Anthropic, Google y DeepSeek: solo es exacto para texto plano de los modelos de OpenAI que mapea.",
         "Conteo local de texto: no incluye los tokens de formato de mensaje ni el esquema de la solicitud, que sí cuenta el proveedor.",
         "Los cuatro conjuntos públicos y los 14 dominios del conjunto académico no son una muestra aleatoria de sistemas reales."
       ],
-      "reproduccion": {"comando": "python experiments/v1_tokens/run.py", "nota": "Sin red ni API. Cada ejecución debe registrarse con tools/evidencia_lib.py (nueva_corrida/guardar_corrida) y parametros.componente = tokens_por_dominio_y_tokenizador."},
-      "hu_relacionadas": ["HU105", "HU106", "HU107", "HU118"],
+      "reproduccion": {
+        "comando": "python experiments/v1_tokens/run.py",
+        "nota": "Sin red ni API. Cada ejecución debe registrarse con tools/evidencia_lib.py (nueva_corrida/guardar_corrida) y parametros.componente = tokens_por_dominio_y_tokenizador."
+      },
+      "hu_relacionadas": [
+        "HU105",
+        "HU106",
+        "HU107",
+        "HU118"
+      ],
       "estado_ejecucion": "parcial",
       "resultado": "no_evaluable",
       "bloqueo": null,
       "antecedentes": [
-        {"id": "v1-resultados-archivados", "descripcion": "Resultados de V1 archivados por celda (dominio, tamaño de lote, tokenizador) con IC 95 %, anteriores a los manifiestos de corrida: sin commit ni snapshot fijados.", "procedencia": "reportado_historico", "fuente": "experiments/v1_tokens/results/ahorro_resumen.csv", "cifras": []}
+        {
+          "id": "v1-resultados-archivados",
+          "descripcion": "Resultados de V1 archivados por celda (dominio, tamaño de lote, tokenizador) con IC 95 %, anteriores a los manifiestos de corrida: sin commit ni snapshot fijados.",
+          "procedencia": "reportado_historico",
+          "fuente": "experiments/v1_tokens/results/ahorro_resumen.csv",
+          "cifras": []
+        }
       ]
     },
     {
       "id": "V2",
       "nombre": "Validez y exactitud con varios modelos y proveedores",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"
+      },
       "pregunta": "PI2: ¿.mini produce registros válidos y exactos con varios modelos de varios proveedores, antes y después de una reparación selectiva?",
       "procedimiento": "Diseño dominio x modelo x condición con orden aleatorizado por bloque; conservar todas las respuestas; una reparación como máximo sobre las líneas rechazadas; validez calculada sobre TODOS los registros solicitados (no solo los recibidos); separar validez sintáctica, de contrato y exactitud por campo.",
-      "muestra": {"unidad": "respuesta de un modelo a una solicitud de N registros", "descripcion": "Mínimo comprometido: >= 3 modelos de >= 2 proveedores. Diseño ampliado: 14 dominios x 4 modelos (>= 3 proveedores) x 30 repeticiones x 4 condiciones (A-D, más D+1), con un máximo de 6 720 llamadas primarias."},
-      "comparadores": ["A: JSON por instrucción mínima", "B: JSON con contrato en el prompt", "C: JSON nativo (si el proveedor lo admite)", "D: .mini sin reparación", "D+1: .mini con una reparación pareada sobre la misma D"],
+      "muestra": {
+        "unidad": "respuesta de un modelo a una solicitud de N registros",
+        "descripcion": "Mínimo comprometido: >= 3 modelos de >= 2 proveedores. Diseño ampliado: 14 dominios x 4 modelos (>= 3 proveedores) x 30 repeticiones x 4 condiciones (A-D, más D+1), con un máximo de 6 720 llamadas primarias."
+      },
+      "comparadores": [
+        "A: JSON por instrucción mínima",
+        "B: JSON con contrato en el prompt",
+        "C: JSON nativo (si el proveedor lo admite)",
+        "D: .mini sin reparación",
+        "D+1: .mini con una reparación pareada sobre la misma D"
+      ],
       "criterio": {
         "texto": "I4.2: >= 95 % de registros válidos tras la reparación, con >= 3 modelos y >= 2 proveedores.",
         "interpretacion": "El porcentaje de válidos finales se calcula en la condición D+1 con denominador = TODOS los registros solicitados (incluidos los de respuestas cortadas o rechazadas), por modelo, con IC 95 %; el umbral de 95 % debe cumplirlo CADA modelo (el mínimo entre modelos). Cada corrida registrada corresponde a un modelo (modelo.proveedor y modelo.modelo_pedido). Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "validos_finales", "descripcion": "Válidos finales (D+1) sobre todos los solicitados: el peor modelo", "fuente": "resumen", "ruta": "validos_finales_pct_d1", "agregacion": "min", "op": ">=", "valor": 95},
-          {"id": "modelos", "descripcion": "Modelos distintos medidos", "fuente": "corridas", "ruta": "modelo.modelo_pedido", "agregacion": "conteo_distintos", "op": ">=", "valor": 3},
-          {"id": "proveedores", "descripcion": "Proveedores distintos medidos", "fuente": "corridas", "ruta": "modelo.proveedor", "agregacion": "conteo_distintos", "op": ">=", "valor": 2}
+          {
+            "id": "validos_finales",
+            "descripcion": "Válidos finales (D+1) sobre todos los solicitados: el peor modelo",
+            "fuente": "resumen",
+            "ruta": "validos_finales_pct_d1",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 95
+          },
+          {
+            "id": "modelos",
+            "descripcion": "Modelos distintos medidos",
+            "fuente": "corridas",
+            "ruta": "modelo.modelo_pedido",
+            "agregacion": "conteo_distintos",
+            "op": ">=",
+            "valor": 3
+          },
+          {
+            "id": "proveedores",
+            "descripcion": "Proveedores distintos medidos",
+            "fuente": "corridas",
+            "ruta": "modelo.proveedor",
+            "agregacion": "conteo_distintos",
+            "op": ">=",
+            "valor": 2
+          }
         ]
       },
       "meta_documental": "V2 >= 3 modelos de >= 2 proveedores (Charter v5, I4.2); diseño ampliado: 14 dominios x 4 modelos x 30 repeticiones x 4 condiciones con >= 3 proveedores.",
       "componentes": [
-        {"id": "matriz_generacion_real", "descripcion": "Generación con modelos reales (llamadas autorizadas) con usage original y gasto registrado", "procedencias_admitidas": ["api_real"], "minimo_corridas": 3}
+        {
+          "id": "matriz_generacion_real",
+          "descripcion": "Generación con modelos reales (llamadas autorizadas) con usage original y gasto registrado",
+          "procedencias_admitidas": [
+            "api_real"
+          ],
+          "minimo_corridas": 3
+        }
       ],
       "cifras": [
-        {"id": "validos_iniciales_pct_d", "etiqueta": "Válidos antes de reparar (condición D), el peor modelo", "ruta": "validos_iniciales_pct_d", "agregacion": "min", "unidad": "%"}
+        {
+          "id": "validos_iniciales_pct_d",
+          "etiqueta": "Válidos antes de reparar (condición D), el peor modelo",
+          "ruta": "validos_iniciales_pct_d",
+          "agregacion": "min",
+          "unidad": "%"
+        }
       ],
       "limitaciones": [
         "No hay presupuesto de API autorizado: toda corrida real está bloqueada hasta que el usuario lo autorice.",
@@ -78,47 +192,121 @@
         "La corrida con el proveedor simulado valida el arnés, nunca un modelo: no cuenta como evidencia del criterio.",
         "Los conteos de tiktoken son aproximación fuera de OpenAI: el costo y los tokens reales salen del usage de cada respuesta."
       ],
-      "reproduccion": {"comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE", "nota": "TOPE es el presupuesto que el usuario autorice explícitamente; sin él no se ejecuta. Antes: --dry-run."},
-      "hu_relacionadas": ["HU108", "HU109", "HU110", "HU111", "HU118"],
+      "reproduccion": {
+        "comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE",
+        "nota": "TOPE es el presupuesto que el usuario autorice explícitamente; sin él no se ejecuta. Antes: --dry-run."
+      },
+      "hu_relacionadas": [
+        "HU108",
+        "HU109",
+        "HU110",
+        "HU111",
+        "HU118"
+      ],
       "estado_ejecucion": "bloqueado",
       "resultado": "no_evaluable",
-      "bloqueo": {"causa": "Sin presupuesto de API autorizado ni claves: ninguna llamada de pago a APIs de modelos.", "desbloquea": "Autorización expresa del usuario de un tope de gasto y de los proveedores a usar."},
+      "bloqueo": {
+        "causa": "Sin presupuesto de API autorizado ni claves: ninguna llamada de pago a APIs de modelos.",
+        "desbloquea": "Autorización expresa del usuario de un tope de gasto y de los proveedores a usar."
+      },
       "antecedentes": [
-        {"id": "v2-hu108-reportado", "descripcion": "HU108 reporta una medición de un día (20/09/2026) con 10 tickets: GPT-OSS 20B 434 tokens de salida en JSON frente a 265 en .mini; DeepSeek 619 frente a 241. Sin datos crudos propios en el repositorio.", "procedencia": "reportado_historico", "fuente": "Benchmarks_y_Validacion.xlsx, hoja Backlog, HU108 (reportado; no verificado por archivo)", "cifras": []},
-        {"id": "v2-piloto-simulado", "descripcion": "Piloto del arnés con el proveedor SIMULADO: valida el arnés, no un modelo. No cuenta como evidencia.", "procedencia": "simulado", "fuente": "experiments/generativo/resultados/simulado/piloto", "cifras": []}
+        {
+          "id": "v2-hu108-reportado",
+          "descripcion": "HU108 reporta una medición de un día (20/09/2026) con 10 tickets: GPT-OSS 20B 434 tokens de salida en JSON frente a 265 en .mini; DeepSeek 619 frente a 241. Sin datos crudos propios en el repositorio.",
+          "procedencia": "reportado_historico",
+          "fuente": "Benchmarks_y_Validacion.xlsx, hoja Backlog, HU108 (reportado; no verificado por archivo)",
+          "cifras": []
+        },
+        {
+          "id": "v2-piloto-simulado",
+          "descripcion": "Piloto del arnés con el proveedor SIMULADO: valida el arnés, no un modelo. No cuenta como evidencia.",
+          "procedencia": "simulado",
+          "fuente": "experiments/generativo/resultados/simulado/piloto",
+          "cifras": []
+        }
       ]
     },
     {
       "id": "V3a",
       "nombre": "Recuperación ante truncamiento (cortes sobre salidas guardadas)",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"
+      },
       "pregunta": "PI2: ¿cuántos registros completos se recuperan de una salida cortada, frente a lectores JSON estrictos o parciales?",
       "procedimiento": "Sobre un documento canónico por dominio y tamaño de lote, practicar 20 cortes en fracciones predefinidas; leer cada salida cortada con cada lector; medir la recuperación de registros completos disponibles y contar registros inventados y duplicados.",
-      "muestra": {"unidad": "corte de una salida guardada", "descripcion": "20 cortes por documento; número de documentos por dominio y tamaño de lote por fijar con el piloto (el Plan v3 no lo fija)."},
-      "comparadores": ["JSON estricto", "JSON con recuperación parcial", "JSON Lines", ".mini tolerante"],
+      "muestra": {
+        "unidad": "corte de una salida guardada",
+        "descripcion": "20 cortes por documento; número de documentos por dominio y tamaño de lote por fijar con el piloto (el Plan v3 no lo fija)."
+      },
+      "comparadores": [
+        "JSON estricto",
+        "JSON con recuperación parcial",
+        "JSON Lines",
+        ".mini tolerante"
+      ],
       "criterio": {
         "texto": "I4.3: >= 90 % de los registros completos disponibles se recuperan, sin contar registros inventados ni duplicados.",
         "interpretacion": "Un registro completo disponible es aquel cuya línea y su salto terminan antes del corte. La recuperación del lector .mini tolerante es (registros completos correctos recuperados) / (registros completos disponibles), agregada sobre todos los cortes; se exige >= 90 % como mínimo entre las corridas, y 0 registros inventados y 0 duplicados. Los demás lectores se reportan sin umbral. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "recuperacion", "descripcion": "Recuperación del lector .mini tolerante (mínimo)", "fuente": "resumen", "ruta": "recuperacion_mini_tolerante_pct", "agregacion": "min", "op": ">=", "valor": 90},
-          {"id": "inventados", "descripcion": "Registros inventados", "fuente": "resumen", "ruta": "registros_inventados", "agregacion": "suma", "op": "==", "valor": 0},
-          {"id": "duplicados", "descripcion": "Registros duplicados", "fuente": "resumen", "ruta": "registros_duplicados", "agregacion": "suma", "op": "==", "valor": 0}
+          {
+            "id": "recuperacion",
+            "descripcion": "Recuperación del lector .mini tolerante (mínimo)",
+            "fuente": "resumen",
+            "ruta": "recuperacion_mini_tolerante_pct",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 90
+          },
+          {
+            "id": "inventados",
+            "descripcion": "Registros inventados",
+            "fuente": "resumen",
+            "ruta": "registros_inventados",
+            "agregacion": "suma",
+            "op": "==",
+            "valor": 0
+          },
+          {
+            "id": "duplicados",
+            "descripcion": "Registros duplicados",
+            "fuente": "resumen",
+            "ruta": "registros_duplicados",
+            "agregacion": "suma",
+            "op": "==",
+            "valor": 0
+          }
         ]
       },
       "meta_documental": "V3 >= 90 % de registros completos disponibles recuperados (Charter v5, I4.3).",
       "componentes": [
-        {"id": "cortes_sobre_salidas_guardadas", "descripcion": "Cortes sobre un documento canónico o salidas guardadas, leídos con cada lector", "procedencias_admitidas": ["reproducido_local", "api_real"], "minimo_corridas": 1}
+        {
+          "id": "cortes_sobre_salidas_guardadas",
+          "descripcion": "Cortes sobre un documento canónico o salidas guardadas, leídos con cada lector",
+          "procedencias_admitidas": [
+            "reproducido_local",
+            "api_real"
+          ],
+          "minimo_corridas": 1
+        }
       ],
       "cifras": [],
       "limitaciones": [
         "El arnés actual corta respuestas de modelos en posiciones aleatorias y no un documento canónico en fracciones predefinidas; no existen aún los lectores JSON parcial ni JSON Lines.",
         "Un corte en mitad del último campo puede dar una línea sintácticamente válida pero truncada: el oráculo debe decidir el registro completo antes de contar."
       ],
-      "reproduccion": {"comando": "python experiments/generativo/analyze.py --resultados RUTA_DE_SALIDAS_GUARDADAS", "nota": "Sin API si las salidas ya están guardadas; registrar con parametros.componente = cortes_sobre_salidas_guardadas."},
-      "hu_relacionadas": ["HU109", "HU112", "HU118"],
+      "reproduccion": {
+        "comando": "python experiments/generativo/analyze.py --resultados RUTA_DE_SALIDAS_GUARDADAS",
+        "nota": "Sin API si las salidas ya están guardadas; registrar con parametros.componente = cortes_sobre_salidas_guardadas."
+      },
+      "hu_relacionadas": [
+        "HU109",
+        "HU112",
+        "HU118"
+      ],
       "estado_ejecucion": "pendiente",
       "resultado": "no_evaluable",
       "bloqueo": null,
@@ -128,80 +316,190 @@
       "id": "V3b",
       "nombre": "Recuperación ante truncamiento (cortes reales con tope de salida reducido)",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"
+      },
       "pregunta": "PI2: ¿qué ocurre con .mini y con JSON cuando la respuesta real se corta por un límite de tokens de salida?",
       "procedimiento": "Llamadas reales con un tope de salida fijado ANTES de medir (p. ej. una fracción de la salida de referencia de cada formato); registrar por formato si se cortó, qué lector la procesó y cuántos registros completos y válidos se recuperaron.",
-      "muestra": {"unidad": "solicitud real con tope de salida reducido", "descripcion": "Solicitudes por condición y modelo por fijar con el piloto (el arnés define fraccion_max_tokens = 0,5 y 10 repeticiones)."},
-      "comparadores": ["JSON estricto", "JSON con recuperación parcial", "JSON Lines", ".mini tolerante"],
+      "muestra": {
+        "unidad": "solicitud real con tope de salida reducido",
+        "descripcion": "Solicitudes por condición y modelo por fijar con el piloto (el arnés define fraccion_max_tokens = 0,5 y 10 repeticiones)."
+      },
+      "comparadores": [
+        "JSON estricto",
+        "JSON con recuperación parcial",
+        "JSON Lines",
+        ".mini tolerante"
+      ],
       "criterio": {
         "texto": "I4.3: >= 90 % de los registros completos disponibles se recuperan, sin contar inventados ni duplicados.",
         "interpretacion": "Misma lectura que V3a, aplicada a respuestas realmente cortadas por el límite de salida: recuperación del lector .mini tolerante >= 90 % (mínimo entre corridas), 0 inventados y 0 duplicados. El tope de salida debe fijarse antes de medir y cortar de verdad al menos el formato de referencia. Lectura propuesta; pendiente de confirmación del equipo.",
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "recuperacion", "descripcion": "Recuperación del lector .mini tolerante (mínimo)", "fuente": "resumen", "ruta": "recuperacion_mini_tolerante_pct", "agregacion": "min", "op": ">=", "valor": 90},
-          {"id": "inventados", "descripcion": "Registros inventados", "fuente": "resumen", "ruta": "registros_inventados", "agregacion": "suma", "op": "==", "valor": 0},
-          {"id": "duplicados", "descripcion": "Registros duplicados", "fuente": "resumen", "ruta": "registros_duplicados", "agregacion": "suma", "op": "==", "valor": 0}
+          {
+            "id": "recuperacion",
+            "descripcion": "Recuperación del lector .mini tolerante (mínimo)",
+            "fuente": "resumen",
+            "ruta": "recuperacion_mini_tolerante_pct",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 90
+          },
+          {
+            "id": "inventados",
+            "descripcion": "Registros inventados",
+            "fuente": "resumen",
+            "ruta": "registros_inventados",
+            "agregacion": "suma",
+            "op": "==",
+            "valor": 0
+          },
+          {
+            "id": "duplicados",
+            "descripcion": "Registros duplicados",
+            "fuente": "resumen",
+            "ruta": "registros_duplicados",
+            "agregacion": "suma",
+            "op": "==",
+            "valor": 0
+          }
         ]
       },
       "meta_documental": "V3 >= 90 % de registros completos disponibles recuperados (Charter v5, I4.3).",
       "componentes": [
-        {"id": "llamadas_reales_con_tope_reducido", "descripcion": "Llamadas reales autorizadas con un límite de salida que corta la respuesta", "procedencias_admitidas": ["api_real"], "minimo_corridas": 1}
+        {
+          "id": "llamadas_reales_con_tope_reducido",
+          "descripcion": "Llamadas reales autorizadas con un límite de salida que corta la respuesta",
+          "procedencias_admitidas": [
+            "api_real"
+          ],
+          "minimo_corridas": 1
+        }
       ],
       "cifras": [],
       "limitaciones": [
         "Sin presupuesto de API autorizado: bloqueado.",
         "Con un tope de 300 tokens la salida .mini de HU108/HU113 cabe sin cortarse (241-265 tokens): el 10 de 10 reportado refleja el tamaño y no una recuperación tras el corte; el tope debe fijarse con la salida de referencia de cada formato."
       ],
-      "reproduccion": {"comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE", "nota": "TOPE es el presupuesto que el usuario autorice; los casos de V3b están en la configuración (fraccion_max_tokens)."},
-      "hu_relacionadas": ["HU109", "HU112", "HU113", "HU118"],
+      "reproduccion": {
+        "comando": "python experiments/generativo/run.py --config experiments/generativo/configs/estudio.yaml --adapter real --confirmar-real --max-costo-usd TOPE",
+        "nota": "TOPE es el presupuesto que el usuario autorice; los casos de V3b están en la configuración (fraccion_max_tokens)."
+      },
+      "hu_relacionadas": [
+        "HU109",
+        "HU112",
+        "HU113",
+        "HU118"
+      ],
       "estado_ejecucion": "bloqueado",
       "resultado": "no_evaluable",
-      "bloqueo": {"causa": "Sin presupuesto de API autorizado ni claves.", "desbloquea": "Autorización expresa del usuario de un tope de gasto."},
+      "bloqueo": {
+        "causa": "Sin presupuesto de API autorizado ni claves.",
+        "desbloquea": "Autorización expresa del usuario de un tope de gasto."
+      },
       "antecedentes": [
-        {"id": "v3b-hu113-reportado", "descripcion": "HU113 reporta (20/09/2026, GPT-OSS 20B y DeepSeek) cortes reales de JSON con 0 de 10 registros frente a 10 de 10 en .mini con un tope de 300 tokens. Dato de un solo día, sin datos crudos propios.", "procedencia": "reportado_historico", "fuente": "Benchmarks_y_Validacion.xlsx, hoja Backlog, HU113 (reportado; no verificado por archivo)", "cifras": []}
+        {
+          "id": "v3b-hu113-reportado",
+          "descripcion": "HU113 reporta (20/09/2026, GPT-OSS 20B y DeepSeek) cortes reales de JSON con 0 de 10 registros frente a 10 de 10 en .mini con un tope de 300 tokens. Dato de un solo día, sin datos crudos propios.",
+          "procedencia": "reportado_historico",
+          "fuente": "Benchmarks_y_Validacion.xlsx, hoja Backlog, HU113 (reportado; no verificado por archivo)",
+          "cifras": []
+        }
       ]
     },
     {
       "id": "V4",
       "nombre": "Costo por registro válido y latencia",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"
+      },
       "pregunta": "PI1: ¿cuánto cuesta y cuánto tarda cada registro válido con .mini frente a JSON, incluyendo instrucciones y reintentos?",
       "procedimiento": "Registrar los tokens que informa la API por categoría (entrada sin caché, caché leída y escrita, salida, razonamiento), la tarifa consultada con su fecha y la latencia de extremo a extremo (mediana y p95); costo total de TODAS las solicitudes incluidas las reparaciones, agrupado por la solicitud original; costo por 1 000 registros válidos (sin definir si hay 0 válidos). El modelo de precios 12 x 5 se mantiene aparte y etiquetado como modelo.",
-      "muestra": {"unidad": "solicitud original con todos sus intentos", "descripcion": "Los mismos modelos de V2; modelo de costos: 12 modelos de 5 proveedores."},
-      "comparadores": ["Mismo flujo para todas las condiciones de V2"],
+      "muestra": {
+        "unidad": "solicitud original con todos sus intentos",
+        "descripcion": "Los mismos modelos de V2; modelo de costos: 12 modelos de 5 proveedores."
+      },
+      "comparadores": [
+        "Mismo flujo para todas las condiciones de V2"
+      ],
       "criterio": null,
       "meta_documental": "V4 es descriptivo: el Plan v3 no fija una meta de decisión (se recomienda declararlo así para que no se lea como meta incumplida).",
       "componentes": [
-        {"id": "modelo_de_costos", "descripcion": "Modelo de costos con tarifas fechadas y tokens medidos en V1 (sin llamadas)", "procedencias_admitidas": ["reproducido_local"], "minimo_corridas": 1},
-        {"id": "costo_y_latencia_reales", "descripcion": "Costo y latencia medidos en llamadas reales con usage original", "procedencias_admitidas": ["api_real"], "minimo_corridas": 1}
+        {
+          "id": "modelo_de_costos",
+          "descripcion": "Modelo de costos con tarifas fechadas y tokens medidos en V1 (sin llamadas)",
+          "procedencias_admitidas": [
+            "reproducido_local"
+          ],
+          "minimo_corridas": 1
+        },
+        {
+          "id": "costo_y_latencia_reales",
+          "descripcion": "Costo y latencia medidos en llamadas reales con usage original",
+          "procedencias_admitidas": [
+            "api_real"
+          ],
+          "minimo_corridas": 1
+        }
       ],
       "cifras": [
-        {"id": "costo_por_1000_validos_mini_usd", "etiqueta": "Costo por 1 000 registros válidos con .mini", "ruta": "costo_por_1000_validos_mini_usd", "agregacion": "unico", "unidad": "USD"}
+        {
+          "id": "costo_por_1000_validos_mini_usd",
+          "etiqueta": "Costo por 1 000 registros válidos con .mini",
+          "ruta": "costo_por_1000_validos_mini_usd",
+          "agregacion": "unico",
+          "unidad": "USD"
+        }
       ],
       "limitaciones": [
         "La parte real está bloqueada por falta de presupuesto autorizado; el modelo de costos no es una facturación.",
         "Tarifas de DeepSeek según el horario (pico o fuera de pico): hay que registrar la hora de la corrida.",
         "deepseek-chat ya no figura en la página de precios oficial: su tarifa real no es verificable sin una llamada de pago."
       ],
-      "reproduccion": {"comando": "python experiments/v4_costos/run.py", "nota": "Modelo de costos local. La parte real requiere el arnés con presupuesto autorizado. El cálculo exacto está en experiments/economia/calculo.py y las tarifas en evidencia/tarifas/."},
-      "hu_relacionadas": ["HU109", "HU114", "HU115", "HU118"],
+      "reproduccion": {
+        "comando": "python experiments/v4_costos/run.py",
+        "nota": "Modelo de costos local. La parte real requiere el arnés con presupuesto autorizado. El cálculo exacto está en experiments/economia/calculo.py y las tarifas en evidencia/tarifas/."
+      },
+      "hu_relacionadas": [
+        "HU109",
+        "HU114",
+        "HU115",
+        "HU118"
+      ],
       "estado_ejecucion": "bloqueado",
       "resultado": "no_evaluable",
-      "bloqueo": {"causa": "Costo y latencia reales exigen llamadas de pago: sin presupuesto ni claves.", "desbloquea": "Autorización expresa del usuario de un tope de gasto."},
+      "bloqueo": {
+        "causa": "Costo y latencia reales exigen llamadas de pago: sin presupuesto ni claves.",
+        "desbloquea": "Autorización expresa del usuario de un tope de gasto."
+      },
       "antecedentes": [
-        {"id": "v4-modelo-de-costos", "descripcion": "Modelo de costos por 1 000 registros (12 modelos, precios del 15/09/2026, ya con obsolescencias respecto de las tarifas consultadas el 30/09/2026): estimación, no facturación.", "procedencia": "reportado_historico", "fuente": "experiments/v4_costos/results/costo_por_1000_registros.csv", "cifras": []}
+        {
+          "id": "v4-modelo-de-costos",
+          "descripcion": "Modelo de costos por 1 000 registros (12 modelos, precios del 15/09/2026, ya con obsolescencias respecto de las tarifas consultadas el 30/09/2026): estimación, no facturación.",
+          "procedencia": "reportado_historico",
+          "fuente": "experiments/v4_costos/results/costo_por_1000_registros.csv",
+          "cifras": []
+        }
       ]
     },
     {
       "id": "V5",
       "nombre": "Conformidad y calidad del componente",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "formativo durante el piloto; sumativo con la versión congelada"
+      },
       "pregunta": "PI2: ¿las implementaciones de Python y TypeScript cumplen la especificación y se mantienen con umbrales de calidad en tres sistemas operativos?",
       "procedimiento": "Suite de conformidad común ejecutada contra ambas implementaciones; cobertura de líneas; integración continua en Linux, Windows y macOS; instalación limpia; registro de defectos.",
-      "muestra": {"unidad": "release congelado", "descripcion": "Todos los casos de conformance/cases (16 categorías) en Python y TypeScript."},
+      "muestra": {
+        "unidad": "release congelado",
+        "descripcion": "Todos los casos de conformance/cases (16 categorías) en Python y TypeScript."
+      },
       "comparadores": [],
       "criterio": {
         "texto": "I3.1: 100 % de conformidad; I3.2: cobertura >= 90 % y CI en Linux, Windows y macOS; sin defectos bloqueantes.",
@@ -209,59 +507,181 @@
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "conformidad", "descripcion": "Conformidad (mínimo entre corridas)", "fuente": "resumen", "ruta": "conformidad_pct", "agregacion": "min", "op": "==", "valor": 100},
-          {"id": "cobertura_python", "descripcion": "Cobertura de líneas de Python (mínimo)", "fuente": "resumen", "ruta": "cobertura_python_pct", "agregacion": "min", "op": ">=", "valor": 90},
-          {"id": "cobertura_typescript", "descripcion": "Cobertura de líneas de TypeScript (mínimo)", "fuente": "resumen", "ruta": "cobertura_ts_lineas_pct", "agregacion": "min", "op": ">=", "valor": 90},
-          {"id": "sistemas_operativos", "descripcion": "Familias de sistema operativo con la suite ejecutada", "fuente": "corridas", "ruta": "entorno.so", "agregacion": "conteo_distintos_familia", "op": ">=", "valor": 3},
-          {"id": "defectos_bloqueantes", "descripcion": "Defectos bloqueantes abiertos", "fuente": "resumen", "ruta": "defectos_bloqueantes", "agregacion": "suma", "op": "==", "valor": 0}
+          {
+            "id": "conformidad",
+            "descripcion": "Conformidad (mínimo entre corridas)",
+            "fuente": "resumen",
+            "ruta": "conformidad_pct",
+            "agregacion": "min",
+            "op": "==",
+            "valor": 100
+          },
+          {
+            "id": "cobertura_python",
+            "descripcion": "Cobertura de líneas de Python (mínimo)",
+            "fuente": "resumen",
+            "ruta": "cobertura_python_pct",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 90
+          },
+          {
+            "id": "cobertura_typescript",
+            "descripcion": "Cobertura de líneas de TypeScript (mínimo)",
+            "fuente": "resumen",
+            "ruta": "cobertura_ts_lineas_pct",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 90
+          },
+          {
+            "id": "sistemas_operativos",
+            "descripcion": "Familias de sistema operativo con la suite ejecutada",
+            "fuente": "corridas",
+            "ruta": "entorno.so",
+            "agregacion": "conteo_distintos_familia",
+            "op": ">=",
+            "valor": 3
+          },
+          {
+            "id": "defectos_bloqueantes",
+            "descripcion": "Defectos bloqueantes abiertos",
+            "fuente": "resumen",
+            "ruta": "defectos_bloqueantes",
+            "agregacion": "suma",
+            "op": "==",
+            "valor": 0
+          }
         ]
       },
       "meta_documental": "V5 100 % de conformidad, cobertura >= 90 % y CI en Linux, Windows y macOS (Charter v5, I3.1 e I3.2).",
       "componentes": [
-        {"id": "suite_de_conformidad", "descripcion": "Suite de conformidad en Python y TypeScript", "procedencias_admitidas": ["reproducido_local"], "minimo_corridas": 1},
-        {"id": "cobertura", "descripcion": "Cobertura de líneas de las dos implementaciones", "procedencias_admitidas": ["reproducido_local"], "minimo_corridas": 1},
-        {"id": "ci_tres_sistemas", "descripcion": "Suite ejecutada en Linux, Windows y macOS", "procedencias_admitidas": ["reproducido_local"], "minimo_corridas": 3}
+        {
+          "id": "suite_de_conformidad",
+          "descripcion": "Suite de conformidad en Python y TypeScript",
+          "procedencias_admitidas": [
+            "reproducido_local"
+          ],
+          "minimo_corridas": 1
+        },
+        {
+          "id": "cobertura",
+          "descripcion": "Cobertura de líneas de las dos implementaciones",
+          "procedencias_admitidas": [
+            "reproducido_local"
+          ],
+          "minimo_corridas": 1
+        },
+        {
+          "id": "ci_tres_sistemas",
+          "descripcion": "Suite ejecutada en Linux, Windows y macOS",
+          "procedencias_admitidas": [
+            "reproducido_local"
+          ],
+          "minimo_corridas": 3
+        }
       ],
       "cifras": [
-        {"id": "casos_de_conformidad", "etiqueta": "Casos de conformidad ejecutados", "ruta": "casos_ejecutados", "agregacion": "min", "unidad": "casos"}
+        {
+          "id": "casos_de_conformidad",
+          "etiqueta": "Casos de conformidad ejecutados",
+          "ruta": "casos_ejecutados",
+          "agregacion": "min",
+          "unidad": "casos"
+        }
       ],
       "limitaciones": [
         "La ejecución de CI de un commit concreto en tres sistemas no es verificable desde un equipo local: hace falta enlazar la corrida (o reproducirla en cada sistema).",
         "Las cifras de cobertura de 94 % y 97 % del Plan v3 son reportadas; no se han reproducido en este registro."
       ],
-      "reproduccion": {"comando": "python -m coverage run --source=minifmt -m pytest -q tests experiments/generativo/tests && python -m coverage report --fail-under=90 && python conformance/run_python.py && node conformance/run_js.mjs", "nota": "Registrar cada ejecución con parametros.componente = suite_de_conformidad, cobertura o ci_tres_sistemas."},
-      "hu_relacionadas": ["HU104", "HU116", "HU118"],
+      "reproduccion": {
+        "comando": "python -m coverage run --source=minifmt -m pytest -q tests experiments/generativo/tests && python -m coverage report --fail-under=90 && python conformance/run_python.py && node conformance/run_js.mjs",
+        "nota": "Registrar cada ejecución con parametros.componente = suite_de_conformidad, cobertura o ci_tres_sistemas."
+      },
+      "hu_relacionadas": [
+        "HU104",
+        "HU116",
+        "HU118"
+      ],
       "estado_ejecucion": "parcial",
       "resultado": "no_evaluable",
       "bloqueo": null,
       "antecedentes": [
-        {"id": "v5-casos-de-conformidad", "descripcion": "Casos de conformidad del repositorio (suite común a Python y TypeScript). El Plan v3 reporta 372 de 372; la cifra se vuelve a contar aquí desde los archivos.", "procedencia": "reportado_historico", "fuente": "conformance/cases", "cifras": [
-          {"etiqueta": "Casos en conformance/cases", "valor": 376, "unidad": "casos", "verificacion": {"tipo": "suma_longitudes", "glob": "conformance/cases/*.json", "ruta": "cases", "estricta": false}}
-        ]}
+        {
+          "id": "v5-casos-de-conformidad",
+          "descripcion": "Casos de conformidad del repositorio (suite común a Python y TypeScript). El Plan v3 reporta 372 de 372; la cifra se vuelve a contar aquí desde los archivos.",
+          "procedencia": "reportado_historico",
+          "fuente": "conformance/cases",
+          "cifras": [
+            {
+              "etiqueta": "Casos en conformance/cases",
+              "valor": 376,
+              "unidad": "casos",
+              "verificacion": {
+                "tipo": "suma_longitudes",
+                "glob": "conformance/cases/*.json",
+                "ruta": "cases",
+                "estricta": false
+              }
+            }
+          ]
+        }
       ]
     },
     {
       "id": "V6a",
       "nombre": "Integración en sistemas reales",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "naturalista", "formativo_sumativo": "sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "naturalista",
+        "formativo_sumativo": "sumativo con la versión congelada"
+      },
       "pregunta": "PI3: ¿.mini opera en el contexto real de sistemas distintos de la tesis, reemplazando o complementando al lector anterior?",
       "procedimiento": "Integrar mini-format en un sistema real sin cambiar el resto de su interfaz; comparar el flujo anterior con el nuevo; guardar la evidencia mínima por integración (ficha T9): respuesta cruda, lector usado, registros válidos, reparaciones y tokens.",
-      "muestra": {"unidad": "sistema integrado", "descripcion": "Dos sistemas de dominios distintos: CIMA (en código SIMA) y un segundo sistema."},
-      "comparadores": ["Flujo anterior del sistema frente al flujo con mini-format"],
+      "muestra": {
+        "unidad": "sistema integrado",
+        "descripcion": "Dos sistemas de dominios distintos: CIMA (en código SIMA) y un segundo sistema."
+      },
+      "comparadores": [
+        "Flujo anterior del sistema frente al flujo con mini-format"
+      ],
       "criterio": {
         "texto": "I4.4: integración en dos sistemas de dominios distintos.",
         "interpretacion": "Se cuenta un sistema cuando existe al menos una corrida ejecutada con su evidencia mínima (parametros.sistema y parametros.dominio); la meta exige >= 2 sistemas distintos en >= 2 dominios distintos. Queda por decidir si CIMA cuenta como sistema propio del equipo y si el segundo debe ser ajeno (Plan v3 §8): esa decisión no cambia el predicado pero sí cómo se reporta. Lectura propuesta; pendiente de confirmación del equipo.",
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "sistemas", "descripcion": "Sistemas integrados distintos", "fuente": "corridas", "ruta": "parametros.sistema", "agregacion": "conteo_distintos", "op": ">=", "valor": 2},
-          {"id": "dominios", "descripcion": "Dominios distintos", "fuente": "corridas", "ruta": "parametros.dominio", "agregacion": "conteo_distintos", "op": ">=", "valor": 2}
+          {
+            "id": "sistemas",
+            "descripcion": "Sistemas integrados distintos",
+            "fuente": "corridas",
+            "ruta": "parametros.sistema",
+            "agregacion": "conteo_distintos",
+            "op": ">=",
+            "valor": 2
+          },
+          {
+            "id": "dominios",
+            "descripcion": "Dominios distintos",
+            "fuente": "corridas",
+            "ruta": "parametros.dominio",
+            "agregacion": "conteo_distintos",
+            "op": ">=",
+            "valor": 2
+          }
         ]
       },
       "meta_documental": "V6a dos sistemas de dominios distintos (Charter v5, I4.4).",
       "componentes": [
-        {"id": "integracion_en_sistema_real", "descripcion": "Integración ejecutada en un sistema real con su evidencia mínima", "procedencias_admitidas": ["api_real", "reproducido_local"], "minimo_corridas": 2}
+        {
+          "id": "integracion_en_sistema_real",
+          "descripcion": "Integración ejecutada en un sistema real con su evidencia mínima",
+          "procedencias_admitidas": [
+            "api_real",
+            "reproducido_local"
+          ],
+          "minimo_corridas": 2
+        }
       ],
       "cifras": [],
       "limitaciones": [
@@ -269,56 +689,199 @@
         "CIMA pertenece a la misma organización de GitHub que mini-format: falta decidir si cuenta como sistema ajeno.",
         "No hay una medida de éxito más allá de la presencia de los dos sistemas."
       ],
-      "reproduccion": {"comando": "python experiments/v8_sima/analizar.py", "nota": "Reanaliza los datos archivados de la integración con CIMA; una nueva integración real requiere autorización de gasto."},
-      "hu_relacionadas": ["HU119", "HU120", "HU121", "HU122", "HU123", "HU124", "HU125", "HU126", "HU127", "HU128", "HU118"],
+      "reproduccion": {
+        "comando": "python experiments/v8_sima/analizar.py",
+        "nota": "Reanaliza los datos archivados de la integración con CIMA; una nueva integración real requiere autorización de gasto."
+      },
+      "hu_relacionadas": [
+        "HU119",
+        "HU120",
+        "HU121",
+        "HU122",
+        "HU123",
+        "HU124",
+        "HU125",
+        "HU126",
+        "HU127",
+        "HU128",
+        "HU118"
+      ],
       "estado_ejecucion": "parcial",
       "resultado": "no_evaluable",
       "bloqueo": null,
       "antecedentes": [
-        {"id": "v6a-cima-v8", "descripcion": "Integración en CIMA (SIMA en código) archivada en experiments/v8_sima: 350 ítems pedidos, 343 válidos al llegar, 7 líneas inválidas, 5 reparadas, 350 válidos finales en 38 llamadas.", "procedencia": "reportado_historico", "fuente": "experiments/v8_sima/resumen.json", "cifras": [
-          {"etiqueta": "Ítems pedidos", "valor": 350, "unidad": "ítems", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.items_pedidos", "estricta": true}},
-          {"etiqueta": "Válidos al llegar", "valor": 343, "unidad": "ítems", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.validos_al_llegar", "estricta": true}},
-          {"etiqueta": "Líneas inválidas", "valor": 7, "unidad": "líneas", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.lineas_invalidas", "estricta": true}},
-          {"etiqueta": "Líneas reparadas", "valor": 5, "unidad": "líneas", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.lineas_reparadas", "estricta": true}},
-          {"etiqueta": "Válidos finales", "valor": 350, "unidad": "ítems", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.validos_finales", "estricta": true}},
-          {"etiqueta": "Llamadas", "valor": 38, "unidad": "llamadas", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.llamadas", "estricta": true}}
-        ]}
+        {
+          "id": "v6a-cima-v8",
+          "descripcion": "Integración en CIMA (SIMA en código) archivada en experiments/v8_sima: 350 ítems pedidos, 343 válidos al llegar, 7 líneas inválidas, 5 reparadas, 350 válidos finales en 38 llamadas.",
+          "procedencia": "reportado_historico",
+          "fuente": "experiments/v8_sima/resumen.json",
+          "cifras": [
+            {
+              "etiqueta": "Ítems pedidos",
+              "valor": 350,
+              "unidad": "ítems",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.items_pedidos",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Válidos al llegar",
+              "valor": 343,
+              "unidad": "ítems",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.validos_al_llegar",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Líneas inválidas",
+              "valor": 7,
+              "unidad": "líneas",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.lineas_invalidas",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Líneas reparadas",
+              "valor": 5,
+              "unidad": "líneas",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.lineas_reparadas",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Válidos finales",
+              "valor": 350,
+              "unidad": "ítems",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.validos_finales",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Llamadas",
+              "valor": 38,
+              "unidad": "llamadas",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.llamadas",
+                "estricta": true
+              }
+            }
+          ]
+        }
       ]
     },
     {
       "id": "V6b",
       "nombre": "Desempeño de desarrolladores externos",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "controlado", "formativo_sumativo": "sumativo con la versión congelada"},
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "sumativo con la versión congelada"
+      },
       "pregunta": "PI3: ¿un desarrollador externo integra .mini con la guía en un tiempo y con una satisfacción razonables, frente a hacerlo con JSON?",
       "procedimiento": "Diseño intrasujeto con tareas estandarizadas y respuestas congeladas: T1 en JSON y en .mini contrabalanceado; T2-T4 solo con mini-format; SUS tras usar el componente; ficha de observación. Dos pilotos excluidos del análisis. Tener personas reales no vuelve naturalista al estudio.",
-      "muestra": {"unidad": "participante", "descripcion": "8-12 participantes válidos más 2 de piloto; se procura que >= 3 tengan ejercicio profesional; se excluye a autores, asesores y personas con experiencia previa con mini-format."},
-      "comparadores": ["T1 con JSON frente a T1 con .mini (contrabalanceado)", "T2-T4 sin comparador"],
+      "muestra": {
+        "unidad": "participante",
+        "descripcion": "8-12 participantes válidos más 2 de piloto; se procura que >= 3 tengan ejercicio profesional; se excluye a autores, asesores y personas con experiencia previa con mini-format."
+      },
+      "comparadores": [
+        "T1 con JSON frente a T1 con .mini (contrabalanceado)",
+        "T2-T4 sin comparador"
+      ],
       "criterio": {
         "texto": "I4.4: mediana de T1 con .mini <= 30 min y SUS >= 70, con >= 8 participantes válidos tras excluir los dos pilotos.",
         "interpretacion": "La mediana de T1 en .mini se calcula sobre los participantes válidos con los tiempos reales; quien no termina en el tope de 30 min cuenta como 30 (censura) y se reporta aparte la fracción que completó T1 dentro del tope, porque el tope coincide con la meta y la deja casi vacía. SUS = media de los participantes válidos con la fórmula estándar (2,5 x [suma de impares - 1 + suma de 5 - pares]). Se exigen >= 8 participantes válidos. Lectura propuesta por la auditoría del 30/09/2026; pendiente de confirmación del equipo.",
         "fijado_utc": "2026-09-30T19:00:00Z",
         "aprobado_por_equipo": false,
         "predicados": [
-          {"id": "participantes", "descripcion": "Participantes válidos", "fuente": "resumen", "ruta": "participantes_validos", "agregacion": "suma", "op": ">=", "valor": 8},
-          {"id": "t1_mediana", "descripcion": "Mediana de T1 con .mini, en minutos", "fuente": "resumen", "ruta": "mediana_t1_mini_min", "agregacion": "unico", "op": "<=", "valor": 30},
-          {"id": "sus", "descripcion": "SUS medio", "fuente": "resumen", "ruta": "sus_promedio", "agregacion": "unico", "op": ">=", "valor": 70}
+          {
+            "id": "participantes",
+            "descripcion": "Participantes válidos",
+            "fuente": "resumen",
+            "ruta": "participantes_validos",
+            "agregacion": "suma",
+            "op": ">=",
+            "valor": 8
+          },
+          {
+            "id": "t1_mediana",
+            "descripcion": "Mediana de T1 con .mini, en minutos",
+            "fuente": "resumen",
+            "ruta": "mediana_t1_mini_min",
+            "agregacion": "unico",
+            "op": "<=",
+            "valor": 30
+          },
+          {
+            "id": "sus",
+            "descripcion": "SUS medio",
+            "fuente": "resumen",
+            "ruta": "sus_promedio",
+            "agregacion": "unico",
+            "op": ">=",
+            "valor": 70
+          }
         ]
       },
       "meta_documental": "V6b mediana de T1 con .mini <= 30 min y SUS >= 70 con >= 8 participantes válidos tras 2 pilotos excluidos (Charter v5, I4.4).",
       "componentes": [
-        {"id": "sesiones_con_participantes", "descripcion": "Sesiones con participantes (datos personales en evidencia/restringida; solo agregados publicables)", "procedencias_admitidas": ["participantes"], "minimo_corridas": 1}
+        {
+          "id": "sesiones_con_participantes",
+          "descripcion": "Sesiones con participantes (datos personales en evidencia/restringida; solo agregados publicables)",
+          "procedencias_admitidas": [
+            "participantes"
+          ],
+          "minimo_corridas": 1
+        }
       ],
       "cifras": [
-        {"id": "completaron_t1_pct", "etiqueta": "Participantes que completaron T1 con .mini dentro del tope", "ruta": "completaron_t1_mini_pct", "agregacion": "unico", "unidad": "%"}
+        {
+          "id": "completaron_t1_pct",
+          "etiqueta": "Participantes que completaron T1 con .mini dentro del tope",
+          "ruta": "completaron_t1_mini_pct",
+          "agregacion": "unico",
+          "unidad": "%"
+        }
       ],
       "limitaciones": [
         "No hay participantes ni materiales (tareas T1-T4, respuestas congeladas, ficha, consentimiento) en el repositorio: pendiente.",
         "Cualquier dato sintético o asistido por IA es solo ensayo del protocolo y no cuenta como sesión con participantes.",
         "n pequeño: el análisis es descriptivo con intervalos, no un contraste de hipótesis."
       ],
-      "reproduccion": {"comando": null, "nota": "Requiere sesiones con participantes según el protocolo del Plan v3 (secciones 9 y 10). Los datos crudos van a evidencia/restringida/ (ignorada por git); solo los agregados se registran con tools/evidencia_lib.py y procedencia participantes."},
-      "hu_relacionadas": ["HU117", "HU118", "HU129", "HU130", "HU131", "HU132", "HU133", "HU134", "HU135", "HU136", "HU137", "HU138"],
+      "reproduccion": {
+        "comando": null,
+        "nota": "Requiere sesiones con participantes según el protocolo del Plan v3 (secciones 9 y 10). Los datos crudos van a evidencia/restringida/ (ignorada por git); solo los agregados se registran con tools/evidencia_lib.py y procedencia participantes."
+      },
+      "hu_relacionadas": [
+        "HU117",
+        "HU118",
+        "HU129",
+        "HU130",
+        "HU131",
+        "HU132",
+        "HU133",
+        "HU134",
+        "HU135",
+        "HU136",
+        "HU137",
+        "HU138"
+      ],
       "estado_ejecucion": "pendiente",
       "resultado": "no_evaluable",
       "bloqueo": null,
@@ -326,69 +889,266 @@
     },
     {
       "id": "V7",
-      "nombre": "Escalamiento por tamaño de lote y volumen (exploratorio)",
+      "nombre": "Escala con modelo real: volumen y tamaño de lote",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "exploratorio", "formativo_sumativo": "formativo"},
-      "pregunta": "¿Cómo cambian los tokens, los cortes y la validez de JSON frente a .mini al crecer el tamaño de lote y el volumen?",
-      "procedimiento": "Barrido por tamaño de lote con un modelo real y una corrida de volumen; conteo de tokens de salida, registros válidos y cortes por lector.",
-      "muestra": {"unidad": "llamada a un modelo real", "descripcion": "Un proveedor por experimento (DeepSeek y Groq); no cumple las metas I4.2 ni I4.3 y se cita como antecedente."},
-      "comparadores": ["JSON (lector json.loads, todo o nada)", ".mini"],
-      "criterio": null,
-      "meta_documental": "Exploratorio: sin meta de aceptación.",
+      "clasificacion": {
+        "tipo": "controlado",
+        "formativo_sumativo": "sumativo sobre datos archivados; confirmatorio con la replicación"
+      },
+      "pregunta": "PI1 y PI2 a escala: con miles de registros generados por un modelo real, ¿cuántos tokens de salida ahorra .mini frente a JSON, cuántos registros son aprovechables y qué se pierde cuando la respuesta se corta?",
+      "procedimiento": "Barrido por tamaño de lote (10 a 400 registros por llamada, 3 repeticiones) y corrida de volumen de 20 000 registros por formato con deepseek-chat, temperatura 0 y el mayor lote sin pérdida de cada formato. Se registran los tokens que informa el proveedor, el motivo de parada y los registros completos, válidos y aprovechables. Componente 1: reanálisis local reproducible de las respuestas archivadas. Componente 2: replicación con API bajo manifiesto de corrida.",
+      "muestra": {
+        "unidad": "llamada a un modelo real",
+        "descripcion": "Volumen: 300 llamadas y 40 000 registros (20 000 por formato). Barrido: 48 llamadas, 8 tamaños de lote por formato. Un proveedor, un modelo y un dominio (tickets de soporte)."
+      },
+      "comparadores": [
+        "JSON con el JSON Schema en la instrucción, leído con json.loads",
+        "mini con el bloque de especificación del contrato, leído en modo tolerante"
+      ],
+      "criterio": {
+        "texto": "I4.5 (escala): procesar >= 10 000 registros por formato con un modelo real, con >= 99 % de registros aprovechables en .mini y una reducción de tokens de salida por registro >= 30 % frente a JSON.",
+        "interpretacion": "Registros por formato = registros solicitados en la corrida de volumen (el menor de los dos formatos). Aprovechables = registros que la aplicación usa sin otra llamada, sobre los solicitados. Reducción = 100 x (1 - tokens de salida por registro de .mini / de JSON), con los tokens que informa el proveedor. Este criterio se fijó el 08/10/2026, DESPUÉS de conocer los datos archivados del 17/09/2026: el reanálisis es descriptivo y el criterio solo es confirmatorio sobre la replicación con API.",
+        "fijado_utc": "2026-10-08T15:00:00Z",
+        "aprobado_por_equipo": false,
+        "predicados": [
+          {
+            "id": "registros_por_formato",
+            "descripcion": "Registros procesados por formato (el menor)",
+            "fuente": "resumen",
+            "ruta": "registros_minimo_por_formato",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 10000
+          },
+          {
+            "id": "aprovechables_mini",
+            "descripcion": "Registros aprovechables de .mini (%)",
+            "fuente": "resumen",
+            "ruta": "aprovechables_pct_mini",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 99
+          },
+          {
+            "id": "reduccion_salida",
+            "descripcion": "Reducción de tokens de salida por registro frente a JSON (%)",
+            "fuente": "resumen",
+            "ruta": "reduccion_tokens_salida_pct",
+            "agregacion": "min",
+            "op": ">=",
+            "valor": 30
+          }
+        ]
+      },
+      "meta_documental": "Pedido del asesor: validar con miles de registros. Propuesta de indicador I4.5 para el plan de validación (enmienda del 08/10/2026).",
       "componentes": [
-        {"id": "barrido_por_lote", "descripcion": "Barrido por tamaño de lote con modelos reales", "procedencias_admitidas": ["api_real"], "minimo_corridas": 1}
+        {
+          "id": "reanalisis_volumen",
+          "descripcion": "Reanálisis local reproducible de las 300 llamadas archivadas de volumen y del barrido por lote",
+          "procedencias_admitidas": [
+            "reproducido_local"
+          ],
+          "minimo_corridas": 1
+        },
+        {
+          "id": "replicacion_volumen_api",
+          "descripcion": "Replicación de la corrida de volumen con API real bajo manifiesto (>= 10 000 registros por formato)",
+          "procedencias_admitidas": [
+            "api_real"
+          ],
+          "minimo_corridas": 1
+        }
       ],
-      "cifras": [],
+      "cifras": [
+        {
+          "id": "registros_totales",
+          "etiqueta": "Registros procesados con modelo real",
+          "ruta": "registros_totales",
+          "agregacion": "max",
+          "unidad": "registros"
+        },
+        {
+          "id": "reduccion_salida",
+          "etiqueta": "Reducción de tokens de salida por registro frente a JSON",
+          "ruta": "reduccion_tokens_salida_pct",
+          "agregacion": "max",
+          "unidad": "%"
+        },
+        {
+          "id": "aprovechables_corte_mini",
+          "etiqueta": "Registros de .mini aprovechados en lotes donde JSON se corta",
+          "ruta": "aprovechables_con_corte_pct_mini",
+          "agregacion": "max",
+          "unidad": "%"
+        }
+      ],
       "limitaciones": [
-        "Datos reales de un solo proveedor por experimento; el lector JSON es solo json.loads y se corta a 8 192 tokens desde 150 registros por llamada.",
-        "Usa deepseek-chat, que ya no figura en la página oficial de precios (descontinuado según su registro de cambios): la tarifa con la que se facturó no es verificable.",
-        "El consumo real declarado (0,78 USD) es menor que el mínimo teórico con las tarifas publicadas hoy (1,04 USD): discrepancia sin resolver; no presentar una estimación como costo real.",
-        "Sin manifiesto de corrida: los datos son históricos, no reproducibles sin gasto."
+        "Un proveedor, un modelo (deepseek-chat) y un dominio (tickets de soporte).",
+        "Las llamadas archivadas son anteriores a los manifiestos de corrida: el reanálisis es reproducible, la generación no.",
+        "El criterio se fijó después de conocer los datos archivados; solo la replicación con API es confirmatoria.",
+        "Lotes distintos en la corrida de volumen (JSON 100, .mini 200): cada formato usa su mayor lote sin pérdida del barrido.",
+        "deepseek-chat ya no figura en la página oficial de precios; el consumo real declarado (0,78 USD) no se concilia con las tarifas archivadas: no presentar el costo estimado como costo real."
       ],
-      "reproduccion": {"comando": "python experiments/v7_escalamiento/analizar.py", "nota": "Reanaliza los datos archivados; repetir las llamadas requiere autorización de gasto."},
-      "hu_relacionadas": ["HU108", "HU113"],
+      "reproduccion": {
+        "comando": "python tools/ejecutar_v7.py",
+        "nota": "Reanálisis sin red. La replicación usa experiments/v7_escalamiento/correr.py con --confirmar-real y requiere autorización de gasto (estimado < 3 USD)."
+      },
+      "hu_relacionadas": [
+        "HU108",
+        "HU113"
+      ],
       "estado_ejecucion": "parcial",
       "resultado": "no_evaluable",
-      "bloqueo": null,
+      "bloqueo": {
+        "causa": "La replicación con API requiere autorización de gasto y clave del proveedor.",
+        "desbloquea": "Autorización expresa del usuario y clave en el entorno de ejecución."
+      },
       "antecedentes": [
-        {"id": "v7-volumen-deepseek", "descripcion": "Corrida de volumen archivada con DeepSeek (17/09/2026): 40 000 registros procesados; consumo declarado por diferencia de saldo de la cuenta.", "procedencia": "reportado_historico", "fuente": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json", "cifras": [
-          {"etiqueta": "Registros procesados", "valor": 40000, "unidad": "registros", "verificacion": {"tipo": "json", "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json", "ruta": "registros_procesados", "estricta": true}},
-          {"etiqueta": "Tokens de entrada", "valor": 1138042, "unidad": "tokens", "verificacion": {"tipo": "json", "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json", "ruta": "tokens_entrada", "estricta": true}},
-          {"etiqueta": "Tokens de salida", "valor": 1730641, "unidad": "tokens", "verificacion": {"tipo": "json", "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json", "ruta": "tokens_salida", "estricta": true}},
-          {"etiqueta": "Consumo declarado", "valor": 0.78, "unidad": "USD", "verificacion": {"tipo": "json", "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json", "ruta": "consumido_usd", "estricta": true}}
-        ]}
+        {
+          "id": "v7-volumen-deepseek",
+          "descripcion": "Corrida de volumen archivada con DeepSeek (17/09/2026): 40 000 registros procesados; consumo declarado por diferencia de saldo de la cuenta.",
+          "procedencia": "reportado_historico",
+          "fuente": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json",
+          "cifras": [
+            {
+              "etiqueta": "Registros procesados",
+              "valor": 40000,
+              "unidad": "registros",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json",
+                "ruta": "registros_procesados",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Tokens de entrada",
+              "valor": 1138042,
+              "unidad": "tokens",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json",
+                "ruta": "tokens_entrada",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Tokens de salida",
+              "valor": 1730641,
+              "unidad": "tokens",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json",
+                "ruta": "tokens_salida",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Consumo declarado",
+              "valor": 0.78,
+              "unidad": "USD",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v7_escalamiento/results/deepseek_volumen/costo_real.json",
+                "ruta": "consumido_usd",
+                "estricta": true
+              }
+            }
+          ]
+        }
       ]
     },
     {
       "id": "V8",
       "nombre": "Integración real en CIMA con comparación pareada (exploratorio)",
       "objetivo": "OE4",
-      "clasificacion": {"tipo": "exploratorio", "formativo_sumativo": "formativo"},
+      "clasificacion": {
+        "tipo": "exploratorio",
+        "formativo_sumativo": "formativo"
+      },
       "pregunta": "¿Cómo se comportan .mini y JSON en la generación real de preguntas de CIMA (SIMA en código), con reparación selectiva y respuestas cortadas?",
       "procedimiento": "Comparación pareada de .mini frente a JSON sobre las mismas solicitudes y cinco clases completas, con un modelo real; se registran tokens, validez, cortes y reparaciones.",
-      "muestra": {"unidad": "solicitud de preguntas de una clase", "descripcion": "12 y 40 preguntas por comparación pareada y cinco clases completas (350 ítems)."},
-      "comparadores": ["JSON (lector anterior)", ".mini"],
+      "muestra": {
+        "unidad": "solicitud de preguntas de una clase",
+        "descripcion": "12 y 40 preguntas por comparación pareada y cinco clases completas (350 ítems)."
+      },
+      "comparadores": [
+        "JSON (lector anterior)",
+        ".mini"
+      ],
       "criterio": null,
       "meta_documental": "Exploratorio: sin meta de aceptación.",
       "componentes": [
-        {"id": "integracion_sima_real", "descripcion": "Generación real en CIMA con comparación pareada", "procedencias_admitidas": ["api_real"], "minimo_corridas": 1}
+        {
+          "id": "integracion_sima_real",
+          "descripcion": "Generación real en CIMA con comparación pareada",
+          "procedencias_admitidas": [
+            "api_real"
+          ],
+          "minimo_corridas": 1
+        }
       ],
       "cifras": [],
       "limitaciones": [
         "Un solo proveedor y un solo sistema; usa deepseek-chat (ya no documentado por el proveedor).",
         "Sin manifiesto de corrida: los datos son históricos, no reproducibles sin gasto."
       ],
-      "reproduccion": {"comando": "python experiments/v8_sima/analizar.py", "nota": "Reanaliza los datos archivados; repetir las llamadas requiere autorización de gasto."},
-      "hu_relacionadas": ["HU123", "HU124", "HU125", "HU126", "HU128"],
+      "reproduccion": {
+        "comando": "python experiments/v8_sima/analizar.py",
+        "nota": "Reanaliza los datos archivados; repetir las llamadas requiere autorización de gasto."
+      },
+      "hu_relacionadas": [
+        "HU123",
+        "HU124",
+        "HU125",
+        "HU126",
+        "HU128"
+      ],
       "estado_ejecucion": "parcial",
       "resultado": "no_evaluable",
       "bloqueo": null,
       "antecedentes": [
-        {"id": "v8-clases-completas", "descripcion": "Cinco clases completas archivadas (350 ítems; 343 válidos al llegar, 350 finales tras reparar 5 líneas en 38 llamadas).", "procedencia": "reportado_historico", "fuente": "experiments/v8_sima/resumen.json", "cifras": [
-          {"etiqueta": "Ítems pedidos", "valor": 350, "unidad": "ítems", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.items_pedidos", "estricta": true}},
-          {"etiqueta": "Válidos finales", "valor": 350, "unidad": "ítems", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.validos_finales", "estricta": true}},
-          {"etiqueta": "Llamadas", "valor": 38, "unidad": "llamadas", "verificacion": {"tipo": "json", "archivo": "experiments/v8_sima/resumen.json", "ruta": "clases.llamadas", "estricta": true}}
-        ]}
+        {
+          "id": "v8-clases-completas",
+          "descripcion": "Cinco clases completas archivadas (350 ítems; 343 válidos al llegar, 350 finales tras reparar 5 líneas en 38 llamadas).",
+          "procedencia": "reportado_historico",
+          "fuente": "experiments/v8_sima/resumen.json",
+          "cifras": [
+            {
+              "etiqueta": "Ítems pedidos",
+              "valor": 350,
+              "unidad": "ítems",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.items_pedidos",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Válidos finales",
+              "valor": 350,
+              "unidad": "ítems",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.validos_finales",
+                "estricta": true
+              }
+            },
+            {
+              "etiqueta": "Llamadas",
+              "valor": 38,
+              "unidad": "llamadas",
+              "verificacion": {
+                "tipo": "json",
+                "archivo": "experiments/v8_sima/resumen.json",
+                "ruta": "clases.llamadas",
+                "estricta": true
+              }
+            }
+          ]
+        }
       ]
     }
   ]

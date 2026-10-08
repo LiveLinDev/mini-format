@@ -1377,28 +1377,68 @@
           "procedencia": "reportado_historico"
         }
       ],
-      "bloqueo": null,
-      "cifras_principales": [],
+      "bloqueo": {
+        "causa": "La replicación con API requiere autorización de gasto y clave del proveedor.",
+        "desbloquea": "Autorización expresa del usuario y clave en el entorno de ejecución."
+      },
+      "cifras_principales": [
+        {
+          "etiqueta": "Registros procesados con modelo real",
+          "id": "registros_totales",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "registros",
+          "valor": null
+        },
+        {
+          "etiqueta": "Reducción de tokens de salida por registro frente a JSON",
+          "id": "reduccion_salida",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "%",
+          "valor": null
+        },
+        {
+          "etiqueta": "Registros de .mini aprovechados en lotes donde JSON se corta",
+          "id": "aprovechables_corte_mini",
+          "procedencias": [],
+          "run_ids": [],
+          "unidad": "%",
+          "valor": null
+        }
+      ],
       "clasificacion": {
-        "formativo_sumativo": "formativo",
-        "tipo": "exploratorio"
+        "formativo_sumativo": "sumativo sobre datos archivados; confirmatorio con la replicación",
+        "tipo": "controlado"
       },
       "commit_ultima_corrida": null,
       "comparadores": [
-        "JSON (lector json.loads, todo o nada)",
-        ".mini"
+        "JSON con el JSON Schema en la instrucción, leído con json.loads",
+        "mini con el bloque de especificación del contrato, leído en modo tolerante"
       ],
       "componentes": [
         {
           "corridas_que_cuentan": [],
-          "descripcion": "Barrido por tamaño de lote con modelos reales",
-          "id": "barrido_por_lote",
+          "descripcion": "Reanálisis local reproducible de las 300 llamadas archivadas de volumen y del barrido por lote",
+          "id": "reanalisis_volumen",
+          "minimo_corridas": 1,
+          "satisfecho": false
+        },
+        {
+          "corridas_que_cuentan": [],
+          "descripcion": "Replicación de la corrida de volumen con API real bajo manifiesto (>= 10 000 registros por formato)",
+          "id": "replicacion_volumen_api",
           "minimo_corridas": 1,
           "satisfecho": false
         }
       ],
       "corridas": [],
-      "criterio": null,
+      "criterio": {
+        "aprobado_por_equipo": false,
+        "fijado_utc": "2026-10-08T15:00:00Z",
+        "interpretacion": "Registros por formato = registros solicitados en la corrida de volumen (el menor de los dos formatos). Aprovechables = registros que la aplicación usa sin otra llamada, sobre los solicitados. Reducción = 100 x (1 - tokens de salida por registro de .mini / de JSON), con los tokens que informa el proveedor. Este criterio se fijó el 08/10/2026, DESPUÉS de conocer los datos archivados del 17/09/2026: el reanálisis es descriptivo y el criterio solo es confirmatorio sobre la replicación con API.",
+        "texto": "I4.5 (escala): procesar >= 10 000 registros por formato con un modelo real, con >= 99 % de registros aprovechables en .mini y una reducción de tokens de salida por registro >= 30 % frente a JSON."
+      },
       "estado_calculado": "pendiente",
       "estado_ejecucion": "parcial",
       "fecha_ultima_corrida": null,
@@ -1409,28 +1449,54 @@
       ],
       "id": "V7",
       "limitaciones": [
-        "Datos reales de un solo proveedor por experimento; el lector JSON es solo json.loads y se corta a 8 192 tokens desde 150 registros por llamada.",
-        "Usa deepseek-chat, que ya no figura en la página oficial de precios (descontinuado según su registro de cambios): la tarifa con la que se facturó no es verificable.",
-        "El consumo real declarado (0,78 USD) es menor que el mínimo teórico con las tarifas publicadas hoy (1,04 USD): discrepancia sin resolver; no presentar una estimación como costo real.",
-        "Sin manifiesto de corrida: los datos son históricos, no reproducibles sin gasto."
+        "Un proveedor, un modelo (deepseek-chat) y un dominio (tickets de soporte).",
+        "Las llamadas archivadas son anteriores a los manifiestos de corrida: el reanálisis es reproducible, la generación no.",
+        "El criterio se fijó después de conocer los datos archivados; solo la replicación con API es confirmatoria.",
+        "Lotes distintos en la corrida de volumen (JSON 100, .mini 200): cada formato usa su mayor lote sin pérdida del barrido.",
+        "deepseek-chat ya no figura en la página oficial de precios; el consumo real declarado (0,78 USD) no se concilia con las tarifas archivadas: no presentar el costo estimado como costo real."
       ],
-      "meta_documental": "Exploratorio: sin meta de aceptación.",
+      "meta_documental": "Pedido del asesor: validar con miles de registros. Propuesta de indicador I4.5 para el plan de validación (enmienda del 08/10/2026).",
       "motivo_resultado": "el estudio no está ejecutado (estado calculado: pendiente)",
       "muestra": {
-        "descripcion": "Un proveedor por experimento (DeepSeek y Groq); no cumple las metas I4.2 ni I4.3 y se cita como antecedente.",
+        "descripcion": "Volumen: 300 llamadas y 40 000 registros (20 000 por formato). Barrido: 48 llamadas, 8 tamaños de lote por formato. Un proveedor, un modelo y un dominio (tickets de soporte).",
         "unidad": "llamada a un modelo real"
       },
       "n_corridas": 0,
       "n_corridas_que_cuentan": 0,
-      "nombre": "Escalamiento por tamaño de lote y volumen (exploratorio)",
+      "nombre": "Escala con modelo real: volumen y tamaño de lote",
       "objetivo": "OE4",
-      "predicados": [],
-      "pregunta": "¿Cómo cambian los tokens, los cortes y la validez de JSON frente a .mini al crecer el tamaño de lote y el volumen?",
+      "predicados": [
+        {
+          "cumple": null,
+          "descripcion": "Registros procesados por formato (el menor)",
+          "id": "registros_por_formato",
+          "op": ">=",
+          "umbral": 10000,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Registros aprovechables de .mini (%)",
+          "id": "aprovechables_mini",
+          "op": ">=",
+          "umbral": 99,
+          "valor_observado": null
+        },
+        {
+          "cumple": null,
+          "descripcion": "Reducción de tokens de salida por registro frente a JSON (%)",
+          "id": "reduccion_salida",
+          "op": ">=",
+          "umbral": 30,
+          "valor_observado": null
+        }
+      ],
+      "pregunta": "PI1 y PI2 a escala: con miles de registros generados por un modelo real, ¿cuántos tokens de salida ahorra .mini frente a JSON, cuántos registros son aprovechables y qué se pierde cuando la respuesta se corta?",
       "procedencias_que_cuentan": {},
       "procedencias_todas": {},
       "reproduccion": {
-        "comando": "python experiments/v7_escalamiento/analizar.py",
-        "nota": "Reanaliza los datos archivados; repetir las llamadas requiere autorización de gasto."
+        "comando": "python tools/ejecutar_v7.py",
+        "nota": "Reanálisis sin red. La replicación usa experiments/v7_escalamiento/correr.py con --confirmar-real y requiere autorización de gasto (estimado < 3 USD)."
       },
       "resultado": "no_evaluable",
       "resultado_calculado": "no_evaluable",
