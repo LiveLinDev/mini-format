@@ -309,11 +309,15 @@ def test_http_chat_json_call_is_patched_with_one_changed_call(kit4, tmp_path, mo
     assert sent[0]["json"]["messages"][:2] == [{"role": "system", "content": "Return only valid JSON."},
                                                 {"role": "user", "content": "Create four tickets"}]
     assert contract["schema_id"] in sent[0]["json"]["messages"][-1]["content"]
+    # The bridge keeps the model answer and the validated document for inspection with the mini CLI.
+    run = bundle / "ultima_ejecucion"
+    assert (run / "respuesta_1.mini").read_text(encoding="utf-8") == encode(sample, contract, shared=False, dictionaries=False)
+    assert Workflow(bundle).runtime.diagnose((run / "resultado.mini").read_text(encoding="utf-8"), contract)["ok"]
     # Requests that are not JSON-mode chat calls go through unchanged.
     assert app.other_call("hi")["choices"][0]["message"]["content"] == "plain" and sent[1]["json"] == {"input": "hi"}
 
 
-def test_cut_response_keeps_complete_records_and_requests_only_the_missing_ones(kit4, monkeypatch):
+def test_cut_response_keeps_complete_records_and_requests_only_the_missing_ones(kit4, monkeypatch, tmp_path):
     bundle, contract, sample = kit4
     lines = encode(sample, contract, shared=False, dictionaries=False).split("\n")
     cut = "```mini\n" + "\n".join(lines[:3]) + "\n" + lines[3][:4]  # header + 2 records + a broken third; fence never closed
@@ -331,6 +335,11 @@ def test_cut_response_keeps_complete_records_and_requests_only_the_missing_ones(
     assert "truncation" in stages and "continuation" in stages
     assert "removed unclosed Markdown code fence" in flow.last_run["trace"][2]["changes"]
     assert "2 conservados y 2 pedidos de nuevo" in response.mini_summary and "20 tokens de salida en 2 llamada(s)" in response.mini_summary
+    saved = flow.save_run(tmp_path / "run")
+    assert sorted(p.name for p in saved.iterdir()) == ["ejecucion.json", "respuesta_1.mini", "respuesta_2.mini", "resultado.mini"]
+    assert (saved / "respuesta_1.mini").read_text(encoding="utf-8") == cut
+    final = (saved / "resultado.mini").read_text(encoding="utf-8")
+    assert final == encode(sample, contract, shared=False, dictionaries=False) + "\n"
 
 
 def test_text_callback_cut_is_inferred_from_a_short_last_line(kit4):

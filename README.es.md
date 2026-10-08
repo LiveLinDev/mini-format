@@ -10,10 +10,10 @@ En ese ejemplo, el mismo resultado consume 443 tokens en JSON, 304 en TOON y 278
 
 ## Empieza aquí
 
-[Descarga y extrae el paquete](https://mini-format.pmoluna.com/downloads/mini-format-1.3.2.zip). Desde la carpeta extraída:
+[Descarga y extrae el paquete](https://mini-format.pmoluna.com/downloads/mini-format-1.3.3.zip). Desde la carpeta extraída:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.2-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.3-py3-none-any.whl
 mini setup
 ```
 

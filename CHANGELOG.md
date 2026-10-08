@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.3 — 2026-10-08
+
+- The bridge created by `mini integrate --apply` for HTTP chat calls saves each run in `.mini/ultima_ejecucion/` (`.mini/last_run/` in English toolkits): every model answer as received, the validated `resultado.mini` and the trace. They can be inspected with `mini validate`, `mini to-json` and `mini tokens`. `Workflow.save_run(folder)` does the same for any run.
+- After a cut response is completed, the stored document is written without shared columns or dictionaries, so it reads like the model's own lines.
+
 ## 1.3.2 — 2026-10-08
 
 - `mini integrate --apply` and `mini setup` connect a second Python pattern: `requests.post` or `httpx.post` to an OpenAI-compatible chat endpoint that requests a JSON `response_format` (for example DeepSeek). Only the call changes; the application keeps its URL, headers, timeout, error handling and JSON reader. The generated bridge prints a one-line summary of each run.

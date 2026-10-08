@@ -92,7 +92,7 @@ class Workflow:
                 trace.append({"stage": "parse", "ok": True, "records": report["records"]})
                 if cut is not None:
                     data = self._continue(data, target, generate, task, max_repairs, trace, _round)
-                    text = self.runtime.encode(data, self.contract)
+                    text = self.runtime.encode(data, self.contract, shared=False, dictionaries=False)
                 self.last_run.update(ok=True, mini=text, data=data)
                 return data
             if generate is None or attempt == max_repairs:
@@ -192,6 +192,31 @@ class Workflow:
                 {"code": "D_EXPECTED_COUNT", "message": f"expected {target} records, received {len(records)}"}]})
             raise WorkflowError(self.last_run)
         return data
+
+    def save_run(self, folder):
+        """Write the last run so it can be inspected with ``mini validate``, ``mini diagnose`` or ``mini to-json``.
+
+        Each model answer is saved exactly as received (``respuesta_N.mini``; a selective correction, which is a
+        JSON object of lines, as ``.json``), plus the validated document (``resultado.mini``) and the trace
+        (``ejecucion.json``). Earlier files in the folder are replaced. The files contain application data.
+        """
+        folder = Path(folder)
+        folder.mkdir(parents=True, exist_ok=True)
+        for old in list(folder.glob("*.mini")) + list(folder.glob("*.json")):
+            old.unlink()
+        run = self.last_run or {}
+        es = self.lang == "es"
+        answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective") else ".mini")
+                   for step in run.get("trace") or []
+                   if step.get("stage") in ("generate", "model_repair", "continuation") and isinstance(step.get("text"), str)]
+        for number, (text, suffix) in enumerate(answers, 1):
+            (folder / f"{'respuesta' if es else 'response'}_{number}{suffix}").write_bytes(text.encode("utf-8"))
+        if run.get("ok") and run.get("mini"):
+            (folder / ("resultado.mini" if es else "result.mini")).write_bytes((run["mini"].rstrip("\n") + "\n").encode("utf-8"))
+        trace = {key: value for key, value in run.items() if key != "data"}
+        (folder / ("ejecucion.json" if es else "run.json")).write_bytes(
+            (json.dumps(trace, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+        return folder
 
     def summary(self):
         """One line describing the last run, in the toolkit language."""

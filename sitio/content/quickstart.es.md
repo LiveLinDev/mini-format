@@ -8,10 +8,10 @@ Una empresa recibe quejas y consultas. Su aplicación pide a la IA que interpret
 
 ## 1. Instala y abre el asistente
 
-[Descarga el paquete](/downloads/mini-format-1.3.2.zip) y extráelo. Desde esa carpeta:
+[Descarga el paquete](/downloads/mini-format-1.3.3.zip) y extráelo. Desde esa carpeta:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.2-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.3-py3-none-any.whl
 mini setup
 ```
 

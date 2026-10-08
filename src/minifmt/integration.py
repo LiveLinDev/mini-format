@@ -178,13 +178,19 @@ def _bridge(kind, relative, lang):
             "module = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(module)\n")
     if kind == "sdk":
         return head + f"def complete(create, **kwargs):\n    return module.Workflow(BUNDLE, lang={lang!r}).complete(create, **kwargs)\n"
-    return ("import sys\nimport " + kind + " as _http\n" + head +
+    runs, saved = ("ultima_ejecucion", "respuestas guardadas en") if lang == "es" else ("last_run", "answers saved in")
+    return ("import os\nimport sys\nimport " + kind + " as _http\n" + head +
             "\n\ndef post(url, **kwargs):\n"
             "    \"\"\"Same call as " + kind + ".post; JSON-mode chat requests answer in .mini and return validated JSON.\"\"\"\n"
             f"    flow = module.Workflow(BUNDLE, lang={lang!r})\n"
             "    response = flow.post(_http.post, url, **kwargs)\n"
             "    if getattr(response, 'mini_summary', None):\n"
-            "        print(response.mini_summary, file=sys.stderr)\n"
+            f"        folder = flow.save_run(BUNDLE / {runs!r})\n"
+            "        try:\n"
+            "            folder = os.path.relpath(folder)\n"
+            "        except ValueError:\n"
+            "            pass\n"
+            f"        print(response.mini_summary + ' · {saved} ' + str(folder), file=sys.stderr)\n"
             "    return response\n")
 
 

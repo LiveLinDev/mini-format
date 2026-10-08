@@ -8,10 +8,10 @@ A company receives complaints and questions. Its app asks AI to interpret each m
 
 ## 1. Install and open the wizard
 
-[Download the package](/downloads/mini-format-1.3.2.zip) and extract it. From that directory:
+[Download the package](/downloads/mini-format-1.3.3.zip) and extract it. From that directory:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.2-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.3-py3-none-any.whl
 mini setup
 ```
 

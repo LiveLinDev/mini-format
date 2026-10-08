@@ -21,7 +21,7 @@ from .serializer import dumps
 from .stream import Reader, ReaderResult, StreamRecord, create_reader, read_records
 from .values import scalar_equal
 
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 SPEC_VERSION = "1.1"
 
 __all__ = ["Contract", "Field", "MiniError", "MiniValidationError", "Document", "parse",

@@ -10,10 +10,10 @@ In this example, the same output takes 443 JSON tokens, 304 TOON tokens and 278 
 
 ## Start here
 
-[Download and extract the package](https://mini-format.pmoluna.com/downloads/mini-format-1.3.2.zip). From the extracted directory:
+[Download and extract the package](https://mini-format.pmoluna.com/downloads/mini-format-1.3.3.zip). From the extracted directory:
 
 ```sh
-python -m pip install --no-index mini_format-1.3.2-py3-none-any.whl
+python -m pip install --no-index mini_format-1.3.3-py3-none-any.whl
 mini setup
 ```
 

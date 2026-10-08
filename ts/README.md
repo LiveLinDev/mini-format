@@ -1,6 +1,6 @@
 # @mini-format/core — biblioteca TypeScript de `.mini`
 
-Versión de software 1.3.2. Implementación TypeScript modular y tipada del núcleo
+Versión de software 1.3.3. Implementación TypeScript modular y tipada del núcleo
 `.mini` (SPEC 1.1):
 parser, serializador, bloque de especificación para prompts, registro de familias
 (forks), una API de lectura en streaming para respuestas de modelos token a token,
@@ -18,11 +18,11 @@ Autores: A. E. J. Palma Obispo, E. J. Palomino Santa Cruz (UPC). Licencia MIT.
 
 ## Instalación del paquete
 
-Necesitas Node.js ≥ 22.6. Descarga `mini-format-core-1.3.2.tgz` desde Descargas
+Necesitas Node.js ≥ 22.6. Descarga `mini-format-core-1.3.3.tgz` desde Descargas
 o extrae ese archivo del ZIP del toolkit. Instala el archivo local:
 
 ```sh
-npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.3.2.tgz
+npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1.3.3.tgz
 ```
 
 El archivo contiene JavaScript ESM compilado y declaraciones `.d.ts` en `dist/`
