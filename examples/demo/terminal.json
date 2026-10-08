@@ -1,0 +1,392 @@
+{
+ "version": "1.3.1",
+ "contratoArchivo": "{\n  \"prefix\": \"tk\",\n  \"version\": 1,\n  \"name\": \"Tickets de soporte\",\n  \"description\": \"\",\n  \"parent\": null,\n  \"domain\": \"\",\n  \"list_separator\": \",\",\n  \"records_key\": \"records\",\n  \"header\": {\n    \"required\": [\n      \"n\"\n    ],\n    \"keys\": {\n      \"n\": {\n        \"type\": \"int\",\n        \"desc\": \"number of records\"\n      },\n      \"v\": {\n        \"type\": \"int\",\n        \"default\": 1,\n        \"desc\": \"contract version\"\n      }\n    }\n  },\n  \"core\": [\n    {\n      \"name\": \"id\",\n      \"type\": \"str\",\n      \"desc\": \"código del ticket\"\n    },\n    {\n      \"name\": \"prioridad\",\n      \"type\": \"enum\",\n      \"values\": [\n        \"baja\",\n        \"media\",\n        \"alta\"\n      ]\n    },\n    {\n      \"name\": \"categoria\",\n      \"type\": \"enum\",\n      \"values\": [\n        \"acceso\",\n        \"pago\",\n        \"error\",\n        \"consulta\"\n      ]\n    },\n    {\n      \"name\": \"resumen\",\n      \"type\": \"str\",\n      \"desc\": \"resumen breve de la solicitud\"\n    },\n    {\n      \"name\": \"horas\",\n      \"type\": \"int\",\n      \"min\": 0,\n      \"max\": 40,\n      \"desc\": \"horas estimadas de atención\"\n    }\n  ],\n  \"extensions\": [],\n  \"author\": \"\",\n  \"license\": \"MIT\",\n  \"source\": \"\"\n}\n",
+ "es": {
+  "comunes": {
+   "instalar": [
+    {
+     "cmd": "python -m pip install mini_format-1.3.1-py3-none-any.whl",
+     "out": "Processing ./mini_format-1.3.1-py3-none-any.whl\nInstalling collected packages: mini-format\nSuccessfully installed mini-format-1.3.1",
+     "nota": "instalación del paquete publicado en mini-format.pmoluna.com"
+    },
+    {
+     "cmd": "mini --help",
+     "out": "usage: mini [-h] [--forks FORKS]\n            {setup,init,forks,validate,diagnose,to-json,from-json,prompt,tokens,check-forks,new-fork,build,integrate,repair,bench,from-schema,to-schema}\n            ...\n\nCrea tu propio formato .mini y úsalo con IA\n\n…",
+     "nota": "la herramienta queda disponible como «mini»"
+    }
+   ],
+   "contrato": [
+    {
+     "cmd": "mini from-schema ticket.schema.json -p tk --out tk.contract.json",
+     "out": "wrote tk.contract.json",
+     "nota": "el contrato se genera desde el esquema JSON que la aplicación ya tenía"
+    },
+    {
+     "cmd": "mini prompt --contract tk.contract.json --lang es",
+     "out": "FORMATO .mini — familia 'tk' v1 (Tickets de soporte)\nReglas:\n- Texto plano UTF-8. La PRIMERA línea es la cabecera: 'tk|n=<int>'. n es obligatorio y debe ser igual al número exacto de líneas de registro.\n- Después de la cabecera, UNA línea por registro; nada más (sin comentarios, sin bloques de código, sin líneas en blanco intermedias).\n- Cada registro tiene los campos en ESTE orden, separados por '|' (el orden es la semántica; no se escriben nombres de campo):\n  1. id: str — código del ticket\n  2. prioridad: uno de {baja|media|alta}\n  3. categoria: uno de {acceso|pago|error|consulta}\n  4. resumen: str — resumen breve de la solicitud\n  5. horas: int [0..40] — horas estimadas de atención\n- Si un elemento de lista contiene el separador ',', enciérralo entre comillas dobles al estilo CSV (\"impacto, justicia y evidencia\"; el marcador * va después de la comilla de cierre) o escapa el separador como '\\,'. Un asterisco final literal se escribe '\\*'.\n- Escapes válidos en cualquier valor: '\\|' para una barra vertical literal, '\\\\' para una barra invertida, '\\n' para un salto de línea.\n…",
+     "nota": "la instrucción para la IA se escribe desde el contrato"
+    }
+   ],
+   "setup": [
+    {
+     "cmd": "mini setup",
+     "out": "  mini setup · .mini → JSON\n  Idioma / Language: es / en [es]  › es\n  Tu IA genera .mini. Tu aplicación sigue recibiendo JSON.\n  1 Tengo un JSON de mi IA   2 Definir campos   3 Salir   4 Probar con tickets\n  ¿Cómo empezamos?  › 4\n  Nombre corto de tu formato [ticket]  › tk\n  Carpeta de salida [.mini]  › .mini\n  ✓ Toolkit creado en .mini\n  contract.json: reglas de los campos y sus tipos.\n  prompt.es.md: instrucciones que tu código enviará a la IA.\n  workflow.py: valida, repara, vuelve a comprobar y entrega JSON a tu aplicación.\n  Prueba: copia el contenido de .mini\\try-prompt.md a tu IA. Ya incluye el formato.\n  python \".mini\\workflow.py\" response.mini --out result.json\n\n  Ahora conectamos el formato al código que llama a tu IA.\n  1 Todavía no tengo un flujo   2 Elegir mi archivo   3 Buscar en mi proyecto\n  ¿Ya tienes esa llamada a IA?  › 1\n  Tu kit está listo. Cuando tengas el archivo que llama a la IA, sustituye la ruta en:\n  mini integrate \"ruta/a/tu/app.py\" --bundle \".mini\" --lang es\n  Guía: .mini\\GUIA.md",
+     "nota": "asistente guiado: crea el contrato, la instrucción y el kit de integración en .mini/"
+    },
+    {
+     "cmd": "python .mini/workflow.py .mini/example.mini",
+     "out": "[\n  {\n    \"id\": 1,\n    \"titulo\": \"No puedo entrar\",\n    \"categoria\": \"acceso\",\n    \"prioridad\": \"alta\"\n  },\n  {\n    \"id\": 2,\n    \"titulo\": \"Factura duplicada\",\n    \"categoria\": \"facturacion\",\n    \"prioridad\": \"media\"\n  }\n]",
+     "nota": "el kit valida el ejemplo del asistente, repara si hace falta y entrega JSON"
+    }
+   ]
+  },
+  "escenarios": {
+   "ok": {
+    "respuesta": [
+     {
+      "cmd": "mini tokens respuesta.mini",
+      "out": "219 tokens (o200k_base, backend=tiktoken); 673 bytes",
+      "nota": "tamaño de la respuesta en .mini"
+     },
+     {
+      "cmd": "mini tokens respuesta.json",
+      "out": "349 tokens (o200k_base, backend=tiktoken); 1249 bytes",
+      "nota": "tamaño de la misma respuesta pedida en JSON"
+     }
+    ],
+    "validar": [
+     {
+      "cmd": "mini validate respuesta.mini --contract tk.contract.json",
+      "out": "OK: prefix=tk v1 records=10 n=10",
+      "nota": "cada línea se revisa contra el contrato"
+     },
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json",
+      "out": "Registros válidos: 10 de 10\nRegistros que faltan: 0\nNo hay nada que reparar.",
+      "nota": "qué hay que volver a pedir"
+     }
+    ],
+    "resultado": [
+     {
+      "cmd": "mini to-json respuesta.mini --contract tk.contract.json",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n…",
+      "nota": "la aplicación recibe JSON (con --out tickets.json se guarda en un archivo)"
+     },
+     {
+      "cmd": "mini --forks familias bench respuesta.mini -p tk",
+      "out": "respuesta.mini  (family tk, 10 records; o200k_base via tiktoken)\nformat                         tokens    bytes   saving vs JSON compact\n.mini                             219      673                    39.7%\nTOON (flattened, tabular)         247      759                    32.0%\nTOON (official, as-is)            251      770                    30.9%\nCSV (flattened)                   218      702                    39.9%\nJSON compact                      363     1287                     0.0%\nYAML                              387     1229                    -6.6%\nJSON indented                     571     1818                   -57.3%",
+      "nota": "el mismo contenido medido en otros formatos"
+     }
+    ]
+   },
+   "error": {
+    "respuesta": [
+     {
+      "cmd": "mini tokens respuesta.mini",
+      "out": "219 tokens (o200k_base, backend=tiktoken); 678 bytes",
+      "nota": "tamaño de la respuesta en .mini"
+     },
+     {
+      "cmd": "mini tokens respuesta.json",
+      "out": "349 tokens (o200k_base, backend=tiktoken); 1254 bytes",
+      "nota": "tamaño de la misma respuesta pedida en JSON"
+     }
+    ],
+    "validar": [
+     {
+      "cmd": "mini validate respuesta.mini --contract tk.contract.json",
+      "out": "E10 line 6 [categoria]: 'facturacion' not in {acceso|pago|error|consulta}\nINVALID: 1 error(s)",
+      "nota": "cada línea se revisa contra el contrato"
+     },
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json",
+      "out": "Registros válidos: 9 de 10\n  línea 6: T-1045|media|facturacion|No llega el código de verificación   →  E10 'facturacion' not in {acceso|pago|error|consulta}\nRegistros que faltan: 0\nSe vuelve a pedir al modelo solo: 1 línea(s) inválida(s) y 0 registro(s) faltante(s).\nLos registros válidos se conservan y no se vuelven a pagar.",
+      "nota": "qué hay que volver a pedir"
+     }
+    ],
+    "reparar": [
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --correccion correccion.mini --out reparada.mini",
+      "out": "Líneas corregidas y aceptadas: 6\nDocumento reparado: 10 de 10 registros válidos → reparada.mini",
+      "nota": "correccion.mini es lo que respondió la IA al pedido de reparación"
+     },
+     {
+      "cmd": "mini validate reparada.mini --contract tk.contract.json",
+      "out": "OK: prefix=tk v1 records=10 n=10",
+      "nota": "se vuelve a comprobar el documento completo"
+     }
+    ],
+    "parcial": [
+     {
+      "cmd": "mini to-json respuesta.mini --contract tk.contract.json --lenient",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n…\n    }\n  ]\n}\nE10 line 6 [categoria]: 'facturacion' not in {acceso|pago|error|consulta}",
+      "nota": "sin reparar: se entregan solo los registros válidos"
+     }
+    ],
+    "resultado": [
+     {
+      "cmd": "mini to-json reparada.mini --contract tk.contract.json",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n…",
+      "nota": "la aplicación recibe JSON (con --out tickets.json se guarda en un archivo)"
+     },
+     {
+      "cmd": "mini --forks familias bench reparada.mini -p tk",
+      "out": "reparada.mini  (family tk, 10 records; o200k_base via tiktoken)\nformat                         tokens    bytes   saving vs JSON compact\n.mini                             219      673                    39.7%\nTOON (flattened, tabular)         247      759                    32.0%\nTOON (official, as-is)            251      770                    30.9%\nCSV (flattened)                   218      702                    39.9%\nJSON compact                      363     1287                     0.0%\nYAML                              387     1229                    -6.6%\nJSON indented                     571     1818                   -57.3%",
+      "nota": "el mismo contenido medido en otros formatos"
+     }
+    ]
+   },
+   "cortada": {
+    "respuesta": [
+     {
+      "cmd": "mini tokens respuesta.mini",
+      "out": "170 tokens (o200k_base, backend=tiktoken); 504 bytes",
+      "nota": "tamaño de la respuesta en .mini"
+     },
+     {
+      "cmd": "mini tokens respuesta.json",
+      "out": "265 tokens (o200k_base, backend=tiktoken); 936 bytes",
+      "nota": "tamaño de la misma respuesta pedida en JSON"
+     }
+    ],
+    "validar": [
+     {
+      "cmd": "mini validate respuesta.mini --contract tk.contract.json",
+      "out": "E05 line 9: record has 4 fields, core requires 5\nE04 document: header declares n=10 but document has 8 record lines\nINVALID: 2 error(s)",
+      "nota": "cada línea se revisa contra el contrato"
+     },
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json",
+      "out": "Registros válidos: 7 de 10\n  línea 9: T-1048|baja|consulta|Cam  →  E05 record has 4 fields, core requires 5\nRegistros que faltan: 2\nSe vuelve a pedir al modelo solo: 1 línea(s) inválida(s) y 2 registro(s) faltante(s).\nLos registros válidos se conservan y no se vuelven a pagar.",
+      "nota": "qué hay que volver a pedir"
+     }
+    ],
+    "reparar": [
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --correccion correccion.mini --out reparada.mini",
+      "out": "Líneas corregidas y aceptadas: 9\nRegistros faltantes añadidos: T-1049, T-1050\nDocumento reparado: 10 de 10 registros válidos → reparada.mini",
+      "nota": "correccion.mini es lo que respondió la IA al pedido de reparación"
+     },
+     {
+      "cmd": "mini validate reparada.mini --contract tk.contract.json",
+      "out": "OK: prefix=tk v1 records=10 n=10",
+      "nota": "se vuelve a comprobar el documento completo"
+     }
+    ],
+    "parcial": [
+     {
+      "cmd": "mini to-json respuesta.mini --contract tk.contract.json --lenient",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n…\n  ]\n}\nE05 line 9: record has 4 fields, core requires 5\nE04 document: header declares n=10 but document has 8 record lines",
+      "nota": "sin reparar: se entregan solo los registros válidos"
+     }
+    ],
+    "resultado": [
+     {
+      "cmd": "mini to-json reparada.mini --contract tk.contract.json",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n…",
+      "nota": "la aplicación recibe JSON (con --out tickets.json se guarda en un archivo)"
+     },
+     {
+      "cmd": "mini --forks familias bench reparada.mini -p tk",
+      "out": "reparada.mini  (family tk, 10 records; o200k_base via tiktoken)\nformat                         tokens    bytes   saving vs JSON compact\n.mini                             219      673                    39.7%\nTOON (flattened, tabular)         247      759                    32.0%\nTOON (official, as-is)            251      770                    30.9%\nCSV (flattened)                   218      702                    39.9%\nJSON compact                      363     1287                     0.0%\nYAML                              387     1229                    -6.6%\nJSON indented                     571     1818                   -57.3%",
+      "nota": "el mismo contenido medido en otros formatos"
+     }
+    ]
+   }
+  }
+ },
+ "en": {
+  "comunes": {
+   "instalar": [
+    {
+     "cmd": "python -m pip install mini_format-1.3.1-py3-none-any.whl",
+     "out": "Processing ./mini_format-1.3.1-py3-none-any.whl\nInstalling collected packages: mini-format\nSuccessfully installed mini-format-1.3.1",
+     "nota": "install the package published at mini-format.pmoluna.com"
+    },
+    {
+     "cmd": "mini --help",
+     "out": "usage: mini [-h] [--forks FORKS]\n            {setup,init,forks,validate,diagnose,to-json,from-json,prompt,tokens,check-forks,new-fork,build,integrate,repair,bench,from-schema,to-schema}\n            ...\n\nCrea tu propio formato .mini y úsalo con IA\n\n…",
+     "nota": "the tool is now available as «mini»"
+    }
+   ],
+   "contrato": [
+    {
+     "cmd": "mini from-schema ticket.schema.json -p tk --out tk.contract.json",
+     "out": "wrote tk.contract.json",
+     "nota": "the contract is generated from the JSON Schema the application already had"
+    },
+    {
+     "cmd": "mini prompt --contract tk.contract.json --lang en",
+     "out": ".mini FORMAT — family 'tk' v1 (Tickets de soporte)\nRules:\n- Plain UTF-8 text. The FIRST line is the header: 'tk|n=<int>'. n is mandatory and must equal the exact number of record lines.\n- After the header, ONE line per record and nothing else (no comments, no code fences, no blank lines in between).\n- Each record has these fields in THIS order, separated by '|' (position is the semantics; field names are never written):\n  1. id: str — código del ticket\n  2. prioridad: one of {baja|media|alta}\n  3. categoria: one of {acceso|pago|error|consulta}\n  4. resumen: str — resumen breve de la solicitud\n  5. horas: int [0..40] — horas estimadas de atención\n- If a list element contains the separator ',', enclose the element in double quotes CSV-style (\"impact, justice and evidence\"; the * marker goes after the closing quote) or escape the separator as '\\,'. A literal trailing asterisk is written '\\*'.\n- Escapes valid in any value: '\\|' for a literal vertical bar, '\\\\' for a backslash, '\\n' for a line break.\n…",
+     "nota": "the instruction for the AI is written from the contract"
+    }
+   ],
+   "setup": [
+    {
+     "cmd": "mini setup",
+     "out": "  mini setup · .mini → JSON\n  Idioma / Language: es / en [es]  › en\n  Your AI generates .mini. Your application still receives JSON.\n  1 I have AI-generated JSON   2 Define fields   3 Exit   4 Try support tickets\n  Where do we start?  › 4\n  Short format name [ticket]  › tk\n  Output folder [.mini]  › .mini\n  ✓ Toolkit created in .mini\n  contract.json: field and type rules.\n  prompt.en.md: instructions your code will send to AI.\n  workflow.py: validates, repairs, checks again and delivers JSON to your application.\n  Test: paste the contents of .mini\\try-prompt.md into your AI. The format is included.\n  python \".mini\\workflow.py\" response.mini --out result.json\n\n  Now connect the format to the code that calls your AI.\n  1 I do not have a workflow yet   2 Select my file   3 Search my project\n  Do you already have that AI call?  › 1\n  Your toolkit is ready. Once you have the AI call file, replace the path in:\n  mini integrate \"path/to/app.py\" --bundle \".mini\" --lang en\n  Guide: .mini\\README.md",
+     "nota": "guided assistant: creates the contract, the instruction and the integration kit in .mini/"
+    },
+    {
+     "cmd": "python .mini/workflow.py .mini/example.mini",
+     "out": "[\n  {\n    \"id\": 1,\n    \"titulo\": \"No puedo entrar\",\n    \"categoria\": \"acceso\",\n    \"prioridad\": \"alta\"\n  },\n  {\n    \"id\": 2,\n    \"titulo\": \"Factura duplicada\",\n    \"categoria\": \"facturacion\",\n    \"prioridad\": \"media\"\n  }\n]",
+     "nota": "the kit validates the assistant's example, repairs if needed and hands over JSON"
+    }
+   ]
+  },
+  "escenarios": {
+   "ok": {
+    "respuesta": [
+     {
+      "cmd": "mini tokens respuesta.mini",
+      "out": "219 tokens (o200k_base, backend=tiktoken); 673 bytes",
+      "nota": "size of the .mini answer"
+     },
+     {
+      "cmd": "mini tokens respuesta.json",
+      "out": "349 tokens (o200k_base, backend=tiktoken); 1249 bytes",
+      "nota": "size of the same answer requested in JSON"
+     }
+    ],
+    "validar": [
+     {
+      "cmd": "mini validate respuesta.mini --contract tk.contract.json",
+      "out": "OK: prefix=tk v1 records=10 n=10",
+      "nota": "every line is checked against the contract"
+     },
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --lang en",
+      "out": "Valid records: 10 of 10\nMissing records: 0\nNothing to repair.",
+      "nota": "what has to be requested again"
+     }
+    ],
+    "resultado": [
+     {
+      "cmd": "mini to-json respuesta.mini --contract tk.contract.json",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n…",
+      "nota": "the application receives JSON (--out tickets.json saves it to a file)"
+     },
+     {
+      "cmd": "mini --forks familias bench respuesta.mini -p tk",
+      "out": "respuesta.mini  (family tk, 10 records; o200k_base via tiktoken)\nformat                         tokens    bytes   saving vs JSON compact\n.mini                             219      673                    39.7%\nTOON (flattened, tabular)         247      759                    32.0%\nTOON (official, as-is)            251      770                    30.9%\nCSV (flattened)                   218      702                    39.9%\nJSON compact                      363     1287                     0.0%\nYAML                              387     1229                    -6.6%\nJSON indented                     571     1818                   -57.3%",
+      "nota": "the same content measured in other formats"
+     }
+    ]
+   },
+   "error": {
+    "respuesta": [
+     {
+      "cmd": "mini tokens respuesta.mini",
+      "out": "219 tokens (o200k_base, backend=tiktoken); 678 bytes",
+      "nota": "size of the .mini answer"
+     },
+     {
+      "cmd": "mini tokens respuesta.json",
+      "out": "349 tokens (o200k_base, backend=tiktoken); 1254 bytes",
+      "nota": "size of the same answer requested in JSON"
+     }
+    ],
+    "validar": [
+     {
+      "cmd": "mini validate respuesta.mini --contract tk.contract.json",
+      "out": "E10 line 6 [categoria]: 'facturacion' not in {acceso|pago|error|consulta}\nINVALID: 1 error(s)",
+      "nota": "every line is checked against the contract"
+     },
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --lang en",
+      "out": "Valid records: 9 of 10\n  line 6: T-1045|media|facturacion|No llega el código de verificación   →  E10 'facturacion' not in {acceso|pago|error|consulta}\nMissing records: 0\nOnly this is requested from the model again: 1 invalid line(s) and 0 missing record(s).\nValid records are kept and not paid for again.",
+      "nota": "what has to be requested again"
+     }
+    ],
+    "reparar": [
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --correccion correccion.mini --out reparada.mini --lang en",
+      "out": "Corrected lines accepted: 6\nRepaired document: 10 of 10 valid records → reparada.mini",
+      "nota": "correccion.mini is what the AI answered to the repair request"
+     },
+     {
+      "cmd": "mini validate reparada.mini --contract tk.contract.json",
+      "out": "OK: prefix=tk v1 records=10 n=10",
+      "nota": "the whole document is checked again"
+     }
+    ],
+    "parcial": [
+     {
+      "cmd": "mini to-json respuesta.mini --contract tk.contract.json --lenient",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n…\n    }\n  ]\n}\nE10 line 6 [categoria]: 'facturacion' not in {acceso|pago|error|consulta}",
+      "nota": "without repair: only the valid records are delivered"
+     }
+    ],
+    "resultado": [
+     {
+      "cmd": "mini to-json reparada.mini --contract tk.contract.json",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n…",
+      "nota": "the application receives JSON (--out tickets.json saves it to a file)"
+     },
+     {
+      "cmd": "mini --forks familias bench reparada.mini -p tk",
+      "out": "reparada.mini  (family tk, 10 records; o200k_base via tiktoken)\nformat                         tokens    bytes   saving vs JSON compact\n.mini                             219      673                    39.7%\nTOON (flattened, tabular)         247      759                    32.0%\nTOON (official, as-is)            251      770                    30.9%\nCSV (flattened)                   218      702                    39.9%\nJSON compact                      363     1287                     0.0%\nYAML                              387     1229                    -6.6%\nJSON indented                     571     1818                   -57.3%",
+      "nota": "the same content measured in other formats"
+     }
+    ]
+   },
+   "cortada": {
+    "respuesta": [
+     {
+      "cmd": "mini tokens respuesta.mini",
+      "out": "170 tokens (o200k_base, backend=tiktoken); 504 bytes",
+      "nota": "size of the .mini answer"
+     },
+     {
+      "cmd": "mini tokens respuesta.json",
+      "out": "265 tokens (o200k_base, backend=tiktoken); 936 bytes",
+      "nota": "size of the same answer requested in JSON"
+     }
+    ],
+    "validar": [
+     {
+      "cmd": "mini validate respuesta.mini --contract tk.contract.json",
+      "out": "E05 line 9: record has 4 fields, core requires 5\nE04 document: header declares n=10 but document has 8 record lines\nINVALID: 2 error(s)",
+      "nota": "every line is checked against the contract"
+     },
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --lang en",
+      "out": "Valid records: 7 of 10\n  line 9: T-1048|baja|consulta|Cam  →  E05 record has 4 fields, core requires 5\nMissing records: 2\nOnly this is requested from the model again: 1 invalid line(s) and 2 missing record(s).\nValid records are kept and not paid for again.",
+      "nota": "what has to be requested again"
+     }
+    ],
+    "reparar": [
+     {
+      "cmd": "python reparar.py respuesta.mini --contract tk.contract.json --correccion correccion.mini --out reparada.mini --lang en",
+      "out": "Corrected lines accepted: 9\nMissing records added: T-1049, T-1050\nRepaired document: 10 of 10 valid records → reparada.mini",
+      "nota": "correccion.mini is what the AI answered to the repair request"
+     },
+     {
+      "cmd": "mini validate reparada.mini --contract tk.contract.json",
+      "out": "OK: prefix=tk v1 records=10 n=10",
+      "nota": "the whole document is checked again"
+     }
+    ],
+    "parcial": [
+     {
+      "cmd": "mini to-json respuesta.mini --contract tk.contract.json --lenient",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n…\n  ]\n}\nE05 line 9: record has 4 fields, core requires 5\nE04 document: header declares n=10 but document has 8 record lines",
+      "nota": "without repair: only the valid records are delivered"
+     }
+    ],
+    "resultado": [
+     {
+      "cmd": "mini to-json reparada.mini --contract tk.contract.json",
+      "out": "{\n  \"prefix\": \"tk\",\n  \"header\": {\n    \"n\": 10,\n    \"v\": 1\n  },\n  \"records\": [\n    {\n      \"id\": \"T-1041\",\n      \"prioridad\": \"alta\",\n      \"categoria\": \"acceso\",\n      \"resumen\": \"No puede iniciar sesión tras cambiar la contraseña\",\n      \"horas\": 2\n    },\n    {\n      \"id\": \"T-1042\",\n…",
+      "nota": "the application receives JSON (--out tickets.json saves it to a file)"
+     },
+     {
+      "cmd": "mini --forks familias bench reparada.mini -p tk",
+      "out": "reparada.mini  (family tk, 10 records; o200k_base via tiktoken)\nformat                         tokens    bytes   saving vs JSON compact\n.mini                             219      673                    39.7%\nTOON (flattened, tabular)         247      759                    32.0%\nTOON (official, as-is)            251      770                    30.9%\nCSV (flattened)                   218      702                    39.9%\nJSON compact                      363     1287                     0.0%\nYAML                              387     1229                    -6.6%\nJSON indented                     571     1818                   -57.3%",
+      "nota": "the same content measured in other formats"
+     }
+    ]
+   }
+  }
+ }
+}

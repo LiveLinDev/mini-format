@@ -78,6 +78,20 @@ __CABEZA__
   .dm-caja .k { color: rgb(var(--bad)); background: rgb(var(--bad) / .08); border-radius: 3px; }
   .dm-caja .sep { color: rgb(var(--accent)); font-weight: 700; }
   .dm-caja .tok { font-family: var(--f-mono); font-size: .78rem; color: rgb(var(--fg-muted)); font-weight: 600; }
+  .dm-gen { display: grid; grid-template-columns: minmax(0, 1fr) 1.4rem minmax(0, 1fr) 1.4rem minmax(0, 1fr); gap: .5rem; align-items: stretch; }
+  .dm-gen .fl { display: grid; place-items: center; color: rgb(var(--fg-faint)); font-size: 1.2rem; font-weight: 700; }
+  .dm-gen .dm-caja { display: flex; flex-direction: column; background: rgb(var(--raised)); }
+  .dm-gen .dm-caja pre { font-size: .72rem; line-height: 1.5; max-height: 17rem; flex: 1; }
+  .dm-gen .cab small { font-family: var(--f-mono); font-weight: 500; font-size: .7rem; color: rgb(var(--fg-muted)); }
+  .dm-gen .num { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border-radius: 50%; margin-right: .4rem;
+                 background: rgb(var(--fg-faint) / .35); color: rgb(var(--fg)); font-size: .68rem; font-weight: 700; }
+  .dm-gen .listo .num { background: rgb(var(--accent)); color: #fff; }
+  .dm-gen .vacio { flex: 1; display: grid; place-items: center; min-height: 11rem; padding: 1rem; text-align: center; font-size: .8rem; color: rgb(var(--fg-faint)); }
+  .dm-gen .kc { color: rgb(var(--accent)); }
+  .dm-gen .ln { display: block; animation: aparece .3s ease both; }
+  .dm-tras { animation: entra .4s ease both; }
+  .dm-sub { font-size: 1rem; margin: 1.6rem 0 .7rem; }
+  @keyframes aparece { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
 
   /* paso 3: situaciones y respuestas */
   .dm-situaciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
@@ -164,11 +178,38 @@ __CABEZA__
   .dm-opcion:has(input:checked) { border-color: rgb(var(--accent)); background: rgb(var(--accent) / .06); }
   .dm-opcion small { display: block; color: rgb(var(--fg-muted)); font-size: .76rem; }
 
+  /* ---------- terminal: los mismos pasos con la CLI */
+  .dm-term { margin-top: 2.2rem; scroll-margin-top: calc(var(--header-h, 4rem) + 1rem); }
+  .dm-term-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; margin-bottom: .7rem; }
+  .dm-term-cab h2 { font-family: var(--f-display); font-size: clamp(1.1rem, 2vw, 1.35rem); margin: 0; letter-spacing: -.01em; }
+  .dm-term-cab p { margin: .25rem 0 0; font-size: .88rem; color: rgb(var(--fg-muted)); max-width: 48rem; }
+  .dm-consola { background: #0e0e11; color: #ececf0; border-radius: var(--r-lg, 14px); overflow: hidden; box-shadow: 0 14px 34px -18px rgb(0 0 0 / .45); }
+  .dm-consola .bar { display: flex; align-items: center; gap: .7rem; padding: .55rem .8rem; border-bottom: 1px solid rgb(255 255 255 / .08);
+                     font-family: var(--f-mono); font-size: .7rem; color: rgb(255 255 255 / .5); }
+  .dm-consola .dots { display: flex; gap: 5px; } .dm-consola .dots i { width: 9px; height: 9px; border-radius: 999px; background: rgb(255 255 255 / .17); }
+  .dm-consola .titulo { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dm-consola .bar button { font: inherit; font-size: .7rem; border: 1px solid rgb(255 255 255 / .16); background: transparent; color: rgb(255 255 255 / .62);
+                            padding: .2rem .6rem; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+  .dm-consola .bar button:hover { color: #fff; border-color: rgb(255 255 255 / .35); }
+  .dm-consola .bar button[aria-pressed="true"] { background: rgb(255 255 255 / .12); color: #fff; border-color: rgb(255 255 255 / .3); }
+  .dm-consola .pestanas { display: flex; gap: .3rem; }
+  .dm-consola pre { margin: 0; padding: 1rem 1.1rem 1.2rem; font-family: var(--f-mono); font-size: .76rem; line-height: 1.6; letter-spacing: -.02em;
+                    white-space: pre-wrap; overflow-wrap: anywhere; min-height: 12rem; max-height: 34rem; overflow: auto; background: transparent; color: inherit; border: 0; }
+  .dm-consola .t-c { color: #80808d; } .dm-consola .t-p { color: #8fe3aa; user-select: none; } .dm-consola .t-cmd { color: #fff; font-weight: 600; }
+  .dm-consola .t-s { color: #8fe3aa; } .dm-consola .t-e { color: #ff9c9c; } .dm-consola .t-w { color: #f3cb83; }
+  .dm-consola .t-cursor { display: inline-block; width: .55em; height: 1.05em; background: #ececf0; vertical-align: text-bottom; animation: parpadeo 1s steps(2) infinite; }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+  .dm-consola .pie-t { padding: .5rem 1.1rem; border-top: 1px solid rgb(255 255 255 / .08); font-size: .7rem; color: rgb(255 255 255 / .45); }
+  .dm-nav .ayuda a { color: rgb(var(--accent)); }
+
   @media (max-width: 860px) {
     .dm-campos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .dm-compara, .dm-situaciones, .dm-kpis { grid-template-columns: 1fr; }
+    .dm-compara, .dm-situaciones, .dm-kpis, .dm-gen { grid-template-columns: 1fr; }
+    .dm-gen .fl { transform: rotate(90deg); height: 1.2rem; }
+    .dm-consola .bar { flex-wrap: wrap; } .dm-consola .titulo { flex-basis: calc(100% - 3rem); }
     .dm-progreso .t { display: none; }
   }
+  @media (prefers-reduced-motion: reduce) { .dm *, .dm-consola * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
@@ -200,9 +241,32 @@ __CABECERA__
 
   <div class="dm-nav">
     <button type="button" class="btn" id="atras"><span data-lang="es">← Anterior</span><span data-lang="en" hidden>← Back</span></button>
-    <span class="ayuda"><span data-lang="es">También puedes usar las flechas ← → del teclado</span><span data-lang="en" hidden>You can also use the ← → keys</span></span>
+    <span class="ayuda"><span data-lang="es">También puedes usar las flechas ← → del teclado · <a href="#terminal">Ver los comandos ↓</a></span><span data-lang="en" hidden>You can also use the ← → keys · <a href="#terminal">See the commands ↓</a></span></span>
     <button type="button" class="btn btn-solid" id="adelante"><span data-lang="es">Siguiente →</span><span data-lang="en" hidden>Next →</span></button>
   </div>
+
+  <section class="dm-term" id="terminal" aria-labelledby="tituloTerminal">
+    <div class="dm-term-cab">
+      <div>
+        <h2 id="tituloTerminal"><span data-lang="es">Lo mismo en la línea de comandos</span><span data-lang="en" hidden>The same on the command line</span></h2>
+        <p><span data-lang="es">La página es una vista. Estos son los comandos de mini-format que hacen el paso que está en pantalla, con la salida que producen.</span>
+          <span data-lang="en" hidden>The page is a view. These are the mini-format commands that perform the step on screen, with the output they produce.</span></p>
+      </div>
+    </div>
+    <div class="dm-consola">
+      <div class="bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="titulo" id="tituloConsola"></span>
+        <span class="pestanas">
+          <button type="button" data-tab="paso" aria-pressed="true"><span data-lang="es">Este paso</span><span data-lang="en" hidden>This step</span></button>
+          <button type="button" data-tab="setup" aria-pressed="false">mini setup</button>
+        </span>
+        <button type="button" id="copiarCmd"><span data-lang="es">Copiar comandos</span><span data-lang="en" hidden>Copy commands</span></button>
+      </div>
+      <pre id="pantalla"></pre>
+      <div class="pie-t" id="pieConsola"></div>
+    </div>
+  </section>
 
   <dialog class="dm-dialogo" id="ajustes">
     <form method="dialog" id="formAjustes">
@@ -248,7 +312,7 @@ __PIE__
     ? window.GPTTokenizer_o200k_base.encode(s || "").length : Math.round(new TextEncoder().encode(s || "").length / 3.6);
   const num = (x) => Number(x).toLocaleString(es() ? "es-PE" : "en-US");
 
-  const estado = { paso: 1, modo: "grabado", escenario: "cortada", mini: null, json: null, rep: null, ocupado: false };
+  const estado = { paso: 1, modo: "grabado", escenario: "cortada", contrato: false, animarContrato: false, mini: null, json: null, rep: null, ocupado: false };
 
   /* ============================================================ clave y modo (ocultos tras el botón de ajustes) */
   function leerClave() {
@@ -394,6 +458,7 @@ __PIE__
   function ir(n) {
     if (n < 1 || n > 5 || estado.ocupado) return;
     if (n > 3 && !estado.mini) n = 3;
+    if (n >= 3) estado.contrato = true;
     estado.paso = n; render(); window.scrollTo({ top: $("#progreso").offsetTop - 80, behavior: "smooth" });
   }
   function render() {
@@ -401,11 +466,12 @@ __PIE__
     const e = $("#escena");
     e.style.animation = "none"; void e.offsetWidth; e.style.animation = "";
     e.innerHTML = [null, escena1, escena2, escena3, escena4, escena5][estado.paso]();
-    const enganches = [null, null, null, enganchar3, enganchar4, enganchar5][estado.paso];
+    const enganches = [null, null, enganchar2, enganchar3, enganchar4, enganchar5][estado.paso];
     if (enganches) enganches();
     $("#atras").disabled = estado.paso === 1 || estado.ocupado;
     $("#adelante").disabled = !puedeAvanzar();
     $("#adelante").hidden = estado.paso === 5;
+    pintarTerminal();
   }
 
   function escena1() {
@@ -425,9 +491,28 @@ __PIE__
     const tk = JSON.parse(DATOS.grabaciones.json.ok).tickets[0];
     const json = esc(JSON.stringify(tk, null, 1)).replace(/&quot;|"/g, '"').replace(/"(\w+)":/g, '<span class="k">"$1"</span>:');
     const linea = CAMPOS.map((f) => esc(String(tk[f.name]))).join('<span class="sep">|</span>');
+    const hecho = estado.contrato, anima = estado.animarContrato;
+    estado.animarContrato = false;
+    const contrato = vistaContrato(), instruccion = instruccionMini();
+    const nC = contrato.split("\n").length, retraso = (i, base) => anima ? ' style="animation-delay:' + (base + i * 45) + 'ms"' : ' style="animation:none"';
+    const lineas = (texto, base, resaltar) => texto.split("\n").map((l, i) => '<span class="ln"' + retraso(i, base) + ">" +
+      ((resaltar ? esc(l).replace(/"(\w+)":/g, '<span class="kc">"$1"</span>:') : esc(l)) || " ") + "</span>").join("");
+    const caja = (n, titulo, archivo, cuerpo, mini) => '<div class="dm-caja' + (mini ? " mini" : "") + (cuerpo ? " listo" : "") + '"><div class="cab"><span><span class="num">' + n + "</span>" +
+      titulo + "</span><small>" + archivo + "</small></div>" + (cuerpo ? "<pre>" + cuerpo + "</pre>" : '<div class="vacio">' +
+      t(["Todavía no se ha generado", "Not generated yet"]) + "</div>") + "</div>";
+    const tras = anima ? ' style="animation-delay:' + (nC * 45 + 900) + 'ms"' : "";
     return "<h2>" + t(["2 · Se acuerdan las reglas una sola vez", "2 · The rules are agreed once"]) + '</h2><p class="lead">' +
-      t(["Un contrato define los cinco campos del ticket, su orden y los valores válidos. Así la IA no necesita repetir los nombres de los campos y mini-format puede revisar cada respuesta.",
-         "A contract defines the ticket's five fields, their order and the valid values. The AI no longer needs to repeat field names, and mini-format can check every answer."]) + "</p>" +
+      t(["La aplicación ya tenía un esquema JSON de sus tickets. mini-format lo convierte en un contrato y, desde el contrato, escribe la instrucción para la IA. Este paso se hace una sola vez.",
+         "The application already had a JSON Schema for its tickets. mini-format turns it into a contract and, from the contract, writes the instruction for the AI. This step is done once."]) + "</p>" +
+      '<div class="dm-accion"><button type="button" class="btn btn-solid btn-grande" id="generar"' + (hecho ? " disabled" : "") + ">" +
+        (hecho ? t(["✓ Contrato generado", "✓ Contract generated"]) : t(["Generar contrato", "Generate contract"])) + '</button><span class="nota">' +
+        t(["Equivale a «mini from-schema» y «mini prompt»; los comandos están en la terminal, más abajo.", "Same as «mini from-schema» and «mini prompt»; the commands are in the terminal below."]) + "</span></div>" +
+      '<div class="dm-gen">' +
+        caja(1, t(["Esquema de la aplicación", "Application schema"]), "ticket.schema.json", esc(compacto(JSON.parse(DATOS.esquema), 0)), false) + '<span class="fl">→</span>' +
+        caja(2, t(["Contrato .mini", ".mini contract"]), "tk.contract.json", hecho ? lineas(contrato, 0, true) : "", true) + '<span class="fl">→</span>' +
+        caja(3, t(["Instrucción para la IA", "Instruction for the AI"]), hecho ? contar(instruccion) + " tokens" : "prompt", hecho ? lineas(instruccion, nC * 45 + 150, false) : "", false) +
+      "</div>" +
+      (hecho ? '<div class="dm-tras"' + tras + '><h3 class="dm-sub">' + t(["Lo que fija el contrato", "What the contract sets"]) + "</h3>" +
       '<div class="dm-campos">' + CAMPOS.map((f, i) => '<div class="dm-campo"><span class="n">' + (i + 1) + "</span><code>" + esc(f.name) + '</code><span class="q">' +
         esc(t(explica[f.name] || ["", ""])) + '</span><span class="r">' + esc(regla(f)) + "</span></div>").join("") + "</div>" +
       '<div class="dm-compara"><div class="dm-caja"><div class="cab"><span>' + t(["Un ticket en JSON", "One ticket in JSON"]) + '</span><span class="tok">' +
@@ -435,7 +520,25 @@ __PIE__
       '<div class="dm-caja mini"><div class="cab"><span>' + t(["El mismo ticket en .mini", "The same ticket in .mini"]) + '</span><span class="tok">' +
         contar(CAMPOS.map((f) => tk[f.name]).join("|")) + " tokens</span></div><pre>" + linea + '</pre><p class="dm-nota" style="padding:0 .9rem .8rem">' +
         t(["En rojo, lo que JSON repite en cada ticket. En .mini solo van los valores, en el orden del contrato.", "In red, what JSON repeats in every ticket. In .mini only the values go, in contract order."]) +
-        "</p></div></div>";
+        "</p></div></div></div>" : "");
+  }
+  function enganchar2() {
+    $("#generar").addEventListener("click", () => { estado.contrato = true; estado.animarContrato = true; render(); });
+  }
+  /* JSON legible: los dos primeros niveles en líneas, lo demás en una sola línea */
+  function compacto(v, nivel) {
+    const pad = "  ".repeat(nivel);
+    const enLinea = (x) => JSON.stringify(x, null, 1).replace(/\n\s*/g, " ").replace(/\{ /g, "{").replace(/ \}/g, "}").replace(/\[ /g, "[").replace(/ \]/g, "]");
+    if (v && typeof v === "object" && !Array.isArray(v) && nivel < 2)
+      return "{\n" + Object.keys(v).map((k) => pad + "  " + JSON.stringify(k) + ": " + compacto(v[k], nivel + 1)).join(",\n") + "\n" + pad + "}";
+    if (Array.isArray(v) && nivel < 2 && v.some((x) => x && typeof x === "object"))
+      return "[\n" + v.map((x) => pad + "  " + enLinea(x)).join(",\n") + "\n" + pad + "]";
+    return enLinea(v);
+  }
+  /* extracto del archivo que escribe `mini from-schema` (terminal.json guarda el archivo real) */
+  function vistaContrato() {
+    const c = JSON.parse(DATOS.terminal.contratoArchivo);
+    return compacto({ prefix: c.prefix, version: c.version, name: c.name, records_key: c.records_key, header: { required: c.header.required }, core: c.core }, 0);
   }
 
   const ICONOS = {
@@ -656,6 +759,70 @@ __PIE__
     $("#otra").addEventListener("click", () => { estado.mini = estado.json = estado.rep = null; ir(3); });
   }
 
+  /* ============================================================ terminal: los comandos reales de cada paso
+     Las salidas vienen de terminal.json, generado al ejecutar la CLI sobre las respuestas grabadas (examples/demo/generar_terminal.py). */
+  const TERM = { tab: "paso", base: "", firmas: [], hechos: 0, gen: 0 };
+  const SIN_MOVIMIENTO = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function bloquesTerminal() {
+    const T = DATOS.terminal[es() ? "es" : "en"], E = T.escenarios[estado.escenario];
+    const aviso = (par) => [{ espera: t(par) }];
+    if (TERM.tab === "setup") return T.comunes.setup;
+    switch (estado.paso) {
+      case 1: return T.comunes.instalar;
+      case 2: return estado.contrato ? T.comunes.contrato
+        : aviso(["Al pulsar «Generar contrato» se ejecuta este paso.", "Pressing «Generate contract» runs this step."]);
+      case 3: return estado.mini && !estado.ocupado ? E.respuesta
+        : aviso(estado.ocupado ? ["Esperando la respuesta de la IA…", "Waiting for the AI's answer…"]
+                               : ["La llamada a la IA la hace el código de la aplicación; su respuesta se guarda en respuesta.mini (y respuesta.json para comparar).",
+                                  "The AI call is made by the application's code; its answer is saved in respuesta.mini (and respuesta.json to compare)."]);
+      case 4: return E.validar.concat(estado.rep && E.reparar ? E.reparar : []);
+      default: return E.reparar && !estado.rep ? E.parcial : E.resultado;
+    }
+  }
+  function claseLinea(l) {
+    if (/^(E\d\d|INVALID|D_[A-Z]+)|→\s+E\d\d|^\s+(línea|line) \d+:/.test(l)) return "e";
+    if (/^(OK:|Successfully|wrote )|^\s*✓|^(Documento reparado|Repaired document|No hay nada|Nothing to repair)/.test(l)) return "s";
+    if (/^(Registros que faltan|Missing records|Se vuelve a pedir|Only this is requested)/.test(l)) return "w";
+    return "";
+  }
+  const salidaHtml = (out) => out.split("\n").map((l) => { const c = claseLinea(l); return c ? '<span class="t-' + c + '">' + esc(l) + "</span>" : esc(l); }).join("\n");
+  function pintarPie() {
+    const v = DATOS.terminal.version;
+    $("#tituloConsola").textContent = TERM.tab === "setup" ? "~/mi-proyecto — mini setup" : "~/mesa-de-ayuda — " + t(["paso ", "step "]) + estado.paso + "/5";
+    $("#pieConsola").textContent = TERM.tab === "setup"
+      ? t(["Salida real de mini setup (mini-format " + v + "). El asistente usa su propio ejemplo de tickets.", "Real output of mini setup (mini-format " + v + "). The assistant uses its own ticket example."])
+      : t(["Salida real de mini-format " + v + " sobre las respuestas grabadas", "Real output of mini-format " + v + " on the recorded answers"]) +
+        (estado.modo === "deepseek" && estado.paso >= 3 ? t([". En vivo, la respuesta de DeepSeek puede ser distinta.", ". Live, DeepSeek's answer may differ."]) : ".");
+  }
+  async function pintarTerminal() {
+    const bloques = bloquesTerminal(), firmas = bloques.map((b) => JSON.stringify(b));
+    const base = TERM.tab + (es() ? "es" : "en"), p = $("#pantalla");
+    pintarPie();
+    const mismoInicio = TERM.base === base && TERM.hechos === TERM.firmas.length && TERM.firmas.length <= firmas.length && TERM.firmas.every((f, i) => f === firmas[i]);
+    if (mismoInicio && TERM.firmas.length === firmas.length) return;
+    let desde = 0;
+    if (mismoInicio) { desde = TERM.firmas.length; const fin = $(".t-fin", p); if (fin) fin.remove(); }
+    else p.innerHTML = "";
+    TERM.base = base; TERM.firmas = firmas; TERM.hechos = desde;
+    const gen = ++TERM.gen, vigente = () => gen === TERM.gen;
+    for (let k = desde; k < bloques.length; k++) {
+      const b = bloques[k];
+      if (b.espera) { p.insertAdjacentHTML("beforeend", '<span class="t-c"># ' + esc(b.espera) + "</span>\n"); TERM.hechos = k + 1; continue; }
+      if (b.nota) p.insertAdjacentHTML("beforeend", '<span class="t-c"># ' + esc(b.nota) + "</span>\n");
+      p.insertAdjacentHTML("beforeend", '<span class="t-p">$ </span><span class="t-cmd"></span>');
+      const cmd = p.lastElementChild;
+      if (SIN_MOVIMIENTO) cmd.textContent = b.cmd;
+      else for (let i = 2; i < b.cmd.length + 2; i += 2) { if (!vigente()) return; cmd.textContent = b.cmd.slice(0, i); p.scrollTop = p.scrollHeight; await espera(16); }
+      if (!vigente()) return;
+      if (!SIN_MOVIMIENTO) await espera(220);
+      if (!vigente()) return;
+      p.insertAdjacentHTML("beforeend", "\n" + (b.out ? salidaHtml(b.out) + "\n" : "") + "\n");
+      p.scrollTop = p.scrollHeight;
+      TERM.hechos = k + 1;
+    }
+    if (vigente()) p.insertAdjacentHTML("beforeend", '<span class="t-fin"><span class="t-p">$ </span><span class="t-cursor"></span></span>');
+  }
+
   /* ============================================================ navegación */
   $("#atras").addEventListener("click", () => ir(estado.paso - 1));
   $("#adelante").addEventListener("click", () => { if (puedeAvanzar()) ir(estado.paso + 1); });
@@ -666,6 +833,17 @@ __PIE__
     if (ev.key === "ArrowLeft") ir(estado.paso - 1);
   });
   document.querySelectorAll("[data-lang-btn]").forEach((b) => b.addEventListener("click", () => setTimeout(() => { pintarModo(); render(); }, 0)));
+  document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
+    TERM.tab = b.dataset.tab;
+    document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    pintarTerminal();
+  }));
+  $("#copiarCmd").addEventListener("click", async () => {
+    const cmds = bloquesTerminal().filter((b) => b.cmd).map((b) => b.cmd).join("\n");
+    try { await navigator.clipboard.writeText(cmds); } catch (e) { return; }
+    const b = $("#copiarCmd"), antes = b.innerHTML;
+    b.textContent = t(["Copiado", "Copied"]); setTimeout(() => { b.innerHTML = antes; }, 1400);
+  });
   if (!leerClave()) estado.modo = "grabado";
   pintarModo();
   (async function directo() {
@@ -678,6 +856,11 @@ __PIE__
       if (n === 5 || q.has("reparado")) { try { await calcularReparacion(false); } catch (e) {} }
     }
     estado.paso = Math.min(5, Math.max(1, n || 1));
+    if (estado.paso >= 3 || q.has("contrato")) estado.contrato = true;
+    if (q.get("terminal") === "setup") {
+      TERM.tab = "setup";
+      document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.tab === "setup")));
+    }
     render();
   })();
 })();

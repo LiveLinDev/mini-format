@@ -1082,6 +1082,8 @@ def construir_demo() -> None:
     reparación selectiva y resultado), con respuestas grabadas o una llamada en vivo a DeepSeek con la clave del visitante."""
     datos = datos_mesa()
     datos = {k: datos[k] for k in ("contrato", "esquema", "mensajes", "grabaciones", "prompt", "errores", "erroresEn")}
+    # salidas reales de la CLI para el panel de terminal (examples/demo/generar_terminal.py)
+    datos["terminal"] = json.loads((RAIZ / "examples" / "demo" / "terminal.json").read_text(encoding="utf-8"))
     safe = lambda js: js.replace("</script", "<" + "\\" + "/script")
     pagina = (RAIZ / "examples" / "demo" / "plantilla.html").read_text(encoding="utf-8")
     for marca, valor in [("__CABEZA__", cabeza()),
