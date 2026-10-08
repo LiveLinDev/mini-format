@@ -546,17 +546,43 @@ __PIE__
     error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
     cortada: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>'
   };
+  /* Qué es exactamente cada situación: las pruebas se dicen como tales. */
+  const NOTAS = {
+    grabado: {
+      ok: ["Respuesta grabada de deepseek-chat.", "Recorded deepseek-chat answer."],
+      error: ["Respuesta grabada de deepseek-chat; en T-1045 la categoría se cambió por «facturacion», que el contrato no admite.",
+              "Recorded deepseek-chat answer; in T-1045 the category was changed to «facturacion», which the contract does not allow."],
+      cortada: ["Respuesta grabada de deepseek-chat, cortada al 75 %.", "Recorded deepseek-chat answer, cut at 75 %."]
+    },
+    vivo: {
+      ok: ["Llamada real a deepseek-chat.", "Real call to deepseek-chat."],
+      error: ["Llamada real a deepseek-chat; al llegar, la categoría de T-1045 se cambia por «facturacion».",
+              "Real call to deepseek-chat; on arrival, the category of T-1045 is changed to «facturacion»."],
+      cortada: ["Llamada real a deepseek-chat con un límite de 250 tokens: el corte lo produce el proveedor.",
+                "Real call to deepseek-chat with a 250-token limit: the provider makes the cut."]
+    }
+  };
+  /* Prueba de valor inválido en vivo: el mismo cambio que en la grabación, aplicado a la respuesta real. */
+  function valorInvalido(f, texto) {
+    if (f === "mini") {
+      return texto.split("\n").map((l) => {
+        const c = l.split("|");
+        return c[0] === "T-1045" && c.length > 2 ? (c[2] = "facturacion", c.join("|")) : l;
+      }).join("\n");
+    }
+    return texto.replace(/("id"\s*:\s*"T-1045"[\s\S]*?"categoria"\s*:\s*")[^"]*(")/, "$1facturacion$2");
+  }
   function escena3() {
-    const sits = [["ok", "ok", ["Todo sale bien", "All goes well"], ["La IA responde completa y sin errores.", "The AI answers fully and without mistakes."]],
-                  ["error", "err", ["La IA comete un error", "The AI makes a mistake"], ["Un ticket trae un valor que no existe.", "One ticket has a value that does not exist."]],
-                  ["cortada", "cut", ["La respuesta se corta", "The answer gets cut"], ["La IA llega a su límite de texto a mitad de camino.", "The AI hits its text limit halfway."]]];
+    const sits = [["ok", "ok", ["Respuesta correcta", "Correct answer"], ["La respuesta de la IA, completa y sin cambios.", "The AI's answer, complete and unchanged."]],
+                  ["error", "err", ["Prueba: valor inválido", "Test: invalid value"], ["Se cambia la categoría de un ticket por una que no existe, como cuando la IA inventa un valor.", "One ticket's category is changed to one that does not exist, as when the AI makes up a value."]],
+                  ["cortada", "cut", ["Prueba: respuesta cortada", "Test: cut answer"], ["La respuesta termina antes de tiempo, como cuando la IA llega a su límite de texto.", "The answer stops early, as when the AI reaches its text limit."]]];
     return "<h2>" + t(["3 · La IA responde, en JSON y en .mini", "3 · The AI answers, in JSON and in .mini"]) + '</h2><p class="lead">' +
-      t(["Se hace la misma petición dos veces, al mismo tiempo. Elige qué situación quieres ver.", "The same request is made twice, at the same time. Choose which situation to see."]) + "</p>" +
+      t(["Se hace la misma petición en JSON y en .mini. Las dos pruebas reproducen fallas reales de forma controlada, para ver qué hace cada formato.",
+         "The same request is made in JSON and in .mini. The two tests reproduce real failures in a controlled way, to see what each format does."]) + "</p>" +
       '<div class="dm-situaciones">' + sits.map(([v, ic, tit, desc]) => '<button type="button" class="dm-sit" data-sit="' + v + '" aria-pressed="' + (estado.escenario === v) + '"><span class="ic ' + ic + '">' +
         ICONOS[v] + "</span><b>" + t(tit) + "</b><span>" + t(desc) + "</span></button>").join("") + "</div>" +
       '<div class="dm-accion"><button type="button" class="btn btn-solid btn-grande" id="pedir">' + t(["Enviar a la IA", "Send to the AI"]) + '</button><span class="nota">' +
-        (estado.modo === "deepseek" ? t(["Llamada real a deepseek-chat", "Real call to deepseek-chat"]) + (estado.escenario === "cortada" ? t([" con un límite de 250 tokens", " with a 250-token limit"]) : "")
-                                     : t(["Respuestas grabadas de deepseek-chat", "Recorded deepseek-chat answers"])) + "</span></div>" +
+        t(NOTAS[estado.modo === "deepseek" ? "vivo" : "grabado"][estado.escenario]) + "</span></div>" +
       '<div class="dm-compara" id="respuestas">' + cajaRespuesta("json", "JSON") + cajaRespuesta("mini", ".mini") + "</div>" +
       '<div id="veredicto"></div>';
   }
@@ -610,6 +636,9 @@ __PIE__
         ? await Promise.all([llamarVivo(instruccionJson(), usuario, limite(), escribir("json")), llamarVivo(instruccionMini(), usuario, limite(), escribir("mini"))])
         : await Promise.all([reproducir(DATOS.grabaciones.json[estado.escenario], estado.escenario === "cortada", escribir("json")),
                              reproducir(DATOS.grabaciones.mini[estado.escenario], estado.escenario === "cortada", escribir("mini"))]);
+      if (estado.modo === "deepseek" && estado.escenario === "error") {
+        j.texto = valorInvalido("json", j.texto); m.texto = valorInvalido("mini", m.texto);
+      }
       estado.json = j; estado.mini = m;
     } catch (e) {
       estado.ocupado = false; render();
