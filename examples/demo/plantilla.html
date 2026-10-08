@@ -16,7 +16,11 @@ __CABEZA__
   .dm-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
   .dm-top .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
   .dm-top h1 { font-family: var(--f-display); font-size: clamp(1.6rem, 3.2vw, 2.3rem); letter-spacing: -.02em; margin: .25rem 0 0; line-height: 1.1; }
-  .dm-modo { display: flex; align-items: center; gap: .5rem; }
+  .dm-modo { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .dm-precio { cursor: default; color: rgb(var(--fg)); }
+  .dm-precio select { font: inherit; font-size: var(--fs-cap); border: 0; background: transparent; color: rgb(var(--fg)); max-width: 17rem; cursor: pointer; }
+  .dm .usd { font-family: var(--f-mono); color: rgb(var(--ok)); font-weight: 600; white-space: nowrap; }
+  .dm-consola .usd { color: #8fe3aa; }
   .dm-pill { display: inline-flex; align-items: center; gap: .45rem; font-size: var(--fs-cap); padding: .35rem .7rem; border-radius: 99px;
              border: 1px solid rgb(var(--line)); background: rgb(var(--raised)); color: rgb(var(--fg-muted)); cursor: pointer; font: inherit; font-size: var(--fs-cap); }
   .dm-pill .dot { width: .55rem; height: .55rem; border-radius: 50%; background: rgb(var(--fg-faint)); }
@@ -162,7 +166,7 @@ __CABEZA__
   .dm-kpi span { font-size: .82rem; color: rgb(var(--fg-muted)); }
   .dm-kpi.acento b { color: rgb(var(--accent)); } .dm-kpi.bien b { color: rgb(var(--ok)); } .dm-kpi.mal b { color: rgb(var(--bad)); }
   .dm-barras { display: grid; gap: .55rem; margin: 1.3rem 0 .4rem; }
-  .dm-barra { display: grid; grid-template-columns: 4rem 1fr 4rem; gap: .7rem; align-items: center; font-size: .85rem; font-weight: 600; }
+  .dm-barra { display: grid; grid-template-columns: 4rem 1fr 11rem; gap: .7rem; align-items: center; font-size: .85rem; font-weight: 600; }
   .dm-barra .b { height: 1.35rem; border-radius: 6px; background: rgb(var(--fg-faint) / .45); transition: width .8s ease; width: 0; }
   .dm-barra.mini .b { background: rgb(var(--accent)); }
   .dm-barra .num { font-family: var(--f-mono); text-align: right; }
@@ -235,6 +239,8 @@ __CABECERA__
       <h1><span data-lang="es">De mensajes de clientes a tickets, con mini-format</span><span data-lang="en" hidden>From customer messages to tickets, with mini-format</span></h1>
     </div>
     <div class="dm-modo">
+      <label class="dm-pill dm-precio" title="Precio de referencia de Artificial Analysis"><span data-lang="es">Costo con</span><span data-lang="en" hidden>Cost with</span>
+        <select id="modeloGlobal" aria-label="Modelo para calcular el costo"></select></label>
       <button type="button" class="dm-pill" id="pillModo" title="Modelo"><span class="dot"></span><span id="textoModo"></span></button>
       <button type="button" class="dm-icono" id="abrirAjustes" aria-label="Ajustes del modelo" title="Ajustes del modelo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -505,6 +511,7 @@ __PIE__
     const tk = JSON.parse(DATOS.grabaciones.json.ok).tickets[0];
     const json = esc(JSON.stringify(tk, null, 1)).replace(/&quot;|"/g, '"').replace(/"(\w+)":/g, '<span class="k">"$1"</span>:');
     const linea = CAMPOS.map((f) => esc(String(tk[f.name]))).join('<span class="sep">|</span>');
+    const tokJ = contar(JSON.stringify(tk)), tokM = contar(CAMPOS.map((f) => tk[f.name]).join("|"));
     const hecho = estado.contrato, anima = estado.animarContrato;
     estado.animarContrato = false;
     const contrato = vistaContrato(), instruccion = instruccionMini();
@@ -524,17 +531,21 @@ __PIE__
       '<div class="dm-gen">' +
         caja(1, t(["Esquema de la aplicación", "Application schema"]), "ticket.schema.json", esc(compacto(JSON.parse(DATOS.esquema), 0)), false) + '<span class="fl">→</span>' +
         caja(2, t(["Contrato .mini", ".mini contract"]), "tk.contract.json", hecho ? lineas(contrato, 0, true) : "", true) + '<span class="fl">→</span>' +
-        caja(3, t(["Instrucción para la IA", "Instruction for the AI"]), hecho ? contar(instruccion) + " tokens" : "prompt", hecho ? lineas(instruccion, nC * 45 + 150, false) : "", false) +
+        caja(3, t(["Instrucción para la IA", "Instruction for the AI"]), hecho ? contar(instruccion) + " tokens · " + dinero(contar(instruccion), "entrada") : "prompt", hecho ? lineas(instruccion, nC * 45 + 150, false) : "", false) +
       "</div>" +
       (hecho ? '<div class="dm-tras"' + tras + '><h3 class="dm-sub">' + t(["Lo que fija el contrato", "What the contract sets"]) + "</h3>" +
       '<div class="dm-campos">' + CAMPOS.map((f, i) => '<div class="dm-campo"><span class="n">' + (i + 1) + "</span><code>" + esc(f.name) + '</code><span class="q">' +
         esc(t(explica[f.name] || ["", ""])) + '</span><span class="r">' + esc(regla(f)) + "</span></div>").join("") + "</div>" +
       '<div class="dm-compara"><div class="dm-caja"><div class="cab"><span>' + t(["Un ticket en JSON", "One ticket in JSON"]) + '</span><span class="tok">' +
-        contar(JSON.stringify(tk)) + " tokens</span></div><pre>" + json + "</pre></div>" +
+        tokJ + " tokens · " + dinero(tokJ) + "</span></div><pre>" + json + "</pre></div>" +
       '<div class="dm-caja mini"><div class="cab"><span>' + t(["El mismo ticket en .mini", "The same ticket in .mini"]) + '</span><span class="tok">' +
-        contar(CAMPOS.map((f) => tk[f.name]).join("|")) + " tokens</span></div><pre>" + linea + '</pre><p class="dm-nota" style="padding:0 .9rem .8rem">' +
+        tokM + " tokens · " + dinero(tokM) + "</span></div><pre>" + linea + '</pre><p class="dm-nota" style="padding:0 .9rem .8rem">' +
         t(["En rojo, lo que JSON repite en cada ticket. En .mini solo van los valores, en el orden del contrato.", "In red, what JSON repeats in every ticket. In .mini only the values go, in contract order."]) +
-        "</p></div></div></div>" : "");
+        "</p></div></div>" +
+      '<p class="dm-veredicto">' + t(["Con ", "With "]) + nombreModelo() + ' (' + tarifa("salida") + t([" por millón de tokens de salida), un millón de tickets cuesta ",
+        " per million output tokens), one million tickets cost "]) + dinero(tokJ, "salida", 1e6) + t([" en JSON y ", " in JSON and "]) + dinero(tokM, "salida", 1e6) +
+        t([" en .mini. La instrucción se cobra como entrada (", " in .mini. The instruction is billed as input ("]) + tarifa("entrada") +
+        t([" por millón): ", " per million): "]) + dinero(contar(instruccion), "entrada") + t([" por llamada.", " per call."]) + "</p></div>" : "");
   }
   function enganchar2() {
     $("#generar").addEventListener("click", () => { estado.contrato = true; estado.animarContrato = true; render(); });
@@ -604,7 +615,7 @@ __PIE__
     const r = estado[f];
     return '<div class="dm-caja ' + (f === "mini" ? "mini" : "") + '" id="caja-' + f + '"><div class="cab"><span>' + nombre + ' <span class="estado ' +
       (r ? (r.cortada ? "cortada" : "listo") : "") + '">' + (r ? (r.cortada ? t(["cortada", "cut"]) : t(["lista", "done"])) : "") + '</span></span><span class="tok">' +
-      (r ? num(r.tokens) : 0) + " tokens</span></div><pre>" + (r ? colorear(f, r.texto) : '<span style="color:rgb(var(--fg-faint))">' +
+      etiquetaTokens(r ? r.tokens : 0) + "</span></div><pre>" + (r ? colorear(f, r.texto) : '<span style="color:rgb(var(--fg-faint))">' +
       t(["Esperando la petición…", "Waiting for the request…"]) + "</span>") + "</pre></div>";
   }
   function colorear(f, texto) {
@@ -619,12 +630,17 @@ __PIE__
       return '<div class="dm-veredicto">' + t(["Las dos respuestas se cortaron antes de terminar. En .mini llegaron completas " + lm + " de " + N +
         " líneas; el JSON quedó abierto a la mitad. El siguiente paso muestra qué se puede usar de cada una.",
         "Both answers were cut before finishing. In .mini, " + lm + " of " + N + " lines arrived complete; the JSON was left open halfway. " +
-        "The next step shows what can be used from each."]) + "</div>";
+        "The next step shows what can be used from each."]) + " " +
+        t(["Las dos se cobran de todos modos: ", "Both are billed anyway: "]) + num(m.tokens) + " tokens (" + dinero(m.tokens) + t([") en .mini y ", ") in .mini and "]) +
+        num(j.tokens) + " tokens (" + dinero(j.tokens) + t([") en JSON, con ", ") in JSON, with "]) + nombreModelo() + ".</div>";
     }
     const menos = j.tokens ? Math.round(100 * (1 - m.tokens / j.tokens)) : 0;
     return '<div class="dm-veredicto">' + t(["Para los mismos tickets, la IA escribió ", "For the same tickets, the AI wrote "]) + "<b>" + num(m.tokens) + " tokens " +
       t(["en .mini", "in .mini"]) + "</b>" + t([" frente a ", " versus "]) + "<b>" + num(j.tokens) + t([" en JSON", " in JSON"]) + "</b>" +
-      (menos > 0 ? t([": " + menos + " % menos texto que pagar.", ": " + menos + " % less text to pay for."]) : ".") + "</div>";
+      (menos > 0 ? t([": " + menos + " % menos texto que pagar.", ": " + menos + " % less text to pay for."]) : ".") + " " +
+      t(["Con ", "With "]) + nombreModelo() + t([", esta respuesta cuesta ", ", this answer costs "]) + dinero(m.tokens) + t([" en .mini y ", " in .mini and "]) +
+      dinero(j.tokens) + t([" en JSON; en un millón de respuestas, ", " in JSON; over one million answers, "]) + dinero(Math.max(0, j.tokens - m.tokens), "salida", 1e6) +
+      t([" de diferencia.", " of difference."]) + "</div>";
   }
   function enganchar3() {
     document.querySelectorAll("[data-sit]").forEach((b) => b.addEventListener("click", () => {
@@ -640,7 +656,7 @@ __PIE__
     const escribir = (f) => (texto, tokens) => {
       const caja = $("#caja-" + f); if (!caja) return;
       $("pre", caja).innerHTML = colorear(f, texto);
-      $(".tok", caja).textContent = num(tokens) + " tokens";
+      $(".tok", caja).innerHTML = etiquetaTokens(tokens);
       $(".estado", caja).className = "estado escribiendo"; $(".estado", caja).textContent = t(["escribiendo…", "writing…"]);
       const pre = $("pre", caja); pre.scrollTop = pre.scrollHeight;
     };
@@ -766,8 +782,8 @@ __PIE__
       if (corregidas.length) partes.push(t([(corregidas.length === 1 ? "la línea de " : "las líneas de ") + corregidas.join(", "), (corregidas.length === 1 ? "the line of " : "the lines of ") + corregidas.join(", ")]));
       if (faltan.length) partes.push(t(["los " + faltan.length + " tickets que faltaban", "the " + faltan.length + " missing tickets"]));
       estado.rep = { texto, tokens, resumen: "✓ " + t(["Se le pidió a la IA solo ", "Only "]) + partes.join(t([" y ", " and "])) +
-        t([" (" + num(tokens) + " tokens más). Ahora hay " + final.records.length + " de " + N + " tickets correctos.",
-           " " + (corregidas.length + faltan.length === 1 ? "was" : "were") + " requested from the AI (" + num(tokens) + " more tokens). Now " + final.records.length + " of " + N + " tickets are correct."]) };
+        t([" (" + num(tokens) + " tokens más, " + dinero(tokens) + "). Ahora hay " + final.records.length + " de " + N + " tickets correctos.",
+           " " + (corregidas.length + faltan.length === 1 ? "was" : "were") + " requested from the AI (" + num(tokens) + " more tokens, " + dinero(tokens) + "). Now " + final.records.length + " of " + N + " tickets are correct."]) };
     }
   }
 
@@ -788,8 +804,8 @@ __PIE__
       '</span></div><div class="dm-kpi ' + (jsonOk ? "" : "mal") + '"><b>' + (j.ilegible ? 0 : j.validos.length) + "/" + N + "</b><span>" +
       t(["tickets útiles en la primera respuesta JSON", "useful tickets in the first JSON answer"]) + '</span></div><div class="dm-kpi bien"><b>' + ahorro + " %</b><span>" +
       t(["menos texto pagado en total", "less text paid in total"]) + "</span></div></div>" +
-      '<div class="dm-barras"><div class="dm-barra mini"><span>.mini</span><span class="b" data-w="' + (100 * tokMini / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokMini) + "</span></div>" +
-      '<div class="dm-barra"><span>JSON</span><span class="b" data-w="' + (100 * tokJson / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokJson) + "</span></div></div>" +
+      '<div class="dm-barras"><div class="dm-barra mini"><span>.mini</span><span class="b" data-w="' + (100 * tokMini / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokMini) + " tokens · " + dinero(tokMini) + "</span></div>" +
+      '<div class="dm-barra"><span>JSON</span><span class="b" data-w="' + (100 * tokJson / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokJson) + " tokens · " + dinero(tokJson) + "</span></div></div>" +
       '<p class="dm-nota">' + t(["Tokens de respuesta en total" + (estado.rep ? ", incluida la reparación de .mini" : "") + (reintento ? " y el nuevo pedido completo que necesita JSON" : "") + ".",
                                 "Total answer tokens" + (estado.rep ? ", including the .mini repair" : "") + (reintento ? " and the full new request JSON needs" : "") + "."]) + "</p>" +
       bloqueCosto(tokMini, tokJson) +
@@ -801,10 +817,7 @@ __PIE__
   function enganchar5() {
     requestAnimationFrame(() => document.querySelectorAll(".dm-barra .b").forEach((b) => { b.style.width = b.dataset.w + "%"; }));
     $("#otra").addEventListener("click", () => { estado.mini = estado.json = estado.rep = null; ir(3); });
-    $("#modeloPrecio").addEventListener("change", (ev) => {
-      try { localStorage.setItem(CLAVE_MODELO, ev.target.value); } catch (e) {}
-      $("#costoCifras").innerHTML = cifrasCosto(estado.costo.mini, estado.costo.json);
-    });
+    $("#modeloPrecio").addEventListener("change", (ev) => cambiarModelo(ev.target.value));
   }
 
   /* ============================================================ costo de la respuesta según el modelo
@@ -812,20 +825,62 @@ __PIE__
   const PRECIOS = DATOS.precios;
   const CLAVE_MODELO = "mini-demo-modelo-precio";
   function modeloElegido() {
-    let nombre = PRECIOS.defecto;
-    try { nombre = localStorage.getItem(CLAVE_MODELO) || nombre; } catch (e) {}
+    let nombre = estado.modeloPrecio || PRECIOS.defecto;
+    if (!estado.modeloPrecio) { try { nombre = localStorage.getItem(CLAVE_MODELO) || nombre; } catch (e) {} }
     return PRECIOS.modelos.find((m) => m.modelo === nombre) || PRECIOS.modelos[0];
   }
   function usd(x) {
     const d = x >= 100 ? 0 : x >= 1 ? 2 : 4;
     return "$" + x.toLocaleString(es() ? "es-PE" : "en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
   }
+  /* Precio por millón de tokens: como lo publica el proveedor ($0.30, $1.20, $0.075). */
+  const precio = (x) => "$" + x.toLocaleString(es() ? "es-PE" : "en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 });
+  /* Montos de una sola respuesta: fracciones de centavo, con dos cifras significativas. */
+  function usdFino(x) {
+    if (!(x > 0)) return "$0";
+    if (x >= 1) return usd(x);
+    const d = Math.min(8, 1 - Math.floor(Math.log10(x)));
+    return "$" + x.toLocaleString(es() ? "es-PE" : "en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  const costoDe = (tok, tipo, escala) => tok * (tipo === "entrada" ? modeloElegido().entrada : modeloElegido().salida) / 1e6 * (escala || 1);
+  /* Todo número de tokens va con su costo; el monto se recalcula al cambiar de modelo (refrescarDinero). */
+  function dinero(tok, tipo, escala) {
+    tipo = tipo || "salida"; escala = escala || 1;
+    return '<span class="usd" data-tok="' + tok + '" data-tipo="' + tipo + '" data-escala="' + escala + '">' + usdFino(costoDe(tok, tipo, escala)) + "</span>";
+  }
+  const tarifa = (tipo) => '<span class="usd-tarifa" data-tipo="' + tipo + '">' + precio(tipo === "entrada" ? modeloElegido().entrada : modeloElegido().salida) + "</span>";
+  const nombreModelo = () => '<b class="usd-modelo">' + esc(modeloElegido().modelo) + "</b>";
+  const etiquetaTokens = (tok) => num(tok) + " tokens · " + dinero(tok);
+  function refrescarDinero() {
+    document.querySelectorAll(".usd").forEach((s) => { s.textContent = usdFino(costoDe(+s.dataset.tok, s.dataset.tipo, +s.dataset.escala)); });
+    document.querySelectorAll(".usd-tarifa").forEach((s) => { s.textContent = precio(s.dataset.tipo === "entrada" ? modeloElegido().entrada : modeloElegido().salida); });
+    document.querySelectorAll(".usd-modelo").forEach((s) => { s.textContent = modeloElegido().modelo; });
+  }
+  function cambiarModelo(nombre) {
+    estado.modeloPrecio = nombre;
+    try { localStorage.setItem(CLAVE_MODELO, nombre); } catch (e) {}
+    document.querySelectorAll("#modeloGlobal, #modeloPrecio").forEach((s) => { s.value = nombre; });
+    if ($("#costoCifras") && estado.costo) $("#costoCifras").innerHTML = cifrasCosto(estado.costo.mini, estado.costo.json);
+    refrescarDinero();
+  }
+  const opcionesModelo = (corto) => PRECIOS.modelos.map((m) => '<option value="' + esc(m.modelo) + '"' + (m.modelo === modeloElegido().modelo ? " selected" : "") + ">" +
+    esc(m.modelo) + (corto ? "" : " · " + esc(m.creador)) + " — " + precio(m.salida) + (corto ? "/M" : "") + "</option>").join("");
+  /* En la terminal, la salida de «mini tokens» y de «mini bench» se acompaña de su costo (comentario de la página, no de la CLI). */
+  function dineroTerminal(out) {
+    const uno = /^(\d+) tokens \(/.exec(out || "");
+    if (uno) return '<span class="t-c"># ≈ ' + dinero(+uno[1]) + t([" por respuesta con ", " per answer with "]) + '<span class="usd-modelo">' + esc(modeloElegido().modelo) + "</span> · " +
+      dinero(+uno[1], "salida", 1e6) + t([" por un millón de respuestas", " per million answers"]) + "</span>\n";
+    const mi = /^\.mini\s+(\d+)/m.exec(out || ""), js = /^JSON compact\s+(\d+)/m.exec(out || "");
+    if (mi && js) return '<span class="t-c"># ' + t(["Por un millón de respuestas con ", "Per million answers with "]) + '<span class="usd-modelo">' + esc(modeloElegido().modelo) + "</span>: .mini " +
+      dinero(+mi[1], "salida", 1e6) + t([" · JSON compacto ", " · compact JSON "]) + dinero(+js[1], "salida", 1e6) + "</span>\n";
+    return "";
+  }
   function cifrasCosto(tokMini, tokJson) {
     const m = modeloElegido(), porToken = m.salida / 1e6;
     const caja = (cls, titulo, grande, pie) => '<div class="' + cls + '"><span>' + titulo + "</span><b>" + grande + "</b><small>" + pie + "</small></div>";
     const millon = t([" por un millón de respuestas", " per million answers"]);
     return '<div class="dm-costo-cifras">' +
-      caja("", t(["Precio de salida", "Output price"]), usd(m.salida), t(["por millón de tokens", "per million tokens"])) +
+      caja("", t(["Precio de salida", "Output price"]), precio(m.salida), t(["por millón de tokens", "per million tokens"])) +
       caja("mini", t([".mini · por 1 000 respuestas", ".mini · per 1,000 answers"]), usd(tokMini * porToken * 1000), usd(tokMini * porToken * 1e6) + millon) +
       caja("", t(["JSON · por 1 000 respuestas", "JSON · per 1,000 answers"]), usd(tokJson * porToken * 1000), usd(tokJson * porToken * 1e6) + millon) +
       caja("bien", t(["Ahorro por un millón de respuestas", "Saving per million answers"]), usd((tokJson - tokMini) * porToken * 1e6),
@@ -833,9 +888,7 @@ __PIE__
   }
   function bloqueCosto(tokMini, tokJson) {
     estado.costo = { mini: tokMini, json: tokJson };
-    const elegido = modeloElegido().modelo;
-    const opciones = PRECIOS.modelos.map((m) => '<option value="' + esc(m.modelo) + '"' + (m.modelo === elegido ? " selected" : "") + ">" +
-      esc(m.modelo) + " · " + esc(m.creador) + " — " + usd(m.salida) + "</option>").join("");
+    const opciones = opcionesModelo();
     const fecha = PRECIOS.consultado.split("-").reverse().join("/");
     return '<div class="dm-costo"><div class="cab"><b>' + t(["¿Cuánto cuesta esta respuesta?", "What does this answer cost?"]) + "</b><label>" +
       t(["Modelo", "Model"]) + ' <select id="modeloPrecio">' + opciones + '</select></label></div><div id="costoCifras">' + cifrasCosto(tokMini, tokJson) + "</div>" +
@@ -904,7 +957,7 @@ __PIE__
       if (!vigente()) return;
       if (!SIN_MOVIMIENTO) await espera(220);
       if (!vigente()) return;
-      p.insertAdjacentHTML("beforeend", "\n" + (b.out ? salidaHtml(b.out) + "\n" : "") + "\n");
+      p.insertAdjacentHTML("beforeend", "\n" + (b.out ? salidaHtml(b.out) + "\n" + dineroTerminal(b.out) : "") + "\n");
       p.scrollTop = p.scrollHeight;
       TERM.hechos = k + 1;
     }
@@ -934,6 +987,8 @@ __PIE__
   });
   if (!leerClave()) estado.modo = "grabado";
   pintarModo();
+  $("#modeloGlobal").innerHTML = opcionesModelo(true);
+  $("#modeloGlobal").addEventListener("change", (ev) => cambiarModelo(ev.target.value));
   (async function directo() {
     const q = new URLSearchParams(location.search);
     const sit = q.get("situacion"), n = parseInt(q.get("escena") || "1", 10);
