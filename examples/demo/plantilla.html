@@ -7,159 +7,225 @@
 <meta name="description" content="El flujo completo de mini-format en una página: datos, reglas, respuesta de la IA en .mini y en JSON, validación, reparación selectiva y resultado.">
 __CABEZA__
 <style>
-  .dm { padding-block: clamp(2rem, 5vw, 3.5rem) 4rem; }
+  .dm { padding-block: clamp(1.5rem, 4vw, 2.5rem) 4rem; --ok: 16 122 87; --bad: 200 38 38; }
   .dm, .dm * { box-sizing: border-box; }
   .dm { max-width: 100%; overflow-wrap: anywhere; }
-  .dm-intro { max-width: 62rem; }
-  .dm-intro .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
-  .dm-intro h1 { font-family: var(--f-display); font-size: var(--fs-h3); letter-spacing: -.02em; margin: .3rem 0 .6rem; }
-  .dm-intro .lead { color: rgb(var(--fg-muted)); font-size: var(--fs-lead); margin: 0; }
-  .dm-ruta { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; margin: 1.6rem 0; padding: 0; list-style: none; }
-  .dm-ruta li { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .55rem .7rem; font-size: var(--fs-cap); background: rgb(var(--raised)); }
-  .dm-ruta li b { display: block; color: rgb(var(--accent)); font-family: var(--f-mono); }
-  .dm-ruta li.hecho { border-color: rgb(16 122 87 / .5); }
-  .dm-ruta li.hecho b { color: rgb(16 122 87); }
-  .dm-paso { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: clamp(1rem, 3vw, 1.5rem); background: rgb(var(--raised)); margin-top: 1.1rem; }
-  .dm-paso h2 { margin: 0 0 .3rem; font-size: var(--fs-h5); }
-  .dm-paso h2 .n { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: rgb(var(--accent)); color: #fff; font-size: .85rem; margin-right: .45rem; }
-  .dm-paso .sub { margin: 0 0 1rem; color: rgb(var(--fg-muted)); font-size: var(--fs-cap); max-width: 62rem; }
-  .dm-paso[aria-disabled="true"] { opacity: .45; }
-  .dm table { width: 100%; border-collapse: collapse; font-size: .82rem; }
-  .dm th, .dm td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid rgb(var(--line)); vertical-align: top; }
-  .dm th { white-space: nowrap; font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em; color: rgb(var(--fg-muted)); }
-  .dm .tabla { overflow-x: auto; }
-  .dm pre { margin: 0; padding: .8rem 1rem; border-radius: var(--r); background: rgb(var(--subtle)); overflow: auto; font-size: .76rem; line-height: 1.5; max-height: 20rem; white-space: pre-wrap; word-break: break-word; }
-  .dm-fila { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .8rem 0; }
-  .dm-fila .et { font-size: var(--fs-cap); color: rgb(var(--fg-muted)); font-weight: 600; }
-  .dm-seg { display: inline-flex; border: 1px solid rgb(var(--line)); border-radius: 99px; overflow: hidden; }
-  .dm-seg button { font: inherit; font-size: var(--fs-cap); padding: .4rem .8rem; border: 0; background: transparent; color: rgb(var(--fg-muted)); cursor: pointer; }
-  .dm-seg button[aria-pressed="true"] { background: rgb(var(--accent)); color: #fff; font-weight: 600; }
-  .dm input[type="password"] { font: inherit; font-size: .8rem; padding: .45rem .6rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle)); color: rgb(var(--fg)); min-width: 16rem; }
-  .dm .btn[disabled] { opacity: .5; cursor: not-allowed; }
-  .dm-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .dm-col { min-width: 0; border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .8rem; }
-  .dm-col h3 { margin: 0 0 .5rem; font-size: 1rem; display: flex; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
-  .dm-col h3 .tok { font-family: var(--f-mono); font-size: .8rem; color: rgb(var(--fg-muted)); font-weight: 600; }
-  .dm-col.mini { border-color: rgb(var(--accent) / .45); }
-  .dm-aviso { margin: .7rem 0; padding: .65rem .85rem; border-radius: var(--r); font-size: var(--fs-cap); }
-  .dm-aviso.bien { background: rgb(16 122 87 / .1); color: rgb(16 122 87); }
-  .dm-aviso.mal { background: rgb(220 38 38 / .1); color: rgb(185 28 28); }
-  .dm-aviso.info { background: rgb(var(--accent) / .08); color: rgb(var(--fg)); }
-  .dm-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .8rem; margin: 1rem 0; }
-  .dm-cifra { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .7rem .85rem; }
-  .dm-cifra .v { display: block; font-family: var(--f-mono); font-size: 1.5rem; font-weight: 700; }
-  .dm-cifra .k { font-size: var(--fs-fine); color: rgb(var(--fg-muted)); }
-  .dm-cifra.bien .v { color: rgb(16 122 87); } .dm-cifra.mal .v { color: rgb(185 28 28); } .dm-cifra.acento .v { color: rgb(var(--accent)); }
-  .dm .cod { font-family: var(--f-mono); font-weight: 700; color: rgb(185 28 28); }
-  .dm .ok { color: rgb(16 122 87); font-weight: 700; }
-  .dm-barras { display: grid; gap: .5rem; margin: .8rem 0; }
-  .dm-barra { display: grid; grid-template-columns: 6.5rem 1fr 4.5rem; gap: .6rem; align-items: center; font-size: var(--fs-cap); }
-  .dm-barra .b { height: 1rem; border-radius: 4px; background: rgb(var(--fg-faint) / .5); }
+  [hidden] { display: none !important; }
+
+  /* ---------- cabecera de la demo */
+  .dm-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  .dm-top .eyebrow { color: rgb(var(--accent)); font-size: var(--fs-cap); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+  .dm-top h1 { font-family: var(--f-display); font-size: clamp(1.6rem, 3.2vw, 2.3rem); letter-spacing: -.02em; margin: .25rem 0 0; line-height: 1.1; }
+  .dm-modo { display: flex; align-items: center; gap: .5rem; }
+  .dm-pill { display: inline-flex; align-items: center; gap: .45rem; font-size: var(--fs-cap); padding: .35rem .7rem; border-radius: 99px;
+             border: 1px solid rgb(var(--line)); background: rgb(var(--raised)); color: rgb(var(--fg-muted)); cursor: pointer; font: inherit; font-size: var(--fs-cap); }
+  .dm-pill .dot { width: .55rem; height: .55rem; border-radius: 50%; background: rgb(var(--fg-faint)); }
+  .dm-pill.vivo .dot { background: rgb(var(--ok)); box-shadow: 0 0 0 3px rgb(var(--ok) / .2); }
+  .dm-pill.vivo { color: rgb(var(--fg)); }
+  .dm-icono { width: 2.2rem; height: 2.2rem; display: inline-grid; place-items: center; border-radius: 50%; border: 1px solid rgb(var(--line));
+              background: rgb(var(--raised)); color: rgb(var(--fg-muted)); cursor: pointer; }
+  .dm-icono:hover { color: rgb(var(--accent)); border-color: rgb(var(--accent) / .5); }
+  .dm-icono svg { width: 1.05rem; height: 1.05rem; }
+
+  /* ---------- progreso */
+  .dm-progreso { display: grid; grid-template-columns: repeat(5, 1fr); margin: 1.6rem 0 1.2rem; padding: 0; list-style: none; position: relative; }
+  .dm-progreso::before { content: ""; position: absolute; top: 1.05rem; left: 10%; right: 10%; height: 2px; background: rgb(var(--line)); }
+  .dm-progreso .barra { position: absolute; top: 1.05rem; left: 10%; height: 2px; background: rgb(var(--accent)); transition: width .4s ease; }
+  .dm-progreso li { position: relative; text-align: center; }
+  .dm-progreso button { font: inherit; border: 0; background: none; cursor: pointer; display: grid; justify-items: center; gap: .35rem; width: 100%; color: rgb(var(--fg-muted)); }
+  .dm-progreso .c { width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .85rem;
+                    background: rgb(var(--raised)); border: 2px solid rgb(var(--line)); color: rgb(var(--fg-muted)); transition: all .25s; }
+  .dm-progreso .t { font-size: var(--fs-fine); line-height: 1.25; max-width: 9rem; }
+  .dm-progreso li.hecho .c { background: rgb(var(--accent)); border-color: rgb(var(--accent)); color: #fff; }
+  .dm-progreso li.actual .c { border-color: rgb(var(--accent)); color: rgb(var(--accent)); box-shadow: 0 0 0 5px rgb(var(--accent) / .12); }
+  .dm-progreso li.actual .t { color: rgb(var(--fg)); font-weight: 600; }
+
+  /* ---------- escena */
+  .dm-escena { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); background: rgb(var(--raised)); padding: clamp(1.1rem, 3vw, 2rem);
+               min-height: 30rem; animation: entra .35s ease; }
+  @keyframes entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .dm-escena h2 { font-family: var(--f-display); font-size: clamp(1.25rem, 2.4vw, 1.65rem); margin: 0 0 .35rem; letter-spacing: -.01em; }
+  .dm-escena .lead { color: rgb(var(--fg-muted)); margin: 0 0 1.4rem; max-width: 52rem; }
+  .dm-nav { display: flex; justify-content: space-between; align-items: center; gap: .8rem; margin-top: 1.1rem; }
+  .dm-nav .ayuda { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); }
+  .dm .btn[disabled] { opacity: .45; cursor: not-allowed; }
+  .dm .btn-grande { font-size: 1rem; padding: .75rem 1.4rem; }
+
+  /* paso 1: mensajes */
+  .dm-chats { display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: .75rem; }
+  .dm-chat { border: 1px solid rgb(var(--line)); border-radius: 14px 14px 14px 4px; padding: .75rem .9rem; background: rgb(var(--subtle));
+             font-size: .9rem; line-height: 1.45; animation: entra .4s ease both; }
+  .dm-chat .id { display: block; font-family: var(--f-mono); font-size: .72rem; color: rgb(var(--fg-faint)); margin-bottom: .25rem; }
+  .dm-flecha { display: flex; align-items: center; gap: .8rem; margin: 1.3rem 0 0; padding: .9rem 1rem; border-radius: var(--r);
+               background: rgb(var(--accent) / .07); font-size: .92rem; }
+  .dm-flecha b { font-family: var(--f-mono); font-size: .82rem; }
+
+  /* paso 2: contrato */
+  .dm-campos { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; }
+  .dm-campo { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .75rem; background: rgb(var(--subtle)); position: relative; }
+  .dm-campo .n { position: absolute; top: .55rem; right: .65rem; font-family: var(--f-mono); font-size: .72rem; color: rgb(var(--fg-faint)); }
+  .dm-campo code { font-size: .9rem; font-weight: 700; color: rgb(var(--accent)); }
+  .dm-campo .q { display: block; font-size: .82rem; margin: .3rem 0 .45rem; }
+  .dm-campo .r { display: block; font-size: .72rem; color: rgb(var(--fg-muted)); }
+  .dm-compara { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.4rem; }
+  .dm-caja { border: 1px solid rgb(var(--line)); border-radius: var(--r); overflow: hidden; min-width: 0; }
+  .dm-caja .cab { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .55rem .8rem;
+                  border-bottom: 1px solid rgb(var(--line)); font-size: .82rem; font-weight: 600; background: rgb(var(--subtle)); }
+  .dm-caja.mini { border-color: rgb(var(--accent) / .45); }
+  .dm-caja.mini .cab { background: rgb(var(--accent) / .08); }
+  .dm-caja pre { margin: 0; padding: .8rem .9rem; font-size: .8rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+                 background: transparent; max-height: 22rem; overflow: auto; }
+  .dm-caja .k { color: rgb(var(--bad)); background: rgb(var(--bad) / .08); border-radius: 3px; }
+  .dm-caja .sep { color: rgb(var(--accent)); font-weight: 700; }
+  .dm-caja .tok { font-family: var(--f-mono); font-size: .78rem; color: rgb(var(--fg-muted)); font-weight: 600; }
+
+  /* paso 3: situaciones y respuestas */
+  .dm-situaciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+  .dm-sit { font: inherit; text-align: left; cursor: pointer; border: 2px solid rgb(var(--line)); border-radius: var(--r-lg, 14px); padding: 1rem;
+            background: rgb(var(--subtle)); color: rgb(var(--fg)); transition: border-color .2s, transform .2s; }
+  .dm-sit:hover { transform: translateY(-2px); }
+  .dm-sit[aria-pressed="true"] { border-color: rgb(var(--accent)); background: rgb(var(--accent) / .06); }
+  .dm-sit .ic { width: 2.1rem; height: 2.1rem; border-radius: 10px; display: grid; place-items: center; margin-bottom: .55rem; }
+  .dm-sit .ic svg { width: 1.2rem; height: 1.2rem; }
+  .dm-sit b { display: block; margin-bottom: .2rem; }
+  .dm-sit span { font-size: .82rem; color: rgb(var(--fg-muted)); }
+  .ic.ok { background: rgb(var(--ok) / .12); color: rgb(var(--ok)); }
+  .ic.err { background: rgb(234 140 0 / .14); color: rgb(190 110 0); }
+  .ic.cut { background: rgb(var(--bad) / .1); color: rgb(var(--bad)); }
+  .dm-accion { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 1.3rem 0 1rem; }
+  .dm-accion .nota { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); }
+  .dm-caja .estado { font-size: .72rem; font-weight: 700; padding: .15rem .5rem; border-radius: 99px; }
+  .estado.escribiendo { background: rgb(var(--accent) / .12); color: rgb(var(--accent)); }
+  .estado.listo { background: rgb(var(--ok) / .12); color: rgb(var(--ok)); }
+  .estado.cortada { background: rgb(var(--bad) / .1); color: rgb(var(--bad)); }
+  .dm-veredicto { margin-top: 1rem; padding: .9rem 1rem; border-radius: var(--r); background: rgb(var(--accent) / .07); font-size: .95rem; }
+  .dm-veredicto b { color: rgb(var(--accent)); }
+
+  /* paso 4: validación */
+  .dm-lineas { display: grid; gap: .3rem; margin: 0; padding: 0; list-style: none; }
+  .dm-lineas li { display: grid; grid-template-columns: 1.6rem 4.5rem 1fr; gap: .5rem; align-items: start; padding: .4rem .55rem; border-radius: 8px;
+                  font-size: .8rem; background: rgb(var(--subtle)); animation: entra .3s ease both; }
+  .dm-lineas li .s { font-weight: 800; text-align: center; }
+  .dm-lineas li .id { font-family: var(--f-mono); color: rgb(var(--fg-muted)); }
+  .dm-lineas li.ok .s { color: rgb(var(--ok)); }
+  .dm-lineas li.mal { background: rgb(var(--bad) / .08); }
+  .dm-lineas li.mal .s { color: rgb(var(--bad)); }
+  .dm-lineas li.falta { background: transparent; border: 1px dashed rgb(var(--line)); color: rgb(var(--fg-muted)); }
+  .dm-lineas li.reparada { background: rgb(var(--ok) / .1); }
+  .dm-lineas li.reparada .s { color: rgb(var(--ok)); }
+  .dm-lineas .por { display: block; font-size: .74rem; color: rgb(var(--bad)); margin-top: .15rem; }
+  .dm-lineas li.reparada .por { color: rgb(var(--ok)); }
+  .dm-json-roto { display: grid; place-items: center; text-align: center; gap: .4rem; padding: 2.2rem 1rem; color: rgb(var(--bad)); }
+  .dm-json-roto .x { font-size: 2.6rem; line-height: 1; font-weight: 800; }
+  .dm-json-roto small { color: rgb(var(--fg-muted)); max-width: 22rem; }
+  .dm-marcador { display: flex; gap: 1.2rem; flex-wrap: wrap; padding: .7rem .9rem; border-bottom: 1px solid rgb(var(--line)); }
+  .dm-marcador div { font-size: .75rem; color: rgb(var(--fg-muted)); }
+  .dm-marcador b { display: block; font-family: var(--f-mono); font-size: 1.35rem; color: rgb(var(--fg)); }
+  .dm-marcador .bien b { color: rgb(var(--ok)); } .dm-marcador .mal b { color: rgb(var(--bad)); }
+  .dm-cuerpo { padding: .8rem; }
+  .dm-reparo { margin-top: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; padding: .9rem 1rem; border-radius: var(--r);
+               border: 1px solid rgb(var(--accent) / .35); background: rgb(var(--accent) / .05); }
+  .dm-reparo p { margin: 0; flex: 1 1 18rem; font-size: .9rem; }
+  .dm-reparo.hecho { border-color: rgb(var(--ok) / .4); background: rgb(var(--ok) / .07); }
+
+  /* paso 5: resultado */
+  .dm-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+  .dm-kpi { border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: 1rem; background: rgb(var(--subtle)); }
+  .dm-kpi b { display: block; font-family: var(--f-mono); font-size: clamp(1.7rem, 3.5vw, 2.4rem); line-height: 1.1; }
+  .dm-kpi span { font-size: .82rem; color: rgb(var(--fg-muted)); }
+  .dm-kpi.acento b { color: rgb(var(--accent)); } .dm-kpi.bien b { color: rgb(var(--ok)); } .dm-kpi.mal b { color: rgb(var(--bad)); }
+  .dm-barras { display: grid; gap: .55rem; margin: 1.3rem 0 .4rem; }
+  .dm-barra { display: grid; grid-template-columns: 4rem 1fr 4rem; gap: .7rem; align-items: center; font-size: .85rem; font-weight: 600; }
+  .dm-barra .b { height: 1.35rem; border-radius: 6px; background: rgb(var(--fg-faint) / .45); transition: width .8s ease; width: 0; }
   .dm-barra.mini .b { background: rgb(var(--accent)); }
   .dm-barra .num { font-family: var(--f-mono); text-align: right; }
-  .dm-nota { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); margin-top: .8rem; }
-  .dm details summary { cursor: pointer; font-size: var(--fs-cap); color: rgb(var(--accent)); margin: .5rem 0; }
-  [hidden] { display: none !important; }
-  @media (max-width: 760px) { .dm-dos { grid-template-columns: 1fr; } .dm-ruta { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .dm-fila .btn { width: 100%; } .dm input[type="password"] { min-width: 0; width: 100%; } }
+  .dm-nota { font-size: var(--fs-fine); color: rgb(var(--fg-faint)); margin: .4rem 0 0; }
+  .dm-tabla { overflow-x: auto; margin-top: 1.2rem; border: 1px solid rgb(var(--line)); border-radius: var(--r); }
+  .dm table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .dm th, .dm td { text-align: left; padding: .5rem .65rem; border-bottom: 1px solid rgb(var(--line)); vertical-align: top; }
+  .dm th { white-space: nowrap; font-size: var(--fs-fine); text-transform: uppercase; letter-spacing: .04em; color: rgb(var(--fg-muted)); background: rgb(var(--subtle)); }
+  .dm .tag { display: inline-block; font-size: .72rem; font-weight: 600; padding: .1rem .5rem; border-radius: 99px; background: rgb(var(--subtle)); border: 1px solid rgb(var(--line)); }
+  .dm .tag.alta { color: rgb(var(--bad)); border-color: rgb(var(--bad) / .35); }
+  .dm details summary { cursor: pointer; font-size: var(--fs-cap); color: rgb(var(--accent)); margin: 1rem 0 .4rem; }
+  .dm details pre { margin: 0; padding: .8rem 1rem; border-radius: var(--r); background: rgb(var(--subtle)); font-size: .76rem; max-height: 18rem; overflow: auto; }
+
+  /* ---------- ajustes del modelo */
+  .dm-dialogo { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: 1.4rem; width: min(30rem, 92vw); background: rgb(var(--raised)); color: rgb(var(--fg)); }
+  .dm-dialogo::backdrop { background: rgb(0 0 0 / .45); }
+  .dm-dialogo h3 { margin: 0 0 .3rem; }
+  .dm-dialogo p { font-size: .85rem; color: rgb(var(--fg-muted)); margin: 0 0 1rem; }
+  .dm-dialogo label { display: block; font-size: .8rem; font-weight: 600; margin: .8rem 0 .3rem; }
+  .dm-dialogo input[type="password"] { width: 100%; font: inherit; font-family: var(--f-mono); font-size: .85rem; padding: .55rem .7rem;
+                                       border: 1px solid rgb(var(--line)); border-radius: var(--r); background: rgb(var(--subtle)); color: rgb(var(--fg)); }
+  .dm-dialogo .fila { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1.2rem; }
+  .dm-dialogo .check { display: flex; gap: .5rem; align-items: center; font-weight: 400; }
+  .dm-opciones { display: grid; gap: .5rem; }
+  .dm-opcion { display: flex; gap: .6rem; align-items: flex-start; border: 1px solid rgb(var(--line)); border-radius: var(--r); padding: .6rem .75rem; cursor: pointer; font-weight: 400 !important; margin: 0 !important; }
+  .dm-opcion:has(input:checked) { border-color: rgb(var(--accent)); background: rgb(var(--accent) / .06); }
+  .dm-opcion small { display: block; color: rgb(var(--fg-muted)); font-size: .76rem; }
+
+  @media (max-width: 860px) {
+    .dm-campos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dm-compara, .dm-situaciones, .dm-kpis { grid-template-columns: 1fr; }
+    .dm-progreso .t { display: none; }
+  }
 </style>
 </head>
 <body>
 __CABECERA__
 <main id="contenido" class="wrap dm">
-  <section class="dm-intro">
-    <p class="eyebrow"><span data-lang="es">Demostración en vivo</span><span data-lang="en" hidden>Live demo</span></p>
-    <h1><span data-lang="es">mini-format de principio a fin, en cinco pasos</span>
-        <span data-lang="en" hidden>mini-format end to end, in five steps</span></h1>
-    <p class="lead"><span data-lang="es">Una empresa recibe mensajes de sus clientes y le pide a una IA que los convierta en tickets. Aquí se pide lo mismo
-      dos veces: una en JSON, como se hace hoy, y otra en .mini. Se ve cuánto texto escribe la IA en cada caso, qué pasa cuando la respuesta
-      sale mal y cómo mini-format rescata y corrige solo lo necesario antes de entregar el JSON a la aplicación.</span>
-      <span data-lang="en" hidden>A company receives messages from its customers and asks an AI to turn them into tickets. The same request is made
-      twice: once in JSON, as it is done today, and once in .mini. You can see how much text the AI writes in each case, what happens when the
-      answer goes wrong and how mini-format rescues and fixes only what is needed before handing JSON to the application.</span></p>
+  <div class="dm-top">
+    <div>
+      <p class="eyebrow"><span data-lang="es">Demostración en vivo</span><span data-lang="en" hidden>Live demo</span></p>
+      <h1><span data-lang="es">De mensajes de clientes a tickets, con mini-format</span><span data-lang="en" hidden>From customer messages to tickets, with mini-format</span></h1>
+    </div>
+    <div class="dm-modo">
+      <button type="button" class="dm-pill" id="pillModo" title="Modelo"><span class="dot"></span><span id="textoModo"></span></button>
+      <button type="button" class="dm-icono" id="abrirAjustes" aria-label="Ajustes del modelo" title="Ajustes del modelo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <ol class="dm-progreso" id="progreso"><span class="barra" id="barra"></span></ol>
+
+  <section class="dm-escena" id="escena" aria-live="polite">
+    <h2><span data-lang="es">Demostración del flujo de mini-format</span><span data-lang="en" hidden>mini-format flow demo</span></h2>
+    <p class="lead"><span data-lang="es">Una empresa recibe mensajes de clientes y le pide a una IA que los convierta en tickets. La misma petición se hace en JSON
+      y en .mini para comparar cuánto texto se paga, qué pasa cuando la respuesta sale mal y cómo mini-format corrige solo lo necesario.
+      Esta demostración necesita JavaScript.</span>
+      <span data-lang="en" hidden>A company receives customer messages and asks an AI to turn them into tickets. The same request is made in JSON and in .mini to
+      compare how much text is paid for, what happens when the answer goes wrong and how mini-format fixes only what is needed. This demo needs JavaScript.</span></p>
   </section>
 
-  <ol class="dm-ruta" id="ruta">
-    <li data-r="1"><b>1</b><span data-lang="es">Los datos que llegan</span><span data-lang="en" hidden>The incoming data</span></li>
-    <li data-r="2"><b>2</b><span data-lang="es">Las reglas (contrato)</span><span data-lang="en" hidden>The rules (contract)</span></li>
-    <li data-r="3"><b>3</b><span data-lang="es">La IA responde</span><span data-lang="en" hidden>The AI answers</span></li>
-    <li data-r="4"><b>4</b><span data-lang="es">Comprobar y reparar</span><span data-lang="en" hidden>Check and repair</span></li>
-    <li data-r="5"><b>5</b><span data-lang="es">Resultado</span><span data-lang="en" hidden>Result</span></li>
-  </ol>
+  <div class="dm-nav">
+    <button type="button" class="btn" id="atras"><span data-lang="es">← Anterior</span><span data-lang="en" hidden>← Back</span></button>
+    <span class="ayuda"><span data-lang="es">También puedes usar las flechas ← → del teclado</span><span data-lang="en" hidden>You can also use the ← → keys</span></span>
+    <button type="button" class="btn btn-solid" id="adelante"><span data-lang="es">Siguiente →</span><span data-lang="en" hidden>Next →</span></button>
+  </div>
 
-  <section class="dm-paso" id="paso1">
-    <h2><span class="n">1</span><span data-lang="es">Los datos que llegan</span><span data-lang="en" hidden>The incoming data</span></h2>
-    <p class="sub"><span data-lang="es">Diez mensajes escritos por clientes. La aplicación necesita convertir cada uno en un ticket organizado.</span>
-      <span data-lang="en" hidden>Ten messages written by customers. The application needs to turn each one into an organized ticket.</span></p>
-    <div class="tabla" id="mensajes"></div>
-  </section>
-
-  <section class="dm-paso" id="paso2">
-    <h2><span class="n">2</span><span data-lang="es">Las reglas: el contrato</span><span data-lang="en" hidden>The rules: the contract</span></h2>
-    <p class="sub"><span data-lang="es">El contrato dice, una sola vez, qué campos tiene cada ticket, en qué orden y qué valores acepta. Con él, la IA ya no
-      repite los nombres de los campos en cada ticket, y mini-format puede comprobar cada línea que recibe.</span>
-      <span data-lang="en" hidden>The contract states once which fields each ticket has, in which order and which values it accepts. With it, the AI no
-      longer repeats field names in every ticket, and mini-format can check every line it receives.</span></p>
-    <div class="tabla" id="campos"></div>
-    <details><summary><span data-lang="es">Ver la instrucción que recibe la IA en cada caso</span><span data-lang="en" hidden>See the instruction the AI receives in each case</span></summary>
-      <div class="dm-dos">
-        <div class="dm-col mini"><h3>.mini</h3><pre id="promptMini"></pre></div>
-        <div class="dm-col"><h3>JSON</h3><pre id="promptJson"></pre></div>
+  <dialog class="dm-dialogo" id="ajustes">
+    <form method="dialog" id="formAjustes">
+      <h3><span data-lang="es">Ajustes del modelo</span><span data-lang="en" hidden>Model settings</span></h3>
+      <p><span data-lang="es">Las respuestas grabadas son de deepseek-chat y siempre dan el mismo resultado. En vivo, la petición va de este navegador a DeepSeek con tu clave; nunca pasa por este sitio.</span>
+        <span data-lang="en" hidden>Recorded answers come from deepseek-chat and always give the same result. Live, the request goes from this browser to DeepSeek with your key; it never goes through this site.</span></p>
+      <div class="dm-opciones">
+        <label class="dm-opcion"><input type="radio" name="modo" value="grabado"><span><span data-lang="es">Respuestas grabadas</span><span data-lang="en" hidden>Recorded answers</span>
+          <small><span data-lang="es">Sin clave ni costo. Recomendado para exponer.</span><span data-lang="en" hidden>No key, no cost. Recommended for presenting.</span></small></span></label>
+        <label class="dm-opcion"><input type="radio" name="modo" value="deepseek"><span><span data-lang="es">DeepSeek en vivo</span><span data-lang="en" hidden>Live DeepSeek</span>
+          <small><span data-lang="es">Llamadas reales a deepseek-chat; consume saldo de tu cuenta.</span><span data-lang="en" hidden>Real calls to deepseek-chat; spends your account balance.</span></small></span></label>
       </div>
-    </details>
-  </section>
-
-  <section class="dm-paso" id="paso3">
-    <h2><span class="n">3</span><span data-lang="es">La IA responde, en .mini y en JSON</span><span data-lang="en" hidden>The AI answers, in .mini and in JSON</span></h2>
-    <p class="sub"><span data-lang="es">Se envía el mismo pedido dos veces. Elige si se usan respuestas grabadas de un modelo real (siempre iguales, sin clave) o
-      una llamada en vivo a DeepSeek con tu clave.</span>
-      <span data-lang="en" hidden>The same request is sent twice. Choose recorded answers from a real model (always the same, no key) or a live call to
-      DeepSeek with your key.</span></p>
-    <div class="dm-fila">
-      <span class="et"><span data-lang="es">Modelo:</span><span data-lang="en" hidden>Model:</span></span>
-      <span class="dm-seg" id="modo">
-        <button type="button" data-v="grabado" aria-pressed="true"><span data-lang="es">Respuestas grabadas</span><span data-lang="en" hidden>Recorded answers</span></button>
-        <button type="button" data-v="deepseek" aria-pressed="false"><span data-lang="es">DeepSeek en vivo</span><span data-lang="en" hidden>Live DeepSeek</span></button>
-      </span>
-    </div>
-    <div class="dm-fila" id="filaEscenario">
-      <span class="et"><span data-lang="es">Situación:</span><span data-lang="en" hidden>Situation:</span></span>
-      <span class="dm-seg" id="escenario">
-        <button type="button" data-v="ok" aria-pressed="false"><span data-lang="es">Todo sale bien</span><span data-lang="en" hidden>All goes well</span></button>
-        <button type="button" data-v="error" aria-pressed="true"><span data-lang="es">La IA comete un error</span><span data-lang="en" hidden>The AI makes a mistake</span></button>
-        <button type="button" data-v="cortada" aria-pressed="false"><span data-lang="es">La respuesta se corta</span><span data-lang="en" hidden>The answer gets cut</span></button>
-      </span>
-    </div>
-    <div class="dm-fila" id="filaVivo" hidden>
-      <label class="et" for="clave"><span data-lang="es">Clave de DeepSeek</span><span data-lang="en" hidden>DeepSeek key</span></label>
-      <input type="password" id="clave" autocomplete="off" spellcheck="false" placeholder="sk-...">
-      <span class="et"><span data-lang="es">Límite de respuesta:</span><span data-lang="en" hidden>Answer limit:</span></span>
-      <span class="dm-seg" id="limite">
-        <button type="button" data-v="2000" aria-pressed="true"><span data-lang="es">Normal (2 000 tokens)</span><span data-lang="en" hidden>Normal (2,000 tokens)</span></button>
-        <button type="button" data-v="250" aria-pressed="false"><span data-lang="es">Bajo (250): fuerza un corte</span><span data-lang="en" hidden>Low (250): forces a cut</span></button>
-      </span>
-    </div>
-    <p class="dm-nota" id="notaClave" hidden><span data-lang="es">La clave va solo de este navegador a DeepSeek; nunca a este sitio. Se guarda en la pestaña y se borra al cerrarla. Cada ejecución consume saldo de tu cuenta.</span>
-      <span data-lang="en" hidden>The key goes only from this browser to DeepSeek, never to this site. It is kept in this tab and cleared when it closes. Each run spends your account balance.</span></p>
-    <div class="dm-fila"><button type="button" class="btn btn-solid" id="pedir"><span data-lang="es">Pedir a la IA</span><span data-lang="en" hidden>Ask the AI</span></button></div>
-    <div id="res3"></div>
-  </section>
-
-  <section class="dm-paso" id="paso4" aria-disabled="true">
-    <h2><span class="n">4</span><span data-lang="es">mini-format comprueba y repara solo lo que falló</span><span data-lang="en" hidden>mini-format checks and repairs only what failed</span></h2>
-    <p class="sub"><span data-lang="es">Cada línea .mini se revisa contra el contrato. Las correctas se conservan; solo las que fallan, o las que faltan, se vuelven a pedir.
-      Con JSON, un solo problema obliga a leer o pedir de nuevo toda la respuesta.</span>
-      <span data-lang="en" hidden>Every .mini line is checked against the contract. Correct lines are kept; only failing or missing ones are requested again.
-      With JSON, a single problem forces reading or requesting the whole answer again.</span></p>
-    <div id="res4"><p class="dm-aviso info"><span data-lang="es">Primero pide la respuesta en el paso 3.</span><span data-lang="en" hidden>First request the answer in step 3.</span></p></div>
-  </section>
-
-  <section class="dm-paso" id="paso5" aria-disabled="true">
-    <h2><span class="n">5</span><span data-lang="es">Resultado para la aplicación</span><span data-lang="en" hidden>Result for the application</span></h2>
-    <p class="sub"><span data-lang="es">La aplicación recibe JSON, igual que antes. Lo que cambia es cuánto texto se pagó y cuántos tickets se salvaron.</span>
-      <span data-lang="en" hidden>The application receives JSON, as before. What changes is how much text was paid for and how many tickets were saved.</span></p>
-    <div id="res5"></div>
-  </section>
+      <div id="bloqueClave">
+        <label for="clave"><span data-lang="es">Clave de DeepSeek</span><span data-lang="en" hidden>DeepSeek key</span></label>
+        <input type="password" id="clave" autocomplete="off" spellcheck="false" placeholder="sk-…">
+        <label class="check"><input type="checkbox" id="recordar"><span data-lang="es">Recordar en este navegador</span><span data-lang="en" hidden>Remember in this browser</span></label>
+      </div>
+      <div class="fila">
+        <button type="button" class="btn" id="olvidar"><span data-lang="es">Olvidar clave</span><span data-lang="en" hidden>Forget key</span></button>
+        <button type="submit" class="btn btn-solid" id="guardar" value="ok"><span data-lang="es">Guardar</span><span data-lang="en" hidden>Save</span></button>
+      </div>
+    </form>
+  </dialog>
 </main>
 __PIE__
 <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@3.0.1/dist/o200k_base.js" onerror="window.__tokFail=true"></script>
@@ -168,38 +234,59 @@ __PIE__
 <script>
 (function () {
   "use strict";
-  const $ = (s) => document.querySelector(s);
+  const $ = (s, r) => (r || document).querySelector(s);
   const es = () => document.documentElement.lang !== "en";
   const t = (par) => par[es() ? 0 : 1];
   const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const espera = (ms) => new Promise((r) => setTimeout(r, ms));
   const C = MINI.normalizeContract(DATOS.contrato);
   const CAMPOS = C.core;
   const N = DATOS.mensajes.length;
-  const CLAVE_KEY = "mini-demo-clave";
+  const CLAVE = "mini-demo-clave";
   const DEEPSEEK = { url: "https://api.deepseek.com/chat/completions", modelo: "deepseek-chat" };
-  const estado = { modo: "grabado", escenario: "error", limite: 2000, mini: null, json: null, rep: null };
-
   const contar = (s) => (window.GPTTokenizer_o200k_base && window.GPTTokenizer_o200k_base.encode)
     ? window.GPTTokenizer_o200k_base.encode(s || "").length : Math.round(new TextEncoder().encode(s || "").length / 3.6);
   const num = (x) => Number(x).toLocaleString(es() ? "es-PE" : "en-US");
 
-  /* -------------------------------------------------------------- pasos 1 y 2 */
-  function pintarDatos() {
-    $("#mensajes").innerHTML = "<table><thead><tr><th>" + t(["Mensaje", "Message"]) + "</th><th>" + t(["Lo que escribió el cliente", "What the customer wrote"]) +
-      "</th></tr></thead><tbody>" + DATOS.mensajes.map((m) => "<tr><td><code>" + esc(m.id) + "</code></td><td>" + esc(m.mensaje) + "</td></tr>").join("") + "</tbody></table>";
-    const regla = (f) => f.type === "enum" ? t(["uno de: ", "one of: "]) + f.values.join(", ")
-      : f.type === "int" ? t(["número entero", "whole number"]) + (f.min !== undefined && f.min !== null ? t([" entre ", " between "]) + f.min + t([" y ", " and "]) + f.max : "")
-      : t(["texto", "text"]);
-    const explica = { id: ["código del ticket", "ticket code"], prioridad: ["urgencia", "urgency"], categoria: ["tipo de problema", "kind of problem"],
-                      resumen: ["qué pasó, en una frase", "what happened, in one sentence"], horas: ["horas estimadas de atención", "estimated hours of work"] };
-    $("#campos").innerHTML = "<table><thead><tr><th>#</th><th>" + t(["Campo", "Field"]) + "</th><th>" + t(["Qué significa", "Meaning"]) + "</th><th>" +
-      t(["Regla", "Rule"]) + "</th></tr></thead><tbody>" + CAMPOS.map((f, i) => "<tr><td>" + (i + 1) + "</td><td><code>" + esc(f.name) + "</code></td><td>" +
-      esc(t(explica[f.name] || ["", ""])) + "</td><td>" + esc(regla(f)) + "</td></tr>").join("") + "</tbody></table>" +
-      '<p class="dm-nota">' + t(["Así se ve un ticket en .mini, un valor tras otro en el orden del contrato:", "This is a ticket in .mini, one value after another in contract order:"]) +
-      " <code>T-1041|alta|acceso|No puede iniciar sesión|2</code></p>";
-    $("#promptMini").textContent = instruccionMini() + "\n\n" + pedido(DATOS.mensajes);
-    $("#promptJson").textContent = instruccionJson() + "\n\n" + pedido(DATOS.mensajes);
+  const estado = { paso: 1, modo: "grabado", escenario: "cortada", mini: null, json: null, rep: null, ocupado: false };
+
+  /* ============================================================ clave y modo (ocultos tras el botón de ajustes) */
+  function leerClave() {
+    try { return sessionStorage.getItem(CLAVE) || localStorage.getItem(CLAVE) || ""; } catch (e) { return ""; }
   }
+  function guardarClave(valor, recordar) {
+    try {
+      sessionStorage.removeItem(CLAVE); localStorage.removeItem(CLAVE);
+      if (valor) (recordar ? localStorage : sessionStorage).setItem(CLAVE, valor);
+    } catch (e) {}
+  }
+  function pintarModo() {
+    const vivo = estado.modo === "deepseek";
+    $("#pillModo").classList.toggle("vivo", vivo);
+    $("#textoModo").textContent = vivo ? t(["En vivo · DeepSeek", "Live · DeepSeek"]) : t(["Respuestas grabadas", "Recorded answers"]);
+  }
+  function abrirAjustes() {
+    const d = $("#ajustes");
+    d.querySelectorAll('input[name="modo"]').forEach((r) => { r.checked = r.value === estado.modo; });
+    $("#clave").value = "";
+    $("#clave").placeholder = leerClave() ? t(["Clave guardada · escribe otra para cambiarla", "Key saved · type another to change it"]) : "sk-…";
+    try { $("#recordar").checked = !!localStorage.getItem(CLAVE); } catch (e) {}
+    d.showModal();
+  }
+  $("#abrirAjustes").addEventListener("click", abrirAjustes);
+  $("#pillModo").addEventListener("click", abrirAjustes);
+  $("#olvidar").addEventListener("click", () => { guardarClave(""); $("#clave").placeholder = "sk-…"; if (estado.modo === "deepseek") estado.modo = "grabado"; pintarModo(); });
+  $("#formAjustes").addEventListener("submit", () => {
+    const modo = ($('#ajustes input[name="modo"]:checked') || {}).value || "grabado";
+    const nueva = $("#clave").value.trim();
+    if (nueva) guardarClave(nueva, $("#recordar").checked);
+    else if (leerClave()) guardarClave(leerClave(), $("#recordar").checked);
+    estado.modo = modo === "deepseek" && leerClave() ? "deepseek" : "grabado";
+    $("#clave").value = "";
+    pintarModo(); render();
+  });
+
+  /* ============================================================ instrucciones */
   function instruccionMini() { return es() ? DATOS.prompt.es : DATOS.prompt.en; }
   function instruccionJson() {
     return (es() ? 'Eres el asistente de una mesa de ayuda. Responde únicamente con un objeto JSON de la forma {"tickets": [...]}, donde cada ticket cumple este JSON Schema:\n'
@@ -211,47 +298,66 @@ __PIE__
       mensajes.map((m) => m.id + ": " + m.mensaje).join("\n");
   }
 
-  /* -------------------------------------------------------------- llamadas al modelo */
-  function clave() { try { return sessionStorage.getItem(CLAVE_KEY) || ""; } catch (e) { return $("#clave").value.trim(); } }
-  function llamar(sistema, usuario, maxTokens) {
-    const t0 = performance.now();
-    return fetch(DEEPSEEK.url, {
-      method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + ($("#clave").value.trim() || clave()) },
-      body: JSON.stringify({ model: DEEPSEEK.modelo, temperature: 0, max_tokens: maxTokens,
+  /* ============================================================ llamadas (en vivo con streaming, o grabadas) */
+  async function llamarVivo(sistema, usuario, maxTokens, alEscribir) {
+    const r = await fetch(DEEPSEEK.url, {
+      method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + leerClave() },
+      body: JSON.stringify({ model: DEEPSEEK.modelo, temperature: 0, max_tokens: maxTokens, stream: true, stream_options: { include_usage: true },
                              messages: [{ role: "system", content: sistema }, { role: "user", content: usuario }] })
-    }).then((r) => r.text().then((crudo) => {
-      if (!r.ok) throw new Error("HTTP " + r.status + " · " + crudo.slice(0, 160));
-      const j = JSON.parse(crudo); const e = (j.choices || [{}])[0] || {};
-      return { texto: (e.message || {}).content || "", tokens: (j.usage || {}).completion_tokens || 0,
-               cortada: e.finish_reason === "length", ms: performance.now() - t0, real: true };
-    }));
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status + " · " + (await r.text()).slice(0, 160));
+    const lector = r.body.getReader(), dec = new TextDecoder();
+    let buf = "", texto = "", tokens = 0, cortada = false;
+    for (;;) {
+      const { value, done } = await lector.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const partes = buf.split("\n"); buf = partes.pop();
+      for (const p of partes) {
+        const l = p.trim(); if (!l.startsWith("data:")) continue;
+        const d = l.slice(5).trim(); if (d === "[DONE]") continue;
+        let j; try { j = JSON.parse(d); } catch (e) { continue; }
+        const ch = (j.choices || [])[0];
+        if (ch && ch.delta && ch.delta.content) { texto += ch.delta.content; alEscribir(texto, contar(texto)); }
+        if (ch && ch.finish_reason === "length") cortada = true;
+        if (j.usage) tokens = j.usage.completion_tokens || tokens;
+      }
+    }
+    return { texto, tokens: tokens || contar(texto), cortada, real: true };
   }
-  function grabada(formato, escenario) {
-    const texto = DATOS.grabaciones[formato][escenario];
-    return new Promise((ok) => setTimeout(() => ok({ texto, tokens: contar(texto), cortada: escenario === "cortada", ms: 0, real: false }), 500));
+  async function reproducir(texto, cortada, alEscribir) {
+    const total = contar(texto), porToken = 14;                // ~70 tokens por segundo, igual para ambos formatos
+    const pasos = Math.max(1, Math.ceil(total / 6));
+    for (let i = 1; i <= pasos; i++) {
+      const parte = texto.slice(0, Math.round(texto.length * i / pasos));
+      alEscribir(parte, Math.round(total * i / pasos));
+      await espera(porToken * 6);
+    }
+    return { texto, tokens: total, cortada, real: false };
   }
+  function limite() { return estado.escenario === "cortada" ? 250 : 2000; }
 
-  /* -------------------------------------------------------------- lectura y validación */
+  /* ============================================================ lectura y validación */
   function leerMini(texto) {
     const doc = MINI.extractDocument(texto || "", C);
-    if (!doc.trim()) return { vacio: true, records: [], errores: [] };
+    if (!doc.trim()) return { vacio: true, doc: "", records: [], errores: [] };
     const d = MINI.parse(doc, C, { strict: false });
-    return { doc, records: d.records, errores: (d.errors || []).filter((e) => e.line > 1), header: d.header || {} };
+    return { doc, records: d.records, errores: (d.errors || []).filter((e) => e.line > 1) };
   }
   function validarTicket(tk) {
     for (const f of CAMPOS) {
       const v = tk[f.name];
       if (v === undefined || v === null || v === "") return f.name + t([": falta el valor", ": missing value"]);
-      if (f.type === "enum" && f.values.indexOf(v) < 0) return f.name + ": '" + v + "' " + t(["no es un valor permitido", "is not an allowed value"]);
+      if (f.type === "enum" && f.values.indexOf(v) < 0) return f.name + ": «" + v + "» " + t(["no es un valor permitido", "is not an allowed value"]);
       if (f.type === "int" && (typeof v !== "number" || Math.floor(v) !== v || (f.min != null && v < f.min) || (f.max != null && v > f.max)))
-        return f.name + ": '" + v + "' " + t(["está fuera de la regla", "breaks the rule"]);
+        return f.name + ": «" + v + "» " + t(["no cumple la regla", "breaks the rule"]);
     }
     return null;
   }
   function leerJson(texto) {
-    let limpio = (texto || "").trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
+    const limpio = (texto || "").trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
     let obj;
-    try { obj = JSON.parse(limpio); } catch (e) { return { ilegible: true, motivo: e.message, validos: [], malos: [] }; }
+    try { obj = JSON.parse(limpio); } catch (e) { return { ilegible: true, validos: [], malos: [] }; }
     const lista = Array.isArray(obj) ? obj : (obj.tickets || obj.records || []);
     const validos = [], malos = [];
     lista.forEach((tk) => { const m = validarTicket(tk); if (m) malos.push({ id: tk.id, motivo: m }); else validos.push(tk); });
@@ -259,174 +365,316 @@ __PIE__
   }
   const SIMPLE = {
     E04: ["llegaron menos tickets de los anunciados", "fewer tickets arrived than announced"],
-    E05: ["la línea está incompleta o le sobran campos (por ejemplo, se cortó a la mitad)", "the line is incomplete or has extra fields (for example, it was cut in half)"],
+    E05: ["la línea quedó incompleta (la respuesta se cortó aquí)", "the line is incomplete (the answer was cut here)"],
     E06: ["un valor no tiene el tipo esperado", "a value does not have the expected type"],
     E07: ["una lista no tiene la cantidad de elementos esperada", "a list does not have the expected number of items"],
-    E10: ["un valor no está entre los permitidos por el contrato", "a value is not one of those the contract allows"],
+    E10: ["un valor no es uno de los permitidos por el contrato", "a value is not one the contract allows"],
     E13: ["un número está fuera del rango permitido", "a number is outside the allowed range"]
   };
-  const titulo = (cod) => SIMPLE[cod] ? t(SIMPLE[cod]) : ((es() ? DATOS.errores : DATOS.erroresEn)[cod] || "");
+  const motivo = (e) => SIMPLE[e.code] ? t(SIMPLE[e.code]) : ((es() ? DATOS.errores : DATOS.erroresEn)[e.code] || e.message || "");
 
-  /* -------------------------------------------------------------- paso 3 */
-  function pedir() {
-    if (estado.modo === "deepseek" && !$("#clave").value.trim()) {
-      $("#res3").innerHTML = '<p class="dm-aviso mal">' + t(["Falta la clave de DeepSeek.", "The DeepSeek key is missing."]) + "</p>"; return;
-    }
-    if (estado.modo === "deepseek") { try { sessionStorage.setItem(CLAVE_KEY, $("#clave").value.trim()); } catch (e) {} }
-    $("#pedir").disabled = true; estado.rep = null;
-    $("#res3").innerHTML = '<p class="dm-aviso info">' + t(["Pidiendo a la IA las dos respuestas a la vez…", "Asking the AI for both answers at once…"]) + "</p>";
-    const usuario = pedido(DATOS.mensajes);
-    const p = estado.modo === "grabado"
-      ? Promise.all([grabada("mini", estado.escenario), grabada("json", estado.escenario)])
-      : Promise.all([llamar(instruccionMini(), usuario, estado.limite), llamar(instruccionJson(), usuario, estado.limite)]);
-    p.then(([m, j]) => { estado.mini = m; estado.json = j; pintar3(); pintar4(); pintar5(); })
-     .catch((e) => { $("#res3").innerHTML = '<p class="dm-aviso mal">' + t(["La llamada falló: ", "The call failed: "]) + esc(e.message) + "</p>"; })
-     .finally(() => { $("#pedir").disabled = false; });
+  /* ============================================================ escenas */
+  const PASOS = [
+    ["Los mensajes", "The messages"], ["Las reglas", "The rules"], ["La IA responde", "The AI answers"],
+    ["Comprobar y reparar", "Check and repair"], ["Resultado", "Result"]
+  ];
+  function pintarProgreso() {
+    const ol = $("#progreso");
+    ol.innerHTML = '<span class="barra" id="barra"></span>' + PASOS.map((p, i) =>
+      '<li class="' + (i + 1 < estado.paso ? "hecho" : i + 1 === estado.paso ? "actual" : "") + '"><button type="button" data-ir="' + (i + 1) + '">' +
+      '<span class="c">' + (i + 1 < estado.paso ? "✓" : i + 1) + '</span><span class="t">' + t(p) + "</span></button></li>").join("");
+    $("#barra").style.width = (80 * (estado.paso - 1) / 4) + "%";
+    ol.querySelectorAll("[data-ir]").forEach((b) => b.addEventListener("click", () => ir(+b.dataset.ir)));
   }
-  function columna(clase, nombre, r) {
-    return '<div class="dm-col ' + clase + '"><h3>' + nombre + '<span class="tok">' + num(r.tokens) + " " + t(["tokens de respuesta", "answer tokens"]) +
-      (r.cortada ? " · " + t(["cortada", "cut"]) : "") + "</span></h3><pre>" + esc(r.texto || t(["(la IA no escribió nada)", "(the AI wrote nothing)"])) + "</pre></div>";
+  function puedeAvanzar() {
+    if (estado.paso === 3) return !!estado.mini && !estado.ocupado;
+    if (estado.paso === 4) return !estado.ocupado;
+    return estado.paso < 5;
   }
-  function pintar3() {
+  function ir(n) {
+    if (n < 1 || n > 5 || estado.ocupado) return;
+    if (n > 3 && !estado.mini) n = 3;
+    estado.paso = n; render(); window.scrollTo({ top: $("#progreso").offsetTop - 80, behavior: "smooth" });
+  }
+  function render() {
+    pintarProgreso();
+    const e = $("#escena");
+    e.style.animation = "none"; void e.offsetWidth; e.style.animation = "";
+    e.innerHTML = [null, escena1, escena2, escena3, escena4, escena5][estado.paso]();
+    const enganches = [null, null, null, enganchar3, enganchar4, enganchar5][estado.paso];
+    if (enganches) enganches();
+    $("#atras").disabled = estado.paso === 1 || estado.ocupado;
+    $("#adelante").disabled = !puedeAvanzar();
+    $("#adelante").hidden = estado.paso === 5;
+  }
+
+  function escena1() {
+    return "<h2>" + t(["1 · Llegan mensajes de clientes", "1 · Customer messages arrive"]) + '</h2><p class="lead">' +
+      t(["Diez personas escriben a soporte. La aplicación necesita convertir cada mensaje en un ticket ordenado para asignarlo. Para eso le pide ayuda a una IA.",
+         "Ten people write to support. The application needs to turn each message into an organized ticket to assign it. It asks an AI for help."]) + "</p>" +
+      '<div class="dm-chats">' + DATOS.mensajes.map((m, i) => '<div class="dm-chat" style="animation-delay:' + (i * 50) + 'ms"><span class="id">' + esc(m.id) + "</span>" + esc(m.mensaje) + "</div>").join("") + "</div>" +
+      '<div class="dm-flecha">→ ' + t(["Lo que la aplicación quiere obtener de cada mensaje: ", "What the application wants from each message: "]) +
+      "<b>id · prioridad · categoria · resumen · horas</b></div>";
+  }
+
+  function escena2() {
+    const explica = { id: ["¿Qué mensaje es?", "Which message is it?"], prioridad: ["¿Qué tan urgente es?", "How urgent is it?"],
+                      categoria: ["¿De qué trata?", "What is it about?"], resumen: ["¿Qué pasó?", "What happened?"], horas: ["¿Cuánto trabajo toma?", "How much work does it take?"] };
+    const regla = (f) => f.type === "enum" ? f.values.join(" · ")
+      : f.type === "int" ? t(["número de ", "number from "]) + f.min + t([" a ", " to "]) + f.max : t(["texto libre", "free text"]);
+    const tk = JSON.parse(DATOS.grabaciones.json.ok).tickets[0];
+    const json = esc(JSON.stringify(tk, null, 1)).replace(/&quot;|"/g, '"').replace(/"(\w+)":/g, '<span class="k">"$1"</span>:');
+    const linea = CAMPOS.map((f) => esc(String(tk[f.name]))).join('<span class="sep">|</span>');
+    return "<h2>" + t(["2 · Se acuerdan las reglas una sola vez", "2 · The rules are agreed once"]) + '</h2><p class="lead">' +
+      t(["Un contrato define los cinco campos del ticket, su orden y los valores válidos. Así la IA no necesita repetir los nombres de los campos y mini-format puede revisar cada respuesta.",
+         "A contract defines the ticket's five fields, their order and the valid values. The AI no longer needs to repeat field names, and mini-format can check every answer."]) + "</p>" +
+      '<div class="dm-campos">' + CAMPOS.map((f, i) => '<div class="dm-campo"><span class="n">' + (i + 1) + "</span><code>" + esc(f.name) + '</code><span class="q">' +
+        esc(t(explica[f.name] || ["", ""])) + '</span><span class="r">' + esc(regla(f)) + "</span></div>").join("") + "</div>" +
+      '<div class="dm-compara"><div class="dm-caja"><div class="cab"><span>' + t(["Un ticket en JSON", "One ticket in JSON"]) + '</span><span class="tok">' +
+        contar(JSON.stringify(tk)) + " tokens</span></div><pre>" + json + "</pre></div>" +
+      '<div class="dm-caja mini"><div class="cab"><span>' + t(["El mismo ticket en .mini", "The same ticket in .mini"]) + '</span><span class="tok">' +
+        contar(CAMPOS.map((f) => tk[f.name]).join("|")) + " tokens</span></div><pre>" + linea + '</pre><p class="dm-nota" style="padding:0 .9rem .8rem">' +
+        t(["En rojo, lo que JSON repite en cada ticket. En .mini solo van los valores, en el orden del contrato.", "In red, what JSON repeats in every ticket. In .mini only the values go, in contract order."]) +
+        "</p></div></div>";
+  }
+
+  const ICONOS = {
+    ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
+    cortada: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>'
+  };
+  function escena3() {
+    const sits = [["ok", "ok", ["Todo sale bien", "All goes well"], ["La IA responde completa y sin errores.", "The AI answers fully and without mistakes."]],
+                  ["error", "err", ["La IA comete un error", "The AI makes a mistake"], ["Un ticket trae un valor que no existe.", "One ticket has a value that does not exist."]],
+                  ["cortada", "cut", ["La respuesta se corta", "The answer gets cut"], ["La IA llega a su límite de texto a mitad de camino.", "The AI hits its text limit halfway."]]];
+    return "<h2>" + t(["3 · La IA responde, en JSON y en .mini", "3 · The AI answers, in JSON and in .mini"]) + '</h2><p class="lead">' +
+      t(["Se hace la misma petición dos veces, al mismo tiempo. Elige qué situación quieres ver.", "The same request is made twice, at the same time. Choose which situation to see."]) + "</p>" +
+      '<div class="dm-situaciones">' + sits.map(([v, ic, tit, desc]) => '<button type="button" class="dm-sit" data-sit="' + v + '" aria-pressed="' + (estado.escenario === v) + '"><span class="ic ' + ic + '">' +
+        ICONOS[v] + "</span><b>" + t(tit) + "</b><span>" + t(desc) + "</span></button>").join("") + "</div>" +
+      '<div class="dm-accion"><button type="button" class="btn btn-solid btn-grande" id="pedir">' + t(["Enviar a la IA", "Send to the AI"]) + '</button><span class="nota">' +
+        (estado.modo === "deepseek" ? t(["Llamada real a deepseek-chat", "Real call to deepseek-chat"]) + (estado.escenario === "cortada" ? t([" con un límite de 250 tokens", " with a 250-token limit"]) : "")
+                                     : t(["Respuestas grabadas de deepseek-chat", "Recorded deepseek-chat answers"])) + "</span></div>" +
+      '<div class="dm-compara" id="respuestas">' + cajaRespuesta("json", "JSON") + cajaRespuesta("mini", ".mini") + "</div>" +
+      '<div id="veredicto"></div>';
+  }
+  function cajaRespuesta(f, nombre) {
+    const r = estado[f];
+    return '<div class="dm-caja ' + (f === "mini" ? "mini" : "") + '" id="caja-' + f + '"><div class="cab"><span>' + nombre + ' <span class="estado ' +
+      (r ? (r.cortada ? "cortada" : "listo") : "") + '">' + (r ? (r.cortada ? t(["cortada", "cut"]) : t(["lista", "done"])) : "") + '</span></span><span class="tok">' +
+      (r ? num(r.tokens) : 0) + " tokens</span></div><pre>" + (r ? colorear(f, r.texto) : '<span style="color:rgb(var(--fg-faint))">' +
+      t(["Esperando la petición…", "Waiting for the request…"]) + "</span>") + "</pre></div>";
+  }
+  function colorear(f, texto) {
+    const s = esc(texto || "");
+    return f === "json" ? s.replace(/"(\w+)":/g, '<span class="k">"$1"</span>:') : s.replace(/\|/g, '<span class="sep">|</span>');
+  }
+  function veredicto() {
     const m = estado.mini, j = estado.json;
+    if (!m || !j) return "";
     const menos = j.tokens ? Math.round(100 * (1 - m.tokens / j.tokens)) : 0;
-    $("#res3").innerHTML = '<div class="dm-dos">' + columna("mini", ".mini", m) + columna("", "JSON", j) + "</div>" +
-      '<p class="dm-aviso info">' + t(["Para los mismos tickets, la IA escribió ", "For the same tickets, the AI wrote "]) + "<b>" + num(m.tokens) +
-      t([" tokens en .mini y ", " tokens in .mini and "]) + num(j.tokens) + t([" en JSON", " in JSON"]) + "</b>" +
+    return '<div class="dm-veredicto">' + t(["Para los mismos tickets, la IA escribió ", "For the same tickets, the AI wrote "]) + "<b>" + num(m.tokens) + " tokens " +
+      t(["en .mini", "in .mini"]) + "</b>" + t([" frente a ", " versus "]) + "<b>" + num(j.tokens) + t([" en JSON", " in JSON"]) + "</b>" +
       (menos > 0 ? t([": " + menos + " % menos texto que pagar.", ": " + menos + " % less text to pay for."]) : ".") +
-      (m.real ? "" : " " + t(["(Respuestas grabadas de deepseek-chat; tokens contados con el tokenizador de GPT-4o.)", "(Recorded deepseek-chat answers; tokens counted with the GPT-4o tokenizer.)"])) + "</p>";
-    $("#ruta [data-r='3']").classList.add("hecho"); $("#ruta [data-r='1']").classList.add("hecho"); $("#ruta [data-r='2']").classList.add("hecho");
+      (estado.escenario === "cortada" ? " " + t(["Las dos respuestas se cortaron al llegar al límite. El siguiente paso muestra qué se puede rescatar de cada una.",
+                                                 "Both answers were cut at the limit. The next step shows what can be rescued from each."]) : "") + "</div>";
+  }
+  function enganchar3() {
+    document.querySelectorAll("[data-sit]").forEach((b) => b.addEventListener("click", () => {
+      if (estado.ocupado) return;
+      estado.escenario = b.dataset.sit; estado.mini = estado.json = estado.rep = null; render();
+    }));
+    $("#pedir").addEventListener("click", pedir);
+    $("#veredicto").innerHTML = veredicto();
+  }
+  async function pedir() {
+    estado.ocupado = true; estado.mini = estado.json = estado.rep = null; render();
+    $("#pedir").disabled = true;
+    const escribir = (f) => (texto, tokens) => {
+      const caja = $("#caja-" + f); if (!caja) return;
+      $("pre", caja).innerHTML = colorear(f, texto);
+      $(".tok", caja).textContent = num(tokens) + " tokens";
+      $(".estado", caja).className = "estado escribiendo"; $(".estado", caja).textContent = t(["escribiendo…", "writing…"]);
+      const pre = $("pre", caja); pre.scrollTop = pre.scrollHeight;
+    };
+    try {
+      const usuario = pedido(DATOS.mensajes);
+      const [j, m] = estado.modo === "deepseek"
+        ? await Promise.all([llamarVivo(instruccionJson(), usuario, limite(), escribir("json")), llamarVivo(instruccionMini(), usuario, limite(), escribir("mini"))])
+        : await Promise.all([reproducir(DATOS.grabaciones.json[estado.escenario], estado.escenario === "cortada", escribir("json")),
+                             reproducir(DATOS.grabaciones.mini[estado.escenario], estado.escenario === "cortada", escribir("mini"))]);
+      estado.json = j; estado.mini = m;
+    } catch (e) {
+      estado.ocupado = false; render();
+      $("#veredicto").innerHTML = '<div class="dm-veredicto" style="color:rgb(var(--bad))">' + t(["La llamada falló: ", "The call failed: "]) + esc(e.message) + "</div>";
+      return;
+    }
+    estado.ocupado = false; render();
   }
 
-  /* -------------------------------------------------------------- paso 4 */
-  function pintar4() {
-    $("#paso4").setAttribute("aria-disabled", "false");
-    const m = leerMini(estado.rep ? estado.rep.texto : estado.mini.texto), j = leerJson(estado.json.texto);
-    const lineas = (m.doc || "").split("\n");
-    const conError = new Set(m.errores.map((e) => (lineas[e.line - 1] || "").split("|")[0]));
-    const faltan = DATOS.mensajes.filter((x) => !m.records.some((r) => r.id === x.id) && !conError.has(x.id)).length;
-    let h = '<div class="dm-dos"><div class="dm-col mini"><h3>.mini</h3>';
-    h += '<div class="dm-cifras"><div class="dm-cifra bien"><span class="v">' + m.records.length + "/" + N + '</span><span class="k">' + t(["tickets correctos", "correct tickets"]) +
-         '</span></div><div class="dm-cifra ' + (m.errores.length ? "mal" : "") + '"><span class="v">' + m.errores.length + '</span><span class="k">' + t([m.errores.length === 1 ? "línea con error" : "líneas con error", m.errores.length === 1 ? "line with an error" : "lines with errors"]) +
-         '</span></div><div class="dm-cifra ' + (faltan ? "mal" : "") + '"><span class="v">' + faltan + '</span><span class="k">' + t(["tickets que faltan", "missing tickets"]) + "</span></div></div>";
-    if (m.errores.length) {
-      h += "<table><thead><tr><th>" + t(["Línea", "Line"]) + "</th><th>" + t(["Código", "Code"]) + "</th><th>" + t(["Qué pasó", "What happened"]) + "</th></tr></thead><tbody>" +
-        m.errores.map((e) => "<tr><td>" + e.line + '</td><td class="cod">' + esc(e.code) + "</td><td>" + esc(titulo(e.code) || e.message || "") + "</td></tr>").join("") + "</tbody></table>";
-    }
-    h += (m.errores.length || faltan)
-      ? '<p class="dm-aviso info">' + t(["Las " + m.records.length + " líneas correctas se guardan. Solo se volverá a pedir lo que falló o faltó.", "The " + m.records.length + " correct lines are kept. Only what failed or is missing will be requested again."]) + "</p>"
-      : '<p class="dm-aviso bien">' + t(["Todas las líneas cumplen el contrato.", "All lines meet the contract."]) + "</p>";
-    h += '</div><div class="dm-col"><h3>JSON</h3>';
+  function contexto4() {
+    const m = leerMini(estado.rep ? estado.rep.texto : estado.mini.texto);
+    const original = leerMini(estado.mini.texto);
+    const lineas = original.doc.split("\n");
+    const errPorId = {};
+    original.errores.forEach((e) => { const id = (lineas[e.line - 1] || "").split("|")[0]; if (id) errPorId[id] = e; });
+    return { m, original, errPorId };
+  }
+  function escena4() {
+    const { m, original, errPorId } = contexto4();
+    const j = leerJson(estado.json.texto);
+    const filas = DATOS.mensajes.map((msg, i) => {
+      const final = m.records.find((r) => r.id === msg.id);
+      const enOriginal = original.records.find((r) => r.id === msg.id);
+      const err = errPorId[msg.id];
+      let cls, s, txt;
+      if (enOriginal) { cls = "ok"; s = "✓"; txt = esc(enOriginal.resumen); }
+      else if (final) { cls = "reparada"; s = "✓"; txt = esc(final.resumen) + '<span class="por">' + (err ? t(["corregida: ", "fixed: "]) + esc(motivo(err)) : t(["pedido de nuevo porque faltaba", "requested again because it was missing"])) + "</span>"; }
+      else if (err) { cls = "mal"; s = "✗"; txt = '<code>' + esc((original.doc.split("\n")[err.line - 1] || "").slice(0, 70)) + '</code><span class="por">' + esc(err.code) + " · " + esc(motivo(err)) + "</span>"; }
+      else { cls = "falta"; s = "–"; txt = t(["no llegó: la respuesta terminó antes", "did not arrive: the answer ended before"]); }
+      return '<li class="' + cls + '" style="animation-delay:' + (i * 60) + 'ms"><span class="s">' + s + '</span><span class="id">' + esc(msg.id) + "</span><span>" + txt + "</span></li>";
+    }).join("");
+    const correctos = m.records.length, conError = Object.keys(errPorId).filter((id) => !m.records.some((r) => r.id === id)).length;
+    const faltan = N - correctos - conError;
+    let jsonCuerpo;
     if (j.ilegible) {
-      h += '<div class="dm-cifras"><div class="dm-cifra mal"><span class="v">0/' + N + '</span><span class="k">' + t(["tickets utilizables", "usable tickets"]) + "</span></div></div>" +
-        '<p class="dm-aviso mal">' + t(["El JSON no se puede leer (", "The JSON cannot be read ("]) + esc(j.motivo) + t(["): se pierde la respuesta completa, incluidos los tickets que estaban bien.", "): the whole answer is lost, including the tickets that were fine."]) + "</p>";
+      jsonCuerpo = '<div class="dm-json-roto"><span class="x">✗</span><b>' + t(["No se puede leer", "Cannot be read"]) + "</b><small>" +
+        t(["Al JSON cortado le falta el cierre. El programa no puede abrirlo y se pierden los diez tickets, incluso los que estaban completos.",
+           "The cut JSON lacks its closing. The program cannot open it and all ten tickets are lost, even the complete ones."]) + "</small></div>";
+    } else if (j.malos.length) {
+      jsonCuerpo = '<div class="dm-json-roto" style="color:rgb(190 110 0)"><span class="x">!</span><b>' + j.validos.length + t([" de ", " of "]) + N + t([" tickets válidos", " valid tickets"]) + "</b><small>" +
+        j.malos.map((x) => esc(x.id + " · " + x.motivo)).join("<br>") + "<br>" + t(["Para corregirlo hay que volver a pedir la respuesta completa.", "Fixing it means requesting the whole answer again."]) + "</small></div>";
     } else {
-      h += '<div class="dm-cifras"><div class="dm-cifra ' + (j.malos.length ? "mal" : "bien") + '"><span class="v">' + j.validos.length + "/" + N + '</span><span class="k">' + t(["tickets correctos", "correct tickets"]) + "</span></div></div>";
-      if (j.malos.length) h += '<p class="dm-aviso mal">' + j.malos.map((x) => esc(x.id + ": " + x.motivo)).join("<br>") + "<br>" +
-        t(["JSON no dice en qué parte del texto está el error: para corregirlo se vuelve a pedir la respuesta completa.", "JSON does not say where the error is in the text: fixing it means requesting the whole answer again."]) + "</p>";
-      else h += '<p class="dm-aviso bien">' + t(["Todos los tickets cumplen el esquema.", "All tickets meet the schema."]) + "</p>";
+      jsonCuerpo = '<div class="dm-json-roto" style="color:rgb(var(--ok))"><span class="x">✓</span><b>' + t(["Los diez tickets son válidos", "All ten tickets are valid"]) + "</b></div>";
     }
-    h += "</div></div>";
-    const hayQueReparar = (m.errores.length || faltan) && !estado.rep;
-    if (hayQueReparar) h += '<div class="dm-fila"><button type="button" class="btn btn-solid" id="reparar">' + t(["Reparar solo lo que falló", "Repair only what failed"]) + "</button></div>";
-    if (estado.rep) h += '<p class="dm-aviso bien">' + estado.rep.resumen + "</p>";
-    $("#res4").innerHTML = h;
-    if ($("#reparar")) $("#reparar").addEventListener("click", reparar);
-    if (!hayQueReparar) $("#ruta [data-r='4']").classList.add("hecho");
+    const hayQueReparar = (conError || faltan) && !estado.rep;
+    return "<h2>" + t(["4 · mini-format revisa cada línea", "4 · mini-format checks every line"]) + '</h2><p class="lead">' +
+      t(["Cada ticket en .mini es una línea que se revisa por separado contra el contrato. Lo correcto se guarda; solo lo que falló o faltó se vuelve a pedir.",
+         "Each .mini ticket is a line checked on its own against the contract. What is correct is kept; only what failed or is missing is requested again."]) + "</p>" +
+      '<div class="dm-compara"><div class="dm-caja"><div class="cab"><span>JSON</span></div>' + jsonCuerpo + "</div>" +
+      '<div class="dm-caja mini"><div class="cab"><span>.mini</span></div><div class="dm-marcador"><div class="bien"><b>' + correctos + "/" + N + "</b>" + t(["correctos", "correct"]) +
+        '</div><div class="' + (conError ? "mal" : "") + '"><b>' + conError + "</b>" + t(["con error", "with errors"]) + '</div><div class="' + (faltan ? "mal" : "") + '"><b>' + faltan + "</b>" +
+        t(["faltan", "missing"]) + '</div></div><div class="dm-cuerpo"><ol class="dm-lineas">' + filas + "</ol></div></div></div>" +
+      (hayQueReparar ? '<div class="dm-reparo"><p>' + t(["Se conservan los " + correctos + " tickets correctos. Solo se le pedirá a la IA lo que falló o faltó.",
+                                                          "The " + correctos + " correct tickets are kept. The AI will only be asked for what failed or is missing."]) +
+                       '</p><button type="button" class="btn btn-solid" id="reparar">' + t(["Reparar solo lo que falló", "Repair only what failed"]) + "</button></div>" : "") +
+      (estado.rep ? '<div class="dm-reparo hecho"><p>' + estado.rep.resumen + "</p></div>" : "");
   }
+  function enganchar4() { if ($("#reparar")) $("#reparar").addEventListener("click", reparar); }
 
-  function reparar() {
-    $("#reparar").disabled = true;
+  async function reparar() {
+    estado.ocupado = true; $("#reparar").disabled = true; $("#reparar").textContent = t(["Reparando…", "Repairing…"]);
+    $("#adelante").disabled = true; $("#atras").disabled = true;
+    try { await calcularReparacion(true); }
+    catch (e) {
+      estado.ocupado = false; render();
+      $("#escena").insertAdjacentHTML("beforeend", '<div class="dm-veredicto" style="color:rgb(var(--bad))">' + esc(e.message) + "</div>"); return;
+    }
+    estado.ocupado = false; render();
+  }
+  async function calcularReparacion(conPausa) {
+    const espera2 = conPausa ? espera : () => Promise.resolve();
     const original = MINI.extractDocument(estado.mini.texto, C);
     const sol = MINI.repairRequest(original, C, es() ? "es" : "en");
     const lineasOk = {};
     MINI.extractDocument(DATOS.grabaciones.mini.ok, C).split("\n").slice(1).forEach((l) => { lineasOk[l.split("|")[0]] = l; });
     const vivo = estado.modo === "deepseek";
-    let tokens = 0, llamadas = 0;
-    const paso1 = !sol.needed ? Promise.resolve(original) : (() => {
-      llamadas++;
-      const pedirCorreccion = vivo ? llamar(sol.system, sol.user, 600)
-        : grabada("mini", "ok").then(() => {
-            const fisicas = original.split("\n");
-            const lineas = sol.lines.map((n) => lineasOk[(fisicas[n - 1] || "").split("|")[0]]).filter(Boolean);
-            const texto = C.prefix + "|n=" + lineas.length + "\n" + lineas.join("\n");
-            return { texto, tokens: contar(texto) };
-          });
-      return pedirCorreccion.then((r) => { tokens += r.tokens; return MINI.mergeRepair(original, r.texto, C, sol).text; });
-    })();
-    paso1.then((texto) => {
+    let tokens = 0, texto = original, corregidas = [];
+    {
+      if (sol.needed) {
+        let r;
+        if (vivo) r = await llamarVivo(sol.system, sol.user, 600, () => {});
+        else {
+          await espera2(700);
+          const fis = original.split("\n");
+          const ls = sol.lines.map((n) => lineasOk[(fis[n - 1] || "").split("|")[0]]).filter(Boolean);
+          const txt = C.prefix + "|n=" + ls.length + "\n" + ls.join("\n");
+          r = { texto: txt, tokens: contar(txt) };
+        }
+        tokens += r.tokens;
+        const fis = original.split("\n");
+        corregidas = sol.lines.map((n) => (fis[n - 1] || "").split("|")[0]);
+        texto = MINI.mergeRepair(original, r.texto, C, sol).text;
+      }
       const d = leerMini(texto);
       const faltan = DATOS.mensajes.filter((x) => !d.records.some((r) => r.id === x.id));
-      if (!faltan.length) return { texto, faltan: [] };
-      llamadas++;
-      const pedirFaltan = vivo ? llamar(instruccionMini(), pedido(faltan), 1000)
-        : grabada("mini", "ok").then(() => {
-            const lineas = faltan.map((x) => lineasOk[x.id]).filter(Boolean);
-            const t2 = C.prefix + "|n=" + lineas.length + "\n" + lineas.join("\n");
-            return { texto: t2, tokens: contar(t2) };
-          });
-      return pedirFaltan.then((r) => {
+      if (faltan.length) {
+        let r;
+        if (vivo) r = await llamarVivo(instruccionMini(), pedido(faltan), 1000, () => {});
+        else {
+          await espera2(700);
+          const ls = faltan.map((x) => lineasOk[x.id]).filter(Boolean);
+          const txt = C.prefix + "|n=" + ls.length + "\n" + ls.join("\n");
+          r = { texto: txt, tokens: contar(txt) };
+        }
         tokens += r.tokens;
         const extra = leerMini(r.texto).records.filter((x) => faltan.some((f) => f.id === x.id));
-        const todos = d.records.concat(extra);
-        return { texto: MINI.dumps({ header: {}, [C.records_key || "tickets"]: todos }, C), faltan };
-      });
-    }).then(({ texto, faltan }) => {
+        texto = MINI.dumps({ header: {}, [C.records_key || "records"]: d.records.concat(extra) }, C);
+      }
       const final = leerMini(texto);
-      estado.rep = { texto, tokens, llamadas,
-        resumen: t(["Se reenviaron solo ", "Only "]) + (sol.needed ? t([(sol.lines.length === 1 ? "la línea " : "las líneas ") + sol.lines.join(", "), (sol.lines.length === 1 ? "line " : "lines ") + sol.lines.join(", ")]) : "") +
-          (sol.needed && faltan.length ? t([" y ", " and "]) : "") + (faltan.length ? t(["los " + faltan.length + " tickets que faltaban", "the " + faltan.length + " missing tickets"]) : "") +
-          t([" (" + num(tokens) + " tokens más). Ahora hay " + final.records.length + " de " + N + " tickets correctos.",
-             ((sol.needed ? sol.lines.length : 0) + faltan.length === 1 ? " was" : " were") + " sent again (" + num(tokens) + " more tokens). Now " + final.records.length + " of " + N + " tickets are correct."]) };
-      pintar4(); pintar5();
-    }).catch((e) => { $("#res4").insertAdjacentHTML("beforeend", '<p class="dm-aviso mal">' + esc(e.message) + "</p>"); });
+      const partes = [];
+      if (corregidas.length) partes.push(t([(corregidas.length === 1 ? "la línea de " : "las líneas de ") + corregidas.join(", "), (corregidas.length === 1 ? "the line of " : "the lines of ") + corregidas.join(", ")]));
+      if (faltan.length) partes.push(t(["los " + faltan.length + " tickets que faltaban", "the " + faltan.length + " missing tickets"]));
+      estado.rep = { texto, tokens, resumen: "✓ " + t(["Se le pidió a la IA solo ", "Only "]) + partes.join(t([" y ", " and "])) +
+        t([" (" + num(tokens) + " tokens más). Ahora hay " + final.records.length + " de " + N + " tickets correctos.",
+           " " + (corregidas.length + faltan.length === 1 ? "was" : "were") + " requested from the AI (" + num(tokens) + " more tokens). Now " + final.records.length + " of " + N + " tickets are correct."]) };
+    }
   }
 
-  /* -------------------------------------------------------------- paso 5 */
-  function pintar5() {
-    $("#paso5").setAttribute("aria-disabled", "false");
+  function escena5() {
     const m = leerMini(estado.rep ? estado.rep.texto : estado.mini.texto), j = leerJson(estado.json.texto);
     const jsonOk = !j.ilegible && !j.malos.length;
     const tokMini = estado.mini.tokens + (estado.rep ? estado.rep.tokens : 0);
-    // Con JSON, cualquier problema obliga a pedir la respuesta completa otra vez (se estima con la respuesta correcta grabada).
     const reintento = jsonOk ? 0 : (estado.json.real ? estado.json.tokens : contar(DATOS.grabaciones.json.ok));
     const tokJson = estado.json.tokens + reintento;
-    const max = Math.max(tokMini, tokJson, 1);
-    const salida = { [C.records_key || "tickets"]: m.records };
-    let h = '<div class="dm-cifras"><div class="dm-cifra acento"><span class="v">' + m.records.length + "/" + N + '</span><span class="k">' + t(["tickets entregados con .mini", "tickets delivered with .mini"]) +
-      '</span></div><div class="dm-cifra ' + (jsonOk ? "" : "mal") + '"><span class="v">' + (j.ilegible ? 0 : j.validos.length) + "/" + N + '</span><span class="k">' +
-      t(["tickets correctos en el primer JSON", "correct tickets in the first JSON"]) + '</span></div><div class="dm-cifra bien"><span class="v">' +
-      Math.max(0, Math.round(100 * (1 - tokMini / tokJson))) + ' %</span><span class="k">' + t(["menos tokens de respuesta en total", "fewer answer tokens in total"]) + "</span></div></div>";
-    h += '<div class="dm-barras"><div class="dm-barra mini"><span>.mini</span><span class="b" style="width:' + (100 * tokMini / max) + '%"></span><span class="num">' + num(tokMini) + "</span></div>" +
-      '<div class="dm-barra"><span>JSON</span><span class="b" style="width:' + (100 * tokJson / max) + '%"></span><span class="num">' + num(tokJson) + "</span></div></div>" +
-      '<p class="dm-nota">' + t(["Tokens de respuesta, incluida la reparación de .mini" + (reintento ? " y el reintento completo que necesita JSON (" + num(reintento) + " tokens)" : "") + ".",
-                                "Answer tokens, including the .mini repair" + (reintento ? " and the full retry JSON needs (" + num(reintento) + " tokens)" : "") + "."]) + "</p>";
-    h += "<details open><summary>" + t(["JSON que recibe la aplicación", "JSON the application receives"]) + "</summary><pre>" + esc(JSON.stringify(salida, null, 2)) + "</pre></details>";
-    $("#res5").innerHTML = h;
-    if (!(m.errores.length) && m.records.length === N) $("#ruta [data-r='5']").classList.add("hecho");
+    const ahorro = Math.max(0, Math.round(100 * (1 - tokMini / tokJson)));
+    const salida = { [C.records_key || "records"]: m.records };
+    const filas = m.records.map((r) => "<tr><td><code>" + esc(r.id) + '</code></td><td><span class="tag ' + esc(r.prioridad) + '">' + esc(r.prioridad) + "</span></td><td>" +
+      esc(r.categoria) + "</td><td>" + esc(r.resumen) + "</td><td>" + esc(r.horas) + " h</td></tr>").join("");
+    return "<h2>" + t(["5 · La aplicación recibe sus tickets", "5 · The application gets its tickets"]) + '</h2><p class="lead">' +
+      t(["La aplicación sigue recibiendo JSON, como siempre. Lo que cambia es cuánto se pagó y cuántos tickets se salvaron.",
+         "The application still receives JSON, as always. What changes is how much was paid and how many tickets were saved."]) + "</p>" +
+      '<div class="dm-kpis"><div class="dm-kpi acento"><b>' + m.records.length + "/" + N + "</b><span>" + t(["tickets entregados con mini-format", "tickets delivered with mini-format"]) +
+      '</span></div><div class="dm-kpi ' + (jsonOk ? "" : "mal") + '"><b>' + (j.ilegible ? 0 : j.validos.length) + "/" + N + "</b><span>" +
+      t(["tickets útiles en la primera respuesta JSON", "useful tickets in the first JSON answer"]) + '</span></div><div class="dm-kpi bien"><b>' + ahorro + " %</b><span>" +
+      t(["menos texto pagado en total", "less text paid in total"]) + "</span></div></div>" +
+      '<div class="dm-barras"><div class="dm-barra mini"><span>.mini</span><span class="b" data-w="' + (100 * tokMini / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokMini) + "</span></div>" +
+      '<div class="dm-barra"><span>JSON</span><span class="b" data-w="' + (100 * tokJson / Math.max(tokMini, tokJson)) + '"></span><span class="num">' + num(tokJson) + "</span></div></div>" +
+      '<p class="dm-nota">' + t(["Tokens de respuesta en total" + (estado.rep ? ", incluida la reparación de .mini" : "") + (reintento ? " y el nuevo pedido completo que necesita JSON" : "") + ".",
+                                "Total answer tokens" + (estado.rep ? ", including the .mini repair" : "") + (reintento ? " and the full new request JSON needs" : "") + "."]) + "</p>" +
+      '<div class="dm-tabla"><table><thead><tr><th>id</th><th>' + t(["Prioridad", "Priority"]) + "</th><th>" + t(["Categoría", "Category"]) + "</th><th>" +
+      t(["Resumen", "Summary"]) + "</th><th>" + t(["Horas", "Hours"]) + "</th></tr></thead><tbody>" + filas + "</tbody></table></div>" +
+      "<details><summary>" + t(["Ver el JSON que recibe la aplicación", "See the JSON the application receives"]) + "</summary><pre>" + esc(JSON.stringify(salida, null, 2)) + "</pre></details>" +
+      '<div class="dm-accion"><button type="button" class="btn" id="otra">' + t(["Probar otra situación", "Try another situation"]) + "</button></div>";
+  }
+  function enganchar5() {
+    requestAnimationFrame(() => document.querySelectorAll(".dm-barra .b").forEach((b) => { b.style.width = b.dataset.w + "%"; }));
+    $("#otra").addEventListener("click", () => { estado.mini = estado.json = estado.rep = null; ir(3); });
   }
 
-  /* -------------------------------------------------------------- controles */
-  function segmento(id, clave, alCambiar) {
-    $(id).addEventListener("click", (ev) => {
-      const b = ev.target.closest("button[data-v]"); if (!b) return;
-      $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-      estado[clave] = clave === "limite" ? parseInt(b.dataset.v, 10) : b.dataset.v;
-      if (alCambiar) alCambiar();
-    });
-  }
-  segmento("#modo", "modo", () => {
-    const vivo = estado.modo === "deepseek";
-    $("#filaVivo").hidden = !vivo; $("#notaClave").hidden = !vivo; $("#filaEscenario").hidden = vivo;
-    if (vivo) { try { $("#clave").value = sessionStorage.getItem(CLAVE_KEY) || ""; } catch (e) {} }
+  /* ============================================================ navegación */
+  $("#atras").addEventListener("click", () => ir(estado.paso - 1));
+  $("#adelante").addEventListener("click", () => { if (puedeAvanzar()) ir(estado.paso + 1); });
+  document.addEventListener("keydown", (ev) => {
+    const el = ev.target;
+    if ((el && el.closest && el.closest("input, textarea, dialog")) || $("#ajustes").open || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+    if (ev.key === "ArrowRight" && puedeAvanzar()) ir(estado.paso + 1);
+    if (ev.key === "ArrowLeft") ir(estado.paso - 1);
   });
-  segmento("#escenario", "escenario");
-  segmento("#limite", "limite");
-  $("#pedir").addEventListener("click", pedir);
-  document.querySelectorAll("[data-lang-btn]").forEach((b) => b.addEventListener("click", () => setTimeout(() => {
-    pintarDatos(); if (estado.mini) { pintar3(); pintar4(); pintar5(); }
-  }, 0)));
-  pintarDatos();
+  document.querySelectorAll("[data-lang-btn]").forEach((b) => b.addEventListener("click", () => setTimeout(() => { pintarModo(); render(); }, 0)));
+  if (!leerClave()) estado.modo = "grabado";
+  pintarModo();
+  (async function directo() {
+    const q = new URLSearchParams(location.search);
+    const sit = q.get("situacion"), n = parseInt(q.get("escena") || "1", 10);
+    if (sit && ["ok", "error", "cortada"].indexOf(sit) >= 0) estado.escenario = sit;
+    if (n >= 4 || (n === 3 && q.has("respuesta"))) {
+      const g = (f) => ({ texto: DATOS.grabaciones[f][estado.escenario], tokens: contar(DATOS.grabaciones[f][estado.escenario]), cortada: estado.escenario === "cortada", real: false });
+      estado.json = g("json"); estado.mini = g("mini");
+      if (n === 5 || q.has("reparado")) { try { await calcularReparacion(false); } catch (e) {} }
+    }
+    estado.paso = Math.min(5, Math.max(1, n || 1));
+    render();
+  })();
 })();
 </script>
 <script src="/docs.js"></script>
