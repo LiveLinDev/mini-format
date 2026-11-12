@@ -7,11 +7,12 @@ from .anthropic_adapter import AnthropicAdapter
 from .base import Adapter, AdapterError, MissingKeyError, redact, redact_headers
 from .deepseek_adapter import DeepSeekAdapter
 from .groq_adapter import GroqAdapter
+from .kimi_adapter import KimiAdapter
 from .openai_adapter import OpenAIAdapter
 from .simulated import DEFAULT_PROFILE, PROFILES, SimTarget, SimulatedAdapter
 
 ADAPTERS = {"openai": OpenAIAdapter, "anthropic": AnthropicAdapter, "groq": GroqAdapter,
-            "deepseek": DeepSeekAdapter, "simulado": SimulatedAdapter, "simulated": SimulatedAdapter}
+            "deepseek": DeepSeekAdapter, "kimi": KimiAdapter, "simulado": SimulatedAdapter, "simulated": SimulatedAdapter}
 
 
 def get_adapter(provider: str, model: str, **options: Any) -> Adapter:
@@ -23,5 +24,5 @@ def get_adapter(provider: str, model: str, **options: Any) -> Adapter:
 
 
 __all__ = ["Adapter", "AdapterError", "MissingKeyError", "OpenAIAdapter", "AnthropicAdapter", "GroqAdapter",
-           "DeepSeekAdapter",
+           "DeepSeekAdapter", "KimiAdapter",
            "SimulatedAdapter", "SimTarget", "DEFAULT_PROFILE", "PROFILES", "get_adapter", "redact", "redact_headers"]

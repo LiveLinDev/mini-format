@@ -1,0 +1,14 @@
+{
+ "esquema": "mini-format/tarifa-manual/1",
+ "consulta_utc": "2026-11-12T17:54:51Z",
+ "metodo": "consulta manual: la página oficial dibuja las tablas con JavaScript (la fuente estática y la versión .md traen las tablas vacías), por lo que se renderizó con Chrome sin interfaz (--dump-dom y --screenshot) y se copió la fila del modelo",
+ "url": "https://platform.kimi.ai/docs/pricing/chat",
+ "archivos": {
+  "kimi_precios_20261112T175451Z.html": "eb6f5d57c5d82bf46eac0b716bbcd93e0c9b43ac7dbce984649ce72478f45af9",
+  "kimi_precios_20261112T175451Z.png": "5b757f529b35b317f4df56a08b333e930fbf95edaa24b51a9b978d553640aa26"
+ },
+ "columnas": "Name | Input | Output | Cached Input | 5m writes | 1h writes",
+ "extracto": "kimi-k3.1-pro | $2.00 / MTok | $10.00 / MTok | $0.20 / MTok | $2.00 / MTok | $4.00 / MTok",
+ "extracto_sha256": "cd77fc7aa54306ac77dc5b455b924cd0bba7faf24db9feadc2f1edf5d4962b7e",
+ "notas": "K3.1 Pro razona siempre (reasoning_effort low/high/max); los tokens de razonamiento se cuentan en completion_tokens. Temperatura fija en el proveedor. Las escrituras de caché de 5 min cuestan lo mismo que la entrada."
+}

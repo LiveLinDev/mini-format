@@ -46,11 +46,12 @@ from .usage import es_negativa, usage_de_respuesta
 log = logging.getLogger("exp.generativo")
 
 EXPERIMENTOS = ("v2", "v3b")
-ENV_PROVEEDOR = {"openai": "OPENAI_API_KEY", "anthropic": "ANTHROPIC_API_KEY", "groq": "GROQ_API_KEY"}
+ENV_PROVEEDOR = {"openai": "OPENAI_API_KEY", "anthropic": "ANTHROPIC_API_KEY", "groq": "GROQ_API_KEY",
+                 "deepseek": "DEEPSEEK_API_KEY", "kimi": "MOONSHOT_API_KEY"}
 STOP_TRUNCADO = {"max_tokens", "length"}
 BRAZOS_POR_DEFECTO = ["A", "B", "C", "D", "B+1", "C+1", "D+1"]
 # Supuestos CONSERVADORES (no medidos) para convertir el conteo local o200k_base en una cota de tokens de cada proveedor.
-FACTOR_TOKENIZADOR = {"openai": 1.0, "anthropic": 1.3, "groq": 1.15, "deepseek": 1.3, "simulado": 1.0}
+FACTOR_TOKENIZADOR = {"openai": 1.0, "anthropic": 1.3, "groq": 1.15, "deepseek": 1.3, "kimi": 1.3, "simulado": 1.0}
 POLITICAS_LIMITE = ("comun_por_tarea", "fraccion_por_brazo", "fijo")
 
 
