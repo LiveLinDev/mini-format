@@ -1,0 +1,83 @@
+{
+  "aceptadas": 1241,
+  "rechazadas": [],
+  "reparaciones_pendientes": [
+    {
+      "celda_id": "v2/gen-q/A+1/asistido_ia:kimi-k3.1-pro/r002",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-q/A+1/asistido_ia:kimi-k3.1-pro/r003",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-q/A+1/asistido_ia:kimi-k3.1-pro/r004",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-q/A+1/asistido_ia:kimi-k3.1-pro/r005",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-q/D+1/asistido_ia:kimi-k3.1-pro/r002",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-q/D+1/asistido_ia:kimi-k3.1-pro/r003",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-q/D+1/asistido_ia:kimi-k3.1-pro/r004",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-r/A+1/asistido_ia:kimi-k3.1-pro/r001",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-r/A+1/asistido_ia:kimi-k3.1-pro/r002",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-r/A+1/asistido_ia:kimi-k3.1-pro/r003",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-r/A+1/asistido_ia:kimi-k3.1-pro/r004",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-r/A+1/asistido_ia:kimi-k3.1-pro/r005",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-r/B+1/asistido_ia:kimi-k3.1-pro/r005",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-code/A+1/asistido_ia:kimi-k3.1-pro/r001",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-code/A+1/asistido_ia:kimi-k3.1-pro/r002",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-code/A+1/asistido_ia:kimi-k3.1-pro/r003",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-code/A+1/asistido_ia:kimi-k3.1-pro/r004",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-code/A+1/asistido_ia:kimi-k3.1-pro/r005",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    },
+    {
+      "celda_id": "v2/gen-code/D+1/asistido_ia:kimi-k3.1-pro/r003",
+      "motivo": "necesita reparación: falta importar su respuesta de reparación"
+    }
+  ],
+  "no_aplicables": []
+}

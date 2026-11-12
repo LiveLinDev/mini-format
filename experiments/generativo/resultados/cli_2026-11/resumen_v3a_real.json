@@ -1,0 +1,8 @@
+{
+ "salidas": 210,
+ "cortes": 4200,
+ "mini_recuperacion": 0.986,
+ "json_estricto_recuperacion": 0.0,
+ "mini_incorrectos": 187,
+ "salidas_json": 210
+}

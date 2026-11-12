@@ -1,0 +1,8 @@
+{
+ "_nota": "USD por millón de tokens. Claude: tabla de modelos y precios de la API de Anthropic (referencia del 03/11/2026). Kimi: página oficial renderizada el 12/11/2026 (evidencia/tarifas/manual/kimi_precios_20261112T175451Z.*). El costo de la corrida se calcula como tokens de salida informados por cada CLI × tarifa de salida; la generación usa las suscripciones del usuario y no genera factura de API.",
+ "claude-opus-5-5": {"entrada": 4.0, "salida": 20.0, "fuente": "Anthropic, precios de la API (Claude Opus 5.5)"},
+ "claude-haiku-5-5": {"entrada": 0.1, "salida": 0.5, "fuente": "Anthropic, precios de la API (Claude Haiku 5.5, prompts de hasta 100K tokens)"},
+ "claude-sonnet-5-5": {"entrada": 2.0, "salida": 10.0, "fuente": "Anthropic, precios de la API (Claude Sonnet 5.5)"},
+ "kimi-code/k3.1-pro": {"entrada": 2.0, "salida": 10.0, "fuente": "Moonshot AI, Model Inference Pricing (kimi-k3.1-pro), 12/11/2026"},
+ "kimi-code/k3": {"entrada": 3.0, "salida": 15.0, "fuente": "Moonshot AI, Model Inference Pricing (kimi-k3), 12/11/2026"}
+}

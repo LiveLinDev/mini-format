@@ -1,0 +1,10 @@
+brazo,modelo,cortes,muestras,recuperados_media,ideal_media,cortes_sin_ideal,eficiencia_media_pct,recuperados_sobre_ideal_pct,cero_recuperados_pct,cero_ic_inf,cero_ic_sup,incorrectos_sin_aviso_total
+A,asistido_ia:claude-haiku-5-5,1400,70,0.01,3.59,520,0.1,0.2,99.9,99.8,100.0,0
+A,asistido_ia:claude-opus-5-5,1400,70,0.0,3.37,560,0.0,0.0,100.0,100.0,100.0,0
+A,asistido_ia:kimi-k3.1-pro,1400,70,0.0,3.06,602,0.0,0.0,100.0,100.0,100.0,0
+B,asistido_ia:claude-haiku-5-5,1400,70,0.0,5.57,20,0.0,0.0,100.0,100.0,100.0,0
+B,asistido_ia:claude-opus-5-5,1400,70,0.0,5.53,0,0.0,0.0,100.0,100.0,100.0,0
+B,asistido_ia:kimi-k3.1-pro,1400,70,0.0,5.44,20,0.0,0.0,100.0,100.0,100.0,0
+D,asistido_ia:claude-haiku-5-5,1400,70,5.29,5.34,3,91.4,99.2,3.9,2.6,5.3,98
+D,asistido_ia:claude-opus-5-5,1400,70,5.22,5.33,0,89.9,97.9,4.6,3.2,6.2,27
+D,asistido_ia:kimi-k3.1-pro,1400,70,5.27,5.33,1,89.5,98.8,5.6,4.1,7.4,62
