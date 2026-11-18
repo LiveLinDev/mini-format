@@ -5,6 +5,8 @@ on: [push, pull_request]
 # Node está fijado en 22.14.0: es la versión con la que se generó y se verificó js/mini.js (la salida de
 # `stripTypeScriptTypes` puede cambiar entre versiones menores; subirla es una decisión deliberada: regenerar el bundle,
 # revisar el diff y cambiar este número y el de sitio.yml a la vez).
+# Linux está fijado en ubuntu-24.04 (LTS): desde el 19/10/2026 ubuntu-latest es Ubuntu 26.04 y actions/setup-python no
+# publica Python 3.9 para esa versión; con ubuntu-latest el trabajo de 3.9 fallaba antes de ejecutar ninguna prueba.
 jobs:
   test:
     name: ${{ matrix.os }} · Python ${{ matrix.python }}
@@ -12,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-24.04, windows-latest, macos-latest]
         python: ["3.9", "3.12"]
     defaults:
       run:
@@ -56,7 +58,7 @@ jobs:
         run: python tools/tarifas.py verificar || true
       - run: python playground/build.py
       - name: Build and verify offline distributions
-        if: matrix.python == '3.12' && matrix.os == 'ubuntu-latest'
+        if: matrix.python == '3.12' && matrix.os == 'ubuntu-24.04'
         run: |
           python tools/build_release.py --output dist
           python tools/smoke_release.py --directory dist
