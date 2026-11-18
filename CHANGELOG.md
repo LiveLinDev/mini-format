@@ -1,5 +1,15 @@
 # Changelog
 
+## Site and examples — 2026-11-17
+
+The `mini-format` 1.3.3 Python package and the `@mini-format/core` 1.3.3 package are unchanged.
+
+- Workshop (`/taller/`): reloading the page keeps the repaired result. Startup and language changes now repaint the saved state instead of validating again, which used to discard the merged correction (a 10-record result came back with 9). Switching to EN translates every message drawn by JavaScript: counters, notices, tables and the engine note.
+- The site publishes a pip index (PEP 503) at `/simple/`: `python -m pip install mini-format --index-url https://mini-format.pmoluna.com/simple/` installs by package name. Each link carries the wheel's `#sha256=` from the release manifest, and `tools/check_site.py` verifies it.
+- `examples/flujo-soporte/run.py --live` calls any OpenAI-compatible server chosen with `MINI_IA_URL`, `MINI_IA_MODEL` and `MINI_IA_KEY` (also vLLM or Ollama with open-weights models). `--formato json` swaps only the component that reads the answer, and `--max-tokens` sends an output limit. Each run records tokens, latency, stop reason and the model the server reports per call, and saves the answers as received; the key is never written.
+- Quickstart (ES/EN): new section for teams that already describe their data with JSON Schema or Pydantic, with `mini from-schema`, `mini prompt` and the integration code (instruction from the contract, lenient parse, selective repair, canonical JSON).
+- Tests: the honesty check of the studies schema finds the exploratory study by its classification (V7 became a controlled study with the 08/10/2026 amendment); the stale check failed the coverage-and-tests gate.
+
 ## 1.3.3 — 2026-10-08
 
 - The bridge created by `mini integrate --apply` for HTTP chat calls saves each run in `.mini/ultima_ejecucion/` (`.mini/last_run/` in English toolkits): every model answer as received, the validated `resultado.mini` and the trace. They can be inspected with `mini validate`, `mini to-json` and `mini tokens`. `Workflow.save_run(folder)` does the same for any run.

@@ -204,6 +204,46 @@ def test_reglas_originales_siguen_activas(tmp_path):
     assert any("invalid release checksum: f.bin" in x for x in p)
 
 
+def _con_wheel(s: Path) -> str:
+    import hashlib
+    datos = b"wheel de prueba"
+    nombre = "mini_format-9.9.9-py3-none-any.whl"
+    (s / "downloads" / nombre).write_bytes(datos)
+    huella = hashlib.sha256(datos).hexdigest()
+    (s / "downloads" / "manifest.json").write_text(
+        json.dumps({"files": [{"name": nombre, "bytes": len(datos), "sha256": huella}]}), encoding="utf-8")
+    return huella
+
+
+def _indice_pip(s: Path, huella: str, nombre="mini_format-9.9.9-py3-none-any.whl") -> None:
+    (s / "simple" / "mini-format").mkdir(parents=True)
+    (s / "simple" / "index.html").write_text('<a href="mini-format/">mini-format</a>', encoding="utf-8")
+    (s / "simple" / "mini-format" / "index.html").write_text(
+        f'<a href="/downloads/{nombre}#sha256={huella}" data-requires-python="&gt;=3.9">{nombre}</a>', encoding="utf-8")
+
+
+def test_indice_pip_correcto_no_da_problemas(tmp_path):
+    s = sitio_valido(tmp_path)
+    _indice_pip(s, _con_wheel(s))
+    assert problemas(s) == []
+
+
+def test_wheel_publicado_sin_indice_pip(tmp_path):
+    s = sitio_valido(tmp_path)
+    _con_wheel(s)
+    assert any("simple/: falta el índice pip" in x for x in problemas(s))
+
+
+def test_indice_pip_con_huella_distinta_o_archivo_inexistente(tmp_path):
+    s = sitio_valido(tmp_path)
+    _con_wheel(s)
+    _indice_pip(s, "0" * 64)
+    assert any("#sha256 no coincide" in x for x in problemas(s))
+    (s / "simple" / "mini-format" / "index.html").write_text(
+        '<a href="/downloads/otro-1.0-py3-none-any.whl#sha256=' + "0" * 64 + '">x</a>', encoding="utf-8")
+    assert any("enlaza un archivo inexistente" in x for x in problemas(s))
+
+
 def test_main_termina_con_error_si_hay_problemas(tmp_path, monkeypatch):
     s = sitio_valido(tmp_path)
     (s / "404.html").unlink()

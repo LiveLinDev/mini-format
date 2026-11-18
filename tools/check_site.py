@@ -115,7 +115,8 @@ def _paginas(site: Path) -> dict[Path, "Page"]:
     paginas = {}
     for path in site.rglob("*.html"):
         partes = path.relative_to(site).parts[:-1]
-        if any(p in {"downloads", "servidor"} for p in partes):
+        # downloads/ y simple/ (índice pip PEP 503) son índices técnicos, no páginas del sitio: se comprueban aparte
+        if any(p in {"downloads", "servidor"} for p in partes) or (partes and partes[0] == "simple"):
             continue
         paginas[path] = Page(path.read_text(encoding="utf-8"))
     # Download indexes are public; exclude only potential HTML inside artifacts.
@@ -123,6 +124,29 @@ def _paginas(site: Path) -> dict[Path, "Page"]:
         if path.exists():
             paginas[path] = Page(path.read_text(encoding="utf-8"))
     return paginas
+
+
+def _comprobar_indice_pip(site: Path, manifest: dict) -> list[str]:
+    """/simple/ (PEP 503): permite ``pip install mini-format --index-url <sitio>/simple/``."""
+    problems: list[str] = []
+    if not any(entry["name"].endswith(".whl") for entry in manifest.get("files", [])):
+        return problems  # sin wheel publicado no hay nada que indexar
+    raiz, proyecto = site / "simple" / "index.html", site / "simple" / "mini-format" / "index.html"
+    if not raiz.is_file() or not proyecto.is_file():
+        return ["simple/: falta el índice pip (python sitio/construir.py lo genera tras build_release)"]
+    if 'href="mini-format/"' not in raiz.read_text(encoding="utf-8"):
+        problems.append("simple/index.html: no enlaza el proyecto mini-format/")
+    texto = proyecto.read_text(encoding="utf-8")
+    enlaces = dict(re.findall(r'href="/downloads/([^"#]+)#sha256=([0-9a-f]{64})"', texto))
+    for entry in manifest.get("files", []):
+        if not entry["name"].endswith(".whl"):
+            continue
+        if enlaces.get(entry["name"]) != entry["sha256"]:
+            problems.append(f"simple/mini-format/: falta {entry['name']} o su #sha256 no coincide con el manifiesto")
+    for nombre in enlaces:
+        if not (site / "downloads" / nombre).is_file():
+            problems.append(f"simple/mini-format/: enlaza un archivo inexistente {nombre}")
+    return problems
 
 
 def _nav_sin_idioma(links: list[str]) -> list[str]:
@@ -165,6 +189,8 @@ def comprobar(site: Path = SITE) -> list[str]:
                 problems.append(f"invalid release checksum: {entry['name']}")
     else:
         problems.append("downloads/manifest.json: missing")
+    # ---- 3b: índice pip (PEP 503): cada wheel del manifiesto está enlazado con su huella y el enlace existe
+    problems.extend(_comprobar_indice_pip(site, manifest))
     # ---- 4: 404.html real
     e404 = pages.get(site / "404.html")
     if e404 is None:

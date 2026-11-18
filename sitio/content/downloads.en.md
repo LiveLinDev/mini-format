@@ -29,6 +29,16 @@ mini setup
 python -m pip install --no-index mini_format-1.3.3-py3-none-any.whl
 ```
 
+### Install by name from the site index
+
+The site publishes a pip-compatible package index ([/simple/](/simple/)). Install by name, without typing the file URL; pip checks the SHA-256 hash while downloading:
+
+```bash
+python -m pip install mini-format --index-url https://mini-format.pmoluna.com/simple/
+```
+
+In a `requirements.txt`, write `--index-url https://mini-format.pmoluna.com/simple/` on the first line and then `mini-format==1.3.3`. The package has no dependencies, so this index is enough.
+
 ## Install Node
 
 Download the `.tgz` or extract it from the toolkit, then run:

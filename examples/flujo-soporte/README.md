@@ -18,6 +18,20 @@ python examples/flujo-soporte/run.py --serve
 
 Abre la dirección que imprime. Puedes repetir la grabación sin clave o desplegar el formulario de IA real. La clave se envía al servidor local y de allí a OpenAI por HTTPS, sólo se mantiene en memoria y no se guarda en el historial. No pegues una clave en la web pública. La llamada real y un posible reintento tienen el coste de tu proveedor.
 
+## Con un modelo real, desde la terminal
+
+La misma aplicación puede llamar a cualquier servidor compatible con Chat Completions (OpenAI, DeepSeek, Groq, o un modelo de pesos abiertos servido con vLLM u Ollama). El proveedor se elige con variables de entorno; el contrato y el código no cambian:
+
+```powershell
+$env:MINI_IA_URL   = "http://127.0.0.1:11434/v1"   # Ollama local; por defecto, https://api.openai.com/v1
+$env:MINI_IA_MODEL = "llama3.1:8b"
+$env:MINI_IA_KEY   = "..."                         # solo si el servidor la pide; se usa en memoria
+python examples/flujo-soporte/run.py --live
+python examples/flujo-soporte/run.py --live --formato json --max-tokens 300
+```
+
+`MINI_IA_CABECERA` cambia la cabecera que lleva la clave (por defecto `Authorization: Bearer …`) y `MINI_IA_EXTRA` añade campos JSON a la petición, por ejemplo `{"temperature": 0}`. `--formato` elige el único componente que cambia: `mini` valida y repara con mini-format; `json` pide un arreglo JSON y lo lee con `json.loads`. `--max-tokens` envía un límite de salida al proveedor. Cada ejecución imprime los tokens que informa el proveedor, la latencia y el motivo de parada de cada llamada, y guarda en `--out` las respuestas tal como llegaron (`respuesta_N.mini` o `.json`), `history.json` y `result.json`; la clave nunca se escribe.
+
 `messages.json` contiene la entrada. `expected.json` contiene los 20 tickets. `raw.mini` y `correction.json` guardan las respuestas ilustrativas. `history.json` registra el recorrido completo y `comparison.json` cuenta los tokens del mismo resultado en JSON, TOON y .mini. La comparación es de salida: el prompt y los reintentos se muestran aparte y también pueden tener coste.
 
 Para tu aplicación, usa `mini setup` o `mini integrate archivo.py --bundle .mini`. El callback de `Workflow.run` conserva tu proveedor. La edición automática admite un patrón Python síncrono de chat completions + `json.loads`; otros flujos reciben una guía concreta para tu IA de código.

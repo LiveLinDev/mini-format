@@ -21,6 +21,7 @@ __CABEZA__
   .tl-pasos button[aria-current="step"] { border-color: rgb(var(--accent)); color: rgb(var(--fg)); font-weight: 600; }
   .tl-pasos button[aria-current="step"] .num { background: rgb(var(--accent)); color: #fff; }
   .tl-pasos button.hecho .num { background: rgb(16 122 87); color: #fff; }
+  .tl-pasos .num .ico { width: .8rem; height: .8rem; }
 
   .tl-panel { border: 1px solid rgb(var(--line)); border-radius: var(--r-xl); padding: clamp(1rem, 3vw, 1.5rem);
               background: rgb(var(--raised)); }
@@ -233,11 +234,14 @@ __PIE__
 
   // ------------------------------------------------------------ pasos
   const NOMBRES = [["Esquema", "Schema"], ["Instrucción", "Instruction"], ["Respuesta", "Answer"], ["Reparación", "Repair"], ["Resultado", "Result"]];
+  const ICO = {
+    hecho: '<svg class="ico" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0Z" clip-rule="evenodd"/></svg>',
+  };
   function pintarPasos() {
     $("#pasos").innerHTML = NOMBRES.map((n, i) => {
       const p = i + 1, actual = p === estado.paso, hecho = p < estado.paso;
       return '<li><button type="button" data-ir="' + p + '"' + (actual ? ' aria-current="step"' : "") +
-        (hecho ? ' class="hecho"' : "") + (p > 1 && !contrato ? " disabled" : "") + '><span class="num">' + (hecho ? "✓" : p) +
+        (hecho ? ' class="hecho"' : "") + (p > 1 && !contrato ? " disabled" : "") + '><span class="num">' + (hecho ? ICO.hecho : p) +
         "</span>" + t(n) + "</button></li>";
     }).join("");
     $$("#pasos [data-ir]").forEach((b) => b.addEventListener("click", () => ir(Number(b.dataset.ir))));
@@ -365,8 +369,14 @@ __PIE__
       return d;
     } catch (e) { return { vacio: true, errors: e.errors || [{ code: "E01", line: 0 }], records: [], header: {} }; }
   }
+  // validar() parte de una respuesta nueva: descarta la reparación anterior. Al recargar la página o cambiar de idioma
+  // solo se vuelve a pintar (pintarValidacion), para no perder la corrección ya fusionada.
   function validar() {
-    estado.respuesta = $("#respuesta").value; estado.correccion = ""; estado.fusionado = ""; estado.faltantesPedidos = false; guardar();
+    estado.respuesta = $("#respuesta").value; estado.correccion = ""; estado.fusionado = ""; estado.faltantesPedidos = false;
+    ultimaFusion = null; $("#res-fusion").innerHTML = ""; guardar();
+    pintarValidacion();
+  }
+  function pintarValidacion() {
     const d = leer(estado.respuesta), caja = $("#res-validacion");
     const anunciados = (d.header && d.header.n) || d.records.length;
     const invalidas = [...new Set(d.errors.filter((e) => e.line).map((e) => e.line))];
@@ -406,7 +416,7 @@ __PIE__
   }
 
   // ------------------------------------------------------------ 4 · reparación
-  let solicitud = null;
+  let solicitud = null, ultimaFusion = null;
   function textoActual() { return estado.fusionado || estado.respuesta; }
   function pintarSolicitud() {
     const texto = textoActual(), d = leer(texto), caja = $("#res-solicitud");
@@ -449,16 +459,28 @@ __PIE__
     const antes = textoActual();
     const r = MINI.mergeRepair(antes, estado.correccion, contrato, solicitud);
     const aceptadas = r.replaced || [], pendientes = r.unresolved || [];
-    let html = aceptadas.length ? '<p class="tl-aviso bien">' + t(["Correcciones aceptadas en las líneas ", "Corrections accepted in lines "]) + aceptadas.join(", ") + ".</p>" : "";
-    if (pendientes.length) html += '<p class="tl-aviso mal">' + t(["Rechazadas porque siguen sin cumplir el contrato: líneas ", "Rejected because they still break the contract: lines "]) + pendientes.join(", ") + ".</p>";
     if (aceptadas.length) { estado.fusionado = r.text; }
     guardar();
-    const validos = r.document ? r.document.records.length : 0;
-    html += '<p class="tl-aviso info">' + t(["Registros válidos ahora: ", "Valid records now: "]) + validos + ".</p>" +
-      '<div class="tl-fila"><button type="button" class="btn btn-solid" id="ir-resultado">' + t(["Ver el resultado →", "See the result →"]) + "</button></div>";
+    ultimaFusion = { aceptadas, pendientes, validos: r.document ? r.document.records.length : 0 };
+    pintarFusion();
+    if (aceptadas.length) pintarSolicitud();
+  }
+  function pintarFusion() {
+    if (!ultimaFusion) return;
+    const ver = '<div class="tl-fila"><button type="button" class="btn btn-solid" id="ir-resultado">' + t(["Ver el resultado →", "See the result →"]) + "</button></div>";
+    if (ultimaFusion.faltantes !== undefined) {
+      $("#res-fusion").innerHTML = '<p class="tl-aviso bien">' + t(["Se pidieron solo ", "Only "]) + ultimaFusion.faltantes +
+        t([" registros; el lote queda completo con ", " records were requested; the batch is complete with "]) + ultimaFusion.total +
+        t([" registros.", " records."]) + "</p>" + ver;
+      $("#ir-resultado").addEventListener("click", () => ir(5));
+      return;
+    }
+    const { aceptadas, pendientes, validos } = ultimaFusion;
+    let html = aceptadas.length ? '<p class="tl-aviso bien">' + t(["Correcciones aceptadas en las líneas ", "Corrections accepted in lines "]) + aceptadas.join(", ") + ".</p>" : "";
+    if (pendientes.length) html += '<p class="tl-aviso mal">' + t(["Rechazadas porque siguen sin cumplir el contrato: líneas ", "Rejected because they still break the contract: lines "]) + pendientes.join(", ") + ".</p>";
+    html += '<p class="tl-aviso info">' + t(["Registros válidos ahora: ", "Valid records now: "]) + validos + ".</p>" + ver;
     $("#res-fusion").innerHTML = html;
     $("#ir-resultado").addEventListener("click", () => ir(5));
-    if (aceptadas.length) pintarSolicitud();
   }
   function pedirFaltantes() {
     const d = leer(textoActual());
@@ -470,10 +492,8 @@ __PIE__
     const todas = completos.concat(faltantes);
     estado.fusionado = estado.prefijo + "|n=" + todas.length + "\n" + todas.join("\n") + "\n";
     estado.faltantesPedidos = true; guardar();
-    $("#res-fusion").innerHTML = '<p class="tl-aviso bien">' + t(["Se pidieron solo ", "Only "]) + faltantes.length +
-      t([" registros; el lote queda completo con ", " records were requested; the batch is complete with "]) + todas.length + t([" registros.", " records."]) +
-      '</p><div class="tl-fila"><button type="button" class="btn btn-solid" id="ir-resultado">' + t(["Ver el resultado →", "See the result →"]) + "</button></div>";
-    $("#ir-resultado").addEventListener("click", () => ir(5));
+    ultimaFusion = { faltantes: faltantes.length, total: todas.length };
+    pintarFusion();
     pintarSolicitud();
   }
 
@@ -534,18 +554,34 @@ __PIE__
   $("#reiniciar").addEventListener("click", () => {
     try { localStorage.removeItem(CLAVE); } catch (e) {}
     estado = { paso: 1, esquema: "", prefijo: "tk", idioma: "es", tarea: "", respuesta: "", correccion: "", fusionado: "", faltantesPedidos: false };
-    contrato = null; $("#tarea").value = ""; $("#res-contrato").innerHTML = ""; $("#res-validacion").innerHTML = ""; $("#res-fusion").innerHTML = ""; $("#respuesta").value = "";
+    contrato = null; ultimaFusion = null; $("#tarea").value = ""; $("#res-contrato").innerHTML = ""; $("#res-validacion").innerHTML = ""; $("#res-fusion").innerHTML = ""; $("#respuesta").value = "";
     cargarEjemplo("tickets"); ir(1);
   });
-  new MutationObserver(() => { pintarPasos(); if (contrato) generar(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  // Cambio de idioma: todo lo que se pinta desde JavaScript (avisos, contadores, tablas, nota del motor) se vuelve a pintar
+  // con el idioma nuevo, a partir del estado guardado y sin repetir la validación ni la reparación.
+  function pintarNota() {
+    $("#nota").textContent = t(["Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), el mismo de la biblioteca TypeScript. Nada sale de tu navegador.",
+                                "Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), the same as the TypeScript library. Nothing leaves your browser."]);
+  }
+  function repintar() {
+    pintarNota();
+    pintarPasos();
+    if (!contrato) return;
+    generar();
+    if (estado.respuesta) pintarValidacion();
+    pintarFusion();
+    if (estado.paso === 2) pintarInstruccion();
+    if (estado.paso === 4) pintarSolicitud();
+    if (estado.paso === 5) pintarResultado();
+  }
+  new MutationObserver(repintar).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
   // ------------------------------------------------------------ arranque: se retoma lo guardado
-  $("#nota").textContent = t(["Motor: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), el mismo de la biblioteca TypeScript. Nada sale de tu navegador.",
-                              "Engine: js/mini.js " + MINI.VERSION + " (SPEC " + MINI.SPEC_VERSION + "), the same as the TypeScript library. Nothing leaves your browser."]);
+  pintarNota();
   if (estado.esquema) { $("#esquema").value = estado.esquema; $("#prefijo").value = estado.prefijo; $("#tarea").value = estado.tarea || ""; generar(); }
   else { cargarEjemplo("tickets"); }
   $("#respuesta").value = estado.respuesta || "";
-  if (contrato && estado.respuesta) validar();
+  if (contrato && estado.respuesta) pintarValidacion();
   // enlaces de demostración: /taller/?ejemplo=productos&muestra=error&paso=3
   const params = new URLSearchParams(location.search);
   if (DATOS.ejemplos[params.get("ejemplo")]) cargarEjemplo(params.get("ejemplo"));

@@ -214,6 +214,76 @@ def test_live_example_uses_the_prompt_and_never_stores_the_key(monkeypatch):
     assert "mini-domain/1" in payload["messages"][0]["content"]
 
 
+def _support_module(name):
+    path = ROOT / "examples/flujo-soporte/run.py"
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module, path.parent
+
+
+class _ChatResponse:
+    def __init__(self, content, finish="stop", usage=None):
+        self.body = json.dumps({"choices": [{"message": {"content": content}, "finish_reason": finish}],
+                                "usage": usage or {"prompt_tokens": 100, "completion_tokens": 50}}).encode()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        pass
+
+    def read(self):
+        return self.body
+
+
+def test_live_from_environment_switches_provider_without_code_changes(monkeypatch, tmp_path, capsys):
+    module, base = _support_module("support_live_env")
+    from minifmt.domain import infer_contract
+    data = json.loads((base / "expected.json").read_text(encoding="utf-8"))
+    wire = encode(data, infer_contract([data], "ticket"))
+    requests = []
+
+    def open_request(request, **kwargs):
+        requests.append(request)
+        return _ChatResponse(wire)
+    monkeypatch.setattr(module.urllib.request, "urlopen", open_request)
+    monkeypatch.setenv("MINI_IA_URL", "http://127.0.0.1:9/v1")
+    monkeypatch.setenv("MINI_IA_MODEL", "modelo-abierto")
+    monkeypatch.setenv("MINI_IA_KEY", "clave-de-prueba-en-memoria")
+    monkeypatch.setenv("MINI_IA_CABECERA", "X-API-Key")
+    monkeypatch.setenv("MINI_IA_EXTRA", '{"temperature": 0}')
+    history = module.live_from_environment(str(tmp_path), "mini", 900)
+    assert history["ok"] and len(history["data"]) == 20 and history["format"] == "mini"
+    assert requests[0].full_url == "http://127.0.0.1:9/v1/chat/completions"
+    assert requests[0].get_header("X-api-key") == "clave-de-prueba-en-memoria"
+    payload = json.loads(requests[0].data)
+    assert payload["model"] == "modelo-abierto" and payload["max_tokens"] == 900 and payload["temperature"] == 0
+    assert history["calls"][0]["output_tokens"] == 50 and history["calls"][0]["finish_reason"] == "stop"
+    saved = (tmp_path / "history.json").read_text(encoding="utf-8") + (tmp_path / "respuesta_1.mini").read_text(encoding="utf-8")
+    assert "clave-de-prueba" not in saved and "clave-de-prueba" not in capsys.readouterr().out
+
+
+def test_live_json_reader_loses_a_cut_answer_and_mini_keeps_complete_records(monkeypatch, tmp_path):
+    module, base = _support_module("support_live_cut")
+    from minifmt.domain import infer_contract
+    data = json.loads((base / "expected.json").read_text(encoding="utf-8"))
+    as_json = json.dumps(data, ensure_ascii=False)
+    monkeypatch.setattr(module.urllib.request, "urlopen", lambda request, **k: _ChatResponse(as_json[:300], "length"))
+    history = module.execute(live=True, formato="json", max_tokens=80, out=tmp_path / "json")
+    assert history["ok"] is False and history["data"] is None and "JSONDecodeError" in history["error"]
+    wire = encode(data, infer_contract([data], "ticket"))
+    lines = wire.splitlines()
+    cut = "\n".join(lines[:9]) + "\n" + lines[9][:5]                 # header + 8 complete records + a cut line
+    rest = encode(data[8:], infer_contract([data], "ticket"))
+    answers = iter([_ChatResponse(cut, "length"), _ChatResponse(rest)])
+    monkeypatch.setattr(module.urllib.request, "urlopen", lambda request, **k: next(answers))
+    history = module.execute(live=True, formato="mini", max_tokens=80, out=tmp_path / "mini")
+    assert history["ok"] and history["data"] == data
+    assert [c["finish_reason"] for c in history["calls"]] == ["length", "stop"]
+    assert any(step.get("stage") == "truncation" and step["complete_records"] == 8 for step in history["trace"])
+
+
 # ---------------------------------------------------------------- HTTP chat calls (requests/httpx) and cut responses
 HTTP_APP = '''"""Generator that already asks an OpenAI-compatible chat endpoint for JSON."""
 import json

@@ -29,7 +29,7 @@
           "type": "object",
           "required": ["tipo", "formativo_sumativo"],
           "properties": {
-            "tipo": { "enum": ["controlado", "naturalista", "exploratorio"], "description": "V1-V5 y V6b controlados; V6a naturalista; V7 y V8 exploratorios." },
+            "tipo": { "enum": ["controlado", "naturalista", "exploratorio"], "description": "V1-V5, V6b y V7 controlados (V7 desde la enmienda del 08/10/2026); V6a naturalista; V8 exploratorio." },
             "formativo_sumativo": { "type": "string", "description": "Otra dimensión, independiente del tipo." }
           },
           "additionalProperties": false

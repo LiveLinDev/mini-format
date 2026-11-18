@@ -73,6 +73,32 @@ python examples/flujo-soporte/run.py --serve
 
 Open the printed address. The form asks for an API key and model only in live mode. The key stays in memory and is not stored in history. Real calls and corrections have provider costs. Integrate your own callback to keep your provider.
 
+## Already describing your data with JSON Schema or Pydantic?
+
+You do not need samples: the contract is generated from the schema your system already uses.
+
+```sh
+mini from-schema ticket.schema.json -p tk --out contract.json
+mini prompt --contract contract.json --lang en
+```
+
+With a Pydantic model: `mini from-schema -p tk --pydantic app.models:Ticket --out contract.json`. In your application, the instruction comes from the contract and the answer is validated and repaired before the JSON is delivered:
+
+```python
+from minifmt import Contract, spec_block, parse
+from minifmt.ai import repair_request, merge_repair
+
+contract = Contract.load("contract.json")
+system = spec_block(contract, "en")                   # system message of your AI call
+text = call_your_ai(system, task)                     # your provider, unchanged
+doc = parse(text, contract, strict=False)             # valid records + errors with their line
+if doc.errors:
+    request = repair_request(text, contract, "en")    # only the invalid lines
+    fixed = merge_repair(text, call_your_ai(request.system, request.user), contract, request)
+    doc = fixed.document
+tickets = doc.to_canonical()["records"]               # the JSON your application expects
+```
+
 ## What about savings?
 
 **Tokens** are pieces of text counted for API billing. At the same model and rate, fewer response tokens mean lower output cost. Total cost also includes instructions and corrections.

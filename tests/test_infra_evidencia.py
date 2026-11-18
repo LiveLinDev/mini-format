@@ -591,8 +591,11 @@ class EsquemaJson(unittest.TestCase):
         malo = copy.deepcopy(doc)
         malo["estudios"][0]["resultado"] = "cumple"            # V1 con estado parcial
         self.assertTrue(list(v.iter_errors(malo)))
+        # Un estudio exploratorio no puede llevar criterio. Se busca por su clasificación y no por posición: V7 era
+        # exploratorio y pasó a controlado con la enmienda del 08/10/2026 (criterio I4.5); hoy el exploratorio es V8.
+        exploratorio = next(i for i, e in enumerate(doc["estudios"]) if e["clasificacion"]["tipo"] == "exploratorio")
         malo = copy.deepcopy(doc)
-        malo["estudios"][8]["criterio"] = copy.deepcopy(doc["estudios"][0]["criterio"])   # V7 exploratorio con criterio
+        malo["estudios"][exploratorio]["criterio"] = copy.deepcopy(doc["estudios"][0]["criterio"])
         self.assertTrue(list(v.iter_errors(malo)))
         malo = copy.deepcopy(doc)
         malo["estudios"][1]["bloqueo"] = None                   # V2 bloqueado sin bloqueo

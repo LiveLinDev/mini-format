@@ -1129,6 +1129,34 @@ def construir_sima() -> None:
           f"{k['mini']} tokens en .mini y {k['json_compacto']} en JSON compacto")
 
 
+def construir_indice_pip() -> None:
+    """/simple/: índice de paquetes PEP 503 con el wheel publicado en /downloads/.
+
+    Permite instalar por nombre, sin escribir la URL del archivo:
+    ``python -m pip install mini-format --index-url https://mini-format.pmoluna.com/simple/``.
+    Cada enlace lleva la huella ``#sha256=`` del manifiesto (pip la comprueba al descargar) y
+    ``data-requires-python``. Se genera después de ``tools/build_release.py`` porque lee su manifiesto."""
+    import shutil
+    from html import escape
+    manifest = json.loads((SITIO / "downloads" / "manifest.json").read_text(encoding="utf-8"))
+    ruedas = [f for f in manifest["files"] if f["name"].endswith(".whl")]
+    if not ruedas:
+        raise SystemExit("índice pip: el manifiesto no contiene ningún wheel")
+    requiere = escape(">=3.9")
+    raiz = SITIO / "simple"
+    if raiz.exists():
+        shutil.rmtree(raiz)
+    (raiz / "mini-format").mkdir(parents=True)
+    plantilla = ('<!DOCTYPE html>\n<html>\n<head><meta charset="utf-8"><meta name="pypi:repository-version" content="1.0">'
+                 '<meta name="robots" content="noindex"><title>{titulo}</title></head>\n<body>\n<h1>{titulo}</h1>\n{enlaces}\n</body>\n</html>\n')
+    (raiz / "index.html").write_text(plantilla.format(titulo="Simple index", enlaces='<a href="mini-format/">mini-format</a><br>'),
+                                     encoding="utf-8")
+    enlaces = "\n".join(f'<a href="/downloads/{f["name"]}#sha256={f["sha256"]}" data-requires-python="{requiere}">{f["name"]}</a><br>'
+                        for f in ruedas)
+    (raiz / "mini-format" / "index.html").write_text(plantilla.format(titulo="Links for mini-format", enlaces=enlaces), encoding="utf-8")
+    print(f"  índice pip /simple/mini-format/: {', '.join(f['name'] for f in ruedas)}")
+
+
 def sellar() -> None:
     """version.json: qué commit construyó lo publicado (GITHUB_SHA en CI, 'local' fuera)."""
     import os
@@ -1182,4 +1210,5 @@ if __name__ == "__main__":
     publicar.prepare_public_site(TRADUCCIONES)
     import subprocess
     subprocess.run([sys.executable, str(RAIZ / "tools" / "build_release.py"), "--output", str(SITIO / "downloads")], check=True)
+    construir_indice_pip()
     print("listo")

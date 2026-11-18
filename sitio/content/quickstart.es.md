@@ -73,6 +73,32 @@ python examples/flujo-soporte/run.py --serve
 
 Abre la dirección que imprime. El formulario pide API key y modelo sólo al elegir una IA real. La clave se usa en memoria y no va al historial. Las llamadas reales y las correcciones tienen coste. Puedes conservar tu proveedor al integrar tu propia función.
 
+## ¿Ya describes tus datos con JSON Schema o Pydantic?
+
+No necesitas reunir muestras: el contrato se genera desde el esquema que ya usa tu sistema.
+
+```sh
+mini from-schema ticket.schema.json -p tk --out contract.json
+mini prompt --contract contract.json --lang es
+```
+
+Con un modelo Pydantic: `mini from-schema -p tk --pydantic app.modelos:Ticket --out contract.json`. En tu aplicación, la instrucción se genera desde el contrato y la respuesta se valida y se repara antes de entregar el JSON:
+
+```python
+from minifmt import Contract, spec_block, parse
+from minifmt.ai import repair_request, merge_repair
+
+contrato = Contract.load("contract.json")
+sistema = spec_block(contrato, "es")                  # mensaje de sistema de tu llamada a la IA
+texto = llamar_a_tu_ia(sistema, tarea)                # tu proveedor, sin cambios
+doc = parse(texto, contrato, strict=False)            # registros válidos + errores con su línea
+if doc.errors:
+    pedido = repair_request(texto, contrato, "es")    # solo las líneas inválidas
+    arreglo = merge_repair(texto, llamar_a_tu_ia(pedido.system, pedido.user), contrato, pedido)
+    doc = arreglo.document
+tickets = doc.to_canonical()["records"]               # el JSON que espera tu aplicación
+```
+
 ## ¿Y el ahorro?
 
 Los **tokens** son fragmentos de texto que la API cuenta para cobrar. Con el mismo modelo y tarifa, menos tokens en la respuesta significa menos coste de salida. El coste total también suma las instrucciones que envías y las correcciones.
