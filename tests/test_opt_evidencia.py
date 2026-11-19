@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -211,8 +212,11 @@ def test_las_carpetas_de_ejemplos_coinciden_con_lo_que_genera_el_codigo(dom):
 
 @pytest.mark.parametrize("dom", ["tickets", "eventos", "comentarios"])
 def test_reconstruir_py_funciona_como_programa_sobre_cada_carpeta(dom):
+    # El programa escribe acentos: se fija UTF-8 en el subproceso para que la salida no dependa de la
+    # codificación de la consola (cp1252 en Windows cuando no se define PYTHONIOENCODING).
+    entorno = dict(os.environ, PYTHONIOENCODING="utf-8")
     r = subprocess.run([sys.executable, str(ROOT / "examples" / "optimizacion" / "reconstruir.py"), dom],
-                       capture_output=True, text=True, encoding="utf-8", timeout=120)
+                       capture_output=True, text=True, encoding="utf-8", timeout=120, env=entorno)
     assert r.returncode == 0, r.stdout + r.stderr
     assert "idénticos a datos_originales.json" in r.stdout
 

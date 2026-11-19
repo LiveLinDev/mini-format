@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Toolkit repair (`mini repair`, `repair.py`, `Workflow`) removes extra empty lines at the end of a response, such as a file saved by PowerShell with a byte order mark, CRLF and a trailing empty line. They used to be read as a record without cells (`D_ARITY`), so the response kept no recoverable records. Empty lines between records are still rejected. The `repair` command writes exactly one final LF.
+- Tests: the `reconstruir.py` program test sets UTF-8 for its subprocess, so the suite passes on Windows without `PYTHONIOENCODING` (it decoded the console code page as UTF-8).
 
 ## Site and examples — 2026-11-17
 
