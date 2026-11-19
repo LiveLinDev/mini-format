@@ -158,6 +158,47 @@ class DomainTests(unittest.TestCase):
         self.assertFalse(repair(invalid, c, fix_count=True)["ok"])
         self.assertFalse(repair("Here is your response:\n" + wire, c)["ok"])
 
+    def test_transport_repair_removes_extra_trailing_blank_lines(self):
+        # CP063: response saved with BOM, CRLF and an extra empty line at the end (PowerShell Out-File).
+        data = [{"id": 1, "name": "Luna"}, {"id": 2, "name": "Sol"}]
+        c = infer_contract([data])
+        wire = encode(data, c) + "\n"
+        saved = "﻿" + wire.replace("\n", "\r\n") + "\r\n"
+        self.assertFalse(diagnose(saved, c)["ok"])
+        report = repair(saved, c)
+        self.assertTrue(report["ok"], report)
+        self.assertEqual(report["changes"], ["removed UTF-8 BOM", "normalized CRLF to LF", "removed trailing blank lines"])
+        self.assertEqual(report["text"], wire)
+        self.assertEqual(decode(report["text"], c), data)
+        for extra in (wire + "\n\n\n", wire.rstrip("\n") + "\n\n"):
+            report = repair(extra, c)
+            self.assertTrue(report["ok"], report)
+            self.assertEqual(report["text"], wire)
+        # A response that is already clean is returned unchanged.
+        self.assertEqual(repair(wire, c)["changes"], [])
+        # Only the trailing whitespace is transport: an empty line between records is still rejected.
+        header, first, *rest = wire.rstrip("\n").split("\n")
+        inner = header + "\n" + first + "\n\n" + "\n".join(rest) + "\n"
+        self.assertFalse(repair(inner, c)["ok"])
+
+    def test_cli_repair_writes_file_for_trailing_blank_lines(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            sample = root / "sample.json"
+            sample.write_text('[{"id":1,"name":"Luna"},{"id":2,"name":"Sol"}]', encoding="utf-8")
+            bundle = root / "kit"
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+                self.assertEqual(cli.main(["build", str(sample), "--prefix", "phone", "--out", str(bundle)]), 0)
+            example = (bundle / "example.mini").read_bytes()
+            saved = root / "saved.mini"
+            saved.write_bytes(b"\xef\xbb\xbf" + example.replace(b"\n", b"\r\n") + b"\r\n")
+            target = root / "repaired.mini"
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                rc = cli.main(["repair", str(saved), "--contract", str(bundle / "contract.json"), "--out", str(target)])
+            self.assertEqual(rc, 0)
+            self.assertEqual(target.read_bytes(), example)
+
     def test_selective_diagnostics_and_verified_line_replacement(self):
         data = [{"id": 1}, {"id": 2}, {"id": 3}]
         c = infer_contract([data])

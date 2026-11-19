@@ -668,6 +668,13 @@ def repair(text, contract=None, *, fix_count=False):
         # A response cut by the output limit inside a fenced block never reaches its closing fence.
         text = stripped[opened.end():]
         changes.append("removed unclosed Markdown code fence")
+    # A response saved by a shell or an editor can end with extra empty lines (PowerShell Out-File appends CRLF).
+    # An empty physical line never encodes a record (a row without cells is written as "-"), so the extra lines
+    # are transport whitespace: keep only the optional final LF of the profile.
+    trimmed = re.sub(r"\n{2,}\Z", "\n", text)
+    if trimmed != text:
+        text = trimmed
+        changes.append("removed trailing blank lines")
     report = diagnose(text, contract)
     if fix_count and not report["ok"] and report["errors"][0]["code"] == "D_COUNT":
         # Validate every field and the full wrapper before changing n.  This
@@ -928,7 +935,7 @@ def main(argv=None):
             if not report["ok"]:
                 print(json.dumps(report, ensure_ascii=False, indent=2), file=sys.stderr)
                 return 1
-            output = report["text"]
+            output = report["text"].rstrip("\n")  # the writer below adds the single final LF
             print(json.dumps({"ok": True, "changes": report["changes"]}, ensure_ascii=False), file=sys.stderr)
         if args.out:
             _write_text(Path(args.out), output + "\n")
