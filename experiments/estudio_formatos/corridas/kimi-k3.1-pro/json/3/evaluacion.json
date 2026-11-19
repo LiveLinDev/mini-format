@@ -1,0 +1,41 @@
+{
+  "esquema": "mini-format/estudio-formatos/1",
+  "proveedor": "kimi-k3.1-pro",
+  "corredor": "cli-kimi",
+  "modelo": "kimi-code/k3.1-pro",
+  "esfuerzo": "low",
+  "formato": "json",
+  "repeticion": 3,
+  "solicitados": 20,
+  "validos_inicial": 20,
+  "validos_final": 20,
+  "diagnostico_inicial": {
+    "leido": true,
+    "validos": 20,
+    "recibidos": 20,
+    "error": null
+  },
+  "diagnostico_final": {
+    "leido": true,
+    "validos": 20,
+    "recibidos": 20,
+    "error": null
+  },
+  "estado": "completa",
+  "llamadas": [
+    {
+      "n": 1,
+      "etapa": "generacion",
+      "archivo": "respuesta_1.json",
+      "error": null,
+      "tokens_salida": 976,
+      "tokens_razonamiento": null,
+      "tokens_entrada": 922,
+      "latencia_s": 18.997,
+      "fin": null,
+      "modelo_informado": "kimi-code/k3.1-pro",
+      "fecha_utc": "2026-11-19T21:30:21Z"
+    }
+  ],
+  "fecha_utc": "2026-11-19T21:30:21Z"
+}

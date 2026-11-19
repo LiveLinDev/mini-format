@@ -1,0 +1,21 @@
+ticket|v=1|n=20|h=79a88ccdd100
+1|Contraseña dejó de funcionar|acceso|alta
+2|Cobro duplicado en factura de septiembre|facturacion|alta
+3|Apertura lenta del panel|rendimiento|media
+4|Actualizar dirección de la cuenta|cuenta|baja
+5|Error 500 al descargar informe|errores|alta
+6|Enlace de restablecimiento de contraseña caducado|acceso|media
+7|Pago no visible en la cuenta|facturacion|alta
+8|Notificaciones por correo no recibidas|notificaciones|media
+9|Invitar compañeros al equipo|equipo|baja
+10|Buscador no encuentra un ticket existente|busqueda|media
+11|Pantalla en blanco al abrir un adjunto|errores|alta
+12|Cambiar nombre de la empresa|cuenta|baja
+13|Exportación CSV pierde acentos|exportacion|media
+14|Sesión se cierra cada cinco minutos|acceso|alta
+15|Número fiscal antiguo en la factura|facturacion|media
+16|Botón de guardar no responde desde el móvil|errores|alta
+17|Cancelar resumen semanal|notificaciones|baja
+18|No se puede subir un PDF de dos megabytes|adjuntos|media
+19|Filtros del panel se reinician al volver|panel|media
+20|Descargar todas las facturas del año|facturacion|baja

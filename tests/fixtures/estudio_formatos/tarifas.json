@@ -1,0 +1,4 @@
+{"esquema": "mini-format/tarifas/1", "tarifas": [
+  {"proveedor": "P", "modelo_api_id": "a", "estado": "verificada", "salida_por_millon": "10", "fecha_consulta_utc": "2026-11-19T00:00:00Z"},
+  {"proveedor": "P", "modelo_api_id": "b", "estado": "no_verificada", "salida_por_millon": null, "fecha_consulta_utc": "2026-11-19T00:00:00Z"}
+]}

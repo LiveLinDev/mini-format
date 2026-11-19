@@ -1,0 +1,52 @@
+{
+  "esquema": "mini-format/tarifas-fuentes/1",
+  "descripcion": "Fuentes de las tarifas del estudio de formatos (experiments/estudio_formatos). Mismo mecanismo que evidencia/tarifas: python tools/tarifas.py consultar --directorio experiments/estudio_formatos/tarifas.",
+  "paginas_bloqueadas": [
+    {
+      "url": "https://platform.kimi.ai/docs/pricing/chat",
+      "motivo": "tabla de precios por modelo dibujada con JavaScript; la versión .md oficial no la incluye",
+      "registrado_por": "estudio de formatos 2026-11-19"
+    }
+  ],
+  "fuentes": [
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-opus-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Opus 5\\.5 +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Primera tabla de la pagina (precios base del modelo). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-haiku-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>\\| Claude Haiku 5\\.5 \\(for prompts up to 100,000 tokens\\) +\\| \\$(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_escritura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$[0-9]+(?:\\.[0-9]+)? / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<entrada_cache_lectura>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\| \\$(?P<salida>[0-9]+(?:\\.[0-9]+)?) / MTok(?:<sup>\\d+</sup>)? +\\|)"
+        }
+      ],
+      "nota": "Fila de prompts de hasta 100 000 tokens (las solicitudes del estudio son de menos de 3 000). Escritura de cache = la de 5 minutos."
+    },
+    {
+      "proveedor": "Moonshot AI",
+      "modelo_api_id": "kimi-k3.1-pro",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.kimi.ai/docs/pricing/chat.md",
+          "formato": "markdown",
+          "patron": "(?m)^(?P<extracto>[^\\n]*`kimi-k3\\.1-pro`[^\\n]*)$(?:[\\s\\S]*?^\\| *kimi-k3\\.1-pro *\\| *\\$?(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\| *\\$?(?P<salida>[0-9]+(?:\\.[0-9]+)?) *\\|[^\\n]*$)?"
+        }
+      ],
+      "nota": "Página oficial de precios de inferencia de Kimi (platform.moonshot.ai redirige a platform.kimi.ai). La versión Markdown nombra el modelo pero no trae la tabla de precios, que la página dibuja con JavaScript: sin una fila con entrada y salida la tarifa queda no_verificada."
+    }
+  ]
+}

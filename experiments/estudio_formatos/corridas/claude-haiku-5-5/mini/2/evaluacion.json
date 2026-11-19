@@ -1,0 +1,58 @@
+{
+  "esquema": "mini-format/estudio-formatos/1",
+  "proveedor": "claude-haiku-5-5",
+  "corredor": "cli-claude",
+  "modelo": "claude-haiku-5-5",
+  "esfuerzo": "low",
+  "formato": "mini",
+  "repeticion": 2,
+  "solicitados": 20,
+  "validos_inicial": 0,
+  "validos_final": 20,
+  "diagnostico_inicial": {
+    "validos": 0,
+    "ajustes_locales": [],
+    "errores": [
+      {
+        "code": "D_PREFIX",
+        "line": 1,
+        "message": "expected prefix ticket"
+      }
+    ]
+  },
+  "diagnostico_final": {
+    "validos": 20,
+    "ok": true
+  },
+  "resumen": "mini-format: 20 registro(s) válidos · 1 corrección(es) selectiva(s) del modelo",
+  "estado": "completa",
+  "llamadas": [
+    {
+      "n": 1,
+      "etapa": "generacion",
+      "archivo": "respuesta_1.mini",
+      "error": null,
+      "tokens_salida": 1360,
+      "tokens_razonamiento": 821,
+      "tokens_entrada": 2373,
+      "latencia_s": 7.581,
+      "fin": "end_turn",
+      "modelo_informado": "claude-haiku-5-5",
+      "fecha_utc": "2026-11-19T21:29:53Z"
+    },
+    {
+      "n": 2,
+      "etapa": "correccion",
+      "archivo": "respuesta_2_correccion.txt",
+      "error": null,
+      "tokens_salida": 1071,
+      "tokens_razonamiento": 545,
+      "tokens_entrada": 3019,
+      "latencia_s": 10.045,
+      "fin": "end_turn",
+      "modelo_informado": "claude-haiku-5-5",
+      "fecha_utc": "2026-11-19T21:30:03Z"
+    }
+  ],
+  "fecha_utc": "2026-11-19T21:30:03Z"
+}

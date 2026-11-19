@@ -1,0 +1,107 @@
+{
+  "esquema": "mini-format/tarifas/1",
+  "moneda": "USD",
+  "unidad": "por millón de tokens, nivel estándar",
+  "consulta_utc": "2026-11-19T21:31:33Z",
+  "fuente_metodo": "Consulta automática con tools/tarifas.py (descarga de la página oficial y lectura de la fila del modelo). Ninguna cifra se escribe a mano.",
+  "nota_tokenizadores": "tiktoken (o200k_base, cl100k_base, r50k_base) es una aproximación salvo para texto plano de los modelos de OpenAI que tiktoken mapea; para Anthropic, Google, DeepSeek y los modelos de Groq que no son gpt-oss solo valen el usage de la respuesta o el endpoint de conteo del proveedor. Los conteos locales de texto, los conteos de solicitud del proveedor y el usage de una llamada real son tres cosas distintas y no se suman ni se sustituyen.",
+  "tokenizadores": [
+    {
+      "proveedor": "OpenAI",
+      "metodo_oficial": "Endpoint de conteo de entrada de la Responses API (client.responses.input_tokens.count -> input_tokens) y campo usage de cada respuesta. La guia cita tiktoken como opcion local para texto plano, con limites (imagenes, archivos, herramientas y esquemas no se cuentan bien). Verificado aqui con tiktoken 0.14.0 (encoding_name_for_model): gpt-5.4, gpt-5.4-mini, gpt-5-mini, gpt-4.1, gpt-4.1-mini, gpt-4o-mini, o4-mini, gpt-5.6-sol -> o200k_base; gpt-oss-120b -> o200k_harmony; gpt-6-luna -> sin mapeo (error).",
+      "url_oficial": "https://developers.openai.com/api/docs/guides/token-counting",
+      "notas": "o200k_base es exacto solo para modelos OpenAI que tiktoken mapea a el y solo para texto plano (el conteo oficial incluye tokens de formato de mensajes). Para la serie GPT-6 no hay mapeo: tratar el conteo local como aproximacion y usar el endpoint o usage."
+    },
+    {
+      "proveedor": "Anthropic",
+      "metodo_oficial": "Endpoint POST /v1/messages/count_tokens (client.messages.count_tokens) y campo usage de cada respuesta (input_tokens, output_tokens, cache_*). La pagina lo define como ESTIMACION. No hay tokenizador local oficial.",
+      "url_oficial": "https://platform.claude.com/docs/en/build-with-claude/token-counting",
+      "notas": "o200k_base es solo una aproximacion para Claude. Claude 4.7 y posteriores usan un tokenizador nuevo que produce \"approximately 30 percent more tokens\" para el mismo texto que modelos anteriores (Haiku 4.5 y Sonnet 4.6 y anteriores usan el previo). Hay que recontar contra el modelo exacto; un factor unico 1.25 (precios.json del arnes) no es una medicion."
+    },
+    {
+      "proveedor": "Google",
+      "metodo_oficial": "client.models.count_tokens / POST models/{modelo}:countTokens y usage_metadata en la respuesta. La documentacion dice que un token equivale a unos 4 caracteres.",
+      "url_oficial": "https://ai.google.dev/gemini-api/docs/tokens",
+      "notas": "o200k_base es solo aproximacion para Gemini (tokenizador propio). Leido en la version Markdown de la pagina (tokens.md.txt)."
+    },
+    {
+      "proveedor": "DeepSeek",
+      "metodo_oficial": "Campo usage de cada respuesta (la pagina dice que el numero real es el que devuelve el modelo) y un tokenizador offline descargable (deepseek_tokenizer.zip) referenciado en la pagina. Regla orientativa oficial: 1 caracter ingles ~ 0.3 token, 1 caracter chino ~ 0.6 token.",
+      "url_oficial": "https://api-docs.deepseek.com/quick_start/token_usage",
+      "notas": "No se descargo el zip (descarga de archivo: requiere permiso). o200k_base es solo aproximacion para DeepSeek."
+    },
+    {
+      "proveedor": "Groq",
+      "metodo_oficial": "Campo usage de la respuesta (prompt_tokens, completion_tokens y detalle de tokens cacheados; ejemplos de usage en https://console.groq.com/docs/prompt-caching). No se encontro endpoint de conteo previo en las paginas consultadas.",
+      "url_oficial": "https://console.groq.com/docs/prompt-caching",
+      "notas": "Para openai/gpt-oss-* el vocabulario es o200k_harmony (tiktoken 0.14.0 lo mapea asi): el texto plano coincide con o200k_base pero hay tokens especiales del formato harmony. Para otros modelos alojados en Groq (Llama, Qwen) el tokenizador es el del modelo, no o200k_base."
+    }
+  ],
+  "bloqueos": [],
+  "discrepancias_repo": [],
+  "tarifas": [
+    {
+      "proveedor": "Anthropic",
+      "modelo_comercial": "Claude Opus 5.5",
+      "modelo_api_id": "claude-opus-5-5",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "4",
+      "entrada_cache_lectura_por_millon": "0.2",
+      "entrada_cache_escritura_por_millon": "5",
+      "salida_por_millon": "20",
+      "otros_cargos": "Cache 1 h: 8.00. Batch: 2 / 10. Fast mode: 8 / 40. Lectura de cache = 0.05x.",
+      "url_oficial": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "extracto": "| Claude Opus 5.5 | $4 / MTok | $5 / MTok | $8 / MTok | $0.20 / MTok<sup>2</sup> | $20 / MTok |",
+      "extracto_sha256": "a5f81ea0e73dba52bbfa437c7582953433cf9640226abe333f37964dd6da9a77",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-11-19T21:31:33Z",
+      "origen": "consultar",
+      "consulta": "20261119T213133Z.json",
+      "motivo_no_verificada": null,
+      "ultimo_valor_verificado": null,
+      "notas": "Nivel estandar, API de Anthropic (enrutamiento global). Escritura de cache 5 min = 1.25x entrada; 1 h = 2x; lectura = 0.1x salvo Opus 5.5 (0.05x) y Fable/Mythos 5.1 (0.025x). Batch -50 %. inference_geo \"us\" = x1.1. Pensamiento facturado como salida (platform.claude.com/docs/en/build-with-claude/thinking). Extracto = fila de la version Markdown oficial de la misma URL (pricing.md); columnas: entrada | escritura cache 5m | escritura cache 1h | lectura cache | salida. Opus vigente; candidato."
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_comercial": "Claude Haiku 5.5",
+      "modelo_api_id": "claude-haiku-5-5",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": "0.1",
+      "entrada_cache_lectura_por_millon": "0.01",
+      "entrada_cache_escritura_por_millon": "0.125",
+      "salida_por_millon": "0.5",
+      "otros_cargos": "",
+      "url_oficial": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "extracto": "| Claude Haiku 5.5 (for prompts up to 100,000 tokens) | $0.10 / MTok | $0.125 / MTok | $0.20 / MTok | $0.01 / MTok | $0.50 / MTok |",
+      "extracto_sha256": "534c998b3ec7aef6651d4eb93eae638fc5d9563032644f64518edc690151d32e",
+      "estado": "verificada",
+      "fecha_consulta_utc": "2026-11-19T21:31:33Z",
+      "origen": "consultar",
+      "consulta": "20261119T213133Z.json",
+      "motivo_no_verificada": null,
+      "ultimo_valor_verificado": null,
+      "notas": "Nivel estándar, API de Anthropic, prompts de hasta 100 000 tokens. Pensamiento facturado como salida."
+    },
+    {
+      "proveedor": "Moonshot AI",
+      "modelo_comercial": "Kimi K3.1 Pro",
+      "modelo_api_id": "kimi-k3.1-pro",
+      "moneda": "USD",
+      "entrada_sin_cache_por_millon": null,
+      "entrada_cache_lectura_por_millon": null,
+      "entrada_cache_escritura_por_millon": null,
+      "salida_por_millon": null,
+      "otros_cargos": "",
+      "url_oficial": "https://platform.kimi.ai/docs/pricing/chat",
+      "extracto": "**[Batch API Inference](https://platform.kimi.ai/docs/pricing/batch.md)**: `kimi-k3.1-pro` and `kimi-k3` support batch inference for large-scale tasks that do not require real-time responses, billed at 60% of the standard price.",
+      "extracto_sha256": "75fa3e6e09c04b61f5c99cbfd05830b2a31a8ad49fc935c90d30e948c4056491",
+      "estado": "no_verificada",
+      "fecha_consulta_utc": "2026-11-19T21:31:33Z",
+      "origen": "consultar",
+      "consulta": "20261119T213133Z.json",
+      "motivo_no_verificada": "extracto_ausente: el patrón no devolvió entrada y salida",
+      "ultimo_valor_verificado": null,
+      "notas": "API de Kimi (pago por uso). En el estudio el modelo se usó por Kimi Code con la suscripción del usuario; la tarifa de API solo sirve para estimar el costo equivalente."
+    }
+  ]
+}

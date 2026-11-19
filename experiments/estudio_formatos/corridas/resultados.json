@@ -1,0 +1,764 @@
+{
+  "esquema": "mini-format/estudio-formatos/1",
+  "aplicacion": "examples/flujo-soporte (20 mensajes, contrato ticket)",
+  "generado_utc": "2026-11-19T21:30:35Z",
+  "corridas": [
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-haiku-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-haiku-5-5",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 1,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 995,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 1470,
+          "latencia_s": 16.007,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:29:45Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:45Z",
+      "carpeta": "claude-haiku-5-5/json/1"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-haiku-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-haiku-5-5",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 2,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 952,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 1469,
+          "latencia_s": 15.685,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:29:45Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:45Z",
+      "carpeta": "claude-haiku-5-5/json/2"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-haiku-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-haiku-5-5",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 3,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 950,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 1470,
+          "latencia_s": 15.577,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:29:45Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:45Z",
+      "carpeta": "claude-haiku-5-5/json/3"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-haiku-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-haiku-5-5",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 1,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 1380,
+          "tokens_razonamiento": 870,
+          "tokens_entrada": 2370,
+          "latencia_s": 7.771,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:29:53Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:53Z",
+      "carpeta": "claude-haiku-5-5/mini/1"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-haiku-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-haiku-5-5",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 2,
+      "solicitados": 20,
+      "validos_inicial": 0,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 0,
+        "ajustes_locales": [],
+        "errores": [
+          {
+            "code": "D_PREFIX",
+            "line": 1,
+            "message": "expected prefix ticket"
+          }
+        ]
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos · 1 corrección(es) selectiva(s) del modelo",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 1360,
+          "tokens_razonamiento": 821,
+          "tokens_entrada": 2373,
+          "latencia_s": 7.581,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:29:53Z"
+        },
+        {
+          "n": 2,
+          "etapa": "correccion",
+          "archivo": "respuesta_2_correccion.txt",
+          "error": null,
+          "tokens_salida": 1071,
+          "tokens_razonamiento": 545,
+          "tokens_entrada": 3019,
+          "latencia_s": 10.045,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:30:03Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:03Z",
+      "carpeta": "claude-haiku-5-5/mini/2"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-haiku-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-haiku-5-5",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 3,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 1251,
+          "tokens_razonamiento": 753,
+          "tokens_entrada": 2373,
+          "latencia_s": 7.362,
+          "fin": "end_turn",
+          "modelo_informado": "claude-haiku-5-5",
+          "fecha_utc": "2026-11-19T21:29:52Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:52Z",
+      "carpeta": "claude-haiku-5-5/mini/3"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-opus-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-opus-5-5",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 1,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 938,
+          "tokens_razonamiento": 9,
+          "tokens_entrada": 1446,
+          "latencia_s": 18.546,
+          "fin": "end_turn",
+          "modelo_informado": "claude-opus-5-5",
+          "fecha_utc": "2026-11-19T21:29:23Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:23Z",
+      "carpeta": "claude-opus-5-5/json/1"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-opus-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-opus-5-5",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 2,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 931,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 1447,
+          "latencia_s": 18.482,
+          "fin": "end_turn",
+          "modelo_informado": "claude-opus-5-5",
+          "fecha_utc": "2026-11-19T21:29:23Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:23Z",
+      "carpeta": "claude-opus-5-5/json/2"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-opus-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-opus-5-5",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 3,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 934,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 1446,
+          "latencia_s": 18.454,
+          "fin": "end_turn",
+          "modelo_informado": "claude-opus-5-5",
+          "fecha_utc": "2026-11-19T21:29:23Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:23Z",
+      "carpeta": "claude-opus-5-5/json/3"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-opus-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-opus-5-5",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 1,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 507,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 2348,
+          "latencia_s": 5.982,
+          "fin": "end_turn",
+          "modelo_informado": "claude-opus-5-5",
+          "fecha_utc": "2026-11-19T21:29:29Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:29Z",
+      "carpeta": "claude-opus-5-5/mini/1"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-opus-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-opus-5-5",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 2,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 503,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 2347,
+          "latencia_s": 6.263,
+          "fin": "end_turn",
+          "modelo_informado": "claude-opus-5-5",
+          "fecha_utc": "2026-11-19T21:29:29Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:29Z",
+      "carpeta": "claude-opus-5-5/mini/2"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "claude-opus-5-5",
+      "corredor": "cli-claude",
+      "modelo": "claude-opus-5-5",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 3,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 507,
+          "tokens_razonamiento": 0,
+          "tokens_entrada": 2346,
+          "latencia_s": 6.178,
+          "fin": "end_turn",
+          "modelo_informado": "claude-opus-5-5",
+          "fecha_utc": "2026-11-19T21:29:29Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:29:29Z",
+      "carpeta": "claude-opus-5-5/mini/3"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "kimi-k3.1-pro",
+      "corredor": "cli-kimi",
+      "modelo": "kimi-code/k3.1-pro",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 1,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 744,
+          "tokens_razonamiento": null,
+          "tokens_entrada": 922,
+          "latencia_s": 27.6,
+          "fin": null,
+          "modelo_informado": "kimi-code/k3.1-pro",
+          "fecha_utc": "2026-11-19T21:30:20Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:20Z",
+      "carpeta": "kimi-k3.1-pro/json/1"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "kimi-k3.1-pro",
+      "corredor": "cli-kimi",
+      "modelo": "kimi-code/k3.1-pro",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 2,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 904,
+          "tokens_razonamiento": null,
+          "tokens_entrada": 922,
+          "latencia_s": 8.945,
+          "fin": null,
+          "modelo_informado": "kimi-code/k3.1-pro",
+          "fecha_utc": "2026-11-19T21:30:02Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:02Z",
+      "carpeta": "kimi-k3.1-pro/json/2"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "kimi-k3.1-pro",
+      "corredor": "cli-kimi",
+      "modelo": "kimi-code/k3.1-pro",
+      "esfuerzo": "low",
+      "formato": "json",
+      "repeticion": 3,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "diagnostico_final": {
+        "leido": true,
+        "validos": 20,
+        "recibidos": 20,
+        "error": null
+      },
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.json",
+          "error": null,
+          "tokens_salida": 976,
+          "tokens_razonamiento": null,
+          "tokens_entrada": 922,
+          "latencia_s": 18.997,
+          "fin": null,
+          "modelo_informado": "kimi-code/k3.1-pro",
+          "fecha_utc": "2026-11-19T21:30:21Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:21Z",
+      "carpeta": "kimi-k3.1-pro/json/3"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "kimi-k3.1-pro",
+      "corredor": "cli-kimi",
+      "modelo": "kimi-code/k3.1-pro",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 1,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 695,
+          "tokens_razonamiento": null,
+          "tokens_entrada": 1555,
+          "latencia_s": 17.848,
+          "fin": null,
+          "modelo_informado": "kimi-code/k3.1-pro",
+          "fecha_utc": "2026-11-19T21:30:21Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:21Z",
+      "carpeta": "kimi-k3.1-pro/mini/1"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "kimi-k3.1-pro",
+      "corredor": "cli-kimi",
+      "modelo": "kimi-code/k3.1-pro",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 2,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 466,
+          "tokens_razonamiento": null,
+          "tokens_entrada": 1555,
+          "latencia_s": 14.063,
+          "fin": null,
+          "modelo_informado": "kimi-code/k3.1-pro",
+          "fecha_utc": "2026-11-19T21:30:34Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:34Z",
+      "carpeta": "kimi-k3.1-pro/mini/2"
+    },
+    {
+      "esquema": "mini-format/estudio-formatos/1",
+      "proveedor": "kimi-k3.1-pro",
+      "corredor": "cli-kimi",
+      "modelo": "kimi-code/k3.1-pro",
+      "esfuerzo": "low",
+      "formato": "mini",
+      "repeticion": 3,
+      "solicitados": 20,
+      "validos_inicial": 20,
+      "validos_final": 20,
+      "diagnostico_inicial": {
+        "validos": 20,
+        "ajustes_locales": [],
+        "errores": []
+      },
+      "diagnostico_final": {
+        "validos": 20,
+        "ok": true
+      },
+      "resumen": "mini-format: 20 registro(s) válidos",
+      "estado": "completa",
+      "llamadas": [
+        {
+          "n": 1,
+          "etapa": "generacion",
+          "archivo": "respuesta_1.mini",
+          "error": null,
+          "tokens_salida": 449,
+          "tokens_razonamiento": null,
+          "tokens_entrada": 1555,
+          "latencia_s": 10.7,
+          "fin": null,
+          "modelo_informado": "kimi-code/k3.1-pro",
+          "fecha_utc": "2026-11-19T21:30:32Z"
+        }
+      ],
+      "fecha_utc": "2026-11-19T21:30:32Z",
+      "carpeta": "kimi-k3.1-pro/mini/3"
+    }
+  ]
+}

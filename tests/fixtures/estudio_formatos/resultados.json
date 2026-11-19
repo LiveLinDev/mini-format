@@ -1,0 +1,24 @@
+{
+  "esquema": "mini-format/estudio-formatos/1",
+  "corridas": [
+    {"proveedor": "modelo-a", "formato": "json", "repeticion": 1, "estado": "completa", "solicitados": 20,
+     "validos_inicial": 20, "validos_final": 20,
+     "llamadas": [{"etapa": "generacion", "tokens_salida": 1000, "tokens_razonamiento": 0, "latencia_s": 10.0}]},
+    {"proveedor": "modelo-a", "formato": "json", "repeticion": 2, "estado": "completa", "solicitados": 20,
+     "validos_inicial": 0, "validos_final": 20,
+     "llamadas": [{"etapa": "generacion", "tokens_salida": 1000, "tokens_razonamiento": 0, "latencia_s": 12.0},
+                  {"etapa": "correccion", "tokens_salida": 1000, "tokens_razonamiento": 0, "latencia_s": 11.0}]},
+    {"proveedor": "modelo-a", "formato": "mini", "repeticion": 1, "estado": "completa", "solicitados": 20,
+     "validos_inicial": 19, "validos_final": 20,
+     "llamadas": [{"etapa": "generacion", "tokens_salida": 500, "tokens_razonamiento": 100, "latencia_s": 5.0},
+                  {"etapa": "correccion", "tokens_salida": 40, "tokens_razonamiento": 0, "latencia_s": 2.0}]},
+    {"proveedor": "modelo-a", "formato": "mini", "repeticion": 2, "estado": "completa", "solicitados": 20,
+     "validos_inicial": 20, "validos_final": 20,
+     "llamadas": [{"etapa": "generacion", "tokens_salida": 500, "tokens_razonamiento": 100, "latencia_s": 7.0}]},
+    {"proveedor": "modelo-b", "formato": "mini", "repeticion": 1, "estado": "completa", "solicitados": 20,
+     "validos_inicial": 20, "validos_final": 20,
+     "llamadas": [{"etapa": "generacion", "tokens_salida": 300, "tokens_razonamiento": null, "latencia_s": 3.0}]},
+    {"proveedor": "modelo-b", "formato": "mini", "repeticion": 2, "estado": "fallida", "solicitados": 20,
+     "llamadas": []}
+  ]
+}

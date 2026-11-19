@@ -1,0 +1,99 @@
+{
+  "esquema": "mini-format/tarifas-consulta/1",
+  "consulta_utc": "2026-11-19T21:31:33Z",
+  "agente": "Mozilla/5.0 (compatible; mini-format-tarifas/1.0; +https://mini-format.pmoluna.com; consulta de tarifas publicas, solo lectura)",
+  "solo_comprobar": false,
+  "resumen": {
+    "entradas": 3,
+    "verificadas": 2,
+    "no_verificadas": 1,
+    "con_cambio_de_precio": 0
+  },
+  "entradas": [
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-opus-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 55859,
+          "sha256": "8fba19f5dbcab60a1ebb3f68b7d3785f6286f76e239d9a3191f2a2a1e06de9d3",
+          "encontrado": true,
+          "extracto": "| Claude Opus 5.5 | $4 / MTok | $5 / MTok | $8 / MTok | $0.20 / MTok<sup>2</sup> | $20 / MTok |",
+          "extracto_sha256": "a5f81ea0e73dba52bbfa437c7582953433cf9640226abe333f37964dd6da9a77",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "4",
+        "entrada_cache_lectura_por_millon": "0.2",
+        "entrada_cache_escritura_por_millon": "5",
+        "salida_por_millon": "20"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Opus 5.5 | $4 / MTok | $5 / MTok | $8 / MTok | $0.20 / MTok<sup>2</sup> | $20 / MTok |",
+      "extracto_sha256": "a5f81ea0e73dba52bbfa437c7582953433cf9640226abe333f37964dd6da9a77"
+    },
+    {
+      "proveedor": "Anthropic",
+      "modelo_api_id": "claude-haiku-5-5",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "url_final": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+          "http_status": 200,
+          "bytes": 55859,
+          "sha256": "8fba19f5dbcab60a1ebb3f68b7d3785f6286f76e239d9a3191f2a2a1e06de9d3",
+          "encontrado": true,
+          "extracto": "| Claude Haiku 5.5 (for prompts up to 100,000 tokens) | $0.10 / MTok | $0.125 / MTok | $0.20 / MTok | $0.01 / MTok | $0.50 / MTok |",
+          "extracto_sha256": "534c998b3ec7aef6651d4eb93eae638fc5d9563032644f64518edc690151d32e",
+          "motivo": null
+        }
+      ],
+      "precios": {
+        "entrada_sin_cache_por_millon": "0.1",
+        "entrada_cache_lectura_por_millon": "0.01",
+        "entrada_cache_escritura_por_millon": "0.125",
+        "salida_por_millon": "0.5"
+      },
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "verificada",
+      "motivo": null,
+      "extracto": "| Claude Haiku 5.5 (for prompts up to 100,000 tokens) | $0.10 / MTok | $0.125 / MTok | $0.20 / MTok | $0.01 / MTok | $0.50 / MTok |",
+      "extracto_sha256": "534c998b3ec7aef6651d4eb93eae638fc5d9563032644f64518edc690151d32e"
+    },
+    {
+      "proveedor": "Moonshot AI",
+      "modelo_api_id": "kimi-k3.1-pro",
+      "tipo": "precio",
+      "paginas": [
+        {
+          "url": "https://platform.kimi.ai/docs/pricing/chat.md",
+          "url_final": "https://platform.kimi.ai/docs/pricing/chat.md",
+          "http_status": 200,
+          "bytes": 3375,
+          "sha256": "0bede5aae7e2be18879d6cf5dcbc4c9705da06c54fddf33af669d2bf6ce5c7b6",
+          "encontrado": true,
+          "extracto": "**[Batch API Inference](https://platform.kimi.ai/docs/pricing/batch.md)**: `kimi-k3.1-pro` and `kimi-k3` support batch inference for large-scale tasks that do not require real-time responses, billed at 60% of the standard price.",
+          "extracto_sha256": "75fa3e6e09c04b61f5c99cbfd05830b2a31a8ad49fc935c90d30e948c4056491",
+          "motivo": null
+        }
+      ],
+      "precios": null,
+      "cambio_respecto_ultimo": false,
+      "diferencias": [],
+      "estado": "no_verificada",
+      "motivo": "extracto_ausente: el patrón no devolvió entrada y salida",
+      "extracto": "**[Batch API Inference](https://platform.kimi.ai/docs/pricing/batch.md)**: `kimi-k3.1-pro` and `kimi-k3` support batch inference for large-scale tasks that do not require real-time responses, billed at 60% of the standard price.",
+      "extracto_sha256": "75fa3e6e09c04b61f5c99cbfd05830b2a31a8ad49fc935c90d30e948c4056491"
+    }
+  ]
+}

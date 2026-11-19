@@ -1,0 +1,16 @@
+{
+  "_nota": "Proveedores del estudio. No contiene claves: el corredor openai-compatible lee la clave de la variable de entorno indicada en clave_env (si el servidor la pide). Los corredores cli-* usan la sesión iniciada en Claude Code o Kimi Code. tarifa apunta a una entrada de evidencia/tarifas/tarifas.json.",
+  "proveedores": [
+    {"id": "claude-opus-5-5", "corredor": "cli-claude", "modelo": "claude-opus-5-5", "esfuerzo": "low",
+     "tarifa": {"proveedor": "Anthropic", "modelo_api_id": "claude-opus-5-5"}},
+    {"id": "claude-haiku-5-5", "corredor": "cli-claude", "modelo": "claude-haiku-5-5", "esfuerzo": "low",
+     "tarifa": {"proveedor": "Anthropic", "modelo_api_id": "claude-haiku-5-5"}},
+    {"id": "kimi-k3.1-pro", "corredor": "cli-kimi", "modelo": "kimi-code/k3.1-pro", "esfuerzo": "low",
+     "tarifa": {"proveedor": "Moonshot AI", "modelo_api_id": "kimi-k3.1-pro"}},
+    {"id": "ejemplo-ollama", "activo": false, "corredor": "openai-compatible", "url": "http://127.0.0.1:11434/v1",
+     "modelo": "nombre-del-modelo", "clave_env": null, "tarifa": null},
+    {"id": "ejemplo-deepseek", "activo": false, "corredor": "openai-compatible", "url": "https://api.deepseek.com/v1",
+     "modelo": "deepseek-chat", "clave_env": "DEEPSEEK_API_KEY",
+     "tarifa": {"proveedor": "DeepSeek", "modelo_api_id": "deepseek-chat"}}
+  ]
+}

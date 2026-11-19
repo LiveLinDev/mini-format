@@ -1,0 +1,6 @@
+{"proveedores": [
+  {"id": "modelo-a", "corredor": "openai-compatible", "url": "http://127.0.0.1:1/v1", "modelo": "a",
+   "tarifa": {"proveedor": "P", "modelo_api_id": "a"}},
+  {"id": "modelo-b", "corredor": "openai-compatible", "url": "http://127.0.0.1:1/v1", "modelo": "b",
+   "tarifa": {"proveedor": "P", "modelo_api_id": "b"}}
+]}

@@ -1,0 +1,41 @@
+{
+  "esquema": "mini-format/estudio-formatos/1",
+  "proveedor": "claude-opus-5-5",
+  "corredor": "cli-claude",
+  "modelo": "claude-opus-5-5",
+  "esfuerzo": "low",
+  "formato": "json",
+  "repeticion": 3,
+  "solicitados": 20,
+  "validos_inicial": 20,
+  "validos_final": 20,
+  "diagnostico_inicial": {
+    "leido": true,
+    "validos": 20,
+    "recibidos": 20,
+    "error": null
+  },
+  "diagnostico_final": {
+    "leido": true,
+    "validos": 20,
+    "recibidos": 20,
+    "error": null
+  },
+  "estado": "completa",
+  "llamadas": [
+    {
+      "n": 1,
+      "etapa": "generacion",
+      "archivo": "respuesta_1.json",
+      "error": null,
+      "tokens_salida": 934,
+      "tokens_razonamiento": 0,
+      "tokens_entrada": 1446,
+      "latencia_s": 18.454,
+      "fin": "end_turn",
+      "modelo_informado": "claude-opus-5-5",
+      "fecha_utc": "2026-11-19T21:29:23Z"
+    }
+  ],
+  "fecha_utc": "2026-11-19T21:29:23Z"
+}
