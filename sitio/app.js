@@ -188,9 +188,9 @@
       { titulo: "mi-django — terminal", dur: 5000,
         cap: "1 · Instala la biblioteca en tu proyecto Django. Sin servicios ni cambios de framework.",
         lineas: [
-          [["p", "$ "], ["", "pip install mini_format-1.3.3-py3-none-any.whl\n"]],
-          [["c", "… instalando mini-format 1.3.3\n"]],
-          [["s", "mini-format 1.3.3 instalado\n"]],
+          [["p", "$ "], ["", "pip install mini_format-1.3.4-py3-none-any.whl\n"]],
+          [["c", "… instalando mini-format 1.3.4\n"]],
+          [["s", "mini-format 1.3.4 instalado\n"]],
           [["", "\n"]],
           [["p", "$ "], ["", "mini from-schema eventos.schema.json -p log --out contrato.json\n"]],
           [["s", "contrato.json creado para tus datos\n"]]
