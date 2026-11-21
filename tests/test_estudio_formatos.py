@@ -155,9 +155,49 @@ class Cortes(unittest.TestCase):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(cortes.main(["--todas", str(ESTUDIO / "corridas"), "--json-salida"]), 0)
-        total = json.loads(out.getvalue())["total"]
-        self.assertGreaterEqual(total["mini"]["recuperacion_pct"], 95.0)
-        self.assertEqual(total["json"]["recuperados"], 0)
+        res = json.loads(out.getvalue())
+        # las 9 parejas del estudio entran en el denominador; ninguna se omite
+        self.assertEqual((res["parejas"], res["procesadas"], res["no_procesadas"]), (9, 9, 0))
+        self.assertEqual(res["cortes_por_formato"], 180)
+        self.assertEqual(len(res["detalle"]), 9)
+        self.assertGreaterEqual(res["total"]["mini"]["recuperacion_pct"], 95.0)
+        self.assertEqual(res["total"]["json"]["recuperados"], 0)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(cortes.main(["--todas", str(ESTUDIO / "corridas")]), 0)
+        self.assertIn("Parejas procesadas: 9 de 9 · 180 cortes por formato", out.getvalue())
+
+    def test_la_pareja_corregida_se_corta_tras_aplicar_la_correccion_grabada(self):
+        res = cortes.medir_todas(ESTUDIO / "corridas", self.lector)
+        haiku2 = next(f for f in res["detalle"] if f["proveedor"] == "claude-haiku-5-5" and f["repeticion"] == "2")
+        self.assertEqual(haiku2["estado"], "procesada")
+        self.assertIn("respuesta_2_correccion.txt", haiku2["referencia"]["mini"])
+        self.assertEqual(haiku2["referencia"]["json"], "primera respuesta")
+        texto, _ = cortes.referencia_mini(ESTUDIO / "corridas" / "claude-haiku-5-5" / "mini" / "2", self.lector)
+        self.assertEqual(len(self.lector.completo(texto)), 20)
+
+    def test_una_pareja_que_no_se_puede_procesar_se_informa(self):
+        import shutil
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            destino = Path(t) / "corridas"
+            shutil.copytree(ESTUDIO / "corridas" / "claude-opus-5-5", destino / "claude-opus-5-5")
+            (destino / "claude-opus-5-5" / "json" / "2" / "respuesta_1.json").write_text("[{", encoding="utf-8")
+            res = cortes.medir_todas(destino, self.lector)
+            self.assertEqual((res["parejas"], res["procesadas"], res["no_procesadas"]), (3, 2, 1))
+            fallida = next(f for f in res["detalle"] if f["estado"] == "no procesada")
+            self.assertEqual(fallida["repeticion"], "2")
+            self.assertTrue(fallida["motivo"])
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(cortes.main(["--todas", str(destino)]), 0)
+            self.assertIn("NO PROCESADA", out.getvalue())
+            self.assertIn("Parejas procesadas: 2 de 3", out.getvalue())
+
+    def test_correcciones_insuficientes(self):
+        primera = (ESTUDIO / "corridas" / "claude-haiku-5-5" / "mini" / "2" / "respuesta_1.mini").read_text(encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.lector.aplicar_correcciones(primera, ["texto que no corrige nada"])
 
 
 class Medir(unittest.TestCase):

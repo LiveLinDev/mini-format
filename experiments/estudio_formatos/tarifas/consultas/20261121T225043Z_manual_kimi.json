@@ -1,0 +1,33 @@
+{
+  "esquema": "mini-format/tarifas-consulta-manual/1",
+  "consulta_utc": "2026-11-21T22:50:43Z",
+  "url": "https://platform.moonshot.ai/docs/pricing/chat",
+  "url_final": "https://platform.kimi.ai/docs/pricing/chat",
+  "titulo": "Model Inference Pricing - Kimi API Platform",
+  "metodo": "Página oficial abierta en un navegador (la tabla de precios se dibuja con JavaScript y no está en la versión Markdown que lee tools/tarifas.py). Se copió el texto de la tabla «K3 Series Models» tal como se muestra; tabla_texto_sha256 se calculó en el navegador sobre ese mismo texto.",
+  "tabla_columnas": [
+    "Name",
+    "Input",
+    "Output",
+    "Cached Input",
+    "5m writes",
+    "1h writes"
+  ],
+  "tabla_texto": "Model\tBase tokens\tPrompt caching\nName\tInput\tOutput\tCached Input\t5m writes\t1h writes\nkimi-k3.1-pro\t$2.00 / MTok\t$10.00 / MTok\t$0.20 / MTok\t$2.00 / MTok\t$4.00 / MTok\nkimi-k3.1-pro-highspeed\t$4.00 / MTok\t$20.00 / MTok\t$0.20 / MTok\t$4.00 / MTok\t$8.00 / MTok\nkimi-k3\t$3.00 / MTok\t$15.00 / MTok\t$0.30 / MTok\t$3.00 / MTok\t$6.00 / MTok",
+  "tabla_texto_sha256": "67add8f5c1baabab1faaeefe16496a3bf66901185ba8c006c9053ddc4c9d3f94",
+  "fila_modelo": [
+    "kimi-k3.1-pro",
+    "$2.00 / MTok",
+    "$10.00 / MTok",
+    "$0.20 / MTok",
+    "$2.00 / MTok",
+    "$4.00 / MTok"
+  ],
+  "precios_usd_por_millon": {
+    "entrada_sin_cache": "2",
+    "salida": "10",
+    "entrada_cache_lectura": "0.2",
+    "entrada_cache_escritura_5m": "2",
+    "entrada_cache_escritura_1h": "4"
+  }
+}

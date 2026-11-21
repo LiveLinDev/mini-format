@@ -46,7 +46,7 @@
           "patron": "(?m)^(?P<extracto>[^\\n]*`kimi-k3\\.1-pro`[^\\n]*)$(?:[\\s\\S]*?^\\| *kimi-k3\\.1-pro *\\| *\\$?(?P<entrada_sin_cache>[0-9]+(?:\\.[0-9]+)?)[^\\n]*\\| *\\$?(?P<salida>[0-9]+(?:\\.[0-9]+)?) *\\|[^\\n]*$)?"
         }
       ],
-      "nota": "Página oficial de precios de inferencia de Kimi (platform.moonshot.ai redirige a platform.kimi.ai). La versión Markdown nombra el modelo pero no trae la tabla de precios, que la página dibuja con JavaScript: sin una fila con entrada y salida la tarifa queda no_verificada."
+      "nota": "Página oficial de precios de inferencia de Kimi (platform.moonshot.ai redirige a platform.kimi.ai). La versión Markdown nombra el modelo pero no trae la tabla de precios, que la página dibuja con JavaScript: la consulta automática no puede verificarla. La verificación vigente es una lectura en navegador de la página renderizada (consultas/*_manual_kimi.json)."
     }
   ]
 }

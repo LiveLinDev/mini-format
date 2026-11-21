@@ -27,23 +27,27 @@ Solo cambia el componente que lee la respuesta; los mensajes, la tarea y el mode
 | Claude Opus 5.5 | .mini | 506 (−45,9 %) | 100 % (94,0–100) | 100 % | 6,1 s (6,3) | 0,506 (−45,9 %) |
 | Claude Haiku 5.5 | JSON | 966 | 100 % (94,0–100) | 100 % | 15,8 s (16,0) | 0,024 |
 | Claude Haiku 5.5 | .mini | 1 330 (+37,8 %) | 66,7 % (54,1–77,3) | 100 % | 7,6 s (7,8) | 0,042 (+74,7 %) |
-| Kimi K3.1 Pro | JSON | 875 | 100 % (94,0–100) | 100 % | 18,5 s (27,6) | tarifa no verificada |
-| Kimi K3.1 Pro | .mini | 537 (−38,6 %) | 100 % (94,0–100) | 100 % | 14,2 s (17,8) | tarifa no verificada |
+| Kimi K3.1 Pro | JSON | 875 | 100 % (94,0–100) | 100 % | 18,5 s (27,6) | 0,437 |
+| Kimi K3.1 Pro | .mini | 537 (−38,6 %) | 100 % (94,0–100) | 100 % | 14,2 s (17,8) | 0,268 (−38,6 %) |
 
 `python experiments/estudio_formatos/cortes.py --todas experiments/estudio_formatos/corridas`
 
+Parejas procesadas: 9 de 9 (una por modelo y repetición), 20 cortes por respuesta: 180 cortes por formato.
+
 | Lector | Registros completos antes del corte | Recuperados |
 |---|---|---|
-| .mini con la señal de corte del proveedor | 1 518 | 1 516 (99,9 %) |
-| JSON con `json.loads` | 1 534 | 0 (0,0 %) |
+| .mini con la señal de corte del proveedor | 1 708 | 1 705 (99,8 %) |
+| JSON con `json.loads` | 1 724 | 0 (0,0 %) |
 
 Observaciones:
 
 - **Tokens.** Con Opus y Kimi, .mini reduce los tokens de salida un 45,9 % y un 38,6 %. Con Haiku los aumenta un 37,8 %: con el prompt .mini el modelo razona (815 tokens de razonamiento de media frente a 0 en JSON), aunque la respuesta visible es más corta. Es el mismo comportamiento que se registró en V2.
 - **Validez.** En la repetición 2, Haiku escribió el título del prompt («# Contrato de dominio .mini») antes de la cabecera. Esa respuesta cuenta con 0 registros válidos y la corrección del modelo la dejó con 20 de 20. Las otras 17 corridas entregaron sus 20 registros válidos sin corrección.
-- **Cortes.** La pareja Haiku/repetición 2 se omite en `cortes.py` porque su respuesta .mini completa no se puede leer sin la corrección. En las 8 parejas restantes, .mini conserva todos los registros completos salvo 2 que terminaban justo en el corte sin salto de línea: con la señal de corte, esa última línea se descarta por precaución.
+- **Cortes.** Cada pareja se corta sobre la respuesta que aceptó la aplicación en esa corrida. En 8 parejas es la primera respuesta. En Haiku/repetición 2 es la primera respuesta con la corrección grabada (`respuesta_2_correccion.txt`), aplicada por `Workflow.process` igual que en el estudio y sin llamar al modelo; el informe lo indica en esa pareja. .mini conserva todos los registros completos salvo 3 que terminaban justo en el corte sin salto de línea: con la señal de corte, esa última línea se descarta por precaución. Si una pareja no se pudiera procesar, `cortes.py` la lista como «NO PROCESADA» con su motivo y el total indica cuántas parejas entran en el denominador.
 - **Latencia.** Es tiempo de reloj medido alrededor del cliente de línea de comandos e incluye su arranque. Sirve para comparar formatos con el mismo modelo, no como latencia de la API.
-- **Costo.** Se calcula como tokens de salida de todas las llamadas × tarifa de salida / registros válidos finales. Las tarifas se consultaron el 19/11/2026 con `tools/tarifas.py` (`tarifas/`): Opus 5.5 a 20 USD por millón y Haiku 5.5 a 0,50 USD por millón, ambas verificadas. La página oficial de Kimi dibuja su tabla de precios con JavaScript y la versión Markdown no la incluye, por lo que su tarifa queda **no verificada** y no se calcula su costo.
+- **Costo.** Se calcula como tokens de salida de todas las llamadas × tarifa de salida / registros válidos finales. Las tarifas de salida están en `tarifas/`:
+  - Opus 5.5, a 20 USD por millón, y Haiku 5.5, a 0,50 USD por millón: verificadas el 19/11/2026 con `tools/tarifas.py consultar`, sobre la versión Markdown oficial de la página de precios de Anthropic.
+  - Kimi K3.1 Pro, a 10 USD por millón: verificada el 21/11/2026 en la página oficial de precios de Kimi (https://platform.kimi.ai/docs/pricing/chat, a la que redirige platform.moonshot.ai). Esa página dibuja la tabla con JavaScript y la versión Markdown no la incluye, por eso se leyó en un navegador. El texto de la tabla y su SHA-256 están en `tarifas/consultas/20261121T225043Z_manual_kimi.json`. Una nueva `consultar` automática no puede leer esa tabla y la marcaría como no verificada hasta repetir la lectura en navegador.
 - **Alcance.** Con 3 repeticiones por celda, los intervalos son amplios: el estudio muestra el comportamiento de la aplicación con modelos reales, no estima tasas de error poco frecuentes.
 
 ## Consulta sin proveedor
@@ -73,6 +77,8 @@ python tools/tarifas.py --directorio experiments/estudio_formatos/tarifas consul
 python tools/tarifas.py --directorio experiments/estudio_formatos/tarifas mostrar
 ```
 
+`consultar` verifica Opus y Haiku de nuevo, pero no puede leer la tabla de Kimi: la deja como no verificada y guarda el valor anterior en `ultimo_valor_verificado`. Para volver a verificarla hay que abrir la página oficial en un navegador y registrar la lectura igual que en `tarifas/consultas/20261121T225043Z_manual_kimi.json`.
+
 ## Repetir el estudio con un proveedor
 
 `proveedores.json` declara los proveedores, sin claves. Hay tres corredores:
@@ -98,7 +104,7 @@ python experiments/estudio_formatos/ver.py todo --resultados mis_corridas/result
 | `proveedores.json` | proveedores del estudio y dos ejemplos inactivos (`openai-compatible`), sin claves |
 | `ver.py` | tokens, validez, reparación, latencia y costo |
 | `cortes.py` | recuperación de registros completos en 20 cortes |
-| `tarifas/` | fuentes, tarifas y consulta del 19/11/2026 (`tools/tarifas.py`) |
+| `tarifas/` | fuentes, tarifas, consulta automática del 19/11/2026 (`tools/tarifas.py`) y lectura en navegador de la tarifa de Kimi del 21/11/2026 |
 | `corridas/` | las 18 corridas grabadas y `resultados.json` |
 
 Las pruebas de `ver.py` y `cortes.py` están en `tests/test_estudio_formatos.py`.
