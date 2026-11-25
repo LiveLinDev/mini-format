@@ -158,6 +158,25 @@ class DomainTests(unittest.TestCase):
         self.assertFalse(repair(invalid, c, fix_count=True)["ok"])
         self.assertFalse(repair("Here is your response:\n" + wire, c)["ok"])
 
+    def test_transport_repair_removes_only_the_echoed_prompt_heading(self):
+        data = [{"note": "# Contrato de dominio .mini"}, {"note": "# .mini domain contract"}]
+        contract = infer_contract([data])
+        wire = encode(data, contract)
+        for lang in ("es", "en"):
+            heading = make_prompt(contract, lang).splitlines()[0]
+            with self.subTest(lang=lang):
+                wrapped = heading + "\n" + wire
+                self.assertFalse(diagnose(wrapped, contract)["ok"])
+                report = repair(wrapped, contract)
+                self.assertTrue(report["ok"], report)
+                self.assertEqual(report["changes"], ["removed echoed .mini prompt heading"])
+                self.assertEqual(report["text"], wire)
+                self.assertEqual(decode(report["text"], contract), data)
+                fenced = heading + "\n\n```mini\n" + wire + "\n```"
+                self.assertEqual(repair(fenced, contract)["text"], wire)
+                self.assertFalse(repair(wrapped.replace("|n=2|", "|n=3|"), contract)["ok"])
+        self.assertFalse(repair("# Unexpected heading\n" + wire, contract)["ok"])
+
     def test_transport_repair_removes_extra_trailing_blank_lines(self):
         # CP063: response saved with BOM, CRLF and an extra empty line at the end (PowerShell Out-File).
         data = [{"id": 1, "name": "Luna"}, {"id": 2, "name": "Sol"}]

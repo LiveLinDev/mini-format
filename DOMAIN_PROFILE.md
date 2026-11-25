@@ -95,8 +95,10 @@ savings are not a universal token guarantee.
 Decode checks contract identity, escapes, column counts, field types, nullability,
 required members, wrapper shape and record count. Errors expose stable `D_*`
 codes, physical line and JSON path. `diagnose` reports recoverable and rejected
-lines; `repair` only fixes explicit transport wrappers. `apply_replacements`
-merges externally corrected invalid lines and validates the complete document.
+lines. `repair` fixes explicit transport wrappers, including the exact Markdown
+heading from the generated contract prompt when it appears before the document.
+`apply_replacements` merges externally corrected invalid lines and validates the
+complete document.
 
 New fields are not silently ignored. Rebuild with representative examples in a
 new directory and distribute its prompt, contract and parser together. Structural

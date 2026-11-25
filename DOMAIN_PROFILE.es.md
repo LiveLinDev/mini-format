@@ -94,9 +94,11 @@ con cualquier tokenizador.
 
 Se comprueban identidad, escapes, columnas, tipos, nullabilidad, campos requeridos,
 envoltorio y cantidad de registros. Los errores exponen código estable `D_*`,
-línea física y ruta JSON. `diagnose` distingue líneas recuperables e inválidas;
-`repair` corrige envoltorios de transporte. `apply_replacements` incorpora líneas
-corregidas externamente y valida todo el documento.
+línea física y ruta JSON. `diagnose` distingue líneas recuperables e inválidas.
+`repair` corrige envoltorios de transporte, incluido el encabezado Markdown
+exacto del prompt del contrato cuando aparece antes del documento.
+`apply_replacements` incorpora líneas corregidas externamente y valida todo el
+documento.
 
 No se ignoran campos nuevos silenciosamente. Reconstruye en otra carpeta con
 ejemplos representativos y distribuye prompt, contrato y parser juntos. Validar

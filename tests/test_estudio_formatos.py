@@ -195,7 +195,7 @@ class Cortes(unittest.TestCase):
             self.assertIn("Parejas procesadas: 2 de 3", out.getvalue())
 
     def test_correcciones_insuficientes(self):
-        primera = (ESTUDIO / "corridas" / "claude-haiku-5-5" / "mini" / "2" / "respuesta_1.mini").read_text(encoding="utf-8")
+        primera = self.mini.replace("ticket|", "otro|", 1)
         with self.assertRaises(ValueError):
             self.lector.aplicar_correcciones(primera, ["texto que no corrige nada"])
 

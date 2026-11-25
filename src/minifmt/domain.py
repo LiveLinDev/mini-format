@@ -19,6 +19,10 @@ from typing import Any
 
 PROFILE = "mini-domain/1"
 MISSING = object()
+_PROMPT_HEADINGS = {
+    "es": "# Contrato de dominio .mini",
+    "en": "# .mini domain contract",
+}
 
 
 class DomainError(ValueError):
@@ -658,6 +662,10 @@ def repair(text, contract=None, *, fix_count=False):
     if "\r\n" in text:
         text = text.replace("\r\n", "\n")
         changes.append("normalized CRLF to LF")
+    heading_end = text.find("\n")
+    if heading_end >= 0 and text[:heading_end] in _PROMPT_HEADINGS.values():
+        text = text[heading_end + 1:].lstrip("\n")
+        changes.append("removed echoed .mini prompt heading")
     stripped = text.strip("\n")
     fence = re.fullmatch(r"```(?:mini|text)?[ \t]*\n([\s\S]*?)\n```", stripped)
     opened = re.match(r"```(?:mini|text)?[ \t]*\n", stripped)
@@ -725,7 +733,6 @@ def make_prompt(contract, lang="en", example=None):
             "Opcionalmente e=[ [índice de columna,[celda0,celda1,...]],...] declara un diccionario de cadenas del documento; la columna usa índices enteros desde 0. Una columna no puede estar en d y e.",
             "Si no queda ninguna columna en una fila, escribe -. n cuenta todas las filas, incluso esas filas vacías.",
         ]
-        title = "Contrato de dominio .mini"
     else:
         intro = "Return only one .mini document matching this contract, without Markdown or explanation."
         rules = [
@@ -741,7 +748,7 @@ def make_prompt(contract, lang="en", example=None):
             "Optional e=[[column index,[cell0,cell1,...]],...] declares per-document string vocabularies; each column then uses zero-based integer indices. A column cannot appear in both d and e.",
             "Write - for a row with no remaining columns. n counts all rows, including these empty rows.",
         ]
-        title = ".mini domain contract"
+    heading = _PROMPT_HEADINGS["es" if lang == "es" else "en"]
     header = f"{contract['prefix']}|v=1|n=<record count>|h={contract['schema_id']}"
     path = contract["record_path"]
     extra = ""
@@ -749,7 +756,7 @@ def make_prompt(contract, lang="en", example=None):
         extra = ("\nLa cabecera requiere m=<JSON posicional del documento completo con la colección de registros sustituida por []>. "
                  if lang == "es" else "\nThe header requires m=<positional JSON of the complete wrapper with the record collection replaced by []>. ")
         extra += "record_path=" + _json(path) + ". Escape m using the same field rules."
-    text = f"# {title}\n\n{intro}\n\nProfile: {PROFILE}\nHeader: `{header}`{extra}\n\n"
+    text = f"{heading}\n\n{intro}\n\nProfile: {PROFILE}\nHeader: `{header}`{extra}\n\n"
     text += "\n".join(f"{index+1}. {rule}" for index, rule in enumerate(rules))
     text += "\n\nColumns (zero-based; paths use JSON Pointer escaping):\n" + "\n".join(f"{index}: {field['name']} ({field['schema']['type']}{', optional' if field['optional'] else ''})" for index, field in enumerate(fields))
     text += "\n\nSchema:\n```json\n" + _json(contract["schema"]) + "\n```\n"
