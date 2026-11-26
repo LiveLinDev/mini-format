@@ -74,7 +74,22 @@ class Workflow:
 
     def _process_positional(self, text, expected_records, *, retry=None, max_repairs=1):
         def parse(response):
-            return self.runtime.decode_positional_json(response, self.contract, expected_records=expected_records)
+            try:
+                return self.runtime.decode_positional_json(response, self.contract, expected_records=expected_records)
+            except self.runtime.DomainError as exc:
+                if (exc.code != "D_VALUE" or not isinstance(response, str)
+                        or not response.rstrip(" \r\n\t").endswith("]")):
+                    raise
+                try:
+                    # Only complete, correctly typed rows may supply the planned count.
+                    data = self.runtime.decode_positional_json(
+                        response + "]", self.contract, expected_records=expected_records
+                    )
+                except self.runtime.DomainError:
+                    raise exc from None
+                self.last_run["trace"].append({"stage": "repair", "ok": True, "errors": [],
+                                               "changes": ["closed positional JSON array"]})
+                return data
         return self._process_compact(text, parse, retry, max_repairs, {"positional_json": True})
 
     def _process_compact(self, text, parse, retry, max_repairs, metadata):
@@ -345,6 +360,7 @@ class Workflow:
         if local:
             nombres = {"removed UTF-8 BOM": "BOM eliminado", "normalized CRLF to LF": "saltos de línea normalizados",
                        "removed complete Markdown code fence": "bloque Markdown eliminado",
+                       "closed positional JSON array": "array JSON posicional cerrado",
                        "removed unclosed Markdown code fence": "bloque Markdown sin cerrar eliminado",
                        "removed trailing blank lines": "líneas vacías finales eliminadas",
                        "removed surplus trailing row separators": "separadores finales sobrantes eliminados"}
