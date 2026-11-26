@@ -41,13 +41,14 @@ export class Workflow {
     });
   }
 
-  async invoke(text, expectedRecords, correction, lastTextField) {
+  async invoke(text, expectedRecords, correction, lastTextField, positionalJson = false) {
     const args = ['--envelope', '--report'];
     if (expectedRecords !== undefined) args.push('--expected-records', String(expectedRecords));
     if (lastTextField !== undefined) {
       args.push(`--last-text-field=${lastTextField}`);
-      if (this.lang) args.push('--lang', this.lang);
     }
+    if (positionalJson) args.push('--positional-json');
+    if ((lastTextField !== undefined || positionalJson) && this.lang) args.push('--lang', this.lang);
     const { code, stdout, stderr } = await this.runParser(args, JSON.stringify({ text, correction }));
     const report = JSON.parse(code === 0 ? stdout : stderr);
     this.lastRun = report;
@@ -62,16 +63,32 @@ export class Workflow {
       throw Error('compact rows require lastTextField and expectedRecords');
     }
     const prompt = await this.prompt(task, expectedRecords, lastTextField);
+    return this.generateAndValidate(generate, prompt, { expectedRecords, maxRepairs, lastTextField });
+  }
+
+  async runPositional(generate, task, { expectedRecords, maxRepairs = 1 } = {}) {
+    if (![0, 1].includes(maxRepairs)) throw Error('maxRepairs must be 0 or 1');
+    if (!Number.isInteger(expectedRecords) || expectedRecords < 0) throw Error('invalid expectedRecords');
+    const args = ['--positional-request', '--expected-records', String(expectedRecords)];
+    if (this.lang) args.push('--lang', this.lang);
+    const result = await this.runParser(args, task);
+    if (result.code !== 0) throw Error(result.stderr.trim());
+    const { prompt, schema } = JSON.parse(result.stdout);
+    return this.generateAndValidate(request => generate(request, schema), prompt,
+      { expectedRecords, maxRepairs, positionalJson: true });
+  }
+
+  async generateAndValidate(generate, prompt, { expectedRecords, maxRepairs, lastTextField, positionalJson = false }) {
     const text = await generate(prompt);
-    try { return await this.invoke(text, expectedRecords, undefined, lastTextField); }
+    try { return await this.invoke(text, expectedRecords, undefined, lastTextField, positionalJson); }
     catch (error) {
       if (!(error instanceof WorkflowError) || maxRepairs === 0) throw error;
       const diagnostic = error.report.diagnostics;
-      const request = lastTextField === undefined
+      const request = lastTextField === undefined && !positionalJson
         ? `${prompt}\n\nOriginal response:\n${error.report.mini}\n\nCORRECTION REQUEST (overrides output format for this call):\n${diagnostic.repair_prompt}`
         : `${prompt}\n${diagnostic.repair_prompt}`;
       const correction = await generate(request);
-      return this.invoke(text, expectedRecords, correction, lastTextField);
+      return this.invoke(text, expectedRecords, correction, lastTextField, positionalJson);
     }
   }
 }

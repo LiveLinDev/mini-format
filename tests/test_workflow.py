@@ -107,6 +107,52 @@ console.log(JSON.stringify({{data, prompts, mini: flow.lastRun.mini}}));
     assert output["mini"].startswith("ticket|v=1|")
 
 
+def test_positional_workflow_repairs_types_with_the_provider_schema(kit, tmp_path):
+    bundle, contract, sample = kit
+    flow = Workflow(bundle)
+    calls = []
+    replies = iter(['[[true,"Acceso"],[2,"Factura"]]', '[[1,"Acceso"],[2,"Factura"]]'])
+
+    def generate(prompt, schema):
+        calls.append((prompt, schema))
+        return next(replies)
+
+    assert flow.run_positional(generate, "Clasifica", expected_records=2) == sample
+    assert len(calls) == 2 and calls[0][1] == calls[1][1]
+    assert "id, titulo" in calls[0][0] and "expected integer" in calls[1][0]
+    schema = calls[0][1]
+    assert schema["minItems"] == schema["maxItems"] == 2
+    assert schema["items"]["prefixItems"] == [{"type": "integer"}, {"type": "string"}]
+    assert decode(flow.last_run["mini"], contract) == sample
+    assert (flow.save_run(tmp_path / "positional") / "respuesta_2.json").is_file()
+
+    with pytest.raises(WorkflowError) as error:
+        flow.run_positional(lambda *_: '[[1,"Acceso"]]', "Clasifica", expected_records=2, max_repairs=0)
+    assert error.value.report["diagnostics"]["errors"][0]["code"] == "D_EXPECTED_COUNT"
+    assert "data" not in flow.last_run
+
+
+def test_node_positional_workflow_uses_the_same_schema_on_retry(kit, tmp_path):
+    bundle, _, sample = kit
+    script = tmp_path / "positional.mjs"
+    script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
+const calls = [];
+const replies = ['[[1,"Acceso"]]', '[[1,"Acceso"],[2,"Factura"]]'];
+const data = await flow.runPositional(async (prompt, schema) => {{
+  calls.push({{prompt, schema}}); return replies.shift();
+}}, 'Clasifica', {{expectedRecords: 2}});
+console.log(JSON.stringify({{data, calls, report: flow.lastRun}}));
+""", encoding="utf-8")
+    result = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 0, result.stderr
+    output = json.loads(result.stdout)
+    assert output["data"] == sample and output["report"]["positional_json"] is True
+    first, second = output["calls"]
+    assert first["schema"] == second["schema"]
+    assert "id, titulo" in first["prompt"] and "received 1" in second["prompt"]
+
+
 def test_generated_compact_cli_uses_utf8_in_isolated_python(kit):
     bundle, _, _ = kit
     output = subprocess.run(

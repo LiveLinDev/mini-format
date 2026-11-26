@@ -111,6 +111,15 @@ El flujo valida las columnas, los tipos y el recuento con el contrato del kit.
 directamente con el contrato. Para elegir el modo, mide el prompt, la respuesta y
 los reintentos con tu modelo y tus datos.
 
+### Filas posicionales con esquema del proveedor
+
+Para las mismas listas planas, `flow.run_positional(generate, tarea, expected_records=20)`
+pide un array JSON de filas sin claves y reconstruye los objetos con su nombre
+de campo. `generate(prompt, schema)` envía el esquema al proveedor. Por ejemplo,
+en Ollama se usa como valor de `format`. En Node el método equivalente es
+`flow.runPositional(generate, tarea, {expectedRecords: 20})`. El flujo comprueba
+los tipos y las cantidades y guarda un documento `.mini` validado en el historial.
+
 ## Validación y evolución
 
 Se comprueban identidad, escapes, columnas, tipos, nullabilidad, campos requeridos,

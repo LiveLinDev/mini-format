@@ -111,6 +111,15 @@ contract. Python's `last_run["mini"]` and Node's `lastRun.mini` hold the
 direct use with the contract. Measure prompts, replies and retries with your
 model and data to choose a mode.
 
+### Positional rows with a provider schema
+
+For the same flat lists, `flow.run_positional(generate, task, expected_records=20)`
+requests a JSON array of rows without keys and restores the named objects.
+`generate(prompt, schema)` passes the schema to the provider. For example, use
+it as `format` in Ollama. The Node method is
+`flow.runPositional(generate, task, {expectedRecords: 20})`. The workflow
+checks types and counts and keeps a validated `.mini` document in the history.
+
 ## Validation and evolution
 
 Decode checks contract identity, escapes, column counts, field types, nullability,

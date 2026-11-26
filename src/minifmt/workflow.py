@@ -61,24 +61,39 @@ class Workflow:
 
     def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1):
         """Validate model rows and store a canonical .mini document in the run history."""
+        def parse(response):
+            return self.runtime.decode_rows(response, self.contract, last_text_field=last_text_field,
+                                            expected_records=expected_records)
+
+        def retry(correction):
+            prompt = self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records)
+            return generate(prompt + "\n" + correction)
+
+        return self._process_compact(text, parse, retry if generate is not None else None, max_repairs,
+                                     {"last_text_field": last_text_field})
+
+    def _process_positional(self, text, expected_records, *, retry=None, max_repairs=1):
+        def parse(response):
+            return self.runtime.decode_positional_json(response, self.contract, expected_records=expected_records)
+        return self._process_compact(text, parse, retry, max_repairs, {"positional_json": True})
+
+    def _process_compact(self, text, parse, retry, max_repairs, metadata):
         if max_repairs not in (0, 1, 2, 3):
             raise ValueError("max_repairs must be between 0 and 3")
         trace = [{"stage": "generate", "text": text}]
-        self.last_run = {"ok": False, "trace": trace, "last_text_field": last_text_field}
+        self.last_run = {"ok": False, "trace": trace, **metadata}
         for attempt in range(max_repairs + 1):
             try:
-                data = self.runtime.decode_rows(text, self.contract, last_text_field=last_text_field,
-                                                expected_records=expected_records)
+                data = parse(text)
             except self.runtime.DomainError as exc:
                 correction = ("Devuelve todas las filas de la fuente. Corrige " if self.lang == "es"
                               else "Return every row from the source. Fix ") + exc.message
                 report = {"ok": False, "errors": [exc.to_dict()], "invalid_lines": [], "repair_prompt": correction}
                 trace.append({"stage": "validate", **report})
                 self.last_run.update(diagnostics=report, mini=text)
-                if generate is None or attempt == max_repairs or exc.code == "D_COMPACT_SCHEMA":
+                if retry is None or attempt == max_repairs or exc.code == "D_COMPACT_SCHEMA":
                     raise WorkflowError(self.last_run) from exc
-                text = generate(self.rows_prompt(task, last_text_field=last_text_field,
-                                                 expected_records=expected_records) + "\n" + correction)
+                text = retry(correction)
                 trace.append({"stage": "model_repair", "attempt": attempt + 1, "selective": False, "text": text})
             else:
                 mini = self.runtime.encode(data, self.contract)
@@ -288,7 +303,10 @@ class Workflow:
                 old.unlink()
         run = self.last_run or {}
         es = self.lang == "es"
-        raw_suffix = ".txt" if run.get("last_text_field") is not None else ".mini"
+        if run.get("positional_json"):
+            raw_suffix = ".json"
+        else:
+            raw_suffix = ".txt" if run.get("last_text_field") is not None else ".mini"
         answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective")
                     and step.get("reply_format") != "mini" else raw_suffix)
                    for step in run.get("trace") or []
@@ -320,7 +338,7 @@ class Workflow:
             asked = sum(step["requested"] for step in trace if step.get("stage") == "continuation")
             parts.append(f"respuesta cortada: {cut['complete_records']} conservados y {asked} pedidos de nuevo" if es
                          else f"cut response: {cut['complete_records']} kept and {asked} requested again")
-        if repaired and run.get("last_text_field") is not None:
+        if repaired and (run.get("last_text_field") is not None or run.get("positional_json")):
             parts.append(f"{repaired} corrección(es) del modelo" if es else f"{repaired} model correction(s)")
         elif repaired:
             parts.append(f"{repaired} corrección(es) selectiva(s) del modelo" if es else f"{repaired} selective model correction(s)")
@@ -342,6 +360,20 @@ class Workflow:
                                      expected_records=expected_records, max_repairs=max_repairs)
         return self.process(generate(self.prompt(task, expected_records)), generate=generate, task=task,
                             expected_records=expected_records, max_repairs=max_repairs)
+
+    def run_positional(self, generate, task, *, expected_records, max_repairs=1):
+        """Call generate(prompt, schema) and validate the provider's positional JSON."""
+        if max_repairs not in (0, 1, 2, 3):
+            raise ValueError("max_repairs must be between 0 and 3")
+        request = self.runtime.positional_json_request(task, self.contract, expected_records=expected_records,
+                                                       lang=self.lang)
+        prompt, schema = request["prompt"], request["schema"]
+
+        def retry(correction):
+            return generate(prompt + "\n" + correction, schema)
+
+        return self._process_positional(generate(prompt, schema), expected_records, retry=retry,
+                                        max_repairs=max_repairs)
 
     async def run_async(self, generate, task, *, expected_records=None, max_repairs=1):
         """Use the same validated pipeline with an asynchronous model callback."""
@@ -480,13 +512,28 @@ def main(argv=None):
     ap.add_argument("--history", help="optional local run history; may contain application data")
     ap.add_argument("--expected-records", type=int)
     ap.add_argument("--last-text-field", help="read compact rows with this final string column")
-    ap.add_argument("--rows-prompt", action="store_true", help="read the task and emit compact row instructions")
+    modes = ap.add_mutually_exclusive_group()
+    modes.add_argument("--rows-prompt", action="store_true", help="read the task and emit compact row instructions")
+    modes.add_argument("--positional-request", action="store_true", help="read the task and emit a prompt and JSON schema")
+    modes.add_argument("--positional-json", action="store_true", help="read compact positional JSON rows")
     ap.add_argument("--lang", choices=("es", "en"))
     ap.add_argument("--report", action="store_true", help="return the complete run report instead of only data")
     ap.add_argument("--envelope", action="store_true", help="stdin/file JSON contains text and an optional correction")
     args = ap.parse_args(argv)
     workflow = Workflow(lang=args.lang)
     text = sys.stdin.read() if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
+    if args.positional_request or args.positional_json:
+        if args.last_text_field is not None:
+            ap.error("positional JSON uses the contract's column order")
+        if args.positional_request:
+            try:
+                request = workflow.runtime.positional_json_request(
+                    text, workflow.contract, expected_records=args.expected_records, lang=workflow.lang
+                )
+            except ValueError as exc:
+                ap.error(str(exc))
+            print(json.dumps(request, ensure_ascii=False))
+            return 0
     if args.rows_prompt:
         try:
             print(workflow.rows_prompt(text, last_text_field=args.last_text_field, expected_records=args.expected_records),
@@ -500,7 +547,9 @@ def main(argv=None):
         text, correction = envelope["text"], envelope.get("correction")
     try:
         generate = (lambda _: correction) if correction is not None else None
-        if args.last_text_field is None:
+        if args.positional_json:
+            data = workflow._process_positional(text, args.expected_records, retry=generate)
+        elif args.last_text_field is None:
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:
             data = workflow.process_rows(text, generate=generate, last_text_field=args.last_text_field,

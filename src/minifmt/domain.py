@@ -799,7 +799,7 @@ def make_prompt(contract, lang="en", example=None):
 _ROW_ATOM = re.compile(r'(?:"(?:[^"\\]|\\.)*"|[^ \t]+)(?:[ \t]+|$)')
 
 
-def _compact_fields(contract, last_text_field):
+def _flat_required_fields(contract):
     root = contract["schema"]
     item = root.get("items", {})
     fields = item.get("fields", [])
@@ -807,6 +807,11 @@ def _compact_fields(contract, last_text_field):
             or any(f["optional"] or f["schema"].get("nullable")
                    or f["schema"]["type"] not in ("string", "integer", "number", "boolean") for f in fields)):
         raise DomainError("D_COMPACT_SCHEMA", "compact rows require a root array of flat, required, non-null scalars")
+    return fields
+
+
+def _compact_fields(contract, last_text_field):
+    fields = _flat_required_fields(contract)
     tail = next((f for f in fields if f["name"] == last_text_field and f["schema"]["type"] == "string"), None)
     if tail is None:
         raise DomainError("D_COMPACT_SCHEMA", "the last text field must name a string column")
@@ -922,6 +927,43 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en"):
     if types:
         text += types + "\n"
     return text
+
+
+def positional_json_request(task, contract=None, *, expected_records, lang="en"):
+    """Build instructions and a provider schema for compact JSON tuples."""
+    fields = _flat_required_fields(_contract(contract))
+    _compact_count(expected_records)
+    width = len(fields)
+    names = ", ".join(field["name"] if re.fullmatch(r"[\w-]+", field["name"]) else _json(field["name"])
+                      for field in fields)
+    schema = {
+        "type": "array", "minItems": expected_records, "maxItems": expected_records,
+        "items": {"type": "array", "minItems": width, "maxItems": width,
+                  "prefixItems": [{"type": field["schema"]["type"]} for field in fields]},
+    }
+    if lang == "es":
+        prompt = (f"Devuelve {expected_records} filas en un array JSON de arrays, sin claves. "
+                  f"Orden de cada fila: {names}. Conserva los valores originales de los IDs.")
+    else:
+        prompt = (f"Return {expected_records} rows as a JSON array of arrays, without keys. "
+                  f"Order of each row: {names}. Preserve the original ID values.")
+    return {"prompt": prompt + "\n" + task, "schema": schema}
+
+
+def decode_positional_json(text, contract=None, *, expected_records):
+    """Validate positional JSON and restore the named fields from the domain contract."""
+    contract = _contract(contract)
+    _flat_required_fields(contract)
+    _compact_count(expected_records)
+    try:
+        value = _strict_json(text)
+    except (ValueError, TypeError) as exc:
+        raise DomainError("D_VALUE", f"invalid positional JSON: {exc}") from exc
+    if not isinstance(value, list):
+        raise DomainError("D_TYPE", "expected an array of rows")
+    if len(value) != expected_records:
+        raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(value)}")
+    return _unpack(value, contract["schema"])
 
 
 # Wrappers load the adjacent parser.py by path: Windows builds of Python 3.9
@@ -1052,12 +1094,16 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
                              "En `setup.json`, `compact_last_text_field` indica la columna de texto que más redujo "
                              "el tamaño de la muestra al ir al final. Para probar las filas compactas, "
                              "pasa ese nombre como `last_text_field` en Python o `lastTextField` en Node "
-                             "junto con el número de registros esperado.\n")
+                             "junto con el número de registros esperado. Si tu proveedor admite esquemas "
+                             "para filas JSON posicionales, usa `run_positional` en Python o `runPositional` en Node "
+                             "con una función `generate(prompt, schema)`.\n")
         files["README.md"] += ("\n## Compact rows\n\n"
                                "In `setup.json`, `compact_last_text_field` names the text column that gave "
                                "the smallest sample when placed last. To try compact rows, "
                                "pass that name as `last_text_field` in Python or `lastTextField` in Node "
-                               "with the expected record count.\n")
+                               "with the expected record count. If your provider supports schemas for "
+                               "positional JSON rows, call `run_positional` in Python or `runPositional` in Node "
+                               "with a `generate(prompt, schema)` callback.\n")
     manifest = {"profile": PROFILE, "schema_id": contract["schema_id"], "sample_documents": len(samples),
                 "sample_records": contract["sample_records"], "sources": list(source_names or []),
                 "files": {name: hashlib.sha256(content.encode("utf-8")).hexdigest() for name, content in files.items()}}
