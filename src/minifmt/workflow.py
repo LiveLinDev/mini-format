@@ -74,8 +74,18 @@ class Workflow:
 
     def _process_positional(self, text, expected_records, *, retry=None, max_repairs=1):
         def parse(response):
+            changes = []
+            if isinstance(response, str):
+                outer = response.lstrip(" \r\n\t")
+                if outer.startswith("```"):
+                    fence = re.fullmatch(
+                        r"```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n```", outer.rstrip(" \r\n\t"), re.IGNORECASE
+                    )
+                    if fence:
+                        response = fence.group(1)
+                        changes.append("removed complete Markdown code fence")
             try:
-                return self.runtime.decode_positional_json(response, self.contract, expected_records=expected_records)
+                data = self.runtime.decode_positional_json(response, self.contract, expected_records=expected_records)
             except self.runtime.DomainError as exc:
                 if (exc.code != "D_VALUE" or not isinstance(response, str)
                         or not response.rstrip(" \r\n\t").endswith("]")):
@@ -87,9 +97,11 @@ class Workflow:
                     )
                 except self.runtime.DomainError:
                     raise exc from None
+                changes.append("closed positional JSON array")
+            if changes:
                 self.last_run["trace"].append({"stage": "repair", "ok": True, "errors": [],
-                                               "changes": ["closed positional JSON array"]})
-                return data
+                                               "changes": changes})
+            return data
         return self._process_compact(text, parse, retry, max_repairs, {"positional_json": True})
 
     def _process_compact(self, text, parse, retry, max_repairs, metadata):
