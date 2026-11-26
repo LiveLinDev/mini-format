@@ -233,6 +233,30 @@ class DomainTests(unittest.TestCase):
         inner = header + "\n" + first + "\n\n" + "\n".join(rest) + "\n"
         self.assertFalse(repair(inner, c)["ok"])
 
+    def test_transport_repair_removes_one_surplus_separator_per_invalid_row(self):
+        data = [{"id": 1, "note": "Ends in |"}, {"id": 2, "note": ""}, {"id": 3, "note": "Texto"}]
+        contract = infer_contract([data])
+        header, first, second, third = encode(data, contract, shared=False, dictionaries=False).split("\n")
+        raw = "\n".join([header, first + "|", second, third + "|", ""])
+        self.assertFalse(diagnose(raw, contract)["ok"])
+        result = repair(raw, contract)
+        self.assertTrue(result["ok"], result)
+        self.assertEqual(result["text"], "\n".join([header, first, second, third, ""]))
+        self.assertEqual(result["changes"], ["removed surplus trailing row separators"])
+        self.assertEqual(decode(result["text"], contract), data)
+
+    def test_transport_repair_preserves_a_valid_empty_cell_and_rejects_other_errors(self):
+        contract = infer_contract([[{"id": 1, "note": ""}]])
+        wire = encode([{"id": 1, "note": ""}], contract, shared=False, dictionaries=False)
+        empty = wire.removesuffix('""')
+        self.assertEqual(repair(empty, contract)["text"], empty)
+        for invalid in (wire + "||", wire + "|otro", (wire + "|").replace("|n=1|", "|n=2|"),
+                        (wire + "|").replace("\n1|", "\nuno|")):
+            with self.subTest(invalid=invalid):
+                result = repair(invalid, contract)
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["text"], invalid)
+
     def test_cli_repair_writes_file_for_trailing_blank_lines(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

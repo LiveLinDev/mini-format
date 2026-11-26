@@ -649,7 +649,7 @@ def apply_replacements(text, replacements, contract=None):
 
 
 def repair(text, contract=None, *, fix_count=False):
-    """Repair transport wrappers only; count changes require explicit opt-in.
+    """Repair unambiguous transport issues. Count changes require explicit opt-in.
 
     Missing values, invalid types and unknown facts are never guessed.  Failed
     repair returns diagnostics and a regeneration prompt, not fabricated JSON.
@@ -684,6 +684,18 @@ def repair(text, contract=None, *, fix_count=False):
         text = trimmed
         changes.append("removed trailing blank lines")
     report = diagnose(text, contract)
+    invalid = set(report["invalid_lines"])
+    if invalid and all(error["code"] == "D_ARITY" for error in report["errors"]):
+        lines = text.split("\n")
+        if all(lines[number - 1].endswith("|") for number in invalid):
+            # The empty cell after a final separator is surplus only if
+            # the whole document then matches the unchanged schema and count.
+            candidate = "\n".join(line[:-1] if number in invalid else line
+                                  for number, line in enumerate(lines, 1))
+            checked = diagnose(candidate, contract)
+            if checked["ok"]:
+                text, report = candidate, checked
+                changes.append("removed surplus trailing row separators")
     if fix_count and not report["ok"] and report["errors"][0]["code"] == "D_COUNT":
         # Validate every field and the full wrapper before changing n.  This
         # cannot establish whether records were omitted by a model; the caller

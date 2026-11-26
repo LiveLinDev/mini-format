@@ -57,6 +57,17 @@ def test_missing_records_are_blocked_without_changing_count(kit):
     assert flow.last_run["diagnostics"]["errors"][0]["code"] == "D_EXPECTED_COUNT"
 
 
+def test_surplus_separator_is_repaired_without_an_additional_model_call(kit):
+    bundle, contract, sample = kit
+    canonical = encode(sample, contract, shared=False, dictionaries=False)
+    calls = []
+    flow = Workflow(bundle)
+    output = flow.run(lambda prompt: calls.append(prompt) or canonical + "|", "Clasifica", expected_records=2)
+    assert output == sample and len(calls) == 1
+    assert flow.last_run["mini"] == canonical
+    assert "separadores finales sobrantes eliminados" in flow.summary()
+
+
 def test_compact_workflow_retries_and_saves_canonical_document(kit, tmp_path):
     bundle, contract, sample = kit
     flow = Workflow(bundle)

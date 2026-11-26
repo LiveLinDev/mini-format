@@ -288,7 +288,8 @@ class Workflow:
             nombres = {"removed UTF-8 BOM": "BOM eliminado", "normalized CRLF to LF": "saltos de línea normalizados",
                        "removed complete Markdown code fence": "bloque Markdown eliminado",
                        "removed unclosed Markdown code fence": "bloque Markdown sin cerrar eliminado",
-                       "removed trailing blank lines": "líneas vacías finales eliminadas"}
+                       "removed trailing blank lines": "líneas vacías finales eliminadas",
+                       "removed surplus trailing row separators": "separadores finales sobrantes eliminados"}
             parts.append(("ajustes locales: " if es else "local fixes: ") + ", ".join(nombres.get(c, c) if es else c for c in local))
         return " · ".join(parts)
 
