@@ -66,23 +66,27 @@ class Workflow:
             raise ValueError("max_repairs must be between 0 and 3")
         if expected_records is not None and (type(expected_records) is not int or expected_records < 0):
             raise ValueError("expected_records must be a nonnegative integer")
-        trace = [{"stage": "generate", "text": text},
-                 {"stage": "validate", **self.runtime.diagnose(text, self.contract)}]
-        self.last_run = {"ok": False, "trace": trace}
         at_line_end = text.rstrip(" \t").endswith("\n")
         repaired = self.runtime.repair(text, self.contract)
+        report = repaired["diagnostics"]
+        original_report = report if repaired["text"] == text else self.runtime.diagnose(text, self.contract)
+        trace = [{"stage": "generate", "text": text},
+                 {"stage": "validate", **original_report}]
+        self.last_run = {"ok": False, "trace": trace}
         trace.append({"stage": "repair", "ok": repaired["ok"], "changes": repaired["changes"],
-                      "errors": repaired["diagnostics"]["errors"]})
+                      "errors": report["errors"]})
         text = repaired["text"]
-        cut = self._cut(text, truncated, at_line_end) if generate is not None and _round < 2 else None
+        cut = None
+        if generate is not None and _round < 2 and (truncated or not report["ok"]):
+            cut = self._cut(text, truncated, at_line_end, diagnostics=report)
         target = expected_records
         if cut is not None:
             text, declared, kept = cut
             target = expected_records if expected_records is not None else declared
             expected_records = None  # the complete part is validated on its own; the rest is requested below
             trace.append({"stage": "truncation", "declared": declared, "complete_records": kept})
-        for attempt in range(max_repairs + 1):
             report = self.runtime.diagnose(text, self.contract)
+        for attempt in range(max_repairs + 1):
             if report["ok"] and expected_records is not None and report["records"] != expected_records:
                 report = {"ok": False, "invalid_lines": [], "errors": [
                     {"code": "D_EXPECTED_COUNT", "message": f"expected {expected_records} records, received {report['records']}"}],
@@ -106,16 +110,18 @@ class Workflow:
             try:
                 if selective:
                     text = self.runtime.apply_replacements(text, self.runtime._strict_json(correction), self.contract)
+                    report = self.runtime.diagnose(text, self.contract)
                 else:
                     result = self.runtime.repair(correction, self.contract)
                     text = result["text"]
+                    report = result["diagnostics"]
             except (ValueError, TypeError) as exc:
                 self.last_run.update(diagnostics={"ok": False, "errors": [{"code": "D_REPAIR", "message": str(exc)}]}, mini=text)
                 raise WorkflowError(self.last_run) from exc
-            trace.append({"stage": "revalidate", **self.runtime.diagnose(text, self.contract)})
+            trace.append({"stage": "revalidate", **report})
         raise AssertionError("unreachable")
 
-    def _cut(self, text, truncated, at_line_end=False):
+    def _cut(self, text, truncated, at_line_end=False, *, diagnostics=None):
         """Return (complete part, declared n, complete records) when the response was cut, else None.
 
         With ``truncated`` (the provider reported its output limit) the last line is always dropped unless
@@ -130,7 +136,7 @@ class Workflow:
         if truncated:
             keep = lines[1:] if at_line_end else lines[1:-1]
         else:
-            report = self.runtime.diagnose(text, self.contract)
+            report = diagnostics if diagnostics is not None else self.runtime.diagnose(text, self.contract)
             if report["ok"]:
                 return None
             errors, last = report.get("errors") or [], len(lines)
