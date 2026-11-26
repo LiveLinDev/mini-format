@@ -40,6 +40,7 @@ def test_existing_data_builds_a_valid_guide_and_toolkit(tmp_path):
     assert json.loads(validation.stdout)["ok"] is True
     settings = json.loads((destination / "setup.json").read_text(encoding="utf-8"))
     assert settings["integration"]["deferred"] is True
+    assert "compact_last_text_field" not in settings
     assert settings["integration"]["resume_command"] in output
     for name, digest in json.loads((destination / "manifest.json").read_text(encoding="utf-8"))["files"].items():
         assert hashlib.sha256((destination / name).read_bytes()).hexdigest() == digest
@@ -102,6 +103,8 @@ def test_setup_toolkit_matches_build_for_the_same_data(tmp_path):
     assert cli.main(["build", str(source), "--prefix", "prod", "--out", str(scripted)]) == 0
     for name in ("contract.json", "example.mini", "prompt.es.md", "parser.py", "validator.py"):
         assert (guided / name).read_bytes() == (scripted / name).read_bytes()
+    settings = json.loads((guided / "setup.json").read_text(encoding="utf-8"))
+    assert settings["compact_last_text_field"] == "nombre"
 
 
 @pytest.mark.parametrize("lang", ["es", "en"])

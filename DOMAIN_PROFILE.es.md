@@ -96,6 +96,10 @@ Para una lista raíz de objetos planos con campos escalares obligatorios y sin
 nulos, puedes pedir que el modelo devuelva solo las filas. Elige una columna de
 texto para el final e indica cuántas filas debe recibir la aplicación.
 
+El kit recomienda una columna en `setup.json` bajo `compact_last_text_field`
+cuando la muestra admite filas compactas. La coloca al final para ahorrar
+comillas y escapes. Puedes pasar esa recomendación al flujo.
+
 ```python
 data = flow.run(generate, tarea, expected_records=20, last_text_field="titulo")
 ```

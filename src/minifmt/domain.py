@@ -818,6 +818,31 @@ def _compact_count(expected_records):
         raise DomainError("D_EXPECTED_COUNT", "compact rows require an explicit nonnegative record count")
 
 
+def _bare_compact_text(value):
+    return (isinstance(value, str) and bool(value) and value == value.strip(" \t")
+            and not value.startswith(('"', "\ufeff")) and not any(ord(ch) < 32 for ch in value))
+
+
+def _recommend_compact_tail(samples, contract):
+    fields = contract["schema"].get("items", {}).get("fields", [])
+    names = [field["name"] for field in reversed(fields) if field["schema"]["type"] == "string"]
+    if not names:
+        return None
+    try:
+        _compact_fields(contract, names[0])
+    except DomainError:
+        return None
+
+    savings = dict.fromkeys(names, 0)
+    for records in samples:
+        for record in records:
+            for name in names:
+                value = record[name]
+                if " " in value and _bare_compact_text(value):
+                    savings[name] += len(_json(value)) - len(value)
+    return max(savings, key=savings.__getitem__)
+
+
 def encode_rows(value, contract=None, *, last_text_field):
     """Write space-separated model output for a fixed flat domain contract."""
     contract = _contract(contract)
@@ -828,9 +853,7 @@ def encode_rows(value, contract=None, *, last_text_field):
         cells = []
         for field in fields:
             cell = row[field["name"]]
-            bare = (isinstance(cell, str) and bool(cell) and cell == cell.strip(" \t")
-                    and not cell.startswith(('"', "\ufeff")) and not any(ord(ch) < 32 for ch in cell)
-                    and (field is fields[-1] or " " not in cell))
+            bare = _bare_compact_text(cell) and (field is fields[-1] or " " not in cell)
             cells.append(cell if bare else _json(cell))
         lines.append(" ".join(cells))
     return "\n".join(lines)
@@ -932,6 +955,10 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
     if lang not in ("es", "en"):
         raise ValueError("lang must be es or en")
     workflow_source = Path(__file__).with_name("workflow.py").read_text(encoding="utf-8")
+    settings = {"language": lang}
+    compact_tail = _recommend_compact_tail(samples, contract)
+    if compact_tail is not None:
+        settings["compact_last_text_field"] = compact_tail
     files = {
         "contract.json": json.dumps(contract, ensure_ascii=False, indent=2) + "\n",
         "schema.json": json.dumps(json_schema(contract), ensure_ascii=False, indent=2) + "\n",
@@ -942,7 +969,7 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "repair.py": '"""Repair only unambiguous transport wrappers; never fabricate data."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["repair", *sys.argv[1:]]))\n',
         "workflow.py": workflow_source,
         "workflow.mjs": Path(__file__).with_name("workflow.mjs").read_text(encoding="utf-8"),
-        "setup.json": json.dumps({"language": lang}, indent=2) + "\n",
+        "setup.json": json.dumps(settings, ensure_ascii=False, indent=2) + "\n",
         "try-prompt.md": ("Genera exactamente 20 registros ficticios del mismo caso que la muestra para probar mi aplicación. "
                           "Respeta los campos, tipos y formato siguientes. Devuelve sólo .mini.\n\n" if lang == "es" else
                           "Generate exactly 20 fictional records for the same use case as the sample to test my application. "
@@ -1020,6 +1047,17 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "Review samples before sharing. Rebuild in a new directory for new fields/types. "
         "Measure prompt, output and retries with your tokenizer before estimating monetary savings.\n"
     )
+    if compact_tail is not None:
+        files["GUIA.md"] += ("\n## Filas compactas\n\n"
+                             "En `setup.json`, `compact_last_text_field` indica la columna de texto que más redujo "
+                             "el tamaño de la muestra al ir al final. Para probar las filas compactas, "
+                             "pasa ese nombre como `last_text_field` en Python o `lastTextField` en Node "
+                             "junto con el número de registros esperado.\n")
+        files["README.md"] += ("\n## Compact rows\n\n"
+                               "In `setup.json`, `compact_last_text_field` names the text column that gave "
+                               "the smallest sample when placed last. To try compact rows, "
+                               "pass that name as `last_text_field` in Python or `lastTextField` in Node "
+                               "with the expected record count.\n")
     manifest = {"profile": PROFILE, "schema_id": contract["schema_id"], "sample_documents": len(samples),
                 "sample_records": contract["sample_records"], "sources": list(source_names or []),
                 "files": {name: hashlib.sha256(content.encode("utf-8")).hexdigest() for name, content in files.items()}}

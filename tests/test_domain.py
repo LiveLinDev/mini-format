@@ -125,6 +125,18 @@ class DomainTests(unittest.TestCase):
         with self.assertRaisesRegex(DomainError, "D_COMPACT_SCHEMA"):
             make_rows_prompt(contract, last_text_field="id", expected_records=1)
 
+    def test_bundle_recommends_the_text_field_that_saves_quoting(self):
+        data = [{"id": 1, "name": "Un título con espacios", "body": "Primera línea\nSegunda línea"}]
+        with tempfile.TemporaryDirectory() as folder:
+            bundle = Path(folder) / "compact"
+            contract = build_bundle([data], "comment", bundle)
+            settings = json.loads((bundle / "setup.json").read_text(encoding="utf-8"))
+            field = settings["compact_last_text_field"]
+            self.assertEqual(field, "name")
+            wire = encode_rows(data, contract, last_text_field=field)
+            self.assertLess(len(wire), len(encode_rows(data, contract, last_text_field="body")))
+            self.assertEqual(decode_rows(wire, contract, last_text_field=field, expected_records=1), data)
+
     def test_unknown_empty_and_null_samples_stay_open(self):
         c = infer_contract([[{"a": None, "b": []}]])
         new = [{"a": {"future": [1, 2]}, "b": [1, "x", {}]}]

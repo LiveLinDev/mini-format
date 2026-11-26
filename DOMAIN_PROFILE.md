@@ -96,6 +96,10 @@ For a root array of flat objects with required, non-null scalar fields, the
 model can reply with rows alone. Choose a string column to place last and pass
 the record count the application expects.
 
+For compatible samples, the toolkit writes `compact_last_text_field` in
+`setup.json`. This recommends the column that saved the most quoting and
+escaping when placed last in the sample. You can pass it to the workflow.
+
 ```python
 data = flow.run(generate, task, expected_records=20, last_text_field="title")
 ```

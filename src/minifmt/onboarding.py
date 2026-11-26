@@ -234,7 +234,10 @@ def _save_integration_choice(destination, project, lang, deferred):
         path = destination / name
         path.write_bytes((path.read_text(encoding="utf-8") + f"\n## {heading}\n\n{text}\n\n```sh\n{command}\n```\n").encode("utf-8"))
     settings = destination / "setup.json"
-    settings.write_bytes((json.dumps({"language": lang, "integration": {"deferred": deferred, "project": None if deferred else project, "resume_command": command}}, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    configuration = json.loads(settings.read_text(encoding="utf-8"))
+    configuration.update(language=lang, integration={"deferred": deferred, "project": None if deferred else project,
+                                                     "resume_command": command})
+    settings.write_bytes((json.dumps(configuration, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     manifest_path = destination / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     for name in ("README.md", "GUIA.md", "setup.json"):
