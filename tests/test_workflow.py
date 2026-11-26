@@ -11,7 +11,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from minifmt.domain import build_bundle, encode
+from minifmt.domain import build_bundle, decode, encode
 from minifmt.integration import prepare
 from minifmt.workflow import Workflow, WorkflowError
 from test_onboarding import _wizard
@@ -55,6 +55,55 @@ def test_missing_records_are_blocked_without_changing_count(kit):
     assert len(calls) == 2
     assert not flow.last_run["ok"] and "data" not in flow.last_run
     assert flow.last_run["diagnostics"]["errors"][0]["code"] == "D_EXPECTED_COUNT"
+
+
+def test_compact_workflow_retries_and_saves_canonical_document(kit, tmp_path):
+    bundle, contract, sample = kit
+    flow = Workflow(bundle)
+    calls = []
+    replies = iter(["1 Acceso", "1 Acceso\n\n2 Factura"])
+    result = flow.run(lambda prompt: calls.append(prompt) or next(replies), "Clasifica",
+                      expected_records=2, last_text_field="titulo")
+    assert result == sample
+    assert len(calls) == 2 and contract["schema_id"] not in calls[0]
+    assert "expected 2 records, received 1" in calls[1]
+    assert decode(flow.last_run["mini"], contract) == sample
+    saved = flow.save_run(tmp_path / "compact-run")
+    assert (saved / "respuesta_2.txt").read_text(encoding="utf-8") == "1 Acceso\n\n2 Factura"
+    assert decode((saved / "resultado.mini").read_text(encoding="utf-8"), contract) == sample
+    with pytest.raises(WorkflowError):
+        flow.run(lambda _: "uno Acceso\n2 Factura", "Clasifica",
+                 expected_records=2, last_text_field="titulo", max_repairs=0)
+    assert "data" not in flow.last_run
+
+
+def test_node_compact_workflow_uses_the_same_schema_and_repairs(kit, tmp_path):
+    bundle, _, sample = kit
+    script = tmp_path / "compact.mjs"
+    script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
+const prompts = [];
+const replies = ['1 Acceso', '1 Acceso\\n2 Factura'];
+const data = await flow.run(async prompt => {{ prompts.push(prompt); return replies.shift(); }},
+  'Clasifica', {{expectedRecords: 2, lastTextField: 'titulo'}});
+console.log(JSON.stringify({{data, prompts, mini: flow.lastRun.mini}}));
+""", encoding="utf-8")
+    result = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 0, result.stderr
+    output = json.loads(result.stdout)
+    assert output["data"] == sample and len(output["prompts"]) == 2
+    assert "2 fila(s)" in output["prompts"][0] and "received 1" in output["prompts"][1]
+    assert output["mini"].startswith("ticket|v=1|")
+
+
+def test_generated_compact_cli_uses_utf8_in_isolated_python(kit):
+    bundle, _, _ = kit
+    output = subprocess.run(
+        [sys.executable, "-I", str(bundle / "workflow.py"), "-", "--last-text-field", "titulo", "--expected-records", "2"],
+        input="1 Cambiar dirección\n2 Niño con acceso 🌊", capture_output=True, text=True, encoding="utf-8",
+    )
+    assert output.returncode == 0, output.stderr
+    assert json.loads(output.stdout) == [{"id": 1, "titulo": "Cambiar dirección"}, {"id": 2, "titulo": "Niño con acceso 🌊"}]
 
 
 def test_repair_cannot_replace_valid_lines(kit):

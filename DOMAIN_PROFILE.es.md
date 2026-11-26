@@ -90,6 +90,23 @@ El codificador aplica estas opciones cuando su estimación de bytes es favorable
 para desactivar las dos optimizaciones. Ahorrar bytes no garantiza ahorrar tokens
 con cualquier tokenizador.
 
+## Filas compactas para la respuesta del modelo
+
+Para una lista raíz de objetos planos con campos escalares obligatorios y sin
+nulos, puedes pedir que el modelo devuelva solo las filas. Elige una columna de
+texto para el final e indica cuántas filas debe recibir la aplicación.
+
+```python
+data = flow.run(generate, tarea, expected_records=20, last_text_field="titulo")
+```
+
+En el `workflow.mjs` generado usa `{expectedRecords: 20, lastTextField: "titulo"}`.
+El flujo valida las columnas, los tipos y el recuento con el contrato del kit.
+`last_run["mini"]` en Python y `lastRun.mini` en Node contienen el documento
+`.mini` con cabecera. `encode_rows` y `decode_rows` permiten usar las filas
+directamente con el contrato. Para elegir el modo, mide el prompt, la respuesta y
+los reintentos con tu modelo y tus datos.
+
 ## Validación y evolución
 
 Se comprueban identidad, escapes, columnas, tipos, nullabilidad, campos requeridos,

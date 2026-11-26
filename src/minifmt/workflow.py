@@ -53,6 +53,40 @@ class Workflow:
         count = "" if expected_records is None else f"\nRequired record count: {expected_records}."
         return f"Task / Tarea:\n{task}{count}\n\nOutput format (replaces JSON instructions):\n{self.format_prompt}"
 
+    def rows_prompt(self, task, *, last_text_field, expected_records):
+        format_prompt = self.runtime.make_rows_prompt(
+            self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang
+        )
+        return format_prompt + "\n" + task
+
+    def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1):
+        """Validate model rows and store a canonical .mini document in the run history."""
+        if max_repairs not in (0, 1, 2, 3):
+            raise ValueError("max_repairs must be between 0 and 3")
+        trace = [{"stage": "generate", "text": text}]
+        self.last_run = {"ok": False, "trace": trace, "last_text_field": last_text_field}
+        for attempt in range(max_repairs + 1):
+            try:
+                data = self.runtime.decode_rows(text, self.contract, last_text_field=last_text_field,
+                                                expected_records=expected_records)
+            except self.runtime.DomainError as exc:
+                correction = ("Devuelve todas las filas de la fuente. Corrige " if self.lang == "es"
+                              else "Return every row from the source. Fix ") + exc.message
+                report = {"ok": False, "errors": [exc.to_dict()], "invalid_lines": [], "repair_prompt": correction}
+                trace.append({"stage": "validate", **report})
+                self.last_run.update(diagnostics=report, mini=text)
+                if generate is None or attempt == max_repairs or exc.code == "D_COMPACT_SCHEMA":
+                    raise WorkflowError(self.last_run) from exc
+                text = generate(self.rows_prompt(task, last_text_field=last_text_field,
+                                                 expected_records=expected_records) + "\n" + correction)
+                trace.append({"stage": "model_repair", "attempt": attempt + 1, "selective": False, "text": text})
+            else:
+                mini = self.runtime.encode(data, self.contract)
+                trace.append({"stage": "parse", "ok": True, "records": len(data)})
+                self.last_run.pop("diagnostics", None)
+                self.last_run.update(ok=True, data=data, mini=mini)
+                return data
+
     def process(self, text, *, generate=None, task="", expected_records=None, max_repairs=1, truncated=None, _round=0):
         """Validate, repair and decode one response.
 
@@ -202,17 +236,21 @@ class Workflow:
     def save_run(self, folder):
         """Write the last run so it can be inspected with ``mini validate``, ``mini diagnose`` or ``mini to-json``.
 
-        Each model answer is saved exactly as received (``respuesta_N.mini``; a selective correction, which is a
-        JSON object of lines, as ``.json``), plus the validated document (``resultado.mini``) and the trace
+        Each model answer is saved exactly as received (``respuesta_N.mini``; compact rows as ``.txt``; a
+        selective correction as ``.json``), plus the validated document (``resultado.mini``) and the trace
         (``ejecucion.json``). Earlier files in the folder are replaced. The files contain application data.
         """
         folder = Path(folder)
         folder.mkdir(parents=True, exist_ok=True)
         for old in list(folder.glob("*.mini")) + list(folder.glob("*.json")):
             old.unlink()
+        for old in list(folder.glob("respuesta_*.txt")) + list(folder.glob("response_*.txt")):
+            if old.stem.rsplit("_", 1)[-1].isdigit():
+                old.unlink()
         run = self.last_run or {}
         es = self.lang == "es"
-        answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective") else ".mini")
+        raw_suffix = ".txt" if run.get("last_text_field") is not None else ".mini"
+        answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective") else raw_suffix)
                    for step in run.get("trace") or []
                    if step.get("stage") in ("generate", "model_repair", "continuation") and isinstance(step.get("text"), str)]
         for number, (text, suffix) in enumerate(answers, 1):
@@ -242,7 +280,9 @@ class Workflow:
             asked = sum(step["requested"] for step in trace if step.get("stage") == "continuation")
             parts.append(f"respuesta cortada: {cut['complete_records']} conservados y {asked} pedidos de nuevo" if es
                          else f"cut response: {cut['complete_records']} kept and {asked} requested again")
-        if repaired:
+        if repaired and run.get("last_text_field") is not None:
+            parts.append(f"{repaired} corrección(es) del modelo" if es else f"{repaired} model correction(s)")
+        elif repaired:
             parts.append(f"{repaired} corrección(es) selectiva(s) del modelo" if es else f"{repaired} selective model correction(s)")
         if local:
             nombres = {"removed UTF-8 BOM": "BOM eliminado", "normalized CRLF to LF": "saltos de línea normalizados",
@@ -252,7 +292,13 @@ class Workflow:
             parts.append(("ajustes locales: " if es else "local fixes: ") + ", ".join(nombres.get(c, c) if es else c for c in local))
         return " · ".join(parts)
 
-    def run(self, generate, task, *, expected_records=None, max_repairs=1):
+    def run(self, generate, task, *, expected_records=None, max_repairs=1, last_text_field=None):
+        if last_text_field is not None:
+            if max_repairs not in (0, 1, 2, 3):
+                raise ValueError("max_repairs must be between 0 and 3")
+            text = generate(self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records))
+            return self.process_rows(text, generate=generate, task=task, last_text_field=last_text_field,
+                                     expected_records=expected_records, max_repairs=max_repairs)
         return self.process(generate(self.prompt(task, expected_records)), generate=generate, task=task,
                             expected_records=expected_records, max_repairs=max_repairs)
 
@@ -383,23 +429,41 @@ class _Response:
 
 
 def main(argv=None):
+    # Match the domain CLI's UTF-8 protocol, including isolated Python on Windows.
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Validate, repair and return JSON in one step (no model call)")
     ap.add_argument("file", help="response .mini file, or - for stdin")
     ap.add_argument("--out")
     ap.add_argument("--history", help="optional local run history; may contain application data")
     ap.add_argument("--expected-records", type=int)
+    ap.add_argument("--last-text-field", help="read compact rows with this final string column")
+    ap.add_argument("--rows-prompt", action="store_true", help="read the task and emit compact row instructions")
+    ap.add_argument("--lang", choices=("es", "en"))
     ap.add_argument("--report", action="store_true", help="return the complete run report instead of only data")
     ap.add_argument("--envelope", action="store_true", help="stdin/file JSON contains text and an optional correction")
     args = ap.parse_args(argv)
-    workflow = Workflow()
+    workflow = Workflow(lang=args.lang)
     text = sys.stdin.read() if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
+    if args.rows_prompt:
+        try:
+            print(workflow.rows_prompt(text, last_text_field=args.last_text_field, expected_records=args.expected_records),
+                  end="")
+        except ValueError as exc:
+            ap.error(str(exc))
+        return 0
     correction = None
     if args.envelope:
         envelope = json.loads(text)
         text, correction = envelope["text"], envelope.get("correction")
     try:
-        data = workflow.process(text, generate=(lambda _: correction) if correction is not None else None,
-                                expected_records=args.expected_records)
+        generate = (lambda _: correction) if correction is not None else None
+        if args.last_text_field is None:
+            data = workflow.process(text, generate=generate, expected_records=args.expected_records)
+        else:
+            data = workflow.process_rows(text, generate=generate, last_text_field=args.last_text_field,
+                                         expected_records=args.expected_records)
     except WorkflowError as exc:
         print(json.dumps(exc.report, ensure_ascii=False), file=sys.stderr)
         status = 1

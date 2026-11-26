@@ -18,8 +18,8 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from minifmt import cli
 from minifmt.domain import (DomainError, _strict_json, apply_replacements, build_bundle, decode,
-                            diagnose, encode, infer_contract, json_schema,
-                            load_contract, make_prompt, repair)
+                            decode_rows, diagnose, encode, encode_rows, infer_contract, json_schema,
+                            load_contract, make_prompt, make_rows_prompt, repair)
 
 
 class DomainTests(unittest.TestCase):
@@ -91,6 +91,39 @@ class DomainTests(unittest.TestCase):
         for bad in ([{"id": "1", "ok": True}], [{"id": True, "ok": True}], [{"id": 1, "ok": 1}], [{"id": 1}], [{"id": 1, "ok": True, "new": 0}]):
             with self.subTest(value=bad), self.assertRaises(DomainError):
                 encode(bad, c)
+
+    def test_compact_rows_round_trip_strings_and_scalar_types(self):
+        values = [
+            {"group": "\ufeffacceso", "title": "Instalar un informe", "id": 1, "open": True, "cost": -0.0},
+            {"group": "cuenta personal", "title": '  "Contacto"\r\n🌊  ', "id": -2, "open": False, "cost": 1.5},
+            {"group": "", "title": "", "id": 3, "open": True, "cost": 25},
+            {"group": "~", "title": "? | barra \\ literal", "id": 4, "open": False, "cost": 0},
+        ]
+        contract = infer_contract([values], "ticket")
+        wire = encode_rows(values, contract, last_text_field="title")
+        wrapped = "\ufeff```mini\r\n" + wire.replace("\n", "\r\n\r\n") + "\r\n```"
+        decoded = decode_rows(wrapped, contract, last_text_field="title", expected_records=len(values))
+        self.assertEqual(json.dumps(decoded, sort_keys=True), json.dumps(values, sort_keys=True))
+        self.assertEqual(encode_rows([], contract, last_text_field="title"), "")
+        self.assertEqual(decode_rows("", contract, last_text_field="title", expected_records=0), [])
+        self.assertIn("group id open cost title", make_rows_prompt(contract, last_text_field="title", expected_records=4))
+
+    def test_compact_rows_reject_bad_shape_count_and_types(self):
+        contract = infer_contract([[{"id": 1, "title": "Acceso"}]], "ticket")
+        for wire, count, code in [
+            ("", 1, "D_EXPECTED_COUNT"), ("1 Acceso\n2 Cobro", 1, "D_EXPECTED_COUNT"),
+            ("true Acceso", 1, "D_VALUE"), ('"1" Acceso', 1, "D_VALUE"),
+            ("1", 1, "D_VALUE"), ('1 "incompleto', 1, "D_VALUE"),
+            ("1 X\rY", 1, "D_VALUE"), ("1 Acceso", True, "D_EXPECTED_COUNT"),
+        ]:
+            with self.subTest(wire=wire, count=count), self.assertRaisesRegex(DomainError, code):
+                decode_rows(wire, contract, last_text_field="title", expected_records=count)
+        for value in ({"id": 1, "title": "Acceso"}, [{"id": None, "title": "Acceso"}],
+                      [{"id": 1, "title": "Acceso"}, {"title": "Cobro"}], [{"id": [1], "title": "Acceso"}]):
+            with self.subTest(value=value), self.assertRaisesRegex(DomainError, "D_COMPACT_SCHEMA"):
+                make_rows_prompt(infer_contract([value]), last_text_field="title", expected_records=1)
+        with self.assertRaisesRegex(DomainError, "D_COMPACT_SCHEMA"):
+            make_rows_prompt(contract, last_text_field="id", expected_records=1)
 
     def test_unknown_empty_and_null_samples_stay_open(self):
         c = infer_contract([[{"a": None, "b": []}]])

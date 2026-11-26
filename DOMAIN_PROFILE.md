@@ -90,6 +90,23 @@ The encoder uses these options only when its byte-cost estimate is favorable.
 disable both optimizations. Token savings still depend on the tokenizer; byte
 savings are not a universal token guarantee.
 
+## Compact rows for model replies
+
+For a root array of flat objects with required, non-null scalar fields, the
+model can reply with rows alone. Choose a string column to place last and pass
+the record count the application expects.
+
+```python
+data = flow.run(generate, task, expected_records=20, last_text_field="title")
+```
+
+In the generated `workflow.mjs`, pass `{expectedRecords: 20, lastTextField: "title"}`.
+The workflow checks the columns, types and record count against the toolkit
+contract. Python's `last_run["mini"]` and Node's `lastRun.mini` hold the
+`.mini` document with its header. `encode_rows` and `decode_rows` also support
+direct use with the contract. Measure prompts, replies and retries with your
+model and data to choose a mode.
+
 ## Validation and evolution
 
 Decode checks contract identity, escapes, column counts, field types, nullability,

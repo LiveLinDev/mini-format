@@ -765,6 +765,111 @@ def make_prompt(contract, lang="en", example=None):
     return text
 
 
+_ROW_ATOM = re.compile(r'(?:"(?:[^"\\]|\\.)*"|[^ \t]+)(?:[ \t]+|$)')
+
+
+def _compact_fields(contract, last_text_field):
+    root = contract["schema"]
+    item = root.get("items", {})
+    fields = item.get("fields", [])
+    if (contract["record_path"] != [] or root.get("nullable") or not _object_row(item)
+            or any(f["optional"] or f["schema"].get("nullable")
+                   or f["schema"]["type"] not in ("string", "integer", "number", "boolean") for f in fields)):
+        raise DomainError("D_COMPACT_SCHEMA", "compact rows require a root array of flat, required, non-null scalars")
+    tail = next((f for f in fields if f["name"] == last_text_field and f["schema"]["type"] == "string"), None)
+    if tail is None:
+        raise DomainError("D_COMPACT_SCHEMA", "the last text field must name a string column")
+    return [f for f in fields if f is not tail] + [tail]
+
+
+def _compact_count(expected_records):
+    if type(expected_records) is not int or expected_records < 0:
+        raise DomainError("D_EXPECTED_COUNT", "compact rows require an explicit nonnegative record count")
+
+
+def encode_rows(value, contract=None, *, last_text_field):
+    """Write space-separated model output for a fixed flat domain contract."""
+    contract = _contract(contract)
+    fields = _compact_fields(contract, last_text_field)
+    _pack(value, contract["schema"])
+    lines = []
+    for row in value:
+        cells = []
+        for field in fields:
+            cell = row[field["name"]]
+            bare = (isinstance(cell, str) and bool(cell) and cell == cell.strip(" \t")
+                    and not cell.startswith(('"', "\ufeff")) and not any(ord(ch) < 32 for ch in cell)
+                    and (field is fields[-1] or " " not in cell))
+            cells.append(cell if bare else _json(cell))
+        lines.append(" ".join(cells))
+    return "\n".join(lines)
+
+
+def decode_rows(text, contract=None, *, last_text_field, expected_records):
+    """Validate compact model rows and restore the application JSON values."""
+    contract = _contract(contract)
+    fields = _compact_fields(contract, last_text_field)
+    _compact_count(expected_records)
+    if not isinstance(text, str):
+        raise DomainError("D_VALUE", "compact rows must be text")
+    text = text.removeprefix("\ufeff").replace("\r\n", "\n").strip("\n")
+    fence = re.fullmatch(r"```(?:mini|text)?[ \t]*\n([\s\S]*?)\n```", text)
+    if fence:
+        text = fence.group(1)
+    lines = [(number, line.strip(" \t")) for number, line in enumerate(text.split("\n"), 1) if line.strip(" \t")]
+    if len(lines) != expected_records:
+        raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(lines)}")
+    rows = []
+    for line_no, line in lines:
+        if "\r" in line:
+            raise DomainError("D_VALUE", "encode line breaks inside strings as JSON escapes", line=line_no)
+        cells, start = [], 0
+        for field in fields[:-1]:
+            token = _ROW_ATOM.match(line, start)
+            if token is None:
+                raise DomainError("D_ARITY", f"missing column {field['name']}", line=line_no)
+            cells.append(token.group().rstrip(" \t"))
+            start = token.end()
+        cells.append(line[start:])
+        row = {}
+        for field, cell in zip(fields, cells):
+            name, schema = field["name"], field["schema"]
+            path = f"$/{line_no - 1}/{name}"
+            if not cell:
+                raise DomainError("D_VALUE", "use a quoted JSON string for empty text", path, line_no)
+            try:
+                value = cell if schema["type"] == "string" and not cell.startswith('"') else _strict_json(cell)
+                row[name] = _pack(value, schema, path)
+            except ValueError as exc:
+                message = exc.message if isinstance(exc, DomainError) else str(exc)
+                raise DomainError("D_VALUE", message, path, line_no) from exc
+        rows.append(row)
+    return rows
+
+
+def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en"):
+    """Describe compact rows without sending the document header or schema JSON."""
+    contract = _contract(contract)
+    fields = _compact_fields(contract, last_text_field)
+    _compact_count(expected_records)
+    labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in fields]
+    names, tail = " ".join(labels), labels[-1]
+    types = " ".join(f"{name}={f['schema']['type']}" for name, f in zip(labels, fields) if f["schema"]["type"] != "string")
+    if lang == "es":
+        text = (f"Emite {expected_records} fila(s), una por línea, sin cabecera. Separa con espacios.\n"
+                f"Orden obligatorio {names}. {tail} va al final y ocupa el resto de la línea.\n"
+                "Usa cadenas JSON para texto vacío, controles, comilla inicial, espacios al borde "
+                "o espacios en el texto de columnas previas.\n")
+    else:
+        text = (f"Emit {expected_records} row(s), one per line, without a header. Separate with spaces.\n"
+                f"Required column order {names}. {tail} comes last and takes the rest of the line.\n"
+                "Use JSON strings for empty text, controls, a leading quote, spaces at either end, "
+                "or spaces within any column before the last.\n")
+    if types:
+        text += types + "\n"
+    return text
+
+
 # Wrappers load the adjacent parser.py by path: Windows builds of Python 3.9
 # compile in the deprecated ``parser`` module, which shadows ``from parser import``.
 _WRAPPER_IMPORT = (
