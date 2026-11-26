@@ -161,13 +161,29 @@ def test_positional_workflow_unwraps_one_complete_json_fence(kit):
             flow.run_positional(lambda *_: malformed, "Clasifica", expected_records=2, max_repairs=0)
 
 
+def test_positional_workflow_removes_only_a_transport_bom(kit):
+    bundle, _, sample = kit
+    flow = Workflow(bundle)
+    wire = '[[1,"\ufeffAcceso"],[2,"Factura"]]'
+    expected = [dict(sample[0], titulo="\ufeffAcceso"), sample[1]]
+    response = "\ufeff" + wire
+
+    assert flow.run_positional(lambda *_: response, "Clasifica", expected_records=2, max_repairs=0) == expected
+    assert "BOM eliminado" in flow.summary()
+    assert flow.last_run["trace"][0]["text"] == response
+
+    for malformed in ("\ufeff" + response, " " + response, "\ufeff[[true,\"Acceso\"],[2,\"Factura\"]]"):
+        with pytest.raises(WorkflowError):
+            flow.run_positional(lambda *_: malformed, "Clasifica", expected_records=2, max_repairs=0)
+
+
 def test_node_positional_workflow_uses_the_same_schema_on_retry(kit, tmp_path):
     bundle, _, sample = kit
     script = tmp_path / "positional.mjs"
     script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
 const flow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
 const calls = [];
-const replies = ['[[1,"Acceso"]]', '```json\\n[[1,"Acceso"],[2,"Factura"]\\n```'];
+const replies = ['[[1,"Acceso"]]', '\\uFEFF```json\\n[[1,"Acceso"],[2,"Factura"]\\n```'];
 const data = await flow.runPositional(async (prompt, schema) => {{
   calls.push({{prompt, schema}}); return replies.shift();
 }}, 'Clasifica', {{expectedRecords: 2}});
@@ -177,7 +193,7 @@ console.log(JSON.stringify({{data, calls, report: flow.lastRun}}));
     assert result.returncode == 0, result.stderr
     output = json.loads(result.stdout)
     assert output["data"] == sample and output["report"]["positional_json"] is True
-    assert any(step.get("changes") == ["removed complete Markdown code fence", "closed positional JSON array"]
+    assert any(step.get("changes") == ["removed UTF-8 BOM", "removed complete Markdown code fence", "closed positional JSON array"]
                for step in output["report"]["trace"])
     first, second = output["calls"]
     assert first["schema"] == second["schema"]

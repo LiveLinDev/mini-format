@@ -76,6 +76,9 @@ class Workflow:
         def parse(response):
             changes = []
             if isinstance(response, str):
+                if response.startswith("\ufeff"):
+                    response = response[1:]
+                    changes.append("removed UTF-8 BOM")
                 outer = response.lstrip(" \r\n\t")
                 if outer.startswith("```"):
                     fence = re.fullmatch(
