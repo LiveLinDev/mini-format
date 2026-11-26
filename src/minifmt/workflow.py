@@ -272,20 +272,26 @@ class Workflow:
 
         Keep model, client, business messages and other generation parameters.
         JSON response_format is removed because the model now returns .mini.
+        The initial SDK finish reason signals a response cut by the output limit.
         """
         kwargs.pop("response_format", None)
         if kwargs.get("stream") or kwargs.get("tools") or kwargs.get("functions") or kwargs.get("n", 1) != 1:
             raise ValueError("use Workflow.run with a text callback for streaming, tools or multiple choices")
         original = [dict(message) for message in messages]
 
-        def generate(prompt):
+        def request(prompt):
             response = create(messages=original + [{"role": "system", "content": prompt}], **kwargs)
             if isinstance(response, dict):
-                return response["choices"][0]["message"]["content"]
-            return response.choices[0].message.content
+                choice = response["choices"][0]
+                return choice["message"]["content"], choice.get("finish_reason")
+            choice = response.choices[0]
+            return choice.message.content, getattr(choice, "finish_reason", None)
 
-        return self.run(generate, "Follow the original application messages.", expected_records=expected_records,
-                        max_repairs=max_repairs)
+        task = "Follow the original application messages."
+        text, finish_reason = request(self.prompt(task, expected_records))
+        return self.process(text, generate=lambda prompt: request(prompt)[0], task=task,
+                            expected_records=expected_records, max_repairs=max_repairs,
+                            truncated=finish_reason == "length")
 
     def post(self, send, url, *, json=None, expected_records=None, max_repairs=1, **kwargs):
         """Bridge an HTTP call to an OpenAI-compatible chat/completions endpoint (``requests.post``, ``httpx.post``).

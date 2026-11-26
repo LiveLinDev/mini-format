@@ -412,6 +412,29 @@ def test_cut_response_keeps_complete_records_and_requests_only_the_missing_ones(
     assert final == encode(sample, contract, shared=False, dictionaries=False) + "\n"
 
 
+@pytest.mark.parametrize("mapping_response", [False, True])
+def test_sdk_length_signal_recovers_a_cut_field_that_still_parses(kit4, mapping_response):
+    bundle, contract, sample = kit4
+    flow = Workflow(bundle)
+    wire = encode(sample, contract, shared=False, dictionaries=False)
+    cut = wire[:-1]
+    assert flow.runtime.decode(cut, contract)["tickets"][-1]["titulo"] == "Pag"
+    rest = encode(dict(sample, tickets=sample["tickets"][-1:]), contract, shared=False, dictionaries=False)
+    replies = iter([(cut, "length"), (rest, "stop")])
+    prompts = []
+
+    def create(**kwargs):
+        prompts.append(kwargs["messages"][-1]["content"])
+        text, finish_reason = next(replies)
+        if mapping_response:
+            return {"choices": [{"message": {"content": text}, "finish_reason": finish_reason}]}
+        return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=text),
+                                                        finish_reason=finish_reason)])
+
+    assert flow.complete(create, messages=[{"role": "user", "content": "four tickets"}]) == sample
+    assert len(prompts) == 2 and "Return ONLY the 1 missing records" in prompts[1]
+
+
 def test_text_callback_cut_is_inferred_from_a_short_last_line(kit4):
     bundle, contract, sample = kit4
     lines = encode(sample, contract, shared=False, dictionaries=False).split("\n")
