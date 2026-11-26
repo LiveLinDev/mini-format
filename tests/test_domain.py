@@ -157,6 +157,16 @@ class DomainTests(unittest.TestCase):
         self.assertFalse(diagnose(bad, c)["ok"])
         self.roundtrip([[{"text": value} for value in ["?", "~", '"quote', "a|b\\c"] * 30]])
 
+    def test_shared_mutable_values_are_independent_after_decode(self):
+        data = [{"id": i, "rules": [{"label": "A shared rule", "enabled": True}]} for i in range(8)]
+        contract = infer_contract([data])
+        wire = encode(data, contract)
+        self.assertIn("|d=", wire.splitlines()[0])
+        restored = decode(wire, contract)
+        self.assertEqual(restored, data)
+        restored[0]["rules"][0]["enabled"] = False
+        self.assertEqual(restored[1:], data[1:])
+
     def test_bad_headers_and_cells_fail_with_location(self):
         data = [{"id": 1}, {"id": 2}]
         c = infer_contract([data])

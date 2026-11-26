@@ -461,7 +461,9 @@ def _decode(text, contract, *, allow_count=False):
         raise DomainError("D_CONTRACT", "wrong profile version or schema fingerprint; use the matching generated bundle", line=1)
     if not re.fullmatch(r"0|[1-9][0-9]*", header.get("n", "")):
         raise DomainError("D_COUNT", "n must be a non-negative integer", line=1)
-    schema, fields = _row_schema(contract), _fields(_row_schema(contract))
+    schema = _row_schema(contract)
+    fields = _fields(schema)
+    object_rows = _object_row(schema)
     defaults = {}
     if "d" in header:
         try:
@@ -477,7 +479,7 @@ def _decode(text, contract, *, allow_count=False):
                 item = _uncell(cell, fields[index]["schema"], "$/shared")
                 if item is MISSING and not fields[index]["optional"]:
                     raise ValueError("shared columns cannot omit a required field")
-                defaults[index] = cell
+                defaults[index] = (cell, item)
         except (ValueError, TypeError) as exc:
             raise DomainError("D_HEADER", str(exc), line=1) from exc
     codebooks = {}
@@ -495,39 +497,48 @@ def _decode(text, contract, *, allow_count=False):
                     raise ValueError("invalid, shared or duplicate vocabulary column")
                 if not isinstance(values, list) or not values or not all(isinstance(value, str) for value in values) or len(set(values)) != len(values):
                     raise ValueError("vocabulary must contain unique encoded string cells")
+                decoded_values = []
                 for cell in values:
                     item = _uncell(cell, fields[index]["schema"], "$/vocabulary")
                     if item is MISSING and not fields[index]["optional"]:
                         raise ValueError("vocabulary cannot omit a required field")
-                codebooks[index] = values
+                    decoded_values.append(item)
+                codebooks[index] = decoded_values
         except (ValueError, TypeError) as exc:
             raise DomainError("D_HEADER", str(exc), line=1) from exc
+    columns = [(field, defaults.get(index), codebooks.get(index)) for index, field in enumerate(fields)]
     rows = []
+    expected = len(fields) - len(defaults)
     for lineno, line in enumerate(lines[1:], 2):
         try:
-            expected = len(fields) - len(defaults)
             row_cells = [] if expected == 0 and line == "-" else _split(line, lineno)
             if len(row_cells) != expected:
                 raise DomainError("D_ARITY", f"expected {expected} cells, received {len(row_cells)}")
-            row, offset = _object_skeleton(schema) if _object_row(schema) else {}, 0
-            for index, field in enumerate(fields):
-                raw = defaults[index] if index in defaults else row_cells[offset]
-                if index not in defaults:
+            row, offset = _object_skeleton(schema) if object_rows else {}, 0
+            for field, default, vocabulary in columns:
+                if default is not None:
+                    raw, item = default
+                    # Rebuild mutable JSON values so each record owns its cells.
+                    if isinstance(item, (dict, list)):
+                        item = _uncell(raw, field["schema"], f"$/{lineno-2}/{field['name']}")
+                else:
+                    raw = row_cells[offset]
                     offset += 1
-                if index in codebooks:
-                    if not re.fullmatch(r"0|[1-9][0-9]*", raw) or int(raw) >= len(codebooks[index]):
-                        raise DomainError("D_ENUM", f"invalid vocabulary index for {field['name']}")
-                    raw = codebooks[index][int(raw)]
-                item = _uncell(raw, field["schema"], f"$/{lineno-2}/{field['name']}")
+                    if vocabulary is None:
+                        item = _uncell(raw, field["schema"], f"$/{lineno-2}/{field['name']}")
+                    else:
+                        if not re.fullmatch(r"0|[1-9][0-9]*", raw) or int(raw) >= len(vocabulary):
+                            raise DomainError("D_ENUM", f"invalid vocabulary index for {field['name']}")
+                        item = vocabulary[int(raw)]
                 if item is MISSING:
                     if not field["optional"]:
                         raise DomainError("D_REQUIRED", f"missing required field {field['name']}")
                 else:
-                    if _object_row(schema):
+                    if object_rows:
                         _put(row, field["path"], item)
                     else:
                         row[field["name"]] = item
-            rows.append(row if _object_row(schema) else row["$value"])
+            rows.append(row if object_rows else row["$value"])
         except DomainError as exc:
             exc.line = lineno
             raise
