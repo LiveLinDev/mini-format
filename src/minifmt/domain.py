@@ -293,21 +293,25 @@ def _escape(text):
     return text.replace("\\", "\\\\").replace("|", "\\|").replace("\n", "\\n").replace("\r", "\\r")
 
 
+_FIELD_PART = re.compile(r"[^\\|]+|\\[\\|nr]|[\\|]")
+_FIELD_ESCAPES = {"\\": "\\", "|": "|", "n": "\n", "r": "\r"}
+
+
 def _split(line, lineno):
-    cells, current, index = [], [], 0
-    while index < len(line):
-        char = line[index]
-        if char == "\\":
-            index += 1
-            if index >= len(line) or line[index] not in "\\|nr":
-                raise DomainError("D_ESCAPE", "allowed field escapes: \\\\, \\|, \\n, \\r", line=lineno)
-            current.append({"n": "\n", "r": "\r"}.get(line[index], line[index]))
-        elif char == "|":
+    if "\\" not in line:
+        return line.split("|")
+    cells, current = [], []
+    for match in _FIELD_PART.finditer(line):
+        part = match.group()
+        if part == "|":
             cells.append("".join(current))
             current = []
+        elif part.startswith("\\"):
+            if len(part) == 1:
+                raise DomainError("D_ESCAPE", "allowed field escapes: \\\\, \\|, \\n, \\r", line=lineno)
+            current.append(_FIELD_ESCAPES[part[1]])
         else:
-            current.append(char)
-        index += 1
+            current.append(part)
     cells.append("".join(current))
     return cells
 
