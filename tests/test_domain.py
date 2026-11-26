@@ -191,6 +191,25 @@ class DomainTests(unittest.TestCase):
         self.assertFalse(repair(invalid, c, fix_count=True)["ok"])
         self.assertFalse(repair("Here is your response:\n" + wire, c)["ok"])
 
+    def test_count_diagnostic_checks_the_full_prefix_and_its_metadata(self):
+        original = {"batch": "turno-1", "items": [{"id": 1}, {"id": 2}]}
+        contract = infer_contract([original])
+        header, first, _ = encode(original, contract, shared=False, dictionaries=False).split("\n")
+        prefix = header + "\n" + first + "\n"
+        report = diagnose(prefix, contract)
+        self.assertFalse(report["ok"])
+        self.assertEqual([error["code"] for error in report["errors"]], ["D_COUNT"])
+        self.assertEqual(report["valid_lines"], [2])
+        self.assertEqual(report["invalid_lines"], [])
+        result = repair(prefix, contract, fix_count=True)
+        self.assertEqual(decode(result["text"], contract), {"batch": "turno-1", "items": [{"id": 1}]})
+
+        corrupt_metadata = header.split("|m=", 1)[0] + "|m=mal\n" + first + "\n"
+        self.assertEqual(diagnose(corrupt_metadata, contract)["recoverable_records"], 0)
+        self.assertFalse(repair(corrupt_metadata, contract, fix_count=True)["ok"])
+        invalid_count = prefix.replace("|n=2|", "|n=invalido|")
+        self.assertEqual(diagnose(invalid_count, contract)["valid_lines"], [2])
+
     def test_transport_repair_removes_only_the_echoed_prompt_heading(self):
         data = [{"note": "# Contrato de dominio .mini"}, {"note": "# .mini domain contract"}]
         contract = infer_contract([data])

@@ -585,9 +585,19 @@ def diagnose(text, contract=None):
     lines = text.split("\n")
     if lines and lines[-1] == "":
         lines.pop()
+    if initial.code == "D_COUNT":
+        # Validate the whole prefix, including its shared fields and metadata,
+        # before reporting the rows as recoverable.
+        try:
+            _decode(text, contract, allow_count=True)
+        except DomainError:
+            pass
+        else:
+            errors.append(initial.to_dict())
+            valid_lines = list(range(2, len(lines) + 1))
     # Isolate records only once the complete header was accepted.  Each test
     # uses the same schema, wrapper and shared columns, with n=1 for that row.
-    if initial.line >= 2 or initial.code == "D_COUNT":
+    if not errors and (initial.line >= 2 or initial.code == "D_COUNT"):
         try:
             header = _split(lines[0], 1)
             single_header = "|".join(_escape("n=1" if cell.startswith("n=") else cell) for cell in header)
@@ -606,8 +616,6 @@ def diagnose(text, contract=None):
         except DomainError:
             errors = [initial.to_dict()]
             valid_lines, invalid_lines = [], []
-    else:
-        errors = [initial.to_dict()]
     if not errors:
         errors = [initial.to_dict()]
     if invalid_lines:
