@@ -136,14 +136,17 @@ class Workflow:
             if generate is None or attempt == max_repairs:
                 self.last_run.update(diagnostics=report, mini=text)
                 raise WorkflowError(self.last_run)
-            selective = bool(report.get("invalid_lines"))
+            invalid_lines = report.get("invalid_lines")
+            selective = bool(invalid_lines)
             correction_prompt = self.prompt(task, expected_records) + "\n\nOriginal response:\n" + text
             correction_prompt += "\n\nCORRECTION REQUEST (overrides output format for this call):\n" + report["repair_prompt"]
             correction = generate(correction_prompt)
             trace.append({"stage": "model_repair", "attempt": attempt + 1, "selective": selective, "text": correction})
             try:
                 if selective:
-                    text = self.runtime.apply_replacements(text, self.runtime._strict_json(correction), self.contract)
+                    text, from_document = self._apply_model_repair(text, correction, invalid_lines)
+                    if from_document:
+                        trace[-1]["reply_format"] = "mini"
                     report = self.runtime.diagnose(text, self.contract)
                 else:
                     result = self.runtime.repair(correction, self.contract)
@@ -154,6 +157,29 @@ class Workflow:
                 raise WorkflowError(self.last_run) from exc
             trace.append({"stage": "revalidate", **report})
         raise AssertionError("unreachable")
+
+    def _apply_model_repair(self, text, correction, invalid_lines):
+        try:
+            replacements = self.runtime._strict_json(correction)
+        except ValueError:
+            if not isinstance(correction, str):
+                raise
+            complete = self.runtime.repair(correction, self.contract)
+            if not complete["ok"]:
+                raise
+            old = text.removesuffix("\n").split("\n")
+            received = complete["text"].removesuffix("\n").split("\n")
+            allowed = set(invalid_lines)
+            if len(old) != len(received) or any(
+                    number not in allowed and before != after
+                    for number, (before, after) in enumerate(zip(old, received), 1)):
+                raise self.runtime.DomainError("D_REPAIR", "complete correction changed the header or a validated row")
+            if (len(received) in allowed and not complete["text"].endswith("\n")
+                    and "removed complete Markdown code fence" not in complete["changes"]):
+                raise self.runtime.DomainError("D_REPAIR", "complete correction did not terminate the last repaired row")
+            replacements = {str(number): received[number - 1] for number in invalid_lines}
+            return self.runtime.apply_replacements(text, replacements, self.contract), True
+        return self.runtime.apply_replacements(text, replacements, self.contract), False
 
     def _cut(self, text, truncated, at_line_end=False, *, diagnostics=None):
         """Return (complete part, declared n, complete records) when the response was cut, else None.
@@ -236,9 +262,9 @@ class Workflow:
     def save_run(self, folder):
         """Write the last run so it can be inspected with ``mini validate``, ``mini diagnose`` or ``mini to-json``.
 
-        Each model answer is saved exactly as received (``respuesta_N.mini``; compact rows as ``.txt``; a
-        selective correction as ``.json``), plus the validated document (``resultado.mini``) and the trace
-        (``ejecucion.json``). Earlier files in the folder are replaced. The files contain application data.
+        Each model answer is saved exactly as received. Compact rows use ``.txt`` and JSON replacements use
+        ``.json``. Complete documents use ``.mini``. The folder also gets the validated ``resultado.mini``
+        and trace ``ejecucion.json``. Earlier files in the folder are replaced. The files contain application data.
         """
         folder = Path(folder)
         folder.mkdir(parents=True, exist_ok=True)
@@ -250,7 +276,8 @@ class Workflow:
         run = self.last_run or {}
         es = self.lang == "es"
         raw_suffix = ".txt" if run.get("last_text_field") is not None else ".mini"
-        answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective") else raw_suffix)
+        answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective")
+                    and step.get("reply_format") != "mini" else raw_suffix)
                    for step in run.get("trace") or []
                    if step.get("stage") in ("generate", "model_repair", "continuation") and isinstance(step.get("text"), str)]
         for number, (text, suffix) in enumerate(answers, 1):

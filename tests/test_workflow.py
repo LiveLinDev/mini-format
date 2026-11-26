@@ -128,6 +128,34 @@ def test_repair_cannot_replace_valid_lines(kit):
     assert flow.last_run["diagnostics"]["errors"][0]["code"] == "D_REPAIR"
 
 
+def test_full_model_correction_preserves_validated_lines_and_history(kit, tmp_path):
+    bundle, contract, data = kit
+    wire = encode(data, contract, shared=False, dictionaries=False)
+    wrong = wire.replace("\n1|", "\nuno|")
+    flow = Workflow(bundle)
+    assert flow.process(wrong, generate=lambda _: wire, expected_records=2) == data
+    assert flow.last_run["mini"] == wire
+    assert next(step for step in flow.last_run["trace"] if step["stage"] == "model_repair")["reply_format"] == "mini"
+    saved = flow.save_run(tmp_path / "full-correction")
+    assert (saved / "respuesta_2.mini").read_text(encoding="utf-8") == wire
+    for modified in (wire.replace("Factura", "Modificado"), wire.replace("|v=1|n=2|", "|n=2|v=1|")):
+        with pytest.raises(WorkflowError):
+            flow.process(wrong, generate=lambda _: modified, expected_records=2)
+        assert "validated row" in flow.last_run["diagnostics"]["errors"][0]["message"]
+
+
+def test_full_model_correction_requires_terminator_for_last_invalid_row(kit):
+    bundle, contract, data = kit
+    wire = encode(data, contract, shared=False, dictionaries=False)
+    wrong = wire.replace("\n2|", "\ndos|")
+    flow = Workflow(bundle)
+    with pytest.raises(WorkflowError):
+        flow.process(wrong, generate=lambda _: wire, expected_records=2)
+    assert "terminate" in flow.last_run["diagnostics"]["errors"][0]["message"]
+    assert flow.process(wrong, generate=lambda _: wire + "\n", expected_records=2) == data
+    assert flow.process(wrong, generate=lambda _: "```mini\n" + wire + "\n```", expected_records=2) == data
+
+
 def test_generated_cli_runs_under_isolated_python_without_package(kit, tmp_path):
     bundle, contract, sample = kit
     wire = "```mini\n" + encode(sample, contract) + "\n```"
