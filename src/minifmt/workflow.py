@@ -250,7 +250,20 @@ class Workflow:
                 break
             finally:
                 self.last_run = outer
-            new = (self._records(more) or [])[:missing]
+            new = self._records(more) or []
+            if len(new) > missing:
+                # A complete restart can supply the suffix after the retained prefix.
+                matches_prefix = False
+                if len(new) == target:
+                    prefix = copy.deepcopy(more)
+                    del self._records(prefix)[len(records):]
+                    matches_prefix = (json.dumps(prefix, ensure_ascii=False, sort_keys=True)
+                                      == json.dumps(data, ensure_ascii=False, sort_keys=True))
+                if not matches_prefix:
+                    trace.append({"stage": "continuation_rejected", "requested": missing, "received": len(new)})
+                    continue
+                trace.append({"stage": "continuation_overlap", "records": len(records)})
+                new = new[len(records):]
             trace.append({"stage": "continuation_parse", "ok": True, "records": len(new)})
             records.extend(new)
         if len(records) != target:

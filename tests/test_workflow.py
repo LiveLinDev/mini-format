@@ -445,6 +445,77 @@ def kit4(tmp_path):
     return bundle, contract, sample
 
 
+def test_complete_continuation_uses_only_the_suffix_after_a_matching_prefix(kit4):
+    bundle, contract, sample = kit4
+    wire = encode(sample, contract, shared=False, dictionaries=False)
+    cut = "\n".join(wire.split("\n")[:3]) + "\n"
+    flow = Workflow(bundle)
+    calls = []
+    assert flow.process(cut, generate=lambda prompt: calls.append(prompt) or wire,
+                        expected_records=4, truncated=True) == sample
+    assert len(calls) == 1 and "2 of 4 records" in calls[0]
+    assert {"stage": "continuation_overlap", "records": 2} in flow.last_run["trace"]
+
+
+@pytest.mark.parametrize("difference", ["retained_row", "metadata", "record_count"])
+@pytest.mark.parametrize("correct_second_reply", [False, True])
+def test_oversized_continuation_rejects_unanchored_rows(kit4, difference, correct_second_reply):
+    bundle, contract, sample = kit4
+    wire = encode(sample, contract, shared=False, dictionaries=False)
+    cut = "\n".join(wire.split("\n")[:3]) + "\n"
+    other = dict(sample, tickets=[dict(row) for row in sample["tickets"]])
+    if difference == "retained_row":
+        other["tickets"][0]["titulo"] = "Dato cambiado"
+    elif difference == "metadata":
+        other["lote"] = "Otro lote"
+    else:
+        other["tickets"].append({"id": 5, "titulo": "Sobra"})
+    invalid = encode(other, contract, shared=False, dictionaries=False)
+    missing = encode(dict(sample, tickets=sample["tickets"][2:]), contract, shared=False, dictionaries=False)
+    calls = []
+    replies = iter([invalid, missing if correct_second_reply else invalid])
+    flow = Workflow(bundle)
+
+    def model(prompt):
+        calls.append(prompt)
+        return next(replies)
+
+    if correct_second_reply:
+        assert flow.process(cut, generate=model, expected_records=4, truncated=True) == sample
+    else:
+        with pytest.raises(WorkflowError):
+            flow.process(cut, generate=model, expected_records=4, truncated=True)
+        assert "data" not in flow.last_run
+    assert len(calls) == 2
+    assert any(step["stage"] == "continuation_rejected" for step in flow.last_run["trace"])
+
+
+def test_continuation_with_the_requested_count_preserves_legitimate_duplicates(kit4):
+    bundle, contract, sample = kit4
+    row = sample["tickets"][1]
+    value = dict(sample, tickets=[*sample["tickets"][:2], row, sample["tickets"][3]])
+    wire = encode(value, contract, shared=False, dictionaries=False)
+    cut = "\n".join(wire.split("\n")[:3]) + "\n"
+    rest = encode(dict(value, tickets=value["tickets"][2:]), contract, shared=False, dictionaries=False)
+    flow = Workflow(bundle)
+    assert flow.process(cut, generate=lambda _: rest, expected_records=4, truncated=True) == value
+
+
+def test_restarted_continuation_preserves_json_number_types_in_metadata(kit4, tmp_path):
+    _, _, sample = kit4
+    data = dict(sample, ratio=1.0)
+    bundle = tmp_path / ".numbers"
+    contract = build_bundle([data], "ticket", bundle)
+    wire = encode(data, contract, shared=False, dictionaries=False)
+    cut = "\n".join(wire.split("\n")[:3]) + "\n"
+    wrong = encode(dict(data, ratio=1), contract, shared=False, dictionaries=False)
+    replies = iter([wrong, wire])
+    flow = Workflow(bundle)
+    result = flow.process(cut, generate=lambda _: next(replies), expected_records=4, truncated=True)
+    assert type(result["ratio"]) is float and result == data
+    assert any(step["stage"] == "continuation_rejected" for step in flow.last_run["trace"])
+
+
 def test_http_chat_json_call_is_patched_with_one_changed_call(kit4, tmp_path, monkeypatch):
     bundle, contract, sample = kit4
     source = tmp_path / "generator.py"
