@@ -106,6 +106,10 @@ def construir(ctx) -> None:
         cache_p = html.escape(str(t["entrada_cache_lectura_por_millon"]))
         options.append(f'<option value="{html.escape(t["modelo_api_id"])}" data-in="{in_p}" data-out="{out_p}" data-cache="{cache_p}">{name} (${in_p} / ${out_p} MTok)</option>')
 
+    nota_haiku = a(
+        '*Con Claude Haiku 5.5, el prompt completo antiguo de 11 reglas provocó 815 tokens de razonamiento CoT. Usar prompt_style="lean" o compact_rows elimina esa sobrecarga.',
+        '*On Claude Haiku 5.5, the legacy 11-rule full prompt triggered 815 CoT reasoning tokens. Using prompt_style="lean" or compact_rows removes that bloat.',
+    )
     cuerpo = f'''<div class="eco-wrap prose">
   <p class="eyebrow">{a("Evidencia económica verificada", "Verified cost economics")}</p>
   <h1>{a("Economía", "Economics")}</h1>
@@ -152,10 +156,7 @@ def construir(ctx) -> None:
       <tbody>{table_html}</tbody>
     </table>
   </div>
-  <p class="fine">{a(
-      "*Con Claude Haiku 5.5, el prompt completo antiguo de 11 reglas provocó 815 tokens de razonamiento CoT. Usar prompt_style=\"lean\" o compact_rows elimina esa sobrecarga.",
-      "*On Claude Haiku 5.5, the legacy 11-rule full prompt triggered 815 CoT reasoning tokens. Using prompt_style=\"lean\" or compact_rows removes that bloat."
-  )}</p>
+  <p class="fine">{nota_haiku}</p>
 
   <section class="eco-sim" id="ecoSim">
     <h2>{a("Simulador mensual interactivo (JSON vs .mini)", "Interactive monthly simulator (JSON vs .mini)")}</h2>
