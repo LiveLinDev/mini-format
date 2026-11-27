@@ -153,6 +153,28 @@ class TestReaderApi(unittest.TestCase):
         self.assertEqual(reader.pending, lines[2][:3])
         self.assertFalse(reader.ended)
 
+    def test_pending_and_emission_across_many_fragments(self):
+        contract = Contract.from_dict({
+            "prefix": "text",
+            "header": {"required": ["n"], "keys": {"n": {"type": "int"}}},
+            "core": [{"name": "body", "type": "str"}],
+        })
+        reader = Reader(contract, strict=True)
+        self.assertEqual(reader.push("text|n=2\n"), [])
+        fragment = "línea 🌊"
+        for _ in range(600):
+            self.assertEqual(reader.push(fragment), [])
+        self.assertEqual(reader.pending, fragment * 600)
+        self.assertEqual(reader.push("continuación"), [])
+        self.assertEqual(reader.pending, fragment * 600 + "continuación")
+        first = reader.push("\nseg")
+        self.assertEqual(first[0].record, {"body": fragment * 600 + "continuación"})
+        self.assertEqual(reader.pending, "seg")
+        result = reader.end("undo")
+        self.assertTrue(result.complete)
+        self.assertEqual(result.records, [first[0].record, {"body": "segundo"}])
+        self.assertEqual(reader.pending, "")
+
     def test_truncated_output_is_reported(self):
         cut = self.text.rstrip("\n")
         cut = cut[:cut.rfind("|")]  # drop the last field(s) of the last record, no final LF
