@@ -260,22 +260,49 @@ class MergeResult:
         return self.document is not None and not self.errors
 
 
-def _answer_lines(repaired_text: str, contract: Contract) -> Tuple[List[str], List[str]]:
+def _answer_lines(repaired_text: str, contract: Contract) -> Tuple[Optional[str], List[str], List[str]]:
     notes: List[str] = []
     body = extract_document(repaired_text or "", contract)
     phys = _physical_lines(body)
     if not phys:
-        return [], ["empty repair answer"]
+        return None, [], ["empty repair answer"]
     first = phys[0][1].strip()
     if first == contract.prefix or first.startswith(contract.prefix + "|"):
         lines = [t for _, t in phys[1:]]
         m = re.search(r"\|\s*n\s*=\s*(\d+)", first)
         if m and int(m.group(1)) != len(lines):
             notes.append(f"repair header declares n={m.group(1)} but has {len(lines)} lines")
-    else:
-        notes.append("repair answer has no header; lines taken in order")
-        lines = [t for _, t in phys]
-    return lines, notes
+        return first, lines, notes
+    return None, [t for _, t in phys], ["repair answer has no header; lines taken in order"]
+
+
+def _merge_full_reply(phys: List[Tuple[int, str]], header: Optional[str], answer: List[str],
+                      items: List[RepairItem], contract: Contract, raw_reply: str) -> Optional[MergeResult]:
+    if not phys or header != phys[0][1].strip() or any(item.is_header for item in items):
+        return None
+    requested = {item.line for item in items}
+    fragments = {line for item in items for line in item.lines[1:]}
+    slots = [(line, text) for line, text in phys[1:] if line not in fragments]
+    if len(slots) != len(answer):
+        return None
+    if slots[-1][0] in requested and not (raw_reply.rstrip(" \t\r").endswith("\n")
+                                          or re.search(r"\n[ \t]*(?:```|~~~)[ \t\r\n]*\Z", raw_reply)):
+        return None
+    merged = [phys[0][1]]
+    for (line, original), corrected in zip(slots, answer):
+        if line in requested:
+            merged.append(corrected)
+        elif original.strip() == corrected.strip():
+            merged.append(original)
+        else:
+            return None
+    text = "\n".join(merged)
+    try:
+        doc = parse(text, contract)
+    except (MiniValidationError, MiniError):
+        return None
+    replaced = sorted(line for item in items for line in item.lines)
+    return MergeResult(text, doc, [], replaced=replaced, notes=["accepted full repair answer"])
 
 
 def merge_repair(original_doc: str, repaired_text: str, contract: Contract,
@@ -287,11 +314,21 @@ def merge_repair(original_doc: str, repaired_text: str, contract: Contract,
     when the header was part of the request).  Rejected corrections leave the
     original line in place, so the merged document never loses information
     that the lenient parser would have reported.
+    A complete reply can supply the requested lines when its header and all
+    retained records match the original and the merged document validates.
     """
     doc_text = request.document if request is not None else extract_document(original_doc, contract)
     items = request.items if request is not None else invalid_items(doc_text, contract)
     phys = _physical_lines(doc_text)
-    answer, notes = _answer_lines(repaired_text, contract)
+    header, answer, notes = _answer_lines(repaired_text, contract)
+    if len(answer) > len(items):
+        full = _merge_full_reply(phys, header, answer, items, contract, repaired_text)
+        if full is not None:
+            return full
+        notes.append("surplus repair lines could not be matched to the original document")
+        doc, errors = lenient_parse(doc_text, contract)
+        return MergeResult(doc_text, doc, errors, unresolved=sorted({ln for it in items for ln in it.lines}),
+                           notes=notes)
     if len(answer) != len(items):
         notes.append(f"expected {len(items)} corrected lines, got {len(answer)}")
     content: Dict[int, str] = {ln: t for ln, t in phys}

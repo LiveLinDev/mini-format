@@ -284,33 +284,62 @@ export interface MergeResult {
   ok: boolean;
 }
 
-function answerLines(repairedText: string, c: Contract): [string[], string[]] {
+function answerLines(repairedText: string, c: Contract): [string | null, string[], string[]] {
   const notes: string[] = [];
   const body = extractDocument(repairedText || '', c);
   const phys = physicalLines(body);
-  if (!phys.length) return [[], ['empty repair answer']];
+  if (!phys.length) return [null, [], ['empty repair answer']];
   const first = pyStrip(phys[0][1]);
-  let lines: string[];
   if (first === c.prefix || first.startsWith(c.prefix + '|')) {
-    lines = phys.slice(1).map(([, t]) => t);
+    const lines = phys.slice(1).map(([, t]) => t);
     const m = /\|\s*n\s*=\s*(\d+)/.exec(first);
     if (m && parseInt(m[1], 10) !== lines.length) {
       notes.push(`repair header declares n=${m[1]} but has ${lines.length} lines`);
     }
-  } else {
-    notes.push('repair answer has no header; lines taken in order');
-    lines = phys.map(([, t]) => t);
+    return [first, lines, notes];
   }
-  return [lines, notes];
+  return [null, phys.map(([, t]) => t), ['repair answer has no header; lines taken in order']];
 }
 
 const ascending = (a: number, b: number): number => a - b;
+
+function mergeFullReply(phys: [number, string][], header: string | null, answer: string[],
+  items: RepairItem[], c: Contract, rawReply: string): MergeResult | null {
+  if (!phys.length || header !== pyStrip(phys[0][1]) || items.some(item => item.isHeader)) return null;
+  const requested = new Set(items.map(item => item.line));
+  const fragments = new Set(items.flatMap(item => item.lines.slice(1)));
+  const slots = phys.slice(1).filter(([line]) => !fragments.has(line));
+  if (slots.length !== answer.length) return null;
+  if (requested.has(slots[slots.length - 1][0])
+    && !/\n(?:[ \t\r]*|[ \t]*(?:```|~~~)[ \t\r\n]*)(?![\s\S])/.test(rawReply)) {
+    return null;
+  }
+  const merged = [phys[0][1]];
+  for (const [i, [line, original]] of slots.entries()) {
+    const corrected = answer[i];
+    if (requested.has(line)) merged.push(corrected);
+    else if (pyStrip(original) === pyStrip(corrected)) merged.push(original);
+    else return null;
+  }
+  const text = merged.join('\n');
+  let document: Document;
+  try {
+    document = parse(text, c, { strict: true });
+  } catch (error) {
+    if (error instanceof MiniValidationError || error instanceof MiniError) return null;
+    throw error;
+  }
+  return { text, document, errors: [], replaced: items.flatMap(item => item.lines).sort(ascending),
+    dropped: [], unresolved: [], notes: ['accepted full repair answer'], ok: true };
+}
 
 /**
  * Inserta las líneas corregidas de una respuesta de reparación en el documento original.
  * Cada corrección se acepta solo si es válida por sí sola bajo el contrato (validada con la
  * cabecera original, o con la corregida si la cabecera formaba parte de la solicitud). Las
  * correcciones rechazadas dejan la línea original, de modo que nunca se pierde información.
+ * Una respuesta completa puede aportar las líneas solicitadas si conserva la cabecera
+ * y los registros válidos originales y el documento fusionado se valida.
  */
 export function mergeRepair(
   originalDoc: string, repairedText: string, contract: Contract | ContractJSON, request?: RepairRequest | null,
@@ -319,7 +348,16 @@ export function mergeRepair(
   const docText = request ? request.document : extractDocument(originalDoc, c);
   const items = request ? request.items : invalidItems(docText, c);
   const phys = physicalLines(docText);
-  const [answer, notes] = answerLines(repairedText, c);
+  const [header, answer, notes] = answerLines(repairedText, c);
+  if (answer.length > items.length) {
+    const full = mergeFullReply(phys, header, answer, items, c, repairedText);
+    if (full !== null) return full;
+    notes.push('surplus repair lines could not be matched to the original document');
+    const [document, errors] = lenientParse(docText, c);
+    return { text: docText, document, errors, replaced: [], dropped: [],
+      unresolved: [...new Set(items.flatMap(item => item.lines))].sort(ascending),
+      notes, ok: document !== null && errors.length === 0 };
+  }
   if (answer.length !== items.length) notes.push(`expected ${items.length} corrected lines, got ${answer.length}`);
   const content = new Map<number, string>(phys);
   const order = phys.map(([ln]) => ln);

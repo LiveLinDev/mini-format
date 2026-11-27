@@ -95,6 +95,27 @@ describe('HU16 escenario 2: la fusión conserva los 10 registros en el orden ori
     assert.equal(m.ok, false);
   });
 
+  test('un documento completo corrige solo las filas solicitadas', () => {
+    const { good, bad } = tenWithTwoInvalid();
+    const req = repairRequest(doc(bad), CLS, 'es');
+    const accepted = mergeRepair(doc(bad), doc(good), CLS, req);
+    assert.equal(accepted.text, doc(good));
+    assert.deepEqual(accepted.replaced, [4, 9]);
+    assert.equal(accepted.ok, true);
+    const changed = [good[0], good[1].replace('|', '|texto modificado '), ...good.slice(2)];
+    const refused = mergeRepair(doc(bad), doc(changed), CLS, req);
+    assert.equal(refused.ok, false);
+    assert.equal(refused.text, doc(bad));
+    assert.deepEqual(refused.unresolved, [4, 9]);
+  });
+
+  test('un documento completo necesita cierre de línea si la última se corrige', () => {
+    const good = [LINES[0].replace('n=12', 'n=2'), ...LINES.slice(1, 3)];
+    const bad = [good[0], good[1], 'registro incompleto'];
+    assert.deepEqual(mergeRepair(doc(bad), doc(good), CLS).unresolved, [3]);
+    assert.equal(mergeRepair(doc(bad), doc(good) + LF, CLS).ok, true);
+  });
+
   test('marca de eliminación y duplicados', () => {
     const ls = [...LINES];
     ls.splice(4, 0, 'Comentario del modelo sin barras');

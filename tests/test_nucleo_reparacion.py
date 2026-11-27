@@ -64,6 +64,22 @@ class UniqueValuesSurviveRepair(unittest.TestCase):
         self.assertEqual((m.replaced, m.unresolved), ([3], []))
         self.assertTrue(m.ok)
 
+    def test_whole_reply_preserves_the_valid_records(self):
+        full = DOC.replace(ROTA, rec(2, "corregido"))
+        accepted = merge(full)
+        self.assertTrue(accepted.ok)
+        self.assertEqual((accepted.text, accepted.replaced, accepted.dropped), (full, [3], []))
+        for ambiguous in (full.replace(rec(1), rec(1, "otro")), full.replace("n=3", "n=4")):
+            refused = merge(ambiguous)
+            self.assertFalse(refused.ok)
+            self.assertEqual((refused.text, refused.replaced, refused.unresolved), (DOC, [], [3]))
+
+    def test_whole_reply_requires_a_terminator_on_the_last_corrected_line(self):
+        doc = "\n".join(["cls|n=2|k=6", rec(1), ROTA])
+        full = doc.replace(ROTA, rec(2, "corregido"))
+        self.assertEqual(merge(full, doc).unresolved, [3])
+        self.assertTrue(merge(full + "\n", doc).ok)
+
     def test_two_corrections_cannot_claim_the_same_new_id(self):
         doc = "\n".join(["cls|n=4|k=6", rec(1), ROTA, "otra línea rota", rec(4)])
         m = merge_repair(doc, "cls|n=2\n" + rec(9, "uno") + "\n" + rec(9, "dos"), CLS, repair_request(doc, CLS, "es"))
