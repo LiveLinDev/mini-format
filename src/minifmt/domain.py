@@ -1591,6 +1591,12 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", 
                 if expected_records == 1:
                     return f'Una cadena JSON con solo el valor de {names}. Formato: "un valor".\n'
                 return f'{expected_records} cadenas JSON en orden de {names}, una por línea. Formato: "un valor".\n'
+            if expected_records > 1 and len(kinds) >= 3 and all(kind == "string" for kind in kinds):
+                example = " ".join(["grupo"] * (len(kinds) - 1) + ["Revisar cuenta"])
+                return (f"{expected_records} filas sin cabecera en orden {names}. "
+                        f"Un espacio entre campos; último=resto. Ej.: {example}. "
+                        "Comillas JSON para vacío, ?/~, comillas, barras inversas, controles o espacios al borde. "
+                        r'Antes del final, también espacios o [/{ inicial. A\B → "A\\B".' + "\n")
             atoms = {"boolean": "true", "integer": "4", "string": '"Grupo A"'}
             example = " ".join([atoms[kind] for kind in kinds[:-1]] + [r'" A\\B\t\" "'])
             if expected_records == 1:

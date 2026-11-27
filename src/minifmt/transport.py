@@ -21,6 +21,7 @@ _TYPES = ("string", "integer", "number", "boolean", "json", "object", "array")
 _KEY = re.compile(r"[A-Za-z_][A-Za-z_0-9./-]*")
 _INTEGER = re.compile(r"0|-?[1-9][0-9]*")
 _TREE = {"|\n", "\t\n", "1|\n", "1\t\n"}
+_SERIES_FIELD = re.compile(rf"({_KEY.pattern})(?:=({_INTEGER.pattern}):({_INTEGER.pattern}))?")
 
 
 def _schema_wire(node):
@@ -82,12 +83,18 @@ def _csv_rows(rows, delimiter):
     return handle.getvalue()[:-2]
 
 
-def _column_patterns(items):
+def _integer_sequence(items):
     if all(_INTEGER.fullmatch(item) and len(item) <= 32 for item in items):
         nums = list(map(int, items))
         start, step = nums[0], nums[1] - nums[0]
         if step and all(num == start + i * step for i, num in enumerate(nums)):
-            yield "s", [start, step]
+            return [start, step]
+    return None
+
+
+def _column_patterns(items):
+    if (sequence := _integer_sequence(items)) is not None:
+        yield "s", sequence
     runs = [[sum(1 for _ in group), item] for item, group in groupby(items)]
     if len(runs) * 3 < len(items):
         yield "g", runs
@@ -210,6 +217,68 @@ def _table_fields(value):
     return None
 
 
+def _series_rows(value):
+    fields = _table_fields(value)
+    if not fields or any(isinstance(cell, (list, dict)) for row in value for cell in row.values()):
+        return None
+    columns = {key: [row[key] for row in value] for key in fields}
+    tail = max(reversed(fields), key=lambda key: sum(isinstance(cell, str) and " " in cell for cell in columns[key]))
+    fields.remove(tail)
+    fields.append(tail)
+    header, visible = [], []
+    for field in fields:
+        atoms = [_scalar(cell) for cell in columns[field]]
+        sequence = _integer_sequence(atoms) if field != tail else None
+        if sequence:
+            start, step = sequence
+            header.append(f"{field}={start}:{step}")
+        else:
+            header.append(field)
+            if field != tail:
+                atoms = [domain._json(cell) if isinstance(cell, str) and " " in cell else atom
+                         for cell, atom in zip(columns[field], atoms)]
+            visible.append(atoms)
+    if len(visible) == len(fields):
+        return None
+    return "^" + " ".join(header) + "\n" + "\n".join(" ".join(row) for row in zip(*visible))
+
+
+def _read_series(header, body):
+    matches = [_SERIES_FIELD.fullmatch(part) for part in header.split(" ")]
+    if any(match is None for match in matches):
+        raise ValueError("invalid sequence table column")
+    fields = [match[1] for match in matches]
+    sequences = {match[1]: (int(match[2]), int(match[3])) for match in matches if match[2] is not None}
+    if (len(set(fields)) != len(fields) or not sequences or fields[-1] in sequences
+            or any(step == 0 for _, step in sequences.values())):
+        raise ValueError("invalid sequence table layout")
+    visible = [field for field in fields if field not in sequences]
+    lines = body.split("\n")
+    if len(lines) < 2:
+        raise ValueError("a sequence table requires at least two rows")
+
+    def scalar(text):
+        if not text or text.startswith(("[", "{")):
+            raise ValueError("expected a scalar value")
+        return domain._strict_json(text) if text.startswith('"') else _read_scalar(text)
+
+    rows = []
+    for position, line in enumerate(lines):
+        if "\r" in line:
+            raise ValueError("encode carriage returns as a JSON escape")
+        row = {name: start + position * step for name, (start, step) in sequences.items()}
+        index = 0
+        for field in visible[:-1]:
+            match = domain._ROW_ATOM.match(line, index)
+            if match is None or match.end() == len(line):
+                raise ValueError("sequence table row is missing a column")
+            row[field] = scalar(match[0].rstrip(" \t"))
+            index = match.end()
+        row[visible[-1]] = scalar(line[index:])
+        rows.append({field: row[field] for field in fields})
+    return rows
+
+
 def _tree_table(name, rows, fields, sep, pad, score):
     encoded = [{key: _scalar(row[key]) for key in fields} for row in rows]
     if any(sep in cell for row in encoded for cell in row.values()):
@@ -312,6 +381,8 @@ def _encode(value, contract, score, sections=True):
     options = [domain._json(value), "=" + schema_text + mini, "~" + schema_text + positional]
     if (rows := _best_rows(sidecar, mini, score)) is not None:
         options.append(rows)
+    if (series := _series_rows(value)) is not None:
+        options.append(series)
     options.extend(_tree(value, sep, score) for sep in ("\t", "|"))
     if sections and isinstance(value, dict):
         keys = [key for key, item in value.items() if _table_fields(item)]
@@ -343,6 +414,8 @@ def _decode(text):
         return domain._unpack(domain._strict_json(body), schema)
     if header.startswith(":"):
         return _restore_rows(domain._strict_json(header[1:]), body)
+    if header.startswith("^"):
+        return _read_series(header[1:], body)
     if header.startswith("#"):
         base, descriptors = domain._strict_json(header[1:])
         if not isinstance(base, dict):

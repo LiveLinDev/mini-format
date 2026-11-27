@@ -7,6 +7,32 @@ from pathlib import Path
 
 RESULTS = Path(__file__).resolve().parents[1] / "benchmark" / "public" / "results.json"
 COMP_RESULTS = Path(__file__).resolve().parents[1] / "benchmark" / "public" / "competitors_results.json"
+CLOUD_RESULTS = COMP_RESULTS.with_name("cloud_results.json")
+
+
+def ticket_proof(lang: str) -> str:
+    data = json.loads(CLOUD_RESULTS.read_text(encoding="utf-8"))
+    counts = data["serialization"]["soporte-20"]
+    formats = (("json_compact", "JSON"), ("toon", "TOON"), ("bpp", "BPP"), ("mini", ".mini"))
+    largest = max(counts[key] for key, _ in formats)
+    rows = []
+    for key, name in formats:
+        count = counts[key]
+        accent = " is-mini" if key == "mini" else ""
+        rows.append(f'<div class="bar{accent}" style="--w:{count / largest:.2%}">'
+                    f'<span class="name">{name}</span><span class="track" aria-hidden="true">'
+                    f'<span class="fill"></span></span><span class="val">{count}</span></div>')
+    es = lang == "es"
+    title = "Tokens para los mismos 20 tickets" if es else "Tokens for the same 20 tickets"
+    unit = "Datos completos · o200k_base" if es else "Complete data · o200k_base"
+    method = "Qué medimos" if es else "What we measure"
+    costs = "Costo y precisión" if es else "Cost and accuracy"
+    return f'''<figure class="proof-benchmark" id="prueba-tokens">
+  <figcaption>{title}<small>{unit}</small></figcaption>
+  <div class="proof-bars js-chart">{"".join(rows)}</div>
+  <div class="proof-links"><a href="/validacion/#criterios">{method}</a>
+    <a href="/validacion/#generacion-nube">{costs}</a></div>
+</figure>'''
 
 
 def inject_benchmarks(page: str, lang: str) -> str:
@@ -15,6 +41,10 @@ def inject_benchmarks(page: str, lang: str) -> str:
     result = json.loads(RESULTS.read_text(encoding="utf-8"))
     comp = json.loads(COMP_RESULTS.read_text(encoding="utf-8")) if COMP_RESULTS.is_file() else {"datasets": []}
     comp_map = {d["name"]: d["formats"] for d in comp.get("datasets", [])}
+    page, changed = re.subn(r'(?<=<!-- PRUEBA DE TOKENS -->).*?(?=<!-- /PRUEBA DE TOKENS -->)',
+                            lambda _: "\n" + ticket_proof(lang) + "\n", page, flags=re.S)
+    if changed != 1:
+        raise ValueError("Ticket benchmark anchor is missing")
 
     es = lang == "es"
     def tr(spanish, english): return spanish if es else english
@@ -55,11 +85,9 @@ def inject_benchmarks(page: str, lang: str) -> str:
         rows = []
         for fmt, (label, subtitle, count) in sorted(entries.items(), key=lambda item: item[1][2]):
             variant = " is-mini" if fmt == baseline_key else (" is-loss" if count < baseline else "")
-            rows.append(f'<div class="bar{variant}" style="--w:{100*count/maximum:.2f}%" title="{count} tokens"><span class="name">{label}<small>{subtitle}</small></span><span class="track"><span class="fill"></span></span><span class="val">{number(count/baseline,2)}×</span></div>')
+            rows.append(f'<div class="bar{variant}" style="--w:{100*count/maximum:.2f}%"><span class="name">{label}<small>{subtitle}</small></span><span class="track"><span class="fill"></span></span><span class="val">{number(count)}</span></div>')
         kind = tr("Observaciones reales", "Real observations") if "real" in dataset["source_kind"] and "synthetic" not in dataset["source_kind"] else tr("Datos públicos de prueba", "Public test data")
-        vs_toon_v2 = (dataset["formats"]["toon_flat"]["tokens"] - baseline) / dataset["formats"]["toon_flat"]["tokens"] * 100.0
-        note = tr(f'{number(vs_toon_v2,2)} % menos tokens que TOON plano (domain/2). Prompt reutilizable medido aparte.', f'{number(vs_toon_v2,2)}% fewer tokens than flat TOON (domain/2). Reusable prompt measured separately.')
-        panels.append(f'<div class="bench-body js-chart" id="{panel_id}" role="tabpanel"{" hidden" if index else ""}><div class="bench-head"><h3>{html.escape(dataset["title"])}</h3><button class="replay" type="button" data-replay>↻ {tr("animar", "replay")}</button></div><p class="unit">{number(dataset["records"])} {tr("registros", "records")} · {kind}</p><p class="howto">{tr("Tokens de salida relativos a .mini domain/2 · menos es mejor.", "Output tokens relative to .mini domain/2 · lower is better.")} <b>o200k_base</b></p>{"".join(rows)}<div class="note"><span>{note}</span><a href="/validacion/">{tr("comparativa completa →", "full comparison →")}</a></div></div>')
+        panels.append(f'<div class="bench-body js-chart" id="{panel_id}" role="tabpanel"{" hidden" if index else ""}><div class="bench-head"><h3>{html.escape(dataset["title"])}</h3><button class="replay" type="button" data-replay>↻ {tr("animar", "replay")}</button></div><p class="unit">{number(dataset["records"])} {tr("registros", "records")} · {kind}</p><p class="howto">{tr("Tokens de los mismos datos", "Tokens for the same data")} · <b>o200k_base</b></p>{"".join(rows)}<div class="note"><a href="/validacion/#criterios">{tr("Datos y criterios", "Data and criteria")}</a></div></div>')
 
     hero = '<div class="bench"><div class="bench-tabs" role="tablist" aria-label="Datasets">' + "".join(tabs) + '</div>' + "".join(panels) + '</div>'
     page, changed = re.subn(r'    <div class="bench">.*?\n  </div>\n</section>', '    ' + hero + '\n  </div>\n</section>', page, count=1, flags=re.S)

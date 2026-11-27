@@ -426,6 +426,40 @@
           "reasoning_tokens": 0
         }
       }
+    },
+    "support_batches": {
+      "case_ids": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "formats": {
+        "mini": {
+          "trials": 6,
+          "exact": 6,
+          "retries": 0,
+          "instruction_tokens": 444,
+          "application_input_tokens": 3045,
+          "input_tokens": 76292,
+          "cached_input_tokens": 70016,
+          "output_tokens": 1065,
+          "reasoning_tokens": 0
+        },
+        "bpp": {
+          "trials": 6,
+          "exact": 6,
+          "retries": 0,
+          "instruction_tokens": 354,
+          "application_input_tokens": 2961,
+          "input_tokens": 76202,
+          "cached_input_tokens": 70528,
+          "output_tokens": 1131,
+          "reasoning_tokens": 0
+        }
+      }
     }
   },
   "single_row_control": {
@@ -459,7 +493,9 @@
   },
   "serialization": {
     "soporte-20": {
-      "mini": 268,
+      "mini": 185,
+      "mini_previous": 268,
+      "toon": 270,
       "bpp": 195,
       "nova_compact": 312,
       "nova_lines": 284,
@@ -567,5 +603,31 @@
         }
       }
     }
+  },
+  "support_ticket_check": {
+    "domain_sha256": "f66f0c3e26205e7009dd11cef4008d78a2a287505786d4876aa7bc43c323007a",
+    "transport": {
+      "base": "f8398299a1068c6966493836c4f959cd1ead0079",
+      "source_sha": "68b7802efeee8ed94f6bf384cda4616ecf27c6f924a66060719381b8b4f6076f",
+      "records": 20,
+      "counts": {
+        "o200k_base": {
+          "mini": 185,
+          "mini_previous": 268,
+          "bpp": 195,
+          "toon": 270,
+          "json_compact": 443
+        },
+        "cl100k_base": {
+          "mini": 203,
+          "mini_previous": 283,
+          "bpp": 215,
+          "toon": 287,
+          "json_compact": 459
+        }
+      }
+    },
+    "cases": 6,
+    "records_per_case": 20
   }
 }

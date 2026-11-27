@@ -153,6 +153,10 @@ incluyen solo si reducen el conteo. `loads(texto)` reconstruye el JSON y puede
 validarlo con un contrato de dominio. Esta ruta sirve para preparar datos que
 la aplicación ya tiene.
 
+En tablas de valores simples, el encabezado puede declarar una secuencia de
+enteros con su inicio y paso. El descodificador repone esos valores en el orden
+de las filas.
+
 ```sh
 python -m minifmt.transport encode datos.json --tokenizer o200k_base > datos.txt
 python -m minifmt.transport decode datos.txt

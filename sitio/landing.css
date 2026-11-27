@@ -7,6 +7,10 @@
 .hero .lead{ margin-bottom:2.4rem; max-width:40ch }
 .hero-examples{ margin:0 0 1.6rem }
 .quickstart{ display:inline-flex; align-items:center; gap:.45rem; margin-top:1.75rem; font-weight:650; font-size:1rem; color:rgb(var(--fg)); text-decoration:underline; text-decoration-thickness:1.5px }
+.proof-benchmark{ margin:1.2rem 0 0; padding-top:1rem; border-top:1px solid rgb(var(--line)); scroll-margin-top:5rem }
+.proof-benchmark figcaption{ margin-bottom:1rem; font-weight:700 }
+.proof-benchmark figcaption small{ display:block; font-weight:400; color:rgb(var(--fg-muted)) }
+.proof-links{ display:flex; flex-wrap:wrap; gap:.4rem 1.2rem; font-size:.86rem }
 
 /* tarjeta de benchmark */
 .bench{ border:1px solid rgb(var(--line)); border-radius:var(--r-lg); overflow:hidden; background:rgb(var(--raised)) }

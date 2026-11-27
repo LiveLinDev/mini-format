@@ -92,6 +92,7 @@ def resultados_nube(ctx):
     {tabla_nube("single_row", a("Una fila · 12 casos", "One row · 12 cases"), abierta=True)}
     {tabla_nube("small_batch", a("De 2 a 8 filas · 8 lotes", "2 to 8 rows · 8 batches"))}
     {tabla_nube("large_batch", a("De 9 a 24 filas · 6 lotes", "9 to 24 rows · 6 batches"))}
+    {tabla_nube("support_batches", a("20 tickets contra BPP · 6 lotes", "20 tickets against BPP · 6 batches"))}
     {tabla_nube("recent_single", a("Una fila contra BPP y NOVA · 16 casos", "One row against BPP and NOVA · 16 cases"))}
     <h3>{a("Comparación con ISON y caché", "Cache comparison with ISON")}</h3>
     <p>{a(
@@ -113,7 +114,7 @@ def resultados_nube(ctx):
         "16-respuestas-independientes": a("16 objetos independientes", "16 independent objects"),
         "doce-lotes": a("12 lotes sintéticos", "12 synthetic batches"),
     }
-    formatos = ("mini", "tokenfold", "bpp", "nova_compact", "nova_lines", "json_compact")
+    formatos = ("mini", "mini_previous", "bpp", "toon", "tokenfold", "nova_compact", "nova_lines", "json_compact")
     encabezados = [a("Conjunto", "Dataset")] + [nombres[clave] for clave in formatos]
     filas = []
     for clave_muestra, conteos in datos["serialization"].items():
@@ -132,8 +133,8 @@ def resultados_nube(ctx):
     transport = f'''<section class="val-sec" id="compresion-entrada">
     <h2>{a("Compresión de datos para la entrada", "Compressing input data")}</h2>
     <p>{a(
-        "Tokens del documento completo con o200k_base. Cada formato recuperó exactamente el JSON de origen. .mini usó menos tokens que Tokenfold en los tres casos compartidos, y BPP fue el más pequeño en los tickets de soporte.",
-        "Full-document tokens with o200k_base. Every format recovered the original JSON exactly. .mini used fewer tokens than Tokenfold on the three shared workloads, and BPP was smallest on the support tickets."
+        "Tokens del documento completo con o200k_base. Cada formato recuperó exactamente el JSON de origen.",
+        "Full-document tokens with o200k_base. Every format recovered the original JSON exactly."
     )}</p>
     {tabla(encabezados, filas, a("Tokens por documento", "Tokens per document"))}
     <p class="val-method">{a("El guion indica una combinación sin ensayo.", "A dash marks a combination that was not tested.")}</p>
@@ -217,17 +218,18 @@ def construir(ctx) -> None:
 
     cloud, transport = resultados_nube(ctx)
     cuerpo = f'''<div class="val-wrap prose">
-  <p class="eyebrow">{a("Evidencia técnica reproducible", "Reproducible technical proof")}</p>
   <h1>{a("Validación y Benchmarks 2026", "Validation & 2026 Benchmarks")}</h1>
-  <p class="lead">{a(
-      "Cuánto cuesta obtener una respuesta correcta y cuántos tokens ocupan los mismos datos en los formatos comparados.",
-      "What it costs to get a correct response and how many tokens the same data uses across formats."
-  )}</p>
-  <div class="val-jumps">
-    <a href="#generacion-nube">{a("Costo por respuesta", "Cost per response")}</a>
-    <a href="#compresion-entrada">{a("Compresión de entrada", "Input compression")}</a>
-    <a href="#serializacion-publica">{a("Clasificación de 16 formatos", "16-format leaderboard")}</a>
-  </div>
+  <section class="val-criteria" id="criterios" aria-labelledby="titulo-criterios">
+    <h2 id="titulo-criterios">{a("Qué medimos", "What we measure")}</h2>
+    <div class="val-criteria-grid">
+      <a href="#compresion-entrada"><strong>{a("Tamaño", "Size")}</strong>
+        <span>{a("Tokens de los mismos datos.", "Tokens for the same data.")}</span></a>
+      <a href="#generacion-nube"><strong>{a("Costo", "Cost")}</strong>
+        <span>{a("USD por acierto. Entrada, salida y reintentos.", "USD per exact result. Input, output and retries.")}</span></a>
+      <a href="#generacion-nube"><strong>{a("Precisión", "Accuracy")}</strong>
+        <span>{a("Respuestas con el JSON exacto ÷ casos.", "Responses with exact JSON ÷ cases.")}</span></a>
+    </div>
+  </section>
 
   {cloud}
   {transport}

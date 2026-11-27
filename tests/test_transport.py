@@ -52,6 +52,21 @@ def test_separate_tables_decode_with_no_out_of_band_state():
             transport.loads(bad)
 
 
+def test_sequence_table_is_self_contained_and_keeps_scalar_types():
+    rows = [{"sequence": 10 - index * 3, "note": note, "other": other, "flag": bool(index % 2)}
+            for index, (note, other) in enumerate((
+                ("two simple words", "123"), (' Lead\r\n"tail" ', 123), ("", "a b"), ("[literal]", None),
+                ("do not split here", "A\\B\tC"), ("repeated words", "true"),
+            ))]
+    wire = transport.dumps(rows, count=lambda text: 0 if text.startswith("^") else len(text))
+    assert wire.startswith("^sequence=10:-3 ") and wire.split("\n", 1)[0].endswith(" note")
+    assert json.dumps(transport.loads(wire), sort_keys=True) == json.dumps(rows, sort_keys=True)
+    for bad in ("^id=0:0 value\na\nb", "^id=1:1 id value\n1 a\n2 b", "^id=1:1 value\na",
+                '^id=1:1 tag value\n"broken\na b', '^id=1:1 value\n"pending\nb'):
+        with pytest.raises(domain.DomainError):
+            transport.loads(bad)
+
+
 def test_well_typed_json_controls_stay_lossless_when_compacted():
     rng = Random(20261127)
     values = ["", '"text', "a=val", "false", "null", "a,b", "c | d", "x\tz", "E\u2028F", None, True, 4, 4.5]

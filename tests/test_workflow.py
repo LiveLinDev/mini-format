@@ -238,6 +238,23 @@ def test_one_projected_row_uses_json_values_and_restores_exact_text(tmp_path, fi
     assert decode(flow.last_run["mini"], contract) == [row]
 
 
+def test_projected_text_batch_accepts_bare_text_and_json_escapes(tmp_path):
+    rows = [{"id": 4, "categoria": "acceso", "prioridad": "alta", "titulo": "Restaurar clave"},
+            {"id": 8, "categoria": "seguimiento activo", "prioridad": "baja", "titulo": " A\\B\t "}]
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([rows], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+
+    def generate(prompt):
+        assert "2 filas sin cabecera en orden categoria,prioridad,titulo." in prompt
+        assert "barras inversas" in prompt
+        return 'acceso alta Restaurar clave\n"seguimiento activo" baja ' + json.dumps(rows[1]["titulo"])
+
+    assert flow.run(generate, "Clasifica", expected_records=2, last_text_field="titulo",
+                    known_rows=[{"id": 4}, {"id": 8}]) == rows
+    assert decode(flow.last_run["mini"], contract) == rows
+
+
 @pytest.mark.parametrize("context", [
     [{"id": 5}],
     [{"id": 5}, {}],

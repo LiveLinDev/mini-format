@@ -151,6 +151,9 @@ sections. Sequences, constants, runs and common fragments appear only when
 they reduce the count. `loads(text)` reconstructs the JSON and can validate it
 against a domain contract. Use this path for data the application already has.
 
+In tables of scalar values, the header can store the start and step of an
+integer sequence. The decoder restores those values in row order.
+
 ```sh
 python -m minifmt.transport encode data.json --tokenizer o200k_base > data.txt
 python -m minifmt.transport decode data.txt

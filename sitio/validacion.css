@@ -34,14 +34,28 @@
   margin-top: 42px;
 }
 
-.val-sec[id] {
+.val-sec[id], .val-criteria {
   scroll-margin-top: 90px;
 }
 
-.val-jumps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
+.val-criteria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 12px;
+}
+
+.val-criteria-grid a {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.val-criteria-grid a > span {
+  font-size: 0.9rem;
+  color: rgb(var(--fg-muted));
 }
 
 .val-run {
