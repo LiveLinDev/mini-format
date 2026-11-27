@@ -4,8 +4,21 @@
   "tokens": {
     "json": 443,
     "toon": 304,
-    "mini": 278
+    "mini": 278,
+    "mini_v2": 291,
+    "mini_rows": 182
+  },
+  "competitors": {
+    "ison": 234,
+    "lean": 246,
+    "tonl": 274,
+    "hedl": 319,
+    "raif": 257,
+    "json_positional": 280,
+    "json_short": 423
   },
   "mini_prompt_tokens": 571,
-  "note": "Prompt and repair calls are extra; these output counts do not measure end-to-end cost."
+  "mini_lean_prompt_tokens": 137,
+  "mini_rows_prompt_tokens": 70,
+  "note": "Prompt and repair calls are extra; output counts exclude prompt overhead."
 }

@@ -371,6 +371,30 @@ def cmd_to_schema(args) -> int:
     return 0
 
 
+def cmd_grammar(args) -> int:
+    from .grammar import contract_to_gbnf, contract_to_lark, contract_to_regex
+    from .domain import _strict_json
+    src = Path(args.source)
+    if src.suffix.lower() == ".json" and src.is_file():
+        loaded = _strict_json(src.read_text(encoding="utf-8-sig"))
+        contract = loaded if "schema" in loaded else Contract.from_dict(loaded)
+    else:
+        contract = _reg(args).get(args.source)
+    fn = {"gbnf": contract_to_gbnf, "lark": contract_to_lark, "regex": contract_to_regex}[args.format]
+    text = fn(
+        contract,
+        compact_rows=args.compact_rows,
+        last_text_field=args.last_text_field,
+        expected_records=args.expected_records,
+        delimiter=args.delimiter,
+    )
+    if args.out:
+        _escribir(Path(args.out), text if text.endswith("\n") else text + "\n")
+    else:
+        print(text, end="" if text.endswith("\n") else "\n")
+    return 0
+
+
 def main(argv=None) -> int:
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
@@ -394,6 +418,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("bench", help="compare tokens of a document across formats"); p.add_argument("file"); p.add_argument("-p", "--prefix"); p.add_argument("--contract", help="domain-profile contract (mini build)"); p.add_argument("--enc", default="o200k_base"); p.add_argument("--format", default="table", choices=["table", "json"]); p.set_defaults(fn=cmd_bench)
     p = sub.add_parser("from-schema", help="convert a JSON Schema or Pydantic model into a contract"); p.add_argument("schema", nargs="?"); p.add_argument("-p", "--prefix", required=True); p.add_argument("--pydantic", metavar="MODULE:MODEL"); p.add_argument("--name"); p.add_argument("--records-key"); p.add_argument("--strict", action="store_true", help="fail on keywords without contract equivalent"); p.add_argument("--out"); p.set_defaults(fn=cmd_from_schema)
     p = sub.add_parser("to-schema", help="describe a contract as JSON Schema"); p.add_argument("source", help="registered PREFIX or path to contract.json"); p.add_argument("--record", action="store_true", help="describe one record instead of the canonical document"); p.add_argument("--out"); p.set_defaults(fn=cmd_to_schema)
+    p = sub.add_parser("grammar", help="compile a contract into a GBNF, Lark or Regex constrained-decoding grammar"); p.add_argument("source", help="registered PREFIX or path to contract.json"); p.add_argument("--format", default="gbnf", choices=["gbnf", "lark", "regex"]); p.add_argument("--compact-rows", action="store_true"); p.add_argument("--last-text-field"); p.add_argument("--expected-records", type=int); p.add_argument("--delimiter", default="|"); p.add_argument("--out"); p.set_defaults(fn=cmd_grammar)
     if argv is None:
         argv = sys.argv[1:]
     if argv == ["help"]:

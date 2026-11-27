@@ -2,8 +2,8 @@
   "methodology_version": 1,
   "tokenizer": "o200k_base",
   "tokenizer_backend": "tiktoken",
-  "python": "3.11.9",
-  "tiktoken": "0.12.0",
+  "python": "3.12.0",
+  "tiktoken": "0.14.0",
   "toon": {
     "implementation": "official vendored reference",
     "package_version": "4.1.1",
@@ -12,9 +12,9 @@
   "contract_training": "Complete snapshot; serialization measurement, not held-out LLM generation accuracy.",
   "comparison": "Identical JSON values, full wrappers and metadata; reusable schema and generation prompt measured separately.",
   "implementation_sha256": {
-    "run.py": "1bd1d69400078a9dd62bc407a9ebc28ea252216a81a85db15a7d2f68c1fd7570",
+    "run.py": "6f569bfce98941cfbe4986aa730e3c6aa42fb46a5b4390983299859d6931bd68",
     "baselines.py": "cc725868d399e1a3cede168650778bb9ee976523316addde1e05029b5384a699",
-    "src/minifmt/domain.py": "1f7a90314d91a4bfdf9610225f51f4163714f2978db10ee8df98d6c2d5abad6d"
+    "src/minifmt/domain.py": "78e9881bcfbbe30981268832084625d4e5827eb234e6215a76cefad4aa08e9aa"
   },
   "datasets": [
     {
@@ -97,6 +97,15 @@
           "prompt_tokens": 1206,
           "payload_plus_schema_tokens": 64848,
           "payload_plus_prompt_tokens": 65296
+        },
+        "mini_v2": {
+          "tokens": 60431,
+          "bytes": 172262,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 60431,
+          "payload_plus_prompt_tokens": null
         }
       },
       "flattening": {
@@ -123,7 +132,8 @@
         "vs_toon_flat_pct": 6.11,
         "vs_csv_pct": 4.42,
         "vs_yaml_pct": 35.92,
-        "vs_xml_pct": 62.24
+        "vs_xml_pct": 62.24,
+        "vs_mini_v2_pct": -6.05
       },
       "mini_fits_smaller_than_flat_toon_including_schema": true,
       "mini_without_document_factoring_tokens": 68645,
@@ -222,6 +232,15 @@
           "prompt_tokens": 1796,
           "payload_plus_schema_tokens": 44519,
           "payload_plus_prompt_tokens": 45064
+        },
+        "mini_v2": {
+          "tokens": 38751,
+          "bytes": 84110,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 38751,
+          "payload_plus_prompt_tokens": null
         }
       },
       "flattening": {
@@ -248,7 +267,8 @@
         "vs_toon_flat_pct": 28.98,
         "vs_csv_pct": 27.92,
         "vs_yaml_pct": 58.72,
-        "vs_xml_pct": 78.6
+        "vs_xml_pct": 78.6,
+        "vs_mini_v2_pct": -11.66
       },
       "mini_fits_smaller_than_flat_toon_including_schema": true,
       "mini_without_document_factoring_tokens": 61262,
@@ -347,6 +367,15 @@
           "prompt_tokens": 477,
           "payload_plus_schema_tokens": 30417,
           "payload_plus_prompt_tokens": 30745
+        },
+        "mini_v2": {
+          "tokens": 29302,
+          "bytes": 117445,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 29302,
+          "payload_plus_prompt_tokens": null
         }
       },
       "flattening": {
@@ -373,7 +402,8 @@
         "vs_toon_flat_pct": 2.43,
         "vs_csv_pct": -1.35,
         "vs_yaml_pct": 23.79,
-        "vs_xml_pct": 49.52
+        "vs_xml_pct": 49.52,
+        "vs_mini_v2_pct": -3.3
       },
       "mini_fits_smaller_than_flat_toon_including_schema": true,
       "mini_without_document_factoring_tokens": 30268,
@@ -472,6 +502,15 @@
           "prompt_tokens": 1336,
           "payload_plus_schema_tokens": 165015,
           "payload_plus_prompt_tokens": 165473
+        },
+        "mini_v2": {
+          "tokens": 116471,
+          "bytes": 235042,
+          "roundtrip": true,
+          "shared_schema_tokens": 0,
+          "prompt_tokens": 0,
+          "payload_plus_schema_tokens": 116471,
+          "payload_plus_prompt_tokens": null
         }
       },
       "flattening": {
@@ -498,7 +537,8 @@
         "vs_toon_flat_pct": 5.56,
         "vs_csv_pct": 4.11,
         "vs_yaml_pct": 45.17,
-        "vs_xml_pct": 69.9
+        "vs_xml_pct": 69.9,
+        "vs_mini_v2_pct": -40.93
       },
       "mini_fits_smaller_than_flat_toon_including_schema": true,
       "mini_without_document_factoring_tokens": 181521,
@@ -531,7 +571,8 @@
       "csv": 328130,
       "yaml": 543927,
       "xml": 977223,
-      "mini": 301763
+      "mini": 301763,
+      "mini_v2": 244955
     },
     "all_roundtrips_passed": true,
     "weighted_savings_pct": {
@@ -541,7 +582,8 @@
       "toon_flat": 9.65,
       "csv": 8.04,
       "yaml": 44.52,
-      "xml": 69.12
+      "xml": 69.12,
+      "mini_v2": -23.19
     },
     "wins_vs_flat_toon": 4
   }

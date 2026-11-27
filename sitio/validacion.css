@@ -1,0 +1,45 @@
+.val-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 56px 24px 84px;
+}
+
+.val-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 28px 0 36px;
+}
+
+.val-kpi {
+  background: var(--bg-soft, #111827);
+  border: 1px solid var(--border, #1f2937);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.val-kpi strong {
+  display: block;
+  font-size: 1.65rem;
+  color: var(--accent, #10b981);
+  margin-bottom: 6px;
+}
+
+.val-kpi span {
+  font-size: 0.92rem;
+  color: var(--muted, #94a3b8);
+}
+
+.val-sec {
+  margin-top: 42px;
+}
+
+.val-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.14);
+  color: #10b981;
+}

@@ -27,7 +27,7 @@ SOURCE_ZIP = f"/downloads/mini-format-{VERSION}-source.zip"
 # Los módulos añaden las suyas con registrar_en_linea() (ver sitio/modulos.py).
 RUTAS_EN_LINEA: set[str] = {"demo", "taller", "sima", "ejemplo", "validacion", "economia"}
 ALLOW_ROOTS = {"benchmark", "experiments", "conformance", "forks", "src", "ts", "js", "docs"}
-ALLOW_SUFFIX = {".md", ".json", ".csv", ".py", ".ts", ".js", ".mini", ".txt", ".toml", ".png", ".svg", ".yaml", ".yml"}
+ALLOW_SUFFIX = {".md", ".json", ".csv", ".py", ".ts", ".js", ".mini", ".txt", ".toml", ".png", ".svg", ".gif", ".yaml", ".yml"}
 EXCLUDE = {"node_modules", "__pycache__", ".venv", ".git", "vocab", "dist"}
 COPIED: set[str] = set()
 

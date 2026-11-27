@@ -75,7 +75,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     vocab_local.preparar_cache([args.tokenizer])
     if not args.baselines_only:
-        from minifmt.domain import infer_contract, encode, decode, make_prompt
+        from minifmt.domain import infer_contract, encode, encode_v2, decode, make_prompt
     tokenizer = get_tokenizer(args.tokenizer)
     manifest = json.loads((HERE / "sources.json").read_text(encoding="utf-8"))
     report = {
@@ -142,6 +142,8 @@ def main() -> None:
             contract = infer_contract([document], prefix=source["id"])
             texts["mini"] = encode(document, contract)
             restored["mini"] = decode(texts["mini"], contract)
+            texts["mini_v2"] = encode_v2(document, contract, token_counter=tokenizer.count)
+            restored["mini_v2"] = decode(texts["mini_v2"], contract)
             schemas["mini"] = compact(contract)
             prompts["mini"] = make_prompt(contract, lang="en")
         entry = {

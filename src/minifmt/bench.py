@@ -34,8 +34,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 TOON_BUNDLE = REPO_ROOT / "benchmark" / "toon_ref" / "toon.bundle.js"
 BASELINE = "json_compact"
 LABELS = {
-    "mini": ".mini", "json_compact": "JSON compact", "json_pretty": "JSON indented", "yaml": "YAML",
-    "csv": "CSV (flattened)", "toon": "TOON (official, as-is)", "toon_flat": "TOON (flattened, tabular)",
+    "mini": ".mini", "mini_v2": ".mini (domain/2)", "json_compact": "JSON compact",
+    "json_pretty": "JSON indented", "yaml": "YAML", "csv": "CSV (flattened)",
+    "toon": "TOON (official, as-is)", "toon_flat": "TOON (flattened, tabular)",
 }
 _SCALARS = ("str", "int", "float", "bool", "enum")
 
@@ -182,10 +183,12 @@ def serialize_family(obj: Dict[str, Any], c: Contract, toon_bundle: Optional[Pat
     return out
 
 
-def serialize_domain(value: Any, contract: Dict[str, Any], toon_bundle: Optional[Path] = None) -> Dict[str, Any]:
+def serialize_domain(value: Any, contract: Dict[str, Any], toon_bundle: Optional[Path] = None,
+                     token_counter: Any = None) -> Dict[str, Any]:
     from . import domain
     out: Dict[str, Any] = {
         "mini": domain.dumps(value, contract),
+        "mini_v2": domain.encode_v2(value, contract, token_counter=token_counter),
         "json_compact": json.dumps(value, ensure_ascii=False, separators=(",", ":")),
         "json_pretty": json.dumps(value, ensure_ascii=False, indent=2),
         "yaml": _yaml(value),
@@ -257,7 +260,11 @@ def run_bench(path: str, prefix: Optional[str] = None, contract_path: Optional[s
     """Measure tokens per format; returns a JSON-serialisable report."""
     tk = _tokenizer(enc)
     kind, contract, value, info = load_document(Path(path), prefix, contract_path, forks)
-    texts = serialize_family(value, contract, toon_bundle) if kind == "family" else serialize_domain(value, contract, toon_bundle)
+    texts = (
+        serialize_family(value, contract, toon_bundle)
+        if kind == "family"
+        else serialize_domain(value, contract, toon_bundle, token_counter=tk.count)
+    )
     base = tk.count(texts[BASELINE])
     rows = []
     for name, text in texts.items():
@@ -269,8 +276,8 @@ def run_bench(path: str, prefix: Optional[str] = None, contract_path: Optional[s
             row.update(available=True, tokens=n, bytes=len(text.encode("utf-8")),
                        saving_vs_json_compact=round((base - n) / base * 100, 1) if base else 0.0)
         rows.append(row)
-    order = ["mini", "toon_flat", "toon", "csv", "json_compact", "yaml", "json_pretty"]
-    rows.sort(key=lambda r: order.index(r["format"]))
+    order = ["mini_v2", "mini", "toon_flat", "toon", "csv", "json_compact", "yaml", "json_pretty"]
+    rows.sort(key=lambda r: order.index(r["format"]) if r["format"] in order else 999)
     report = {"file": str(path), "kind": kind, "encoding": enc, "backend": tk.backend,
               "baseline": BASELINE, "baseline_tokens": base}
     report.update(info)

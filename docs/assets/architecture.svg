@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 320" width="1160" height="320" role="img" aria-label=".mini architecture pipeline">
+  <defs>
+    <linearGradient id="gPipe" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="50%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#38BDF8"/>
+    </marker>
+  </defs>
+  <rect width="1160" height="320" rx="16" fill="#0B1120"/>
+  <rect x="1" y="1" width="1158" height="318" rx="15" fill="none" stroke="#1E293B" stroke-width="1.5"/>
+  <text x="40" y="44" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="19" font-weight="700" fill="#F8FAFC">Zero-Loss LLM Serialization &amp; Recovery Pipeline</text>
+  <text x="40" y="66" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="13" fill="#94A3B8">Schema inference -&gt; KV-cache prefix + optional GBNF/Lark grammar -&gt; repair &amp; cut continuation -&gt; exact JSON</text>
+
+  <!-- Step boxes -->
+  <g transform="translate(36, 98)">
+    <rect x="0" y="0" width="196" height="176" rx="12" fill="#111827" stroke="#334155"/>
+    <text x="16" y="28" font-family="ui-monospace, monospace" font-size="12" font-weight="700" fill="#10B981">01 · CONTRACT</text>
+    <text x="16" y="54" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#F1F5F9">Infer or Define</text>
+    <text x="16" y="80" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- mini build sample.json</text>
+    <text x="16" y="102" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Stable schema hash h=</text>
+    <text x="16" y="124" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Optional JSON Schema</text>
+    <text x="16" y="146" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Optional GBNF / Lark</text>
+  </g>
+  <line x1="236" y1="186" x2="264" y2="186" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g transform="translate(268, 98)">
+    <rect x="0" y="0" width="196" height="176" rx="12" fill="#111827" stroke="#334155"/>
+    <text x="16" y="28" font-family="ui-monospace, monospace" font-size="12" font-weight="700" fill="#06B6D4">02 · PROMPTING</text>
+    <text x="16" y="54" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#F1F5F9">KV-Cache + Lean</text>
+    <text x="16" y="80" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Format prefix at byte 0</text>
+    <text x="16" y="102" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Pruned rules (68-100 tok)</text>
+    <text x="16" y="124" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Blocks CoT bloat</text>
+    <text x="16" y="146" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Drop-in SDK bridge</text>
+  </g>
+  <line x1="468" y1="186" x2="496" y2="186" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g transform="translate(500, 98)">
+    <rect x="0" y="0" width="196" height="176" rx="12" fill="#111827" stroke="#10B981" stroke-width="1.5"/>
+    <text x="16" y="28" font-family="ui-monospace, monospace" font-size="12" font-weight="700" fill="#10B981">03 · WIRE CODEC</text>
+    <text x="16" y="54" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#F1F5F9">domain/2 or Rows</text>
+    <text x="16" y="80" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- BPE delimiter s=sp/cm</text>
+    <text x="16" y="102" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- d= const, p= prefix</text>
+    <text x="16" y="124" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- dt= int delta, e= dict</text>
+    <text x="16" y="146" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- z=1 zero-empty, b=1</text>
+  </g>
+  <line x1="700" y1="186" x2="728" y2="186" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g transform="translate(732, 98)">
+    <rect x="0" y="0" width="196" height="176" rx="12" fill="#111827" stroke="#334155"/>
+    <text x="16" y="28" font-family="ui-monospace, monospace" font-size="12" font-weight="700" fill="#38BDF8">04 · RECOVERY</text>
+    <text x="16" y="54" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#F1F5F9">Repair &amp; Resume</text>
+    <text x="16" y="80" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Strip BOM / CRLF / fences</text>
+    <text x="16" y="102" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Line-by-line patch map</text>
+    <text x="16" y="124" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Keep cut prefix (99.8%)</text>
+    <text x="16" y="146" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#94A3B8">- Ask only missing tail</text>
+  </g>
+  <line x1="932" y1="186" x2="960" y2="186" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g transform="translate(964, 98)">
+    <rect x="0" y="0" width="160" height="176" rx="12" fill="#064E3B" stroke="#10B981" stroke-width="1.5"/>
+    <text x="16" y="28" font-family="ui-monospace, monospace" font-size="12" font-weight="700" fill="#A7F3D0">05 · OUTPUT</text>
+    <text x="16" y="54" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#ECFDF5">Exact JSON</text>
+    <text x="16" y="82" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#D1FAE5">- Zero coercion</text>
+    <text x="16" y="104" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#D1FAE5">- Int vs float exact</text>
+    <text x="16" y="126" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#D1FAE5">- Full wrapper m=</text>
+    <text x="16" y="148" font-family="ui-sans-serif, Segoe UI, sans-serif" font-size="12.5" fill="#D1FAE5">- Audited trace log</text>
+  </g>
+</svg>

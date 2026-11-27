@@ -50,28 +50,51 @@ class Workflow:
     ``last_run`` contains an inspectable history, including unsuccessful runs.
     """
 
-    def __init__(self, bundle=None, lang=None):
+    def __init__(self, bundle=None, lang=None, *, prompt_style="full", kv_cache_first=False):
         self.bundle = Path(bundle or Path(__file__).resolve().parent).resolve()
         if lang is None:
             settings = self.bundle / "setup.json"
             lang = json.loads(settings.read_text(encoding="utf-8"))["language"] if settings.is_file() else "es"
         if lang not in ("es", "en"):
             raise ValueError("lang must be es or en")
+        if prompt_style not in ("full", "lean"):
+            raise ValueError("prompt_style must be full or lean")
         self.lang = lang
+        self.prompt_style = prompt_style
+        self.kv_cache_first = bool(kv_cache_first)
         self.runtime = _runtime(self.bundle)
         self.contract = self.runtime.load_contract(self.bundle / "contract.json")
-        self.format_prompt = (self.bundle / f"prompt.{lang}.md").read_text(encoding="utf-8")
+        self.full_prompt = (self.bundle / f"prompt.{lang}.md").read_text(encoding="utf-8")
+        lean_file = self.bundle / f"prompt.lean.{lang}.md"
+        self.lean_prompt = lean_file.read_text(encoding="utf-8") if lean_file.is_file() else self.full_prompt
+        self.format_prompt = self.lean_prompt if prompt_style == "lean" else self.full_prompt
         self.last_run = None
 
-    def prompt(self, task, expected_records=None):
+    def prompt(self, task, expected_records=None, *, style=None, kv_cache_first=None):
         count = "" if expected_records is None else f"\nRequired record count: {expected_records}."
-        return f"Task / Tarea:\n{task}{count}\n\nOutput format (replaces JSON instructions):\n{self.format_prompt}"
+        if style == "lean":
+            fmt = self.lean_prompt
+        elif style == "full":
+            fmt = self.full_prompt
+        else:
+            fmt = self.format_prompt
+        cache_first = self.kv_cache_first if kv_cache_first is None else kv_cache_first
+        if cache_first:
+            return f"Output format (replaces JSON instructions):\n{fmt}\n\nTask / Tarea:\n{task}{count}"
+        return f"Task / Tarea:\n{task}{count}\n\nOutput format (replaces JSON instructions):\n{fmt}"
 
-    def rows_prompt(self, task, *, last_text_field, expected_records):
+    def rows_prompt(self, task, *, last_text_field, expected_records, kv_cache_first=None):
         format_prompt = self.runtime.make_rows_prompt(
             self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang
         )
         return format_prompt + "\n" + task
+
+    def run_compact(self, generate, task, *, last_text_field, expected_records, max_repairs=1):
+        """Generate and validate space-delimited compact rows (minimal prompt + output tokens)."""
+        prompt = self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records)
+        reply = generate(prompt)
+        return self.process_rows(reply, last_text_field=last_text_field, expected_records=expected_records,
+                                 generate=generate, task=task, max_repairs=max_repairs)
 
     def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1):
         """Validate model rows and store a canonical .mini document in the run history."""
@@ -450,7 +473,8 @@ class Workflow:
         return await asyncio.to_thread(self.process, text, generate=correction, task=task,
                                        expected_records=expected_records, max_repairs=max_repairs)
 
-    def complete(self, create, *, messages, expected_records=None, max_repairs=1, **kwargs):
+    def complete(self, create, *, messages, expected_records=None, max_repairs=1,
+                 kv_cache_first=None, prompt_style=None, **kwargs):
         """Bridge an existing OpenAI-compatible chat completion SDK call.
 
         Keep model, client, business messages and other generation parameters.
@@ -461,9 +485,18 @@ class Workflow:
         if kwargs.get("stream") or kwargs.get("tools") or kwargs.get("functions") or kwargs.get("n", 1) != 1:
             raise ValueError("use Workflow.run with a text callback for streaming, tools or multiple choices")
         original = [dict(message) for message in messages]
+        cache_first = self.kv_cache_first if kv_cache_first is None else kv_cache_first
 
-        def request(prompt):
-            response = create(messages=original + [{"role": "system", "content": prompt}], **kwargs)
+        def request(prompt, *, initial=False):
+            if cache_first and initial:
+                fmt = self.lean_prompt if prompt_style == "lean" else self.format_prompt
+                count = "" if expected_records is None else f"\nRequired record count: {expected_records}."
+                msgs = [{"role": "system", "content": fmt}] + original + (
+                    [{"role": "system", "content": count.lstrip()}] if count else []
+                )
+            else:
+                msgs = original + [{"role": "system", "content": prompt}]
+            response = create(messages=msgs, **kwargs)
             if isinstance(response, dict):
                 choice = response["choices"][0]
                 return choice["message"]["content"], choice.get("finish_reason")
@@ -471,18 +504,19 @@ class Workflow:
             return choice.message.content, getattr(choice, "finish_reason", None)
 
         task = "Follow the original application messages."
-        text, finish_reason = request(self.prompt(task, expected_records))
+        text, finish_reason = request(self.prompt(task, expected_records, style=prompt_style), initial=True)
         return self.process(text, generate=lambda prompt: request(prompt)[0], task=task,
                             expected_records=expected_records, max_repairs=max_repairs,
                             truncated=finish_reason == "length")
 
-    def post(self, send, url, *, json=None, expected_records=None, max_repairs=1, **kwargs):
+    def post(self, send, url, *, json=None, expected_records=None, max_repairs=1,
+             kv_cache_first=None, prompt_style=None, **kwargs):
         """Bridge an HTTP call to an OpenAI-compatible chat/completions endpoint (``requests.post``, ``httpx.post``).
 
         Only JSON-mode chat requests change: ``response_format`` is removed, the format prompt is added as a last
-        system message and the .mini answer is validated, repaired and decoded. The application receives a response
-        with the same shape whose ``message.content`` is the validated JSON document, and ``usage`` adds up every
-        call. Any other request, and any HTTP error, is returned unchanged.
+        system message (or prepended as static prefix when ``kv_cache_first=True``) and the .mini answer is validated,
+        repaired and decoded. The application receives a response with the same shape whose ``message.content`` is the
+        validated JSON document, and ``usage`` adds up every call. Any other request, and any HTTP error, is returned unchanged.
         """
         payload = json
         if (not isinstance(payload, dict) or "messages" not in payload or "response_format" not in payload
@@ -491,14 +525,23 @@ class Workflow:
         base = {key: value for key, value in payload.items() if key != "response_format"}
         original = [dict(message) for message in base["messages"]]
         calls = []
+        cache_first = self.kv_cache_first if kv_cache_first is None else kv_cache_first
 
         class _Failed(Exception):
             def __init__(self, response):
                 super().__init__("HTTP error")
                 self.response = response
 
-        def generate(prompt):
-            response = send(url, json=dict(base, messages=original + [{"role": "system", "content": prompt}]), **kwargs)
+        def generate(prompt, *, initial=False):
+            if cache_first and initial:
+                fmt = self.lean_prompt if prompt_style == "lean" else self.format_prompt
+                count = "" if expected_records is None else f"\nRequired record count: {expected_records}."
+                msgs = [{"role": "system", "content": fmt}] + original + (
+                    [{"role": "system", "content": count.lstrip()}] if count else []
+                )
+            else:
+                msgs = original + [{"role": "system", "content": prompt}]
+            response = send(url, json=dict(base, messages=msgs), **kwargs)
             if getattr(response, "status_code", 200) >= 400:
                 raise _Failed(response)
             body = response.json()
@@ -508,7 +551,7 @@ class Workflow:
 
         task = "Follow the original application messages."
         try:
-            text = generate(self.prompt(task, expected_records))
+            text = generate(self.prompt(task, expected_records, style=prompt_style), initial=True)
             truncated = ((calls[-1].get("choices") or [{}])[0].get("finish_reason") == "length")
             data = self.process(text, generate=generate, task=task, expected_records=expected_records,
                                 max_repairs=max_repairs, truncated=truncated)

@@ -9,7 +9,13 @@ export class WorkflowError extends Error {
 }
 
 export class Workflow {
-  constructor({ lang, python = 'python' } = {}) { this.lang = lang; this.python = python; this.lastRun = null; }
+  constructor({ lang, python = 'python', promptStyle = 'full', kvCacheFirst = false } = {}) {
+    this.lang = lang;
+    this.python = python;
+    this.promptStyle = promptStyle;
+    this.kvCacheFirst = Boolean(kvCacheFirst);
+    this.lastRun = null;
+  }
 
   async prompt(task, expectedRecords, lastTextField) {
     const lang = this.lang || JSON.parse(await readFile(new URL('./setup.json', import.meta.url), 'utf8')).language;
@@ -20,8 +26,14 @@ export class Workflow {
       if (result.code !== 0) throw Error(result.stderr.trim());
       return result.stdout;
     }
-    const format = await readFile(new URL(`./prompt.${lang}.md`, import.meta.url), 'utf8');
+    const promptFile = this.promptStyle === 'lean' ? `./prompt.lean.${lang}.md` : `./prompt.${lang}.md`;
+    const format = await readFile(new URL(promptFile, import.meta.url), 'utf8').catch(
+      () => readFile(new URL(`./prompt.${lang}.md`, import.meta.url), 'utf8'),
+    );
     const count = expectedRecords === undefined ? '' : `\nRequired record count: ${expectedRecords}.`;
+    if (this.kvCacheFirst) {
+      return `Output format (replaces JSON instructions):\n${format}\n\nTask / Tarea:\n${task}${count}`;
+    }
     return `Task / Tarea:\n${task}${count}\n\nOutput format (replaces JSON instructions):\n${format}`;
   }
 

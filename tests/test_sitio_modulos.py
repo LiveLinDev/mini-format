@@ -213,7 +213,7 @@ def test_los_marcadores_de_validacion_y_economia_son_modulos_validos(tmp_path):
     assert set(destino) == {"validacion", "economia"}
     for ruta, pagina in destino.items():
         assert 'class="site-header"' in pagina and 'class="site-footer"' in pagina, ruta
-        assert "en construcción" in pagina and "under construction" in pagina
-        assert "<h1>" in pagina and f'data-title-es=' in pagina
-        assert not re.search(r"[☀-➿\U0001F300-\U0001FAFF]", pagina), "sin emojis ni dingbats"
+        assert "en construcción" not in pagina and "under construction" not in pagina
+        assert "<h1>" in pagina and 'data-title-es=' in pagina and "<table" in pagina
+        assert not re.search(r"[←-⇿⌀-⏿☀-➿⬀-⯿\U0001F000-\U0001FAFF]", pagina), "sin flechas, emojis ni dingbats"
     assert construir.ruta_activa("validacion") == ""

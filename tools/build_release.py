@@ -37,10 +37,12 @@ SOURCE_DIRS = ("src", "forks", "ts/src", "ts/test", "js", "tests", "conformance"
 # Carpetas que NUNCA van a ningún archivo publicado aunque estén dentro de una de SOURCE_DIRS (datos restringidos).
 EXCLUDED_TREES = ("evidencia/restringida",)
 SOURCE_FILES = ("benchmark/formats.py", "benchmark/domains.py", "benchmark/run_benchmark.py",
+                "benchmark/competitors.py", "benchmark/public/run_competitors.py",
                 "benchmark/make_forks.py", "benchmark/make_figures.py",
                 "experiments/README.md", "experiments/README.en.md", "experiments/comun.py",
                 "tools/build_node.mjs", "tools/build_release.py", "tools/smoke_release.py", "tools/check_site.py",
-                "tools/verificar_publicacion.py", "playground/sample.py")
+                "tools/verificar_publicacion.py", "tools/generate_readme_assets.py", "playground/sample.py",
+                "skills/mini-format/SKILL.md")
 # Build inputs of the website: every source file at the top of sitio/ (the generator and its modules,
 # styles, scripts, translation maps, 404.html...), so that a new module can never be forgotten here and the
 # source archive can always rebuild the site. Not deployment tools (sitio/servidor, desplegar.sh) and not

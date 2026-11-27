@@ -18,11 +18,19 @@ from pathlib import Path
 from typing import Any
 
 PROFILE = "mini-domain/1"
+PROFILE_V2 = "mini-domain/2"
 MISSING = object()
 _PROMPT_HEADINGS = {
     "es": "# Contrato de dominio .mini",
     "en": "# .mini domain contract",
+    "lean_es": "# Salida .mini",
+    "lean_en": "# .mini output",
 }
+_DELIMITERS = {"sp": " ", "cm": ",", "tb": "\t", "pi": "|"}
+_DELIM_CODES = {" ": "sp", ",": "cm", "\t": "tb"}
+_SEP_ESCS = {"|": "\\|", " ": "\\s", ",": "\\,", "\t": "\\t"}
+_SEP_UNESCS = {"\\": "\\", "|": "|", "s": " ", " ": " ", ",": ",", "t": "\t", "n": "\n", "r": "\r"}
+_BPE_PROXY_RE = re.compile(r' ?[A-Za-z_]+| ?[0-9]{1,3}|\\[\\|,tsnr]|[^\sA-Za-z0-9_\\]+|\s+')
 
 
 class DomainError(ValueError):
@@ -293,6 +301,27 @@ def _escape(text):
     return text.replace("\\", "\\\\").replace("|", "\\|").replace("\n", "\\n").replace("\r", "\\r")
 
 
+def _escape_sep(text, sep="|"):
+    out = text.replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r")
+    if sep:
+        out = out.replace(sep, _SEP_ESCS[sep])
+    return out
+
+
+def _estimate_bpe_tokens(text):
+    # Pure-stdlib heuristic calibrated to BPE (o200k_base / cl100k_base).
+    tokens = 0
+    for m in _BPE_PROXY_RE.finditer(text):
+        tok = m.group()
+        if "|" in tok:
+            tokens += len(tok)
+        elif tok.startswith(",") and len(tok) > 1:
+            tokens += 1 + (len(tok) - 1 + 4) // 5
+        else:
+            tokens += max(1, (len(tok) + 5) // 6)
+    return tokens
+
+
 _FIELD_PART = re.compile(r"[^\\|]+|\\[\\|nr]|[\\|]")
 _FIELD_ESCAPES = {"\\": "\\", "|": "|", "n": "\n", "r": "\r"}
 
@@ -316,6 +345,119 @@ def _split(line, lineno):
     return cells
 
 
+def _unescape_tail(text, lineno):
+    if "\\" not in text:
+        return text
+    out = []
+    i = 0
+    n = len(text)
+    while i < n:
+        ch = text[i]
+        if ch == "\\":
+            if i + 1 >= n or text[i + 1] not in _SEP_UNESCS:
+                raise DomainError("D_ESCAPE", "invalid field escape in tail cell", line=lineno)
+            out.append(_SEP_UNESCS[text[i + 1]])
+            i += 2
+        else:
+            out.append(ch)
+            i += 1
+    return "".join(out)
+
+
+def _split_v2(line, lineno, sep="|", max_cells=None):
+    if sep == "|" and max_cells is None:
+        return _split(line, lineno)
+    if not line:
+        return [""]
+    cells = []
+    n = len(line)
+    i = 0
+    while True:
+        if max_cells is not None and len(cells) == max_cells - 1:
+            rest = line[i:]
+            cells.append(rest if (sep != "|" and rest.startswith('"')) else _unescape_tail(rest, lineno))
+            return cells
+        if i == n:
+            cells.append("")
+            return cells
+        if sep != "|" and line[i] == '"':
+            j = i + 1
+            while j < n:
+                ch = line[j]
+                if ch == "\\":
+                    j += 2
+                    if j > n:
+                        raise DomainError("D_ESCAPE", "unterminated string escape", line=lineno)
+                elif ch == '"':
+                    break
+                else:
+                    j += 1
+            if j >= n or line[j] != '"':
+                raise DomainError("D_ESCAPE", "unterminated quoted string cell", line=lineno)
+            end = j + 1
+            if end < n and line[end] != sep:
+                raise DomainError("D_ESCAPE", "expected delimiter after quoted cell", line=lineno)
+            cells.append(line[i:end])
+            if end == n:
+                return cells
+            i = end + 1
+            continue
+        if sep != "|" and line[i] in "[{":
+            j = i
+            depth = 0
+            in_str = False
+            esc = False
+            while j < n:
+                ch = line[j]
+                if in_str:
+                    if esc:
+                        esc = False
+                    elif ch == "\\":
+                        esc = True
+                    elif ch == '"':
+                        in_str = False
+                else:
+                    if ch == '"':
+                        in_str = True
+                    elif ch in "[{":
+                        depth += 1
+                    elif ch in "]}":
+                        depth -= 1
+                        if depth == 0:
+                            break
+                j += 1
+            if depth != 0 or j >= n:
+                raise DomainError("D_ESCAPE", "unterminated JSON composite cell", line=lineno)
+            end = j + 1
+            if end < n and line[end] != sep:
+                raise DomainError("D_ESCAPE", "expected delimiter after composite cell", line=lineno)
+            cells.append(line[i:end])
+            if end == n:
+                return cells
+            i = end + 1
+            continue
+        buf = []
+        hit_sep = False
+        while i < n:
+            ch = line[i]
+            if ch == sep:
+                cells.append("".join(buf))
+                i += 1
+                hit_sep = True
+                break
+            if ch == "\\":
+                if i + 1 >= n or line[i + 1] not in _SEP_UNESCS:
+                    raise DomainError("D_ESCAPE", "invalid field escape", line=lineno)
+                buf.append(_SEP_UNESCS[line[i + 1]])
+                i += 2
+            else:
+                buf.append(ch)
+                i += 1
+        if not hit_sep:
+            cells.append("".join(buf))
+            return cells
+
+
 def _cell(value, schema, path):
     if value is MISSING:
         return "?"
@@ -328,11 +470,51 @@ def _cell(value, schema, path):
     return _json(packed)
 
 
-def _uncell(text, schema, path):
+def _cell_v2(value, schema, path, *, sep="|", zero_empty=False, compact_bools=False,
+             prefix_strip=None, is_tail=False, last_physical=False, field_optional=False):
+    if value is MISSING:
+        if zero_empty and not (sep == " " and last_physical):
+            return ""
+        return "?"
+    if value is None:
+        _pack(value, schema, path)
+        if zero_empty and not field_optional and not (sep == " " and last_physical):
+            return ""
+        return "~"
+    packed = _pack(value, schema, path)
+    kind = schema["type"]
+    if compact_bools and kind == "boolean":
+        return "1" if packed else "0"
+    if kind == "string":
+        text = value[len(prefix_strip):] if prefix_strip is not None else value
+        if is_tail:
+            if (not text or text in ("?", "~") or text.startswith(('"', "\ufeff"))
+                    or text != text.strip(" \t\r\n") or "\n" in text or "\r" in text):
+                return _json(text)
+            return _escape_sep(text, "")
+        if sep == "|":
+            raw = _json(text) if not text or text in ("?", "~") or text.startswith('"') else text
+            return _escape_sep(raw, "|")
+        if not text or text in ("?", "~") or text.startswith(('"', "[", "{")) or "\n" in text or "\r" in text:
+            return _json(text)
+        if sep in text:
+            escaped = _escape_sep(text, sep)
+            quoted = _json(text)
+            return quoted if len(quoted) <= len(escaped) else escaped
+        return _escape_sep(text, sep)
+    return _escape_sep(_json(packed), "|") if sep == "|" else _json(packed)
+
+
+def _uncell(text, schema, path, *, compact_bools=False):
     if text == "?":
         return MISSING
     if text == "~":
         return _unpack(None, schema, path)
+    if compact_bools and schema["type"] == "boolean":
+        if text == "1":
+            return True
+        if text == "0":
+            return False
     if schema["type"] == "string":
         if text.startswith('"'):
             try:
@@ -384,62 +566,303 @@ def _object_skeleton(schema):
             if _object_row(field["schema"]) and not field["optional"]}
 
 
-def encode(value, contract=None, *, shared=True, dictionaries=True):
+def _raw_cell(value, schema, path):
+    if value is MISSING:
+        return MISSING
+    if value is None:
+        _pack(value, schema, path)
+        return None
+    return _pack(value, schema, path)
+
+
+def _select_delimiter_v2(rows_raw, fields, active_indices, defaults_map, codebooks, prefix_map,
+                         delta_cols, tail_candidates, compact_bools, zero_empty, explicit_sep=None,
+                         token_counter=None):
+    seps = [explicit_sep] if explicit_sep is not None else ["|", " ", ",", "\t"]
+    sample_n = min(len(rows_raw), 48)
+    best = ("|", None, float("inf"))
+    for sep in seps:
+        tails = [None] if sep == "|" else ([None] + tail_candidates)
+        for tail_col in tails:
+            row_order = [i for i in active_indices if i != tail_col] + ([tail_col] if tail_col is not None else [])
+            if not row_order:
+                cand_lines = ["-" for _ in range(sample_n)]
+            else:
+                cand_lines = []
+                deltas_prev = {idx: None for idx in delta_cols}
+                for r_idx in range(sample_n):
+                    row = rows_raw[r_idx]
+                    out_cells = []
+                    for pos, col_idx in enumerate(row_order):
+                        last_phys = (pos == len(row_order) - 1)
+                        is_tail = (col_idx == tail_col)
+                        if col_idx in codebooks:
+                            out_cells.append(codebooks[col_idx][1][r_idx])
+                            continue
+                        val = row[col_idx]
+                        if col_idx in delta_cols and type(val) is int:
+                            prev = deltas_prev[col_idx]
+                            enc_val = val if prev is None else (val - prev)
+                            deltas_prev[col_idx] = val
+                            out_cells.append(str(enc_val))
+                            continue
+                        out_cells.append(_cell_v2(
+                            val, fields[col_idx]["schema"], f"$/{r_idx}/{fields[col_idx]['name']}",
+                            sep=sep, zero_empty=zero_empty, compact_bools=compact_bools,
+                            prefix_strip=prefix_map.get(col_idx), is_tail=is_tail,
+                            last_physical=last_phys, field_optional=fields[col_idx]["optional"],
+                        ))
+                    cand_lines.append(sep.join(out_cells))
+            sample_text = "\n".join(cand_lines)
+            score = token_counter(sample_text) if token_counter is not None else _estimate_bpe_tokens(sample_text)
+            scale = (len(rows_raw) / sample_n) if sample_n else 1.0
+            total_est = score * scale + (0 if sep == "|" else 3.5) + (0 if tail_col is None else 4.5)
+            if total_est < best[2]:
+                best = (sep, tail_col, total_est)
+    return best[0], best[1]
+
+
+def encode_v2(value, contract=None, *, shared=True, dictionaries=True, delta=True,
+              prefix_factor=True, compact_bools=True, zero_empty=True,
+              delimiter=None, token_counter=None):
+    """Serialize JSON into mini-domain/2 with adaptive BPE-optimal compression (100% lossless)."""
+    return encode(value, contract, shared=shared, dictionaries=dictionaries, version=2,
+                  delimiter=delimiter, token_counter=token_counter, delta=delta,
+                  prefix_factor=prefix_factor, compact_bools=compact_bools, zero_empty=zero_empty)
+
+
+def encode(value, contract=None, *, shared=True, dictionaries=True, version=1,
+           delimiter=None, token_counter=None, delta=True, prefix_factor=True,
+           compact_bools=True, zero_empty=True):
     """Serialize a JSON value without coercion, missing-field loss or key loss."""
+    if version not in (1, 2):
+        raise ValueError("version must be 1 or 2")
+    if delimiter is not None and delimiter not in ("|", " ", ",", "\t"):
+        raise ValueError("delimiter must be '|', ' ', ',', or '\\t'")
     contract = _contract(contract)
     _pack(value, contract["schema"])
     path = contract["record_path"]
     records = _at(value, path) if path is not None else [value]
     schema, fields = _row_schema(contract), _fields(_row_schema(contract))
-    rows = []
-    for index, row in enumerate(records):
-        rows.append([_cell(_at(row, field["path"]) if _object_row(schema) else row,
-                           field["schema"], f"$/{index}/{field['name']}") for field in fields])
-    header = [contract["prefix"], "v=1", f"n={len(rows)}", "h=" + contract["schema_id"]]
+    if version == 1:
+        rows = []
+        for index, row in enumerate(records):
+            rows.append([_cell(_at(row, field["path"]) if _object_row(schema) else row,
+                               field["schema"], f"$/{index}/{field['name']}") for field in fields])
+        header = [contract["prefix"], "v=1", f"n={len(rows)}", "h=" + contract["schema_id"]]
+        if path:
+            envelope = _put(copy.deepcopy(value), path, [])
+            header.append("m=" + _json(_pack(envelope, contract["schema"])))
+        defaults = []
+        if shared and len(rows) >= 3:
+            for index in range(len(fields)):
+                cell = rows[0][index]
+                if all(row[index] == cell for row in rows[1:]):
+                    # Factor only when the actual wire bytes become shorter.
+                    cost = len(_escape(_json([index, cell])).encode("utf-8")) + 2
+                    saving = len(rows) * (len(_escape(cell).encode("utf-8")) + 1)
+                    if saving > cost + 4:
+                        defaults.append([index, cell])
+        if defaults:
+            header.append("d=" + _json(defaults))
+        skipped = {index for index, _ in defaults}
+        codebooks = []
+        encoded_columns = {}
+        if dictionaries and len(rows) >= 6:
+            for index, field in enumerate(fields):
+                if index in skipped or field["schema"]["type"] != "string":
+                    continue
+                values = list(dict.fromkeys(row[index] for row in rows))
+                # This is an explicitly transmitted per-document vocabulary, not
+                # an inferred enum.  New values remain legal in future documents.
+                if not 2 <= len(values) <= 64 or len(values) * 3 > len(rows):
+                    continue
+                if sum(len(value) for value in values) < 6 * len(values):
+                    continue
+                lookup = {value: position for position, value in enumerate(values)}
+                column = [str(lookup[row[index]]) for row in rows]
+                before = sum(len(_escape(row[index]).encode("utf-8")) for row in rows)
+                overhead = len(_escape(_json([index, values])).encode("utf-8")) + 4
+                after = sum(len(cell) for cell in column) + overhead
+                if before - after > max(32, overhead // 3):
+                    codebooks.append([index, values])
+                    encoded_columns[index] = column
+        if codebooks:
+            header.append("e=" + _json(codebooks))
+        lines = ["|".join(_escape(cell) for cell in header)]
+        for row_index, row in enumerate(rows):
+            cells = [encoded_columns[index][row_index] if index in encoded_columns else cell
+                     for index, cell in enumerate(row) if index not in skipped]
+            lines.append("|".join(_escape(cell) for cell in cells) if cells else "-")
+        return "\n".join(lines)
+
+    # ---- mini-domain/2 adaptive codec ----
+    rows_raw = []
+    for row in records:
+        rows_raw.append([_at(row, field["path"]) if _object_row(schema) else row for field in fields])
+    nrows = len(rows_raw)
+    v1_cells = [[_cell(rows_raw[r][c], fields[c]["schema"], f"$/{r}/{fields[c]['name']}")
+                 for c in range(len(fields))] for r in range(nrows)]
+    defaults = []
+    if shared and nrows >= 2:
+        for index in range(len(fields)):
+            cell = v1_cells[0][index]
+            if all(v1_cells[r][index] == cell for r in range(1, nrows)):
+                cost = len(_escape(_json([index, cell])).encode("utf-8")) + 2
+                saving = nrows * (len(_escape(cell).encode("utf-8")) + 1)
+                if saving > cost + 2:
+                    defaults.append([index, cell])
+    skipped = {index for index, _ in defaults}
+
+    bool_cols = [i for i, f in enumerate(fields) if i not in skipped and f["schema"]["type"] == "boolean"]
+    use_bool = bool(compact_bools and bool_cols and nrows * len(bool_cols) >= 2)
+
+    delta_cols = []
+    if delta and nrows >= 3:
+        for index, field in enumerate(fields):
+            if index in skipped or field["schema"]["type"] != "integer":
+                continue
+            orig_chars = 0
+            delta_chars = 0
+            prev = None
+            count_int = 0
+            for r in range(nrows):
+                val = rows_raw[r][index]
+                if type(val) is int:
+                    count_int += 1
+                    orig_chars += len(str(val))
+                    dv = val if prev is None else (val - prev)
+                    prev = val
+                    delta_chars += len(str(dv))
+            if count_int >= 3 and delta_chars + 8 < orig_chars:
+                delta_cols.append(index)
+    delta_set = set(delta_cols)
+
+    # Zero-empty check across remaining optional/nullable cells (excluding delta & defaults)
+    empty_count = 0
+    if zero_empty:
+        for r in range(nrows):
+            for c in range(len(fields)):
+                val = rows_raw[r][c]
+                if c not in skipped and (val is MISSING or (val is None and not fields[c]["optional"])):
+                    empty_count += 1
+    use_zero = bool(zero_empty and empty_count >= 3)
+
+    codebooks_list = []
+    codebooks_map = {}
+    if dictionaries and nrows >= 4:
+        for index, field in enumerate(fields):
+            if index in skipped or index in delta_set:
+                continue
+            # Use canonical unescaped cell tokens for vocabulary lookup
+            col_cells = [v1_cells[r][index] for r in range(nrows)]
+            values = list(dict.fromkeys(col_cells))
+            max_vocab = min(128, max(2, nrows // 2))
+            if not 2 <= len(values) <= max_vocab:
+                continue
+            if use_zero and all(v in ("?", "~") or len(v) < 2 for v in values):
+                continue
+            lookup = {val: pos for pos, val in enumerate(values)}
+            column = [str(lookup[c]) for c in col_cells]
+            before = sum(0 if (use_zero and col_cells[r] in ("?", "~")) else len(col_cells[r].encode("utf-8"))
+                         for r in range(nrows))
+            overhead = len(_escape(_json([index, values])).encode("utf-8")) + 4
+            after = sum(len(c) for c in column) + overhead
+            if before - after > max(16, overhead // 3):
+                codebooks_list.append([index, values])
+                codebooks_map[index] = (values, column)
+
+    prefixes_list = []
+    prefix_map = {}
+    if prefix_factor and nrows >= 3:
+        for index, field in enumerate(fields):
+            if index in skipped or index in delta_set or index in codebooks_map or field["schema"]["type"] != "string":
+                continue
+            strs = [rows_raw[r][index] for r in range(nrows) if isinstance(rows_raw[r][index], str)]
+            if len(strs) < 3 or len(strs) * 2 < nrows:
+                continue
+            s0, s1 = min(strs), max(strs)
+            k = 0
+            limit = min(len(s0), len(s1))
+            while k < limit and s0[k] == s1[k]:
+                k += 1
+            lcp = s0[:k]
+            if len(lcp) < 3:
+                continue
+            header_cost = len(_escape(_json([index, lcp])).encode("utf-8")) + 3
+            if len(strs) * len(lcp) > header_cost + 10:
+                prefixes_list.append([index, lcp])
+                prefix_map[index] = lcp
+
+    active_indices = [i for i in range(len(fields)) if i not in skipped]
+    tail_scores = []
+    for index in active_indices:
+        if (index not in delta_set and index not in codebooks_map and index not in prefix_map
+                and fields[index]["schema"]["type"] == "string"):
+            hits = sum(
+                1 for r in range(nrows)
+                if isinstance(rows_raw[r][index], str) and (" " in rows_raw[r][index] or '"' in rows_raw[r][index])
+            )
+            if hits >= 2:
+                tail_scores.append((hits, index))
+    tail_scores.sort(reverse=True)
+    tail_candidates = [idx for _, idx in tail_scores[:2]]
+
+    sep, tail_col = _select_delimiter_v2(
+        rows_raw, fields, active_indices, dict(defaults), codebooks_map, prefix_map,
+        delta_set, tail_candidates, use_bool, use_zero, explicit_sep=delimiter, token_counter=token_counter,
+    )
+
+    row_order = [i for i in active_indices if i != tail_col] + ([tail_col] if tail_col is not None else [])
+    header = [contract["prefix"], "v=2.0", f"n={nrows}", "h=" + contract["schema_id"]]
     if path:
         envelope = _put(copy.deepcopy(value), path, [])
         header.append("m=" + _json(_pack(envelope, contract["schema"])))
-    defaults = []
-    if shared and len(rows) >= 3:
-        for index in range(len(fields)):
-            cell = rows[0][index]
-            if all(row[index] == cell for row in rows[1:]):
-                # Factor only when the actual wire bytes become shorter.
-                cost = len(_escape(_json([index, cell])).encode("utf-8")) + 2
-                saving = len(rows) * (len(_escape(cell).encode("utf-8")) + 1)
-                if saving > cost + 4:
-                    defaults.append([index, cell])
+    if sep != "|":
+        header.append("s=" + _DELIM_CODES[sep])
+    if tail_col is not None:
+        header.append(f"tl={tail_col}")
+    if use_bool:
+        header.append("b=1")
+    if use_zero:
+        header.append("z=1")
     if defaults:
         header.append("d=" + _json(defaults))
-    skipped = {index for index, _ in defaults}
-    codebooks = []
-    encoded_columns = {}
-    if dictionaries and len(rows) >= 6:
-        for index, field in enumerate(fields):
-            if index in skipped or field["schema"]["type"] != "string":
-                continue
-            values = list(dict.fromkeys(row[index] for row in rows))
-            # This is an explicitly transmitted per-document vocabulary, not
-            # an inferred enum.  New values remain legal in future documents.
-            if not 2 <= len(values) <= 64 or len(values) * 3 > len(rows):
-                continue
-            if sum(len(value) for value in values) < 6 * len(values):
-                continue
-            lookup = {value: position for position, value in enumerate(values)}
-            column = [str(lookup[row[index]]) for row in rows]
-            before = sum(len(_escape(row[index]).encode("utf-8")) for row in rows)
-            overhead = len(_escape(_json([index, values])).encode("utf-8")) + 4
-            after = sum(len(cell) for cell in column) + overhead
-            if before - after > max(32, overhead // 3):
-                codebooks.append([index, values])
-                encoded_columns[index] = column
-    if codebooks:
-        header.append("e=" + _json(codebooks))
+    if prefixes_list:
+        header.append("p=" + _json(prefixes_list))
+    if delta_cols:
+        header.append("dt=" + _json(delta_cols))
+    if codebooks_list:
+        header.append("e=" + _json(codebooks_list))
+
     lines = ["|".join(_escape(cell) for cell in header)]
-    for row_index, row in enumerate(rows):
-        cells = [encoded_columns[index][row_index] if index in encoded_columns else cell
-                 for index, cell in enumerate(row) if index not in skipped]
-        lines.append("|".join(_escape(cell) for cell in cells) if cells else "-")
+    deltas_prev = {idx: None for idx in delta_set}
+    for r_idx in range(nrows):
+        if not row_order:
+            lines.append("-")
+            continue
+        row = rows_raw[r_idx]
+        cells = []
+        for pos, col_idx in enumerate(row_order):
+            last_phys = (pos == len(row_order) - 1)
+            is_tail = (col_idx == tail_col)
+            if col_idx in codebooks_map:
+                cells.append(codebooks_map[col_idx][1][r_idx])
+                continue
+            val = row[col_idx]
+            if col_idx in delta_set and type(val) is int:
+                prev = deltas_prev[col_idx]
+                enc_val = val if prev is None else (val - prev)
+                deltas_prev[col_idx] = val
+                cells.append(str(enc_val))
+                continue
+            cells.append(_cell_v2(
+                val, fields[col_idx]["schema"], f"$/{r_idx}/{fields[col_idx]['name']}",
+                sep=sep, zero_empty=use_zero, compact_bools=use_bool,
+                prefix_strip=prefix_map.get(col_idx), is_tail=is_tail,
+                last_physical=last_phys, field_optional=fields[col_idx]["optional"],
+            ))
+        lines.append(sep.join(cells))
     return "\n".join(lines)
 
 
@@ -456,15 +879,35 @@ def _decode(text, contract, *, allow_count=False):
     if cells[0] != contract["prefix"]:
         raise DomainError("D_PREFIX", f"expected prefix {contract['prefix']}", line=1)
     header = {}
+    all_header_keys = {"v", "n", "h", "m", "d", "e", "s", "tl", "b", "z", "p", "dt"}
     for cell in cells[1:]:
-        key, sep, value = cell.partition("=")
-        if not sep or key in header or key not in {"v", "n", "h", "m", "d", "e"}:
+        key, sep_eq, value = cell.partition("=")
+        if not sep_eq or key in header or key not in all_header_keys:
             raise DomainError("D_HEADER", f"unknown, duplicate or malformed header field {key}", line=1)
         header[key] = value
-    if header.get("v") != "1" or header.get("h") != contract["schema_id"]:
+    version = header.get("v")
+    if version not in ("1", "2.0") or header.get("h") != contract["schema_id"]:
         raise DomainError("D_CONTRACT", "wrong profile version or schema fingerprint; use the matching generated bundle", line=1)
+    if version == "1" and any(k in header for k in ("s", "tl", "b", "z", "p", "dt")):
+        raise DomainError("D_HEADER", "mini-domain/1 header cannot use mini-domain/2 extensions", line=1)
     if not re.fullmatch(r"0|[1-9][0-9]*", header.get("n", "")):
         raise DomainError("D_COUNT", "n must be a non-negative integer", line=1)
+    sep = "|"
+    if "s" in header:
+        if header["s"] not in _DELIMITERS:
+            raise DomainError("D_HEADER", f"unsupported delimiter tag {header['s']}", line=1)
+        sep = _DELIMITERS[header["s"]]
+    compact_bools = False
+    if "b" in header:
+        if header["b"] != "1":
+            raise DomainError("D_HEADER", "b flag must be 1", line=1)
+        compact_bools = True
+    zero_empty = False
+    if "z" in header:
+        if header["z"] != "1":
+            raise DomainError("D_HEADER", "z flag must be 1", line=1)
+        zero_empty = True
+
     schema = _row_schema(contract)
     fields = _fields(schema)
     object_rows = _object_row(schema)
@@ -486,18 +929,52 @@ def _decode(text, contract, *, allow_count=False):
                 defaults[index] = (cell, item)
         except (ValueError, TypeError) as exc:
             raise DomainError("D_HEADER", str(exc), line=1) from exc
+
+    prefixes = {}
+    if "p" in header:
+        try:
+            pairs = _strict_json(header["p"])
+            if not isinstance(pairs, list):
+                raise ValueError("p must be an array of [column index, prefix string] pairs")
+            for pair in pairs:
+                if not isinstance(pair, list) or len(pair) != 2:
+                    raise ValueError("malformed prefix pair")
+                index, prefix_str = pair
+                if (type(index) is not int or not 0 <= index < len(fields) or index in defaults or index in prefixes
+                        or fields[index]["schema"]["type"] != "string" or not isinstance(prefix_str, str) or not prefix_str):
+                    raise ValueError("invalid or duplicate prefix column")
+                prefixes[index] = prefix_str
+        except (ValueError, TypeError) as exc:
+            raise DomainError("D_HEADER", str(exc), line=1) from exc
+
+    deltas = {}
+    if "dt" in header:
+        try:
+            col_ids = _strict_json(header["dt"])
+            if not isinstance(col_ids, list):
+                raise ValueError("dt must be an array of integer column indices")
+            for index in col_ids:
+                if (type(index) is not int or not 0 <= index < len(fields) or index in defaults
+                        or index in deltas or fields[index]["schema"]["type"] != "integer"):
+                    raise ValueError("invalid or duplicate delta column")
+                deltas[index] = None
+        except (ValueError, TypeError) as exc:
+            raise DomainError("D_HEADER", str(exc), line=1) from exc
+
     codebooks = {}
     if "e" in header:
         try:
             pairs = _strict_json(header["e"])
             if not isinstance(pairs, list):
-                raise ValueError("e must be an array of [column index, string-cell vocabulary] pairs")
+                raise ValueError("e must be an array of [column index, cell vocabulary] pairs")
             for pair in pairs:
                 if not isinstance(pair, list) or len(pair) != 2:
                     raise ValueError("malformed vocabulary")
                 index, values = pair
-                if (type(index) is not int or not 0 <= index < len(fields) or index in defaults or index in codebooks
-                        or fields[index]["schema"]["type"] != "string"):
+                if (type(index) is not int or not 0 <= index < len(fields) or index in defaults
+                        or index in codebooks or index in prefixes or index in deltas):
+                    raise ValueError("invalid, shared or duplicate vocabulary column")
+                if version == "1" and fields[index]["schema"]["type"] != "string":
                     raise ValueError("invalid, shared or duplicate vocabulary column")
                 if not isinstance(values, list) or not values or not all(isinstance(value, str) for value in values) or len(set(values)) != len(values):
                     raise ValueError("vocabulary must contain unique encoded string cells")
@@ -506,34 +983,72 @@ def _decode(text, contract, *, allow_count=False):
                     item = _uncell(cell, fields[index]["schema"], "$/vocabulary")
                     if item is MISSING and not fields[index]["optional"]:
                         raise ValueError("vocabulary cannot omit a required field")
-                    decoded_values.append(item)
+                    decoded_values.append((cell, item))
                 codebooks[index] = decoded_values
         except (ValueError, TypeError) as exc:
             raise DomainError("D_HEADER", str(exc), line=1) from exc
-    columns = [(field, defaults.get(index), codebooks.get(index)) for index, field in enumerate(fields)]
+
+    tail_col = None
+    if "tl" in header:
+        if not re.fullmatch(r"0|[1-9][0-9]*", header["tl"]):
+            raise DomainError("D_HEADER", "tl must be a non-negative integer", line=1)
+        tail_col = int(header["tl"])
+        if (tail_col >= len(fields) or tail_col in defaults or tail_col in codebooks
+                or tail_col in deltas or fields[tail_col]["schema"]["type"] != "string"):
+            raise DomainError("D_HEADER", "tl must name an active non-constant string column", line=1)
+
+    active_indices = [index for index in range(len(fields)) if index not in defaults]
+    row_order = [index for index in active_indices if index != tail_col] + ([tail_col] if tail_col is not None else [])
+    expected = len(row_order)
     rows = []
-    expected = len(fields) - len(defaults)
     for lineno, line in enumerate(lines[1:], 2):
         try:
-            row_cells = [] if expected == 0 and line == "-" else _split(line, lineno)
+            if expected == 0 and line == "-":
+                row_cells = []
+            elif expected == 0:
+                row_cells = _split_v2(line, lineno, sep)
+            else:
+                row_cells = _split_v2(line, lineno, sep, max_cells=(expected if tail_col is not None else None))
             if len(row_cells) != expected:
                 raise DomainError("D_ARITY", f"expected {expected} cells, received {len(row_cells)}")
-            row, offset = _object_skeleton(schema) if object_rows else {}, 0
-            for field, default, vocabulary in columns:
-                if default is not None:
-                    raw, item = default
-                    # Rebuild mutable JSON values so each record owns its cells.
+            decoded_by_col = {}
+            for index, raw in zip(row_order, row_cells):
+                field = fields[index]
+                path_str = f"$/{lineno - 2}/{field['name']}"
+                if raw == "" and version == "2.0":
+                    if not zero_empty:
+                        raise DomainError("D_VALUE", "empty cell requires z=1", path_str)
+                    if field["optional"]:
+                        item = MISSING
+                    elif field["schema"].get("nullable") or field["schema"]["type"] == "json":
+                        item = None
+                    else:
+                        raise DomainError("D_REQUIRED", f"empty cell not allowed for required field {field['name']}", path_str)
+                elif index in codebooks:
+                    vocab = codebooks[index]
+                    if not re.fullmatch(r"0|[1-9][0-9]*", raw) or int(raw) >= len(vocab):
+                        raise DomainError("D_ENUM", f"invalid vocabulary index for {field['name']}", path_str)
+                    raw_cell, item = vocab[int(raw)]
+                    if isinstance(item, (dict, list)):
+                        item = _uncell(raw_cell, field["schema"], path_str)
+                else:
+                    item = _uncell(raw, field["schema"], path_str, compact_bools=compact_bools)
+                    if index in prefixes and isinstance(item, str):
+                        item = prefixes[index] + item
+                    if index in deltas and type(item) is int:
+                        prev = deltas[index]
+                        item = item if prev is None else (prev + item)
+                        deltas[index] = item
+                decoded_by_col[index] = item
+
+            row = _object_skeleton(schema) if object_rows else {}
+            for index, field in enumerate(fields):
+                if index in defaults:
+                    raw, item = defaults[index]
                     if isinstance(item, (dict, list)):
                         item = _uncell(raw, field["schema"], f"$/{lineno-2}/{field['name']}")
                 else:
-                    raw = row_cells[offset]
-                    offset += 1
-                    if vocabulary is None:
-                        item = _uncell(raw, field["schema"], f"$/{lineno-2}/{field['name']}")
-                    else:
-                        if not re.fullmatch(r"0|[1-9][0-9]*", raw) or int(raw) >= len(vocabulary):
-                            raise DomainError("D_ENUM", f"invalid vocabulary index for {field['name']}")
-                        item = vocabulary[int(raw)]
+                    item = decoded_by_col[index]
                 if item is MISSING:
                     if not field["optional"]:
                         raise DomainError("D_REQUIRED", f"missing required field {field['name']}")
@@ -750,7 +1265,68 @@ def json_schema(contract):
     return {"$schema": "https://json-schema.org/draft/2020-12/schema", "title": contract["prefix"], **convert(contract["schema"])}
 
 
-def make_prompt(contract, lang="en", example=None):
+def make_lean_prompt(contract, lang="en", example=None):
+    """Schema-pruned, anti-reasoning prompt (~75% fewer input tokens, avoids CoT inflation)."""
+    contract = _contract(contract)
+    row_schema = _row_schema(contract)
+    fields = _fields(row_schema)
+    path = contract["record_path"]
+    has_optional = any(f["optional"] for f in fields)
+    has_nullable = any(f["schema"].get("nullable") for f in fields)
+    has_nested = any(f["schema"]["type"] in ("object", "array", "json") for f in fields)
+    cols = ", ".join(
+        f"{f['name']}{'(opt)' if f['optional'] else ''}:{'json' if f['schema']['type'] == 'json' else f['schema']['type']}"
+        for f in fields
+    )
+    heading = _PROMPT_HEADINGS["lean_es" if lang == "es" else "lean_en"]
+    header = f"{contract['prefix']}|v=1|n=<count>|h={contract['schema_id']}"
+    if path:
+        header += "|m=<wrapper_positional_json_with_records_as_[]>"
+    if lang == "es":
+        lines = [
+            heading,
+            f"Devuelve SOLO líneas .mini sin Markdown, explicaciones ni razonamiento.",
+            f"Cabecera: `{header}`",
+            f"Columnas ({len(fields)}, sep `|`): {cols}",
+            "Cadenas sin comillas salvo vacía `\"\"` o `?`/`~`/`\"` inicial. Escapa `\\\\`, `\\|`, `\\n`.",
+        ]
+        if has_optional or has_nullable:
+            parts = []
+            if has_optional:
+                parts.append("`?`=opcional ausente")
+            if has_nullable:
+                parts.append("`~`=null")
+            lines.append(" / ".join(parts) + ".")
+        if has_nested:
+            lines.append("Objetos/arrays no aplanados en JSON compacto; `json` envuelto `[valor]`.")
+    else:
+        lines = [
+            heading,
+            "Output ONLY raw .mini lines. No Markdown fences, preamble, or commentary.",
+            f"Header: `{header}`",
+            f"Columns ({len(fields)}, sep `|`): {cols}",
+            "Strings are bare unless empty `\"\"` or starting with `?`/`~`/`\"`. Escape `\\\\`, `\\|`, `\\n`.",
+        ]
+        if has_optional or has_nullable:
+            parts = []
+            if has_optional:
+                parts.append("`?`=absent optional")
+            if has_nullable:
+                parts.append("`~`=null")
+            lines.append(" / ".join(parts) + ".")
+        if has_nested:
+            lines.append("Nested arrays/objects use compact JSON; `json` nodes wrap `[value]`.")
+    if example is not None:
+        sample = copy.deepcopy(example)
+        if path is not None:
+            sample = _put(sample, path, _at(sample, path)[:1])
+        lines.append("Example:\n" + encode(sample, contract, shared=False, dictionaries=False))
+    return "\n".join(lines) + "\n"
+
+
+def make_prompt(contract, lang="en", example=None, *, lean=False):
+    if lean:
+        return make_lean_prompt(contract, lang=lang, example=example)
     contract = _contract(contract)
     fields = _fields(_row_schema(contract))
     if lang == "es":
@@ -800,22 +1376,27 @@ def make_prompt(contract, lang="en", example=None):
     return text
 
 
-_ROW_ATOM = re.compile(r'(?:"(?:[^"\\]|\\.)*"|[^ \t]+)(?:[ \t]+|$)')
+_ROW_ATOM = re.compile(r'(?:"(?:[^"\\]|\\.)*"|\[[^\n]*\]|\{[^\n]*\}|[^ \t]+)(?:[ \t]+|$)')
 
 
-def _flat_required_fields(contract):
-    root = contract["schema"]
-    item = root.get("items", {})
-    fields = item.get("fields", [])
-    if (contract["record_path"] != [] or root.get("nullable") or not _object_row(item)
-            or any(f["optional"] or f["schema"].get("nullable")
-                   or f["schema"]["type"] not in ("string", "integer", "number", "boolean") for f in fields)):
+def _flat_required_fields(contract, *, allow_nullable=False, allow_wrapped=False):
+    row_schema = _row_schema(contract)
+    if (not allow_wrapped and contract["record_path"] != []) or contract["record_path"] is None:
+        raise DomainError("D_COMPACT_SCHEMA", "compact rows require a record array contract")
+    if contract["schema"].get("nullable") or not _object_row(row_schema):
+        raise DomainError("D_COMPACT_SCHEMA", "compact rows require an object record schema")
+    fields = _fields(row_schema) if allow_nullable else row_schema.get("fields", [])
+    if not allow_nullable and any(
+        f["optional"] or f["schema"].get("nullable")
+        or f["schema"]["type"] not in ("string", "integer", "number", "boolean")
+        for f in fields
+    ):
         raise DomainError("D_COMPACT_SCHEMA", "compact rows require a root array of flat, required, non-null scalars")
     return fields
 
 
-def _compact_fields(contract, last_text_field):
-    fields = _flat_required_fields(contract)
+def _compact_fields(contract, last_text_field, *, allow_nullable=False, allow_wrapped=False):
+    fields = _flat_required_fields(contract, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
     tail = next((f for f in fields if f["name"] == last_text_field and f["schema"]["type"] == "string"), None)
     if tail is None:
         raise DomainError("D_COMPACT_SCHEMA", "the last text field must name a string column")
@@ -827,9 +1408,14 @@ def _compact_count(expected_records):
         raise DomainError("D_EXPECTED_COUNT", "compact rows require an explicit nonnegative record count")
 
 
-def _bare_compact_text(value):
-    return (isinstance(value, str) and bool(value) and value == value.strip(" \t")
-            and not value.startswith(('"', "\ufeff")) and not any(ord(ch) < 32 for ch in value))
+def _bare_compact_text(value, *, is_tail=False):
+    if not (isinstance(value, str) and bool(value) and value == value.strip(" \t")
+            and not value.startswith(('"', "\ufeff")) and value not in ("?", "~")
+            and not any(ord(ch) < 32 for ch in value)):
+        return False
+    if not is_tail and value.startswith(("[", "{")):
+        return False
+    return True
 
 
 def _recommend_compact_tail(samples, contract):
@@ -847,31 +1433,47 @@ def _recommend_compact_tail(samples, contract):
         for record in records:
             for name in names:
                 value = record[name]
-                if " " in value and _bare_compact_text(value):
+                if " " in value and _bare_compact_text(value, is_tail=True):
                     savings[name] += len(_json(value)) - len(value)
     return max(savings, key=savings.__getitem__)
 
 
-def encode_rows(value, contract=None, *, last_text_field):
-    """Write space-separated model output for a fixed flat domain contract."""
+def encode_rows(value, contract=None, *, last_text_field, allow_nullable=False,
+                allow_wrapped=False, compact_bools=False):
+    """Write space-separated model output for a fixed or extended flat domain contract."""
     contract = _contract(contract)
-    fields = _compact_fields(contract, last_text_field)
+    fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
     _pack(value, contract["schema"])
+    path = contract["record_path"]
+    records = _at(value, path) if path else value
+    row_schema = _row_schema(contract)
+    obj_rows = _object_row(row_schema)
     lines = []
-    for row in value:
+    for row_idx, row in enumerate(records):
         cells = []
         for field in fields:
-            cell = row[field["name"]]
-            bare = _bare_compact_text(cell) and (field is fields[-1] or " " not in cell)
-            cells.append(cell if bare else _json(cell))
+            cell = _at(row, field["path"]) if (obj_rows and "path" in field) else row.get(field["name"], MISSING)
+            if cell is MISSING:
+                cells.append("?")
+            elif cell is None:
+                cells.append("~")
+            elif compact_bools and field["schema"]["type"] == "boolean":
+                cells.append("1" if cell else "0")
+            elif field["schema"]["type"] == "string":
+                is_tail = (field is fields[-1])
+                bare = _bare_compact_text(cell, is_tail=is_tail) and (is_tail or " " not in cell)
+                cells.append(cell if bare else _json(cell))
+            else:
+                cells.append(_json(_pack(cell, field["schema"], f"$/{row_idx}/{field['name']}")))
         lines.append(" ".join(cells))
     return "\n".join(lines)
 
 
-def decode_rows(text, contract=None, *, last_text_field, expected_records):
+def decode_rows(text, contract=None, *, last_text_field, expected_records,
+                allow_nullable=False, allow_wrapped=False, compact_bools=False):
     """Validate compact model rows and restore the application JSON values."""
     contract = _contract(contract)
-    fields = _compact_fields(contract, last_text_field)
+    fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
     _compact_count(expected_records)
     if not isinstance(text, str):
         raise DomainError("D_VALUE", "compact rows must be text")
@@ -882,6 +1484,8 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records):
     lines = [(number, line.strip(" \t")) for number, line in enumerate(text.split("\n"), 1) if line.strip(" \t")]
     if len(lines) != expected_records:
         raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(lines)}")
+    row_schema = _row_schema(contract)
+    obj_rows = _object_row(row_schema)
     rows = []
     for line_no, line in lines:
         if "\r" in line:
@@ -894,15 +1498,22 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records):
             cells.append(token.group().rstrip(" \t"))
             start = token.end()
         cells.append(line[start:])
-        row = {}
+        row = _object_skeleton(row_schema) if obj_rows else {}
         for field, cell in zip(fields, cells):
             name, schema = field["name"], field["schema"]
             path = f"$/{line_no - 1}/{name}"
             if not cell:
                 raise DomainError("D_VALUE", "use a quoted JSON string for empty text", path, line_no)
             try:
-                value = cell if schema["type"] == "string" and not cell.startswith('"') else _strict_json(cell)
-                row[name] = _pack(value, schema, path)
+                value = _uncell(cell, schema, path, compact_bools=compact_bools)
+                if value is MISSING:
+                    if not field["optional"]:
+                        raise DomainError("D_REQUIRED", f"missing required field {name}", path, line_no)
+                else:
+                    if obj_rows and "path" in field:
+                        _put(row, field["path"], value)
+                    else:
+                        row[name] = value
             except ValueError as exc:
                 message = exc.message if isinstance(exc, DomainError) else str(exc)
                 raise DomainError("D_VALUE", message, path, line_no) from exc
@@ -910,14 +1521,18 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records):
     return rows
 
 
-def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en"):
+def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en",
+                     allow_nullable=False, allow_wrapped=False, compact_bools=False):
     """Describe compact rows without sending the document header or schema JSON."""
     contract = _contract(contract)
-    fields = _compact_fields(contract, last_text_field)
+    fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
     _compact_count(expected_records)
     labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in fields]
     names, tail = " ".join(labels), labels[-1]
-    types = " ".join(f"{name}={f['schema']['type']}" for name, f in zip(labels, fields) if f["schema"]["type"] != "string")
+    types = " ".join(
+        f"{name}={'0/1' if compact_bools and f['schema']['type'] == 'boolean' else f['schema']['type']}"
+        for name, f in zip(labels, fields) if f["schema"]["type"] != "string"
+    )
     if lang == "es":
         text = (f"Emite {expected_records} fila(s), una por línea, sin cabecera. Separa con espacios.\n"
                 f"Orden obligatorio {names}. {tail} va al final y ocupa el resto de la línea.\n"
@@ -928,22 +1543,29 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en"):
                 f"Required column order {names}. {tail} comes last and takes the rest of the line.\n"
                 "Use JSON strings for empty text, controls, a leading quote, spaces at either end, "
                 "or spaces within any column before the last.\n")
+    if allow_nullable:
+        text += ("Usa ? para ausente y ~ para null.\n" if lang == "es" else "Use ? for omitted optional and ~ for null.\n")
     if types:
         text += types + "\n"
     return text
 
 
-def positional_json_request(task, contract=None, *, expected_records, lang="en"):
+def positional_json_request(task, contract=None, *, expected_records, lang="en", allow_nullable=False):
     """Build instructions and a provider schema for compact JSON tuples."""
-    fields = _flat_required_fields(_contract(contract))
+    fields = _flat_required_fields(_contract(contract), allow_nullable=allow_nullable, allow_wrapped=allow_nullable)
     _compact_count(expected_records)
     width = len(fields)
     names = ", ".join(field["name"] if re.fullmatch(r"[\w-]+", field["name"]) else _json(field["name"])
                       for field in fields)
+    def _prefix_item(field):
+        st = field["schema"]
+        if st["type"] == "json":
+            return {}
+        return {"type": [st["type"], "null"]} if st.get("nullable") else {"type": st["type"]}
     schema = {
         "type": "array", "minItems": expected_records, "maxItems": expected_records,
         "items": {"type": "array", "minItems": width, "maxItems": width,
-                  "prefixItems": [{"type": field["schema"]["type"]} for field in fields]},
+                  "prefixItems": [_prefix_item(field) for field in fields]},
     }
     if lang == "es":
         prompt = (f"Devuelve {expected_records} filas en un array JSON de arrays, sin claves. "
@@ -1010,6 +1632,8 @@ def build_bundle(samples, prefix="data", out=".mini", *, source_names=None, reco
         "schema.json": json.dumps(json_schema(contract), ensure_ascii=False, indent=2) + "\n",
         "prompt.en.md": make_prompt(contract, "en", example),
         "prompt.es.md": make_prompt(contract, "es", example),
+        "prompt.lean.en.md": make_lean_prompt(contract, "en", example),
+        "prompt.lean.es.md": make_lean_prompt(contract, "es", example),
         "parser.py": source,
         "validator.py": '"""Validate a .mini response with the bundled contract."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["validate", *sys.argv[1:]]))\n',
         "repair.py": '"""Repair only unambiguous transport wrappers; never fabricate data."""\n' + _WRAPPER_IMPORT + 'if __name__ == "__main__":\n    raise SystemExit(main(["repair", *sys.argv[1:]]))\n',
@@ -1132,6 +1756,9 @@ def main(argv=None):
         p.add_argument("--contract")
         if command in ("encode", "decode", "repair", "apply"):
             p.add_argument("--out")
+        if command == "encode":
+            p.add_argument("--version", type=int, default=1, choices=(1, 2))
+            p.add_argument("--delimiter", choices=("|", " ", ",", "\t"))
         if command == "apply":
             p.add_argument("corrections")
         if command == "decode":
@@ -1140,18 +1767,19 @@ def main(argv=None):
             p.add_argument("--fix-count", action="store_true")
     p = sub.add_parser("prompt")
     p.add_argument("--lang", choices=("en", "es"), default="en")
+    p.add_argument("--lean", action="store_true")
     p.add_argument("--contract")
     args = ap.parse_args(argv)
     try:
         contract = load_contract(args.contract)
         if args.command == "prompt":
-            print(make_prompt(contract, args.lang))
+            print(make_prompt(contract, args.lang, lean=args.lean))
             return 0
         # newline='' keeps transport problems visible to diagnose/repair.
         with Path(args.file).open(encoding="utf-8", newline="") as handle:
             text = handle.read()
         if args.command == "encode":
-            output = encode(_strict_json(text.lstrip("\ufeff")), contract)
+            output = encode(_strict_json(text.lstrip("\ufeff")), contract, version=args.version, delimiter=args.delimiter)
         elif args.command == "decode":
             output = json.dumps(decode(text, contract), ensure_ascii=False, indent=None if args.compact else 2, allow_nan=False)
         elif args.command in ("validate", "diagnose"):

@@ -1,0 +1,703 @@
+{
+  "tokenizers": [
+    "o200k_base",
+    "cl100k_base",
+    "p50k_base"
+  ],
+  "datasets": [
+    {
+      "name": "products",
+      "label": "DummyJSON products",
+      "records": 194,
+      "v2_header": "products|v=2.0|n=194|h=5756133b6e00|m=[[],194,0,194]|s=sp|tl=2|z=1|d=[[24,\"https://cdn.dummyjson.com/public/qr-code.png\"]]|p=[[21,\"202\"],[22,\"202\"],[26,\"https://cdn.dummyjson.com/product-images/\"]]|dt=[0]|e=[[3,[\"beauty\",\"fragrances\",\"furniture\",\"groceries\",\"home-decoration\",\"kitchen-accessories\",\"laptops\",\"mens-shirts\",\"mens-shoes\",\"mens-watches\",\"mobile-accessories\",\"motorcycle\",\"skin-care\",\"smartphones\",\"sports-accessories\",\"sunglasses\",\"tablets\",\"tops\",\"vehicle\",\"womens-bags\",\"womens-dresses\",\"womens-jewellery\",\"womens-shoes\",\"womens-watches\"]],[15,[\"1 week warranty\",\"1 year warranty\",\"3 months warranty\",\"3 year warranty\",\"1 month warranty\",\"6 months warranty\",\"Lifetime warranty\",\"5 year warranty\",\"2 year warranty\",\"No warranty\"]],[16,[\"Ships in 3-5 business days\",\"Ships in 2 weeks\",\"Ships in 1-2 business days\",\"Ships in 1 week\",\"Ships overnight\",\"Ships in 1 month\"]],[17,[\"In Stock\",\"Low Stock\",\"Out of Stock\"]],[19,[\"No return policy\",\"7 days return policy\",\"90 days return policy\",\"60 days return policy\",\"30 days return policy\"]]]",
+      "formats": {
+        "mini_v2": {
+          "bytes": 172262,
+          "roundtrip": true,
+          "o200k_base": 60431,
+          "cl100k_base": 61690,
+          "p50k_base": 66833,
+          "saving_vs_json_compact": 32.34
+        },
+        "mini_v1": {
+          "bytes": 181357,
+          "roundtrip": true,
+          "o200k_base": 64090,
+          "cl100k_base": 65323,
+          "p50k_base": 74562,
+          "saving_vs_json_compact": 28.24
+        },
+        "ison": {
+          "bytes": 240723,
+          "roundtrip": true,
+          "o200k_base": 76950,
+          "cl100k_base": 78398,
+          "p50k_base": 86963,
+          "saving_vs_json_compact": 13.84
+        },
+        "lean": {
+          "bytes": 237891,
+          "roundtrip": true,
+          "o200k_base": 78343,
+          "cl100k_base": 79661,
+          "p50k_base": 90330,
+          "saving_vs_json_compact": 12.28
+        },
+        "tonl": {
+          "bytes": 239172,
+          "roundtrip": true,
+          "o200k_base": 76275,
+          "cl100k_base": 77598,
+          "p50k_base": 87787,
+          "saving_vs_json_compact": 14.6
+        },
+        "hedl": {
+          "bytes": 239741,
+          "roundtrip": true,
+          "o200k_base": 76666,
+          "cl100k_base": 77989,
+          "p50k_base": 88185,
+          "saving_vs_json_compact": 14.16
+        },
+        "raif": {
+          "bytes": 238149,
+          "roundtrip": true,
+          "o200k_base": 78384,
+          "cl100k_base": 79702,
+          "p50k_base": 90381,
+          "saving_vs_json_compact": 12.23
+        },
+        "json_positional": {
+          "bytes": 208295,
+          "roundtrip": true,
+          "o200k_base": 68824,
+          "cl100k_base": 69885,
+          "p50k_base": 79896,
+          "saving_vs_json_compact": 22.94
+        },
+        "json_short": {
+          "bytes": 242574,
+          "roundtrip": true,
+          "o200k_base": 84848,
+          "cl100k_base": 85428,
+          "p50k_base": 95243,
+          "saving_vs_json_compact": 5.0
+        },
+        "toon_flat": {
+          "bytes": 201287,
+          "roundtrip": true,
+          "o200k_base": 68260,
+          "cl100k_base": 69450,
+          "p50k_base": 80838,
+          "saving_vs_json_compact": 23.57
+        },
+        "toon": {
+          "bytes": 296409,
+          "roundtrip": true,
+          "o200k_base": 93624,
+          "cl100k_base": 94437,
+          "p50k_base": 105083,
+          "saving_vs_json_compact": -4.83
+        },
+        "csv": {
+          "bytes": 196746,
+          "roundtrip": true,
+          "o200k_base": 67057,
+          "cl100k_base": 68167,
+          "p50k_base": 80059,
+          "saving_vs_json_compact": 24.92
+        },
+        "xml": {
+          "bytes": 578841,
+          "roundtrip": true,
+          "o200k_base": 169714,
+          "cl100k_base": 170116,
+          "p50k_base": 184389,
+          "saving_vs_json_compact": -90.03
+        },
+        "yaml": {
+          "bytes": 313993,
+          "roundtrip": true,
+          "o200k_base": 100014,
+          "cl100k_base": 100821,
+          "p50k_base": 112018,
+          "saving_vs_json_compact": -11.99
+        },
+        "json_compact": {
+          "bytes": 306438,
+          "roundtrip": true,
+          "o200k_base": 89310,
+          "cl100k_base": 89502,
+          "p50k_base": 101839,
+          "saving_vs_json_compact": 0.0
+        },
+        "json_pretty": {
+          "bytes": 415114,
+          "roundtrip": true,
+          "o200k_base": 119823,
+          "cl100k_base": 120792,
+          "p50k_base": 142420,
+          "saving_vs_json_compact": -34.17
+        }
+      }
+    },
+    {
+      "name": "users",
+      "label": "DummyJSON users",
+      "records": 208,
+      "v2_header": "users|v=2.0|n=208|h=8974266aebf8|m=[[],208,0,208]|s=sp|tl=35|d=[[26,\"United States\"],[44,\"United States\"],[48,\"Bitcoin\"],[49,\"0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a\"],[50,\"Ethereum (ERC20)\"]]|p=[[11,\"https://dummyjson.com/icon/\"]]|dt=[0,4]|e=[[5,[\"female\",\"male\"]],[12,[\"O-\",\"B+\",\"AB+\",\"AB-\",\"A-\",\"B-\",\"A+\",\"O+\"]],[15,[\"Green\",\"Red\",\"Hazel\",\"Amber\",\"Blue\",\"Brown\",\"Violet\",\"Gray\"]],[16,[\"Brown\",\"Green\",\"White\",\"Blonde\",\"Gray\",\"Red\",\"Purple\",\"Blue\",\"Black\"]],[17,[\"Curly\",\"Straight\",\"Wavy\",\"Kinky\"]],[20,[\"Phoenix\",\"Houston\",\"Washington\",\"Seattle\",\"Jacksonville\",\"Fort Worth\",\"Indianapolis\",\"San Antonio\",\"New York\",\"Denver\",\"Columbus\",\"San Jose\",\"San Diego\",\"Chicago\",\"Philadelphia\",\"Dallas\",\"Los Angeles\",\"San Francisco\",\"Charlotte\",\"Austin\"]],[21,[\"Mississippi\",\"Alabama\",\"Pennsylvania\",\"Colorado\",\"Tennessee\",\"Delaware\",\"Rhode Island\",\"Louisiana\",\"Utah\",\"South Dakota\",\"West Virginia\",\"North Dakota\",\"Ohio\",\"Iowa\",\"Wyoming\",\"Arkansas\",\"New Mexico\",\"New Jersey\",\"Illinois\",\"Missouri\",\"New York\",\"Maine\",\"Nevada\",\"Massachusetts\",\"Montana\",\"Indiana\",\"Oregon\",\"Idaho\",\"Wisconsin\",\"North Carolina\",\"Vermont\",\"New Hampshire\",\"Alaska\",\"Minnesota\",\"Connecticut\",\"South Carolina\",\"Arizona\",\"Kansas\",\"Oklahoma\",\"Kentucky\",\"Maryland\",\"Florida\",\"Texas\",\"Hawaii\",\"Georgia\",\"Virginia\",\"Michigan\",\"Washington\",\"Nebraska\"]],[28,[\"University of Wisconsin--Madison\",\"Ohio State University\",\"Pepperdine University\",\"University of Southern California\",\"Northeastern University\",\"University of North Carolina--Chapel Hill\",\"University of Illinois--Urbana-Champaign\",\"Syracuse University\",\"California Institute of Technology (Caltech)\",\"William & Mary\",\"New York University (NYU)\",\"Tufts University\",\"Harvard University\",\"Washington University in St. Louis\",\"University of Pennsylvania\",\"Georgetown University\",\"Columbia University\",\"Boston College\",\"Johns Hopkins University\",\"Massachusetts Institute of Technology (MIT)\",\"Boston University\",\"Yale University\",\"Princeton University\",\"University of California--Irvine\",\"University of Michigan--Ann Arbor\",\"University of Florida\",\"University of California--Los Angeles (UCLA)\",\"University of California--San Diego\",\"University of Rochester\",\"Vanderbilt University\",\"Cornell University\",\"University of Chicago\",\"Wake Forest University\",\"University of Virginia\",\"University of Notre Dame\",\"University of Miami\",\"Carnegie Mellon University\",\"Emory University\",\"Duke University\",\"Brown University\",\"University of Texas--Austin\",\"Rice University\",\"University of California--Santa Barbara\",\"University of Connecticut\",\"University of California--Berkeley\",\"Northwestern University\",\"Stanford University\",\"Purdue University\",\"Dartmouth College\"]],[29,[\"05/28\",\"01/30\",\"10/27\",\"07/30\",\"06/30\",\"12/29\",\"08/30\",\"03/30\",\"02/29\",\"12/27\",\"05/30\",\"08/29\",\"01/29\",\"04/30\",\"01/27\",\"09/27\",\"09/30\",\"06/27\",\"08/28\",\"05/29\",\"12/28\",\"11/29\",\"06/28\",\"11/30\",\"10/29\",\"10/28\",\"05/27\",\"04/28\",\"04/27\",\"07/28\",\"11/28\",\"03/27\",\"02/27\",\"11/27\",\"02/28\",\"03/29\",\"04/29\",\"12/30\",\"09/28\",\"02/30\",\"07/29\",\"09/29\",\"08/27\",\"07/27\",\"01/28\",\"03/28\",\"10/30\",\"06/29\"]],[31,[\"Diners Club International\",\"JCB\",\"Discover\",\"Mastercard\",\"American Express\",\"UnionPay\",\"Visa\"]],[32,[\"GBP\",\"USD\",\"EUR\",\"CAD\",\"NZD\",\"PKR\",\"CNY\",\"JPY\",\"AUD\",\"INR\"]],[34,[\"Engineering\",\"Support\",\"Research and Development\",\"Human Resources\",\"Product Management\",\"Marketing\",\"Services\",\"Accounting\",\"Training\",\"Legal\",\"Sales\",\"Business Development\"]],[36,[\"Sales Manager\",\"Support Specialist\",\"Accountant\",\"Research Analyst\",\"Quality Assurance Engineer\",\"Web Developer\",\"Chief Executive Officer\",\"Legal Counsel\",\"Chief Financial Officer\",\"Business Analyst\",\"Database Administrator\",\"Software Architect\",\"Data Analyst\",\"Chief Technology Officer\",\"Business Development Manager\",\"Project Manager\",\"Human Resources Manager\",\"Technical Support Engineer\",\"Software Engineer\",\"Engineer\",\"Chief Information Officer\",\"Marketing Manager\",\"Developer\",\"Chief Operating Officer\",\"Data Scientist\",\"Product Manager\",\"Systems Analyst\"]],[38,[\"San Francisco\",\"Los Angeles\",\"Dallas\",\"Fort Worth\",\"San Antonio\",\"Indianapolis\",\"Washington\",\"Austin\",\"Chicago\",\"San Diego\",\"Philadelphia\",\"Seattle\",\"San Jose\",\"New York\",\"Denver\",\"Houston\",\"Jacksonville\",\"Phoenix\",\"Columbus\",\"Charlotte\"]],[39,[\"Wisconsin\",\"New Hampshire\",\"Nevada\",\"Pennsylvania\",\"Idaho\",\"Oklahoma\",\"Kansas\",\"Colorado\",\"Florida\",\"Maryland\",\"Connecticut\",\"New Jersey\",\"Oregon\",\"Montana\",\"Missouri\",\"Rhode Island\",\"Minnesota\",\"Hawaii\",\"Delaware\",\"South Dakota\",\"North Carolina\",\"Louisiana\",\"Wyoming\",\"West Virginia\",\"Michigan\",\"Georgia\",\"Nebraska\",\"South Carolina\",\"California\",\"North Dakota\",\"Ohio\",\"New York\",\"Maine\",\"Tennessee\",\"Virginia\",\"Alaska\",\"Washington\",\"Texas\",\"Utah\",\"Mississippi\",\"Indiana\",\"Arizona\",\"Vermont\",\"Arkansas\",\"Iowa\",\"Illinois\",\"Alabama\",\"Massachusetts\",\"Kentucky\",\"New Mexico\"]],[47,[\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/97.0.1072.76 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\",\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0\",\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.3 Safari/605.1.15\",\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36\",\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36\",\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36\"]],[51,[\"admin\",\"moderator\",\"user\"]]]",
+      "formats": {
+        "mini_v2": {
+          "bytes": 84110,
+          "roundtrip": true,
+          "o200k_base": 38751,
+          "cl100k_base": 38945,
+          "p50k_base": 35619,
+          "saving_vs_json_compact": 57.53
+        },
+        "mini_v1": {
+          "bytes": 92923,
+          "roundtrip": true,
+          "o200k_base": 43268,
+          "cl100k_base": 43531,
+          "p50k_base": 46754,
+          "saving_vs_json_compact": 52.58
+        },
+        "ison": {
+          "bytes": 159375,
+          "roundtrip": true,
+          "o200k_base": 60155,
+          "cl100k_base": 60440,
+          "p50k_base": 63122,
+          "saving_vs_json_compact": 34.08
+        },
+        "lean": {
+          "bytes": 155007,
+          "roundtrip": true,
+          "o200k_base": 65736,
+          "cl100k_base": 65734,
+          "p50k_base": 71034,
+          "saving_vs_json_compact": 27.96
+        },
+        "tonl": {
+          "bytes": 155597,
+          "roundtrip": true,
+          "o200k_base": 60211,
+          "cl100k_base": 60419,
+          "p50k_base": 65410,
+          "saving_vs_json_compact": 34.02
+        },
+        "hedl": {
+          "bytes": 156177,
+          "roundtrip": true,
+          "o200k_base": 60619,
+          "cl100k_base": 60829,
+          "p50k_base": 65832,
+          "saving_vs_json_compact": 33.57
+        },
+        "raif": {
+          "bytes": 155494,
+          "roundtrip": true,
+          "o200k_base": 65808,
+          "cl100k_base": 65804,
+          "p50k_base": 71139,
+          "saving_vs_json_compact": 27.88
+        },
+        "json_positional": {
+          "bytes": 167864,
+          "roundtrip": true,
+          "o200k_base": 61229,
+          "cl100k_base": 61207,
+          "p50k_base": 65810,
+          "saving_vs_json_compact": 32.9
+        },
+        "json_short": {
+          "bytes": 221117,
+          "roundtrip": true,
+          "o200k_base": 87508,
+          "cl100k_base": 86587,
+          "p50k_base": 90428,
+          "saving_vs_json_compact": 4.1
+        },
+        "toon_flat": {
+          "bytes": 153344,
+          "roundtrip": true,
+          "o200k_base": 60926,
+          "cl100k_base": 60845,
+          "p50k_base": 65655,
+          "saving_vs_json_compact": 33.23
+        },
+        "toon": {
+          "bytes": 152941,
+          "roundtrip": true,
+          "o200k_base": 60815,
+          "cl100k_base": 60735,
+          "p50k_base": 65533,
+          "saving_vs_json_compact": 33.35
+        },
+        "csv": {
+          "bytes": 150416,
+          "roundtrip": true,
+          "o200k_base": 60028,
+          "cl100k_base": 59958,
+          "p50k_base": 65100,
+          "saving_vs_json_compact": 34.22
+        },
+        "xml": {
+          "bytes": 653763,
+          "roundtrip": true,
+          "o200k_base": 202226,
+          "cl100k_base": 201278,
+          "p50k_base": 209296,
+          "saving_vs_json_compact": -121.62
+        },
+        "yaml": {
+          "bytes": 300309,
+          "roundtrip": true,
+          "o200k_base": 104827,
+          "cl100k_base": 104474,
+          "p50k_base": 109618,
+          "saving_vs_json_compact": -14.88
+        },
+        "json_compact": {
+          "bytes": 289146,
+          "roundtrip": true,
+          "o200k_base": 91251,
+          "cl100k_base": 90122,
+          "p50k_base": 96251,
+          "saving_vs_json_compact": 0.0
+        },
+        "json_pretty": {
+          "bytes": 423118,
+          "roundtrip": true,
+          "o200k_base": 131181,
+          "cl100k_base": 131320,
+          "p50k_base": 150281,
+          "saving_vs_json_compact": -43.76
+        }
+      }
+    },
+    {
+      "name": "comments",
+      "label": "JSONPlaceholder comments",
+      "records": 500,
+      "v2_header": "comments|v=2.0|n=500|h=2f9b19bfeb28|s=sp|tl=2|dt=[0,1]",
+      "formats": {
+        "mini_v2": {
+          "bytes": 117445,
+          "roundtrip": true,
+          "o200k_base": 29302,
+          "cl100k_base": 35469,
+          "p50k_base": 41646,
+          "saving_vs_json_compact": 18.06
+        },
+        "mini_v1": {
+          "bytes": 117776,
+          "roundtrip": true,
+          "o200k_base": 30268,
+          "cl100k_base": 36254,
+          "p50k_base": 42884,
+          "saving_vs_json_compact": 15.36
+        },
+        "ison": {
+          "bytes": 119820,
+          "roundtrip": true,
+          "o200k_base": 30092,
+          "cl100k_base": 36112,
+          "p50k_base": 42743,
+          "saving_vs_json_compact": 15.85
+        },
+        "lean": {
+          "bytes": 118779,
+          "roundtrip": true,
+          "o200k_base": 30419,
+          "cl100k_base": 36345,
+          "p50k_base": 43877,
+          "saving_vs_json_compact": 14.94
+        },
+        "tonl": {
+          "bytes": 118814,
+          "roundtrip": true,
+          "o200k_base": 30028,
+          "cl100k_base": 35981,
+          "p50k_base": 43392,
+          "saving_vs_json_compact": 16.03
+        },
+        "hedl": {
+          "bytes": 120323,
+          "roundtrip": true,
+          "o200k_base": 31029,
+          "cl100k_base": 36981,
+          "p50k_base": 44393,
+          "saving_vs_json_compact": 13.23
+        },
+        "raif": {
+          "bytes": 118840,
+          "roundtrip": true,
+          "o200k_base": 30436,
+          "cl100k_base": 36362,
+          "p50k_base": 43894,
+          "saving_vs_json_compact": 14.89
+        },
+        "json_positional": {
+          "bytes": 121744,
+          "roundtrip": true,
+          "o200k_base": 30758,
+          "cl100k_base": 36792,
+          "p50k_base": 43365,
+          "saving_vs_json_compact": 13.99
+        },
+        "json_short": {
+          "bytes": 131744,
+          "roundtrip": true,
+          "o200k_base": 35261,
+          "cl100k_base": 41295,
+          "p50k_base": 47867,
+          "saving_vs_json_compact": 1.4
+        },
+        "toon_flat": {
+          "bytes": 119798,
+          "roundtrip": true,
+          "o200k_base": 31023,
+          "cl100k_base": 36976,
+          "p50k_base": 43887,
+          "saving_vs_json_compact": 13.25
+        },
+        "toon": {
+          "bytes": 119776,
+          "roundtrip": true,
+          "o200k_base": 31014,
+          "cl100k_base": 36966,
+          "p50k_base": 43879,
+          "saving_vs_json_compact": 13.27
+        },
+        "csv": {
+          "bytes": 117282,
+          "roundtrip": true,
+          "o200k_base": 29869,
+          "cl100k_base": 35884,
+          "p50k_base": 42408,
+          "saving_vs_json_compact": 16.48
+        },
+        "xml": {
+          "bytes": 221304,
+          "roundtrip": true,
+          "o200k_base": 59970,
+          "cl100k_base": 65323,
+          "p50k_base": 71906,
+          "saving_vs_json_compact": -67.7
+        },
+        "yaml": {
+          "bytes": 145243,
+          "roundtrip": true,
+          "o200k_base": 39719,
+          "cl100k_base": 45874,
+          "p50k_base": 52039,
+          "saving_vs_json_compact": -11.07
+        },
+        "json_compact": {
+          "bytes": 139744,
+          "roundtrip": true,
+          "o200k_base": 35761,
+          "cl100k_base": 41295,
+          "p50k_base": 48367,
+          "saving_vs_json_compact": 0.0
+        },
+        "json_pretty": {
+          "bytes": 157745,
+          "roundtrip": true,
+          "o200k_base": 45260,
+          "cl100k_base": 50794,
+          "p50k_base": 60422,
+          "saving_vs_json_compact": -26.56
+        }
+      }
+    },
+    {
+      "name": "earthquakes",
+      "label": "USGS earthquake observations",
+      "records": 1000,
+      "v2_header": "earthquakes|v=2.0|n=1000|h=492eda892abe|m=[\"FeatureCollection\",[1789596033000,\"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-02-01&limit=1000&orderby=time-asc\",\"USGS Earthquakes\",200,\"2.7.0\",1000,1],[],[-179.9643,-62.3342,-3.42,179.8656,70.401,496.652]]|s=sp|tl=26|z=1|d=[[0,\"Feature\"],[5,\"~\"],[27,\"Point\"]]|p=[[6,\"https://earthquake.usgs.gov/earthquakes/eventpage/\"],[7,\"https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=\"]]|dt=[3,4]|e=[[12,[\"reviewed\",\"automatic\"]],[15,[\"nn\",\"ak\",\"tx\",\"us\",\"av\",\"nc\",\"uw\",\"mb\",\"ci\",\"uu\",\"pr\",\"hv\",\"ok\",\"nm\"]],[18,[\",nn,\",\",ak,\",\",tx,\",\",us,\",\",av,\",\",nc,\",\",uw,\",\",mb,\",\",ci,\",\",ak,us,\",\",us,nn,\",\",us,ak,\",\",uu,\",\",pr,\",\",uw,us,\",\",us,hv,\",\",us,usauto,\",\",hv,\",\",nc,us,\",\",ok,\",\",us,uu,\",\",av,ak,\",\",usauto,us,\",\",us,tx,\",\",mb,us,\",\",us,usauto,pt,at,\",\",ci,us,\",\",nn,us,\",\",pr,us,\",\",tx,us,\",\",nm,\",\",ew,us,nc,at,\",\",uu,us,\",\",av,us,ak,\",\",ak,av,us,\",\",nc,nn,\",\",ak,us,ak,\",\",us,usauto,pt,\"]],[19,[\",origin,phase-data,\",\",nearby-cities,origin,phase-data,scitech-link,\",\",nearby-cities,origin,phase-data,\",\",focal-mechanism,nearby-cities,origin,phase-data,scitech-link,\",\",dyfi,origin,phase-data,\",\",dyfi,internal-moment-tensor,losspager,moment-tensor,origin,phase-data,shakemap,\",\",dyfi,focal-mechanism,nearby-cities,origin,phase-data,scitech-link,\",\",moment-tensor,origin,phase-data,\",\",internal-moment-tensor,moment-tensor,origin,phase-data,\",\",dyfi,nearby-cities,origin,phase-data,scitech-link,\",\",ground-failure,internal-moment-tensor,internal-origin,losspager,moment-tensor,origin,phase-data,shakemap,\",\",dyfi,origin,phase-data,shakemap,\",\",internal-moment-tensor,origin,phase-data,\",\",dyfi,impact-text,origin,phase-data,\",\",dyfi,event-sequence,focal-mechanism,ground-failure,impact-link,losspager,moment-tensor,nearby-cities,oaf,origin,phase-data,scitech-link,shake-alert,shakemap,\",\",dyfi,focal-mechanism,nearby-cities,origin,phase-data,\",\",dyfi,nearby-cities,origin,phase-data,\",\",internal-moment-tensor,losspager,origin,phase-data,shakemap,\",\",focal-mechanism,nearby-cities,origin,phase-data,\",\",origin,phase-data,shakemap,\",\",internal-moment-tensor,losspager,moment-tensor,origin,phase-data,shakemap,\",\",dyfi,moment-tensor,origin,phase-data,\",\",dyfi,ground-failure,impact-text,internal-moment-tensor,internal-origin,losspager,moment-tensor,origin,phase-data,shakemap,\",\",dyfi,moment-tensor,origin,phase-data,shakemap,\"]],[24,[\"ml\",\"mb\",\"md\",\"mww\",\"mb_lg\",\"mwr\",\"mw\"]],[25,[\"earthquake\",\"explosion\",\"ice quake\",\"mining explosion\",\"quarry blast\"]]]",
+      "formats": {
+        "mini_v2": {
+          "bytes": 235042,
+          "roundtrip": true,
+          "o200k_base": 116471,
+          "cl100k_base": 116744,
+          "p50k_base": 107200,
+          "saving_vs_json_compact": 53.88
+        },
+        "mini_v1": {
+          "bytes": 357348,
+          "roundtrip": true,
+          "o200k_base": 164137,
+          "cl100k_base": 163301,
+          "p50k_base": 181360,
+          "saving_vs_json_compact": 35.0
+        },
+        "ison": {
+          "bytes": 440473,
+          "roundtrip": true,
+          "o200k_base": 166517,
+          "cl100k_base": 166788,
+          "p50k_base": 175846,
+          "saving_vs_json_compact": 34.06
+        },
+        "lean": {
+          "bytes": 438196,
+          "roundtrip": true,
+          "o200k_base": 178357,
+          "cl100k_base": 178928,
+          "p50k_base": 204611,
+          "saving_vs_json_compact": 29.37
+        },
+        "tonl": {
+          "bytes": 446243,
+          "roundtrip": true,
+          "o200k_base": 173219,
+          "cl100k_base": 173625,
+          "p50k_base": 198570,
+          "saving_vs_json_compact": 31.41
+        },
+        "hedl": {
+          "bytes": 433260,
+          "roundtrip": true,
+          "o200k_base": 175070,
+          "cl100k_base": 175476,
+          "p50k_base": 200575,
+          "saving_vs_json_compact": 30.67
+        },
+        "raif": {
+          "bytes": 438481,
+          "roundtrip": true,
+          "o200k_base": 178401,
+          "cl100k_base": 178972,
+          "p50k_base": 204673,
+          "saving_vs_json_compact": 29.35
+        },
+        "json_positional": {
+          "bytes": 465677,
+          "roundtrip": true,
+          "o200k_base": 175188,
+          "cl100k_base": 174464,
+          "p50k_base": 200496,
+          "saving_vs_json_compact": 30.63
+        },
+        "json_short": {
+          "bytes": 597708,
+          "roundtrip": true,
+          "o200k_base": 247527,
+          "cl100k_base": 245798,
+          "p50k_base": 263417,
+          "saving_vs_json_compact": 1.98
+        },
+        "toon_flat": {
+          "bytes": 449588,
+          "roundtrip": true,
+          "o200k_base": 173803,
+          "cl100k_base": 174345,
+          "p50k_base": 198703,
+          "saving_vs_json_compact": 31.17
+        },
+        "toon": {
+          "bytes": 848976,
+          "roundtrip": true,
+          "o200k_base": 294355,
+          "cl100k_base": 294630,
+          "p50k_base": 315744,
+          "saving_vs_json_compact": -16.56
+        },
+        "csv": {
+          "bytes": 442266,
+          "roundtrip": true,
+          "o200k_base": 171180,
+          "cl100k_base": 171720,
+          "p50k_base": 197700,
+          "saving_vs_json_compact": 32.21
+        },
+        "xml": {
+          "bytes": 1757888,
+          "roundtrip": true,
+          "o200k_base": 545323,
+          "cl100k_base": 542580,
+          "p50k_base": 577760,
+          "saving_vs_json_compact": -115.95
+        },
+        "yaml": {
+          "bytes": 791820,
+          "roundtrip": true,
+          "o200k_base": 299370,
+          "cl100k_base": 299643,
+          "p50k_base": 311706,
+          "saving_vs_json_compact": -18.55
+        },
+        "json_compact": {
+          "bytes": 716758,
+          "roundtrip": true,
+          "o200k_base": 252527,
+          "cl100k_base": 250798,
+          "p50k_base": 275418,
+          "saving_vs_json_compact": 0.0
+        },
+        "json_pretty": {
+          "bytes": 1094856,
+          "roundtrip": true,
+          "o200k_base": 353250,
+          "cl100k_base": 353525,
+          "p50k_base": 405703,
+          "saving_vs_json_compact": -39.89
+        }
+      }
+    },
+    {
+      "name": "flujo-soporte",
+      "label": "Support Ticket Triage (20 records)",
+      "records": 20,
+      "v2_header": "ticket|v=2.0|n=20|h=79a88ccdd100|s=sp|tl=1|dt=[0]|e=[[2,[\"acceso\",\"facturacion\",\"rendimiento\",\"cuenta\",\"informes\",\"notificaciones\",\"busqueda\",\"archivos\",\"aplicacion\"]],[3,[\"alta\",\"media\",\"baja\"]]]",
+      "formats": {
+        "mini_v2": {
+          "bytes": 810,
+          "roundtrip": true,
+          "o200k_base": 291,
+          "cl100k_base": 307,
+          "p50k_base": 321,
+          "saving_vs_json_compact": 34.31
+        },
+        "mini_v1": {
+          "bytes": 882,
+          "roundtrip": true,
+          "o200k_base": 278,
+          "cl100k_base": 293,
+          "p50k_base": 366,
+          "saving_vs_json_compact": 37.25
+        },
+        "mini_rows": {
+          "bytes": 851,
+          "roundtrip": true,
+          "o200k_base": 182,
+          "cl100k_base": 202,
+          "p50k_base": 281,
+          "saving_vs_json_compact": 58.92
+        },
+        "ison": {
+          "bytes": 970,
+          "roundtrip": true,
+          "o200k_base": 238,
+          "cl100k_base": 258,
+          "p50k_base": 351,
+          "saving_vs_json_compact": 46.28
+        },
+        "lean": {
+          "bytes": 897,
+          "roundtrip": true,
+          "o200k_base": 249,
+          "cl100k_base": 264,
+          "p50k_base": 370,
+          "saving_vs_json_compact": 43.79
+        },
+        "tonl": {
+          "bytes": 930,
+          "roundtrip": true,
+          "o200k_base": 277,
+          "cl100k_base": 289,
+          "p50k_base": 382,
+          "saving_vs_json_compact": 37.47
+        },
+        "hedl": {
+          "bytes": 1011,
+          "roundtrip": true,
+          "o200k_base": 327,
+          "cl100k_base": 339,
+          "p50k_base": 438,
+          "saving_vs_json_compact": 26.19
+        },
+        "raif": {
+          "bytes": 942,
+          "roundtrip": true,
+          "o200k_base": 257,
+          "cl100k_base": 273,
+          "p50k_base": 376,
+          "saving_vs_json_compact": 41.99
+        },
+        "json_positional": {
+          "bytes": 1013,
+          "roundtrip": true,
+          "o200k_base": 280,
+          "cl100k_base": 296,
+          "p50k_base": 369,
+          "saving_vs_json_compact": 36.79
+        },
+        "json_short": {
+          "bytes": 1333,
+          "roundtrip": true,
+          "o200k_base": 423,
+          "cl100k_base": 439,
+          "p50k_base": 511,
+          "saving_vs_json_compact": 4.51
+        },
+        "toon_flat": {
+          "bytes": 947,
+          "roundtrip": true,
+          "o200k_base": 309,
+          "cl100k_base": 320,
+          "p50k_base": 393,
+          "saving_vs_json_compact": 30.25
+        },
+        "toon": {
+          "bytes": 928,
+          "roundtrip": true,
+          "o200k_base": 304,
+          "cl100k_base": 315,
+          "p50k_base": 386,
+          "saving_vs_json_compact": 31.38
+        },
+        "csv": {
+          "bytes": 894,
+          "roundtrip": true,
+          "o200k_base": 264,
+          "cl100k_base": 274,
+          "p50k_base": 369,
+          "saving_vs_json_compact": 40.41
+        },
+        "xml": {
+          "bytes": 4453,
+          "roundtrip": true,
+          "o200k_base": 1243,
+          "cl100k_base": 1255,
+          "p50k_base": 1445,
+          "saving_vs_json_compact": -180.59
+        },
+        "yaml": {
+          "bytes": 1692,
+          "roundtrip": true,
+          "o200k_base": 503,
+          "cl100k_base": 543,
+          "p50k_base": 642,
+          "saving_vs_json_compact": -13.54
+        },
+        "json_compact": {
+          "bytes": 1773,
+          "roundtrip": true,
+          "o200k_base": 443,
+          "cl100k_base": 459,
+          "p50k_base": 631,
+          "saving_vs_json_compact": 0.0
+        },
+        "json_pretty": {
+          "bytes": 2374,
+          "roundtrip": true,
+          "o200k_base": 762,
+          "cl100k_base": 778,
+          "p50k_base": 1051,
+          "saving_vs_json_compact": -72.01
+        }
+      }
+    }
+  ],
+  "prompt_overhead_o200k": {
+    "make_prompt_full": 453,
+    "make_prompt_lean": 100,
+    "make_rows_prompt": 68,
+    "positional_json_prompt": 35
+  }
+}

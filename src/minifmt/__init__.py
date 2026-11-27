@@ -13,6 +13,7 @@ from typing import Any, Dict
 
 from .contract import Contract, Field
 from .errors import MiniError, MiniValidationError
+from .grammar import contract_to_gbnf, contract_to_lark, contract_to_regex
 from .parser import Document, detect_prefix, parse
 from .prompt import parser_prompt, spec_block
 from .registry import Registry
@@ -27,7 +28,8 @@ SPEC_VERSION = "1.1"
 __all__ = ["Contract", "Field", "MiniError", "MiniValidationError", "Document", "parse",
            "dumps", "detect_prefix", "Registry", "spec_block", "parser_prompt",
            "canonical_equal", "roundtrip_ok", "Reader", "ReaderResult", "StreamRecord", "create_reader",
-           "read_records", "from_json_schema", "to_json_schema", "from_pydantic", "__version__", "SPEC_VERSION"]
+           "read_records", "from_json_schema", "to_json_schema", "from_pydantic",
+           "contract_to_gbnf", "contract_to_lark", "contract_to_regex", "__version__", "SPEC_VERSION"]
 
 
 def canonical_equal(a: Any, b: Any) -> bool:
