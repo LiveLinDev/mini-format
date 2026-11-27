@@ -83,14 +83,14 @@ def construir(ctx) -> None:
   <p class="eyebrow">{a("Evidencia técnica reproducible", "Reproducible technical proof")}</p>
   <h1>{a("Validación y Benchmarks 2026", "Validation & 2026 Benchmarks")}</h1>
   <p class="lead">{a(
-      "Comparación verificada frente a TOON, ISON, TONL, LEAN, HEDL, RAIF, CSV, YAML y XML con ida y vuelta JSON 100% exacta en tres tokenizadores BPE reales.",
-      "Verified head-to-head comparison against TOON, ISON, TONL, LEAN, HEDL, RAIF, CSV, YAML, and XML with 100% lossless JSON round-trips across three real BPE tokenizers."
+      "Comparación de tokens serializados con tres tokenizadores BPE. El arnés verifica la ida y vuelta del JSON y aporta contexto compartido a los perfiles que lo necesitan.",
+      "Comparison of serialized text with three BPE tokenizers. The harness verifies JSON round-trips and supplies shared context to profiles that need it."
   )}</p>
 
   <div class="val-kpi-grid">
     <div class="val-kpi">
-      <strong>5 / 5 {a("victorias", "wins")}</strong>
-      <span>{a("Primer puesto en los 4 datasets públicos y el flujo real de soporte.", "Ranked #1 across all 4 public benchmarks and the live support extraction workload.")}</span>
+      <strong>{a("4 conjuntos", "4 datasets")}</strong>
+      <span>{a("Datos públicos y un ejemplo adicional de 20 tickets.", "Public datasets and a separate 20-ticket example.")}</span>
     </div>
     <div class="val-kpi">
       <strong>-{tot_save:.1f}% {a("total", "total")}</strong>
@@ -114,7 +114,7 @@ def construir(ctx) -> None:
           <tr>
             <th scope="col">{a("Conjunto", "Dataset")}</th>
             <th scope="col">N</th>
-            <th scope="col">.mini ({a("ganador", "winner")})</th>
+            <th scope="col">.mini</th>
             <th scope="col">ISON</th>
             <th scope="col">CSV</th>
             <th scope="col">TOON</th>
