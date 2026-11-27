@@ -14,6 +14,8 @@ from pathlib import Path
 import re
 import sys
 
+_UNDECODED = object()
+
 
 def _runtime(bundle):
     spec = importlib.util.spec_from_file_location("_mini_workflow_parser", bundle / "parser.py")
@@ -150,7 +152,7 @@ class Workflow:
         if expected_records is not None and (type(expected_records) is not int or expected_records < 0):
             raise ValueError("expected_records must be a nonnegative integer")
         at_line_end = text.rstrip(" \t").endswith("\n")
-        repaired = self.runtime.repair(text, self.contract)
+        repaired, data = self._repair_with_value(text)
         report = repaired["diagnostics"]
         original_report = report if repaired["text"] == text else self.runtime.diagnose(text, self.contract)
         trace = [{"stage": "generate", "text": text},
@@ -178,13 +180,15 @@ class Workflow:
             expected_records = None  # the complete part is validated on its own; the rest is requested below
             trace.append({"stage": "truncation", "declared": declared, "complete_records": kept})
             report = self.runtime.diagnose(text, self.contract)
+            data = _UNDECODED
         for attempt in range(max_repairs + 1):
             if report["ok"] and expected_records is not None and report["records"] != expected_records:
                 report = {"ok": False, "invalid_lines": [], "errors": [
                     {"code": "D_EXPECTED_COUNT", "message": f"expected {expected_records} records, received {report['records']}"}],
                     "repair_prompt": "Regenerate the complete document with the required record count. Never invent unavailable facts."}
             if report["ok"]:
-                data = self.runtime.decode(text, self.contract)
+                if data is _UNDECODED:
+                    data = self.runtime.decode(text, self.contract)
                 trace.append({"stage": "parse", "ok": True, "records": report["records"]})
                 if cut is not None:
                     data = self._continue(data, target, generate, task, max_repairs, trace, _round)
@@ -206,8 +210,9 @@ class Workflow:
                     if from_document:
                         trace[-1]["reply_format"] = "mini"
                     report = self.runtime.diagnose(text, self.contract)
+                    data = _UNDECODED
                 else:
-                    result = self.runtime.repair(correction, self.contract)
+                    result, data = self._repair_with_value(correction)
                     text = result["text"]
                     report = result["diagnostics"]
             except (ValueError, TypeError) as exc:
@@ -215,6 +220,12 @@ class Workflow:
                 raise WorkflowError(self.last_run) from exc
             trace.append({"stage": "revalidate", **report})
         raise AssertionError("unreachable")
+
+    def _repair_with_value(self, text):
+        repair = getattr(self.runtime, "_repair_with_value", None)
+        if repair is None:
+            return self.runtime.repair(text, self.contract), _UNDECODED
+        return repair(text, self.contract)
 
     def _recover_json_reply(self, text, expected_records):
         text, changes = _unwrap_json_reply(text)

@@ -68,6 +68,27 @@ def test_surplus_separator_is_repaired_without_an_additional_model_call(kit):
     assert "separadores finales sobrantes eliminados" in flow.summary()
 
 
+@pytest.mark.parametrize("bundle_can_reuse_value", [True, False])
+def test_workflow_reuses_the_validated_value_when_available(kit, monkeypatch, bundle_can_reuse_value):
+    bundle, contract, sample = kit
+    flow = Workflow(bundle)
+    wire = encode(sample, contract, shared=False, dictionaries=False)
+    decode_calls = []
+    decode_document = flow.runtime._decode
+
+    def counted_decode(text, contract, **options):
+        decode_calls.append(text)
+        return decode_document(text, contract, **options)
+
+    monkeypatch.setattr(flow.runtime, "_decode", counted_decode)
+    if not bundle_can_reuse_value:
+        flow.runtime = SimpleNamespace(repair=flow.runtime.repair, decode=flow.runtime.decode)
+
+    assert flow.process(wire, expected_records=len(sample)) == sample
+    assert flow.last_run["mini"] == wire
+    assert decode_calls == [wire] * (1 if bundle_can_reuse_value else 2)
+
+
 def test_workflow_accepts_complete_json_under_the_contract(kit, tmp_path):
     bundle, contract, sample = kit
     raw = "\ufeff```json\r\n" + json.dumps(sample) + "\r\n```"

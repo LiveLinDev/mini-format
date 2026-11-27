@@ -587,13 +587,18 @@ def loads(text, contract=None):
 
 
 def diagnose(text, contract=None):
+    report, _ = _diagnose_with_value(text, contract)
+    return report
+
+
+def _diagnose_with_value(text, contract):
     contract = _contract(contract)
     try:
-        value = decode(text, contract)
+        value = _decode(text, contract)
         path = contract["record_path"]
         count = len(_at(value, path)) if path is not None else 1
         return {"ok": True, "profile": PROFILE, "records": count, "recoverable_records": count,
-                "valid_lines": list(range(2, count + 2)), "invalid_lines": [], "errors": []}
+                "valid_lines": list(range(2, count + 2)), "invalid_lines": [], "errors": []}, value
     except DomainError as exc:
         initial = exc
     errors, valid_lines, invalid_lines = [], [], []
@@ -641,7 +646,7 @@ def diagnose(text, contract=None):
         prompt = ("Using the original task and attached .mini contract, verify completeness and regenerate the response. "
                   "Never invent missing facts or records. Errors: " + _json(errors))
     return {"ok": False, "profile": PROFILE, "errors": errors, "valid_lines": valid_lines,
-            "invalid_lines": invalid_lines, "recoverable_records": len(valid_lines), "repair_prompt": prompt}
+            "invalid_lines": invalid_lines, "recoverable_records": len(valid_lines), "repair_prompt": prompt}, None
 
 
 def apply_replacements(text, replacements, contract=None):
@@ -677,6 +682,11 @@ def repair(text, contract=None, *, fix_count=False):
     Missing values, invalid types and unknown facts are never guessed.  Failed
     repair returns diagnostics and a regeneration prompt, not fabricated JSON.
     """
+    report, _ = _repair_with_value(text, contract, fix_count=fix_count)
+    return report
+
+
+def _repair_with_value(text, contract, *, fix_count=False):
     contract = _contract(contract)
     changes = []
     if text.startswith("\ufeff"):
@@ -706,7 +716,7 @@ def repair(text, contract=None, *, fix_count=False):
     if trimmed != text:
         text = trimmed
         changes.append("removed trailing blank lines")
-    report = diagnose(text, contract)
+    report, value = _diagnose_with_value(text, contract)
     invalid = set(report["invalid_lines"])
     if invalid and all(error["code"] == "D_ARITY" for error in report["errors"]):
         lines = text.split("\n")
@@ -715,23 +725,23 @@ def repair(text, contract=None, *, fix_count=False):
             # the whole document then matches the unchanged schema and count.
             candidate = "\n".join(line[:-1] if number in invalid else line
                                   for number, line in enumerate(lines, 1))
-            checked = diagnose(candidate, contract)
+            checked, decoded = _diagnose_with_value(candidate, contract)
             if checked["ok"]:
-                text, report = candidate, checked
+                text, report, value = candidate, checked, decoded
                 changes.append("removed surplus trailing row separators")
     if fix_count and not report["ok"] and report["errors"][0]["code"] == "D_COUNT":
         # Validate every field and the full wrapper before changing n.  This
         # cannot establish whether records were omitted by a model; the caller
         # explicitly chooses to accept the records that are actually present.
         try:
-            value = _decode(text, contract, allow_count=True)
-            text = encode(value, contract)
+            present = _decode(text, contract, allow_count=True)
+            text = encode(present, contract)
             changes.append("reset n to validated present records (caller accepted record count)")
-            report = diagnose(text, contract)
+            report, value = _diagnose_with_value(text, contract)
         except DomainError:
             pass
     return {"ok": report["ok"], "text": text, "changes": changes, "diagnostics": report,
-            **({"repair_prompt": report["repair_prompt"]} if not report["ok"] else {})}
+            **({"repair_prompt": report["repair_prompt"]} if not report["ok"] else {})}, value
 
 
 def json_schema(contract):
