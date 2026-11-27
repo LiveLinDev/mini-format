@@ -130,6 +130,11 @@ heading from the generated contract prompt when it appears before the document.
 `apply_replacements` merges externally corrected invalid lines and validates the
 complete document.
 
+If a first response from the model arrives as a complete JSON array or object,
+the standard workflow can validate it against the same contract and expected
+record count and convert it to .mini locally. The history keeps the original
+response as JSON. A provider's truncation signal takes precedence.
+
 New fields are not silently ignored. Rebuild with representative examples in a
 new directory and distribute its prompt, contract and parser together. Structural
 validation does not prove a model's factual accuracy or business-rule compliance.

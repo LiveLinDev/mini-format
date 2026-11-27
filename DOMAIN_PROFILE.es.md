@@ -130,6 +130,11 @@ exacto del prompt del contrato cuando aparece antes del documento.
 `apply_replacements` incorpora líneas corregidas externamente y valida todo el
 documento.
 
+Si la primera respuesta del modelo llega como un array u objeto JSON completo,
+el flujo habitual puede validarla con el mismo contrato y el recuento esperado
+y convertirla a .mini localmente. El historial conserva la respuesta original
+como JSON. Si el proveedor señala un corte, el flujo prioriza esa señal.
+
 No se ignoran campos nuevos silenciosamente. Reconstruye en otra carpeta con
 ejemplos representativos y distribuye prompt, contrato y parser juntos. Validar
 estructura no demuestra veracidad del modelo ni cumplimiento de reglas del negocio.

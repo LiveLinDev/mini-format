@@ -22,6 +22,20 @@ def _runtime(bundle):
     return module
 
 
+def _unwrap_json_reply(text):
+    changes = []
+    if text.startswith("\ufeff"):
+        text = text[1:]
+        changes.append("removed UTF-8 BOM")
+    outer = text.strip(" \r\n\t")
+    if outer.startswith("```"):
+        fence = re.fullmatch(r"```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n```", outer, re.IGNORECASE)
+        if fence:
+            text = fence.group(1)
+            changes.append("removed complete Markdown code fence")
+    return text, changes
+
+
 class WorkflowError(ValueError):
     def __init__(self, report):
         self.report = report
@@ -76,17 +90,7 @@ class Workflow:
         def parse(response):
             changes = []
             if isinstance(response, str):
-                if response.startswith("\ufeff"):
-                    response = response[1:]
-                    changes.append("removed UTF-8 BOM")
-                outer = response.lstrip(" \r\n\t")
-                if outer.startswith("```"):
-                    fence = re.fullmatch(
-                        r"```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n```", outer.rstrip(" \r\n\t"), re.IGNORECASE
-                    )
-                    if fence:
-                        response = fence.group(1)
-                        changes.append("removed complete Markdown code fence")
+                response, changes = _unwrap_json_reply(response)
             try:
                 data = self.runtime.decode_positional_json(response, self.contract, expected_records=expected_records)
             except self.runtime.DomainError as exc:
@@ -154,6 +158,15 @@ class Workflow:
         self.last_run = {"ok": False, "trace": trace}
         trace.append({"stage": "repair", "ok": repaired["ok"], "changes": repaired["changes"],
                       "errors": report["errors"]})
+        if _round == 0 and not report["ok"] and not truncated:
+            alternate = self._recover_json_reply(text, expected_records)
+            if alternate is not None:
+                data, document, count, changes = alternate
+                trace[0]["reply_format"] = "json"
+                trace[-1] = {"stage": "repair", "ok": True, "changes": changes, "errors": []}
+                trace.append({"stage": "parse", "ok": True, "records": count})
+                self.last_run.update(ok=True, mini=document, data=data)
+                return data
         text = repaired["text"]
         cut = None
         if generate is not None and _round < 2 and (truncated or not report["ok"]):
@@ -202,6 +215,24 @@ class Workflow:
                 raise WorkflowError(self.last_run) from exc
             trace.append({"stage": "revalidate", **report})
         raise AssertionError("unreachable")
+
+    def _recover_json_reply(self, text, expected_records):
+        text, changes = _unwrap_json_reply(text)
+        if not text.lstrip(" \r\n\t").startswith(("[", "{")):
+            return None
+        try:
+            data = self.runtime._strict_json(text)
+            document = self.runtime.encode(data, self.contract, shared=False, dictionaries=False)
+            # Use the same UTF-8 boundary as the CLI and the saved result.
+            document.encode("utf-8")
+        except (ValueError, RecursionError):
+            return None
+        records = self._records(data)
+        count = 1 if records is None else len(records)
+        if expected_records is not None and count != expected_records:
+            return None
+        changes.append("converted validated JSON to .mini")
+        return data, document, count, changes
 
     def _apply_model_repair(self, text, correction, invalid_lines):
         try:
@@ -337,8 +368,9 @@ class Workflow:
             raw_suffix = ".json"
         else:
             raw_suffix = ".txt" if run.get("last_text_field") is not None else ".mini"
-        answers = [(step["text"], ".json" if step.get("stage") == "model_repair" and step.get("selective")
-                    and step.get("reply_format") != "mini" else raw_suffix)
+        answers = [(step["text"], ".json" if step.get("reply_format") == "json" or (
+                    step.get("stage") == "model_repair" and step.get("selective")
+                    and step.get("reply_format") != "mini") else raw_suffix)
                    for step in run.get("trace") or []
                    if step.get("stage") in ("generate", "model_repair", "continuation") and isinstance(step.get("text"), str)]
         for number, (text, suffix) in enumerate(answers, 1):
@@ -376,6 +408,7 @@ class Workflow:
             nombres = {"removed UTF-8 BOM": "BOM eliminado", "normalized CRLF to LF": "saltos de línea normalizados",
                        "removed complete Markdown code fence": "bloque Markdown eliminado",
                        "closed positional JSON array": "array JSON posicional cerrado",
+                       "converted validated JSON to .mini": "JSON validado convertido a .mini",
                        "removed unclosed Markdown code fence": "bloque Markdown sin cerrar eliminado",
                        "removed trailing blank lines": "líneas vacías finales eliminadas",
                        "removed surplus trailing row separators": "separadores finales sobrantes eliminados"}

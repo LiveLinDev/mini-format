@@ -68,6 +68,47 @@ def test_surplus_separator_is_repaired_without_an_additional_model_call(kit):
     assert "separadores finales sobrantes eliminados" in flow.summary()
 
 
+def test_workflow_accepts_complete_json_under_the_contract(kit, tmp_path):
+    bundle, contract, sample = kit
+    raw = "\ufeff```json\r\n" + json.dumps(sample) + "\r\n```"
+    calls = []
+    flow = Workflow(bundle)
+
+    assert flow.run(lambda prompt: calls.append(prompt) or raw, "Clasifica", expected_records=2) == sample
+    assert len(calls) == 1
+    assert decode(flow.last_run["mini"], contract) == sample
+    assert "JSON validado convertido a .mini" in flow.summary()
+    saved = flow.save_run(tmp_path / "historial")
+    assert (saved / "respuesta_1.json").read_bytes() == raw.encode("utf-8")
+    assert decode((saved / "resultado.mini").read_text(encoding="utf-8"), contract) == sample
+
+    malformed = (
+        '[{"id":1,"id":2,"titulo":"Acceso"},{"id":2,"titulo":"Factura"}]',
+        json.dumps(sample[:1]),
+        json.dumps([dict(sample[0], id=True), sample[1]]),
+        raw + "\nFin.",
+    )
+    for response in malformed:
+        with pytest.raises(WorkflowError):
+            flow.process(response, expected_records=2, max_repairs=0)
+    with pytest.raises(WorkflowError):
+        flow.process(raw, expected_records=2, max_repairs=0, truncated=True)
+
+
+def test_node_workflow_accepts_complete_json_under_the_contract(kit, tmp_path):
+    bundle, _, sample = kit
+    script = tmp_path / "fallback-json.mjs"
+    script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{python: {json.dumps(sys.executable)}}});
+const data = await flow.run(async () => JSON.stringify({json.dumps(sample)}), 'Clasifica',
+  {{expectedRecords: 2, maxRepairs: 0}});
+console.log(JSON.stringify({{data, source: flow.lastRun.trace[0].reply_format}}));
+""", encoding="utf-8")
+    result = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == {"data": sample, "source": "json"}
+
+
 def test_compact_workflow_retries_and_saves_canonical_document(kit, tmp_path):
     bundle, contract, sample = kit
     flow = Workflow(bundle)
