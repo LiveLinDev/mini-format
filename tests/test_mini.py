@@ -70,6 +70,19 @@ class TestCodec(unittest.TestCase):
         toks = codec.split_fields("Si 3x+6=18\\, x?", ",", 1)
         self.assertEqual(codec.text_of(toks[0]), "Si 3x+6=18, x?")
 
+    def test_field_split_preserves_quoted_lists_and_escape_flags(self):
+        fields = codec.split_fields('\u202f"á,b"*,"c""d"\u202f|🌊', ",", 2)
+        self.assertEqual(codec.split_list(fields[0], ","), [("á,b", True), ('c"d', False)])
+        self.assertEqual(codec.text_of(fields[1]), "🌊")
+
+        line = r"\\n\n|\;\q"
+        fields = codec.split_fields(line, ";", 3, strict=False)
+        self.assertEqual(codec.text_of(fields[0]), "\\n\n")
+        self.assertEqual(fields[1], [(";", True), ("\\", True), ("q", True)])
+        with self.assertRaises(MiniError) as cm:
+            codec.split_fields(line, ";", 3)
+        self.assertEqual(cm.exception.to_dict()["line"], 3)
+
 
 class TestParserA(unittest.TestCase):
     def test_valid_document(self):

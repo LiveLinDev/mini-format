@@ -68,6 +68,27 @@ def test_surplus_separator_is_repaired_without_an_additional_model_call(kit):
     assert "separadores finales sobrantes eliminados" in flow.summary()
 
 
+@pytest.mark.parametrize("bundle_can_reuse_value", [True, False])
+def test_workflow_reuses_the_validated_value_when_available(kit, monkeypatch, bundle_can_reuse_value):
+    bundle, contract, sample = kit
+    flow = Workflow(bundle)
+    wire = encode(sample, contract, shared=False, dictionaries=False)
+    decode_calls = []
+    decode_document = flow.runtime._decode
+
+    def counted_decode(text, contract, **options):
+        decode_calls.append(text)
+        return decode_document(text, contract, **options)
+
+    monkeypatch.setattr(flow.runtime, "_decode", counted_decode)
+    if not bundle_can_reuse_value:
+        flow.runtime = SimpleNamespace(repair=flow.runtime.repair, decode=flow.runtime.decode)
+
+    assert flow.process(wire, expected_records=len(sample)) == sample
+    assert flow.last_run["mini"] == wire
+    assert decode_calls == [wire] * (1 if bundle_can_reuse_value else 2)
+
+
 def test_workflow_accepts_complete_json_under_the_contract(kit, tmp_path):
     bundle, contract, sample = kit
     raw = "\ufeff```json\r\n" + json.dumps(sample) + "\r\n```"
@@ -146,6 +167,63 @@ console.log(JSON.stringify({{data, prompts, mini: flow.lastRun.mini}}));
     assert output["data"] == sample and len(output["prompts"]) == 2
     assert "2 fila(s)" in output["prompts"][0] and "received 1" in output["prompts"][1]
     assert output["mini"].startswith("ticket|v=1|")
+
+
+def test_workflow_restores_known_fields_after_a_repair(kit):
+    bundle, contract, _ = kit
+    flow = Workflow(bundle)
+    context = [{"id": 91}, {"id": 7}]
+    answers = iter(["Acceso", 'Acceso\n\n"Factura\\nurgente"'])
+    calls = []
+
+    def generate(prompt):
+        calls.append(prompt)
+        context[0]["id"] = 10
+        return next(answers)
+
+    result = flow.run(generate, "Clasifica los casos.", last_text_field="titulo", expected_records=2,
+                      known_rows=context)
+    assert result == [{"id": 91, "titulo": "Acceso"}, {"id": 7, "titulo": "Factura\nurgente"}]
+    assert len(calls) == 2 and "Solo titulo" in calls[0]
+    assert "91" not in calls[0] and "expected 2 records, received 1" in calls[1]
+    assert decode(flow.last_run["mini"], contract) == result
+
+
+@pytest.mark.parametrize("context", [
+    [{"id": 5}],
+    [{"id": 5}, {}],
+    [{"id": True}, {"id": 7}],
+    [{"other": 5}, {"other": 7}],
+    [{"titulo": "A"}, {"titulo": "B"}],
+])
+def test_workflow_rejects_bad_known_fields_before_calling_the_model(kit, context):
+    flow = Workflow(kit[0])
+    with pytest.raises(ValueError):
+        flow.run(lambda _: pytest.fail("invalid context must fail before generation"), "Clasifica",
+                 expected_records=2, last_text_field="titulo", known_rows=context)
+
+
+def test_node_workflow_restores_known_fields(kit, tmp_path):
+    bundle, _, _ = kit
+    script = tmp_path / "known.mjs"
+    script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{lang: 'en', python: {json.dumps(sys.executable)}}});
+const knownRows = [{{id: 42}}, {{id: 11}}];
+const answers = ['Access', 'Access\\n\\nBilling'];
+const prompts = [];
+const result = await flow.run(async prompt => {{
+  prompts.push(prompt);
+  knownRows[0].id = 999;
+  return answers.shift();
+}}, 'Classify', {{expectedRecords: 2, lastTextField: 'titulo', knownRows}});
+console.log(JSON.stringify({{result, prompts, mini: flow.lastRun.mini}}));
+""", encoding="utf-8")
+    run = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert run.returncode == 0, run.stderr
+    output = json.loads(run.stdout)
+    assert output["result"] == [{"id": 42, "titulo": "Access"}, {"id": 11, "titulo": "Billing"}]
+    assert "Only titulo" in output["prompts"][0] and "42" not in output["prompts"][0]
+    assert "expected 2 records, received 1" in output["prompts"][1] and "42|Access" in output["mini"]
 
 
 def test_positional_workflow_repairs_types_with_the_provider_schema(kit, tmp_path):

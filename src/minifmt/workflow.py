@@ -14,6 +14,8 @@ from pathlib import Path
 import re
 import sys
 
+_UNDECODED = object()
+
 
 def _runtime(bundle):
     spec = importlib.util.spec_from_file_location("_mini_workflow_parser", bundle / "parser.py")
@@ -83,9 +85,11 @@ class Workflow:
             return f"Output format (replaces JSON instructions):\n{fmt}\n\nTask / Tarea:\n{task}{count}"
         return f"Task / Tarea:\n{task}{count}\n\nOutput format (replaces JSON instructions):\n{fmt}"
 
-    def rows_prompt(self, task, *, last_text_field, expected_records, kv_cache_first=None):
+    def rows_prompt(self, task, *, last_text_field, expected_records, kv_cache_first=None, known_rows=None):
+        projection = {} if known_rows is None else {"known_rows": known_rows}
         format_prompt = self.runtime.make_rows_prompt(
-            self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang
+            self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang,
+            **projection
         )
         return format_prompt + "\n" + task
 
@@ -96,14 +100,18 @@ class Workflow:
         return self.process_rows(reply, last_text_field=last_text_field, expected_records=expected_records,
                                  generate=generate, task=task, max_repairs=max_repairs)
 
-    def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1):
+    def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1,
+                     known_rows=None):
         """Validate model rows and store a canonical .mini document in the run history."""
+        projection = {} if known_rows is None else {"known_rows": known_rows}
+
         def parse(response):
             return self.runtime.decode_rows(response, self.contract, last_text_field=last_text_field,
-                                            expected_records=expected_records)
+                                            expected_records=expected_records, **projection)
 
         def retry(correction):
-            prompt = self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records)
+            prompt = self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records,
+                                      known_rows=known_rows)
             return generate(prompt + "\n" + correction)
 
         return self._process_compact(text, parse, retry if generate is not None else None, max_repairs,
@@ -173,7 +181,7 @@ class Workflow:
         if expected_records is not None and (type(expected_records) is not int or expected_records < 0):
             raise ValueError("expected_records must be a nonnegative integer")
         at_line_end = text.rstrip(" \t").endswith("\n")
-        repaired = self.runtime.repair(text, self.contract)
+        repaired, data = self._repair_with_value(text)
         report = repaired["diagnostics"]
         original_report = report if repaired["text"] == text else self.runtime.diagnose(text, self.contract)
         trace = [{"stage": "generate", "text": text},
@@ -201,13 +209,15 @@ class Workflow:
             expected_records = None  # the complete part is validated on its own; the rest is requested below
             trace.append({"stage": "truncation", "declared": declared, "complete_records": kept})
             report = self.runtime.diagnose(text, self.contract)
+            data = _UNDECODED
         for attempt in range(max_repairs + 1):
             if report["ok"] and expected_records is not None and report["records"] != expected_records:
                 report = {"ok": False, "invalid_lines": [], "errors": [
                     {"code": "D_EXPECTED_COUNT", "message": f"expected {expected_records} records, received {report['records']}"}],
                     "repair_prompt": "Regenerate the complete document with the required record count. Never invent unavailable facts."}
             if report["ok"]:
-                data = self.runtime.decode(text, self.contract)
+                if data is _UNDECODED:
+                    data = self.runtime.decode(text, self.contract)
                 trace.append({"stage": "parse", "ok": True, "records": report["records"]})
                 if cut is not None:
                     data = self._continue(data, target, generate, task, max_repairs, trace, _round)
@@ -229,8 +239,9 @@ class Workflow:
                     if from_document:
                         trace[-1]["reply_format"] = "mini"
                     report = self.runtime.diagnose(text, self.contract)
+                    data = _UNDECODED
                 else:
-                    result = self.runtime.repair(correction, self.contract)
+                    result, data = self._repair_with_value(correction)
                     text = result["text"]
                     report = result["diagnostics"]
             except (ValueError, TypeError) as exc:
@@ -238,6 +249,12 @@ class Workflow:
                 raise WorkflowError(self.last_run) from exc
             trace.append({"stage": "revalidate", **report})
         raise AssertionError("unreachable")
+
+    def _repair_with_value(self, text):
+        repair = getattr(self.runtime, "_repair_with_value", None)
+        if repair is None:
+            return self.runtime.repair(text, self.contract), _UNDECODED
+        return repair(text, self.contract)
 
     def _recover_json_reply(self, text, expected_records):
         text, changes = _unwrap_json_reply(text)
@@ -438,13 +455,17 @@ class Workflow:
             parts.append(("ajustes locales: " if es else "local fixes: ") + ", ".join(nombres.get(c, c) if es else c for c in local))
         return " · ".join(parts)
 
-    def run(self, generate, task, *, expected_records=None, max_repairs=1, last_text_field=None):
+    def run(self, generate, task, *, expected_records=None, max_repairs=1, last_text_field=None, known_rows=None):
+        if known_rows is not None and last_text_field is None:
+            raise ValueError("known_rows requires compact rows with a last_text_field")
         if last_text_field is not None:
             if max_repairs not in (0, 1, 2, 3):
                 raise ValueError("max_repairs must be between 0 and 3")
-            text = generate(self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records))
+            known_rows = copy.deepcopy(known_rows)
+            text = generate(self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records,
+                                             known_rows=known_rows))
             return self.process_rows(text, generate=generate, task=task, last_text_field=last_text_field,
-                                     expected_records=expected_records, max_repairs=max_repairs)
+                                     expected_records=expected_records, max_repairs=max_repairs, known_rows=known_rows)
         return self.process(generate(self.prompt(task, expected_records)), generate=generate, task=task,
                             expected_records=expected_records, max_repairs=max_repairs)
 
@@ -625,7 +646,7 @@ def main(argv=None):
     modes.add_argument("--positional-json", action="store_true", help="read compact positional JSON rows")
     ap.add_argument("--lang", choices=("es", "en"))
     ap.add_argument("--report", action="store_true", help="return the complete run report instead of only data")
-    ap.add_argument("--envelope", action="store_true", help="stdin/file JSON contains text and an optional correction")
+    ap.add_argument("--envelope", action="store_true", help="read a JSON envelope with the text and optional row context")
     args = ap.parse_args(argv)
     workflow = Workflow(lang=args.lang)
     text = sys.stdin.read() if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
@@ -643,15 +664,21 @@ def main(argv=None):
             return 0
     if args.rows_prompt:
         try:
-            print(workflow.rows_prompt(text, last_text_field=args.last_text_field, expected_records=args.expected_records),
+            packet = json.loads(text) if args.envelope else {"task": text}
+            print(workflow.rows_prompt(packet["task"], last_text_field=args.last_text_field,
+                                       expected_records=args.expected_records, known_rows=packet.get("known_rows")),
                   end="")
         except ValueError as exc:
             ap.error(str(exc))
         return 0
     correction = None
+    known_rows = None
     if args.envelope:
         envelope = json.loads(text)
         text, correction = envelope["text"], envelope.get("correction")
+        known_rows = envelope.get("known_rows")
+        if known_rows is not None and (args.last_text_field is None or args.positional_json):
+            ap.error("known_rows requires --last-text-field")
     try:
         generate = (lambda _: correction) if correction is not None else None
         if args.positional_json:
@@ -660,7 +687,7 @@ def main(argv=None):
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:
             data = workflow.process_rows(text, generate=generate, last_text_field=args.last_text_field,
-                                         expected_records=args.expected_records)
+                                         expected_records=args.expected_records, known_rows=known_rows)
     except WorkflowError as exc:
         print(json.dumps(exc.report, ensure_ascii=False), file=sys.stderr)
         status = 1

@@ -111,6 +111,22 @@ contract. Python's `last_run["mini"]` and Node's `lastRun.mini` hold the
 direct use with the contract. Measure prompts, replies and retries with your
 model and data to choose a mode.
 
+If the application already knows fields such as IDs and the task preserves input
+order, pass those fields for each row. The model emits only the other columns.
+The workflow validates the known values and restores them by position before
+returning the complete JSON.
+
+```python
+data = flow.run(
+    generate, task, expected_records=2, last_text_field="title",
+    known_rows=[{"id": 91}, {"id": 7}],
+)
+```
+
+In Node, use `{expectedRecords: 2, lastTextField: "title", knownRows: [{id: 91}, {id: 7}]}`.
+Every known row must have the same fields. Keep IDs in the model output when the
+task may reorder the rows.
+
 ### Positional rows with a provider schema
 
 For the same flat lists, `flow.run_positional(generate, task, expected_records=20)`
@@ -119,6 +135,22 @@ requests a JSON array of rows without keys and restores the named objects.
 it as `format` in Ollama. The Node method is
 `flow.runPositional(generate, task, {expectedRecords: 20})`. The workflow
 checks types and counts and keeps a validated `.mini` document in the history.
+
+## Compact transport for existing JSON
+
+`minifmt.transport.dumps(value, count=counter)` chooses the lowest-cost
+representation among compact JSON, rows with a compact contract, and tabular
+sections. Sequences, constants, runs and common fragments appear only when
+they reduce the count. `loads(text)` reconstructs the JSON and can validate it
+against a domain contract. Use this path for data the application already has.
+
+```sh
+python -m minifmt.transport encode data.json --tokenizer o200k_base > data.txt
+python -m minifmt.transport decode data.txt
+```
+
+The default minimizes UTF-8 bytes. In Python, supply a function that returns the
+token count for your model. The CLI requires `tiktoken` for `--tokenizer`.
 
 ## Validation and evolution
 

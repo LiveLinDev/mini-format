@@ -1102,13 +1102,18 @@ def loads(text, contract=None):
 
 
 def diagnose(text, contract=None):
+    report, _ = _diagnose_with_value(text, contract)
+    return report
+
+
+def _diagnose_with_value(text, contract):
     contract = _contract(contract)
     try:
-        value = decode(text, contract)
+        value = _decode(text, contract)
         path = contract["record_path"]
         count = len(_at(value, path)) if path is not None else 1
         return {"ok": True, "profile": PROFILE, "records": count, "recoverable_records": count,
-                "valid_lines": list(range(2, count + 2)), "invalid_lines": [], "errors": []}
+                "valid_lines": list(range(2, count + 2)), "invalid_lines": [], "errors": []}, value
     except DomainError as exc:
         initial = exc
     errors, valid_lines, invalid_lines = [], [], []
@@ -1156,7 +1161,7 @@ def diagnose(text, contract=None):
         prompt = ("Using the original task and attached .mini contract, verify completeness and regenerate the response. "
                   "Never invent missing facts or records. Errors: " + _json(errors))
     return {"ok": False, "profile": PROFILE, "errors": errors, "valid_lines": valid_lines,
-            "invalid_lines": invalid_lines, "recoverable_records": len(valid_lines), "repair_prompt": prompt}
+            "invalid_lines": invalid_lines, "recoverable_records": len(valid_lines), "repair_prompt": prompt}, None
 
 
 def apply_replacements(text, replacements, contract=None):
@@ -1192,6 +1197,11 @@ def repair(text, contract=None, *, fix_count=False):
     Missing values, invalid types and unknown facts are never guessed.  Failed
     repair returns diagnostics and a regeneration prompt, not fabricated JSON.
     """
+    report, _ = _repair_with_value(text, contract, fix_count=fix_count)
+    return report
+
+
+def _repair_with_value(text, contract, *, fix_count=False):
     contract = _contract(contract)
     changes = []
     if text.startswith("\ufeff"):
@@ -1221,7 +1231,7 @@ def repair(text, contract=None, *, fix_count=False):
     if trimmed != text:
         text = trimmed
         changes.append("removed trailing blank lines")
-    report = diagnose(text, contract)
+    report, value = _diagnose_with_value(text, contract)
     invalid = set(report["invalid_lines"])
     if invalid and all(error["code"] == "D_ARITY" for error in report["errors"]):
         lines = text.split("\n")
@@ -1230,23 +1240,23 @@ def repair(text, contract=None, *, fix_count=False):
             # the whole document then matches the unchanged schema and count.
             candidate = "\n".join(line[:-1] if number in invalid else line
                                   for number, line in enumerate(lines, 1))
-            checked = diagnose(candidate, contract)
+            checked, decoded = _diagnose_with_value(candidate, contract)
             if checked["ok"]:
-                text, report = candidate, checked
+                text, report, value = candidate, checked, decoded
                 changes.append("removed surplus trailing row separators")
     if fix_count and not report["ok"] and report["errors"][0]["code"] == "D_COUNT":
         # Validate every field and the full wrapper before changing n.  This
         # cannot establish whether records were omitted by a model; the caller
         # explicitly chooses to accept the records that are actually present.
         try:
-            value = _decode(text, contract, allow_count=True)
-            text = encode(value, contract)
+            present = _decode(text, contract, allow_count=True)
+            text = encode(present, contract)
             changes.append("reset n to validated present records (caller accepted record count)")
-            report = diagnose(text, contract)
+            report, value = _diagnose_with_value(text, contract)
         except DomainError:
             pass
     return {"ok": report["ok"], "text": text, "changes": changes, "diagnostics": report,
-            **({"repair_prompt": report["repair_prompt"]} if not report["ok"] else {})}
+            **({"repair_prompt": report["repair_prompt"]} if not report["ok"] else {})}, value
 
 
 def json_schema(contract):
@@ -1408,6 +1418,27 @@ def _compact_count(expected_records):
         raise DomainError("D_EXPECTED_COUNT", "compact rows require an explicit nonnegative record count")
 
 
+def _project_compact_fields(fields, known_rows, expected_records):
+    if known_rows is None:
+        return fields
+    if not isinstance(known_rows, list) or len(known_rows) != expected_records:
+        raise DomainError("D_COMPACT_SCHEMA", "known_rows must have one object per expected row")
+    if not known_rows:
+        return fields
+    if any(not isinstance(row, dict) for row in known_rows):
+        raise DomainError("D_COMPACT_SCHEMA", "every known row must be an object")
+    known = set(known_rows[0])
+    schema = {field["name"]: field["schema"] for field in fields}
+    if not known <= schema.keys() or fields[-1]["name"] in known:
+        raise DomainError("D_COMPACT_SCHEMA", "known fields must exist in the contract and exclude the last text field")
+    for index, row in enumerate(known_rows):
+        if row.keys() != known:
+            raise DomainError("D_COMPACT_SCHEMA", "known rows must specify the same fields", f"$/{index}")
+        for name, value in row.items():
+            _pack(value, schema[name], f"$/{index}/{name}")
+    return [field for field in fields if field["name"] not in known]
+
+
 def _bare_compact_text(value, *, is_tail=False):
     if not (isinstance(value, str) and bool(value) and value == value.strip(" \t")
             and not value.startswith(('"', "\ufeff")) and value not in ("?", "~")
@@ -1469,12 +1500,15 @@ def encode_rows(value, contract=None, *, last_text_field, allow_nullable=False,
     return "\n".join(lines)
 
 
-def decode_rows(text, contract=None, *, last_text_field, expected_records,
+def decode_rows(text, contract=None, *, last_text_field, expected_records, known_rows=None,
                 allow_nullable=False, allow_wrapped=False, compact_bools=False):
     """Validate compact model rows and restore the application JSON values."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
     _compact_count(expected_records)
+    projected = _project_compact_fields(fields, known_rows, expected_records)
+    known_names = known_rows[0].keys() if known_rows else ()
+    supplied = [field for field in fields if field["name"] in known_names]
     if not isinstance(text, str):
         raise DomainError("D_VALUE", "compact rows must be text")
     text = text.removeprefix("\ufeff").replace("\r\n", "\n").strip("\n")
@@ -1487,11 +1521,11 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records,
     row_schema = _row_schema(contract)
     obj_rows = _object_row(row_schema)
     rows = []
-    for line_no, line in lines:
+    for position, (line_no, line) in enumerate(lines):
         if "\r" in line:
             raise DomainError("D_VALUE", "encode line breaks inside strings as JSON escapes", line=line_no)
         cells, start = [], 0
-        for field in fields[:-1]:
+        for field in projected[:-1]:
             token = _ROW_ATOM.match(line, start)
             if token is None:
                 raise DomainError("D_ARITY", f"missing column {field['name']}", line=line_no)
@@ -1499,7 +1533,10 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records,
             start = token.end()
         cells.append(line[start:])
         row = _object_skeleton(row_schema) if obj_rows else {}
-        for field, cell in zip(fields, cells):
+        for field in supplied:
+            name = field["name"]
+            _put(row, field.get("path", [name]), known_rows[position][name])
+        for field, cell in zip(projected, cells):
             name, schema = field["name"], field["schema"]
             path = f"$/{line_no - 1}/{name}"
             if not cell:
@@ -1521,19 +1558,37 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records,
     return rows
 
 
-def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en",
+def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", known_rows=None,
                      allow_nullable=False, allow_wrapped=False, compact_bools=False):
     """Describe compact rows without sending the document header or schema JSON."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
     _compact_count(expected_records)
-    labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in fields]
+    projected = _project_compact_fields(fields, known_rows, expected_records)
+    has_projection = len(projected) != len(fields)
+    labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in projected]
     names, tail = " ".join(labels), labels[-1]
     types = " ".join(
         f"{name}={'0/1' if compact_bools and f['schema']['type'] == 'boolean' else f['schema']['type']}"
-        for name, f in zip(labels, fields) if f["schema"]["type"] != "string"
+        for name, f in zip(labels, projected) if f["schema"]["type"] != "string"
     )
-    if lang == "es":
+    if has_projection:
+        if lang == "es":
+            text = (f"{expected_records} filas en orden, sin cabecera. Solo {names} separados por espacios. "
+                    f"{tail}: resto de la línea. Si un texto contiene barras inversas, comillas, controles "
+                    "o espacios al borde, escríbelo como cadena JSON. Usa \"\" para vacío.\n")
+        else:
+            text = (f"{expected_records} rows in order, no header. Only {names}, space-separated. "
+                    f"{tail}: rest of the line. Use a JSON string for text with backslashes, quotes, "
+                    "controls or edge whitespace. Use \"\" for empty text.\n")
+        atoms = {"string": "texto", "integer": "1", "number": "1.5", "boolean": "1" if compact_bools else "true"}
+        example_types = [field["schema"]["type"] for field in projected[:-1]]
+        if all(kind in atoms for kind in example_types):
+            head = "Ejemplo" if lang == "es" else "Example"
+            tail_example = "Una solicitud" if lang == "es" else "Sample request"
+            example = " ".join([atoms[kind] for kind in example_types] + [tail_example])
+            text += f"{head}: {example}\n"
+    elif lang == "es":
         text = (f"Emite {expected_records} fila(s), una por línea, sin cabecera. Separa con espacios.\n"
                 f"Orden obligatorio {names}. {tail} va al final y ocupa el resto de la línea.\n"
                 "Usa cadenas JSON para texto vacío, controles, comilla inicial, espacios al borde "

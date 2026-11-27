@@ -241,8 +241,8 @@ class Reader:
         self._contract = _as_contract(contract)
         self._strict = bool(strict)
         self._engine = _LineEngine(self._contract, self._strict, keep_records)
+        self._pending_blocks: List[str] = []
         self._pending: List[str] = []
-        self._pending_len = 0
         self._ended = False
         self._decoder: Any = None
         self._mode: Optional[str] = None
@@ -287,12 +287,13 @@ class Reader:
         raise TypeError(f"chunk must be str or bytes, not {type(chunk).__name__}")
 
     def _take_pending(self, tail: str = "") -> str:
-        if not self._pending:
+        parts = self._pending_blocks + self._pending if self._pending_blocks else self._pending
+        if not parts:
             return tail
-        self._pending.append(tail)
-        text = "".join(self._pending)
-        self._pending, self._pending_len = [], 0
-        return text
+        if tail:
+            parts.append(tail)
+        self._pending_blocks, self._pending = [], []
+        return "".join(parts)
 
     # ---------------------------------------------------------------- API
     def push(self, chunk: Chunk) -> List[StreamRecord]:
@@ -313,9 +314,10 @@ class Reader:
             idx = text.find("\n", start)
         if start < len(text):
             self._pending.append(text[start:] if start else text)
-            self._pending_len += 1
-            if self._pending_len > 256:  # keep many one-character fragments compact
-                self._pending, self._pending_len = ["".join(self._pending)], 1
+            if len(self._pending) == 256:
+                # Join only new fragments and keep the earlier blocks intact.
+                self._pending_blocks.append("".join(self._pending))
+                self._pending.clear()
         return out
 
     def end(self, chunk: Optional[Chunk] = None) -> ReaderResult:
@@ -385,9 +387,9 @@ class Reader:
     @property
     def pending(self) -> str:
         """Text of the current line, still without LF."""
-        if len(self._pending) > 1:
-            self._pending, self._pending_len = ["".join(self._pending)], 1
-        return self._pending[0] if self._pending else ""
+        if self._pending or len(self._pending_blocks) > 1:
+            self._pending_blocks = [self._take_pending()]
+        return self._pending_blocks[0] if self._pending_blocks else ""
 
     @property
     def progress(self) -> ReaderProgress:

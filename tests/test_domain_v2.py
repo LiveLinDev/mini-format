@@ -137,6 +137,24 @@ def test_make_lean_prompt_and_extended_compact_rows(tmp_path):
     assert "prefixItems" in pos["schema"]["items"]
 
 
+def test_projected_compact_rows_restore_known_nested_fields():
+    data = [
+        {"ticket": {"id": 42, "active": True}, "title": "First item"},
+        {"ticket": {"id": 11, "active": False}, "title": "~"},
+    ]
+    contract = domain.infer_contract([data], "ticket")
+    options = {
+        "last_text_field": "title", "expected_records": 2,
+        "known_rows": [{"ticket/id": 42}, {"ticket/id": 11}],
+        "allow_nullable": True, "compact_bools": True,
+    }
+    prompt = domain.make_rows_prompt(contract, **options)
+    assert "ticket/id" not in prompt
+    assert '"ticket/active"=0/1' in prompt
+    assert "Example: 1 Sample request" in prompt
+    assert domain.decode_rows('1 First item\n\n0 "~"', contract, **options) == data
+
+
 def test_workflow_lean_kv_cache_and_run_compact(tmp_path, monkeypatch):
     sample = [{"id": 1, "titulo": "Acceso"}, {"id": 2, "titulo": "Factura"}]
     bundle = tmp_path / ".mini"

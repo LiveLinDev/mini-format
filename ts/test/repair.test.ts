@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { extractDocument, invalidItems, mergeRepair, parse, repairRequest } from '../src/index.ts';
-import type { MergeResult, RepairRequest } from '../src/index.ts';
+import type { ContractJSON, MergeResult, RepairRequest } from '../src/index.ts';
 import { LF, REG, lf, read } from './helpers.ts';
 
 const CLS = REG.get('cls');
@@ -95,6 +95,27 @@ describe('HU16 escenario 2: la fusión conserva los 10 registros en el orden ori
     assert.equal(m.ok, false);
   });
 
+  test('un documento completo corrige solo las filas solicitadas', () => {
+    const { good, bad } = tenWithTwoInvalid();
+    const req = repairRequest(doc(bad), CLS, 'es');
+    const accepted = mergeRepair(doc(bad), doc(good), CLS, req);
+    assert.equal(accepted.text, doc(good));
+    assert.deepEqual(accepted.replaced, [4, 9]);
+    assert.equal(accepted.ok, true);
+    const changed = [good[0], good[1].replace('|', '|texto modificado '), ...good.slice(2)];
+    const refused = mergeRepair(doc(bad), doc(changed), CLS, req);
+    assert.equal(refused.ok, false);
+    assert.equal(refused.text, doc(bad));
+    assert.deepEqual(refused.unresolved, [4, 9]);
+  });
+
+  test('un documento completo necesita cierre de línea si la última se corrige', () => {
+    const good = [LINES[0].replace('n=12', 'n=2'), ...LINES.slice(1, 3)];
+    const bad = [good[0], good[1], 'registro incompleto'];
+    assert.deepEqual(mergeRepair(doc(bad), doc(good), CLS).unresolved, [3]);
+    assert.equal(mergeRepair(doc(bad), doc(good) + LF, CLS).ok, true);
+  });
+
   test('marca de eliminación y duplicados', () => {
     const ls = [...LINES];
     ls.splice(4, 0, 'Comentario del modelo sin barras');
@@ -117,6 +138,27 @@ describe('HU16 escenario 2: la fusión conserva los 10 registros en el orden ori
     const m = mergeRepair(doc(ls), 'cls|n=1\n' + LINES[0], CLS, req);
     assert.deepEqual(m.replaced, [1]);
     assert.equal(m.ok, true);
+  });
+
+  test('la repetición de filas sigue el contrato', () => {
+    const optional: ContractJSON['extensions'] = [{ name: 'tag', type: 'str', optional: true, unique: true }];
+    for (const extensions of [[], optional]) {
+      const contract: ContractJSON = {
+        prefix: 'event',
+        header: { required: ['n'], keys: { n: { type: 'int' } } },
+        core: [{ name: 'text', type: 'str' }],
+        extensions,
+      };
+      for (const kept of ['mismo evento', 'incompleto|con|campos|sobrantes']) {
+        const broken = doc(['event|n=2', kept, 'incompleto|con|demasiados|campos']);
+        const count = kept === 'mismo evento' ? 1 : 2;
+        const answer = doc([`event|n=${count}`, ...Array<string>(count).fill('mismo evento')]);
+        const merged = mergeRepair(broken, answer, contract);
+        assert.equal(merged.ok, true);
+        assert.equal(merged.text, doc(['event|n=2', 'mismo evento', 'mismo evento']));
+        assert.deepEqual(merged.dropped, []);
+      }
+    }
   });
 });
 
