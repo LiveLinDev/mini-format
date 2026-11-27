@@ -184,10 +184,31 @@ def test_workflow_restores_known_fields_after_a_repair(kit):
     result = flow.run(generate, "Clasifica los casos.", last_text_field="titulo", expected_records=2,
                       known_rows=context)
     assert result == [{"id": 91, "titulo": "Acceso"}, {"id": 7, "titulo": "Factura\nurgente"}]
-    assert len(calls) == 2 and "sin cabecera: titulo." in calls[0]
-    assert r'Ejemplo: A\B → "A\\B".' in calls[0]
+    assert len(calls) == 2 and '2 cadenas JSON en orden de titulo, una por línea. Formato: "un valor".' in calls[0]
     assert "91" not in calls[0] and "expected 2 records, received 1" in calls[1]
     assert decode(flow.last_run["mini"], contract) == result
+
+
+@pytest.mark.parametrize("count", [2, 24])
+def test_projected_batch_quotes_text_before_the_last_field(tmp_path, count):
+    samples = [{"grupo": "Equipo A", "titulo": "Estado de cuenta"},
+               {"grupo": "Equipo B", "titulo": ' A\\B\t" '}]
+    rows = [{"id": 91 + index, **samples[index % 2]} for index in range(count)]
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([rows], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+    prompts = []
+
+    def generate(prompt):
+        prompts.append(prompt)
+        return "\n".join('"Equipo A" Estado de cuenta' if index % 2 == 0
+                         else '"Equipo B" ' + json.dumps(row["titulo"]) for index, row in enumerate(rows))
+
+    assert flow.run(generate, "Clasifica", last_text_field="titulo", expected_records=count,
+                    known_rows=[{"id": row["id"]} for row in rows]) == rows
+    assert len(prompts) == 1 and f"{count} filas en orden: grupo,titulo." in prompts[0]
+    assert r'Ej.: "Grupo A" " A\\B\t\" "' in prompts[0]
+    assert decode(flow.last_run["mini"], contract) == rows
 
 
 @pytest.mark.parametrize("fields, prefix", [

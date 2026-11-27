@@ -129,10 +129,11 @@ respuesta del modelo para tareas que puedan reordenar las filas.
 
 Para las columnas planas de texto, enteros y booleanos, el prompt en español
 lista una vez las columnas que debe generar el modelo y muestra cómo escribir
-una barra inversa literal. Si esperas una sola fila y usas `known_rows`, pide
-los valores JSON separados por espacios. Si queda un solo campo, pide únicamente
-una cadena JSON. Al comparar con JSON o CSV, cuenta la instrucción, la respuesta
-y los reintentos hasta obtener el JSON correcto.
+una barra inversa literal. Si esperas de una a 24 filas y usas `known_rows`,
+el prompt agrupa los valores por línea y muestra un ejemplo con el orden de
+las columnas. Si queda un solo campo, pide una cadena JSON por fila. Al comparar
+con JSON o CSV, cuenta la instrucción, la respuesta y los reintentos hasta
+obtener el JSON correcto.
 
 ### Filas posicionales con esquema del proveedor
 

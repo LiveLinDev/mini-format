@@ -128,10 +128,11 @@ Every known row must have the same fields. Keep IDs in the model output when the
 task may reorder the rows.
 
 For flat text, integer, and boolean columns, the Spanish prompt lists each
-generated column once and shows how to write a literal backslash. For one
-expected row with `known_rows`, it asks for space-separated JSON values. If
-one field remains, it asks for a single JSON string. When comparing against
-JSON or CSV, include the instructions, reply, and retries through exact recovery.
+generated column once and shows how to write a literal backslash. For one to
+24 expected rows with `known_rows`, the prompt groups values by line and
+shows an example in column order. If one field remains, it asks for one JSON
+string per row. When comparing against JSON or CSV, include the instructions,
+reply, and retries through exact recovery.
 
 ### Positional rows with a provider schema
 
