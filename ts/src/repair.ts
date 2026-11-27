@@ -410,13 +410,6 @@ export function mergeRepair(
       for (const ln of it.lines) content.delete(ln);
       continue;
     }
-    if (seen.has(cand)) {
-      // el mismo registro se devolvió dos veces (o ya existe): se conserva una sola copia
-      notes.push(`line ${it.line}: correction duplicates another record; dropped`);
-      dropped.push(...it.lines);
-      for (const ln of it.lines) content.delete(ln);
-      continue;
-    }
     const [probe, errs] = lenientParse(headerText + '\n' + cand, c);
     // el documento de prueba tiene la n de la cabecera original: se ignora el conteo
     const lineErrs = errs.filter(e => e.line > 1 || (e.line === 0 && e.code !== 'E04'));
@@ -427,6 +420,13 @@ export function mergeRepair(
         return v !== null && v !== undefined && (claimed.get(name) as Set<string>).has(uniqueKey(v));
       });
       if (clash !== undefined) {
+        if (seen.has(cand)) {
+          // El texto repetido solo es un duplicado si entra en conflicto con un valor único.
+          notes.push(`line ${it.line}: correction duplicates another record; dropped`);
+          dropped.push(...it.lines);
+          for (const ln of it.lines) content.delete(ln);
+          continue;
+        }
         // SPEC §6: un valor `unique` no puede repetirse; se conserva la línea original en vez de dañar otro registro válido
         notes.push(`line ${it.line}: correction repeats the unique value of field '${clash}' of another record`);
         unresolved.push(...it.lines);

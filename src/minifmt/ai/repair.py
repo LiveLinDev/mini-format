@@ -371,13 +371,6 @@ def merge_repair(original_doc: str, repaired_text: str, contract: Contract,
             for ln in it.lines:
                 content.pop(ln, None)
             continue
-        if cand in seen:
-            # the same record was returned twice (or already exists): keep a single copy
-            notes.append(f"line {it.line}: correction duplicates another record; dropped")
-            dropped.extend(it.lines)
-            for ln in it.lines:
-                content.pop(ln, None)
-            continue
         probe, errs = lenient_parse(header_text + "\n" + cand, contract)
         line_errs = [e for e in errs if e.line > 1 or (e.line == 0 and e.code != "E04")]
         # the probe document has n from the original header: ignore the count
@@ -386,6 +379,13 @@ def merge_repair(original_doc: str, repaired_text: str, contract: Contract,
                           if probe.records[0].get(name) is not None
                           and _hashable(probe.records[0][name]) in claimed[name]), None)
             if clash is not None:
+                if cand in seen:
+                    # Equal text is a duplicate only when a declared unique value clashes.
+                    notes.append(f"line {it.line}: correction duplicates another record; dropped")
+                    dropped.extend(it.lines)
+                    for ln in it.lines:
+                        content.pop(ln, None)
+                    continue
                 # SPEC §6: a `unique` value must not repeat; keep the original line instead of
                 # damaging another valid record
                 notes.append(f"line {it.line}: correction repeats the unique value of field '{clash}' of another record")

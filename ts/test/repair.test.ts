@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { extractDocument, invalidItems, mergeRepair, parse, repairRequest } from '../src/index.ts';
-import type { MergeResult, RepairRequest } from '../src/index.ts';
+import type { ContractJSON, MergeResult, RepairRequest } from '../src/index.ts';
 import { LF, REG, lf, read } from './helpers.ts';
 
 const CLS = REG.get('cls');
@@ -138,6 +138,27 @@ describe('HU16 escenario 2: la fusión conserva los 10 registros en el orden ori
     const m = mergeRepair(doc(ls), 'cls|n=1\n' + LINES[0], CLS, req);
     assert.deepEqual(m.replaced, [1]);
     assert.equal(m.ok, true);
+  });
+
+  test('la repetición de filas sigue el contrato', () => {
+    const optional: ContractJSON['extensions'] = [{ name: 'tag', type: 'str', optional: true, unique: true }];
+    for (const extensions of [[], optional]) {
+      const contract: ContractJSON = {
+        prefix: 'event',
+        header: { required: ['n'], keys: { n: { type: 'int' } } },
+        core: [{ name: 'text', type: 'str' }],
+        extensions,
+      };
+      for (const kept of ['mismo evento', 'incompleto|con|campos|sobrantes']) {
+        const broken = doc(['event|n=2', kept, 'incompleto|con|demasiados|campos']);
+        const count = kept === 'mismo evento' ? 1 : 2;
+        const answer = doc([`event|n=${count}`, ...Array<string>(count).fill('mismo evento')]);
+        const merged = mergeRepair(broken, answer, contract);
+        assert.equal(merged.ok, true);
+        assert.equal(merged.text, doc(['event|n=2', 'mismo evento', 'mismo evento']));
+        assert.deepEqual(merged.dropped, []);
+      }
+    }
   });
 });
 

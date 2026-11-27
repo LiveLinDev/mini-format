@@ -125,5 +125,24 @@ class ListBoundZeroInPrompt(unittest.TestCase):
         self.assertIn("1 to ∞ elements", spec_block(c, "en"))
 
 
+class EqualRowsSurviveRepair(unittest.TestCase):
+    def test_repeated_rows_follow_the_contract(self):
+        for extensions in ([], [{"name": "tag", "type": "str", "optional": True, "unique": True}]):
+            contract = Contract.from_dict({
+                "prefix": "event",
+                "header": {"required": ["n"], "keys": {"n": {"type": "int"}}},
+                "core": [{"name": "text", "type": "str"}],
+                "extensions": extensions,
+            })
+            for kept in ("mismo evento", "incompleto|con|campos|sobrantes"):
+                broken = "\n".join(["event|n=2", kept, "incompleto|con|demasiados|campos"])
+                count = 1 if kept == "mismo evento" else 2
+                answer = "\n".join([f"event|n={count}"] + ["mismo evento"] * count)
+                merged = merge_repair(broken, answer, contract)
+                self.assertEqual(merged.text, "event|n=2\nmismo evento\nmismo evento")
+                self.assertTrue(merged.ok)
+                self.assertEqual(merged.dropped, [])
+
+
 if __name__ == "__main__":
     unittest.main()
