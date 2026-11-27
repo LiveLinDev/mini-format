@@ -184,7 +184,8 @@ def test_workflow_restores_known_fields_after_a_repair(kit):
     result = flow.run(generate, "Clasifica los casos.", last_text_field="titulo", expected_records=2,
                       known_rows=context)
     assert result == [{"id": 91, "titulo": "Acceso"}, {"id": 7, "titulo": "Factura\nurgente"}]
-    assert len(calls) == 2 and "Solo titulo" in calls[0]
+    assert len(calls) == 2 and "sin cabecera: titulo." in calls[0]
+    assert r'Ejemplo: A\B → "A\\B".' in calls[0]
     assert "91" not in calls[0] and "expected 2 records, received 1" in calls[1]
     assert decode(flow.last_run["mini"], contract) == result
 

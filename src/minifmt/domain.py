@@ -1580,6 +1580,18 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", 
     _compact_count(expected_records)
     projected = _project_compact_fields(fields, known_rows, expected_records)
     has_projection = len(projected) != len(fields)
+    scalar_labels = {"integer": "(entero)", "boolean": "(true/false)", "string": ""}
+    kinds = [field["schema"]["type"] for field in projected]
+    if (has_projection and lang == "es" and not (allow_nullable or allow_wrapped or compact_bools)
+            and all(kind in scalar_labels and re.fullmatch(r"[\w-]+", field["name"])
+                    for field, kind in zip(projected, kinds))):
+        names = " ".join(field["name"] + scalar_labels[kind] for field, kind in zip(projected, kinds))
+        text = (f"{expected_records} líneas en orden, sin cabecera: {names}. "
+                "Un espacio entre campos; último=resto de línea.\n"
+                "Usa comillas JSON para texto vacío, ?, ~, comillas, barras inversas, controles o espacios extremos.")
+        if "string" in kinds[:-1]:
+            text += " Antes del último, también espacios internos o [/{ inicial."
+        return text + r' Ejemplo: A\B → "A\\B".' + "\n"
     labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in projected]
     names, tail = " ".join(labels), labels[-1]
     types = " ".join(

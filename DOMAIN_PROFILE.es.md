@@ -127,6 +127,11 @@ En Node, usa `{expectedRecords: 2, lastTextField: "titulo", knownRows: [{id: 91}
 Cada fila conocida debe tener las mismas columnas. Conserva los IDs en la
 respuesta del modelo para tareas que puedan reordenar las filas.
 
+Para las columnas planas de texto, enteros y booleanos, el prompt en español
+lista una vez las columnas que debe generar el modelo y muestra cómo escribir
+una barra inversa literal. Al comparar este modo con JSON o CSV, mide desde
+el primer prompt hasta el JSON correcto e incluye los reintentos.
+
 ### Filas posicionales con esquema del proveedor
 
 Para las mismas listas planas, `flow.run_positional(generate, tarea, expected_records=20)`

@@ -127,6 +127,11 @@ In Node, use `{expectedRecords: 2, lastTextField: "title", knownRows: [{id: 91},
 Every known row must have the same fields. Keep IDs in the model output when the
 task may reorder the rows.
 
+For flat text, integer, and boolean columns, the Spanish prompt lists each
+generated column once and shows how to write a literal backslash. When
+comparing this mode with JSON or CSV, measure from the first prompt through
+correct JSON recovery and include retries.
+
 ### Positional rows with a provider schema
 
 For the same flat lists, `flow.run_positional(generate, task, expected_records=20)`
