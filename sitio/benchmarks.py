@@ -96,7 +96,7 @@ def inject_benchmarks(page: str, lang: str) -> str:
         'The table counts serialized text tokens for the profiles implemented by the harness. '
         'Generation cost also depends on the instructions, contract, and retries.',
     )
-    block = f'<section class="section"><div class="frame"><div class="split-head"><h2 class="rv">{heading}</h2><p class="aside rv">{intro}</p></div>{table}<p class="fine">{note} <a href="/validacion/">{tr("Ver tabla de 16 formatos →", "View 16-format leaderboard →")}</a> · <a href="/source/benchmark/public/competitors_results.json">JSON</a></p></div></section>'
+    block = f'<section class="section"><div class="frame"><div class="split-head"><h2 class="rv">{heading}</h2><p class="aside rv">{intro}</p></div>{table}<p class="fine">{note} <a href="/validacion/#generacion-nube">{tr("Costo por respuesta correcta", "Cost per correct response")}</a> · <a href="/validacion/#serializacion-publica">{tr("Tabla de 16 formatos", "16-format leaderboard")}</a> · <a href="/source/benchmark/public/competitors_results.json">JSON</a></p></div></section>'
     page, changed = re.subn(r'(?<=<!-- ═══════════ BENCHMARK COMPLETO ═══════════ -->)\s*<section.*?</section>', '\n' + block, page, count=1, flags=re.S)
     if changed != 1:
         raise ValueError("Detailed benchmark anchor is missing")

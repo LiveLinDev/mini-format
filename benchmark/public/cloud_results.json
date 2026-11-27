@@ -1,0 +1,571 @@
+{
+  "measured_on": "2026-11-27",
+  "model": "gpt-6-luna",
+  "tokenizer": "o200k_base",
+  "price_usd_per_million": {
+    "input": 0.1,
+    "cached_input": 0.01,
+    "output": 0.5
+  },
+  "mini_commits": {
+    "single_row": "56eb511f4bfc4fe85aa57f559992bcf41b784870",
+    "batches": "27f65957683ae94bfcfaf73e38b2b89e6276281b"
+  },
+  "cohorts": {
+    "single_row": {
+      "case_ids": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "formats": {
+        "mini": {
+          "exact": 12,
+          "trials": 12,
+          "retries": 0,
+          "instruction_tokens": 351,
+          "application_input_tokens": 1138,
+          "input_tokens": 147514,
+          "cached_input_tokens": 136320,
+          "output_tokens": 149,
+          "reasoning_tokens": 0
+        },
+        "mini_previous": {
+          "exact": 10,
+          "trials": 12,
+          "retries": 0,
+          "instruction_tokens": 813,
+          "application_input_tokens": 1600,
+          "input_tokens": 147976,
+          "cached_input_tokens": 133888,
+          "output_tokens": 131,
+          "reasoning_tokens": 0
+        },
+        "json_positional": {
+          "exact": 9,
+          "trials": 12,
+          "retries": 3,
+          "instruction_tokens": 237,
+          "application_input_tokens": 1280,
+          "input_tokens": 184238,
+          "cached_input_tokens": 177024,
+          "output_tokens": 190,
+          "reasoning_tokens": 0
+        },
+        "csv": {
+          "exact": 9,
+          "trials": 12,
+          "retries": 0,
+          "instruction_tokens": 270,
+          "application_input_tokens": 1057,
+          "input_tokens": 147421,
+          "cached_input_tokens": 139008,
+          "output_tokens": 129,
+          "reasoning_tokens": 0
+        },
+        "csv_escapes": {
+          "exact": 8,
+          "trials": 12,
+          "retries": 0,
+          "instruction_tokens": 498,
+          "application_input_tokens": 1285,
+          "input_tokens": 147649,
+          "cached_input_tokens": 137216,
+          "output_tokens": 127,
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    "small_batch": {
+      "case_ids": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "formats": {
+        "mini": {
+          "exact": 8,
+          "trials": 8,
+          "retries": 0,
+          "instruction_tokens": 298,
+          "application_input_tokens": 1349,
+          "input_tokens": 98947,
+          "cached_input_tokens": 89088,
+          "output_tokens": 247,
+          "reasoning_tokens": 0
+        },
+        "mini_previous": {
+          "exact": 6,
+          "trials": 8,
+          "retries": 0,
+          "instruction_tokens": 555,
+          "application_input_tokens": 1606,
+          "input_tokens": 99204,
+          "cached_input_tokens": 89088,
+          "output_tokens": 231,
+          "reasoning_tokens": 0
+        },
+        "json_positional": {
+          "exact": 7,
+          "trials": 8,
+          "retries": 0,
+          "instruction_tokens": 158,
+          "application_input_tokens": 1209,
+          "input_tokens": 98799,
+          "cached_input_tokens": 81664,
+          "output_tokens": 283,
+          "reasoning_tokens": 0
+        },
+        "json_compact": {
+          "exact": 8,
+          "trials": 8,
+          "retries": 0,
+          "instruction_tokens": 142,
+          "application_input_tokens": 1193,
+          "input_tokens": 98783,
+          "cached_input_tokens": 89088,
+          "output_tokens": 416,
+          "reasoning_tokens": 0
+        },
+        "toon": {
+          "exact": 7,
+          "trials": 8,
+          "retries": 1,
+          "instruction_tokens": 552,
+          "application_input_tokens": 1776,
+          "input_tokens": 111565,
+          "cached_input_tokens": 89088,
+          "output_tokens": 349,
+          "reasoning_tokens": 0
+        },
+        "json_schema": {
+          "exact": 8,
+          "trials": 8,
+          "retries": 0,
+          "instruction_tokens": 723,
+          "application_input_tokens": 1774,
+          "input_tokens": 99172,
+          "cached_input_tokens": 11136,
+          "output_tokens": 488,
+          "reasoning_tokens": 0
+        },
+        "csv_typed": {
+          "exact": 5,
+          "trials": 8,
+          "retries": 1,
+          "instruction_tokens": 244,
+          "application_input_tokens": 1423,
+          "input_tokens": 111212,
+          "cached_input_tokens": 100224,
+          "output_tokens": 248,
+          "reasoning_tokens": 0
+        },
+        "csv": {
+          "exact": 2,
+          "trials": 8,
+          "retries": 2,
+          "instruction_tokens": 214,
+          "application_input_tokens": 1653,
+          "input_tokens": 123641,
+          "cached_input_tokens": 112384,
+          "output_tokens": 284,
+          "reasoning_tokens": 0
+        },
+        "jmd": {
+          "exact": 6,
+          "trials": 8,
+          "retries": 4,
+          "instruction_tokens": 448,
+          "application_input_tokens": 2296,
+          "input_tokens": 148707,
+          "cached_input_tokens": 133632,
+          "output_tokens": 698,
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    "large_batch": {
+      "case_ids": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "formats": {
+        "mini": {
+          "exact": 6,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 197,
+          "application_input_tokens": 2215,
+          "input_tokens": 75468,
+          "cached_input_tokens": 66816,
+          "output_tokens": 724,
+          "reasoning_tokens": 0
+        },
+        "mini_previous": {
+          "exact": 1,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 402,
+          "application_input_tokens": 2420,
+          "input_tokens": 75673,
+          "cached_input_tokens": 66816,
+          "output_tokens": 706,
+          "reasoning_tokens": 0
+        },
+        "json_positional": {
+          "exact": 6,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 114,
+          "application_input_tokens": 2132,
+          "input_tokens": 75379,
+          "cached_input_tokens": 66816,
+          "output_tokens": 745,
+          "reasoning_tokens": 0
+        },
+        "ison": {
+          "exact": 5,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 294,
+          "application_input_tokens": 2312,
+          "input_tokens": 75565,
+          "cached_input_tokens": 66816,
+          "output_tokens": 772,
+          "reasoning_tokens": 0
+        },
+        "tson": {
+          "exact": 4,
+          "trials": 6,
+          "retries": 2,
+          "instruction_tokens": 409,
+          "application_input_tokens": 3243,
+          "input_tokens": 100904,
+          "cached_input_tokens": 89088,
+          "output_tokens": 1029,
+          "reasoning_tokens": 0
+        },
+        "toon": {
+          "exact": 3,
+          "trials": 6,
+          "retries": 1,
+          "instruction_tokens": 409,
+          "application_input_tokens": 2899,
+          "input_tokens": 88357,
+          "cached_input_tokens": 77952,
+          "output_tokens": 893,
+          "reasoning_tokens": 0
+        },
+        "csv_typed": {
+          "exact": 0,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 171,
+          "application_input_tokens": 2189,
+          "input_tokens": 75436,
+          "cached_input_tokens": 66816,
+          "output_tokens": 607,
+          "reasoning_tokens": 0
+        },
+        "jmd": {
+          "exact": 5,
+          "trials": 6,
+          "retries": 3,
+          "instruction_tokens": 323,
+          "application_input_tokens": 3773,
+          "input_tokens": 113666,
+          "cached_input_tokens": 100224,
+          "output_tokens": 1883,
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    "cached_single": {
+      "case_ids": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "formats": {
+        "mini": {
+          "exact": 12,
+          "trials": 12,
+          "retries": 0,
+          "instruction_tokens": 351,
+          "application_input_tokens": 1138,
+          "input_tokens": 147514,
+          "cached_input_tokens": 140032,
+          "output_tokens": 149,
+          "reasoning_tokens": 0
+        },
+        "ison": {
+          "exact": 11,
+          "trials": 12,
+          "retries": 2,
+          "instruction_tokens": 561,
+          "application_input_tokens": 1641,
+          "input_tokens": 172415,
+          "cached_input_tokens": 162304,
+          "output_tokens": 322,
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    "cached_batch": {
+      "case_ids": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "formats": {
+        "mini": {
+          "exact": 6,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 197,
+          "application_input_tokens": 2215,
+          "input_tokens": 75468,
+          "cached_input_tokens": 66816,
+          "output_tokens": 724,
+          "reasoning_tokens": 0
+        },
+        "ison": {
+          "exact": 5,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 294,
+          "application_input_tokens": 2312,
+          "input_tokens": 75565,
+          "cached_input_tokens": 66816,
+          "output_tokens": 772,
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    "recent_single": {
+      "case_ids": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "formats": {
+        "mini": {
+          "exact": 16,
+          "trials": 16,
+          "retries": 0,
+          "instruction_tokens": 483,
+          "application_input_tokens": 1559,
+          "input_tokens": 196727,
+          "cached_input_tokens": 184576,
+          "output_tokens": 192,
+          "reasoning_tokens": 0
+        },
+        "bpp": {
+          "exact": 16,
+          "trials": 16,
+          "retries": 0,
+          "instruction_tokens": 570,
+          "application_input_tokens": 1646,
+          "input_tokens": 196798,
+          "cached_input_tokens": 173696,
+          "output_tokens": 307,
+          "reasoning_tokens": 0
+        },
+        "nova_compact": {
+          "exact": 15,
+          "trials": 16,
+          "retries": 1,
+          "instruction_tokens": 1054,
+          "application_input_tokens": 2280,
+          "input_tokens": 209630,
+          "cached_input_tokens": 194048,
+          "output_tokens": 348,
+          "reasoning_tokens": 0
+        }
+      }
+    }
+  },
+  "single_row_control": {
+    "case_ids": [
+      11
+    ],
+    "formats": {
+      "mini": {
+        "exact": 1,
+        "trials": 1,
+        "retries": 0,
+        "instruction_tokens": 32,
+        "application_input_tokens": 114,
+        "input_tokens": 12312,
+        "cached_input_tokens": 11136,
+        "output_tokens": 13,
+        "reasoning_tokens": 0
+      },
+      "json_positional": {
+        "exact": 1,
+        "trials": 1,
+        "retries": 0,
+        "instruction_tokens": 19,
+        "application_input_tokens": 101,
+        "input_tokens": 12298,
+        "cached_input_tokens": 11136,
+        "output_tokens": 15,
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "serialization": {
+    "soporte-20": {
+      "mini": 268,
+      "bpp": 195,
+      "nova_compact": 312,
+      "nova_lines": 284,
+      "json_compact": 443,
+      "tokenfold": 302
+    },
+    "comentarios-500": {
+      "mini": 28522,
+      "bpp": 30377,
+      "nova_compact": 31274,
+      "nova_lines": 31600,
+      "json_compact": 35761,
+      "tokenfold": 30782
+    },
+    "16-respuestas-independientes": {
+      "mini": 173,
+      "bpp": 226,
+      "nova_compact": 264,
+      "json_compact": 214
+    },
+    "doce-lotes": {
+      "mini": 953,
+      "tokenfold": 1228,
+      "json_compact": 1541
+    }
+  },
+  "schema_inclusive_corpus": {
+    "mini_commit": "69f059662ab5e4816b5788f85faa01d7b0a7f161",
+    "records": 1902,
+    "tokenizers": {
+      "o200k_base": {
+        "products": {
+          "mini": 64848,
+          "csv": 68200,
+          "toon": 69163,
+          "tson": 84537,
+          "xron": 76244,
+          "gcf": 68731,
+          "hedl": 69837
+        },
+        "users": {
+          "mini": 44519,
+          "csv": 60848,
+          "toon": 60815,
+          "tson": 84425,
+          "xron": 83206,
+          "gcf": 54410,
+          "hedl": 61831
+        },
+        "comments": {
+          "mini": 30417,
+          "csv": 29951,
+          "toon": 31014,
+          "tson": 35259,
+          "xron": 30797,
+          "gcf": 30273,
+          "hedl": 32133
+        },
+        "earthquakes": {
+          "mini": 165015,
+          "csv": 171930,
+          "toon": 174393,
+          "tson": 220095,
+          "xron": 251714,
+          "gcf": 172121,
+          "hedl": 211419
+        }
+      },
+      "cl100k_base": {
+        "products": {
+          "mini": 66071,
+          "csv": 69257,
+          "toon": 70300,
+          "tson": 85531,
+          "xron": 76920,
+          "gcf": 69941,
+          "hedl": 70886
+        },
+        "users": {
+          "mini": 44769,
+          "csv": 60724,
+          "toon": 60735,
+          "tson": 84520,
+          "xron": 83153,
+          "gcf": 54357,
+          "hedl": 61707
+        },
+        "comments": {
+          "mini": 36400,
+          "csv": 35959,
+          "toon": 36966,
+          "tson": 40793,
+          "xron": 36964,
+          "gcf": 36272,
+          "hedl": 38079
+        },
+        "earthquakes": {
+          "mini": 164170,
+          "csv": 172433,
+          "toon": 174898,
+          "tson": 220364,
+          "xron": 251952,
+          "gcf": 172326,
+          "hedl": 211656
+        }
+      }
+    }
+  }
+}

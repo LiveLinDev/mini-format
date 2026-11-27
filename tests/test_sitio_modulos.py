@@ -108,6 +108,21 @@ def test_un_modulo_que_falla_rompe_el_build(tmp_path):
         modulos.ejecutar(ctx_falso(tmp_path), nombres=("validacion",), salida=lambda *_: None)
 
 
+def test_validacion_publica_costos_de_nube_y_respeta_cero_aciertos():
+    modulo = modulos.cargar("validacion", SITIO)
+    ctx = ctx_falso(SITIO)
+    datos = ctx.leer_json("benchmark/public/cloud_results.json")
+    precios = datos["price_usd_per_million"]
+    lotes = datos["cohorts"]["large_batch"]["formats"]
+    assert modulo.costo_por_mil(lotes["mini"], precios) == pytest.approx(0.09725)
+    assert modulo.costo_por_mil(lotes["ison"], precios, con_cache=True) == pytest.approx(0.385812)
+    assert modulo.costo_por_mil(lotes["csv_typed"], precios) is None
+    nube, entrada = modulo.resultados_nube(ctx)
+    assert "14 de 14 lotes exactos" in nube and "TOON 4.4 acertó 10 de 14" in nube
+    assert "Sin exactas" in nube and "/source/benchmark/public/cloud_results.json" in nube
+    assert "Tokenfold 0.6.0" in entrada and "BPP 0.4.0" in entrada
+
+
 @pytest.mark.parametrize("codigo, mensaje", [
     ("def otra(ctx): pass", "construir"),
     ("construir = 3", "construir"),

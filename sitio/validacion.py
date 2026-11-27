@@ -2,6 +2,7 @@
 
 Toda cifra proviene de:
 - ``benchmark/public/competitors_results.json`` (o200k_base, cl100k_base, p50k_base; round-trip 100%)
+- ``benchmark/public/cloud_results.json`` (generación en la nube y compresión de entrada)
 - ``experiments/estudio_formatos/corridas/resultados.json`` (18 corridas reales + 180 cortes)
 - ``ctx.cifras`` (conformidad de 376 casos en 14 familias)
 
@@ -10,6 +11,141 @@ Política estricta: cero flechas, emojis ni símbolos dingbats prohibidos.
 from __future__ import annotations
 
 import html
+
+
+def costo_por_mil(resultado, precios, *, con_cache=False):
+    if not resultado["exact"]:
+        return None
+    if con_cache:
+        cache = resultado["cached_input_tokens"]
+        entrada = (resultado["input_tokens"] - cache) * precios["input"] + cache * precios["cached_input"]
+    else:
+        entrada = resultado["application_input_tokens"] * precios["input"]
+    salida = resultado["output_tokens"] * precios["output"]
+    return (entrada + salida) / (1000 * resultado["exact"])
+
+
+def resultados_nube(ctx):
+    a = ctx.ambos
+    datos = ctx.leer_json("benchmark/public/cloud_results.json")
+    grupos = datos["cohorts"]
+    precios = datos["price_usd_per_million"]
+    nombres = {
+        "mini": ".mini", "mini_previous": a(".mini anterior", "Previous .mini"),
+        "json_positional": a("JSON posicional", "Positional JSON"),
+        "json_compact": a("JSON compacto", "Compact JSON"),
+        "json_schema": a("JSON con esquema", "JSON with schema"),
+        "csv": "CSV", "csv_escapes": a("CSV con escapes", "CSV with escaping"),
+        "csv_typed": a("CSV tipado", "Typed CSV"), "toon": "TOON 4.4",
+        "ison": "ISON 1.2.0", "tson": "TSON rev. 40", "jmd": "JMD 0.11.0",
+        "nova_compact": "NOVA 0.8.1", "nova_lines": "NOVA Lines 0.8.1", "bpp": "BPP 0.4.0",
+        "tokenfold": "Tokenfold 0.6.0",
+    }
+
+    def numero(valor, decimales=0):
+        ingles = f"{valor:,.{decimales}f}"
+        espanol = ingles.translate(str.maketrans(",.", ".,"))
+        return a(espanol, ingles) if espanol != ingles else ingles
+
+    def tabla(encabezados, filas, etiqueta):
+        columnas = "".join(f'<th scope="col">{texto}</th>' for texto in encabezados)
+        return (f'<div class="tablewrap val-result-table" tabindex="0"><table class="t">'
+                f'<caption class="sr">{etiqueta}</caption><thead><tr>{columnas}</tr></thead>'
+                f'<tbody>{"".join(filas)}</tbody></table></div>')
+
+    def tabla_nube(clave, titulo, *, con_cache=False, abierta=False):
+        formatos = grupos[clave]["formats"]
+        metrica = a("Tokens leídos de caché", "Cached input tokens") if con_cache else a("Tokens de instrucción", "Instruction tokens")
+        encabezados = (a("Formato", "Format"), a("USD por 1.000", "USD per 1,000"),
+                       a("Exactas", "Exact"), a("Reintentos", "Retries"), metrica)
+        filas = []
+        for clave_formato, resultado in formatos.items():
+            tokens = resultado["cached_input_tokens" if con_cache else "instruction_tokens"]
+            costo = costo_por_mil(resultado, precios, con_cache=con_cache)
+            precio = numero(costo, 5) if costo is not None else a("Sin exactas", "No exact results")
+            filas.append(f'<tr><th scope="row">{nombres[clave_formato]}</th>'
+                         f'<td>{precio}</td><td>{resultado["exact"]}/{resultado["trials"]}</td>'
+                         f'<td>{resultado["retries"]}</td><td>{numero(tokens)}</td></tr>')
+        return (f'<details class="val-run"{" open" if abierta else ""}><summary>{titulo}</summary>'
+                f'{tabla(encabezados, filas, titulo)}</details>')
+
+    lotes_medidos = [grupos[clave]["formats"] for clave in ("small_batch", "large_batch")]
+    tokens_mini = sum(f["mini"]["instruction_tokens"] for f in lotes_medidos)
+    tokens_anteriores = sum(f["mini_previous"]["instruction_tokens"] for f in lotes_medidos)
+    ahorro = round(100 * (1 - tokens_mini / tokens_anteriores))
+    exactas = sum(f["mini"]["exact"] for f in lotes_medidos)
+    exactas_toon = sum(f["toon"]["exact"] for f in lotes_medidos)
+    lotes = sum(f["mini"]["trials"] for f in lotes_medidos)
+    cache = grupos["cached_batch"]["formats"]
+    ahorro_cache = 100 * (1 - costo_por_mil(cache["mini"], precios, con_cache=True)
+                          / costo_por_mil(cache["ison"], precios, con_cache=True))
+    cloud = f'''<section class="val-sec" id="generacion-nube">
+    <h2>{a("Costo por respuesta correcta en la nube", "Cost per correct cloud response")}</h2>
+    <p>{a(
+        f"Con GPT-6 Luna, .mini generó {exactas} de {lotes} lotes exactos de 2 a 24 filas al primer intento. TOON 4.4 acertó {exactas_toon} de {lotes}. La instrucción de .mini usó {ahorro} % menos tokens que el flujo anterior.",
+        f"With GPT-6 Luna, .mini generated {exactas} of {lotes} exact batches of 2 to 24 rows on the first attempt. TOON 4.4 got {exactas_toon} of {lotes} right. The .mini instructions used {ahorro}% fewer tokens than the previous workflow."
+    )}</p>
+    <p>{a(
+        "Cada formato recibió las mismas tareas sintéticas en español y las mismas columnas conocidas. El costo por resultado exacto incluye todos los tokens de entrada y salida, también los de los intentos fallidos y los reintentos.",
+        "Every format got the same synthetic Spanish tasks and known columns. Cost per exact result includes all input and output tokens, including failed attempts and retries."
+    )}</p>
+    {tabla_nube("single_row", a("Una fila · 12 casos", "One row · 12 cases"), abierta=True)}
+    {tabla_nube("small_batch", a("De 2 a 8 filas · 8 lotes", "2 to 8 rows · 8 batches"))}
+    {tabla_nube("large_batch", a("De 9 a 24 filas · 6 lotes", "9 to 24 rows · 6 batches"))}
+    {tabla_nube("recent_single", a("Una fila contra BPP y NOVA · 16 casos", "One row against BPP and NOVA · 16 cases"))}
+    <h3>{a("Comparación con ISON y caché", "Cache comparison with ISON")}</h3>
+    <p>{a(
+        f"En los lotes de 9 a 24 filas, .mini costó {ahorro_cache:.0f} % menos con la misma cantidad de tokens leídos de caché.",
+        f"On batches of 9 to 24 rows, .mini cost {ahorro_cache:.0f}% less with the same number of cached input tokens."
+    )}</p>
+    {tabla_nube("cached_single", a("Una fila con caché · 12 casos", "One row with caching · 12 cases"), con_cache=True)}
+    {tabla_nube("cached_batch", a("Lotes de 9 a 24 filas con caché", "Batches of 9 to 24 rows with caching"), con_cache=True)}
+    <p class="val-method">{html.escape(datos["measured_on"])} · {a(
+        "Las primeras tablas estiman la entrada de la aplicación con o200k_base. Las tablas con caché usan la telemetría del proveedor e incluyen el contexto de Codex. En un control de una sola fila, JSON posicional costó ligeramente menos. Entre 9 y 24 filas, los dos quedaron prácticamente empatados.",
+        "The first tables estimate application input with o200k_base. The cache tables use provider telemetry, including Codex context. Positional JSON cost slightly less in one single-row control. It was effectively tied with .mini on batches of 9 to 24 rows."
+    )} <a href="/source/benchmark/public/cloud_results.json">{a("Datos y commits (JSON)", "Data and commits (JSON)")}</a> ·
+      <a href="https://developers.openai.com/api/docs/models/gpt-6-luna">{a("Tarifas del modelo", "Model pricing")}</a></p>
+  </section>'''
+
+    muestras = {
+        "soporte-20": a("20 tickets de soporte", "20 support tickets"),
+        "comentarios-500": a("500 comentarios", "500 comments"),
+        "16-respuestas-independientes": a("16 objetos independientes", "16 independent objects"),
+        "doce-lotes": a("12 lotes sintéticos", "12 synthetic batches"),
+    }
+    formatos = ("mini", "tokenfold", "bpp", "nova_compact", "nova_lines", "json_compact")
+    encabezados = [a("Conjunto", "Dataset")] + [nombres[clave] for clave in formatos]
+    filas = []
+    for clave_muestra, conteos in datos["serialization"].items():
+        celdas = "".join(f'<td>{numero(conteos[clave]) if clave in conteos else "—"}</td>' for clave in formatos)
+        filas.append(f'<tr><th scope="row">{muestras[clave_muestra]}</th>{celdas}</tr>')
+    corpus = datos["schema_inclusive_corpus"]["tokenizers"]["o200k_base"]
+    titulos = {"products": a("Productos", "Products"), "users": a("Usuarios", "Users"),
+               "comments": a("Comentarios", "Comments"), "earthquakes": a("Sismos", "Earthquakes")}
+    perfiles = ("mini", "toon", "csv", "tson", "hedl", "xron", "gcf")
+    rotulos = (a("Conjunto", "Dataset"), ".mini", "TOON 4.4.0", "CSV", "TSON rev. 40", "HEDL 2.0.0", "XRON 0.4.1", "GCF 2.8.0")
+    filas_corpus = []
+    for conjunto, conteos in corpus.items():
+        celdas = "".join(f'<td>{numero(conteos[clave])}</td>' for clave in perfiles)
+        filas_corpus.append(f'<tr><th scope="row">{titulos[conjunto]}</th>{celdas}</tr>')
+    comparacion = a("1.902 registros contando contratos", "1,902 records including contracts")
+    transport = f'''<section class="val-sec" id="compresion-entrada">
+    <h2>{a("Compresión de datos para la entrada", "Compressing input data")}</h2>
+    <p>{a(
+        "Tokens del documento completo con o200k_base. Cada formato recuperó exactamente el JSON de origen. .mini usó menos tokens que Tokenfold en los tres casos compartidos, y BPP fue el más pequeño en los tickets de soporte.",
+        "Full-document tokens with o200k_base. Every format recovered the original JSON exactly. .mini used fewer tokens than Tokenfold on the three shared workloads, and BPP was smallest on the support tickets."
+    )}</p>
+    {tabla(encabezados, filas, a("Tokens por documento", "Tokens per document"))}
+    <p class="val-method">{a("El guion indica una combinación sin ensayo.", "A dash marks a combination that was not tested.")}</p>
+    <details class="val-run"><summary>{comparacion}</summary>
+      <p>{a(
+          "La medición anterior de .mini, en el commit 69f0596, incluye los contratos o mapas de reconstrucción. Usó menos tokens que TOON 4.4.0 en los cuatro conjuntos. CSV ganó en los 500 comentarios.",
+          "The earlier .mini measurement at commit 69f0596 includes the contracts or reconstruction maps. It used fewer tokens than TOON 4.4.0 across all four datasets. CSV won on the 500 comments."
+      )}</p>
+      {tabla(rotulos, filas_corpus, comparacion)}
+    </details>
+  </section>'''
+    return cloud, transport
 
 
 def construir(ctx) -> None:
@@ -79,13 +215,22 @@ def construir(ctx) -> None:
             f'<td>{b_tot:,}</td><td>{save:+.1f}%</td><td>{a("100% Exacto", "100% Exact")}</td></tr>'
         )
 
+    cloud, transport = resultados_nube(ctx)
     cuerpo = f'''<div class="val-wrap prose">
   <p class="eyebrow">{a("Evidencia técnica reproducible", "Reproducible technical proof")}</p>
   <h1>{a("Validación y Benchmarks 2026", "Validation & 2026 Benchmarks")}</h1>
   <p class="lead">{a(
-      "Comparación de tokens serializados con tres tokenizadores BPE. El arnés verifica la ida y vuelta del JSON y aporta contexto compartido a los perfiles que lo necesitan.",
-      "Comparison of serialized text with three BPE tokenizers. The harness verifies JSON round-trips and supplies shared context to profiles that need it."
+      "Cuánto cuesta obtener una respuesta correcta y cuántos tokens ocupan los mismos datos en los formatos comparados.",
+      "What it costs to get a correct response and how many tokens the same data uses across formats."
   )}</p>
+  <div class="val-jumps">
+    <a href="#generacion-nube">{a("Costo por respuesta", "Cost per response")}</a>
+    <a href="#compresion-entrada">{a("Compresión de entrada", "Input compression")}</a>
+    <a href="#serializacion-publica">{a("Clasificación de 16 formatos", "16-format leaderboard")}</a>
+  </div>
+
+  {cloud}
+  {transport}
 
   <div class="val-kpi-grid">
     <div class="val-kpi">
@@ -127,8 +272,12 @@ def construir(ctx) -> None:
     </div>
   </section>
 
-  <section class="val-sec">
+  <section class="val-sec" id="serializacion-publica">
     <h2>{a("Clasificación agregada multiformato (1.902 registros públicos)", "Aggregate multi-tokenizer leaderboard (1,902 public records)")}</h2>
+    <p>{a(
+        "Tres tokenizadores BPE cuentan el texto serializado de cuatro conjuntos públicos. El arnés usa esquemas o mapas reutilizables cuando el perfil los requiere para reconstruir el JSON.",
+        "Three BPE tokenizers count serialized text from four public datasets. The harness uses reusable schemas or maps when the profile needs them to reconstruct JSON."
+    )}</p>
     <div class="tablewrap">
       <table class="t">
         <thead>
