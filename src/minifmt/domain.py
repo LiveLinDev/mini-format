@@ -837,6 +837,27 @@ def _compact_count(expected_records):
         raise DomainError("D_EXPECTED_COUNT", "compact rows require an explicit nonnegative record count")
 
 
+def _project_compact_fields(fields, known_rows, expected_records):
+    if known_rows is None:
+        return fields
+    if not isinstance(known_rows, list) or len(known_rows) != expected_records:
+        raise DomainError("D_COMPACT_SCHEMA", "known_rows must have one object per expected row")
+    if not known_rows:
+        return fields
+    if any(not isinstance(row, dict) for row in known_rows):
+        raise DomainError("D_COMPACT_SCHEMA", "every known row must be an object")
+    known = set(known_rows[0])
+    schema = {field["name"]: field["schema"] for field in fields}
+    if not known <= schema.keys() or fields[-1]["name"] in known:
+        raise DomainError("D_COMPACT_SCHEMA", "known fields must exist in the contract and exclude the last text field")
+    for index, row in enumerate(known_rows):
+        if row.keys() != known:
+            raise DomainError("D_COMPACT_SCHEMA", "known rows must specify the same fields", f"$/{index}")
+        for name, value in row.items():
+            _pack(value, schema[name], f"$/{index}/{name}")
+    return [field for field in fields if field["name"] not in known]
+
+
 def _bare_compact_text(value):
     return (isinstance(value, str) and bool(value) and value == value.strip(" \t")
             and not value.startswith(('"', "\ufeff")) and not any(ord(ch) < 32 for ch in value))
@@ -878,11 +899,12 @@ def encode_rows(value, contract=None, *, last_text_field):
     return "\n".join(lines)
 
 
-def decode_rows(text, contract=None, *, last_text_field, expected_records):
+def decode_rows(text, contract=None, *, last_text_field, expected_records, known_rows=None):
     """Validate compact model rows and restore the application JSON values."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field)
     _compact_count(expected_records)
+    fields = _project_compact_fields(fields, known_rows, expected_records)
     if not isinstance(text, str):
         raise DomainError("D_VALUE", "compact rows must be text")
     text = text.removeprefix("\ufeff").replace("\r\n", "\n").strip("\n")
@@ -893,7 +915,7 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records):
     if len(lines) != expected_records:
         raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(lines)}")
     rows = []
-    for line_no, line in lines:
+    for position, (line_no, line) in enumerate(lines):
         if "\r" in line:
             raise DomainError("D_VALUE", "encode line breaks inside strings as JSON escapes", line=line_no)
         cells, start = [], 0
@@ -904,7 +926,7 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records):
             cells.append(token.group().rstrip(" \t"))
             start = token.end()
         cells.append(line[start:])
-        row = {}
+        row = {} if known_rows is None else dict(known_rows[position])
         for field, cell in zip(fields, cells):
             name, schema = field["name"], field["schema"]
             path = f"$/{line_no - 1}/{name}"
@@ -920,14 +942,32 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records):
     return rows
 
 
-def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en"):
+def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", known_rows=None):
     """Describe compact rows without sending the document header or schema JSON."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field)
     _compact_count(expected_records)
-    labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in fields]
+    projected = _project_compact_fields(fields, known_rows, expected_records)
+    has_projection = len(projected) != len(fields)
+    labels = [f["name"] if re.fullmatch(r"[\w-]+", f["name"]) else _json(f["name"]) for f in projected]
     names, tail = " ".join(labels), labels[-1]
-    types = " ".join(f"{name}={f['schema']['type']}" for name, f in zip(labels, fields) if f["schema"]["type"] != "string")
+    types = " ".join(f"{name}={f['schema']['type']}" for name, f in zip(labels, projected)
+                     if f["schema"]["type"] != "string")
+    if has_projection:
+        atoms = {"string": "texto", "integer": "1", "number": "1.5", "boolean": "true"}
+        example = " ".join([atoms[f["schema"]["type"]] for f in projected[:-1]]
+                           + ["Una solicitud" if lang == "es" else "Sample request"])
+        if lang == "es":
+            text = (f"{expected_records} filas en orden, sin cabecera. Solo {names} separados por espacios. "
+                    f"{tail}: resto de la línea. Si un texto contiene barras inversas, comillas, controles "
+                    "o espacios al borde, escríbelo como cadena JSON. Usa \"\" para vacío.\n"
+                    f"Ejemplo: {example}\n")
+        else:
+            text = (f"{expected_records} rows in order, no header. Only {names}, space-separated. "
+                    f"{tail}: rest of the line. Use a JSON string for text with backslashes, quotes, "
+                    "controls or edge whitespace. Use \"\" for empty text.\n"
+                    f"Example: {example}\n")
+        return text + (types + "\n" if types else "")
     if lang == "es":
         text = (f"Emite {expected_records} fila(s), una por línea, sin cabecera. Separa con espacios.\n"
                 f"Orden obligatorio {names}. {tail} va al final y ocupa el resto de la línea.\n"

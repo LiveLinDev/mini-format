@@ -111,6 +111,22 @@ El flujo valida las columnas, los tipos y el recuento con el contrato del kit.
 directamente con el contrato. Para elegir el modo, mide el prompt, la respuesta y
 los reintentos con tu modelo y tus datos.
 
+Si la aplicación ya conoce columnas como el ID y la tarea conserva el orden de
+entrada, pásalas por fila. El modelo escribe únicamente las columnas restantes.
+El flujo valida los valores conocidos y los reincorpora por posición antes de
+entregar el JSON completo.
+
+```python
+data = flow.run(
+    generate, tarea, expected_records=2, last_text_field="titulo",
+    known_rows=[{"id": 91}, {"id": 7}],
+)
+```
+
+En Node, usa `{expectedRecords: 2, lastTextField: "titulo", knownRows: [{id: 91}, {id: 7}]}`.
+Cada fila conocida debe tener las mismas columnas. Conserva los IDs en la
+respuesta del modelo para tareas que puedan reordenar las filas.
+
 ### Filas posicionales con esquema del proveedor
 
 Para las mismas listas planas, `flow.run_positional(generate, tarea, expected_records=20)`
@@ -119,6 +135,24 @@ de campo. `generate(prompt, schema)` envía el esquema al proveedor. Por ejemplo
 en Ollama se usa como valor de `format`. En Node el método equivalente es
 `flow.runPositional(generate, tarea, {expectedRecords: 20})`. El flujo comprueba
 los tipos y las cantidades y guarda un documento `.mini` validado en el historial.
+
+## Transporte compacto de JSON existente
+
+`minifmt.transport.dumps(objeto, count=contador)` elige la representación de
+menor costo entre JSON compacto, filas con contrato compacto y secciones
+tabulares. Las secuencias, valores constantes, grupos y fragmentos comunes se
+incluyen solo si reducen el conteo. `loads(texto)` reconstruye el JSON y puede
+validarlo con un contrato de dominio. Esta ruta sirve para preparar datos que
+la aplicación ya tiene.
+
+```sh
+python -m minifmt.transport encode datos.json --tokenizer o200k_base > datos.txt
+python -m minifmt.transport decode datos.txt
+```
+
+Sin tokenizador se minimizan bytes UTF-8. Para elegir por tokens desde Python,
+pasa una función que devuelva el conteo de tu modelo. El CLI necesita
+`tiktoken` para `--tokenizer`.
 
 ## Validación y evolución
 

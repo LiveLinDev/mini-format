@@ -69,20 +69,26 @@ class Workflow:
         count = "" if expected_records is None else f"\nRequired record count: {expected_records}."
         return f"Task / Tarea:\n{task}{count}\n\nOutput format (replaces JSON instructions):\n{self.format_prompt}"
 
-    def rows_prompt(self, task, *, last_text_field, expected_records):
+    def rows_prompt(self, task, *, last_text_field, expected_records, known_rows=None):
+        projection = {} if known_rows is None else {"known_rows": known_rows}
         format_prompt = self.runtime.make_rows_prompt(
-            self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang
+            self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang,
+            **projection
         )
         return format_prompt + "\n" + task
 
-    def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1):
+    def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1,
+                     known_rows=None):
         """Validate model rows and store a canonical .mini document in the run history."""
+        projection = {} if known_rows is None else {"known_rows": known_rows}
+
         def parse(response):
             return self.runtime.decode_rows(response, self.contract, last_text_field=last_text_field,
-                                            expected_records=expected_records)
+                                            expected_records=expected_records, **projection)
 
         def retry(correction):
-            prompt = self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records)
+            prompt = self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records,
+                                      known_rows=known_rows)
             return generate(prompt + "\n" + correction)
 
         return self._process_compact(text, parse, retry if generate is not None else None, max_repairs,
@@ -426,13 +432,17 @@ class Workflow:
             parts.append(("ajustes locales: " if es else "local fixes: ") + ", ".join(nombres.get(c, c) if es else c for c in local))
         return " · ".join(parts)
 
-    def run(self, generate, task, *, expected_records=None, max_repairs=1, last_text_field=None):
+    def run(self, generate, task, *, expected_records=None, max_repairs=1, last_text_field=None, known_rows=None):
+        if known_rows is not None and last_text_field is None:
+            raise ValueError("known_rows requires compact rows with a last_text_field")
         if last_text_field is not None:
             if max_repairs not in (0, 1, 2, 3):
                 raise ValueError("max_repairs must be between 0 and 3")
-            text = generate(self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records))
+            known_rows = copy.deepcopy(known_rows)
+            text = generate(self.rows_prompt(task, last_text_field=last_text_field, expected_records=expected_records,
+                                             known_rows=known_rows))
             return self.process_rows(text, generate=generate, task=task, last_text_field=last_text_field,
-                                     expected_records=expected_records, max_repairs=max_repairs)
+                                     expected_records=expected_records, max_repairs=max_repairs, known_rows=known_rows)
         return self.process(generate(self.prompt(task, expected_records)), generate=generate, task=task,
                             expected_records=expected_records, max_repairs=max_repairs)
 
@@ -593,7 +603,7 @@ def main(argv=None):
     modes.add_argument("--positional-json", action="store_true", help="read compact positional JSON rows")
     ap.add_argument("--lang", choices=("es", "en"))
     ap.add_argument("--report", action="store_true", help="return the complete run report instead of only data")
-    ap.add_argument("--envelope", action="store_true", help="stdin/file JSON contains text and an optional correction")
+    ap.add_argument("--envelope", action="store_true", help="read a JSON envelope with the text and optional row context")
     args = ap.parse_args(argv)
     workflow = Workflow(lang=args.lang)
     text = sys.stdin.read() if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
@@ -611,15 +621,21 @@ def main(argv=None):
             return 0
     if args.rows_prompt:
         try:
-            print(workflow.rows_prompt(text, last_text_field=args.last_text_field, expected_records=args.expected_records),
+            packet = json.loads(text) if args.envelope else {"task": text}
+            print(workflow.rows_prompt(packet["task"], last_text_field=args.last_text_field,
+                                       expected_records=args.expected_records, known_rows=packet.get("known_rows")),
                   end="")
         except ValueError as exc:
             ap.error(str(exc))
         return 0
     correction = None
+    known_rows = None
     if args.envelope:
         envelope = json.loads(text)
         text, correction = envelope["text"], envelope.get("correction")
+        known_rows = envelope.get("known_rows")
+        if known_rows is not None and (args.last_text_field is None or args.positional_json):
+            ap.error("known_rows requires --last-text-field")
     try:
         generate = (lambda _: correction) if correction is not None else None
         if args.positional_json:
@@ -628,7 +644,7 @@ def main(argv=None):
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:
             data = workflow.process_rows(text, generate=generate, last_text_field=args.last_text_field,
-                                         expected_records=args.expected_records)
+                                         expected_records=args.expected_records, known_rows=known_rows)
     except WorkflowError as exc:
         print(json.dumps(exc.report, ensure_ascii=False), file=sys.stderr)
         status = 1
