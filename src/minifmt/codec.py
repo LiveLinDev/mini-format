@@ -18,7 +18,8 @@ inside list elements.
 """
 from __future__ import annotations
 
-from typing import List, Tuple
+import re
+from typing import Iterable, List, Tuple
 
 from .errors import E_ESCAPE, MiniError
 
@@ -28,40 +29,48 @@ ESCAPE = "\\"
 
 Tok = Tuple[str, bool]  # (character, was_escaped)
 
+# The optional group lets a final backslash retain its own diagnostic.
+_ESCAPED = re.compile(r"\\(.)?", re.DOTALL)
+_ASCII_TOKENS = {chr(code): (chr(code), False) for code in range(128)}
+
+
+def _plain_tokens(text: str) -> Iterable[Tok]:
+    if text.isascii():
+        return map(_ASCII_TOKENS.__getitem__, text)
+    return ((ch, False) for ch in text)
+
 
 def tokenize(line: str, sep: str, lineno: int, strict: bool = True) -> List[Tok]:
     """Turn a physical line into (char, escaped) pairs, resolving escapes."""
     out: List[Tok] = []
-    i, n = 0, len(line)
-    while i < n:
-        ch = line[i]
-        if ch == ESCAPE:
-            if i + 1 >= n:
-                raise MiniError(E_ESCAPE, lineno, "dangling backslash at end of line")
-            nxt = line[i + 1]
-            if nxt == "n":
-                out.append(("\n", True))
-            elif nxt in (FIELD_SEP, MARKER, ESCAPE, sep, ",", '"'):
-                out.append((nxt, True))
-            elif strict:
-                raise MiniError(E_ESCAPE, lineno, f"invalid escape sequence '\\{nxt}'")
-            else:  # lenient: keep both characters literally
-                out.append((ESCAPE, True))
-                out.append((nxt, True))
-            i += 2
-        else:
-            out.append((ch, False))
-            i += 1
+    allowed = (FIELD_SEP, MARKER, ESCAPE, sep, ",", '"')
+    start = 0
+    for escape in _ESCAPED.finditer(line):
+        out.extend(_plain_tokens(line[start:escape.start()]))
+        nxt = escape[1]
+        if nxt is None:
+            raise MiniError(E_ESCAPE, lineno, "dangling backslash at end of line")
+        if nxt == "n":
+            out.append(("\n", True))
+        elif nxt in allowed:
+            out.append((nxt, True))
+        elif strict:
+            raise MiniError(E_ESCAPE, lineno, f"invalid escape sequence '\\{nxt}'")
+        else:  # lenient: keep both characters literally
+            out.extend(((ESCAPE, True), (nxt, True)))
+        start = escape.end()
+    out.extend(_plain_tokens(line[start:]))
     return out
 
 
 def split_on(toks: List[Tok], delim: str) -> List[List[Tok]]:
     parts: List[List[Tok]] = [[]]
-    for ch, esc in toks:
+    for token in toks:
+        ch, esc = token
         if ch == delim and not esc:
             parts.append([])
         else:
-            parts[-1].append((ch, esc))
+            parts[-1].append(token)
     return parts
 
 
@@ -80,6 +89,8 @@ def text_of(toks: List[Tok]) -> str:
 
 
 def split_fields(line: str, sep: str, lineno: int, strict: bool = True) -> List[List[Tok]]:
+    if ESCAPE not in line:
+        return [list(_plain_tokens(field.strip())) for field in line.split(FIELD_SEP)]
     return [strip_toks(p) for p in split_on(tokenize(line, sep, lineno, strict), FIELD_SEP)]
 
 
