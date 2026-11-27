@@ -23,8 +23,8 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from minifmt.ai.adapters import (AdapterError, AnthropicAdapter, DeepSeekAdapter, GroqAdapter, MissingKeyError,  # noqa: E402
-                                 OpenAIAdapter, SimulatedAdapter, get_adapter, redact)
+from minifmt.ai.adapters import (AdapterError, AnthropicAdapter, DeepSeekAdapter, GroqAdapter, KimiAdapter,  # noqa: E402
+                                 MissingKeyError, OpenAIAdapter, SimulatedAdapter, get_adapter, redact)
 
 CLAVE_FALSA = "sk-mock-0123456789abcdefghij"
 
@@ -41,7 +41,8 @@ class Transporte:
 
 
 def _sin_claves():
-    return mock.patch.dict("os.environ", {k: "" for k in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "DEEPSEEK_API_KEY")})
+    return mock.patch.dict("os.environ", {k: "" for k in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "DEEPSEEK_API_KEY",
+                                                                  "MOONSHOT_API_KEY")})
 
 
 class AdaptadoresMock(unittest.TestCase):
@@ -78,6 +79,25 @@ class AdaptadoresMock(unittest.TestCase):
         self.assertNotIn("max_completion_tokens", llamada["body"])
         self.assertEqual(r["provider"], "deepseek")
 
+    def test_mock_kimi_omite_la_temperatura_y_pasa_el_esfuerzo_de_razonamiento(self):
+        t = Transporte({"model": "kimi-k3.1-pro", "choices": [{"message": {"content": "hola", "reasoning_content": "pienso"},
+                                                                "finish_reason": "stop"}],
+                        "usage": {"prompt_tokens": 6, "completion_tokens": 11, "cached_tokens": 2}})
+        esquema = {"type": "json_schema", "name": "r", "schema": {"type": "object", "properties": {}}}
+        with mock.patch.dict("os.environ", {"MOONSHOT_API_KEY": CLAVE_FALSA}):
+            ad = KimiAdapter("kimi-k3.1-pro", transport=t, structured=True, send_temperature=True,
+                             extra_body={"reasoning_effort": "low"})
+            r = ad.generate("sis", "usr", max_tokens=50, temperature=0.7, response_format=esquema)
+        (llamada,) = t.llamadas
+        self.assertEqual(llamada["url"], "https://api.moonshot.ai/v1/chat/completions")
+        self.assertEqual(llamada["headers"]["authorization"], "Bearer " + CLAVE_FALSA)
+        self.assertNotIn("temperature", llamada["body"])          # fija en el proveedor para la serie K3
+        self.assertEqual(llamada["body"]["reasoning_effort"], "low")
+        self.assertEqual(llamada["body"]["max_completion_tokens"], 50)
+        self.assertEqual(llamada["body"]["response_format"]["type"], "json_schema")
+        self.assertEqual((r["text"], r["output_tokens"], r["provider"]), ("hola", 11, "kimi"))
+        self.assertIs(get_adapter("kimi", "kimi-k3.1-pro").__class__, KimiAdapter)
+
     def test_mock_openai_con_cliente_inyectado(self):
         cliente = mock.MagicMock()
         cliente.chat.completions.create.return_value = SimpleNamespace(
@@ -100,7 +120,7 @@ class AdaptadoresMock(unittest.TestCase):
     def test_mock_sin_clave_no_se_hace_ninguna_llamada(self):
         t = Transporte({})
         with _sin_claves():
-            for cls in (AnthropicAdapter, GroqAdapter, DeepSeekAdapter):
+            for cls in (AnthropicAdapter, GroqAdapter, DeepSeekAdapter, KimiAdapter):
                 with self.assertRaises(MissingKeyError):
                     cls("m", transport=t).generate("s", "u", max_tokens=1, temperature=0.0)
         self.assertEqual(t.llamadas, [], "sin clave el adaptador debe fallar ANTES de llamar")

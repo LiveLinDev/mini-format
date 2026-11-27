@@ -1,0 +1,26 @@
+30 solicitudes de reparación en experiments/generativo/resultados/cli_2026-11/prompts_rep_claude-opus-5-5.jsonl
+listo: 30 respuestas nuevas, 0 con error
+32 solicitudes de reparación en experiments/generativo/resultados/cli_2026-11/prompts_rep_claude-haiku-5-5.jsonl
+listo: 0 respuestas nuevas, 0 con error
+listo: 0 respuestas nuevas, 19 con error
+importadas 1241 muestras en experiments\generativo\resultados\cli_2026-11\import_todos; rechazadas 0; no aplicables 0; reparaciones pendientes 19 (detalle en importacion.json)
+análisis escrito en experiments\generativo\resultados\cli_2026-11\import_todos\analisis
+V3a sobre salidas reales: {'salidas': 210, 'cortes': 4200, 'mini_recuperacion': 0.986, 'json_estricto_recuperacion': 0.0, 'mini_incorrectos': 187, 'salidas_json': 210}
+Claude Haiku 5.5  A    n= 70 validez=0.6286 exact=0.8 tok=2375.3 costo=0.083135 por1000=0.1718
+Claude Haiku 5.5  A+1  n= 70 validez=0.6714 exact=0.84 tok=3517.1 costo=0.123098 por1000=0.2381
+Claude Haiku 5.5  B    n= 70 validez=0.9831 exact=1.0 tok=1922.9 costo=0.067302 por1000=0.0889
+Claude Haiku 5.5  B+1  n= 70 validez=1.0 exact=1.0 tok=1939.7 costo=0.067891 por1000=0.0882
+Claude Haiku 5.5  D    n= 70 validez=0.9831 exact=0.9745 tok=2602.9 costo=0.091101 por1000=0.1203
+Claude Haiku 5.5  D+1  n= 70 validez=1.0 exact=0.9745 tok=2645.7 costo=0.092598 por1000=0.1203
+Claude Opus 5.5   A    n= 70 validez=0.6 exact=0.8 tok=1725.3 costo=2.4154 por1000=5.2281
+Claude Opus 5.5   A+1  n= 70 validez=0.7714 exact=0.9 tok=2763.1 costo=3.8683 por1000=6.5123
+Claude Opus 5.5   B    n= 70 validez=0.9974 exact=1.0 tok=1516.0 costo=2.12244 por1000=2.7636
+Claude Opus 5.5   B+1  n= 70 validez=1.0 exact=1.0 tok=1520.5 costo=2.12876 por1000=2.7646
+Claude Opus 5.5   D    n= 70 validez=0.9987 exact=1.0 tok=1063.0 costo=1.48818 por1000=1.9352
+Claude Opus 5.5   D+1  n= 70 validez=1.0 exact=1.0 tok=1068.1 costo=1.49534 por1000=1.942
+Kimi K3.1 Pro     A    n= 70 validez=0.5662 exact=0.7909 tok=1483.1 costo=1.03819 por1000=2.3812
+Kimi K3.1 Pro     A+1  n= 70 validez=0.5948 exact=0.8309 tok=1847.3 costo=1.2931 por1000=2.8234
+Kimi K3.1 Pro     B    n= 70 validez=0.9857 exact=1.0 tok=1212.4 costo=0.84866 por1000=1.1181
+Kimi K3.1 Pro     B+1  n= 70 validez=0.9857 exact=1.0 tok=1212.4 costo=0.84866 por1000=1.1181
+Kimi K3.1 Pro     D    n= 70 validez=0.9909 exact=0.9873 tok=945.8 costo=0.66207 por1000=0.8677
+Kimi K3.1 Pro     D+1  n= 70 validez=0.9922 exact=0.9891 tok=949.0 costo=0.66428 por1000=0.8695

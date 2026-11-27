@@ -1,0 +1,83 @@
+# Matriz PROPUESTA para el estudio real (NO ejecutada, NO autorizada).
+# 14 dominios × 4 modelos × 30 repeticiones × 4 condiciones primarias (A, B, C, D) = 6 720 llamadas primarias
+# nominales; C no aplica a los modelos sin modo estructurado (llama-3.3-70b-versatile): 6 300 a ejecutar.
+# Las reparaciones (A+1, B+1, C+1, D+1) son UNA llamada adicional sobre la MISMA respuesta y solo cuando la
+# respuesta tiene algo que reparar. V3b añade 2 100 llamadas con límite de salida reducido.
+# Antes de ejecutar: confirmar modelos y tarifas VERIFICADAS (evidencia/tarifas/tarifas.json), correr el dry-run,
+# obtener la autorización del presupuesto (bloque presupuesto) y pasar --max-costo-usd.
+nombre: estudio_v2v3b
+descripcion: Estudio V2/V3b — fiabilidad de generación y recuperación ante truncamiento
+semilla: 20260915
+idioma: es
+temperatura: 0.7
+max_tokens: 8192
+repeticiones: 5
+
+tareas:
+  # extracción (10 dominios)
+  - ext-log     # operaciones / observabilidad
+  - ext-cls     # clasificación de soporte (lista marcada con clave de conteo)
+  - ext-tc      # casos de prueba de software
+  - ext-ner     # anotación de entidades
+  - ext-cat     # catálogo de productos
+  - ext-map     # mapas conceptuales
+  - ext-sum     # segmentos de resumen
+  - ext-us      # historias de usuario
+  - ext-a       # ítems de evaluación (lista marcada + tuplas)
+  - ext-s       # ítems de encuesta
+  # generativas (evaluación contra contrato)
+  - gen-card    # tarjetas de estudio
+  - gen-q       # cuestionario formativo
+  - gen-r       # rúbricas
+  - gen-code    # ejercicios de programación
+brazos: [A, B, C, D, A+1, B+1, C+1, D+1]
+
+modelos:
+  - proveedor: deepseek
+    modelo: deepseek-flash
+    estructurado: false          # DeepSeek documenta json_object, no json_schema estricto: C y C+1 quedan «no aplicable»
+  - proveedor: deepseek
+    modelo: deepseek-v4-pro
+    estructurado: false
+  - proveedor: kimi
+    modelo: kimi-k3.1-pro
+    estructurado: true           # json_schema con strict: true (platform.kimi.ai, consulta del 2026-11-12)
+    enviar_temperatura: false    # temperatura fija en el proveedor para la serie K3 (se registra como diferencia obligada)
+    extra_body:
+      reasoning_effort: low      # K3.1 Pro razona siempre; se usa el esfuerzo mínimo documentado
+
+presupuesto:
+  autorizado_usd: 0              # lo completa quien autoriza el gasto (ver correr_v2v3b.ps1)
+  por_celda_max_usd: null
+  firmado_por: ""
+  fecha: ""
+
+controles:
+  aleatorizar: true
+  reintentos_por_llamada: 2
+  max_fallos_seguidos: 5
+
+experimentos:
+  v2:
+    activo: true
+  v3b:
+    activo: true
+    brazos: [A, B, C, D, A+1, B+1, C+1, D+1]
+    repeticiones: 5
+    politica_limite: comun_por_tarea
+    fraccion_max_tokens: 0.5     # PROVISIONAL: política y fracción se fijan con el piloto real
+  v3a:
+    cortes_por_muestra: 20
+    semilla: 7
+    brazos: [A, B, C, D]
+
+reparacion:
+  max_rondas: 1
+  incluir_entrada: false
+  max_tokens_factor: 2.0
+  temperatura: 0.0
+
+estimacion:
+  factor_salida: 1.15
+  tasa_reparacion_esperada: 0.35
+  fraccion_lineas_reparadas: 0.2

@@ -1,0 +1,66 @@
+# Piloto del arnés V2/V3b.
+# Con el adaptador simulado valida el arnés de extremo a extremo sin red ni gasto.
+# Con el adaptador real sería un piloto pequeño: exige presupuesto autorizado, tope y tarifas verificadas
+# (ver README, sección «Ejecución con API»).
+nombre: piloto_v2v3b
+descripcion: Piloto real V2/V3b (3 tareas de extracción + 1 generativa; DeepSeek y Kimi)
+semilla: 20260914
+idioma: es
+temperatura: 0.7
+max_tokens: 4096
+repeticiones: 6
+
+tareas: [ext-log, ext-cls, ext-tc, gen-card]
+# A = JSON con instrucción mínima · B = JSON con el contrato en el prompt · C = JSON con restricción nativa
+# D = .mini sin reparación · X+1 = UNA reparación selectiva de la misma respuesta de X
+brazos: [A, B, C, D, A+1, B+1, C+1, D+1]
+
+modelos:
+  - proveedor: deepseek
+    modelo: deepseek-flash
+    estructurado: false          # DeepSeek documenta json_object, no json_schema estricto: C y C+1 quedan «no aplicable»
+  - proveedor: deepseek
+    modelo: deepseek-v4-pro
+    estructurado: false
+  - proveedor: kimi
+    modelo: kimi-k3.1-pro
+    estructurado: true           # json_schema con strict: true (platform.kimi.ai, consulta del 2026-11-12)
+    enviar_temperatura: false    # temperatura fija en el proveedor para la serie K3 (se registra como diferencia obligada)
+    extra_body:
+      reasoning_effort: low      # K3.1 Pro razona siempre; se usa el esfuerzo mínimo documentado
+
+presupuesto:
+  autorizado_usd: 0              # lo completa quien autoriza el gasto (ver correr_v2v3b.ps1)
+  por_celda_max_usd: null
+  firmado_por: ""
+  fecha: ""
+
+controles:
+  aleatorizar: true             # orden de las celdas barajado con semilla registrada (controles.semilla_orden o derivada)
+  reintentos_por_llamada: 2     # cada reintento se registra y se proyecta contra el tope
+  max_fallos_seguidos: 5
+
+experimentos:
+  v2:
+    activo: true
+  v3b:                          # generación real con límite de salida reducido
+    activo: true
+    brazos: [A, B, C, D, A+1, B+1, C+1, D+1]
+    repeticiones: 3
+    politica_limite: comun_por_tarea   # el MISMO límite para todos los brazos de la tarea (mediana de las salidas de referencia)
+    fraccion_max_tokens: 0.5           # PROVISIONAL: se fija con el piloto real
+  v3a:                          # cortes sobre salidas guardadas (lo ejecuta analyze.py; V3a «canónica» vive en experiments/truncamiento)
+    cortes_por_muestra: 20
+    semilla: 7
+    brazos: [A, B, C, D]
+
+reparacion:
+  max_rondas: 1
+  incluir_entrada: false        # true añade el texto de origen a la solicitud de reparación
+  max_tokens_factor: 2.0
+  temperatura: 0.0
+
+estimacion:
+  factor_salida: 1.15           # salida esperada = tokens de la salida de referencia × factor
+  tasa_reparacion_esperada: 0.35
+  fraccion_lineas_reparadas: 0.2

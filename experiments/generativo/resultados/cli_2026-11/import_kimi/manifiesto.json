@@ -1,0 +1,305 @@
+{
+  "nombre": "import_kimi",
+  "adaptador": "importado",
+  "procedencia": "asistido_ia",
+  "simulado": false,
+  "advertencia": "MATERIAL ASISTIDO POR IA: respuestas generadas por una IA en sesión, sin llamada a ninguna API, sin usage ni factura; no es una corrida de API",
+  "config": {
+    "nombre": "import_kimi",
+    "semilla": null,
+    "idioma": "es",
+    "tareas": [
+      "ext-a",
+      "ext-cat",
+      "ext-cls",
+      "ext-log",
+      "ext-map",
+      "ext-ner",
+      "ext-s",
+      "ext-sum",
+      "ext-tc",
+      "ext-us",
+      "gen-card",
+      "gen-code",
+      "gen-q",
+      "gen-r"
+    ],
+    "brazos": [
+      "A",
+      "A+1",
+      "B",
+      "B+1",
+      "D",
+      "D+1"
+    ],
+    "modelos": [
+      {
+        "proveedor": "asistido_ia",
+        "modelo": "kimi-k3.1-pro"
+      }
+    ],
+    "experimentos": {
+      "v2": {
+        "activo": true
+      }
+    },
+    "importado_de": "respuestas_kimi-code_k3.1-pro.jsonl"
+  },
+  "hashes": {
+    "config_sha256": "4ee699cf6e29f854aadceab05df495558f76d39fed14160f6f7c20a1c7e88a9a",
+    "prompts_sha256": "12247159dde0333700872b095871f4bc7b880c466af30067677a069a4b093e78",
+    "prompts": {
+      "ext-a/A": "fe779874f4654a050dfa2996896fe46789732ef6e3503b78ac17a2e9de928abc",
+      "ext-a/B": "2eb34776d69fc20ea6eac2c0e6d29959832752d6da46fb2a64fc5d7d66f56d2f",
+      "ext-a/D": "9adda580ced9cd1efab0c950889b2fd5b52ff111c7eb774cb1af60341a03f98a",
+      "ext-cat/A": "40f0976142d20733aa57428004d5655a34c43660cde9786899d54f1b213369ef",
+      "ext-cat/B": "d8c92114b6edfba2a4ccec38a73ab87bbac427ef5c5976ec363ead4fa852ddbc",
+      "ext-cat/D": "426a53565d5f3b056a2e1024f229af58c38d72a0da95dca1cd0ae093fac0831a",
+      "ext-cls/A": "9fa5d4883262c3eaec9ec294eac53be24806ac728fa3b19ebf28584652ec3950",
+      "ext-cls/B": "c6a04b1cd629dcfc59fda6fd5fef3807b854dc3a31a9c1579d97e0b7842bbb6e",
+      "ext-cls/D": "f0204404180f85cedf7dd2fdfdad0ec3d29bbac7e5b583c23a541b693426fcbf",
+      "ext-log/A": "72f1764768a53324775b9db47dd0384e4b960b4f855fe1c7b3a887c82db35257",
+      "ext-log/B": "b04c453ccdfc58b6002103bf6923f4aea18bce053ac4ef2ab4029eef81eb10a3",
+      "ext-log/D": "04bc1fda24152ce205822db4bc172ca255e07873b769763043626ad9d136cdae",
+      "ext-map/A": "ed7842473dc15ae7ded3acca89b46e62d29e1021187ca5329f6e9a484f832ad3",
+      "ext-map/B": "aea55392adbecd2ecb7f31c06dd4d4a4bad34b994a70ab938584de0342dd368b",
+      "ext-map/D": "a21bd49b4d139266b69e30455a90aece9d738e2d6dc6cd0a3a21774e41398c97",
+      "ext-ner/A": "db9024726e97962df6ff3dc7f08a85736f174549e39ecf5f2939b9fdbd809cdc",
+      "ext-ner/B": "ed3c6c680b24c18aef700e86ba00071b4285d5248d54314f8c9d4cc4097c6e9f",
+      "ext-ner/D": "ff3d2b029b880371aa0050b9443fe00bfcb962569ea0ace091027ba64fd60665",
+      "ext-s/A": "e32e55c3866a1a2ebb161ee1171fc0c12b8efb0fc3edff690cda381a821a1d09",
+      "ext-s/B": "2843dea7f7974f02bb3ac935b41d605acda5dc210486dd98342fb19ffbb5d374",
+      "ext-s/D": "62ab77c7dcb2a362ebdfe4564ba5b537e2b51b37697f2745ee33c3457a43c3e0",
+      "ext-sum/A": "fea1da2b864574bbb9c163749f00ddce2231bd4132658d68b2c6a58c9854c08a",
+      "ext-sum/B": "5fdf86a750bcd90b1f25034041f25ed6882eb47cec3e00e1c42a3175a90f3655",
+      "ext-sum/D": "161f19c7dc63779a7c7be237df38f6c85d99749599754cc52918fe5f4435003d",
+      "ext-tc/A": "eafddfed30afaacfe13ead5cf0516ffefa301efd0a62de29de36a3f7c42f60a8",
+      "ext-tc/B": "9054e7cb9644be1f5b44ab2512564a008d6b1bad4550ba8c9fb9d8883b01583b",
+      "ext-tc/D": "d39156d332028cd8aee1fb6099ac478e061b67b2a471b32b2456d31a43f41c07",
+      "ext-us/A": "f4b50599f3a59eb8cf77dcb3a5f24735230102cdff60c0512262dfa10956d9b6",
+      "ext-us/B": "2f1665718ae17290c669290f1a0ae7c0e69ed3ba99c0cfb186a1a879e5624d4b",
+      "ext-us/D": "810b8613c058b95b4c04bacf6f58668dac6b7b81a6bfe0996b183cbd85a25d97",
+      "gen-card/A": "3227d0c7f7bcedc2d1564b5e5f88e233e44d68c406d3a68f759fa31be1212356",
+      "gen-card/B": "e88457ccd4bf7cbc80d5f94d1252a8a881ed6490f2f021a2afbf0b1761e62f1c",
+      "gen-card/D": "0438eb2e16351897e01ed719554ee5a441a8a3e22ee13236a993b2594576d9cf",
+      "gen-code/A": "5708f97f544ac4add20d45834e427bcc37598ab465b4d4583c59f18e7b586e0e",
+      "gen-code/B": "68f4dec446308997634c02297c52d4136b21314446eac3726737888a892b197b",
+      "gen-code/D": "a0a81382d3ba9d26b066eab8431d1de06b69ddf47377bfdf2af17871cc1bcb9f",
+      "gen-q/A": "551cc81c712ad577c9eb8bcfd18d2fb739b974fea04646f04f3c9379d322699b",
+      "gen-q/B": "0560ff599c648f9bf5ef0fb4eec7dda373b9b943449b8f1f4b4b79b2a6b72324",
+      "gen-q/D": "1495663306d2e251f3360075df59d83410f2d6dadb853e8a44b0ae4dd17fa9d4",
+      "gen-r/A": "0c0b4519f19621288ea78bb3a9d0957d4a56a741f9579515434b9836355a542f",
+      "gen-r/B": "017da9756f996093453e2c9c54f57c7a8483254895d455cbebfff6dfdeed55f2",
+      "gen-r/D": "17b1c5e065d8523188b574ab34e5227d92b011ac8302f21ee564798977191273"
+    },
+    "contratos": [
+      {
+        "ruta": "forks/a/contract.json",
+        "sha256": "31b86aa2fd3b2d70e55794e1c2975c7ea715d5c65b81a7f2d46e2bd3babdb82d",
+        "prefijo": "a"
+      },
+      {
+        "ruta": "forks/cat/contract.json",
+        "sha256": "4d4d5b230f78f2e41eae959355beccca0428f9bfc29fa44267d002d68e28b935",
+        "prefijo": "cat"
+      },
+      {
+        "ruta": "forks/cls/contract.json",
+        "sha256": "cddb7ce851be1be679551509cbc4736da5d8065c04fd4b951d5ba11e32bd3889",
+        "prefijo": "cls"
+      },
+      {
+        "ruta": "forks/log/contract.json",
+        "sha256": "7ad741551746e4e5cbcacd213bfc9b33c4410bba010382cd6415066d3dd431f1",
+        "prefijo": "log"
+      },
+      {
+        "ruta": "forks/map/contract.json",
+        "sha256": "1508a72e7d03415ec691e59b1297fba2951bffaccec3226382493501152d57e2",
+        "prefijo": "map"
+      },
+      {
+        "ruta": "forks/ner/contract.json",
+        "sha256": "50b8fc5f23c4facf6847e338834f495eb7813c8674f1fcd64989850aa2585aa4",
+        "prefijo": "ner"
+      },
+      {
+        "ruta": "forks/s/contract.json",
+        "sha256": "33b7ce22e8f318a94443cd226f573385b624b3f4aebbaa46557d07cf3c21d554",
+        "prefijo": "s"
+      },
+      {
+        "ruta": "forks/sum/contract.json",
+        "sha256": "efc926e2039aef51b0ed3e6c69af2c1c863e6f2aa43746b3b0bf35f13c868df3",
+        "prefijo": "sum"
+      },
+      {
+        "ruta": "forks/tc/contract.json",
+        "sha256": "aad3eeb9be41190c747fea2b1fa5c71b2c785f7955bb5f8a4c32ff8b8e7775af",
+        "prefijo": "tc"
+      },
+      {
+        "ruta": "forks/us/contract.json",
+        "sha256": "1b38adc88ca44ee13aa002bd5b14042ef7205a4015d2a66daa752b5255fc70f3",
+        "prefijo": "us"
+      },
+      {
+        "ruta": "forks/card/contract.json",
+        "sha256": "f5bc9bc1007195715b93b0de9592c8ef7f46a32419efdff509005fc153bdbb4b",
+        "prefijo": "card"
+      },
+      {
+        "ruta": "forks/code/contract.json",
+        "sha256": "5aef1f29f32f70f72945237294a9aafeb433dbfc7e4cfa16057fb79ed412a8b5",
+        "prefijo": "code"
+      },
+      {
+        "ruta": "forks/q/contract.json",
+        "sha256": "16825effde3a00c78c664c0809f48beb2e031f0a0a37950811ca670ce77c7081",
+        "prefijo": "q"
+      },
+      {
+        "ruta": "forks/r/contract.json",
+        "sha256": "5c2059abd042600354ef7e0f17ed9b7f380a08c36cd1a1c99ef1f674ea034974",
+        "prefijo": "r"
+      }
+    ],
+    "conjuntos": [
+      {
+        "ruta": "forks/a/fixtures/canonical.json",
+        "sha256": "74719a451f482cd627d00df7053fde50a9fef9fe9cad11d6dac6c85c712297b6",
+        "nombre": "a/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/cat/fixtures/canonical.json",
+        "sha256": "245e1ad8d8ac2c3a1bf87d4a73fc8003c39e4ca512fcb1f8172d0faca5c30f96",
+        "nombre": "cat/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/cls/fixtures/canonical.json",
+        "sha256": "f2e7489efec104d0a26a84d38a2ec38ce1b3af8f00edcf4cdea34c175c0b7b3a",
+        "nombre": "cls/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/log/fixtures/canonical.json",
+        "sha256": "0f1e825512ff30f73d8f532e350ff3e432c826679f96115b1752c53f496b2fa2",
+        "nombre": "log/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/map/fixtures/canonical.json",
+        "sha256": "2e10a8b46ce3631e8a658517ba2c81f95663091d0efd746024a1e3e8f5db3e6d",
+        "nombre": "map/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/ner/fixtures/canonical.json",
+        "sha256": "8905d31d6c87e47e24e7455853feafb19f8a47db1b6a932c825c2447545c6594",
+        "nombre": "ner/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/s/fixtures/canonical.json",
+        "sha256": "c7afc75ac891dcda6fc092203f98480fcb198aafa9ddb9d04d71b47e696022bd",
+        "nombre": "s/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/sum/fixtures/canonical.json",
+        "sha256": "72f2c5426df2898b7ba70ae7fd9bb5de79e6bc7fa24f43bf4de895c852ce6ac3",
+        "nombre": "sum/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/tc/fixtures/canonical.json",
+        "sha256": "5661adcb847886cdb56ed1ce8c3c4c0251f95911b8c12df5d9d7b7613573b77f",
+        "nombre": "tc/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/us/fixtures/canonical.json",
+        "sha256": "bc98a6ccf174a057b4078f89e0403e490138e9d2dc29aad197dff7cf17d5e69a",
+        "nombre": "us/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/card/fixtures/canonical.json",
+        "sha256": "8f343a42963578d26a4230c0cdc888b966c46cee6d2d60754d97229b950a4533",
+        "nombre": "card/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/code/fixtures/canonical.json",
+        "sha256": "c746d950f04896c23549b0e7e263cf8fb258f592393b318857e9a85fb7020f9b",
+        "nombre": "code/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/q/fixtures/canonical.json",
+        "sha256": "acf10b314a47f4095c81b06e3ee0eeaf97e31af3082ea076b6df8ceac9662951",
+        "nombre": "q/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      },
+      {
+        "ruta": "forks/r/fixtures/canonical.json",
+        "sha256": "a6d5b1fc394d1b17c747dd2b4ade4671a13c21925abdb5b29c9f9361393d96db",
+        "nombre": "r/canonical.json",
+        "sintetico": true,
+        "fuente": "fixtures del fork publicado en forks/ (datos de referencia versionados)"
+      }
+    ],
+    "celdas_sha256": "9fb07aafa0eaac039dc6d52e5dd0d3e0c14ce7d5d0db112e555787f9be5f2abd",
+    "limites_sha256": "41445b4f19ff76c224d863db88867a11b7c1ddaa16bbd5bcd145f87def2f910f",
+    "orden_sha256": "ae123cf72fb9c83f5d3e7be2a7d77c9bdbd5a5fd64d4f092bf93372f6b0116bb",
+    "codigo_arnes_sha256": {
+      "brazos.py": "8324f44a88814aacd57262d2ff1d9936221be33800e9c5b4b6904f189d5533f1",
+      "json_tolerante.py": "9295b33566d8e74521408ee43614c4b540de4e8dcbaa41f0e550ccbbbe06c990",
+      "metricas.py": "dbe33066f80007f4c4fe3e5f7f033783edd42e39614a6b2bffba8c6d4a6f16da",
+      "ejecucion.py": "3f281869bc417c91b5c95612d805f7032abecd1b7e722fff526a1f69cd01868a",
+      "tareas.py": "38513d4b4b508827674cfd38c7ec0a5fd404d3fb22f07e7b4ba44632fb810820",
+      "usage.py": "f2dcf47220659ead1284e78c092a11311394010eeddbe486817fed082570b0f0",
+      "tarifas.py": "ae8a2f2115b16463fc880b6b8408f75163c5f1924cf42591261cfbbc7b4234d7"
+    },
+    "nucleo_minifmt_sha256": {
+      "parser.py": "4a2443ea5157dfab7ad1bb02a037c6d7013bcb4fad9e58d17eac0f3e6e8f3708",
+      "values.py": "fc8aae78a26ad923ebcc0c094807ddfcb415b8f4e282de4d43cc4bb4af70461b",
+      "codec.py": "79fb58915bd0e58b06f9c10a711a52547014bd6d4e493ebe72862cc3f9678751",
+      "serializer.py": "a1c821ada116e63ef1fc30ebc2a00c2de812c7597e78b3e13b6eff690b94c38d",
+      "contract.py": "4655da142451797449b3d5fe53878e705078f6d3394f5c442661aef1f978736d",
+      "prompt.py": "455e6c5598f6beb65b86b2978b33265781b730e1da13ca9e5d2eeb1368345769",
+      "ai/repair.py": "44cba6a60bb11d40eed3de38a64dc22345f646f05f1007513b0e808bd97568fd"
+    },
+    "tarifas": {
+      "archivo": null,
+      "sha256": null,
+      "por_modelo": {
+        "asistido_ia:kimi-k3.1-pro": {
+          "estado": "ausente"
+        }
+      }
+    },
+    "diseno_sha256": "57c26de96dbb2fd6caa318157a79352ad6236200cefca041ffe9b2e8143fb5fa"
+  },
+  "origen": {
+    "archivo": "respuestas_kimi-code_k3.1-pro.jsonl",
+    "sha256": "6981b52e46a80fb45da313418a18ee70dfa581ca233d016c89744773228d3f8c"
+  },
+  "gasto_usd": 0,
+  "muestras": 384
+}

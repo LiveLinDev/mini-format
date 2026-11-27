@@ -1,0 +1,19 @@
+experimento,brazo,modelo_completo,muestras,latencia_flujo_mediana_s,latencia_flujo_p95_s,latencia_n,latencia_excluidas_error_tecnico,latencia_origen,costo_usd_total,costo_solicitud_mediana_usd,costo_por_1000_validos_usd,costo_nota,validos_finales,intentos_totales,intentos_fallidos
+v2,A,asistido_ia:claude-haiku-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),484,70,0
+v2,A,asistido_ia:claude-opus-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),462,70,0
+v2,A,asistido_ia:kimi-k3.1-pro,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),436,70,0
+v2,A+1,asistido_ia:claude-haiku-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),517,96,0
+v2,A+1,asistido_ia:claude-opus-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),594,98,0
+v2,A+1,asistido_ia:kimi-k3.1-pro,56,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),458,72,0
+v2,B,asistido_ia:claude-haiku-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),757,70,0
+v2,B,asistido_ia:claude-opus-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),768,70,0
+v2,B,asistido_ia:kimi-k3.1-pro,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),759,70,0
+v2,B+1,asistido_ia:claude-haiku-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),770,73,0
+v2,B+1,asistido_ia:claude-opus-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),770,71,0
+v2,B+1,asistido_ia:kimi-k3.1-pro,69,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),759,69,0
+v2,D,asistido_ia:claude-haiku-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),757,70,0
+v2,D,asistido_ia:claude-opus-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),769,70,0
+v2,D,asistido_ia:kimi-k3.1-pro,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),763,70,0
+v2,D+1,asistido_ia:claude-haiku-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),770,73,0
+v2,D+1,asistido_ia:claude-opus-5-5,70,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),770,71,0
+v2,D+1,asistido_ia:kimi-k3.1-pro,66,,,0,0,no_medida,,,,sin usage ni factura de API (asistido_ia),726,67,0

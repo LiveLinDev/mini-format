@@ -53,8 +53,10 @@ def usage_de_respuesta(proveedor: str, r: Mapping[str, Any]) -> Optional[Dict[st
     det_out = u.get("completion_tokens_details") or {}
     if u.get("prompt_cache_hit_tokens") is not None:            # DeepSeek informa acierto y fallo de caché por separado
         cacheados = _i(u.get("prompt_cache_hit_tokens"))
-    else:
+    elif det_in.get("cached_tokens") is not None:
         cacheados = _i(det_in.get("cached_tokens"))
+    else:                                                       # Kimi: cached_tokens en la raíz de usage
+        cacheados = _i(u.get("cached_tokens"))
     razon = det_out.get("reasoning_tokens")
     return {"entrada_sin_cache": max(0, _i(u.get("prompt_tokens")) - cacheados),
             "entrada_cache_lectura": cacheados, "entrada_cache_escritura": 0,

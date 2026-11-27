@@ -1,0 +1,19 @@
+modelo,nombre,proveedor,condicion,muestras,solicitados,validos,validez,exactitud_extraccion,sintaxis_ok,tokens_salida_media,costo_salida_usd,costo_por_1000_validos_usd,reparaciones_con_llamada,reparaciones_no_ejecutadas,razonamiento_media
+claude-haiku-5-5,Claude Haiku 5.5,Anthropic,A,70,770,484,0.6286,0.8,68,2375.3,0.083135,0.1718,0,0,604.9
+claude-haiku-5-5,Claude Haiku 5.5,Anthropic,A+1,70,770,517,0.6714,0.84,70,3517.1,0.123098,0.2381,26,0,604.9
+claude-haiku-5-5,Claude Haiku 5.5,Anthropic,B,70,770,757,0.9831,1.0,69,1922.9,0.067302,0.0889,0,0,386.4
+claude-haiku-5-5,Claude Haiku 5.5,Anthropic,B+1,70,770,770,1.0,1.0,70,1939.7,0.067891,0.0882,3,0,386.4
+claude-haiku-5-5,Claude Haiku 5.5,Anthropic,D,70,770,757,0.9831,0.9745,70,2602.9,0.091101,0.1203,0,0,1729.7
+claude-haiku-5-5,Claude Haiku 5.5,Anthropic,D+1,70,770,770,1.0,0.9745,70,2645.7,0.092598,0.1203,3,0,1729.7
+claude-opus-5-5,Claude Opus 5.5,Anthropic,A,70,770,462,0.6,0.8,69,1725.3,2.4154,5.2281,0,0,45.5
+claude-opus-5-5,Claude Opus 5.5,Anthropic,A+1,70,770,594,0.7714,0.9,70,2763.1,3.8683,6.5123,28,0,45.5
+claude-opus-5-5,Claude Opus 5.5,Anthropic,B,70,770,768,0.9974,1.0,70,1516.0,2.12244,2.7636,0,0,0
+claude-opus-5-5,Claude Opus 5.5,Anthropic,B+1,70,770,770,1.0,1.0,70,1520.5,2.12876,2.7646,1,0,0
+claude-opus-5-5,Claude Opus 5.5,Anthropic,D,70,770,769,0.9987,1.0,70,1063.0,1.48818,1.9352,0,0,135.4
+claude-opus-5-5,Claude Opus 5.5,Anthropic,D+1,70,770,770,1.0,1.0,70,1068.1,1.49534,1.942,1,0,135.4
+kimi-k3.1-pro,Kimi K3.1 Pro,Moonshot AI (Kimi),A,70,770,436,0.5662,0.7909,70,1483.1,1.03819,2.3812,0,0,
+kimi-k3.1-pro,Kimi K3.1 Pro,Moonshot AI (Kimi),A+1,70,770,458,0.5948,0.8309,70,1847.3,1.2931,2.8234,16,14,
+kimi-k3.1-pro,Kimi K3.1 Pro,Moonshot AI (Kimi),B,70,770,759,0.9857,1.0,69,1212.4,0.84866,1.1181,0,0,
+kimi-k3.1-pro,Kimi K3.1 Pro,Moonshot AI (Kimi),B+1,70,770,759,0.9857,1.0,69,1212.4,0.84866,1.1181,0,1,
+kimi-k3.1-pro,Kimi K3.1 Pro,Moonshot AI (Kimi),D,70,770,763,0.9909,0.9873,70,945.8,0.66207,0.8677,0,0,
+kimi-k3.1-pro,Kimi K3.1 Pro,Moonshot AI (Kimi),D+1,70,770,764,0.9922,0.9891,70,949.0,0.66428,0.8695,1,4,

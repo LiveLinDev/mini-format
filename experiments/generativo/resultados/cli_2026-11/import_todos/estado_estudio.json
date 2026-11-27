@@ -1,0 +1,22 @@
+{
+  "estado": "parcial",
+  "motivo": "importación",
+  "adaptador": "importado",
+  "inicio_utc": "2026-11-12T19:20:05+00:00",
+  "actualizado_utc": "2026-11-12T19:20:05+00:00",
+  "celdas": {
+    "hecha": 1241,
+    "pendiente": 19,
+    "bloqueado": 0,
+    "no_aplicable": 0,
+    "error_tecnico": 0
+  },
+  "gasto": {
+    "gastado_usd": "0",
+    "incierto_usd": "0",
+    "llamadas": 0
+  },
+  "orden_semilla": 0,
+  "reanudaciones": 0,
+  "interrupcion": null
+}
