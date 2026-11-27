@@ -16,7 +16,7 @@
 
 <p>
   <strong>Cut LLM structured-output token bills by 47.8%–58.9% vs JSON while recovering 99.8% of truncated records.</strong><br>
-  100% lossless JSON round-trip &middot; Outperforms TOON, ISON, TONL, LEAN, HEDL, RAIF, and CSV &middot; Zero runtime dependencies
+  Lossless JSON round-trip &middot; Reproducible token benchmarks &middot; Zero runtime dependencies
 </p>
 
 <p>
@@ -36,7 +36,7 @@
 <table>
   <tr>
     <td align="center" width="25%"><strong>244,955 vs 468,849</strong><br><sub>&minus;47.8% total tokens across 1,902 public records vs compact JSON (<code>o200k_base</code>)</sub></td>
-    <td align="center" width="25%"><strong>182 vs 443 tokens</strong><br><sub>&minus;58.9% on real LLM extraction batches (beats ISON 238, LEAN 249, TOON 304)</sub></td>
+    <td align="center" width="25%"><strong>182 vs 443 tokens</strong><br><sub>&minus;58.9% when serializing the 20-ticket example</sub></td>
     <td align="center" width="25%"><strong>99.8% Cut Survival</strong><br><sub>1,705 / 1,708 records recovered vs 0 / 1,724 (0.0%) with <code>json.loads()</code></sub></td>
     <td align="center" width="25%"><strong>&minus;45.9% Real API Cost</strong><br><sub>Measured on Claude Opus 5.5 ($0.506 vs $0.934 / 1k records) &amp; 3.0&times; lower latency</sub></td>
   </tr>
@@ -86,13 +86,13 @@ Every time an LLM generates JSON (`{"id": 1, "categoria": "acceso", "prioridad":
 
 ## 2026 Competitor Benchmarks
 
-All measurements below run from source via [`benchmark/public/run_competitors.py`](benchmark/public/run_competitors.py) across **1,902 public records** (`products`, `users`, `comments`, `earthquakes`) plus our **20-ticket extraction workflow** ([`examples/flujo-soporte`](examples/flujo-soporte)), using **exact official BPE tokenizers** (`o200k_base`, `cl100k_base`, `p50k_base`). Every single format passes `equivalent(decode(encode(doc)), doc) == True`—preserving root envelopes, nested objects/arrays, nulls, types, and optional keys without lossy shortcuts.
+[`benchmark/public/run_competitors.py`](benchmark/public/run_competitors.py) measures the serialized text of **1,902 public records** (`products`, `users`, `comments`, `earthquakes`) and a **20-ticket example** ([`examples/flujo-soporte`](examples/flujo-soporte)) with `o200k_base`, `cl100k_base`, and `p50k_base`. The harness verifies round-trips for the tested profiles and supplies type and structure context to formats such as CSV, ISON, TONL, and HEDL. Generation cost also depends on the instructions, contract, and retries.
 
 <p align="center">
   <img src="docs/assets/benchmark-competitors.png" alt="Token comparison of .mini domain/2 against TOON, ISON, TONL, LEAN, HEDL, RAIF, Positional JSON, CSV, YAML, and JSON" width="100%">
 </p>
 
-### Head-to-Head Output Token Leaderboard (`o200k_base`)
+### Serialized data tokens (`o200k_base`)
 
 | Format | Products (194) | Users (208) | Comments (500) | Earthquakes (1,000) | Total Public (1,902) | Saving vs JSON | Support Triage (20) |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -136,13 +136,13 @@ Static token counts alone miss three production failure modes: **model reasoning
 
 ---
 
-## Why `.mini` Wins: Technical Architecture
+## Technical Architecture
 
 <p align="center">
   <img src="docs/assets/architecture.svg" alt=".mini 5-stage contract, prompting, domain/2 codec, repair, and exact JSON pipeline" width="100%">
 </p>
 
-`mini-domain/2` beats every tabular and compact-JSON competitor by designing around how **BPE tokenizers and Transformer KV-caches actually behave**:
+`mini-domain/2` reduces token use based on the data and tokenizer. The workflow can reuse format instructions as a cache prefix on supported providers.
 
 1. **Adaptive BPE Delimiter Selection (`s=sp|cm|tb` vs `|`)**: In `o200k_base` and `cl100k_base`, the pipe character `|` rarely merges and accounts for 6.6%–22.1% of tokens in v1 documents. `domain/2` scores candidate delimiters (` `, `,`, `\t`, `|`) against an accurate BPE estimator (or live `tiktoken`) per workload: picking `" "` (`s=sp`) on natural prose and tabular strings so BPE merges leading whitespace (` word`) for zero delimiter overhead, while preserving bracketed/quoted cells losslessly.
 2. **Column-Level Information Folding**:
@@ -154,7 +154,7 @@ Static token counts alone miss three production failure modes: **model reasoning
    - **`tl=`**: Places one free-text column last so multi-word sentences avoid quote/escape tokens completely.
 3. **Anti-CoT Lean Prompts (`prompt_style="lean"`)**: Our empirical runs showed small models like Haiku 5.5 burned 815 CoT reasoning tokens trying to follow 11 dense rules + raw JSON Schema (`453–571` tok). `make_lean_prompt()` prunes unreachable nullability/wrapper/dictionary rules down to **100 tokens (&minus;78%)**, and `make_rows_prompt()` drops prompt tax to **68 tokens (&minus;85%)**.
 4. **Byte-0 KV-Cache Prefix Ordering (`kv_cache_first=True`)**: `Workflow(..., kv_cache_first=True)` places static contract/format instructions at index 0 of `messages`, maximizing Anthropic/OpenAI automatic prefix cache reads (up to 90–95% cheaper input cache reads).
-5. **Constrained Decoding Compiler (`mini grammar`)**: Compiles any SPEC 1.1 contract or domain contract into **GBNF** (llama.cpp), **Lark** (vLLM / XGrammar / Outlines), or **Regex** grammars for zero-retry guaranteed syntax on self-hosted and local models.
+5. **Constrained Decoding Compiler (`mini grammar`)**. Produces **GBNF**, **Lark**, or **Regex** grammars to constrain syntax in compatible providers and runtimes.
 
 ---
 
@@ -163,9 +163,15 @@ Static token counts alone miss three production failure modes: **model reasoning
 ### Install (Zero Runtime Dependencies)
 
 ```bash
-pip install mini-format
+python -m pip install mini-format --index-url https://mini-format.pmoluna.com/simple/
 # Optional: exact tiktoken + benchmark extras
-pip install "mini-format[bench]"
+python -m pip install "mini-format[bench] @ https://mini-format.pmoluna.com/downloads/mini_format-1.3.4-py3-none-any.whl"
+```
+
+For the Node.js core library, download `mini-format-core-1.3.4.tgz` from [Downloads](https://mini-format.pmoluna.com/downloads/) and install the file.
+
+```bash
+npm install ./mini-format-core-1.3.4.tgz
 ```
 
 ### 1. Build a Toolkit from JSON &amp; Run a Protected Workflow

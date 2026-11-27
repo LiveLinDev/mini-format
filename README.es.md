@@ -16,7 +16,7 @@
 
 <p>
   <strong>Reduce entre un 47,8 % y un 58,9 % la factura de tokens de salida frente a JSON y recupera el 99,8 % de los registros ante cortes por <code>max_tokens</code>.</strong><br>
-  Ida y vuelta JSON 100 % exacta &middot; Supera a TOON, ISON, TONL, LEAN, HEDL, RAIF y CSV &middot; Cero dependencias en tiempo de ejecución
+  Ida y vuelta JSON exacta &middot; Comparativas reproducibles de tokens &middot; Cero dependencias en tiempo de ejecución
 </p>
 
 <p>
@@ -36,7 +36,7 @@
 <table>
   <tr>
     <td align="center" width="25%"><strong>244.955 vs 468.849</strong><br><sub>&minus;47,8 % tokens totales en 1.902 registros públicos frente a JSON compacto (<code>o200k_base</code>)</sub></td>
-    <td align="center" width="25%"><strong>182 vs 443 tokens</strong><br><sub>&minus;58,9 % en lotes reales de clasificación (supera a ISON 238, LEAN 249, TOON 304)</sub></td>
+    <td align="center" width="25%"><strong>182 vs 443 tokens</strong><br><sub>&minus;58,9 % al serializar el ejemplo de 20 tickets</sub></td>
     <td align="center" width="25%"><strong>99,8 % recuperación</strong><br><sub>1.705 / 1.708 registros salvados tras corte vs 0 / 1.724 (0,0 %) con <code>json.loads()</code></sub></td>
     <td align="center" width="25%"><strong>&minus;45,9 % costo API real</strong><br><sub>Medido en Claude Opus 5.5 (\$0,506 vs \$0,934 / 1k registros) y latencia 3,0&times; menor</sub></td>
   </tr>
@@ -86,7 +86,7 @@ Cada vez que un LLM genera JSON (`{"id": 1, "categoria": "acceso", "prioridad": 
 
 ## Comparativa 2026 contra competidores
 
-Todas las cifras provienen de [`benchmark/public/run_competitors.py`](benchmark/public/run_competitors.py) sobre **1.902 registros públicos** (`products`, `users`, `comments`, `earthquakes`) más nuestro **flujo real de 20 tickets** ([`examples/flujo-soporte`](examples/flujo-soporte)), medidos con tokenizadores BPE reales (`o200k_base`, `cl100k_base`, `p50k_base`). Cada formato supera la verificación estricta `equivalent(decode(encode(doc)), doc) == True`.
+[`benchmark/public/run_competitors.py`](benchmark/public/run_competitors.py) mide el texto serializado de **1.902 registros públicos** (`products`, `users`, `comments`, `earthquakes`) y un **ejemplo de 20 tickets** ([`examples/flujo-soporte`](examples/flujo-soporte)) con `o200k_base`, `cl100k_base` y `p50k_base`. El arnés verifica la ida y vuelta de los perfiles evaluados y aporta contexto de tipos y estructura a formatos como CSV, ISON, TONL y HEDL. Para medir el costo de generación también hay que contar las instrucciones, el contrato y los reintentos.
 
 <p align="center">
   <img src="docs/assets/benchmark-competitors.png" alt="Comparación de .mini domain/2 frente a TOON, ISON, TONL, LEAN, HEDL, RAIF, JSON posicional, CSV, YAML y JSON" width="100%">
@@ -142,7 +142,7 @@ Medir solo los tokens de salida oculta tres factores críticos en producción: *
   <img src="docs/assets/architecture.svg" alt="Arquitectura de .mini: contrato, prompting con KV-cache, códec domain/2, reparación y JSON exacto" width="100%">
 </p>
 
-`mini-domain/2` supera a todos los formatos tabulares porque aprovecha directamente la mecánica de **tokenizadores BPE y cachés KV de Transformers**:
+`mini-domain/2` reduce tokens según el contenido y el tokenizador. El flujo puede reutilizar las instrucciones como prefijo de caché cuando el proveedor lo admite.
 
 1. **Selección adaptativa de delimitador BPE (`s=sp|cm|tb`)**: En `o200k_base`, la barra `|` casi nunca se fusiona y consumía hasta el 22,1 % de tokens en v1. `domain/2` evalúa `" "`, `","`, `"\t"` y `"|"` por carga de trabajo: escoge espacio `" "` en texto tabular (las palabras absorben el espacio precedente a costo ~0 en BPE), respetando arreglos/objetos entre corchetes sin ambigüedad.
 2. **Compresión estructural sin pérdida por columna**:
@@ -154,15 +154,22 @@ Medir solo los tokens de salida oculta tres factores críticos en producción: *
    - **`tl=`**: Coloca al final la columna con frases libres para evitar comillas o escapes.
 3. **Prompts ligeros anti-CoT (`prompt_style="lean"`)**: Descubrimos en los registros de Haiku 5.5 que enviar las 11 reglas + esquema JSON completo (`453–571` tok) provocaba 815 tokens de razonamiento. `make_lean_prompt()` poda reglas inaplicables bajando a **100 tokens (&minus;78 %)**, y `make_rows_prompt()` a **68 tokens (&minus;85 %)**.
 4. **Prefijo KV-Cache en byte 0 (`kv_cache_first=True`)**: `Workflow(..., kv_cache_first=True)` coloca las instrucciones estáticas al principio de `messages`, maximizando lecturas cacheadas en Anthropic y OpenAI.
-5. **Compilador de gramáticas (`mini grammar`)**: Genera gramáticas **GBNF** (llama.cpp), **Lark** (vLLM / XGrammar / Outlines) o **Regex** para decodificación restringida con 0 reintentos en modelos locales/autoalojados.
+5. **Compilador de gramáticas (`mini grammar`)**. Genera gramáticas **GBNF**, **Lark** o **Regex** para restringir la sintaxis en proveedores y entornos compatibles.
 
 ---
 
-## Ejemplos Python y CLI
+## Instalación y ejemplos
 
 ```bash
-pip install mini-format
-pip install "mini-format[bench]"   # Opcional: tiktoken y utilidades de benchmark
+python -m pip install mini-format --index-url https://mini-format.pmoluna.com/simple/
+# Opcional: tiktoken y utilidades de benchmark
+python -m pip install "mini-format[bench] @ https://mini-format.pmoluna.com/downloads/mini_format-1.3.4-py3-none-any.whl"
+```
+
+Para la biblioteca base de Node.js, descarga `mini-format-core-1.3.4.tgz` desde [Descargas](https://mini-format.pmoluna.com/downloads/) e instala el archivo.
+
+```bash
+npm install ./mini-format-core-1.3.4.tgz
 ```
 
 ```bash

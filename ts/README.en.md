@@ -8,7 +8,8 @@ contracts from Zod / JSON Schema and interchangeable model adapters (OpenAI,
 Anthropic, Groq, simulated) over `fetch`. No runtime dependencies; everything except
 `Registry.load` also runs in the browser.
 
-Includes the fourteen core families. Contracts adapted from JSON samples by
+The fourteen core families are available in the optional ZIP on the
+[Downloads page](https://mini-format.pmoluna.com/downloads/). Contracts adapted from JSON samples by
 `mini build` use a separate `mini-domain/1` profile and their generated Python
 parser; this library does not interpret that profile. See the
 [builder guide](https://mini-format.pmoluna.com/en/docs/build/) and
@@ -26,8 +27,7 @@ npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1
 ```
 
 The archive contains compiled JavaScript ESM and `.d.ts` declarations in `dist/`
-(`exports.types` points to `dist/index.d.ts`), contracts for all fourteen families
-and the TypeScript sources. Import it as `@mini-format/core`:
+(`exports.types` points to `dist/index.d.ts`) and the TypeScript sources. Import it as `@mini-format/core`:
 running TypeScript inside `node_modules`, `--experimental-strip-types` and an npm
 registry connection are not required.
 

@@ -8,7 +8,8 @@ reparación selectiva, contratos desde Zod / JSON Schema y adaptadores de modelo
 intercambiables (OpenAI, Anthropic, Groq, simulado) sobre `fetch`. Sin dependencias
 de ejecución; todo salvo `Registry.load` funciona también en el navegador.
 
-Incluye las catorce familias del núcleo. Los contratos adaptados a muestras JSON
+Las catorce familias del núcleo se distribuyen en un ZIP opcional desde
+[Descargas](https://mini-format.pmoluna.com/downloads/). Los contratos adaptados a muestras JSON
 por `mini build` usan otro perfil, `mini-domain/1`, y el parser Python que se genera
 con ellos; esta biblioteca no interpreta ese perfil. Consulta la
 [guía del constructor](https://mini-format.pmoluna.com/docs/build/) y la
@@ -26,8 +27,7 @@ npm install --offline --ignore-scripts --no-audit --no-fund ./mini-format-core-1
 ```
 
 El archivo contiene JavaScript ESM compilado y declaraciones `.d.ts` en `dist/`
-(`exports.types` apunta a `dist/index.d.ts`), los contratos de las catorce familias
-y las fuentes TypeScript. Se importa desde
+(`exports.types` apunta a `dist/index.d.ts`) y las fuentes TypeScript. Se importa desde
 `@mini-format/core`: no necesita ejecutar TypeScript dentro de `node_modules`,
 usar `--experimental-strip-types` ni conectarse al registro npm.
 

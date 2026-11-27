@@ -88,7 +88,14 @@ def inject_benchmarks(page: str, lang: str) -> str:
         table_rows.append('<tr><th scope="row">' + cells[0] + '</th>' + data_cells + '</tr>')
     heads = [tr("Conjunto", "Dataset"), "N", ".mini v2", "ISON", "TOON flat", tr("vs TOON", "vs TOON"), tr("vs CSV", "vs CSV")]
     table = '<div class="tablewrap"><table class="t"><caption class="sr">' + tr("Tokens de salida, comparativa contra ISON, TOON y CSV", "Output tokens, comparison vs ISON, TOON and CSV") + '</caption><thead><tr>' + ''.join('<th scope="col">' + x + '</th>' for x in heads) + '</tr></thead><tbody>' + ''.join(table_rows) + '</tbody></table></div>'
-    note = tr('USGS: 1.000 observaciones reales. DummyJSON y JSONPlaceholder: 902 registros públicos de prueba. Ida y vuelta JSON 100 % exacta en los 16 formatos evaluados. mini-domain/2 supera a TOON, ISON, TONL, LEAN, HEDL, RAIF y CSV en los 4 conjuntos.', 'USGS: 1,000 real observations. DummyJSON and JSONPlaceholder: 902 public test records. 100% exact JSON round-trips across all 16 evaluated formats. mini-domain/2 outperforms TOON, ISON, TONL, LEAN, HEDL, RAIF, and CSV on all 4 datasets.')
+    note = tr(
+        'USGS aporta 1.000 observaciones reales. DummyJSON y JSONPlaceholder aportan 902 registros públicos de prueba. '
+        'La tabla cuenta tokens del texto serializado con los perfiles del arnés. '
+        'Para calcular el costo de generación también cuentan la instrucción, el contrato y los reintentos.',
+        'USGS contributes 1,000 real observations. DummyJSON and JSONPlaceholder contribute 902 public test records. '
+        'The table counts serialized text tokens for the profiles implemented by the harness. '
+        'Generation cost also depends on the instructions, contract, and retries.',
+    )
     block = f'<section class="section"><div class="frame"><div class="split-head"><h2 class="rv">{heading}</h2><p class="aside rv">{intro}</p></div>{table}<p class="fine">{note} <a href="/validacion/">{tr("Ver tabla de 16 formatos →", "View 16-format leaderboard →")}</a> · <a href="/source/benchmark/public/competitors_results.json">JSON</a></p></div></section>'
     page, changed = re.subn(r'(?<=<!-- ═══════════ BENCHMARK COMPLETO ═══════════ -->)\s*<section.*?</section>', '\n' + block, page, count=1, flags=re.S)
     if changed != 1:
