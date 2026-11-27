@@ -134,6 +134,11 @@ shows an example in column order. If one field remains, it asks for one JSON
 string per row. When comparing against JSON or CSV, include the instructions,
 reply, and retries through exact recovery.
 
+For one row with two text fields remaining, the Spanish workflow can request a
+compact CSV row. It uses space-separated JSON strings when the task contains
+escape sequences other than quotes. Both paths validate the result, restore
+known fields, and store the `.mini` document.
+
 ### Positional rows with a provider schema
 
 For the same flat lists, `flow.run_positional(generate, task, expected_records=20)`

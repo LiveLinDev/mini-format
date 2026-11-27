@@ -85,8 +85,14 @@ class Workflow:
             return f"Output format (replaces JSON instructions):\n{fmt}\n\nTask / Tarea:\n{task}{count}"
         return f"Task / Tarea:\n{task}{count}\n\nOutput format (replaces JSON instructions):\n{fmt}"
 
+    def _csv_pair_for_task(self, task):
+        # Retain explicit JSON escaping when the task includes escape sequences other than quotes.
+        return self.lang == "es" and re.search(r'\\(?!")|\t', task) is None
+
     def rows_prompt(self, task, *, last_text_field, expected_records, kv_cache_first=None, known_rows=None):
         projection = {} if known_rows is None else {"known_rows": known_rows}
+        if hasattr(self.runtime, "_from_csv_pair"):
+            projection["csv_pair"] = self._csv_pair_for_task(task)
         format_prompt = self.runtime.make_rows_prompt(
             self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang,
             **projection
@@ -104,6 +110,8 @@ class Workflow:
                      known_rows=None):
         """Validate model rows and store a canonical .mini document in the run history."""
         projection = {} if known_rows is None else {"known_rows": known_rows}
+        if hasattr(self.runtime, "_from_csv_pair"):
+            projection["csv_pair"] = self._csv_pair_for_task(task)
 
         def parse(response):
             return self.runtime.decode_rows(response, self.contract, last_text_field=last_text_field,
@@ -672,11 +680,13 @@ def main(argv=None):
             ap.error(str(exc))
         return 0
     correction = None
+    task = ""
     known_rows = None
     if args.envelope:
         envelope = json.loads(text)
         text, correction = envelope["text"], envelope.get("correction")
         known_rows = envelope.get("known_rows")
+        task = envelope.get("task", "")
         if known_rows is not None and (args.last_text_field is None or args.positional_json):
             ap.error("known_rows requires --last-text-field")
     try:
@@ -686,7 +696,7 @@ def main(argv=None):
         elif args.last_text_field is None:
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:
-            data = workflow.process_rows(text, generate=generate, last_text_field=args.last_text_field,
+            data = workflow.process_rows(text, generate=generate, task=task, last_text_field=args.last_text_field,
                                          expected_records=args.expected_records, known_rows=known_rows)
     except WorkflowError as exc:
         print(json.dumps(exc.report, ensure_ascii=False), file=sys.stderr)

@@ -33,6 +33,8 @@ def resultados_nube(ctx):
     nombres = {
         "mini": ".mini", "mini_previous": a(".mini anterior", "Previous .mini"),
         "json_positional": a("JSON posicional", "Positional JSON"),
+        "json_positional_short": a("JSON posicional con prompt breve", "Positional JSON with short prompt"),
+        "json_positional_nested": a("JSON posicional del control original", "Original positional JSON control"),
         "json_compact": a("JSON compacto", "Compact JSON"),
         "json_schema": a("JSON con esquema", "JSON with schema"),
         "csv": "CSV", "csv_escapes": a("CSV con escapes", "CSV with escaping"),
@@ -89,7 +91,9 @@ def resultados_nube(ctx):
         "Cada formato recibió las mismas tareas sintéticas en español y las mismas columnas conocidas. El costo por resultado exacto incluye todos los tokens de entrada y salida, también los de los intentos fallidos y los reintentos.",
         "Every format got the same synthetic Spanish tasks and known columns. Cost per exact result includes all input and output tokens, including failed attempts and retries."
     )}</p>
-    {tabla_nube("single_row", a("Una fila · 12 casos", "One row · 12 cases"), abierta=True)}
+    {tabla_nube("single_row_recheck", a("Una fila · 4 repeticiones del caso original", "One row · 4 repeats of the original case"), abierta=True)}
+    {tabla_nube("single_pair_confirmation", a("Una fila con dos campos de texto · 16 pruebas", "One row with two text fields · 16 trials"))}
+    {tabla_nube("single_row", a("Una fila · 12 casos del ensayo anterior", "One row · 12 cases from the previous trial"))}
     {tabla_nube("small_batch", a("De 2 a 8 filas · 8 lotes", "2 to 8 rows · 8 batches"))}
     {tabla_nube("large_batch", a("De 9 a 24 filas · 6 lotes", "9 to 24 rows · 6 batches"))}
     {tabla_nube("support_batches", a("20 tickets contra BPP · 6 lotes", "20 tickets against BPP · 6 batches"))}
@@ -102,8 +106,8 @@ def resultados_nube(ctx):
     {tabla_nube("cached_single", a("Una fila con caché · 12 casos", "One row with caching · 12 cases"), con_cache=True)}
     {tabla_nube("cached_batch", a("Lotes de 9 a 24 filas con caché", "Batches of 9 to 24 rows with caching"), con_cache=True)}
     <p class="val-method">{html.escape(datos["measured_on"])} · {a(
-        "Las primeras tablas estiman la entrada de la aplicación con o200k_base. Las tablas con caché usan la telemetría del proveedor e incluyen el contexto de Codex. En un control de una sola fila, JSON posicional costó ligeramente menos. Entre 9 y 24 filas, los dos quedaron prácticamente empatados.",
-        "The first tables estimate application input with o200k_base. The cache tables use provider telemetry, including Codex context. Positional JSON cost slightly less in one single-row control. It was effectively tied with .mini on batches of 9 to 24 rows."
+        "Las primeras tablas estiman la entrada de la aplicación con o200k_base. Las tablas con caché usan la telemetría del proveedor e incluyen el contexto de Codex. Entre 9 y 24 filas, JSON posicional y .mini tuvieron costos similares.",
+        "The first tables estimate application input with o200k_base. The cache tables use provider telemetry, including Codex context. Positional JSON and .mini had similar costs on batches of 9 to 24 rows."
     )} <a href="/source/benchmark/public/cloud_results.json">{a("Datos y commits (JSON)", "Data and commits (JSON)")}</a> ·
       <a href="https://developers.openai.com/api/docs/models/gpt-6-luna">{a("Tarifas del modelo", "Model pricing")}</a></p>
   </section>'''

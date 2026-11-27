@@ -135,6 +135,11 @@ las columnas. Si queda un solo campo, pide una cadena JSON por fila. Al comparar
 con JSON o CSV, cuenta la instrucción, la respuesta y los reintentos hasta
 obtener el JSON correcto.
 
+Para una fila con dos campos de texto pendientes, el flujo en español puede
+pedir una fila CSV compacta. Usa las cadenas JSON separadas por espacios cuando
+la tarea incluye secuencias de escape distintas de las comillas. En ambos casos
+valida el resultado, repone los campos conocidos y guarda el documento `.mini`.
+
 ### Filas posicionales con esquema del proveedor
 
 Para las mismas listas planas, `flow.run_positional(generate, tarea, expected_records=20)`

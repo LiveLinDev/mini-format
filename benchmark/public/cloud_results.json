@@ -460,6 +460,104 @@
           "reasoning_tokens": 0
         }
       }
+    },
+    "single_row_recheck": {
+      "case_ids": [
+        1100,
+        1101,
+        1102,
+        1103
+      ],
+      "formats": {
+        "mini": {
+          "trials": 4,
+          "exact": 4,
+          "retries": 0,
+          "instruction_tokens": 76,
+          "application_input_tokens": 404,
+          "input_tokens": 49156,
+          "cached_input_tokens": 48384,
+          "output_tokens": 48,
+          "reasoning_tokens": 0
+        },
+        "json_positional_nested": {
+          "trials": 4,
+          "exact": 4,
+          "retries": 0,
+          "instruction_tokens": 76,
+          "application_input_tokens": 404,
+          "input_tokens": 49156,
+          "cached_input_tokens": 48128,
+          "output_tokens": 60,
+          "reasoning_tokens": 0
+        }
+      }
+    },
+    "single_pair_confirmation": {
+      "case_ids": [
+        1100,
+        1101,
+        1102,
+        1103,
+        1200,
+        1201,
+        1202,
+        1203,
+        1204,
+        1205,
+        1206,
+        1207,
+        1300,
+        1301,
+        1302,
+        1303
+      ],
+      "formats": {
+        "mini": {
+          "trials": 16,
+          "exact": 16,
+          "retries": 0,
+          "instruction_tokens": 356,
+          "application_input_tokens": 1470,
+          "input_tokens": 196482,
+          "cached_input_tokens": 187136,
+          "output_tokens": 194,
+          "reasoning_tokens": 0
+        },
+        "json_positional": {
+          "trials": 16,
+          "exact": 16,
+          "retries": 0,
+          "instruction_tokens": 304,
+          "application_input_tokens": 1418,
+          "input_tokens": 196426,
+          "cached_input_tokens": 189056,
+          "output_tokens": 211,
+          "reasoning_tokens": 0
+        },
+        "json_positional_short": {
+          "trials": 16,
+          "exact": 9,
+          "retries": 8,
+          "instruction_tokens": 192,
+          "application_input_tokens": 2045,
+          "input_tokens": 294585,
+          "cached_input_tokens": 269056,
+          "output_tokens": 341,
+          "reasoning_tokens": 0
+        },
+        "mini_previous": {
+          "trials": 16,
+          "exact": 16,
+          "retries": 0,
+          "instruction_tokens": 512,
+          "application_input_tokens": 1626,
+          "input_tokens": 196650,
+          "cached_input_tokens": 184448,
+          "output_tokens": 211,
+          "reasoning_tokens": 0
+        }
+      }
     }
   },
   "single_row_control": {
@@ -629,5 +727,13 @@
     },
     "cases": 6,
     "records_per_case": 20
+  },
+  "single_row_check": {
+    "domain_sha256": "01a6e85b66e0ca16cfb8366b51b903188cacf6be0c0ebef1bf66530cdc783b14",
+    "workflow_sha256": "97bb5b2f0d293fdcc6a1428b9397397ea623381e430bbd0a840bd9cad1f3294a",
+    "scope": "Spanish, one row, two projected text fields, known identifiers",
+    "original_case_id": 1100,
+    "repetitions": 4,
+    "cases": 16
   }
 }

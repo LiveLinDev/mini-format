@@ -214,7 +214,6 @@ def test_projected_batch_quotes_text_before_the_last_field(tmp_path, count):
 @pytest.mark.parametrize("fields, prefix", [
     ({}, ""),
     ({"seguimiento": True, "prioridad": 2}, "true 2 "),
-    ({"grupo": "Equipo A"}, '"Equipo A" '),
 ])
 def test_one_projected_row_uses_json_values_and_restores_exact_text(tmp_path, fields, prefix):
     row = {"id": 91, **fields, "titulo": ' A\\B\t" '}
@@ -236,6 +235,49 @@ def test_one_projected_row_uses_json_values_and_restores_exact_text(tmp_path, fi
     else:
         assert "Una cadena JSON con solo el valor de titulo." in prompts[0]
     assert decode(flow.last_run["mini"], contract) == [row]
+
+
+def test_single_projected_csv_pair_preserves_quotes_bars_and_line_breaks(tmp_path):
+    row = {"id": 91, "grupo": "Zona\\N", "titulo": ' «"Llave"»\r\n abierta '}
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([[row]], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+    reply = 'Zona\\N," «""Llave""»\r\n abierta "'
+
+    def generate(prompt):
+        assert "Una fila CSV sin cabecera: grupo,titulo." in prompt
+        assert "91" not in prompt
+        return reply
+
+    options = {"expected_records": 1, "last_text_field": "titulo", "known_rows": [{"id": 91}]}
+    assert flow.run(generate, "Copia el texto.", **options) == [row]
+    assert decode(flow.last_run["mini"], contract) == [row]
+    json_reply = '"Zona\\\\N" ' + json.dumps(row["titulo"])
+    escaped_task = "Copia literalmente " + json.dumps(row)
+
+    def generate_json(prompt):
+        assert "valores JSON en orden separados por espacios" in prompt
+        return json_reply
+
+    assert flow.run(generate_json, escaped_task, **options) == [row]
+    assert flow.runtime.decode_rows(json_reply, contract, **options) == [row]
+
+    script = tmp_path / "csv.mjs"
+    script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const workflow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
+const data = await workflow.run(async prompt => {{
+    if (!prompt.includes('Una fila CSV sin cabecera')) throw new Error(prompt);
+    return {json.dumps(reply)};
+}}, 'Copia el texto.', {{expectedRecords: 1, lastTextField: 'titulo', knownRows: [{{id: 91}}]}});
+const escaped = await workflow.run(async prompt => {{
+    if (!prompt.includes('valores JSON en orden separados por espacios')) throw new Error(prompt);
+    return {json.dumps(json_reply)};
+}}, {json.dumps(escaped_task)}, {{expectedRecords: 1, lastTextField: 'titulo', knownRows: [{{id: 91}}]}});
+console.log(JSON.stringify([data, escaped]));
+""", encoding="utf-8")
+    node = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert node.returncode == 0, node.stderr
+    assert json.loads(node.stdout) == [[row], [row]]
 
 
 def test_projected_text_batch_accepts_bare_text_and_json_escapes(tmp_path):

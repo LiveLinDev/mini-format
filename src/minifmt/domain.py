@@ -9,11 +9,13 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import hashlib
 import json
 import math
 import re
 import sys
+from io import StringIO
 from pathlib import Path
 from typing import Any
 
@@ -1501,8 +1503,28 @@ def encode_rows(value, contract=None, *, last_text_field, allow_nullable=False,
     return "\n".join(lines)
 
 
+def _csv_pair_eligible(fields, projected, expected_records):
+    return (expected_records == 1 and len(projected) == 2 and len(fields) > len(projected)
+            and all(field["schema"]["type"] == "string" and re.fullmatch(r"[\w-]+", field["name"])
+                    for field in projected))
+
+
+def _from_csv_pair(text):
+    body = text.removeprefix("\ufeff").strip("\r\n")
+    fence = re.fullmatch(r"```(?:csv|mini|text)?[ \t]*\r?\n([\s\S]*?)\r?\n```", body)
+    if fence:
+        body = fence.group(1)
+    try:
+        rows = list(csv.reader(StringIO(body, newline=""), strict=True))
+    except csv.Error as error:
+        raise DomainError("D_VALUE", "invalid CSV row, double interior quotes") from error
+    if len(rows) != 1 or len(rows[0]) != 2:
+        raise DomainError("D_ARITY", "expected one CSV row with two fields and no header")
+    return " ".join(_json(value) for value in rows[0])
+
+
 def decode_rows(text, contract=None, *, last_text_field, expected_records, known_rows=None,
-                allow_nullable=False, allow_wrapped=False, compact_bools=False):
+                allow_nullable=False, allow_wrapped=False, compact_bools=False, csv_pair=False):
     """Validate compact model rows and restore the application JSON values."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
@@ -1512,6 +1534,9 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records, known
     supplied = [field for field in fields if field["name"] in known_names]
     if not isinstance(text, str):
         raise DomainError("D_VALUE", "compact rows must be text")
+    if (csv_pair and not (allow_nullable or allow_wrapped or compact_bools)
+            and _csv_pair_eligible(fields, projected, expected_records)):
+        text = _from_csv_pair(text)
     text = text.removeprefix("\ufeff").replace("\r\n", "\n").strip("\n")
     fence = re.fullmatch(r"```(?:mini|text)?[ \t]*\n([\s\S]*?)\n```", text)
     if fence:
@@ -1573,7 +1598,7 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records, known
 
 
 def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", known_rows=None,
-                     allow_nullable=False, allow_wrapped=False, compact_bools=False):
+                     allow_nullable=False, allow_wrapped=False, compact_bools=False, csv_pair=True):
     """Describe compact rows without sending the document header or schema JSON."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
@@ -1591,6 +1616,8 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", 
                 if expected_records == 1:
                     return f'Una cadena JSON con solo el valor de {names}. Formato: "un valor".\n'
                 return f'{expected_records} cadenas JSON en orden de {names}, una por línea. Formato: "un valor".\n'
+            if csv_pair and _csv_pair_eligible(fields, projected, expected_records):
+                return f"Una fila CSV sin cabecera: {names}. Duplica comillas; \\ literal.\n"
             if expected_records > 1 and len(kinds) >= 3 and all(kind == "string" for kind in kinds):
                 example = " ".join(["grupo"] * (len(kinds) - 1) + ["Revisar cuenta"])
                 return (f"{expected_records} filas sin cabecera en orden {names}. "
