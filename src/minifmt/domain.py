@@ -1386,7 +1386,8 @@ def make_prompt(contract, lang="en", example=None, *, lean=False):
     return text
 
 
-_ROW_ATOM = re.compile(r'(?:"(?:[^"\\]|\\.)*"|\[[^\n]*\]|\{[^\n]*\}|[^ \t]+)(?:[ \t]+|$)')
+_ROW_ATOM = re.compile(r'(?:"(?:[^"\\]|\\.)*"|[^ \t]+)(?:[ \t]+|$)')
+_ROW_JSON = json.JSONDecoder()
 
 
 def _flat_required_fields(contract, *, allow_nullable=False, allow_wrapped=False):
@@ -1526,6 +1527,19 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records, known
             raise DomainError("D_VALUE", "encode line breaks inside strings as JSON escapes", line=line_no)
         cells, start = [], 0
         for field in projected[:-1]:
+            if line[start:start + 1] in ("[", "{") and field["schema"]["type"] != "string":
+                path = f"$/{line_no - 1}/{field['name']}"
+                try:
+                    _, end = _ROW_JSON.raw_decode(line, start)
+                except ValueError as exc:
+                    raise DomainError("D_VALUE", str(exc), path, line_no) from exc
+                if end < len(line) and line[end] not in " \t":
+                    raise DomainError("D_VALUE", "expected a space after the JSON column", path, line_no)
+                cells.append(line[start:end])
+                start = end
+                while start < len(line) and line[start] in " \t":
+                    start += 1
+                continue
             token = _ROW_ATOM.match(line, start)
             if token is None:
                 raise DomainError("D_ARITY", f"missing column {field['name']}", line=line_no)

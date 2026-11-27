@@ -137,6 +137,17 @@ def test_make_lean_prompt_and_extended_compact_rows(tmp_path):
     assert "prefixItems" in pos["schema"]["items"]
 
 
+@pytest.mark.parametrize("data", [
+    [{"items": [1], "title": "Report [beta]"}],
+    [{"items": ["literal ] bracket"], "ids": [3, 4], "title": "Report [beta]"}],
+])
+def test_extended_compact_rows_keep_json_columns_and_trailing_text_separate(data):
+    contract = domain.infer_contract([data], "report")
+    options = {"last_text_field": "title", "allow_nullable": True}
+    wire = domain.encode_rows(data, contract, **options)
+    assert domain.decode_rows(wire, contract, expected_records=1, **options) == data
+
+
 def test_projected_compact_rows_restore_known_nested_fields():
     data = [
         {"ticket": {"id": 42, "active": True}, "title": "First item"},
