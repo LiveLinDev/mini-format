@@ -190,6 +190,33 @@ def test_workflow_restores_known_fields_after_a_repair(kit):
     assert decode(flow.last_run["mini"], contract) == result
 
 
+@pytest.mark.parametrize("fields, prefix", [
+    ({}, ""),
+    ({"seguimiento": True, "prioridad": 2}, "true 2 "),
+    ({"grupo": "Equipo A"}, '"Equipo A" '),
+])
+def test_one_projected_row_uses_json_values_and_restores_exact_text(tmp_path, fields, prefix):
+    row = {"id": 91, **fields, "titulo": ' A\\B\t" '}
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([[row]], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+    prompts = []
+
+    def generate(prompt):
+        prompts.append(prompt)
+        return prefix + json.dumps(row["titulo"], ensure_ascii=False)
+
+    assert flow.run(generate, "Copia el texto.", last_text_field="titulo", expected_records=1,
+                    known_rows=[{"id": 91}]) == [row]
+    assert len(prompts) == 1 and "91" not in prompts[0]
+    if fields:
+        assert "valores JSON en orden separados por espacios" in prompts[0]
+        assert r'" A\\B\t\" "' in prompts[0]
+    else:
+        assert "Una cadena JSON con solo el valor de titulo." in prompts[0]
+    assert decode(flow.last_run["mini"], contract) == [row]
+
+
 @pytest.mark.parametrize("context", [
     [{"id": 5}],
     [{"id": 5}, {}],

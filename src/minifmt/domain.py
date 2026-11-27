@@ -1585,6 +1585,14 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", 
     if (has_projection and lang == "es" and not (allow_nullable or allow_wrapped or compact_bools)
             and all(kind in scalar_labels and re.fullmatch(r"[\w-]+", field["name"])
                     for field, kind in zip(projected, kinds))):
+        if expected_records == 1:
+            names = ",".join(field["name"] for field in projected)
+            if len(projected) == 1:
+                return f'Una cadena JSON con solo el valor de {names}. Formato: "un valor".\n'
+            atoms = {"boolean": "true", "integer": "4", "string": '"Grupo A"'}
+            example = " ".join([atoms[kind] for kind in kinds[:-1]] + [r'" A\\B\t\" "'])
+            return (f"{names}: valores JSON en orden separados por espacios; "
+                    f"sin nombres ni corchetes. Ej.: {example}\n")
         names = " ".join(field["name"] + scalar_labels[kind] for field, kind in zip(projected, kinds))
         text = (f"{expected_records} líneas en orden, sin cabecera: {names}. "
                 "Un espacio entre campos; último=resto de línea.\n"
