@@ -23,7 +23,7 @@
   <a href="#comparativa-2026-contra-competidores">Benchmarks</a> &middot;
   <a href="#costos-y-cortes-en-produccion">Economía LLM</a> &middot;
   <a href="#arquitectura-tecnica">Cómo funciona</a> &middot;
-  <a href="#ejemplos-python-y-cli">Inicio rápido</a> &middot;
+  <a href="#instalacion-y-ejemplos">Inicio rápido</a> &middot;
   <a href="#gramaticas-y-agent-skill">Gramáticas y Skill</a> &middot;
   <a href="https://mini-format.pmoluna.com">Playground</a> &middot;
   <a href="README.md">English</a>
@@ -157,6 +157,8 @@ Medir solo los tokens de salida oculta tres factores críticos en producción: *
 5. **Compilador de gramáticas (`mini grammar`)**. Genera gramáticas **GBNF**, **Lark** o **Regex** para restringir la sintaxis en proveedores y entornos compatibles.
 
 ---
+
+<a id="ejemplos-python-y-cli"></a>
 
 ## Instalación y ejemplos
 

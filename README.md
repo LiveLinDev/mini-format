@@ -22,7 +22,7 @@
 <p>
   <a href="#2026-competitor-benchmarks">Benchmarks</a> &middot;
   <a href="#llm-cost-and-truncation-economics">LLM Economics</a> &middot;
-  <a href="#why-mini-wins-technical-architecture">How It Works</a> &middot;
+  <a href="#technical-architecture">How It Works</a> &middot;
   <a href="#quickstart">Quickstart</a> &middot;
   <a href="#constrained-decoding-and-agent-skill">Grammars &amp; Skill</a> &middot;
   <a href="https://mini-format.pmoluna.com">Live Playground</a> &middot;
@@ -135,6 +135,8 @@ Static token counts alone miss three production failure modes: **model reasoning
 *Across 180 simulated output truncation cuts over those runs, `.mini` recovered **1,705 / 1,708 (99.8%)** complete prefix records and re-requested only the remaining tail; `json.loads()` recovered **0 / 1,724 (0.0%)**.*
 
 ---
+
+<a id="why-mini-wins-technical-architecture"></a>
 
 ## Technical Architecture
 
