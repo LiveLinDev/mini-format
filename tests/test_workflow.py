@@ -340,6 +340,76 @@ def test_projected_json_lines_reject_bad_counts_or_values(line, line_count, code
     assert error.value.code == code
 
 
+@pytest.mark.parametrize("scenario", ["row", "batch", "unmatched", "two_errors", "wrong_count"])
+def test_projected_json_lines_repair_uses_the_original_source_row(tmp_path, scenario):
+    rows = [{"id": 101 + index, "grupo": f"Equipo {index}", "titulo": f"Revisión {index}\r\n"}
+            for index in range(25)]
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([rows], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+    known = [{"id": row["id"]} for row in rows]
+    source = [json.dumps({"id": row["id"], "sector": row["grupo"], "asunto": row["titulo"]}) for row in rows]
+    index = 13
+    if scenario == "unmatched":
+        source[index] = '{"sector":"Equipo 13","asunto":"Revisión 13"}'
+    task = "Copia los casos en orden.\n" + "\n".join(source)
+    lines = [json.dumps([row["grupo"], row["titulo"]]) for row in rows]
+    damaged = list(lines)
+    damaged[index] = '["Equipo 13",null]'
+    if scenario == "two_errors":
+        damaged[2] = '["Equipo 2"]'
+    initial = "\n".join(damaged)
+    selective = scenario in ("row", "batch", "wrong_count")
+    repair = (lines[index] if scenario in ("row", "wrong_count") else "\n".join(lines))
+    if scenario == "batch":
+        rewrite = ['["otro equipo","otro título"]'] * len(lines)
+        rewrite[index] = lines[index]
+        repair = "\n".join(rewrite)
+    opts = {"expected_records": len(rows), "last_text_field": "titulo", "known_rows": known}
+    replies = [initial, repair]
+    if scenario == "wrong_count":
+        replies.insert(1, repair + "\n" + repair)
+    answers = iter(replies)
+    prompts = []
+
+    def generate(prompt):
+        prompts.append(prompt)
+        return next(answers)
+
+    assert flow.run(generate, task, max_repairs=len(replies) - 1, **opts) == rows
+    assert len(prompts) == len(replies)
+    assert prompts[1].endswith(source[index]) == selective
+    assert flow.last_run["trace"][2]["selective"] == selective
+    with pytest.raises(DomainError) as caught:
+        decode_rows(initial, contract, jsonl_pair=True, **opts)
+    if scenario == "two_errors":
+        assert not hasattr(caught.value, "row_index")
+    else:
+        assert caught.value.row_index == index
+        merged = caught.value.merge_row(repair)
+        assert decode_rows(merged, contract, jsonl_pair=True, **opts) == rows
+    if scenario == "wrong_count":
+        with pytest.raises(DomainError, match="expected one corrected row"):
+            caught.value.merge_row(replies[1])
+        with pytest.raises(DomainError, match="must be text"):
+            caught.value.merge_row(None)
+
+    if scenario == "row":
+        script = tmp_path / "repair-jsonl.mjs"
+        script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
+const responses = {json.dumps(replies)};
+const data = await flow.run(async prompt => {{
+    if (responses.length === 1 && !prompt.endsWith({json.dumps(source[index])})) throw new Error(prompt);
+    return responses.shift();
+}}, {json.dumps(task)}, {{expectedRecords: 25, lastTextField: 'titulo', knownRows: {json.dumps(known)}}});
+console.log(JSON.stringify(data));
+""", encoding="utf-8")
+        node = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+        assert node.returncode == 0, node.stderr
+        assert json.loads(node.stdout) == rows
+
+
 def test_projected_text_batch_accepts_bare_text_and_json_escapes(tmp_path):
     rows = [{"id": 4, "categoria": "acceso", "prioridad": "alta", "titulo": "Restaurar clave"},
             {"id": 8, "categoria": "seguimiento activo", "prioridad": "baja", "titulo": " A\\B\t "}]

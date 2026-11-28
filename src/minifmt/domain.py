@@ -1523,26 +1523,63 @@ def _from_csv_pair(text):
     return " ".join(_json(value) for value in rows[0])
 
 
-def _decode_jsonl_pair(text, projected, known_rows, expected_records):
+def _jsonl_lines(text):
     body = text.removeprefix("\ufeff").strip(" \t\r\n")
     fence = re.fullmatch(r"```(?:jsonl?|mini|text)?[ \t]*\r?\n([\s\S]*?)\r?\n```", body)
     if fence:
         body = fence[1]
-    lines = [(number, line) for number, line in enumerate(body.split("\n"), 1) if line.strip(" \t\r")]
+    return [(number, line) for number, line in enumerate(body.split("\n"), 1) if line.strip(" \t\r")]
+
+
+class _JsonlRowError(DomainError):
+    def __init__(self, error, lines, row_index):
+        super().__init__(error.code, error.message, error.path, error.line)
+        self.lines = lines
+        self.row_index = row_index
+
+    def merge_row(self, text):
+        if not isinstance(text, str):
+            raise DomainError("D_VALUE", "the corrected row must be text")
+        correction = _jsonl_lines(text)
+        if len(correction) == len(self.lines):
+            correction = [correction[self.row_index]]
+        if len(correction) != 1:
+            raise DomainError("D_EXPECTED_COUNT", f"expected one corrected row, received {len(correction)}")
+        merged = [line for _, line in self.lines]
+        merged[self.row_index] = correction[0][1]
+        return "\n".join(merged)
+
+
+def _decode_jsonl_record(line, schema, position, number):
+    try:
+        value = _strict_json(line)
+    except (ValueError, RecursionError) as exc:
+        raise DomainError("D_VALUE", "use one JSON array per line", line=number) from exc
+    try:
+        return _unpack(value, schema, f"$/{position}")
+    except DomainError as exc:
+        raise DomainError(exc.code, exc.message, exc.path, number) from exc
+
+
+def _decode_jsonl_pair(text, projected, known_rows, expected_records):
+    lines = _jsonl_lines(text)
     if len(lines) != expected_records:
         raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(lines)}")
     schema = {"type": "object", "fields": projected}
     rows = []
+    invalid = None
     for position, (number, line) in enumerate(lines):
         try:
-            value = _strict_json(line)
-        except (ValueError, RecursionError) as exc:
-            raise DomainError("D_VALUE", "use one JSON array per line", line=number) from exc
-        try:
-            projected_row = _unpack(value, schema, f"$/{position}")
+            projected_row = _decode_jsonl_record(line, schema, position, number)
         except DomainError as exc:
-            raise DomainError(exc.code, exc.message, exc.path, number) from exc
-        rows.append({**known_rows[position], **projected_row})
+            if invalid is not None:
+                raise invalid[0] from exc
+            invalid = (exc, position)
+        else:
+            rows.append({**known_rows[position], **projected_row})
+    if invalid is not None:
+        error, index = invalid
+        raise _JsonlRowError(error, lines, index) from error
     return rows
 
 

@@ -85,6 +85,11 @@ def resultados_nube(ctx):
     ahorro_texto = round(100 * (1 - costo_por_mil(texto["mini"], precios) / costo_por_mil(texto["json_compact"], precios)))
     titulo_texto = a(f"De 25 a 48 filas de texto · {ahorro_texto} % menos costo que JSON compacto",
                      f"25 to 48 text rows · {ahorro_texto}% lower cost than compact JSON")
+    reparacion = grupos["single_invalid_row_repair"]["formats"]
+    ahorro_reparacion = round(100 * (1 - costo_por_mil(reparacion["mini"], precios)
+                                   / costo_por_mil(reparacion["mini_previous"], precios)))
+    titulo_reparacion = a(f"Una fila inválida · {ahorro_reparacion} % menos costo por lote correcto",
+                          f"One invalid row · {ahorro_reparacion}% lower cost per exact batch")
     cloud = f'''<section class="val-sec" id="generacion-nube">
     <h2>{a("Costo por respuesta correcta en la nube", "Cost per correct cloud response")}</h2>
     <p>{a(
@@ -96,6 +101,9 @@ def resultados_nube(ctx):
         "Every format got the same synthetic Spanish tasks and known columns. Cost per exact result includes all input and output tokens, including failed attempts and retries."
     )}</p>
     <div id="lotes-texto">{tabla_nube("projected_text_batches", titulo_texto, abierta=True)}</div>
+    <div id="reparacion-filas">{tabla_nube("single_invalid_row_repair", titulo_reparacion)}</div>
+    <p class="val-method">{a("Cinco lotes con una falla simulada a partir de respuestas reales en la nube.",
+                            "Five batches with one simulated fault in each recorded cloud response.")}</p>
     {tabla_nube("single_row_recheck", a("Una fila · 4 repeticiones del caso original", "One row · 4 repeats of the original case"))}
     {tabla_nube("single_pair_confirmation", a("Una fila con dos campos de texto · 16 pruebas", "One row with two text fields · 16 trials"))}
     {tabla_nube("single_row", a("Una fila · 12 casos del ensayo anterior", "One row · 12 cases from the previous trial"))}

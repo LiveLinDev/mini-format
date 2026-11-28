@@ -139,6 +139,9 @@ Para 25 a 48 filas con dos campos de texto pendientes, el flujo en español pide
 un array JSON por línea. Así los espacios de un campo se conservan dentro de
 ese campo. El toolkit valida ambos textos y restaura los campos conocidos antes
 de devolver el JSON.
+Si una fila es inválida y la tarea termina con un registro JSON por línea cuyos
+campos conocidos coinciden en orden con `known_rows`, el flujo puede volver a
+pedir esa fila. Conserva las demás filas y valida otra vez el resultado completo.
 
 Para una fila con dos campos de texto pendientes, el flujo en español puede
 pedir una fila CSV compacta. Usa las cadenas JSON separadas por espacios cuando

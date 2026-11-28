@@ -138,6 +138,9 @@ For 25 to 48 rows with two text fields left to generate, the Spanish workflow
 requests one JSON array per line. This keeps spaces inside either field without
 moving part of a value to the following column. The toolkit validates both
 strings and restores the known fields before returning JSON.
+If one row is invalid and the source ends with one JSON record per line whose
+known fields match the expected order, the workflow can request that record
+alone. It keeps the other rows and validates the complete result again.
 
 For one row with two text fields remaining, the Spanish workflow can request a
 compact CSV row. It uses space-separated JSON strings when the task contains

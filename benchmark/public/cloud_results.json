@@ -622,6 +622,47 @@
           "reasoning_tokens": 0
         }
       }
+    },
+    "single_invalid_row_repair": {
+      "case_ids": [
+        411,
+        412,
+        413,
+        414,
+        415
+      ],
+      "rows_per_case": [
+        31,
+        33,
+        43,
+        47,
+        48
+      ],
+      "formats": {
+        "mini": {
+          "exact": 5,
+          "trials": 5,
+          "retries": 5,
+          "instruction_tokens": 105,
+          "application_input_tokens": 9119,
+          "input_tokens": 131446,
+          "cached_input_tokens": 100224,
+          "output_tokens": 1945,
+          "reasoning_tokens": 0
+        },
+        "mini_previous": {
+          "exact": 5,
+          "trials": 5,
+          "retries": 5,
+          "instruction_tokens": 105,
+          "application_input_tokens": 9010,
+          "input_tokens": 131337,
+          "cached_input_tokens": 111360,
+          "output_tokens": 3758,
+          "reasoning_tokens": 0
+        }
+      },
+      "method": "One induced structural error per recorded cloud response, same first attempt for both arms"
     }
   },
   "single_row_control": {
@@ -810,5 +851,11 @@
       "text pairs"
     ],
     "completion_format": "unnamed JSON arrays, one per line"
+  },
+  "single_invalid_row_check": {
+    "base_commit": "a96dec8ed06df03966ef984ed4e6483904389b0d",
+    "domain_sha256": "9aebf7d44056e3acf9d1e708a4a894f32e32d9fe7ff7722bcdd8327158b3e1b3",
+    "workflow_sha256": "cafd489a83445028c4e0ac8517cca3066f914d2539c8815cd5687a040b9531eb",
+    "scope": "Spanish, two projected text fields, one invalid JSONL row and matching source ID"
   }
 }

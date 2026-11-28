@@ -126,7 +126,7 @@ class Workflow:
             return generate(prompt + "\n" + correction)
 
         return self._process_compact(text, parse, retry if generate is not None else None, max_repairs,
-                                     {"last_text_field": last_text_field})
+                                     {"last_text_field": last_text_field}, task=task, known_rows=known_rows)
 
     def _process_positional(self, text, expected_records, *, retry=None, max_repairs=1):
         def parse(response):
@@ -153,7 +153,25 @@ class Workflow:
             return data
         return self._process_compact(text, parse, retry, max_repairs, {"positional_json": True})
 
-    def _process_compact(self, text, parse, retry, max_repairs, metadata):
+    def _compact_source_row(self, task, known_rows, index):
+        if not known_rows or sum(row == known_rows[index] for row in known_rows) != 1:
+            return None
+        lines = task.strip(" \t\r\n").split("\n")[-len(known_rows):]
+        if len(lines) != len(known_rows):
+            return None
+        try:
+            sources = [self.runtime._strict_json(line) for line in lines]
+        except (ValueError, RecursionError):
+            return None
+        for source, fields in zip(sources, known_rows):
+            if not isinstance(source, dict) or any(
+                name not in source or type(source[name]) is not type(value) or source[name] != value
+                for name, value in fields.items()
+            ):
+                return None
+        return lines[index]
+
+    def _process_compact(self, text, parse, retry, max_repairs, metadata, *, task="", known_rows=None):
         if max_repairs not in (0, 1, 2, 3):
             raise ValueError("max_repairs must be between 0 and 3")
         trace = [{"stage": "generate", "text": text}]
@@ -162,15 +180,32 @@ class Workflow:
             try:
                 data = parse(text)
             except self.runtime.DomainError as exc:
-                correction = ("Devuelve todas las filas de la fuente. Corrige " if self.lang == "es"
-                              else "Return every row from the source. Fix ") + exc.message
-                report = {"ok": False, "errors": [exc.to_dict()], "invalid_lines": [], "repair_prompt": correction}
+                index = getattr(exc, "row_index", None)
+                source = self._compact_source_row(task, known_rows, index) if index is not None else None
+                if source is None:
+                    correction = ("Devuelve todas las filas de la fuente. Corrige " if self.lang == "es"
+                                  else "Return every row from the source. Fix ") + exc.message
+                else:
+                    correction = ("Corrección: devuelve solo la fila correspondiente a este registro original, "
+                                  "con el mismo formato:\n" + source)
+                report = {"ok": False, "errors": [exc.to_dict()], "invalid_lines": [exc.line] if source else [],
+                          "repair_prompt": correction}
                 trace.append({"stage": "validate", **report})
                 self.last_run.update(diagnostics=report, mini=text)
                 if retry is None or attempt == max_repairs or exc.code == "D_COMPACT_SCHEMA":
                     raise WorkflowError(self.last_run) from exc
-                text = retry(correction)
-                trace.append({"stage": "model_repair", "attempt": attempt + 1, "selective": False, "text": text})
+                response = retry(correction)
+                trace.append({"stage": "model_repair", "attempt": attempt + 1, "selective": source is not None,
+                              "text": response})
+                if source is None:
+                    text = response
+                else:
+                    try:
+                        text = exc.merge_row(response)
+                    except self.runtime.DomainError as rejected:
+                        self.last_run.update(diagnostics={**report, "errors": [rejected.to_dict()]})
+                        if attempt + 1 == max_repairs:
+                            raise WorkflowError(self.last_run) from rejected
             else:
                 mini = self.runtime.encode(data, self.contract)
                 trace.append({"stage": "parse", "ok": True, "records": len(data)})
