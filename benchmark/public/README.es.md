@@ -132,6 +132,23 @@ El piloto usó `--start 400 --sizes 32 48 64 80` sin `--lookup-steps`. El JSON
 público conserva el piloto y las dos corridas posteriores, incluidos los
 fallos y el total de consultas emparejadas frente a BPP sin referencias.
 
+La comparación con LDF 0.6.0 y TRON 0.1.3 usa el decodificador oficial de cada
+formato para comprobar que se conservaron los datos. En la nube, LDF usa su
+modo de tablas hijas y todos los formatos responden al mismo esquema JSON.
+
+```sh
+cargo build --locked --manifest-path benchmark/public/ldf_reference/Cargo.toml --target-dir output/ldf-reference
+npm install --prefix output/tron --ignore-scripts @tron-format/tron@0.1.3
+python benchmark/public/run_multitable_reading.py --out output/lectura-ldf-tron --arms mini_text_refs ldf tron json_compact --ldf-parser output/ldf-reference/debug/mini-ldf-reference --tron-module output/tron/node_modules/@tron-format/tron/dist/index.js --start 450 --sizes 22 39 56 73 --questions 3 --lookup-steps
+python benchmark/public/run_multitable_reading.py --out output/lectura-ldf-confirmacion --arms mini_text_refs mini_tables ldf --ldf-parser output/ldf-reference/debug/mini-ldf-reference --cases 451 470 471 472 --sizes 39 35 53 71 --questions 3 --lookup-steps
+python benchmark/public/run_multitable_reading.py --out output/lectura-ldf-tablas --arms mini_tables ldf --ldf-parser output/ldf-reference/debug/mini-ldf-reference --start 450 --sizes 22 39 56 73 --questions 3 --lookup-steps
+```
+
+En Windows, añade `.exe` al ejecutable `mini-ldf-reference`. Los conteos de
+documento completo con `o200k_base` comparan también la variante `hoist` de LDF.
+Se contabilizan los metadatos de origen y las declaraciones de cada formato.
+[Especificación de LDF](https://ldflabs.org/docs/spec/), [SDK de TRON](https://github.com/tron-format/tron-javascript).
+
 ## Muestras nuevas
 
 `sample_coverage` prueba dos divisiones intercaladas y reproducibles: primero se

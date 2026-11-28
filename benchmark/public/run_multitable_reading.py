@@ -31,15 +31,38 @@ HINTS = {
     "json_compact": "",
     "bpp_refs": "En BPP, &n define un texto compartido y *n recupera ese texto. nombre[n] indica el número de filas.",
     "bpp_plain": "En BPP, nombre[n] indica el número de filas. Las columnas siguen los nombres entre llaves.",
+    "ldf": "Cada tabla @ tiene columnas en orden. En la tabla hija, la primera columna enlaza el padre. El sufijo :t indica el total de filas hijas. Las comillas JSON indican texto escapado.",
+    "tron": "La línea class A: campos fija el orden de los valores en A(...). Cada clase tiene sus campos. El objeto final contiene los datos.",
 }
 MINI_HINT = "En .mini, nombre[n] indica n filas. Las columnas siguen la cabecera y el último campo ocupa el resto de su línea."
 REFS_HINT = "En .mini, [n] indica n filas. Si una columna lleva :r, busca su clave en @refs y copia el texto."
 
 
-def hedl(executable, text, mode):
+def reference_codec(executable, text, mode):
     result = subprocess.run([str(executable.resolve()), mode], input=text, capture_output=True, encoding="utf-8",
                             check=True, timeout=30)
-    return result.stdout.strip()
+    return result.stdout.rstrip("\n")
+
+
+def encode_tron(documents, module):
+    path = module.resolve()
+    package = json.loads((path.parents[1] / "package.json").read_text(encoding="utf-8"))
+    script = f'''
+import {{ parse, stringify }} from {json.dumps(path.as_uri())};
+import {{ readFileSync }} from 'node:fs';
+const values = JSON.parse(readFileSync(0, 'utf8'));
+console.log(JSON.stringify(values.map((value) => {{
+    const wire = stringify(value);
+    return [wire, parse(wire)];
+}})));
+'''
+    result = subprocess.run(["node", "--input-type=module", "-e", script], input=compact(documents),
+                            capture_output=True, encoding="utf-8", check=True, timeout=30)
+    encoded = json.loads(result.stdout)
+    assert len(encoded) == len(documents)
+    for (_, decoded), doc in zip(encoded, documents):
+        assert json.dumps(decoded, sort_keys=True) == json.dumps(doc, sort_keys=True)
+    return [wire for wire, _ in encoded], package["version"]
 
 
 def document(case, count):
@@ -105,27 +128,39 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--previous-transport", type=Path)
     parser.add_argument("--hedl-parser", type=Path)
+    parser.add_argument("--ldf-parser", type=Path)
     parser.add_argument("--toon-module", type=Path)
+    parser.add_argument("--tron-module", type=Path)
     parser.add_argument("--start", type=int, default=324)
     parser.add_argument("--sizes", type=int, nargs="+", default=[24, 38, 56])
+    parser.add_argument("--cases", type=int, nargs="+", help="case numbers for the given document sizes")
     parser.add_argument("--questions", type=int, default=4)
-    parser.add_argument("--arms", nargs="+", choices=(*ARMS, "mini_text_refs", *BPP_ARMS), default=ARMS)
+    parser.add_argument("--arms", nargs="+", choices=(*ARMS, "mini_text_refs", "ldf", "tron", *BPP_ARMS), default=ARMS)
     parser.add_argument("--lookup-steps", action="store_true", help="state the two ID lookups explicitly")
     args = parser.parse_args()
     arms = tuple(dict.fromkeys(args.arms))
     for arm, value, option in (("mini_previous", args.previous_transport, "--previous-transport"),
-                               ("hedl", args.hedl_parser, "--hedl-parser"), ("toon", args.toon_module, "--toon-module")):
+                               ("hedl", args.hedl_parser, "--hedl-parser"), ("ldf", args.ldf_parser, "--ldf-parser"),
+                               ("toon", args.toon_module, "--toon-module"), ("tron", args.tron_module, "--tron-module")):
         if arm in arms and value is None:
             parser.error(f"{option} is required for {arm}")
+    cases = args.cases or list(range(args.start, args.start + len(args.sizes)))
+    if len(cases) != len(args.sizes) or len(set(cases)) != len(cases):
+        parser.error("give one distinct case number per document size")
     out = args.out
     tk = get_tokenizer("o200k_base")
     assert tk.backend == "tiktoken"
     base = old_codec(args.previous_transport) if "mini_previous" in arms else None
-    docs = [document(args.start + i, count) for i, count in enumerate(args.sizes)]
+    docs = [document(case, count) for case, count in zip(cases, args.sizes)]
     toon, version = encode_toon(docs, args.toon_module) if "toon" in arms else (None, None)
     format_versions = {}
+    tron = None
+    if "tron" in arms:
+        tron, format_versions["tron"] = encode_tron(docs, args.tron_module)
     if "hedl" in arms:
         format_versions["hedl"] = "2.0.0"
+    if "ldf" in arms:
+        format_versions["ldf"] = "0.6.0"
     if "gcf" in arms:
         from gcf import decode_generic, encode_generic
         format_versions["gcf"] = "3.6.0"
@@ -136,7 +171,7 @@ def main():
 
     def batch(pair):
         index, doc = pair
-        case = args.start + index
+        case = cases[index]
         wires = {"json_compact": compact(doc)}
         for name in ("mini_tables", "mini_text_refs"):
             if name in arms:
@@ -146,13 +181,17 @@ def main():
             wires["mini_previous"] = base.dumps(doc, for_model=True, count=tk.count)
             assert base.loads(wires["mini_previous"]) == doc
         if "hedl" in arms:
-            wires["hedl"] = hedl(args.hedl_parser, wires["json_compact"], "encode")
-            assert json.loads(hedl(args.hedl_parser, wires["hedl"], "decode")) == doc
+            wires["hedl"] = reference_codec(args.hedl_parser, wires["json_compact"], "encode").strip()
+            assert json.loads(reference_codec(args.hedl_parser, wires["hedl"], "decode")) == doc
+        if "ldf" in arms:
+            wires["ldf"] = reference_codec(args.ldf_parser, wires["json_compact"], "regular")
         if "gcf" in arms:
             wires["gcf"] = encode_generic(doc)
             assert decode_generic(wires["gcf"]) == doc
         if toon is not None:
             wires["toon"] = toon[index]
+        if tron is not None:
+            wires["tron"] = tron[index]
         for name in BPP_ARMS:
             if name in arms:
                 wires[name] = bpp.dumps(doc, refs=name == "bpp_refs")
@@ -183,7 +222,7 @@ def main():
             result[metric] = sum(t[metric] for t in trials if t["format"] == name)
     summary = {"model": MODEL, "prices": PRICES, "max_attempts": ATTEMPTS, "toon_version": version,
                "shared_document_prefix": True, "questions_per_document": args.questions, "document_sizes": args.sizes,
-               "lookup_steps": args.lookup_steps, "format_versions": format_versions, "formats": formats}
+               "lookup_steps": args.lookup_steps, "cases": cases, "format_versions": format_versions, "formats": formats}
     (out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary), flush=True)
 

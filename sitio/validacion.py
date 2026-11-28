@@ -77,6 +77,7 @@ def resultados_nube(ctx):
         "mini_text_refs": a(".mini con referencias", ".mini with references"),
         "bpp_refs": a("BPP 0.4.0 con referencias", "BPP 0.4.0 with references"),
         "bpp_plain": a("BPP 0.4.0 sin referencias", "BPP 0.4.0 without references"),
+        "ldf": "LDF 0.6.0", "tron": "TRON 0.1.3",
         "json_schema": a("JSON nativo por registro", "Native JSON by record"),
         "json_schema_projected": a("JSON nativo sin repetir IDs", "Native JSON with IDs omitted"),
         "hedl": "HEDL 2.0.0", "gcf": "GCF 3.6.0",
@@ -334,10 +335,39 @@ def resultados_nube(ctx):
                                f"GPT-6 Luna with the same response schema. The estimate includes input, output, and retries. In the pilot with more open-ended questions, .mini with references needed {piloto_refs} retries.")}</p>
       <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos por consulta", "Per-question data")}</a></p>
     </details>'''
+    titulo_competidores = a("Lectura frente a LDF y TRON", "Reading against LDF and TRON")
+    inicio_ldf = ensayos["reading_ldf_tron"]["formats"]
+    duelo_ldf = ensayos["reading_ldf_plain_duel"]["pooled_formats"]
+    sin_refs = duelo_ldf["mini_tables"]
+    ahorro_ldf = 100 * (1 - costo_telemetria_por_mil(sin_refs, tarifas, con_cache=True)
+                         / costo_telemetria_por_mil(duelo_ldf["ldf"], tarifas, con_cache=True))
+    ahorro_ldf_es = f"{ahorro_ldf:.1f}".replace(".", ",")
+    titulo_inicio_ldf = a("Primer ensayo con cuatro formatos", "First run with four formats")
+    titulo_duelo_ldf = a("Repetición con tablas sin referencias", "Follow-up with tables without references")
+    titulo_confirma_ldf = a("Confirmación con ambos modos de .mini", "Confirmation with both .mini modes")
+    prueba_competidores = f'''<details class="disclosure val-run" id="lectura-ldf-tron"><summary>{titulo_competidores}</summary>
+      <p>{a(f"En {sin_refs['trials']} consultas con tablas sin referencias, .mini acertó {sin_refs['exact']} al primer intento y LDF acertó {duelo_ldf['ldf']['exact']}. El costo estimado por acierto de .mini fue {ahorro_ldf_es} % menor con la caché observada.",
+             f"Across {sin_refs['trials']} questions using tables without references, .mini got {sin_refs['exact']} right on the first try and LDF got {duelo_ldf['ldf']['exact']} right. .mini's estimated cost per correct answer was {ahorro_ldf:.1f}% lower with the observed cache.")}</p>
+      <p>{a(f"En el primer ensayo de {inicio_ldf['ldf']['trials']} consultas, LDF acertó {inicio_ldf['ldf']['exact']}, .mini con referencias acertó {inicio_ldf['mini_text_refs']['exact']} y TRON acertó {inicio_ldf['tron']['exact']}.",
+             f"In the first run of {inicio_ldf['ldf']['trials']} questions, LDF got {inicio_ldf['ldf']['exact']} right, .mini with references got {inicio_ldf['mini_text_refs']['exact']} right, and TRON got {inicio_ldf['tron']['exact']} right.")}</p>
+      <details class="disclosure val-run"><summary>{titulo_inicio_ldf}</summary>
+        {tabla_telemetria("reading_ldf_tron", titulo_inicio_ldf, ("mini_text_refs", "ldf", "tron", "json_compact"), lectura=True, cache=True)}
+      </details>
+      <details class="disclosure val-run"><summary>{titulo_duelo_ldf}</summary>
+        {tabla_telemetria("reading_ldf_plain_duel", titulo_duelo_ldf, ("mini_tables", "ldf"), lectura=True, cache=True)}
+      </details>
+      <details class="disclosure val-run"><summary>{titulo_confirma_ldf}</summary>
+        {tabla_telemetria("reading_ldf_confirmation", titulo_confirma_ldf, ("mini_text_refs", "mini_tables", "ldf"), lectura=True, cache=True)}
+      </details>
+      <p class="val-method">{a("Las consultas buscan tickets y agentes por ID con GPT-6 Luna. Toda tabla conserva los datos originales. El costo incluye entrada, salida y reintentos.",
+                               "The questions look up tickets and their agents by ID using GPT-6 Luna. Each table preserves the source data. Cost includes input, output, and retries.")}</p>
+      <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos por consulta", "Per-question data")}</a></p>
+    </details>'''
     transport = f'''<details class="disclosure val-group" id="compresion-entrada">
     <summary>{a("Tamaño de los datos en tokens", "Data size in tokens")}</summary>
     <div class="val-body prose">
     {prueba_refs}
+    {prueba_competidores}
     {prueba_tablas}
     {prueba_lectura}
     <p>{a(

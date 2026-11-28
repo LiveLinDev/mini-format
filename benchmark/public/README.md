@@ -103,6 +103,7 @@ cannot establish every valid value of a business domain.
 
 The per-task native schema and reading results are in `native_schema_results.json`.
 Use `run_native_schema.py` and `run_cloud_reading.py` to reproduce them with a
-signed-in Codex CLI and the reference TOON 4.4 encoder. See the [Spanish guide](README.es.md#generación-y-lectura-en-la-nube)
-for the exact commands. USD estimates include all provider-reported input and
-output, including retries, divided by the number of exact answers.
+signed-in Codex CLI and the reference TOON 4.4 encoder. Use
+`run_multitable_reading.py` for the BPP, LDF, and TRON comparisons. USD estimates
+include all provider-reported input and output, including retries, divided by
+the number of exact answers. [Commands in the Spanish guide](README.es.md#generación-y-lectura-en-la-nube).

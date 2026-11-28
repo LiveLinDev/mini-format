@@ -1,0 +1,8 @@
+[package]
+name = "mini-ldf-reference"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ldf = "=0.6.0"
+ldf-data = "=0.6.0"
