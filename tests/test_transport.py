@@ -156,3 +156,47 @@ def test_model_table_does_not_treat_literal_backticks_as_a_fence():
     wire = transport.dumps(doc, for_model=True, count=lambda text: 0 if text.startswith("+\n") else len(text))
     assert '"```mini"\nliteral\n```' in wire
     assert transport.loads(wire) == doc
+
+
+def test_model_text_references_restore_literal_values_for_arrays_and_objects():
+    titles = ['La pantalla muestra "error"\n\nSegunda línea', "", "  Café y tabulador\t '  ", "A"]
+    rows = [{"id": i, "note": titles[i % len(titles)]} for i in range(36)]
+    doc = {"refs": "campo de la aplicación", "tickets": rows,
+           "agents": [{"id": "B", "text": "Soporte norte"}, {"id": "C", "text": "Soporte sur"}]}
+    for source in (doc, rows):
+        wire = transport.dumps(source, text_refs=True)
+        assert wire.startswith("+++") and "\n@refs[4] ref text\n A " in wire
+        assert "note:r" in wire and transport.loads(wire) == source
+        assert transport.loads(wire.replace("\n", "\r\n"), domain.infer_contract([source])) == source
+        assert not transport.dumps(source, for_model=True).startswith("+++")
+
+    unique = [{"id": i, "note": f"Documento {i}"} for i in range(12)]
+    assert transport.dumps(unique, text_refs=True) == transport.dumps(unique, for_model=True)
+
+
+def test_model_text_references_reject_bad_dictionaries_and_missing_codes():
+    wire = '+++{}\n@refs[2] ref text\n A Primero\n B Segundo\n\nitems[2] id:i note:r\n 1 A\n 2 B'
+    assert transport.loads(wire) == {"items": [{"id": 1, "note": "Primero"}, {"id": 2, "note": "Segundo"}]}
+    for bad in (
+        wire.replace(" B Segundo", " A Segundo"),
+        wire.replace(" 2 B", " 2 Z"),
+        wire.replace("id:i note:r", "id:r note"),
+        wire.replace("@refs[2]", "refs[2]"),
+        wire.replace("@refs[2] ref text\n A Primero\n B Segundo", "@refs[0] ref text"),
+        wire.replace("2] ref text", "2] ref value"),
+        wire.replace("+++{}", "+++"),
+        wire.replace("+++{}", "++{}"),
+        wire.replace("@refs[2] ref text\n A Primero\n B Segundo\n\n", ""),
+    ):
+        with pytest.raises(domain.DomainError):
+            transport.loads(bad)
+
+
+def test_transport_cli_text_references_include_numeric_codes_after_letters():
+    source = [{"id": i, "note": f"Clave {i % 28} con un título largo que se repite"} for i in range(112)]
+    command = [sys.executable, "-m", "minifmt.transport"]
+    encoded = subprocess.run(command + ["encode", "-", "--text-refs"], input=domain._json(source).encode(),
+                             check=True, capture_output=True).stdout
+    assert encoded.startswith(b"+++\n@refs[28] ref text\n") and b"\n 26 Clave 26 " in encoded
+    decoded = subprocess.run(command + ["decode", "-"], input=encoded, check=True, capture_output=True).stdout
+    assert json.loads(decoded) == source

@@ -213,6 +213,12 @@ line under a `++` metadata header. `loads` restores the complete JSON and
 validates the columns and record count of each table.
 In `++` blocks, headers omit `:s` for text fields.
 
+For lists with repeated titles or descriptions, use `dumps(value, text_refs=True)`
+or `encode --text-refs`. The encoder checks whether a dictionary `@refs` reduces
+the size and can use a `+++` block. A `:r` column contains dictionary keys.
+Tell the model to look up each `:r` field in `@refs` and copy the text.
+`loads` recovers the exact values.
+
 For repeated questions about one document, place the `dumps` text at the start
 of the input and append each question. An identical prefix lets providers
 that support prompt caching reuse it.

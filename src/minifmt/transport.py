@@ -24,7 +24,7 @@ _TREE = {"|\n", "\t\n", "1|\n", "1\t\n"}
 _SERIES_FIELD = re.compile(rf"({_KEY.pattern})(?:=({_INTEGER.pattern}):({_INTEGER.pattern}))?")
 _TABLE_TYPES = {"s": "string", "i": "integer", "n": "number", "b": "boolean"}
 _TABLE_HEAD = re.compile(rf"({_KEY.pattern})\[(0|[1-9][0-9]*)\] (.+)")
-_TABLE_FIELD = re.compile(rf"({_KEY.pattern})(?::([sinb]))?")
+_TABLE_FIELD = re.compile(rf"({_KEY.pattern})(?::([sinbr]))?")
 
 
 def _schema_wire(node):
@@ -406,16 +406,17 @@ def _encode(value, contract, score, sections=True):
     return min(options, key=score)
 
 
-def _model_table(name, rows):
+def _model_table(name, rows, *, reference_field=None):
     if not _KEY.fullmatch(name) or not _table_fields(rows):
         return None
     contract = domain.infer_contract([rows], prefix="rows")
-    tail = domain._recommend_compact_tail([rows], contract)
+    tail = reference_field or domain._recommend_compact_tail([rows], contract)
     if tail is None:
         return None
     fields = domain._compact_fields(contract, tail)
     codes = {kind: code for code, kind in _TABLE_TYPES.items()}
-    headings = " ".join(f"{field['name']}:{codes[field['schema']['type']]}" for field in fields)
+    headings = " ".join(f"{field['name']}:{'r' if field['name'] == reference_field else codes[field['schema']['type']]}"
+                        for field in fields)
     encoded = domain.encode_rows(rows, contract, last_text_field=tail)
     # A table with one text column can contain literal Markdown fence lines.
     if encoded.startswith("```") and encoded.endswith("\n```"):
@@ -431,7 +432,23 @@ def _compact_model_block(body):
     return f"{name} {headings}\n " + rows.replace("\n", "\n ")
 
 
-def _read_model_block(body, *, implicit_strings=False):
+def _reference_tables(document, tables, blocks, metadata):
+    for name in blocks:
+        rows = document[name]
+        tail = tables[name].split("\n", 1)[0].rsplit(" ", 1)[1].removesuffix(":s")
+        values = list(dict.fromkeys(row[tail] for row in rows))
+        if len(values) == len(rows):
+            continue
+        codes = {value: chr(ord("A") + i) if i < 26 else str(i) for i, value in enumerate(values)}
+        legend = [f"@refs[{len(codes)}] ref text"]
+        legend.extend(f" {code} {domain._compact_text_cell(value, is_tail=True)}" for value, code in codes.items())
+        coded = [dict(row, **{tail: codes[row[tail]]}) for row in rows]
+        table = _compact_model_block(_model_table(name, coded, reference_field=tail))
+        parts = (table if key == name else block for key, block in blocks.items())
+        yield f"+++{metadata}\n" + "\n".join(legend) + "\n\n" + "\n\n".join(parts)
+
+
+def _read_model_block(body, *, implicit_strings=False, references=None):
     header, _, table = body.partition("\n")
     match = _TABLE_HEAD.fullmatch(header)
     if match is None:
@@ -441,9 +458,18 @@ def _read_model_block(body, *, implicit_strings=False):
     if any(field is None or (not implicit_strings and field.group(2) is None) for field in fields):
         raise ValueError("invalid model table field")
     entries = [field.groups() for field in fields]
-    wire = [6, [5, *[[key, _TYPES.index(_TABLE_TYPES[code or "s"])] for key, code in entries]]]
+    reference_field = entries[-1][0] if entries[-1][1] == "r" else None
+    if any(code == "r" for _, code in entries[:-1]) or (reference_field is not None and references is None):
+        raise ValueError("text references require a dictionary and the final column")
+    wire = [6, [5, *[[key, _TYPES.index(_TABLE_TYPES[code if code and code != "r" else "s"])] for key, code in entries]]]
     contract = _schema_contract(["rows", [], wire])
     rows = domain.decode_rows(table, contract, last_text_field=entries[-1][0], expected_records=int(count))
+    if reference_field is not None:
+        for row in rows:
+            code = row[reference_field]
+            if code not in references:
+                raise ValueError(f"unknown text reference {code!r}")
+            row[reference_field] = references[code]
     return name, rows
 
 
@@ -457,46 +483,67 @@ def _read_model_table(metadata, body):
     return {**root, name: rows}
 
 
-def _read_model_tables(metadata, body):
-    root = domain._strict_json(metadata)
+def _read_text_references(legend):
+    if not legend.startswith("@refs["):
+        raise ValueError("expected a text reference dictionary")
+    _, rows = _read_model_block(legend[1:], implicit_strings=True)
+    if not rows:
+        raise ValueError("empty text reference dictionary")
+    references = {}
+    for row in rows:
+        if (row.keys() != {"ref", "text"} or not all(isinstance(cell, str) for cell in row.values())
+                or row["ref"] in references):
+            raise ValueError("invalid or duplicate text reference")
+        references[row["ref"]] = row["text"]
+    return references
+
+
+def _read_model_tables(metadata, body, *, with_references=False):
+    array_root = with_references and metadata == ""
+    root = {} if array_root else domain._strict_json(metadata)
     if not isinstance(root, dict):
         raise ValueError("invalid model table metadata")
     blocks = body.replace("\r\n", "\n").rstrip("\n").split("\n\n")
     if len(blocks) < 2:
         raise ValueError("expected at least two model tables")
+    references = _read_text_references(blocks.pop(0)) if with_references else None
     for block in blocks:
-        name, rows = _read_model_block(block, implicit_strings=True)
+        name, rows = _read_model_block(block, implicit_strings=True, references=references)
         if name in root:
             raise ValueError("duplicate model table")
         root[name] = rows
+    if array_root:
+        if root.keys() != {"records"}:
+            raise ValueError("expected a single records table")
+        return root["records"]
     return root
 
 
-def dumps(value, contract=None, *, count=None, for_model=False):
-    """Encode JSON losslessly. With for_model, keep IDs and row counts explicit."""
+def dumps(value, contract=None, *, count=None, for_model=False, text_refs=False):
+    """Encode JSON losslessly, with readable tables and optional repeated-text references."""
     if count is None:
         count = lambda text: len(text.encode("utf-8"))
     contract = domain.infer_contract([value]) if contract is None else domain._contract(contract)
-    if for_model:
+    if for_model or text_refs:
         domain._pack(value, contract["schema"])
         options = [domain._json(value)]
-        if isinstance(value, dict):
-            tables = {}
-            for name, rows in value.items():
-                candidate = _model_table(name, rows)
-                if candidate is not None:
-                    tables[name] = candidate
-                    metadata = {key: cell for key, cell in value.items() if key != name}
-                    options.append(f"+{domain._json(metadata)}\n{candidate}")
-            if len(tables) > 1:
-                metadata = {key: cell for key, cell in value.items() if key not in tables}
-                names = sorted(tables, key=lambda name: (len(value[name]), name))
-                blocks = "\n\n".join(_compact_model_block(tables[name]) for name in names)
-                options.append(f"++{domain._json(metadata)}\n{blocks}")
-        else:
-            candidate = _model_table("records", value)
+        object_root = isinstance(value, dict)
+        document = value if object_root else {"records": value}
+        tables = {}
+        for name, rows in document.items():
+            candidate = _model_table(name, rows)
             if candidate is not None:
-                options.append("+\n" + candidate)
+                tables[name] = candidate
+                metadata = domain._json({key: cell for key, cell in document.items() if key != name}) if object_root else ""
+                options.append(f"+{metadata}\n{candidate}")
+        if len(tables) > 1 or (text_refs and tables):
+            metadata = domain._json({key: cell for key, cell in document.items() if key not in tables}) if object_root else ""
+            names = sorted(tables, key=lambda name: (len(document[name]), name))
+            blocks = {name: _compact_model_block(tables[name]) for name in names}
+            if len(tables) > 1:
+                options.append(f"++{metadata}\n" + "\n\n".join(blocks.values()))
+            if text_refs:
+                options.extend(_reference_tables(document, tables, blocks, metadata))
         return min(options, key=count)
     return _encode(value, contract, count)
 
@@ -514,6 +561,8 @@ def _decode(text):
         return _restore_rows(domain._strict_json(header[1:]), body)
     if header.startswith("^"):
         return _read_series(header[1:], body)
+    if header.startswith("+++"):
+        return _read_model_tables(header[3:].removesuffix("\r"), body, with_references=True)
     if header.startswith("++"):
         return _read_model_tables(header[2:], body)
     if header.startswith("+"):
@@ -554,6 +603,7 @@ def main(argv=None):
     parser.add_argument("file", help="UTF-8 file or - for stdin")
     parser.add_argument("--tokenizer", help="use an installed tokenizer instead of UTF-8 byte size")
     parser.add_argument("--for-model", action="store_true", help="encode a table with explicit IDs and row counts")
+    parser.add_argument("--text-refs", action="store_true", help="allow a text dictionary in model tables")
     args = parser.parse_args(argv)
     text = sys.stdin.buffer.read().decode("utf-8") if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
     try:
@@ -565,7 +615,7 @@ def main(argv=None):
                 if tokenizer.backend != "tiktoken":
                     raise ValueError("an exact token count requires tiktoken")
                 count = tokenizer.count
-            output = dumps(domain._strict_json(text), count=count, for_model=args.for_model)
+            output = dumps(domain._strict_json(text), count=count, for_model=args.for_model, text_refs=args.text_refs)
         else:
             output = domain._json(loads(text))
     except ValueError as error:

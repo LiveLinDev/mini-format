@@ -118,6 +118,20 @@ usa los encoders y decoders oficiales de HEDL 2.0.0, GCF y TOON 4.4.0.
 Para repetir la comparación adicional con GCF, elige una carpeta `--out`
 distinta y añade `--arms mini_tables gcf --start 350 --sizes 25 40 58`.
 
+Para probar textos repetidos, estos comandos comparan `.mini` con referencias,
+la versión de tablas sin referencias y BPP 0.4.0 en sus dos modos. Se hacen tres
+preguntas por documento y se indican los pasos de búsqueda por ID.
+
+```sh
+python -m pip install bpp-format==0.4.0
+python benchmark/public/run_multitable_reading.py --out output/referencias --arms mini_text_refs mini_tables bpp_refs bpp_plain --start 416 --sizes 32 48 56 68 --questions 3 --lookup-steps
+python benchmark/public/run_multitable_reading.py --out output/referencias-bpp --arms mini_text_refs bpp_plain --start 430 --sizes 34 47 58 76 --questions 3 --lookup-steps
+```
+
+El piloto usó `--start 400 --sizes 32 48 64 80` sin `--lookup-steps`. El JSON
+público conserva el piloto y las dos corridas posteriores, incluidos los
+fallos y el total de consultas emparejadas frente a BPP sin referencias.
+
 ## Muestras nuevas
 
 `sample_coverage` prueba dos divisiones intercaladas y reproducibles: primero se

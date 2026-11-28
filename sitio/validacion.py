@@ -74,6 +74,9 @@ def resultados_nube(ctx):
         "mini_native_rows": a(".mini por filas", ".mini native rows"),
         "mini_reused_rows": a(".mini con esquema reutilizado", ".mini with schema reuse"),
         "mini_tables": a(".mini con varias tablas", ".mini with multiple tables"),
+        "mini_text_refs": a(".mini con referencias", ".mini with references"),
+        "bpp_refs": a("BPP 0.4.0 con referencias", "BPP 0.4.0 with references"),
+        "bpp_plain": a("BPP 0.4.0 sin referencias", "BPP 0.4.0 without references"),
         "json_schema": a("JSON nativo por registro", "Native JSON by record"),
         "json_schema_projected": a("JSON nativo sin repetir IDs", "Native JSON with IDs omitted"),
         "hedl": "HEDL 2.0.0", "gcf": "GCF 3.6.0",
@@ -306,9 +309,35 @@ def resultados_nube(ctx):
                                f"Each document was reused for {preguntas_tablas} questions. Every format restored the same data. The cost estimate includes input, output, and retries, with and without the cache hits reported by Codex.")}</p>
       <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos por consulta", "Per-question data")}</a></p>
     </details>'''
+    titulo_refs = a("Lectura con textos repetidos", "Reading repeated text")
+    segunda_lectura = ensayos["reading_text_refs_bpp_followup"]
+    refs_mini, refs_bpp = (segunda_lectura["pooled_formats"][clave] for clave in ("mini_text_refs", "bpp_plain"))
+    ahorro_prompt_refs = 100 * (1 - refs_mini["prompt_tokens"] / refs_bpp["prompt_tokens"])
+    ahorro_cache_refs = 100 * (1 - costo_telemetria_por_mil(refs_mini, tarifas, con_cache=True)
+                              / costo_telemetria_por_mil(refs_bpp, tarifas, con_cache=True))
+    ahorro_prompt_refs_es = f"{ahorro_prompt_refs:.1f}".replace(".", ",")
+    ahorro_cache_refs_es = f"{ahorro_cache_refs:.1f}".replace(".", ",")
+    repeticion_mini, repeticion_bpp = (segunda_lectura["formats"][clave] for clave in ("mini_text_refs", "bpp_plain"))
+    ahorro_repeticion_refs = 100 * (1 - costo_telemetria_por_mil(repeticion_mini, tarifas, con_cache=True)
+                                   / costo_telemetria_por_mil(repeticion_bpp, tarifas, con_cache=True))
+    ahorro_repeticion_refs_es = f"{ahorro_repeticion_refs:.1f}".replace(".", ",")
+    orden_refs = ("mini_text_refs", "mini_tables", "bpp_refs", "bpp_plain")
+    piloto_refs = ensayos["reading_text_refs_pilot"]["formats"]["mini_text_refs"]["retries"]
+    prueba_refs = f'''<details class="disclosure val-run" id="lectura-textos-repetidos"><summary>{titulo_refs}</summary>
+      <p>{a(f"Al buscar tickets y sus agentes, .mini y BPP sin referencias acertaron las {refs_mini['exact']} consultas al primer intento. .mini usó {ahorro_prompt_refs_es} % menos tokens de prompt y el costo estimado por acierto bajó {ahorro_cache_refs_es} % con la caché observada.",
+             f"Across {refs_mini['exact']} lookups on tickets and their agents, .mini and BPP without references got every question right on the first try. .mini used {ahorro_prompt_refs:.1f}% fewer prompt tokens and the estimated cost per correct answer fell {ahorro_cache_refs:.1f}% with the observed cache.")}</p>
+      <p>{a("Primer ensayo con búsquedas explícitas por ID", "First run with explicit ID lookups")}</p>
+      {tabla_telemetria("reading_text_refs_confirmation", titulo_refs, orden_refs, lectura=True, cache=True)}
+      <p>{a(f"BPP sin referencias costó menos en ese ensayo con más aciertos de caché. En la repetición de {repeticion_mini['trials']} consultas, ambos reutilizaron la misma cantidad de tokens y .mini costó {ahorro_repeticion_refs_es} % menos.",
+             f"BPP without references cost less in that run with more cache hits. In the follow-up of {repeticion_mini['trials']} questions, both reused the same number of tokens and .mini cost {ahorro_repeticion_refs:.1f}% less.")}</p>
+      <p class="val-method">{a(f"GPT-6 Luna con el mismo esquema de respuesta. Se cuentan entrada, salida y reintentos. En el piloto con preguntas más abiertas, .mini con referencias necesitó {piloto_refs} reintentos.",
+                               f"GPT-6 Luna with the same response schema. The estimate includes input, output, and retries. In the pilot with more open-ended questions, .mini with references needed {piloto_refs} retries.")}</p>
+      <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos por consulta", "Per-question data")}</a></p>
+    </details>'''
     transport = f'''<details class="disclosure val-group" id="compresion-entrada">
     <summary>{a("Tamaño de los datos en tokens", "Data size in tokens")}</summary>
     <div class="val-body prose">
+    {prueba_refs}
     {prueba_tablas}
     {prueba_lectura}
     <p>{a(

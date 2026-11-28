@@ -219,6 +219,12 @@ una línea en blanco bajo un encabezado `++` con los metadatos. `loads` repone
 el JSON completo y valida las columnas y el recuento de cada tabla.
 En un bloque `++`, las cabeceras omiten `:s` para los campos de texto.
 
+Si una lista repite títulos o descripciones, usa `dumps(objeto, text_refs=True)`
+o `encode --text-refs`. El codificador comprueba si un diccionario `@refs`
+reduce el tamaño y puede usar un bloque `+++`. Una columna `:r` contiene claves
+del diccionario. Para explicárselo al modelo, indica que busque en `@refs` la
+clave de cada campo `:r` y copie el texto. `loads` recupera los valores exactos.
+
 Si haces varias preguntas sobre el mismo documento, coloca el texto de `dumps`
 al inicio de la entrada y añade cada pregunta después. Mantener ese inicio
 idéntico permite que un proveedor compatible lo reutilice desde su caché.
