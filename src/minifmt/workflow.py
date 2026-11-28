@@ -89,13 +89,18 @@ class Workflow:
         # Retain explicit JSON escaping when the task includes escape sequences other than quotes.
         return self.lang == "es" and re.search(r'\\(?!")|\t', task) is None
 
-    def rows_prompt(self, task, *, last_text_field, expected_records, kv_cache_first=None, known_rows=None):
+    def _row_projection(self, task, known_rows):
         projection = {} if known_rows is None else {"known_rows": known_rows}
         if hasattr(self.runtime, "_from_csv_pair"):
             projection["csv_pair"] = self._csv_pair_for_task(task)
+        if self.lang == "es" and hasattr(self.runtime, "_decode_jsonl_pair"):
+            projection["jsonl_pair"] = True
+        return projection
+
+    def rows_prompt(self, task, *, last_text_field, expected_records, kv_cache_first=None, known_rows=None):
         format_prompt = self.runtime.make_rows_prompt(
             self.contract, last_text_field=last_text_field, expected_records=expected_records, lang=self.lang,
-            **projection
+            **self._row_projection(task, known_rows)
         )
         return format_prompt + "\n" + task
 
@@ -109,9 +114,7 @@ class Workflow:
     def process_rows(self, text, *, last_text_field, expected_records, generate=None, task="", max_repairs=1,
                      known_rows=None):
         """Validate model rows and store a canonical .mini document in the run history."""
-        projection = {} if known_rows is None else {"known_rows": known_rows}
-        if hasattr(self.runtime, "_from_csv_pair"):
-            projection["csv_pair"] = self._csv_pair_for_task(task)
+        projection = self._row_projection(task, known_rows)
 
         def parse(response):
             return self.runtime.decode_rows(response, self.contract, last_text_field=last_text_field,

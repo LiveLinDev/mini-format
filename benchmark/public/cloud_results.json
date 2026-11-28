@@ -558,6 +558,70 @@
           "reasoning_tokens": 0
         }
       }
+    },
+    "projected_text_batches": {
+      "case_ids": [
+        201,
+        202,
+        203,
+        204,
+        205,
+        206
+      ],
+      "rows_per_case": [
+        25,
+        32,
+        47,
+        27,
+        37,
+        48
+      ],
+      "formats": {
+        "mini": {
+          "exact": 6,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 126,
+          "application_input_tokens": 4799,
+          "input_tokens": 78188,
+          "cached_input_tokens": 66816,
+          "output_tokens": 1997,
+          "reasoning_tokens": 0
+        },
+        "mini_previous": {
+          "exact": 2,
+          "trials": 6,
+          "retries": 1,
+          "instruction_tokens": 432,
+          "application_input_tokens": 6019,
+          "input_tokens": 91649,
+          "cached_input_tokens": 79488,
+          "output_tokens": 2070,
+          "reasoning_tokens": 0
+        },
+        "json_compact": {
+          "exact": 6,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 102,
+          "application_input_tokens": 4775,
+          "input_tokens": 78164,
+          "cached_input_tokens": 66816,
+          "output_tokens": 2668,
+          "reasoning_tokens": 0
+        },
+        "json_positional": {
+          "exact": 5,
+          "trials": 6,
+          "retries": 0,
+          "instruction_tokens": 114,
+          "application_input_tokens": 4787,
+          "input_tokens": 78176,
+          "cached_input_tokens": 68224,
+          "output_tokens": 2004,
+          "reasoning_tokens": 0
+        }
+      }
     }
   },
   "single_row_control": {
@@ -735,5 +799,16 @@
     "original_case_id": 1100,
     "repetitions": 4,
     "cases": 16
+  },
+  "projected_text_check": {
+    "base_commit": "2771277aad89018b9297128aa7d23a22b208ec71",
+    "domain_sha256": "598d1362bd99c4d019cdea2346da4a4ec6654f48bcfb5cfd6b3ef04d97cad535",
+    "workflow_sha256": "d1e0b19c3fe797f78f7df09a6948cc5954bd4aee0d474fa53e90bc332f38cada",
+    "scope": "Spanish, two projected text fields, known identifiers, 25 to 48 rows",
+    "families": [
+      "inventory",
+      "text pairs"
+    ],
+    "completion_format": "unnamed JSON arrays, one per line"
   }
 }

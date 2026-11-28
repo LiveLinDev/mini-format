@@ -280,6 +280,50 @@ console.log(JSON.stringify([data, escaped]));
     assert json.loads(node.stdout) == [[row], [row]]
 
 
+@pytest.mark.parametrize("count", [25, 48])
+def test_projected_text_pairs_use_exact_json_lines(tmp_path, count):
+    samples = [
+        {"grupo": "Equipo norte", "titulo": '  "Necesita ayuda"\r\n  '},
+        {"grupo": "A\\B\t|", "titulo": "Uno\u2028dos"},
+        {"grupo": "", "titulo": "~"},
+    ]
+    rows = [{"id": index, **samples[index % len(samples)]} for index in range(count)]
+    known = [{"id": row["id"]} for row in rows]
+    bundle = tmp_path / ".mini"
+    contract = build_bundle([rows], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+    options = {"expected_records": count, "last_text_field": "titulo", "known_rows": known}
+    reply = "```jsonl\r\n" + "\r\n".join(
+        json.dumps([row["grupo"], row["titulo"]], ensure_ascii=False) for row in rows
+    ) + "\r\n```"
+    replies = iter(["Equipo norte Revisar\n" * count, reply])
+    prompts = []
+
+    def generate(prompt):
+        prompts.append(prompt)
+        return next(replies)
+
+    assert flow.run(generate, "Copia los casos.", **options) == rows
+    assert len(prompts) == 2
+    assert f"{count} filas en orden grupo,titulo. Cada línea es un array JSON" in prompts[0]
+    assert "use one JSON array per line" in prompts[1]
+    assert decode(flow.last_run["mini"], contract) == rows
+
+    if count == 25:
+        script = tmp_path / "jsonl.mjs"
+        script.write_text(f"""import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const workflow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
+const data = await workflow.run(async prompt => {{
+    if (!prompt.includes('Cada línea es un array JSON')) throw new Error(prompt);
+    return {json.dumps(reply)};
+}}, 'Copia los casos.', {{expectedRecords: {count}, lastTextField: 'titulo', knownRows: {json.dumps(known)}}});
+console.log(JSON.stringify(data));
+""", encoding="utf-8")
+        node = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+        assert node.returncode == 0, node.stderr
+        assert json.loads(node.stdout) == rows
+
+
 def test_projected_text_batch_accepts_bare_text_and_json_escapes(tmp_path):
     rows = [{"id": 4, "categoria": "acceso", "prioridad": "alta", "titulo": "Restaurar clave"},
             {"id": 8, "categoria": "seguimiento activo", "prioridad": "baja", "titulo": " A\\B\t "}]

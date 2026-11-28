@@ -135,6 +135,11 @@ las columnas. Si queda un solo campo, pide una cadena JSON por fila. Al comparar
 con JSON o CSV, cuenta la instrucción, la respuesta y los reintentos hasta
 obtener el JSON correcto.
 
+Para 25 a 48 filas con dos campos de texto pendientes, el flujo en español pide
+un array JSON por línea. Así los espacios de un campo se conservan dentro de
+ese campo. El toolkit valida ambos textos y restaura los campos conocidos antes
+de devolver el JSON.
+
 Para una fila con dos campos de texto pendientes, el flujo en español puede
 pedir una fila CSV compacta. Usa las cadenas JSON separadas por espacios cuando
 la tarea incluye secuencias de escape distintas de las comillas. En ambos casos

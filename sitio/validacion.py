@@ -58,7 +58,7 @@ def resultados_nube(ctx):
     def tabla_nube(clave, titulo, *, con_cache=False, abierta=False):
         formatos = grupos[clave]["formats"]
         metrica = a("Tokens leídos de caché", "Cached input tokens") if con_cache else a("Tokens de instrucción", "Instruction tokens")
-        encabezados = (a("Formato", "Format"), a("USD por 1.000", "USD per 1,000"),
+        encabezados = (a("Formato", "Format"), a("USD por 1.000 aciertos", "USD per 1,000 exact results"),
                        a("Exactas", "Exact"), a("Reintentos", "Retries"), metrica)
         filas = []
         for clave_formato, resultado in formatos.items():
@@ -81,6 +81,10 @@ def resultados_nube(ctx):
     cache = grupos["cached_batch"]["formats"]
     ahorro_cache = 100 * (1 - costo_por_mil(cache["mini"], precios, con_cache=True)
                           / costo_por_mil(cache["ison"], precios, con_cache=True))
+    texto = grupos["projected_text_batches"]["formats"]
+    ahorro_texto = round(100 * (1 - costo_por_mil(texto["mini"], precios) / costo_por_mil(texto["json_compact"], precios)))
+    titulo_texto = a(f"De 25 a 48 filas de texto · {ahorro_texto} % menos costo que JSON compacto",
+                     f"25 to 48 text rows · {ahorro_texto}% lower cost than compact JSON")
     cloud = f'''<section class="val-sec" id="generacion-nube">
     <h2>{a("Costo por respuesta correcta en la nube", "Cost per correct cloud response")}</h2>
     <p>{a(
@@ -91,7 +95,8 @@ def resultados_nube(ctx):
         "Cada formato recibió las mismas tareas sintéticas en español y las mismas columnas conocidas. El costo por resultado exacto incluye todos los tokens de entrada y salida, también los de los intentos fallidos y los reintentos.",
         "Every format got the same synthetic Spanish tasks and known columns. Cost per exact result includes all input and output tokens, including failed attempts and retries."
     )}</p>
-    {tabla_nube("single_row_recheck", a("Una fila · 4 repeticiones del caso original", "One row · 4 repeats of the original case"), abierta=True)}
+    <div id="lotes-texto">{tabla_nube("projected_text_batches", titulo_texto, abierta=True)}</div>
+    {tabla_nube("single_row_recheck", a("Una fila · 4 repeticiones del caso original", "One row · 4 repeats of the original case"))}
     {tabla_nube("single_pair_confirmation", a("Una fila con dos campos de texto · 16 pruebas", "One row with two text fields · 16 trials"))}
     {tabla_nube("single_row", a("Una fila · 12 casos del ensayo anterior", "One row · 12 cases from the previous trial"))}
     {tabla_nube("small_batch", a("De 2 a 8 filas · 8 lotes", "2 to 8 rows · 8 batches"))}

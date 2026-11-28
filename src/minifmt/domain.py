@@ -1503,8 +1503,8 @@ def encode_rows(value, contract=None, *, last_text_field, allow_nullable=False,
     return "\n".join(lines)
 
 
-def _csv_pair_eligible(fields, projected, expected_records):
-    return (expected_records == 1 and len(projected) == 2 and len(fields) > len(projected)
+def _projected_text_pair(fields, projected):
+    return (len(projected) == 2 and len(fields) > len(projected)
             and all(field["schema"]["type"] == "string" and re.fullmatch(r"[\w-]+", field["name"])
                     for field in projected))
 
@@ -1523,8 +1523,31 @@ def _from_csv_pair(text):
     return " ".join(_json(value) for value in rows[0])
 
 
+def _decode_jsonl_pair(text, projected, known_rows, expected_records):
+    body = text.removeprefix("\ufeff").strip(" \t\r\n")
+    fence = re.fullmatch(r"```(?:jsonl?|mini|text)?[ \t]*\r?\n([\s\S]*?)\r?\n```", body)
+    if fence:
+        body = fence[1]
+    lines = [(number, line) for number, line in enumerate(body.split("\n"), 1) if line.strip(" \t\r")]
+    if len(lines) != expected_records:
+        raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(lines)}")
+    schema = {"type": "object", "fields": projected}
+    rows = []
+    for position, (number, line) in enumerate(lines):
+        try:
+            value = _strict_json(line)
+        except (ValueError, RecursionError) as exc:
+            raise DomainError("D_VALUE", "use one JSON array per line", line=number) from exc
+        try:
+            projected_row = _unpack(value, schema, f"$/{position}")
+        except DomainError as exc:
+            raise DomainError(exc.code, exc.message, exc.path, number) from exc
+        rows.append({**known_rows[position], **projected_row})
+    return rows
+
+
 def decode_rows(text, contract=None, *, last_text_field, expected_records, known_rows=None,
-                allow_nullable=False, allow_wrapped=False, compact_bools=False, csv_pair=False):
+                allow_nullable=False, allow_wrapped=False, compact_bools=False, csv_pair=False, jsonl_pair=False):
     """Validate compact model rows and restore the application JSON values."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
@@ -1534,9 +1557,11 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records, known
     supplied = [field for field in fields if field["name"] in known_names]
     if not isinstance(text, str):
         raise DomainError("D_VALUE", "compact rows must be text")
-    if (csv_pair and not (allow_nullable or allow_wrapped or compact_bools)
-            and _csv_pair_eligible(fields, projected, expected_records)):
-        text = _from_csv_pair(text)
+    if not (allow_nullable or allow_wrapped or compact_bools) and _projected_text_pair(fields, projected):
+        if jsonl_pair and 25 <= expected_records <= 48:
+            return _decode_jsonl_pair(text, projected, known_rows, expected_records)
+        if csv_pair and expected_records == 1:
+            text = _from_csv_pair(text)
     text = text.removeprefix("\ufeff").replace("\r\n", "\n").strip("\n")
     fence = re.fullmatch(r"```(?:mini|text)?[ \t]*\n([\s\S]*?)\n```", text)
     if fence:
@@ -1598,7 +1623,7 @@ def decode_rows(text, contract=None, *, last_text_field, expected_records, known
 
 
 def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", known_rows=None,
-                     allow_nullable=False, allow_wrapped=False, compact_bools=False, csv_pair=True):
+                     allow_nullable=False, allow_wrapped=False, compact_bools=False, csv_pair=True, jsonl_pair=False):
     """Describe compact rows without sending the document header or schema JSON."""
     contract = _contract(contract)
     fields = _compact_fields(contract, last_text_field, allow_nullable=allow_nullable, allow_wrapped=allow_wrapped)
@@ -1610,13 +1635,15 @@ def make_rows_prompt(contract, *, last_text_field, expected_records, lang="en", 
     if (has_projection and lang == "es" and not (allow_nullable or allow_wrapped or compact_bools)
             and all(kind in scalar_labels and re.fullmatch(r"[\w-]+", field["name"])
                     for field, kind in zip(projected, kinds))):
+        names = ",".join(field["name"] for field in projected)
+        if jsonl_pair and 25 <= expected_records <= 48 and _projected_text_pair(fields, projected):
+            return f"{expected_records} filas en orden {names}. Cada línea es un array JSON sin claves; sin array exterior.\n"
         if expected_records <= 24:
-            names = ",".join(field["name"] for field in projected)
             if len(projected) == 1:
                 if expected_records == 1:
                     return f'Una cadena JSON con solo el valor de {names}. Formato: "un valor".\n'
                 return f'{expected_records} cadenas JSON en orden de {names}, una por línea. Formato: "un valor".\n'
-            if csv_pair and _csv_pair_eligible(fields, projected, expected_records):
+            if csv_pair and expected_records == 1 and _projected_text_pair(fields, projected):
                 return f"Una fila CSV sin cabecera: {names}. Duplica comillas; \\ literal.\n"
             if expected_records > 1 and len(kinds) >= 3 and all(kind == "string" for kind in kinds):
                 example = " ".join(["grupo"] * (len(kinds) - 1) + ["Revisar cuenta"])

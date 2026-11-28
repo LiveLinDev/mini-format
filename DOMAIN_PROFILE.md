@@ -134,6 +134,11 @@ shows an example in column order. If one field remains, it asks for one JSON
 string per row. When comparing against JSON or CSV, include the instructions,
 reply, and retries through exact recovery.
 
+For 25 to 48 rows with two text fields left to generate, the Spanish workflow
+requests one JSON array per line. This keeps spaces inside either field without
+moving part of a value to the following column. The toolkit validates both
+strings and restores the known fields before returning JSON.
+
 For one row with two text fields remaining, the Spanish workflow can request a
 compact CSV row. It uses space-separated JSON strings when the task contains
 escape sequences other than quotes. Both paths validate the result, restore
