@@ -185,6 +185,13 @@ saltos de línea. Para un registro, `r` es una cadena. En Node usa
 `allowedValues`. El callback entrega el esquema al proveedor igual que
 `run_columnar`.
 
+Usa `reuse_schema=True` en Python o `reuseSchema: true` en Node para enviar el
+mismo esquema cuando cambia el número de filas. Conserva el orden de las
+opciones y los mismos campos proyectados para que el proveedor pueda reutilizar
+su caché. En ese modo, `r` siempre es un array y el SDK valida la cantidad
+exacta de filas antes de devolver el JSON. Regenera el toolkit con la versión
+actual para usar esta opción.
+
 ## Transporte compacto de JSON existente
 
 `minifmt.transport.dumps(objeto, count=contador)` elige la representación de

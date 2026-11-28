@@ -1878,24 +1878,31 @@ def _native_row_spec(contract, expected_records, last_text_field, known_rows, al
 
 
 def native_rows_json_request(task, contract=None, *, expected_records, last_text_field, lang="en",
-                             known_rows=None, allowed_values=None):
+                             known_rows=None, allowed_values=None, reuse_schema=False):
     """Build a strict provider schema that keeps each compact row in one string."""
     atoms, pattern = _native_row_spec(_contract(contract), expected_records, last_text_field, known_rows, allowed_values)
     item = {"type": "string", "pattern": pattern}
-    rows = item if expected_records == 1 else {
-        "type": "array", "items": item, "minItems": expected_records, "maxItems": expected_records,
-    }
     columns = ", ".join([*atoms, last_text_field])
-    instruction = (f"En r, escribe cada fila como {columns}, con un espacio entre campos. Copia {last_text_field} literalmente."
-                   if lang == "es" else
-                   f"In r, write each row as {columns}, with one space between fields. Copy {last_text_field} verbatim.")
+    if reuse_schema:
+        rows = {"type": "array", "items": item}
+        plural = "s" if expected_records != 1 else ""
+        instruction = (f"En r, genera {expected_records} fila{plural} en orden como {columns}, con un espacio entre campos."
+                       if lang == "es" else
+                       f"In r, write {expected_records} row{plural} in order as {columns}, with one space between fields.")
+    else:
+        rows = item if expected_records == 1 else {
+            "type": "array", "items": item, "minItems": expected_records, "maxItems": expected_records,
+        }
+        instruction = (f"En r, escribe cada fila como {columns}, con un espacio entre campos. Copia {last_text_field} literalmente."
+                       if lang == "es" else
+                       f"In r, write each row as {columns}, with one space between fields. Copy {last_text_field} verbatim.")
     return {"prompt": task + "\n" + instruction,
             "schema": {"type": "object", "properties": {"r": rows}, "required": ["r"],
                        "additionalProperties": False}}
 
 
 def decode_native_rows_json(text, contract=None, *, expected_records, last_text_field, known_rows=None,
-                            allowed_values=None):
+                            allowed_values=None, reuse_schema=False):
     """Validate native row strings and restore any application-owned fields."""
     contract = _contract(contract)
     atoms, pattern = _native_row_spec(contract, expected_records, last_text_field, known_rows, allowed_values)
@@ -1905,7 +1912,7 @@ def decode_native_rows_json(text, contract=None, *, expected_records, last_text_
         raise DomainError("D_VALUE", f"invalid native row JSON: {error}") from error
     if not isinstance(value, dict) or value.keys() != {"r"}:
         raise DomainError("D_TYPE", "native row JSON must contain exactly the r field")
-    rows = [value["r"]] if expected_records == 1 else value["r"]
+    rows = [value["r"]] if expected_records == 1 and not reuse_schema else value["r"]
     if not isinstance(rows, list) or len(rows) != expected_records:
         raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} rows in r")
     matcher = re.compile(pattern)

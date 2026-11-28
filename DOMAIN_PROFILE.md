@@ -182,6 +182,12 @@ line breaks. For a single record, `r` is a string. In Node, call `runNativeRows`
 with `expectedRecords`, `lastTextField`, `knownRows`, and `allowedValues`.
 Pass the schema to the provider from the callback as in `run_columnar`.
 
+Use `reuse_schema=True` in Python or `reuseSchema: true` in Node to send the
+same schema when the row count changes. Keep the order of the allowed values
+and the same projected fields so the provider can reuse its cache. In this
+mode, `r` is always an array and the SDK validates the exact row count before
+returning JSON. Regenerate the toolkit with the current package to use it.
+
 ## Compact transport for existing JSON
 
 `minifmt.transport.dumps(value, count=counter)` chooses the lowest-cost

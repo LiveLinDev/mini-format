@@ -552,11 +552,13 @@ class Workflow:
                                      allowed_values=allowed_values)
 
     def run_native_rows(self, generate, task, *, expected_records, last_text_field,
-                        known_rows=None, allowed_values=None, max_repairs=1):
+                        known_rows=None, allowed_values=None, reuse_schema=False, max_repairs=1):
         """Generate compact row strings through a provider's native JSON schema."""
+        # Bundles created before schema reuse expect the original argument list.
+        reuse = {"reuse_schema": True} if reuse_schema else {}
         return self._run_native_json(generate, task, self.runtime.native_rows_json_request, self._process_native_rows,
                                      max_repairs, expected_records=expected_records, last_text_field=last_text_field,
-                                     known_rows=known_rows, allowed_values=allowed_values)
+                                     known_rows=known_rows, allowed_values=allowed_values, **reuse)
 
     def _run_native_json(self, generate, task, make_request, process, max_repairs, **options):
         if max_repairs not in (0, 1, 2, 3):
@@ -757,6 +759,8 @@ def main(argv=None):
                 if args.native_rows_request:
                     make_request = workflow.runtime.native_rows_json_request
                     options["last_text_field"] = args.last_text_field
+                    if packet.get("reuse_schema"):
+                        options["reuse_schema"] = True
                 request = make_request(packet["task"], workflow.contract, **options)
         except ValueError as exc:
             ap.error(str(exc))
@@ -775,11 +779,13 @@ def main(argv=None):
     task = ""
     known_rows = None
     allowed_values = None
+    reuse_schema = False
     if args.envelope:
         envelope = json.loads(text)
         text, correction = envelope["text"], envelope.get("correction")
         known_rows = envelope.get("known_rows")
         allowed_values = envelope.get("allowed_values")
+        reuse_schema = envelope.get("reuse_schema", False)
         task = envelope.get("task", "")
         if known_rows is not None and args.last_text_field is None and not args.columnar_json:
             ap.error("known_rows requires --last-text-field or --columnar-json")
@@ -790,9 +796,10 @@ def main(argv=None):
         elif args.columnar_json:
             data = workflow._process_columnar(text, args.expected_records, known_rows, allowed_values, retry=generate)
         elif args.native_rows_json:
+            reuse = {"reuse_schema": True} if reuse_schema else {}
             data = workflow._process_native_rows(text, last_text_field=args.last_text_field, retry=generate,
                                                  expected_records=args.expected_records, known_rows=known_rows,
-                                                 allowed_values=allowed_values)
+                                                 allowed_values=allowed_values, **reuse)
         elif args.last_text_field is None:
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:

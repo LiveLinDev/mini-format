@@ -121,6 +121,7 @@ def test_validacion_publica_costos_de_nube_y_respeta_cero_aciertos():
     assert "14 de 14 lotes exactos" in nube and "TOON 4.4 acertó 10 de 14" in nube
     assert "Sin exactas" in nube and "/source/benchmark/public/cloud_results.json" in nube
     assert 'id="esquema-nativo"' in nube and "JSON nativo sin repetir IDs" in nube
+    assert 'id="reuso-esquema"' in nube and ".mini con esquema reutilizado" in nube
     assert 'id="lectura-en-nube"' in entrada and "Tokens del prompt inicial" in entrada
     assert "Tokenfold 0.6.0" in entrada and "BPP 0.4.0" in entrada
     assert 'id="transporte-adaptativo"' in entrada and "TERSE 0.1" in entrada

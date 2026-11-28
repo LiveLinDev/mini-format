@@ -103,16 +103,16 @@ export class Workflow {
     return this.#runNative(generate, task, { expectedRecords, maxRepairs, knownRows, allowedValues, mode: 'columnar' });
   }
 
-  async runNativeRows(generate, task, { expectedRecords, lastTextField, maxRepairs = 1, knownRows, allowedValues } = {}) {
+  async runNativeRows(generate, task, { expectedRecords, lastTextField, maxRepairs = 1, knownRows, allowedValues, reuseSchema } = {}) {
     if (typeof lastTextField !== 'string') throw Error('native rows require lastTextField');
     return this.#runNative(generate, task,
-      { expectedRecords, maxRepairs, knownRows, allowedValues, lastTextField, mode: 'native-rows' });
+      { expectedRecords, maxRepairs, knownRows, allowedValues, lastTextField, reuseSchema, mode: 'native-rows' });
   }
 
-  async #runNative(generate, task, { expectedRecords, maxRepairs, knownRows, allowedValues, lastTextField, mode }) {
+  async #runNative(generate, task, { expectedRecords, maxRepairs, knownRows, allowedValues, lastTextField, reuseSchema, mode }) {
     if (![0, 1].includes(maxRepairs)) throw Error('maxRepairs must be 0 or 1');
     if (!Number.isInteger(expectedRecords) || expectedRecords < 0) throw Error('invalid expectedRecords');
-    const context = structuredClone({ known_rows: knownRows, allowed_values: allowedValues });
+    const context = structuredClone({ known_rows: knownRows, allowed_values: allowedValues, reuse_schema: reuseSchema });
     const args = [`--${mode}-request`, '--envelope', '--expected-records', String(expectedRecords)];
     if (lastTextField !== undefined) args.push(`--last-text-field=${lastTextField}`);
     if (this.lang) args.push('--lang', this.lang);

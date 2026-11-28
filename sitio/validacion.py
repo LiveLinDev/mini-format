@@ -72,19 +72,21 @@ def resultados_nube(ctx):
     nombres_nuevos = {**nombres,
         "mini_columnar": a(".mini por columnas", ".mini columnar"),
         "mini_native_rows": a(".mini por filas", ".mini native rows"),
+        "mini_reused_rows": a(".mini con esquema reutilizado", ".mini with schema reuse"),
         "json_schema": a("JSON nativo por registro", "Native JSON by record"),
         "json_schema_projected": a("JSON nativo sin repetir IDs", "Native JSON with IDs omitted"),
     }
 
-    def tabla_telemetria(clave, titulo, orden, *, lectura=False, detalle=False):
+    def tabla_telemetria(clave, titulo, orden, *, lectura=False, detalle=False, cache=False):
         formatos = ensayos[clave]["formats"]
+        mostrar_cache = detalle or cache
         encabezados = [a("Formato", "Format"), a("Aciertos", "Exact results"), a("Reintentos", "Retries")]
         if lectura:
             encabezados.append(a("Tokens del prompt inicial", "Initial prompt tokens"))
         if detalle:
             encabezados.extend((a("Entrada", "Input"), a("Salida", "Output")))
         encabezados.append(a("USD/1.000 aciertos", "USD/1,000 exact results"))
-        if detalle:
+        if mostrar_cache:
             encabezados.append(a("USD/1.000 con caché", "USD/1,000 with cache"))
         filas = []
         for clave_formato in orden:
@@ -94,7 +96,7 @@ def resultados_nube(ctx):
                 celdas.append(numero(r["prompt_tokens"]))
             if detalle:
                 celdas.extend((numero(r["input_tokens"]), numero(r["output_tokens"])))
-            for con_cache in ((False, True) if detalle else (False,)):
+            for con_cache in ((False, True) if mostrar_cache else (False,)):
                 costo = costo_telemetria_por_mil(r, tarifas, con_cache=con_cache)
                 celdas.append(numero(costo, 4) if costo is not None else "—")
             filas.append(f'<tr><th scope="row">{nombres_nuevos[clave_formato]}</th>'
@@ -126,6 +128,22 @@ def resultados_nube(ctx):
     salida_filas = 100 * (1 - nuevas_filas["output_tokens"] / control_filas["output_tokens"])
     titulo_filas = a("Filas .mini con esquema nativo", ".mini rows with a native schema")
     orden_filas = ("mini_native_rows", "mini_columnar", "json_schema_projected")
+    reuso = ensayos["native_rows_reuse_confirmation"]["formats"]
+    costo_reuso = costo_telemetria_por_mil(reuso["mini_reused_rows"], tarifas, con_cache=True)
+    ahorro_reuso = 100 * (1 - costo_reuso / costo_telemetria_por_mil(reuso["json_schema_projected"], tarifas, con_cache=True))
+    ahorro_reuso_es = f"{ahorro_reuso:.1f}".replace(".", ",")
+    exactas_reuso = reuso["mini_reused_rows"]["exact"]
+    total_reuso = reuso["mini_reused_rows"]["trials"]
+    titulo_reuso = a("Reutilizar el esquema entre lotes", "Reuse the schema across batches")
+    orden_reuso = ("mini_reused_rows", "mini_native_rows", "json_schema_projected")
+    filas_reuso = f'''<details class="disclosure val-run" id="reuso-esquema">
+      <summary>{titulo_reuso}</summary>
+      <p>{a(f"El mismo esquema sirvió para lotes de 1 a 32 tickets. .mini acertó {exactas_reuso} de {total_reuso} tareas y costó {ahorro_reuso_es} % menos por acierto que JSON nativo con la caché observada.",
+             f"The same schema worked for batches of 1–32 tickets. .mini got {exactas_reuso} of {total_reuso} tasks right and cost {ahorro_reuso:.1f}% less per correct answer than native JSON with the observed cache.")}</p>
+      {tabla_telemetria("native_rows_reuse_confirmation", titulo_reuso, orden_reuso, cache=True)}
+      <p class="val-method">{a("Estimación con GPT-6 Luna. Incluye todos los tokens de entrada, salida y reintentos que reportó Codex. El SDK valida la cantidad de filas en cada respuesta.",
+                               "Estimate with GPT-6 Luna. It includes all input, output, and retry tokens reported by Codex. The SDK checks the row count in every response.")}</p>
+    </details>'''
     filas_nativas = f'''<details class="disclosure val-run" id="filas-nativas">
       <summary>{titulo_filas}</summary>
       <p>{a(f"Con GPT-6 Luna, .mini acertó {nuevas_filas['exact']} de {nuevas_filas['trials']} tareas y usó {numero(salida_filas, 1)} % menos tokens de salida que JSON nativo sin repetir IDs. El costo por acierto bajó {numero(costo_filas, 1)} % a tarifa sin caché.",
@@ -143,6 +161,7 @@ def resultados_nube(ctx):
              f"A single row cost about the same. In batches of 8–32 rows, .mini columnar cost {ahorro_lotes:.1f}% less than native JSON by record.")}</p>
       <p class="val-method">{a("Mismo GPT-6 Luna en la nube, de 1 a 32 tickets por tarea y hasta dos intentos. La tabla usa la tarifa de API sin descuento de caché y cuenta todos los tokens reportados, incluido el contexto de Codex.",
                                "Same cloud GPT-6 Luna, 1–32 tickets per task, and up to two attempts. The table uses API rates without a cache discount and includes all reported tokens, including Codex context.")}</p>
+      {filas_reuso}
       {filas_nativas}
       <details class="disclosure val-run"><summary>{titulo_tokens}</summary>
         {tabla_telemetria("columnar_confirmation", titulo_tokens, orden_nativo, detalle=True)}</details>

@@ -83,6 +83,7 @@ variantes proyectadas restauraron los IDs a partir del contexto de la aplicació
 ```sh
 python benchmark/public/run_native_schema.py --out output/nativo --start 60 --cases 12 --arms mini_columnar mini json_schema json_schema_projected --compact-single --literal-codes
 python benchmark/public/run_native_schema.py --out output/filas-nativas --start 84 --cases 12 --workers 4 --arms mini_native_rows mini_columnar json_schema_projected --compact-single --literal-codes
+python benchmark/public/run_native_schema.py --out output/reuso-esquema --start 192 --cases 18 --workers 3 --arms mini_reused_rows mini_native_rows json_schema_projected --compact-single --literal-codes
 npm install --prefix output/toon-44 @toon-format/toon@4.4.0
 python benchmark/public/run_cloud_reading.py --out output/lectura --toon-module output/toon-44/node_modules/@toon-format/toon/dist/index.mjs --model-table --start 48 --cases 12
 ```
@@ -92,6 +93,10 @@ exactos. Se publica la estimación con la tarifa normal de entrada y con el
 caché observado. Ambas cuentan todo el contexto reportado por Codex. Los
 tokens del prompt inicial de lectura cuentan la tarea, la explicación y el
 documento. Los tres formatos usan el mismo esquema de respuesta.
+
+En `mini_reused_rows`, el esquema es idéntico para todos los recuentos del
+ensayo. El SDK sigue validando la cantidad exacta antes de entregar el JSON.
+La medición con caché refleja los aciertos que reportó Codex en cada formato.
 
 ## Muestras nuevas
 

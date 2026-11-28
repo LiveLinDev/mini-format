@@ -1113,42 +1113,46 @@ console.log(JSON.stringify(data));
     assert json.loads(result.stdout) == sample[:1]
 
 
-def test_native_rows_workflow_and_node_retry_preserve_text(tmp_path):
+@pytest.mark.parametrize("reuse_schema", [False, True])
+def test_native_rows_workflow_and_node_retry_preserve_text(tmp_path, reuse_schema):
     sample = [{"id": 1, "categoria": "pago", "titulo": '  "Factura"\nNueva  '},
               {"id": 2, "categoria": "cuenta", "titulo": ""}]
+    if reuse_schema:
+        sample = sample[:1]
     bundle = tmp_path / "kit"
     contract = build_bundle([sample], "ticket", bundle, lang="es")
     flow = Workflow(bundle)
     known = [{"id": row["id"]} for row in sample]
     allowed = {"categoria": ["pago", "cuenta"]}
-    invalid = json.dumps({"r": ["pago Factura", "otra "]})
+    invalid = json.dumps({"r": [] if reuse_schema else ["pago Factura", "otra "]})
     valid = json.dumps({"r": [row["categoria"] + " " + row["titulo"] for row in sample]})
+    options = {"expected_records": len(sample), "last_text_field": "titulo", "known_rows": known,
+               "allowed_values": allowed, "reuse_schema": reuse_schema}
     calls = []
 
     def generate(prompt, schema):
         calls.append((prompt, schema))
         return invalid if len(calls) == 1 else valid
 
-    assert flow.run_native_rows(generate, "Procesa los tickets", expected_records=2, last_text_field="titulo",
-                                known_rows=known, allowed_values=allowed) == sample
+    assert flow.run_native_rows(generate, "Procesa los tickets", **options) == sample
     assert flow.last_run["native_rows_json"] is True
     assert calls[0][1] == calls[1][1]
     assert len(calls) == 2 and len(calls[1][0]) > len(calls[0][0])
     assert decode(flow.last_run["mini"], contract) == sample
     with pytest.raises(WorkflowError):
-        flow.run_native_rows(lambda *_: invalid, "Procesa los tickets", expected_records=2, last_text_field="titulo",
-                             known_rows=known, allowed_values=allowed, max_repairs=0)
+        flow.run_native_rows(lambda *_: invalid, "Procesa los tickets", max_repairs=0, **options)
 
     script = tmp_path / "native-rows.mjs"
     script.write_text(f'''import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
 const flow = new Workflow({{ lang: 'es', python: {json.dumps(sys.executable)} }});
 let calls = 0;
 const data = await flow.runNativeRows(async (prompt, schema) => {{
-  const items = schema.properties.r.items;
-  if (!new RegExp(items.pattern).test('cuenta ')) throw Error('wrong schema');
+  const rows = schema.properties.r;
+  if (!new RegExp(rows.items.pattern).test('cuenta ')) throw Error('wrong schema');
+  if (Object.hasOwn(rows, 'minItems') === {json.dumps(reuse_schema)}) throw Error('wrong count constraint');
   return ++calls === 1 ? {json.dumps(invalid)} : {json.dumps(valid)};
-}}, 'Procesa los tickets', {{ expectedRecords: 2, lastTextField: 'titulo',
-  knownRows: {json.dumps(known)}, allowedValues: {json.dumps(allowed)} }});
+}}, 'Procesa los tickets', {{ expectedRecords: {len(sample)}, lastTextField: 'titulo',
+  knownRows: {json.dumps(known)}, allowedValues: {json.dumps(allowed)}, reuseSchema: {json.dumps(reuse_schema)} }});
 if (calls !== 2 || !flow.lastRun.native_rows_json) throw Error('expected a native row retry');
 console.log(JSON.stringify(data));
 ''', encoding="utf-8")

@@ -65,6 +65,22 @@ class DomainTests(unittest.TestCase):
         with self.assertRaisesRegex(DomainError, "every generated field"):
             native_rows_json_request("Ticket lookup", contract, **dict(options, allowed_values={}))
 
+    def test_native_rows_reuse_schema_across_counts_and_check_count_locally(self):
+        sample = [{"id": 1, "kind": "pago", "title": "Factura"}]
+        contract = infer_contract([sample])
+        options = dict(last_text_field="title", allowed_values={"kind": ["pago"]}, reuse_schema=True)
+        one = dict(options, expected_records=1, known_rows=[{"id": 1}])
+        two = dict(options, expected_records=2, known_rows=[{"id": 7}, {"id": 9}])
+        first = native_rows_json_request("Ticket lookup", contract, **one)
+        second = native_rows_json_request("Revisa los tickets", contract, lang="es", **two)
+        self.assertEqual(first["schema"], second["schema"])
+        self.assertIn("write 1 row in order", first["prompt"])
+        self.assertIn("genera 2 filas", second["prompt"])
+        self.assertEqual(decode_native_rows_json('{"r":["pago Factura"]}', contract, **one), sample)
+        for reply in ('{"r":"pago Factura"}', '{"r":[]}', '{"r":["pago Factura","pago Otro"]}'):
+            with self.subTest(reply=reply), self.assertRaisesRegex(DomainError, "D_EXPECTED_COUNT"):
+                decode_native_rows_json(reply, contract, **one)
+
     def test_columnar_json_projects_known_fields_and_reconstructs_rows(self):
         expected = [{"id": 7, "title": "Pago", "value": 1.0}, {"id": 12, "title": "Acceso", "value": 2.5}]
         contract = infer_contract([expected])
