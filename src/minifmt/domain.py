@@ -1454,6 +1454,11 @@ def _bare_compact_text(value, *, is_tail=False):
     return True
 
 
+def _compact_text_cell(value, *, is_tail=False):
+    bare = _bare_compact_text(value, is_tail=is_tail) and (is_tail or " " not in value)
+    return value if bare else _json(value)
+
+
 def _recommend_compact_tail(samples, contract):
     fields = contract["schema"].get("items", {}).get("fields", [])
     names = [field["name"] for field in reversed(fields) if field["schema"]["type"] == "string"]
@@ -1496,9 +1501,7 @@ def encode_rows(value, contract=None, *, last_text_field, allow_nullable=False,
             elif compact_bools and field["schema"]["type"] == "boolean":
                 cells.append("1" if cell else "0")
             elif field["schema"]["type"] == "string":
-                is_tail = (field is fields[-1])
-                bare = _bare_compact_text(cell, is_tail=is_tail) and (is_tail or " " not in cell)
-                cells.append(cell if bare else _json(cell))
+                cells.append(_compact_text_cell(cell, is_tail=field is fields[-1]))
             else:
                 cells.append(_json(_pack(cell, field["schema"], f"$/{row_idx}/{field['name']}")))
         lines.append(" ".join(cells))
@@ -1785,12 +1788,7 @@ def decode_positional_json(text, contract=None, *, expected_records):
     return _unpack(value, contract["schema"])
 
 
-def _columnar_fields(contract, expected_records, known_rows, allowed_values):
-    _compact_count(expected_records)
-    fields = _project_compact_fields(_flat_required_fields(contract), known_rows, expected_records, keep_last=False)
-    projected = {field["name"]: field["schema"] for field in fields}
-    if not projected:
-        raise DomainError("D_COMPACT_SCHEMA", "columnar output needs at least one generated field")
+def _allowed_field_values(projected, allowed_values):
     allowed = {} if allowed_values is None else allowed_values
     if not isinstance(allowed, dict) or not allowed.keys() <= projected.keys():
         raise DomainError("D_COMPACT_SCHEMA", "allowed_values must name generated fields")
@@ -1801,7 +1799,16 @@ def _columnar_fields(contract, expected_records, known_rows, allowed_values):
             _pack(value, projected[name], name)
         if len(set(values)) != len(values):
             raise DomainError("D_COMPACT_SCHEMA", "allowed field values must be distinct", name)
-    return projected, allowed
+    return allowed
+
+
+def _columnar_fields(contract, expected_records, known_rows, allowed_values):
+    _compact_count(expected_records)
+    fields = _project_compact_fields(_flat_required_fields(contract), known_rows, expected_records, keep_last=False)
+    projected = {field["name"]: field["schema"] for field in fields}
+    if not projected:
+        raise DomainError("D_COMPACT_SCHEMA", "columnar output needs at least one generated field")
+    return projected, _allowed_field_values(projected, allowed_values)
 
 
 def columnar_json_request(task, contract=None, *, expected_records, lang="en", known_rows=None, allowed_values=None):
@@ -1846,6 +1853,77 @@ def decode_columnar_json(text, contract=None, *, expected_records, known_rows=No
             row[name] = value
     _pack(rows, contract["schema"])
     return rows
+
+
+def _native_row_spec(contract, expected_records, last_text_field, known_rows, allowed_values):
+    _compact_count(expected_records)
+    fields = _project_compact_fields(_compact_fields(contract, last_text_field), known_rows, expected_records)
+    prefix = {field["name"]: field["schema"] for field in fields[:-1]}
+    allowed = _allowed_field_values(prefix, allowed_values)
+    if allowed.keys() != prefix.keys():
+        raise DomainError("D_COMPACT_SCHEMA", "supply allowed values for every generated field before the final text field")
+
+    def escape(atom):
+        # Escape only syntax shared by Python and the provider's JSON Schema regex dialect.
+        return re.sub(r"([\\.^$*+?{}\[\]|()])", r"\\\1", atom)
+
+    atoms = {}
+    pattern = "^"
+    for name, field in prefix.items():
+        write = _compact_text_cell if field["type"] == "string" else _json
+        cells = {write(value): value for value in allowed[name]}
+        atoms[name] = cells
+        pattern += "(" + "|".join(map(escape, cells)) + ") "
+    return atoms, pattern + r"([\s\S]*)$"
+
+
+def native_rows_json_request(task, contract=None, *, expected_records, last_text_field, lang="en",
+                             known_rows=None, allowed_values=None):
+    """Build a strict provider schema that keeps each compact row in one string."""
+    atoms, pattern = _native_row_spec(_contract(contract), expected_records, last_text_field, known_rows, allowed_values)
+    item = {"type": "string", "pattern": pattern}
+    rows = item if expected_records == 1 else {
+        "type": "array", "items": item, "minItems": expected_records, "maxItems": expected_records,
+    }
+    columns = ", ".join([*atoms, last_text_field])
+    instruction = (f"En r, escribe cada fila como {columns}, con un espacio entre campos. Copia {last_text_field} literalmente."
+                   if lang == "es" else
+                   f"In r, write each row as {columns}, with one space between fields. Copy {last_text_field} verbatim.")
+    return {"prompt": task + "\n" + instruction,
+            "schema": {"type": "object", "properties": {"r": rows}, "required": ["r"],
+                       "additionalProperties": False}}
+
+
+def decode_native_rows_json(text, contract=None, *, expected_records, last_text_field, known_rows=None,
+                            allowed_values=None):
+    """Validate native row strings and restore any application-owned fields."""
+    contract = _contract(contract)
+    atoms, pattern = _native_row_spec(contract, expected_records, last_text_field, known_rows, allowed_values)
+    try:
+        value = _strict_json(text)
+    except (TypeError, ValueError, RecursionError) as error:
+        raise DomainError("D_VALUE", f"invalid native row JSON: {error}") from error
+    if not isinstance(value, dict) or value.keys() != {"r"}:
+        raise DomainError("D_TYPE", "native row JSON must contain exactly the r field")
+    rows = [value["r"]] if expected_records == 1 else value["r"]
+    if not isinstance(rows, list) or len(rows) != expected_records:
+        raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} rows in r")
+    matcher = re.compile(pattern)
+    data = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, str):
+            raise DomainError("D_TYPE", "each native row must be a string", f"$/r/{index}")
+        match = matcher.fullmatch(row)
+        if match is None:
+            raise DomainError("D_VALUE", "use the allowed column values followed by the literal text", f"$/r/{index}")
+        *cells, tail = match.groups()
+        record = {} if known_rows is None else dict(known_rows[index])
+        for (name, choices), cell in zip(atoms.items(), cells):
+            record[name] = choices[cell]
+        record[last_text_field] = tail
+        data.append(record)
+    _pack(data, contract["schema"])
+    return data
 
 
 # Wrappers load the adjacent parser.py by path: Windows builds of Python 3.9

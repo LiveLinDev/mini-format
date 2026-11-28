@@ -1111,3 +1111,47 @@ console.log(JSON.stringify(data));
     result = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout) == sample[:1]
+
+
+def test_native_rows_workflow_and_node_retry_preserve_text(tmp_path):
+    sample = [{"id": 1, "categoria": "pago", "titulo": '  "Factura"\nNueva  '},
+              {"id": 2, "categoria": "cuenta", "titulo": ""}]
+    bundle = tmp_path / "kit"
+    contract = build_bundle([sample], "ticket", bundle, lang="es")
+    flow = Workflow(bundle)
+    known = [{"id": row["id"]} for row in sample]
+    allowed = {"categoria": ["pago", "cuenta"]}
+    invalid = json.dumps({"r": ["pago Factura", "otra "]})
+    valid = json.dumps({"r": [row["categoria"] + " " + row["titulo"] for row in sample]})
+    calls = []
+
+    def generate(prompt, schema):
+        calls.append((prompt, schema))
+        return invalid if len(calls) == 1 else valid
+
+    assert flow.run_native_rows(generate, "Procesa los tickets", expected_records=2, last_text_field="titulo",
+                                known_rows=known, allowed_values=allowed) == sample
+    assert flow.last_run["native_rows_json"] is True
+    assert calls[0][1] == calls[1][1]
+    assert len(calls) == 2 and len(calls[1][0]) > len(calls[0][0])
+    assert decode(flow.last_run["mini"], contract) == sample
+    with pytest.raises(WorkflowError):
+        flow.run_native_rows(lambda *_: invalid, "Procesa los tickets", expected_records=2, last_text_field="titulo",
+                             known_rows=known, allowed_values=allowed, max_repairs=0)
+
+    script = tmp_path / "native-rows.mjs"
+    script.write_text(f'''import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{ lang: 'es', python: {json.dumps(sys.executable)} }});
+let calls = 0;
+const data = await flow.runNativeRows(async (prompt, schema) => {{
+  const items = schema.properties.r.items;
+  if (!new RegExp(items.pattern).test('cuenta ')) throw Error('wrong schema');
+  return ++calls === 1 ? {json.dumps(invalid)} : {json.dumps(valid)};
+}}, 'Procesa los tickets', {{ expectedRecords: 2, lastTextField: 'titulo',
+  knownRows: {json.dumps(known)}, allowedValues: {json.dumps(allowed)} }});
+if (calls !== 2 || !flow.lastRun.native_rows_json) throw Error('expected a native row retry');
+console.log(JSON.stringify(data));
+''', encoding="utf-8")
+    result = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == sample

@@ -71,6 +71,7 @@ def resultados_nube(ctx):
     tarifas = nuevo["price_usd_per_million"]
     nombres_nuevos = {**nombres,
         "mini_columnar": a(".mini por columnas", ".mini columnar"),
+        "mini_native_rows": a(".mini por filas", ".mini native rows"),
         "json_schema": a("JSON nativo por registro", "Native JSON by record"),
         "json_schema_projected": a("JSON nativo sin repetir IDs", "Native JSON with IDs omitted"),
     }
@@ -117,6 +118,22 @@ def resultados_nube(ctx):
     titulo_base = a("Primera prueba con filas .mini", "Initial run with .mini rows")
     titulo_tokens = a("Tokens reportados y caché", "Reported tokens and cache")
     orden_nativo = ("mini_columnar", "json_schema", "json_schema_projected", "mini")
+    medicion_filas = ensayos["native_rows_confirmation"]["formats"]
+    nuevas_filas = medicion_filas["mini_native_rows"]
+    control_filas = medicion_filas["json_schema_projected"]
+    costo_filas = 100 * (1 - costo_telemetria_por_mil(nuevas_filas, tarifas)
+                         / costo_telemetria_por_mil(control_filas, tarifas))
+    salida_filas = 100 * (1 - nuevas_filas["output_tokens"] / control_filas["output_tokens"])
+    titulo_filas = a("Filas .mini con esquema nativo", ".mini rows with a native schema")
+    orden_filas = ("mini_native_rows", "mini_columnar", "json_schema_projected")
+    filas_nativas = f'''<details class="disclosure val-run" id="filas-nativas">
+      <summary>{titulo_filas}</summary>
+      <p>{a(f"Con GPT-6 Luna, .mini acertó {nuevas_filas['exact']} de {nuevas_filas['trials']} tareas y usó {numero(salida_filas, 1)} % menos tokens de salida que JSON nativo sin repetir IDs. El costo por acierto bajó {numero(costo_filas, 1)} % a tarifa sin caché.",
+             f"With GPT-6 Luna, .mini got {nuevas_filas['exact']} of {nuevas_filas['trials']} tasks right and used {salida_filas:.1f}% fewer output tokens than native JSON with IDs omitted. Cost per correct answer fell {costo_filas:.1f}% at uncached rates.")}</p>
+      {tabla_telemetria("native_rows_confirmation", titulo_filas, orden_filas, detalle=True)}
+      <p class="val-method">{a("En el ensayo, JSON reutilizó más tokens de entrada y costó menos con la caché observada. Cada formato procesó los mismos tickets, de 1 a 32 por tarea.",
+                               "In this run, JSON reused more input tokens and cost less with the observed cache. Each format processed the same tickets, 1–32 per task.")}</p>
+    </details>'''
     nativo = f'''<details class="disclosure val-run" id="esquema-nativo">
       <summary>{titulo_nativo}</summary>
       <p>{a(f".mini por columnas acertó {exactas_col} de {total_col} tareas. Frente a JSON nativo por registro usó {salida_es} % menos tokens de salida y costó {diferencia_es} % menos por acierto.",
@@ -126,6 +143,7 @@ def resultados_nube(ctx):
              f"A single row cost about the same. In batches of 8–32 rows, .mini columnar cost {ahorro_lotes:.1f}% less than native JSON by record.")}</p>
       <p class="val-method">{a("Mismo GPT-6 Luna en la nube, de 1 a 32 tickets por tarea y hasta dos intentos. La tabla usa la tarifa de API sin descuento de caché y cuenta todos los tokens reportados, incluido el contexto de Codex.",
                                "Same cloud GPT-6 Luna, 1–32 tickets per task, and up to two attempts. The table uses API rates without a cache discount and includes all reported tokens, including Codex context.")}</p>
+      {filas_nativas}
       <details class="disclosure val-run"><summary>{titulo_tokens}</summary>
         {tabla_telemetria("columnar_confirmation", titulo_tokens, orden_nativo, detalle=True)}</details>
       <details class="disclosure val-run"><summary>{titulo_base}</summary>

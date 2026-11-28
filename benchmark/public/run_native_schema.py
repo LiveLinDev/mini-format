@@ -125,15 +125,14 @@ def generation(cloud, bundle, case, count, format_name, *, compact_single=False,
         return answer["reply"]
 
     parsed = None
-    if format_name in ("mini", "mini_columnar"):
+    if format_name in ("mini", "mini_columnar", "mini_native_rows"):
         flow = Workflow(bundle)
         options = {"expected_records": count, "known_rows": known}
-        if format_name == "mini_columnar":
-            run = flow.run_columnar
+        if format_name != "mini":
             options["allowed_values"] = {"categoria": list(CATEGORIES.values()), "prioridad": list(PRIORITIES.values())}
-        else:
-            run = flow.run
+        if format_name != "mini_columnar":
             options["last_text_field"] = "titulo"
+        run = {"mini": flow.run, "mini_columnar": flow.run_columnar, "mini_native_rows": flow.run_native_rows}[format_name]
         try:
             parsed = run(ask, task, max_repairs=ATTEMPTS - 1, **options)
             if parsed != expected and len(attempts) < ATTEMPTS:
@@ -181,7 +180,7 @@ def main():
     parser.add_argument("--cases", type=int, default=18, choices=range(3, 31, 3))
     parser.add_argument("--start", type=int, default=0)
     parser.add_argument("--workers", type=int, default=3, choices=range(1, 5))
-    parser.add_argument("--arms", nargs="+", choices=("mini", "json_schema", "json_schema_projected", "mini_columnar"),
+    parser.add_argument("--arms", nargs="+", choices=("mini", "json_schema", "json_schema_projected", "mini_columnar", "mini_native_rows"),
                         default=("mini", "json_schema", "json_schema_projected"))
     parser.add_argument("--compact-single", action="store_true", help="use a single native object for one-row controls")
     parser.add_argument("--literal-codes", action="store_true", help="require code mapping even if the title suggests a different category")

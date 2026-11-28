@@ -164,6 +164,27 @@ una vez con su lista de valores. Para un registro, los valores son escalares.
 opciones válidas por campo. El equivalente en Node es `runColumnar`, con
 `expectedRecords`, `knownRows` y `allowedValues`.
 
+### Filas compactas con esquema nativo
+
+Para registros planos con opciones conocidas y un campo de texto libre, usa un
+proveedor que admita `pattern` en su esquema. El modelo escribe cada fila como
+una sola cadena en `r` y la aplicación repone los IDs y valida los valores.
+
+```python
+data = flow.run_native_rows(
+    generate, tarea, expected_records=2, last_text_field="titulo",
+    known_rows=[{"id": 7}, {"id": 9}],
+    allowed_values={"estado": ["abierto", "cerrado"]},
+)
+```
+
+Declara las opciones de todos los campos que el modelo escribe antes del texto
+final. El texto ocupa el resto de la cadena, incluidos espacios, comillas y
+saltos de línea. Para un registro, `r` es una cadena. En Node usa
+`runNativeRows` con `expectedRecords`, `lastTextField`, `knownRows` y
+`allowedValues`. El callback entrega el esquema al proveedor igual que
+`run_columnar`.
+
 ## Transporte compacto de JSON existente
 
 `minifmt.transport.dumps(objeto, count=contador)` elige la representación de

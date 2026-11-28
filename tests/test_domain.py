@@ -7,6 +7,7 @@ import io
 import json
 import os
 import random
+import re
 import subprocess
 import sys
 import tempfile
@@ -18,12 +19,52 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from minifmt import cli
 from minifmt.domain import (DomainError, _strict_json, apply_replacements, build_bundle, columnar_json_request, decode,
-                            decode_columnar_json,
+                            decode_columnar_json, decode_native_rows_json,
                             decode_rows, diagnose, encode, encode_rows, infer_contract, json_schema,
-                            load_contract, make_prompt, make_rows_prompt, repair)
+                            load_contract, make_prompt, make_rows_prompt, native_rows_json_request, repair)
 
 
 class DomainTests(unittest.TestCase):
+    def test_native_rows_preserve_free_text_and_validate_typed_enum_prefixes(self):
+        expected = [{"id": 7, "kind": "uso (A)+", "confirmed": True, "title": '  "Pago"\nRevisión\t '},
+                    {"id": 9, "kind": "a|b.[2]", "confirmed": False, "title": ""}]
+        contract = infer_contract([expected])
+        known = [{"id": 7}, {"id": 9}]
+        allowed = {"confirmed": [True, False], "kind": ["uso (A)+", "a|b.[2]"]}
+        options = dict(last_text_field="title", known_rows=known, allowed_values=allowed, expected_records=2)
+        wire = ['"uso (A)+" true ' + expected[0]["title"], 'a|b.[2] false ']
+        request = native_rows_json_request("Ticket lookup", contract, **options)
+        self.assertIn("kind, confirmed, title", request["prompt"])
+        row_schema = request["schema"]["properties"]["r"]
+        self.assertEqual((row_schema["minItems"], row_schema["maxItems"]), (2, 2))
+        self.assertTrue(all(re.fullmatch(row_schema["items"]["pattern"], row) for row in wire))
+        self.assertEqual(decode_native_rows_json(json.dumps({"r": wire}), contract, **options), expected)
+
+        single = dict(options, known_rows=known[:1], expected_records=1)
+        self.assertEqual(native_rows_json_request("Tarea", contract, lang="es", **single)["schema"]["properties"]["r"]["type"],
+                         "string")
+        self.assertEqual(decode_native_rows_json(json.dumps({"r": wire[0]}), contract, **single), expected[:1])
+        self.assertEqual(decode_native_rows_json('{"r":[]}', contract, **dict(options, expected_records=0, known_rows=[],
+                                                                           allowed_values={"id": [7], **allowed})), [])
+
+    def test_native_rows_reject_bad_shape_and_out_of_contract_values(self):
+        contract = infer_contract([[{"kind": "pago", "title": "Factura"}]])
+        options = dict(expected_records=2, last_text_field="title", allowed_values={"kind": ["pago"]})
+        for reply, code in (
+            ('{"r":["pago Texto","pago "]', "D_VALUE"),
+            ('{"r":[],"r":[]}', "D_VALUE"),
+            ('{"r":[],"extra":1}', "D_TYPE"),
+            ('{"r":"pago Factura"}', "D_EXPECTED_COUNT"),
+            ('{"r":["pago Factura"]}', "D_EXPECTED_COUNT"),
+            ('{"r":["pago Factura",null]}', "D_TYPE"),
+            ('{"r":["pago Factura","otro Texto"]}', "D_VALUE"),
+        ):
+            with self.subTest(reply=reply), self.assertRaises(DomainError) as raised:
+                decode_native_rows_json(reply, contract, **options)
+            self.assertEqual(raised.exception.code, code)
+        with self.assertRaisesRegex(DomainError, "every generated field"):
+            native_rows_json_request("Ticket lookup", contract, **dict(options, allowed_values={}))
+
     def test_columnar_json_projects_known_fields_and_reconstructs_rows(self):
         expected = [{"id": 7, "title": "Pago", "value": 1.0}, {"id": 12, "title": "Acceso", "value": 2.5}]
         contract = infer_contract([expected])

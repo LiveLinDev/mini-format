@@ -530,27 +530,45 @@ class Workflow:
                                         max_repairs=max_repairs)
 
     def _process_columnar(self, text, expected_records, known_rows=None, allowed_values=None, *, retry=None, max_repairs=1):
+        return self._process_native_json(text, self.runtime.decode_columnar_json, "columnar_json",
+                                         retry=retry, max_repairs=max_repairs, expected_records=expected_records,
+                                         known_rows=known_rows, allowed_values=allowed_values)
+
+    def _process_native_rows(self, text, *, last_text_field, retry=None, max_repairs=1, **options):
+        return self._process_native_json(text, self.runtime.decode_native_rows_json, "native_rows_json",
+                                         retry=retry, max_repairs=max_repairs, last_text_field=last_text_field, **options)
+
+    def _process_native_json(self, text, decode, mode, *, retry, max_repairs, **options):
         def parse(reply):
             value, _ = _unwrap_json_reply(reply)
-            return self.runtime.decode_columnar_json(value, self.contract, expected_records=expected_records,
-                                                     known_rows=known_rows, allowed_values=allowed_values)
+            return decode(value, self.contract, **options)
 
-        return self._process_compact(text, parse, retry, max_repairs, {"columnar_json": True})
+        return self._process_compact(text, parse, retry, max_repairs, {mode: True})
 
     def run_columnar(self, generate, task, *, expected_records, known_rows=None, allowed_values=None, max_repairs=1):
         """Use a provider's native schema to generate columns and reconstruct exact rows."""
+        return self._run_native_json(generate, task, self.runtime.columnar_json_request, self._process_columnar,
+                                     max_repairs, expected_records=expected_records, known_rows=known_rows,
+                                     allowed_values=allowed_values)
+
+    def run_native_rows(self, generate, task, *, expected_records, last_text_field,
+                        known_rows=None, allowed_values=None, max_repairs=1):
+        """Generate compact row strings through a provider's native JSON schema."""
+        return self._run_native_json(generate, task, self.runtime.native_rows_json_request, self._process_native_rows,
+                                     max_repairs, expected_records=expected_records, last_text_field=last_text_field,
+                                     known_rows=known_rows, allowed_values=allowed_values)
+
+    def _run_native_json(self, generate, task, make_request, process, max_repairs, **options):
         if max_repairs not in (0, 1, 2, 3):
             raise ValueError("max_repairs must be between 0 and 3")
-        known_rows, allowed_values = copy.deepcopy((known_rows, allowed_values))
-        request = self.runtime.columnar_json_request(task, self.contract, expected_records=expected_records,
-                                                      known_rows=known_rows, allowed_values=allowed_values, lang=self.lang)
+        options = copy.deepcopy(options)
+        request = make_request(task, self.contract, lang=self.lang, **options)
         prompt, schema = request["prompt"], request["schema"]
 
         def retry(correction):
             return generate(prompt + "\n" + correction, schema)
 
-        return self._process_columnar(generate(prompt, schema), expected_records, known_rows, allowed_values,
-                                      retry=retry, max_repairs=max_repairs)
+        return process(generate(prompt, schema), retry=retry, max_repairs=max_repairs, **options)
 
     async def run_async(self, generate, task, *, expected_records=None, max_repairs=1):
         """Use the same validated pipeline with an asynchronous model callback."""
@@ -715,28 +733,35 @@ def main(argv=None):
     modes.add_argument("--positional-json", action="store_true", help="read compact positional JSON rows")
     modes.add_argument("--columnar-request", action="store_true", help="read the task and emit a columnar request schema")
     modes.add_argument("--columnar-json", action="store_true", help="read native JSON columns")
+    modes.add_argument("--native-rows-request", action="store_true", help="read the task and emit a native row request schema")
+    modes.add_argument("--native-rows-json", action="store_true", help="read compact rows inside native JSON")
     ap.add_argument("--lang", choices=("es", "en"))
     ap.add_argument("--report", action="store_true", help="return the complete run report instead of only data")
     ap.add_argument("--envelope", action="store_true", help="read a JSON envelope with the text and optional row context")
     args = ap.parse_args(argv)
     workflow = Workflow(lang=args.lang)
     text = sys.stdin.read() if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
-    if args.positional_request or args.positional_json or args.columnar_request or args.columnar_json:
-        if args.last_text_field is not None:
-            ap.error("native JSON does not use --last-text-field")
-        if args.positional_request or args.columnar_request:
-            try:
-                options = {"expected_records": args.expected_records, "lang": workflow.lang}
-                if args.columnar_request:
-                    packet = json.loads(text) if args.envelope else {"task": text}
-                    options.update(known_rows=packet.get("known_rows"), allowed_values=packet.get("allowed_values"))
-                    request = workflow.runtime.columnar_json_request(packet["task"], workflow.contract, **options)
-                else:
-                    request = workflow.runtime.positional_json_request(text, workflow.contract, **options)
-            except ValueError as exc:
-                ap.error(str(exc))
-            print(json.dumps(request, ensure_ascii=False))
-            return 0
+    if (args.positional_request or args.positional_json or args.columnar_request or args.columnar_json) and args.last_text_field is not None:
+        ap.error("positional and columnar JSON do not use --last-text-field")
+    if (args.native_rows_request or args.native_rows_json) and args.last_text_field is None:
+        ap.error("native rows require --last-text-field")
+    if args.positional_request or args.columnar_request or args.native_rows_request:
+        try:
+            options = {"expected_records": args.expected_records, "lang": workflow.lang}
+            if args.positional_request:
+                request = workflow.runtime.positional_json_request(text, workflow.contract, **options)
+            else:
+                packet = json.loads(text) if args.envelope else {"task": text}
+                options.update(known_rows=packet.get("known_rows"), allowed_values=packet.get("allowed_values"))
+                make_request = workflow.runtime.columnar_json_request
+                if args.native_rows_request:
+                    make_request = workflow.runtime.native_rows_json_request
+                    options["last_text_field"] = args.last_text_field
+                request = make_request(packet["task"], workflow.contract, **options)
+        except ValueError as exc:
+            ap.error(str(exc))
+        print(json.dumps(request, ensure_ascii=False))
+        return 0
     if args.rows_prompt:
         try:
             packet = json.loads(text) if args.envelope else {"task": text}
@@ -764,6 +789,10 @@ def main(argv=None):
             data = workflow._process_positional(text, args.expected_records, retry=generate)
         elif args.columnar_json:
             data = workflow._process_columnar(text, args.expected_records, known_rows, allowed_values, retry=generate)
+        elif args.native_rows_json:
+            data = workflow._process_native_rows(text, last_text_field=args.last_text_field, retry=generate,
+                                                 expected_records=args.expected_records, known_rows=known_rows,
+                                                 allowed_values=allowed_values)
         elif args.last_text_field is None:
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:

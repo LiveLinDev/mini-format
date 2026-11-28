@@ -162,6 +162,26 @@ once with its list of values. A single record uses scalars. `known_rows` restore
 application-owned fields, and `allowed_values` specifies valid field choices.
 In Node, call `runColumnar` with `expectedRecords`, `knownRows`, and `allowedValues`.
 
+### Compact rows with a native output schema
+
+For flat records with known choices and a free-text field, use a provider
+whose schema supports `pattern`. The model writes each row as a single string
+in `r`. The application restores IDs and validates the values.
+
+```python
+data = flow.run_native_rows(
+    generate, task, expected_records=2, last_text_field="title",
+    known_rows=[{"id": 7}, {"id": 9}],
+    allowed_values={"status": ["open", "closed"]},
+)
+```
+
+Declare the choices for every field the model writes before the final text
+field. The text takes up the rest of the string, including spaces, quotes, and
+line breaks. For a single record, `r` is a string. In Node, call `runNativeRows`
+with `expectedRecords`, `lastTextField`, `knownRows`, and `allowedValues`.
+Pass the schema to the provider from the callback as in `run_columnar`.
+
 ## Compact transport for existing JSON
 
 `minifmt.transport.dumps(value, count=counter)` chooses the lowest-cost

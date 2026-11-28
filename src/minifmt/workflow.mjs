@@ -56,17 +56,17 @@ export class Workflow {
     });
   }
 
-  async invoke(text, expectedRecords, correction, lastTextField, positionalJson = false, knownRows, task, columnar) {
+  async invoke(text, expectedRecords, correction, lastTextField, positionalJson = false, knownRows, task, native) {
     const args = ['--envelope', '--report'];
     if (expectedRecords !== undefined) args.push('--expected-records', String(expectedRecords));
     if (lastTextField !== undefined) {
       args.push(`--last-text-field=${lastTextField}`);
     }
     if (positionalJson) args.push('--positional-json');
-    if (columnar) args.push('--columnar-json');
-    if ((lastTextField !== undefined || positionalJson || columnar) && this.lang) args.push('--lang', this.lang);
+    if (native) args.push(`--${native.mode}-json`);
+    if ((lastTextField !== undefined || positionalJson || native) && this.lang) args.push('--lang', this.lang);
     const { code, stdout, stderr } = await this.runParser(args,
-      JSON.stringify({ text, correction, known_rows: knownRows, task, ...columnar }));
+      JSON.stringify({ text, correction, known_rows: knownRows, task, ...native?.context }));
     const report = JSON.parse(code === 0 ? stdout : stderr);
     this.lastRun = report;
     if (code !== 0) throw new WorkflowError(report);
@@ -100,29 +100,40 @@ export class Workflow {
   }
 
   async runColumnar(generate, task, { expectedRecords, maxRepairs = 1, knownRows, allowedValues } = {}) {
+    return this.#runNative(generate, task, { expectedRecords, maxRepairs, knownRows, allowedValues, mode: 'columnar' });
+  }
+
+  async runNativeRows(generate, task, { expectedRecords, lastTextField, maxRepairs = 1, knownRows, allowedValues } = {}) {
+    if (typeof lastTextField !== 'string') throw Error('native rows require lastTextField');
+    return this.#runNative(generate, task,
+      { expectedRecords, maxRepairs, knownRows, allowedValues, lastTextField, mode: 'native-rows' });
+  }
+
+  async #runNative(generate, task, { expectedRecords, maxRepairs, knownRows, allowedValues, lastTextField, mode }) {
     if (![0, 1].includes(maxRepairs)) throw Error('maxRepairs must be 0 or 1');
     if (!Number.isInteger(expectedRecords) || expectedRecords < 0) throw Error('invalid expectedRecords');
-    const columnar = structuredClone({ known_rows: knownRows, allowed_values: allowedValues });
-    const args = ['--columnar-request', '--envelope', '--expected-records', String(expectedRecords)];
+    const context = structuredClone({ known_rows: knownRows, allowed_values: allowedValues });
+    const args = [`--${mode}-request`, '--envelope', '--expected-records', String(expectedRecords)];
+    if (lastTextField !== undefined) args.push(`--last-text-field=${lastTextField}`);
     if (this.lang) args.push('--lang', this.lang);
-    const result = await this.runParser(args, JSON.stringify({ task, ...columnar }));
+    const result = await this.runParser(args, JSON.stringify({ task, ...context }));
     if (result.code !== 0) throw Error(result.stderr.trim());
     const { prompt, schema } = JSON.parse(result.stdout);
     return this.generateAndValidate(request => generate(request, schema), prompt,
-      { expectedRecords, maxRepairs, columnar });
+      { expectedRecords, maxRepairs, lastTextField, native: { mode, context } });
   }
 
-  async generateAndValidate(generate, prompt, { expectedRecords, maxRepairs, lastTextField, positionalJson = false, knownRows, task, columnar }) {
+  async generateAndValidate(generate, prompt, { expectedRecords, maxRepairs, lastTextField, positionalJson = false, knownRows, task, native }) {
     const text = await generate(prompt);
-    try { return await this.invoke(text, expectedRecords, undefined, lastTextField, positionalJson, knownRows, task, columnar); }
+    try { return await this.invoke(text, expectedRecords, undefined, lastTextField, positionalJson, knownRows, task, native); }
     catch (error) {
       if (!(error instanceof WorkflowError) || maxRepairs === 0) throw error;
       const diagnostic = error.report.diagnostics;
-      const request = lastTextField === undefined && !positionalJson && !columnar
+      const request = lastTextField === undefined && !positionalJson && !native
         ? `${prompt}\n\nOriginal response:\n${error.report.mini}\n\nCORRECTION REQUEST (overrides output format for this call):\n${diagnostic.repair_prompt}`
         : `${prompt}\n${diagnostic.repair_prompt}`;
       const correction = await generate(request);
-      return this.invoke(text, expectedRecords, correction, lastTextField, positionalJson, knownRows, task, columnar);
+      return this.invoke(text, expectedRecords, correction, lastTextField, positionalJson, knownRows, task, native);
     }
   }
 }

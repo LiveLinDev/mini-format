@@ -77,11 +77,12 @@ demuestran por sí solos que una IA genere correctamente.
 
 `native_schema_results.json` incluye cada tarea y los tokens reportados, hasta
 dos intentos por formato. Codex usó GPT-6 Luna con razonamiento desactivado.
-JSON nativo y `.mini` por columnas usaron `--output-schema`. Ambas variantes
-proyectadas recuperaron los IDs a partir del contexto de la aplicación.
+JSON nativo y `.mini` por columnas o filas usaron `--output-schema`. Las
+variantes proyectadas restauraron los IDs a partir del contexto de la aplicación.
 
 ```sh
 python benchmark/public/run_native_schema.py --out output/nativo --start 60 --cases 12 --arms mini_columnar mini json_schema json_schema_projected --compact-single --literal-codes
+python benchmark/public/run_native_schema.py --out output/filas-nativas --start 84 --cases 12 --workers 4 --arms mini_native_rows mini_columnar json_schema_projected --compact-single --literal-codes
 npm install --prefix output/toon-44 @toon-format/toon@4.4.0
 python benchmark/public/run_cloud_reading.py --out output/lectura --toon-module output/toon-44/node_modules/@toon-format/toon/dist/index.mjs --model-table --start 48 --cases 12
 ```
