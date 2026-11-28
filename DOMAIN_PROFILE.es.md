@@ -161,8 +161,9 @@ los tipos y las cantidades y guarda un documento `.mini` validado en el historia
 
 `minifmt.transport.dumps(objeto, count=contador)` elige la representación de
 menor costo entre JSON compacto, filas con contrato compacto y secciones
-tabulares. Las secuencias, valores constantes, grupos y fragmentos comunes se
-incluyen solo si reducen el conteo. `loads(texto)` reconstruye el JSON y puede
+tabulares. Una respuesta JSON con una tabla y metadatos puede usar el códec
+adaptativo mini-domain/2 o una sola sección tabular con secuencias de enteros.
+El conteo incluye el envoltorio y el contrato. `loads(texto)` reconstruye el JSON y puede
 validarlo con un contrato de dominio. Esta ruta sirve para preparar datos que
 la aplicación ya tiene.
 

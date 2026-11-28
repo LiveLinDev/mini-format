@@ -144,6 +144,23 @@ def resultados_nube(ctx):
         celdas = "".join(f'<td>{numero(conteos[clave])}</td>' for clave in perfiles)
         filas_corpus.append(f'<tr><th scope="row">{titulos[conjunto]}</th>{celdas}</tr>')
     comparacion = a("1.902 registros contando contratos", "1,902 records including contracts")
+    adaptativo = ctx.leer_json("benchmark/public/transport_results.json")["datasets"]
+    formatos_adaptativos = ("mini_previous", "mini", "csv", "toon_4_4", "terse_py", "gcf_python_2_8", "json_compact")
+    titulos_adaptativos = {**titulos, "quotes": a("Citas", "Quotes"), "todos": a("Tareas", "Todos"),
+                          "support": a("Tickets de soporte", "Support tickets")}
+    filas_adaptativas = []
+    for conjunto, detalle in adaptativo.items():
+        conteos = detalle["tokenizers"]["o200k_base"]
+        celdas = "".join(f'<td>{numero(conteos[clave]) if conteos[clave] is not None else "—"}</td>'
+                         for clave in formatos_adaptativos)
+        filas_adaptativas.append(f'<tr><th scope="row">{titulos_adaptativos[conjunto]}</th>{celdas}</tr>')
+    rotulos_adaptativos = (a("Conjunto", "Dataset"), nombres["mini_previous"], ".mini",
+                           "CSV", "TOON 4.4", "TERSE 0.1", "GCF 3.6", nombres["json_compact"])
+    titulo_adaptativo = a("Transporte de documentos completos", "Complete document transport")
+    resumen_adaptativo = a(
+        "Tokens con o200k_base para enviar datos que la aplicación ya tiene. Se cuentan los metadatos y los contratos requeridos. Los siete conjuntos se reconstruyeron por completo con cada formato.",
+        "Tokens with o200k_base for sending data the application already has. Metadata and required contracts are included. Every format reconstructed all seven datasets in full.",
+    )
     transport = f'''<details class="disclosure val-group" id="compresion-entrada">
     <summary>{a("Tamaño de los datos en tokens", "Data size in tokens")}</summary>
     <div class="val-body prose">
@@ -153,6 +170,12 @@ def resultados_nube(ctx):
     )}</p>
     {tabla(encabezados, filas, a("Tokens por documento", "Tokens per document"))}
     <p class="val-method">{a("El guion indica una combinación sin ensayo.", "A dash marks a combination that was not tested.")}</p>
+    <details class="disclosure val-run" id="transporte-adaptativo">
+      <summary>{titulo_adaptativo}</summary>
+      <p>{resumen_adaptativo}</p>
+      {tabla(rotulos_adaptativos, filas_adaptativas, titulo_adaptativo)}
+      <p><a href="/source/benchmark/public/transport_results.json">{a("Datos, versiones y dos tokenizadores", "Data, versions and both tokenizers")}</a></p>
+    </details>
     <details class="disclosure val-run"><summary>{comparacion}</summary>
       <p>{a(
           "La medición anterior de .mini, en el commit 69f0596, incluye los contratos o mapas de reconstrucción. Usó menos tokens que TOON 4.4.0 en los cuatro conjuntos. CSV ganó en los 500 comentarios.",

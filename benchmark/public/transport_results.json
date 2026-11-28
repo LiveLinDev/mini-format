@@ -1,0 +1,192 @@
+{
+  "measured_on": "2026-11-27",
+  "baseline_commit": "4c58288b95503b405428a7f5517fdd8dbd735f7d",
+  "source_sha256": {
+    "transport": "3467e9d2a9ca49247190e22a59c718c99efcf094e9251b4c025ee2588eda580f"
+  },
+  "metric": "tokens per full, exactly reversible document, including metadata and required sidecars",
+  "controls": {
+    "csv": "RFC 4180 with reversible flattening, metadata and schema",
+    "toon_4_4": "TOON 4.4.0, best of official raw and two reversible flattened profiles including the schema",
+    "terse_py": "TERSE Python 0.1.0 (7e23f099cee18e406235976f10fd40acabc864b8)",
+    "gcf_python_2_8": "GCF Python 2.8.0 (spec 3.6.0), default generic profile preserving list order",
+    "json_compact": "Compact JSON"
+  },
+  "datasets": {
+    "quotes": {
+      "source": "https://raw.githubusercontent.com/Ovi/DummyJSON/3d78fed5f35b7f1087db1c162edc412f2a736722/database/quotes.json",
+      "source_sha256": "182f62a151ec98bb363bda55619f151c804e0ef6e96f902bc5feda1475de78e4",
+      "records": 1454,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 34941,
+          "mini": 32057,
+          "json_compact": 46939,
+          "toon_4_4": 40679,
+          "terse_py": 41966,
+          "csv": 37821,
+          "gcf_python_2_8": 38565
+        },
+        "cl100k_base": {
+          "mini_previous": 35891,
+          "mini": 32470,
+          "json_compact": 47983,
+          "toon_4_4": 41684,
+          "terse_py": 43016,
+          "csv": 38821,
+          "gcf_python_2_8": 39624
+        }
+      }
+    },
+    "todos": {
+      "source": "https://raw.githubusercontent.com/Ovi/DummyJSON/3d78fed5f35b7f1087db1c162edc412f2a736722/database/todos.json",
+      "source_sha256": "49c1ff7b770548b229f6ca286c6fdfe97ce1a785ca0a5a7172b30b5a9bc9a084",
+      "records": 254,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 2460,
+          "mini": 2386,
+          "json_compact": 5428,
+          "toon_4_4": 3406,
+          "terse_py": 3653,
+          "csv": 2964,
+          "gcf_python_2_8": 3156
+        },
+        "cl100k_base": {
+          "mini_previous": 2490,
+          "mini": 2409,
+          "json_compact": 5206,
+          "toon_4_4": 3433,
+          "terse_py": 3685,
+          "csv": 2984,
+          "gcf_python_2_8": 3187
+        }
+      }
+    },
+    "comments": {
+      "source": "https://github.com/LiveLinDev/mini-format/blob/4c58288b95503b405428a7f5517fdd8dbd735f7d/benchmark/public/data/comments.json",
+      "source_sha256": "400a33270b7ae5f080e5eb48afdfae1fd7426fd50e385e5197bab811c20e611d",
+      "records": 500,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 28522,
+          "mini": 28522,
+          "json_compact": 35761,
+          "toon_4_4": 31014,
+          "terse_py": 31083,
+          "csv": 29951,
+          "gcf_python_2_8": 30273
+        },
+        "cl100k_base": {
+          "mini_previous": 34579,
+          "mini": 34579,
+          "json_compact": 41295,
+          "toon_4_4": 36966,
+          "terse_py": 37103,
+          "csv": 35959,
+          "gcf_python_2_8": 36272
+        }
+      }
+    },
+    "products": {
+      "source": "https://github.com/LiveLinDev/mini-format/blob/4c58288b95503b405428a7f5517fdd8dbd735f7d/benchmark/public/data/products.json",
+      "source_sha256": "d8528cbb47dedc9ddfd769d46dd1ee680b215f850fbf631fedb979be0f02fcab",
+      "records": 194,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 62807,
+          "mini": 60659,
+          "json_compact": 89310,
+          "toon_4_4": 69403,
+          "terse_py": 90010,
+          "csv": 68200,
+          "gcf_python_2_8": 72675
+        },
+        "cl100k_base": {
+          "mini_previous": 63965,
+          "mini": 61916,
+          "json_compact": 89502,
+          "toon_4_4": 70540,
+          "terse_py": 91063,
+          "csv": 69257,
+          "gcf_python_2_8": 73363
+        }
+      }
+    },
+    "users": {
+      "source": "https://github.com/LiveLinDev/mini-format/blob/4c58288b95503b405428a7f5517fdd8dbd735f7d/benchmark/public/data/users.json",
+      "source_sha256": "720aca17969bacdc43b223dec466cdca7934aaff114d8f0ff1397f14452fe136",
+      "records": 208,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 38442,
+          "mini": 38442,
+          "json_compact": 91251,
+          "toon_4_4": 60815,
+          "terse_py": 102089,
+          "csv": 60848,
+          "gcf_python_2_8": 61829
+        },
+        "cl100k_base": {
+          "mini_previous": 38677,
+          "mini": 38677,
+          "json_compact": 90122,
+          "toon_4_4": 60735,
+          "terse_py": 102163,
+          "csv": 60724,
+          "gcf_python_2_8": 62245
+        }
+      }
+    },
+    "earthquakes": {
+      "source": "https://github.com/LiveLinDev/mini-format/blob/4c58288b95503b405428a7f5517fdd8dbd735f7d/benchmark/public/data/earthquakes.json",
+      "source_sha256": "db96981889ce361ff9c89cb838f3210663794a02480200453645778e46770e0c",
+      "records": 1000,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 116289,
+          "mini": 116289,
+          "json_compact": 252527,
+          "toon_4_4": 174553,
+          "terse_py": 274111,
+          "csv": 171930,
+          "gcf_python_2_8": 189330
+        },
+        "cl100k_base": {
+          "mini_previous": 116965,
+          "mini": 116965,
+          "json_compact": 250798,
+          "toon_4_4": 175058,
+          "terse_py": 274380,
+          "csv": 172433,
+          "gcf_python_2_8": 189561
+        }
+      }
+    },
+    "support": {
+      "source": "https://github.com/LiveLinDev/mini-format/blob/4c58288b95503b405428a7f5517fdd8dbd735f7d/examples/flujo-soporte/expected.json",
+      "source_sha256": "4deab1649247aaf604866dcca5d76fb39ce041c063c7bcc32e981c6fd3a17488",
+      "records": 20,
+      "tokenizers": {
+        "o200k_base": {
+          "mini_previous": 185,
+          "mini": 185,
+          "json_compact": 443,
+          "toon_4_4": 304,
+          "terse_py": 267,
+          "csv": 332,
+          "gcf_python_2_8": 279
+        },
+        "cl100k_base": {
+          "mini_previous": 203,
+          "mini": 203,
+          "json_compact": 459,
+          "toon_4_4": 315,
+          "terse_py": 287,
+          "csv": 337,
+          "gcf_python_2_8": 295
+        }
+      }
+    }
+  }
+}

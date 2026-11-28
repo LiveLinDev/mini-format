@@ -52,6 +52,22 @@ def test_separate_tables_decode_with_no_out_of_band_state():
             transport.loads(bad)
 
 
+def test_transport_can_preserve_a_single_table_and_its_metadata_with_both_codecs():
+    rows = [{"id": 13 + index * 3, "owner": "Equipo norte", "text": f"Tarea de revisión {index}"}
+            for index in range(8)]
+    source = {"entries": rows, "skip": 12, "total": 30, "complete": False}
+    contract = domain.infer_contract([source])
+
+    def prefer_adaptive(text):
+        return 0 if text.startswith("=") and "|v=2.0|" in text.split("\n", 2)[1] else len(text)
+
+    adaptive = transport.dumps(source, contract, count=prefer_adaptive)
+    sections = transport.dumps(source, contract, count=lambda text: 0 if text.startswith("#") else len(text))
+    assert adaptive.startswith("=") and "|v=2.0|" in adaptive.splitlines()[1]
+    assert sections.startswith("#") and "^id=13:3 " in sections.splitlines()[1]
+    assert transport.loads(adaptive, contract) == transport.loads(sections, contract) == source
+
+
 def test_sequence_table_is_self_contained_and_keeps_scalar_types():
     rows = [{"sequence": 10 - index * 3, "note": note, "other": other, "flag": bool(index % 2)}
             for index, (note, other) in enumerate((

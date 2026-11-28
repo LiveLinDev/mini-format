@@ -160,8 +160,9 @@ checks types and counts and keeps a validated `.mini` document in the history.
 
 `minifmt.transport.dumps(value, count=counter)` chooses the lowest-cost
 representation among compact JSON, rows with a compact contract, and tabular
-sections. Sequences, constants, runs and common fragments appear only when
-they reduce the count. `loads(text)` reconstructs the JSON and can validate it
+sections. JSON responses with a table and metadata can use the adaptive
+mini-domain/2 codec or a single table section with integer sequences. The
+counter includes the wrapper and contract. `loads(text)` reconstructs the JSON and can validate it
 against a domain contract. Use this path for data the application already has.
 
 In tables of scalar values, the header can store the start and step of an

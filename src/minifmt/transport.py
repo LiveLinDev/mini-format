@@ -379,6 +379,9 @@ def _encode(value, contract, score, sections=True):
     mini = domain.encode(value, contract)
     positional = domain._json(domain._pack(value, contract["schema"]))
     options = [domain._json(value), "=" + schema_text + mini, "~" + schema_text + positional]
+    if contract["record_path"]:
+        adaptive = domain.encode_v2(value, contract, token_counter=score)
+        options.append("=" + schema_text + adaptive)
     if (rows := _best_rows(sidecar, mini, score)) is not None:
         options.append(rows)
     if (series := _series_rows(value)) is not None:
@@ -386,10 +389,15 @@ def _encode(value, contract, score, sections=True):
     options.extend(_tree(value, sep, score) for sep in ("\t", "|"))
     if sections and isinstance(value, dict):
         keys = [key for key, item in value.items() if _table_fields(item)]
+        parts = []
         if len(keys) >= 2:
             parts = [(key, _encode(value[key], domain.infer_contract([value[key]], prefix="rows"), score, False))
                      for key in keys]
-            base = {key: item for key, item in value.items() if key not in keys}
+        elif keys and (series := _series_rows(value[keys[0]])) is not None:
+            parts.append((keys[0], series))
+        if parts:
+            section_keys = {key for key, _ in parts}
+            base = {key: item for key, item in value.items() if key not in section_keys}
             header = [base, [[key, len(part)] for key, part in parts]]
             options.append("#" + domain._json(header) + "\n" + "".join(part for _, part in parts))
     return min(options, key=score)
