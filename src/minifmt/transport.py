@@ -474,7 +474,8 @@ def _read_model_block(body, *, implicit_strings=False, references=None):
 
 
 def _read_model_table(metadata, body):
-    name, rows = _read_model_block(body)
+    metadata = metadata.removesuffix("\r")
+    name, rows = _read_model_block(body.replace("\r\n", "\n"))
     if metadata == "":
         return rows
     root = domain._strict_json(metadata)

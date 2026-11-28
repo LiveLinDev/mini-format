@@ -111,12 +111,16 @@ def test_transport_cli_keeps_unicode_under_a_pipe():
 def test_model_table_has_explicit_ids_counts_and_lossless_text():
     rows = [{"id": 9 + index * 3, "ok": index % 2 == 0, "note": note}
             for index, note in enumerate(("Café listo", 'La pantalla muestra "error"', "", " línea\nsegunda ",
-                                           "true", "<html>", "texto más largo", "último caso"))]
+                                           "true", "<html>", "texto más largo", "último\r\ncaso"))]
     doc = {"team": "norte", "tickets": rows, "page": 2}
     wire = transport.dumps(doc, for_model=True)
     assert wire.startswith('+{"team":"norte","page":2}\ntickets[8] id:i ok:b note:s\n9 true Café listo')
     assert transport.loads(wire) == doc
-    assert transport.loads(transport.dumps(rows, for_model=True)) == rows
+    assert transport.loads(wire.replace("\n", "\r\n")) == doc
+    array_wire = transport.dumps(rows, text_refs=True)
+    assert array_wire.startswith("+\n")
+    assert transport.loads(array_wire) == rows
+    assert transport.loads(array_wire.replace("\n", "\r\n")) == rows
     for wrong in (wire.replace("tickets[8]", "tickets[7]"), wire.replace("ok:b", "id:b"),
                   wire.replace('"page":2', '"tickets":2')):
         with pytest.raises(domain.DomainError):
