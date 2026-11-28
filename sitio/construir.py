@@ -722,12 +722,12 @@ TRADUCCIONES = [
     ('<html lang="en">', '<html lang="es">'),
     ("<title>.mini Playground</title>", "<title>Playground — mini-format</title>"),
     # (las pestañas se traducen al sustituir la cabecera, más arriba)
-    ("Each line on the left is one support ticket. On the right, the parser turns it into a JSON object your application can use. Edit a value to see validation; “Inject errors” shows what gets rejected.",
-     "Cada línea de la izquierda es un ticket de soporte. A la derecha, el parser lo convierte a un objeto JSON para tu aplicación. Cambia un valor para comprobarlo; «Inyectar errores» muestra qué se rechaza."),
+    ("Edit a ticket in the .mini panel or inject errors to see what the validator rejects.",
+     "Edita un ticket en el panel .mini o inyecta errores para ver qué rechaza el validador."),
     ("<label>Contract <select", "<label>Contrato <select"),
     (">Load example<", ">Cargar ejemplo<"), (">Load escaping example<", ">Cargar ejemplo con escapes<"), (">Inject errors<", ">Inyectar errores<"),
-    ("<h2>1 · AI response in .mini</h2>", "<h2>1 · Respuesta de la IA en .mini</h2>"),
-    ("<h2>2 · JSON for your application</h2>", "<h2>2 · JSON para tu aplicación</h2>"),
+    ("<h2>Response .mini</h2>", "<h2>Respuesta .mini</h2>"),
+    ("<h2>Application JSON</h2>", "<h2>JSON para tu aplicación</h2>"),
     ('aria-label=".mini response"', 'aria-label="Respuesta .mini"'),
     ('aria-label="Application JSON"', 'aria-label="JSON para la aplicación"'),
     ('<summary>Field rules and AI instructions</summary>', '<summary>Reglas de los campos e instrucciones para la IA</summary>'),
@@ -776,8 +776,8 @@ def construir_playground() -> None:
   <button class="toggle" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
 </div></div>
 <main id="contenido">
-<div class="pg-intro"><div><h1>Playground</h1><p>''' + ambos('Prueba cómo una respuesta .mini se convierte a JSON. Después compara cuánto texto necesita cada formato.', 'Try converting a .mini response to JSON. Then compare how much text each format needs.') + '''</p><p class="note">''' + ambos('Práctica del formato base en tu navegador. Para conectar tu propio contrato generado por setup, sigue la', 'Base-format practice in your browser. To connect your own setup-generated contract, follow the') + ''' <a href="/docs/quickstart/">''' + ambos('guía de integración', 'integration guide') + ''' →</a></p></div>
-<p class="meta">mini-format ''' + __version__ + ''' · SPEC ''' + SPEC_VERSION + '''<br>motor: js/mini.js</p></div>'''
+<div class="pg-intro"><div><h1>Playground</h1><p>''' + ambos('Valida una respuesta .mini y conviértela a JSON en el navegador.', 'Validate a .mini response and convert it to JSON in your browser.') + '''</p></div>
+<a class="text-link" href="/docs/quickstart/">''' + ambos('Integrar tu propio contrato', 'Integrate your own contract') + ''' <span aria-hidden="true">↗</span></a></div>'''
     tpl = re.sub(r"<header>.*?</header>\s*<main>", cab, tpl, count=1, flags=re.S)
     # 3) pie del sitio
     tpl = re.sub(r"<footer>.*?</footer>", pie(), tpl, count=1, flags=re.S)

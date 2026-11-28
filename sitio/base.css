@@ -15,33 +15,33 @@
   --lh-display: 1.02; --ls-display: -.045em; --w-display: 800;
   --ease: cubic-bezier(.22,1,.36,1); --d-fast: 200ms; --d-base: 320ms;
 
-  --canvas: 252 251 254; --subtle: 246 244 250; --raised: 255 255 255;
-  --fg: 24 22 34; --fg-muted: 86 82 101; --fg-faint: 108 103 123;
-  --line: 228 224 237; --slab: 24 21 37; --on-slab: 244 241 252;
-  --bar: 18 18 22; --track: 238 238 240;
-  --accent: 94 75 255; --accent-strong: 81 55 202; --accent-soft: 238 233 255;
-  --action: 82 57 202; --action-hover: 66 42 178; --action-text: 255 255 255;
+  --canvas: 253 253 252; --subtle: 246 246 247; --raised: 255 255 255;
+  --fg: 23 24 31; --fg-muted: 79 81 95; --fg-faint: 99 101 115;
+  --line: 224 225 232; --slab: 24 25 34; --on-slab: 242 240 250;
+  --bar: 140 143 161; --track: 234 235 240;
+  --accent: 92 78 226; --accent-strong: 74 59 199; --accent-soft: 239 236 255;
+  --action: 25 26 33; --action-hover: 50 52 65; --action-text: 255 255 255;
   --ok: 0 134 84; --danger: 198 32 44; --warn: 158 98 0;
   --ring: 0 0 0 2px rgb(var(--canvas)), 0 0 0 4px rgb(var(--accent));
   color-scheme: light dark;
 }
 /* tema oscuro: por preferencia del sistema, y por atributo cuando el playground lo conmuta */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --canvas: 19 17 27; --subtle: 25 23 36; --raised: 32 28 46;
-  --fg: 244 242 250; --fg-muted: 191 185 209; --fg-faint: 164 156 184;
-  --line: 53 47 72; --slab: 26 22 40; --on-slab: 244 242 250;
-  --bar: 214 214 220; --track: 40 40 47;
-  --accent: 157 139 255; --accent-strong: 193 179 255; --accent-soft: 43 34 70;
-  --action: 181 164 255; --action-hover: 204 191 255; --action-text: 28 19 56;
+  --canvas: 18 19 24; --subtle: 24 25 32; --raised: 30 32 40;
+  --fg: 245 245 251; --fg-muted: 187 189 204; --fg-faint: 162 165 184;
+  --line: 56 58 73; --slab: 24 25 34; --on-slab: 242 240 250;
+  --bar: 156 159 180; --track: 40 42 54;
+  --accent: 166 152 255; --accent-strong: 196 185 255; --accent-soft: 45 39 74;
+  --action: 246 244 255; --action-hover: 223 216 255; --action-text: 25 26 33;
   --ok: 46 214 138; --danger: 255 108 108; --warn: 240 178 66;
 }}
 :root[data-theme="dark"]{
-  --canvas: 19 17 27; --subtle: 25 23 36; --raised: 32 28 46;
-  --fg: 244 242 250; --fg-muted: 191 185 209; --fg-faint: 164 156 184;
-  --line: 53 47 72; --slab: 26 22 40; --on-slab: 244 242 250;
-  --bar: 214 214 220; --track: 40 40 47;
-  --accent: 157 139 255; --accent-strong: 193 179 255; --accent-soft: 43 34 70;
-  --action: 181 164 255; --action-hover: 204 191 255; --action-text: 28 19 56;
+  --canvas: 18 19 24; --subtle: 24 25 32; --raised: 30 32 40;
+  --fg: 245 245 251; --fg-muted: 187 189 204; --fg-faint: 162 165 184;
+  --line: 56 58 73; --slab: 24 25 34; --on-slab: 242 240 250;
+  --bar: 156 159 180; --track: 40 42 54;
+  --accent: 166 152 255; --accent-strong: 196 185 255; --accent-soft: 45 39 74;
+  --action: 246 244 255; --action-hover: 223 216 255; --action-text: 25 26 33;
   --ok: 46 214 138; --danger: 255 108 108; --warn: 240 178 66;
 }
 

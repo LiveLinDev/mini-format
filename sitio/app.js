@@ -3,6 +3,16 @@
   "use strict";
   var sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  var nextExample = document.querySelector("[data-example-next]");
+  if (nextExample) {
+    var stages = Array.from(nextExample.closest("fieldset").querySelectorAll('input[type="radio"]'));
+    nextExample.hidden = false;
+    nextExample.addEventListener("click", function () {
+      var current = stages.findIndex(function (stage) { return stage.checked; });
+      stages[(current + 1) % stages.length].click();
+    });
+  }
+
   /* copiar al portapapeles */
   document.querySelectorAll(".cmd .copy").forEach(function (btn) {
     btn.addEventListener("click", function () {

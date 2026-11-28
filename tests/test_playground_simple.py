@@ -28,7 +28,9 @@ def test_editor_comparison_roundtrip_and_error_recovery(page, base_url, locale):
     page.locator('#fmtSel').select_option('json')
     assert json.loads(page.locator('#fmtOut').inner_text()) == expected
     page.locator('.compare-details summary').click()
-    assert page.locator('#tokTable tr').count() == 9
+    formats = page.locator('#tokTable td:first-child').all_inner_texts()
+    assert len(formats) == len(set(formats)) == page.locator('#fmtSel option').count()
+    assert {'.mini', 'JSON compact', 'Positional JSON', 'TOON (official, as-is)'}.issubset(formats)
     page.locator('[data-tab="editor"]').click()
     page.locator('#jsonText').fill('{bad json')
     page.locator('[data-tab="compare"]').click()

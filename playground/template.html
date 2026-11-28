@@ -53,7 +53,7 @@ svg text{fill:var(--ink)}
 
 <!-- ============================================================ EDITOR -->
 <section class="tab active" id="tab-editor">
-  <p class="note">Each line on the left is one support ticket. On the right, the parser turns it into a JSON object your application can use. Edit a value to see validation; “Inject errors” shows what gets rejected.</p>
+  <p class="note">Edit a ticket in the .mini panel or inject errors to see what the validator rejects.</p>
   <div class="row">
     <label>Contract <select id="forkSel"></select></label>
     <button class="ghost" id="loadExample">Load example</button>
@@ -61,8 +61,8 @@ svg text{fill:var(--ink)}
     <span id="status" class="muted"></span>
   </div>
   <div class="grid">
-    <div class="panel"><h2>1 · AI response in .mini</h2><textarea id="miniText" aria-label=".mini response" spellcheck="false" wrap="soft"></textarea><ul class="errors" id="errList"></ul></div>
-    <div class="panel"><h2>2 · JSON for your application</h2><textarea id="jsonText" aria-label="Application JSON" spellcheck="false" wrap="soft"></textarea>
+    <div class="panel"><h2>Response .mini</h2><textarea id="miniText" aria-label=".mini response" spellcheck="false" wrap="soft"></textarea><ul class="errors" id="errList"></ul></div>
+    <div class="panel"><h2>Application JSON</h2><textarea id="jsonText" aria-label="Application JSON" spellcheck="false" wrap="soft"></textarea>
       <div class="row" style="margin-top:8px"><button class="primary" id="toMini">JSON → .mini</button><span id="jsonStatus" class="muted"></span></div>
     </div>
   </div>

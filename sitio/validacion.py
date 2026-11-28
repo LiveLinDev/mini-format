@@ -261,8 +261,8 @@ def construir(ctx) -> None:
     cuerpo = f'''<div class="wrap val-wrap">
   <header class="val-heading">
     <h1>{a("Resultados de .mini", ".mini benchmark results")}</h1>
-    <p class="lead">{a("Compara cuánto cuesta generar los mismos datos, cuántas respuestas son correctas y cuántos tokens ocupa cada formato.",
-                       "Compare the cost of generating the same data, how many answers are correct, and how many tokens each format takes.")}</p>
+    <p class="lead">{a("Costo por acierto, precisión y tokens. Abre una prueba para ver cómo se midió.",
+                       "Cost per correct response, accuracy, and tokens. Open a test to see how it was measured.")}</p>
   </header>
   <section class="val-overview">
     {prueba}

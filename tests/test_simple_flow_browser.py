@@ -23,15 +23,26 @@ def test_hero_explains_the_format_change_without_overflow(page, base_url, langua
     compact = mini.inner_text()
     page.locator("#view-mini").focus()
     page.keyboard.press("ArrowRight")
+    pw.expect(page.locator(".example-schema")).to_be_visible()
+    fields = page.locator(".editor-fields code").all_inner_texts()
+    page.keyboard.press("ArrowRight")
     original = page.locator(".example-json pre")
     pw.expect(original).to_be_visible()
     expected = json.loads(original.inner_text())
     last_field = "titulo" if language == "es" else "title"
     contract = infer_contract([expected], "ticket")
     assert decode_rows(compact, contract, last_text_field=last_field, expected_records=2) == expected
+    assert fields == list(expected[0])
     assert len(compact) < len(original.inner_text())
     assert page.locator(".example-output").is_visible()
     assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+    next_step = page.locator("[data-example-next]")
+    next_step.click()
+    pw.expect(mini).to_be_visible()
+    next_step.click()
+    pw.expect(page.locator("#view-schema")).to_be_checked()
+    next_step.click()
+    pw.expect(original).to_be_visible()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     page.screenshot(path=str(OUTPUT / f'hero-{language}-{theme}-{width}.png'))
 
@@ -39,7 +50,7 @@ def test_hero_explains_the_format_change_without_overflow(page, base_url, langua
 def test_landing_leads_to_the_real_recorded_workflow(page, base_url):
     OUTPUT.mkdir(parents=True, exist_ok=True)
     page.goto(base_url + "/")
-    pw.expect(page.locator("h1")).to_contain_text("costar menos")
+    pw.expect(page.locator("h1")).to_contain_text("El mismo JSON")
     assert page.locator('#prueba-tokens').get_attribute('open') is None
     assert page.locator('#flujo-animado').get_attribute('open') is None
     page.screenshot(path=str(OUTPUT / "landing-overview.png"))
