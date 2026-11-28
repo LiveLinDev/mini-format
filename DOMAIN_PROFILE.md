@@ -208,6 +208,14 @@ python -m minifmt.transport decode data.txt
 For a table the model will read, use `dumps(value, for_model=True)` or
 `encode --for-model`. It keeps IDs and row counts explicit and uses compact
 JSON if it is shorter or the data does not fit the table layout.
+An object with multiple compatible tables can use blocks separated by a blank
+line under a `++` metadata header. `loads` restores the complete JSON and
+validates the columns and record count of each table.
+In `++` blocks, headers omit `:s` for text fields.
+
+For repeated questions about one document, place the `dumps` text at the start
+of the input and append each question. An identical prefix lets providers
+that support prompt caching reuse it.
 
 The default minimizes UTF-8 bytes. In Python, supply a function that returns the
 token count for your model. The CLI requires `tiktoken` for `--tokenizer`.

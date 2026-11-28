@@ -98,6 +98,26 @@ En `mini_reused_rows`, el esquema es idéntico para todos los recuentos del
 ensayo. El SDK sigue validando la cantidad exacta antes de entregar el JSON.
 La medición con caché refleja los aciertos que reportó Codex en cada formato.
 
+### Consultas sobre varias tablas
+
+`run_multitable_reading.py` usa las mismas tablas de tickets y agentes y el
+mismo esquema de respuesta en cada formato. Primero comprueba que todos los
+códecs recuperen los datos originales. En cada documento hace cuatro preguntas,
+con el texto del documento al inicio de la entrada, y mide hasta dos intentos
+por pregunta. El resultado distingue costos con y sin la caché observada.
+
+```sh
+python -m pip install "gcf-python @ git+https://github.com/blackwell-systems/gcf-python@3a55a7546b2184ea0d2468e667b31536457e2e63"
+cargo build --manifest-path benchmark/public/hedl_reference/Cargo.toml --target-dir output/hedl-reference
+git show 805e7cf5e931a42b7d9cdefb94bbb2cf7c429453:src/minifmt/transport.py > output/transport-anterior.py
+python benchmark/public/run_multitable_reading.py --out output/lectura-tablas --previous-transport output/transport-anterior.py --hedl-parser output/hedl-reference/debug/mini-hedl-reference --toon-module output/toon-44/node_modules/@toon-format/toon/dist/index.mjs
+```
+
+En Windows, el ejecutable `mini-hedl-reference` termina en `.exe`. La prueba
+usa los encoders y decoders oficiales de HEDL 2.0.0, GCF y TOON 4.4.0.
+Para repetir la comparación adicional con GCF, elige una carpeta `--out`
+distinta y añade `--arms mini_tables gcf --start 350 --sizes 25 40 58`.
+
 ## Muestras nuevas
 
 `sample_coverage` prueba dos divisiones intercaladas y reproducibles: primero se

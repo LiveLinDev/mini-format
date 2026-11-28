@@ -73,8 +73,10 @@ def resultados_nube(ctx):
         "mini_columnar": a(".mini por columnas", ".mini columnar"),
         "mini_native_rows": a(".mini por filas", ".mini native rows"),
         "mini_reused_rows": a(".mini con esquema reutilizado", ".mini with schema reuse"),
+        "mini_tables": a(".mini con varias tablas", ".mini with multiple tables"),
         "json_schema": a("JSON nativo por registro", "Native JSON by record"),
         "json_schema_projected": a("JSON nativo sin repetir IDs", "Native JSON with IDs omitted"),
+        "hedl": "HEDL 2.0.0", "gcf": "GCF 3.6.0",
     }
 
     def tabla_telemetria(clave, titulo, orden, *, lectura=False, detalle=False, cache=False):
@@ -85,7 +87,8 @@ def resultados_nube(ctx):
             encabezados.append(a("Tokens del prompt inicial", "Initial prompt tokens"))
         if detalle:
             encabezados.extend((a("Entrada", "Input"), a("Salida", "Output")))
-        encabezados.append(a("USD/1.000 aciertos", "USD/1,000 exact results"))
+        encabezados.append(a("USD/1.000 sin caché", "USD/1,000 without cache") if mostrar_cache
+                           else a("USD/1.000 aciertos", "USD/1,000 exact results"))
         if mostrar_cache:
             encabezados.append(a("USD/1.000 con caché", "USD/1,000 with cache"))
         filas = []
@@ -277,9 +280,36 @@ def resultados_nube(ctx):
                                "Tasks check record counts, ID lookups and filters. All three formats reproduced the source JSON before model calls. Cost includes input, output and retries at the same input rate.")}</p>
       <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos de ambos ensayos de lectura", "Data from both reading runs")}</a></p>
     </details>'''
+    ensayo_tablas = ensayos["reading_multitable_confirmation"]
+    multitabla = ensayo_tablas["formats"]
+    tablas_mini = multitabla["mini_tables"]
+    ahorro_tablas = 100 * (1 - tablas_mini["prompt_tokens"] / multitabla["toon"]["prompt_tokens"])
+    ahorro_tablas_es = f"{ahorro_tablas:.1f}".replace(".", ",")
+    ahorro_tablas_cache = 100 * (1 - costo_telemetria_por_mil(tablas_mini, tarifas, con_cache=True)
+                                / costo_telemetria_por_mil(multitabla["toon"], tarifas, con_cache=True))
+    ahorro_tablas_cache_es = f"{ahorro_tablas_cache:.1f}".replace(".", ",")
+    titulo_tablas = a("Lectura de varias tablas", "Reading multiple tables")
+    orden_tablas = ("mini_tables", "mini_previous", "toon", "hedl", "gcf", "json_compact")
+    preguntas_tablas = ensayo_tablas["questions_per_document"]
+    gcf_tablas = ensayos["reading_multitable_gcf_followup"]["pooled_formats"]
+    costo_gcf = costo_telemetria_por_mil(gcf_tablas["gcf"], tarifas, con_cache=True)
+    ahorro_gcf = 100 * (1 - costo_telemetria_por_mil(gcf_tablas["mini_tables"], tarifas, con_cache=True) / costo_gcf)
+    ahorro_gcf_es = f"{ahorro_gcf:.1f}".replace(".", ",")
+    total_gcf = gcf_tablas["mini_tables"]["trials"]
+    prueba_tablas = f'''<details class="disclosure val-run" id="lectura-varias-tablas"><summary>{titulo_tablas}</summary>
+      <p>{a(f"Con GPT-6 Luna, .mini acertó {tablas_mini['exact']} de {tablas_mini['trials']} consultas sobre tickets y sus agentes. Frente a TOON usó {ahorro_tablas_es} % menos tokens en el prompt y costó {ahorro_tablas_cache_es} % menos por acierto con la caché observada.",
+             f"With GPT-6 Luna, .mini got {tablas_mini['exact']} of {tablas_mini['trials']} questions about tickets and their agents right. It used {ahorro_tablas:.1f}% fewer prompt tokens and cost {ahorro_tablas_cache:.1f}% less per correct answer than TOON with the observed cache.")}</p>
+      {tabla_telemetria("reading_multitable_confirmation", titulo_tablas, orden_tablas, lectura=True, cache=True)}
+      <p>{a(f"En el primer ensayo con la caché observada, GCF costó menos. Al reunir las {total_gcf} consultas de los dos ensayos, .mini costó {ahorro_gcf_es} % menos por acierto con la caché observada.",
+             f"With the observed cache, GCF cost less in the first run. Across {total_gcf} paired questions from both runs, .mini cost {ahorro_gcf:.1f}% less per correct answer with the observed cache.")}</p>
+      <p class="val-method">{a(f"Se reutilizó cada documento para {preguntas_tablas} preguntas. Cada formato recuperó los mismos datos. El costo estimado incluye entrada, salida y reintentos, con y sin los aciertos de caché reportados por Codex.",
+                               f"Each document was reused for {preguntas_tablas} questions. Every format restored the same data. The cost estimate includes input, output, and retries, with and without the cache hits reported by Codex.")}</p>
+      <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos por consulta", "Per-question data")}</a></p>
+    </details>'''
     transport = f'''<details class="disclosure val-group" id="compresion-entrada">
     <summary>{a("Tamaño de los datos en tokens", "Data size in tokens")}</summary>
     <div class="val-body prose">
+    {prueba_tablas}
     {prueba_lectura}
     <p>{a(
         "Tokens del documento completo con o200k_base. Cada formato recuperó exactamente el JSON de origen.",

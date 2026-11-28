@@ -1,0 +1,7 @@
+[package]
+name = "mini-hedl-reference"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hedl = "=2.0.0"

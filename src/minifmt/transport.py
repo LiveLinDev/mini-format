@@ -24,7 +24,7 @@ _TREE = {"|\n", "\t\n", "1|\n", "1\t\n"}
 _SERIES_FIELD = re.compile(rf"({_KEY.pattern})(?:=({_INTEGER.pattern}):({_INTEGER.pattern}))?")
 _TABLE_TYPES = {"s": "string", "i": "integer", "n": "number", "b": "boolean"}
 _TABLE_HEAD = re.compile(rf"({_KEY.pattern})\[(0|[1-9][0-9]*)\] (.+)")
-_TABLE_FIELD = re.compile(rf"({_KEY.pattern}):([sinb])")
+_TABLE_FIELD = re.compile(rf"({_KEY.pattern})(?::([sinb]))?")
 
 
 def _schema_wire(node):
@@ -406,7 +406,7 @@ def _encode(value, contract, score, sections=True):
     return min(options, key=score)
 
 
-def _model_table(name, rows, metadata):
+def _model_table(name, rows):
     if not _KEY.fullmatch(name) or not _table_fields(rows):
         return None
     contract = domain.infer_contract([rows], prefix="rows")
@@ -417,29 +417,59 @@ def _model_table(name, rows, metadata):
     codes = {kind: code for code, kind in _TABLE_TYPES.items()}
     headings = " ".join(f"{field['name']}:{codes[field['schema']['type']]}" for field in fields)
     encoded = domain.encode_rows(rows, contract, last_text_field=tail)
-    metadata_line = "" if metadata is None else domain._json(metadata)
-    return f"+{metadata_line}\n{name}[{len(rows)}] {headings}\n{encoded}"
+    # A table with one text column can contain literal Markdown fence lines.
+    if encoded.startswith("```") and encoded.endswith("\n```"):
+        first, _, rest = encoded.partition("\n")
+        encoded = f"{domain._json(first)}\n{rest}"
+    return f"{name}[{len(rows)}] {headings}\n{encoded}"
 
 
-def _read_model_table(metadata, body):
+def _compact_model_block(body):
+    header, _, rows = body.partition("\n")
+    name, *fields = header.split(" ")
+    headings = " ".join(field.removesuffix(":s") for field in fields)
+    return f"{name} {headings}\n " + rows.replace("\n", "\n ")
+
+
+def _read_model_block(body, *, implicit_strings=False):
     header, _, table = body.partition("\n")
     match = _TABLE_HEAD.fullmatch(header)
     if match is None:
         raise ValueError("invalid model table header")
     name, count, headings = match.groups()
     fields = [_TABLE_FIELD.fullmatch(cell) for cell in headings.split(" ")]
-    if any(field is None for field in fields):
+    if any(field is None or (not implicit_strings and field.group(2) is None) for field in fields):
         raise ValueError("invalid model table field")
     entries = [field.groups() for field in fields]
-    wire = [6, [5, *[[key, _TYPES.index(_TABLE_TYPES[code])] for key, code in entries]]]
+    wire = [6, [5, *[[key, _TYPES.index(_TABLE_TYPES[code or "s"])] for key, code in entries]]]
     contract = _schema_contract(["rows", [], wire])
     rows = domain.decode_rows(table, contract, last_text_field=entries[-1][0], expected_records=int(count))
+    return name, rows
+
+
+def _read_model_table(metadata, body):
+    name, rows = _read_model_block(body)
     if metadata == "":
         return rows
     root = domain._strict_json(metadata)
     if not isinstance(root, dict) or name in root:
         raise ValueError("invalid model table metadata")
     return {**root, name: rows}
+
+
+def _read_model_tables(metadata, body):
+    root = domain._strict_json(metadata)
+    if not isinstance(root, dict):
+        raise ValueError("invalid model table metadata")
+    blocks = body.replace("\r\n", "\n").rstrip("\n").split("\n\n")
+    if len(blocks) < 2:
+        raise ValueError("expected at least two model tables")
+    for block in blocks:
+        name, rows = _read_model_block(block, implicit_strings=True)
+        if name in root:
+            raise ValueError("duplicate model table")
+        root[name] = rows
+    return root
 
 
 def dumps(value, contract=None, *, count=None, for_model=False):
@@ -451,16 +481,22 @@ def dumps(value, contract=None, *, count=None, for_model=False):
         domain._pack(value, contract["schema"])
         options = [domain._json(value)]
         if isinstance(value, dict):
+            tables = {}
             for name, rows in value.items():
-                if _table_fields(rows):
+                candidate = _model_table(name, rows)
+                if candidate is not None:
+                    tables[name] = candidate
                     metadata = {key: cell for key, cell in value.items() if key != name}
-                    candidate = _model_table(name, rows, metadata)
-                    if candidate is not None:
-                        options.append(candidate)
+                    options.append(f"+{domain._json(metadata)}\n{candidate}")
+            if len(tables) > 1:
+                metadata = {key: cell for key, cell in value.items() if key not in tables}
+                names = sorted(tables, key=lambda name: (len(value[name]), name))
+                blocks = "\n\n".join(_compact_model_block(tables[name]) for name in names)
+                options.append(f"++{domain._json(metadata)}\n{blocks}")
         else:
-            candidate = _model_table("records", value, None)
+            candidate = _model_table("records", value)
             if candidate is not None:
-                options.append(candidate)
+                options.append("+\n" + candidate)
         return min(options, key=count)
     return _encode(value, contract, count)
 
@@ -478,6 +514,8 @@ def _decode(text):
         return _restore_rows(domain._strict_json(header[1:]), body)
     if header.startswith("^"):
         return _read_series(header[1:], body)
+    if header.startswith("++"):
+        return _read_model_tables(header[2:], body)
     if header.startswith("+"):
         return _read_model_table(header[1:], body)
     if header.startswith("#"):

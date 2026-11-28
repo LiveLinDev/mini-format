@@ -214,6 +214,14 @@ python -m minifmt.transport decode datos.txt
 Al preparar una tabla que leerá un modelo, usa `dumps(objeto, for_model=True)`
 o `encode --for-model`. Esta opción conserva los IDs y el número de filas en
 la tabla y usa JSON compacto si resulta más corto o la forma no es tabular.
+Si el objeto trae varias tablas compatibles, puede usar bloques separados por
+una línea en blanco bajo un encabezado `++` con los metadatos. `loads` repone
+el JSON completo y valida las columnas y el recuento de cada tabla.
+En un bloque `++`, las cabeceras omiten `:s` para los campos de texto.
+
+Si haces varias preguntas sobre el mismo documento, coloca el texto de `dumps`
+al inicio de la entrada y añade cada pregunta después. Mantener ese inicio
+idéntico permite que un proveedor compatible lo reutilice desde su caché.
 
 Sin tokenizador se minimizan bytes UTF-8. Para elegir por tokens desde Python,
 pasa una función que devuelva el conteo de tu modelo. El CLI necesita

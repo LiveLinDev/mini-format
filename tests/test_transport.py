@@ -126,3 +126,33 @@ def test_model_table_has_explicit_ids_counts_and_lossless_text():
 def test_model_table_falls_back_to_complete_json_for_nested_rows():
     doc = {"rows": [{"id": 1, "info": {"x": None}}, {"id": 2, "info": {"x": 4}}]}
     assert transport.dumps(doc, for_model=True) == domain._json(doc)
+
+
+def test_model_transport_keeps_two_readable_tables_and_document_metadata():
+    doc = {
+        "team": "soporte", "page": {"limit": 20},
+        "tickets": [{"id": i, "agent": f"A{i % 4}", "note": f'Ticket {i} con "detalle"\n\nCafé'} for i in range(12)],
+        "agents": [{"id": f"A{i}", "active": bool(i % 2), "name": f"Soporte norte {i}"} for i in range(8)],
+    }
+    wire = transport.dumps(doc, for_model=True)
+    assert wire.startswith('++{"team":"soporte","page":{"limit":20}}\nagents[8] id active:b name\n A0')
+    assert "\n\ntickets[12] id:i agent note\n " in wire
+    assert transport.loads(wire, domain.infer_contract([doc])) == doc
+    assert transport.loads(wire.replace("\n", "\r\n")) == doc
+    for invalid in (
+        wire.replace("agents[8]", "agents[9]"),
+        wire.replace("agents[8]", "tickets[8]"),
+        wire.replace('"team":"soporte"', '"agents":[]'),
+        "++[]\n" + wire.split("\n", 1)[1],
+        wire.split("\n\n", 1)[0],
+        wire + "\ntrailing content",
+    ):
+        with pytest.raises(domain.DomainError):
+            transport.loads(invalid)
+
+
+def test_model_table_does_not_treat_literal_backticks_as_a_fence():
+    doc = [{"note": "```mini"}, {"note": "literal"}, {"note": "```"}]
+    wire = transport.dumps(doc, for_model=True, count=lambda text: 0 if text.startswith("+\n") else len(text))
+    assert '"```mini"\nliteral\n```' in wire
+    assert transport.loads(wire) == doc
