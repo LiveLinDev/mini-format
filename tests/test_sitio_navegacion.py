@@ -350,7 +350,7 @@ def test_la_portada_se_lee_y_responde_sin_javascript(navegador, base_url, ancho,
     pagina.locator("#prueba-tokens > summary").click()
     assert pagina.locator("#prueba-tokens > p").is_visible()
     assert pagina.locator(".cost-track > span").evaluate_all(
-        "barras => barras.length === 2 && barras.every(e => e.getBoundingClientRect().width > 0)"
+        "barras => barras.length === 3 && barras.every(e => e.getBoundingClientRect().width > 0)"
     )
     assert not pagina.locator(".nav-toggle").is_visible()
     assert pagina.locator("#nav-links a:visible").count() >= len(construir.NAV)

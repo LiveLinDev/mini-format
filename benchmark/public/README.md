@@ -98,3 +98,11 @@ coerced or discarded. Such rejections are included in `sample_coverage` with
 their error code and path; they do not masquerade as successful round-trips.
 More representative samples can cover rare variations, but sample inference
 cannot establish every valid value of a business domain.
+
+## Cloud generation and reading
+
+The per-task native schema and reading results are in `native_schema_results.json`.
+Use `run_native_schema.py` and `run_cloud_reading.py` to reproduce them with a
+signed-in Codex CLI and the reference TOON 4.4 encoder. See the [Spanish guide](README.es.md#generación-y-lectura-en-la-nube)
+for the exact commands. USD estimates include all provider-reported input and
+output, including retries, divided by the number of exact answers.

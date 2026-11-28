@@ -1421,7 +1421,7 @@ def _compact_count(expected_records):
         raise DomainError("D_EXPECTED_COUNT", "compact rows require an explicit nonnegative record count")
 
 
-def _project_compact_fields(fields, known_rows, expected_records):
+def _project_compact_fields(fields, known_rows, expected_records, *, keep_last=True):
     if known_rows is None:
         return fields
     if not isinstance(known_rows, list) or len(known_rows) != expected_records:
@@ -1432,8 +1432,10 @@ def _project_compact_fields(fields, known_rows, expected_records):
         raise DomainError("D_COMPACT_SCHEMA", "every known row must be an object")
     known = set(known_rows[0])
     schema = {field["name"]: field["schema"] for field in fields}
-    if not known <= schema.keys() or fields[-1]["name"] in known:
-        raise DomainError("D_COMPACT_SCHEMA", "known fields must exist in the contract and exclude the last text field")
+    if not known <= schema.keys():
+        raise DomainError("D_COMPACT_SCHEMA", "known fields must exist in the contract")
+    if keep_last and fields[-1]["name"] in known:
+        raise DomainError("D_COMPACT_SCHEMA", "known fields must exclude the last text field")
     for index, row in enumerate(known_rows):
         if row.keys() != known:
             raise DomainError("D_COMPACT_SCHEMA", "known rows must specify the same fields", f"$/{index}")
@@ -1781,6 +1783,69 @@ def decode_positional_json(text, contract=None, *, expected_records):
     if len(value) != expected_records:
         raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} records, received {len(value)}")
     return _unpack(value, contract["schema"])
+
+
+def _columnar_fields(contract, expected_records, known_rows, allowed_values):
+    _compact_count(expected_records)
+    fields = _project_compact_fields(_flat_required_fields(contract), known_rows, expected_records, keep_last=False)
+    projected = {field["name"]: field["schema"] for field in fields}
+    if not projected:
+        raise DomainError("D_COMPACT_SCHEMA", "columnar output needs at least one generated field")
+    allowed = {} if allowed_values is None else allowed_values
+    if not isinstance(allowed, dict) or not allowed.keys() <= projected.keys():
+        raise DomainError("D_COMPACT_SCHEMA", "allowed_values must name generated fields")
+    for name, values in allowed.items():
+        if not isinstance(values, list) or not values:
+            raise DomainError("D_COMPACT_SCHEMA", "allowed field values must be a nonempty list", name)
+        for value in values:
+            _pack(value, projected[name], name)
+        if len(set(values)) != len(values):
+            raise DomainError("D_COMPACT_SCHEMA", "allowed field values must be distinct", name)
+    return projected, allowed
+
+
+def columnar_json_request(task, contract=None, *, expected_records, lang="en", known_rows=None, allowed_values=None):
+    """Build a strict provider schema with one value list per generated field."""
+    fields, allowed = _columnar_fields(_contract(contract), expected_records, known_rows, allowed_values)
+    properties = {}
+    for name, field in fields.items():
+        item = {"type": field["type"]}
+        if name in allowed:
+            item["enum"] = allowed[name]
+        properties[name] = item if expected_records == 1 else {
+            "type": "array", "items": item, "minItems": expected_records, "maxItems": expected_records,
+        }
+    prompt = ("Usa el esquema. Conserva el orden de los registros y copia los valores literales."
+              if lang == "es" else "Use the schema. Preserve record order and copy literal values.")
+    return {"prompt": task + "\n" + prompt,
+            "schema": {"type": "object", "properties": properties, "required": list(properties),
+                       "additionalProperties": False}}
+
+
+def decode_columnar_json(text, contract=None, *, expected_records, known_rows=None, allowed_values=None):
+    """Validate provider JSON and combine columns with any application-owned fields."""
+    contract = _contract(contract)
+    fields, allowed = _columnar_fields(contract, expected_records, known_rows, allowed_values)
+    try:
+        columns = _strict_json(text)
+    except (TypeError, ValueError) as error:
+        raise DomainError("D_VALUE", f"invalid columnar JSON: {error}") from error
+    if not isinstance(columns, dict) or columns.keys() != fields.keys():
+        raise DomainError("D_TYPE", "columnar JSON must contain exactly the generated fields")
+    rows = [{} for _ in range(expected_records)] if known_rows is None else [dict(row) for row in known_rows]
+    for name, column in columns.items():
+        values = [column] if expected_records == 1 else column
+        if not isinstance(values, list) or len(values) != expected_records:
+            raise DomainError("D_EXPECTED_COUNT", f"expected {expected_records} values in column", name)
+        admitted = set(allowed[name]) if name in allowed else None
+        for row, value in zip(rows, values):
+            if admitted is not None:
+                _pack(value, fields[name], name)
+                if value not in admitted:
+                    raise DomainError("D_VALUE", "column value is outside the allowed set", name)
+            row[name] = value
+    _pack(rows, contract["schema"])
+    return rows
 
 
 # Wrappers load the adjacent parser.py by path: Windows builds of Python 3.9

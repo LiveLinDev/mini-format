@@ -1070,3 +1070,44 @@ def test_http_errors_are_returned_unchanged(kit4, monkeypatch):
     _fake_requests(monkeypatch, [error])
     response = Workflow(bundle).post(sys.modules["requests"].post, "u", json={"messages": [], "response_format": {"type": "json_object"}})
     assert response is error
+
+
+def test_native_columns_validate_projection_and_repair(kit):
+    bundle, _, sample = kit
+    flow = Workflow(bundle)
+    known = [{"id": 1}, {"id": 2}]
+    allowed = {"titulo": ["Acceso", "Factura"]}
+    calls = []
+    replies = iter(('{"titulo":["Acceso","Inválido"]}', '{"titulo":["Acceso","Factura"]}'))
+
+    def generate(prompt, schema):
+        calls.append((prompt, schema))
+        return next(replies)
+
+    assert flow.run_columnar(generate, "Procesa los tickets", expected_records=2,
+                             known_rows=known, allowed_values=allowed) == sample
+    assert flow.last_run["columnar_json"] is True
+    assert flow.last_run["trace"][2]["stage"] == "model_repair"
+    assert calls[0][1] == calls[1][1]
+    assert calls[0][1]["properties"] == {
+        "titulo": {"type": "array", "items": {"type": "string", "enum": allowed["titulo"]}, "minItems": 2, "maxItems": 2},
+    }
+    with pytest.raises(WorkflowError):
+        flow.run_columnar(lambda *_: '{"titulo":null}', "Procesa el ticket", expected_records=1,
+                          known_rows=known[:1], max_repairs=0)
+
+
+def test_node_native_columns_restore_known_fields(kit, tmp_path):
+    bundle, _, sample = kit
+    script = tmp_path / "columnar.mjs"
+    script.write_text(f'''import {{ Workflow }} from {json.dumps((bundle / 'workflow.mjs').as_uri())};
+const flow = new Workflow({{lang: 'es', python: {json.dumps(sys.executable)}}});
+const data = await flow.runColumnar(async (prompt, schema) => {{
+  if (schema.required.join() !== 'titulo' || schema.properties.titulo.type !== 'string') throw Error('wrong schema');
+  return '{{"titulo":"Acceso"}}';
+}}, 'Procesa un ticket', {{expectedRecords: 1, knownRows: [{{id: 1}}], allowedValues: {{titulo: ['Acceso']}}}});
+console.log(JSON.stringify(data));
+''', encoding="utf-8")
+    result = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == sample[:1]

@@ -157,6 +157,13 @@ en Ollama se usa como valor de `format`. En Node el método equivalente es
 `flow.runPositional(generate, tarea, {expectedRecords: 20})`. El flujo comprueba
 los tipos y las cantidades y guarda un documento `.mini` validado en el historial.
 
+Si el proveedor exige un objeto JSON en su esquema nativo, usa
+`flow.run_columnar(generate, tarea, expected_records=20)`. Cada campo se envía
+una vez con su lista de valores. Para un registro, los valores son escalares.
+`known_rows` incorpora campos de la aplicación y `allowed_values` fija las
+opciones válidas por campo. El equivalente en Node es `runColumnar`, con
+`expectedRecords`, `knownRows` y `allowedValues`.
+
 ## Transporte compacto de JSON existente
 
 `minifmt.transport.dumps(objeto, count=contador)` elige la representación de
@@ -175,6 +182,10 @@ de las filas.
 python -m minifmt.transport encode datos.json --tokenizer o200k_base > datos.txt
 python -m minifmt.transport decode datos.txt
 ```
+
+Al preparar una tabla que leerá un modelo, usa `dumps(objeto, for_model=True)`
+o `encode --for-model`. Esta opción conserva los IDs y el número de filas en
+la tabla y usa JSON compacto si resulta más corto o la forma no es tabular.
 
 Sin tokenizador se minimizan bytes UTF-8. Para elegir por tokens desde Python,
 pasa una función que devuelva el conteo de tu modelo. El CLI necesita

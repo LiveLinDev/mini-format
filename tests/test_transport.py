@@ -106,3 +106,23 @@ def test_transport_cli_keeps_unicode_under_a_pipe():
     restored = subprocess.run([sys.executable, "-m", "minifmt.transport", "decode", "-"],
                               input=pack, check=True, capture_output=True).stdout
     assert restored == source
+
+
+def test_model_table_has_explicit_ids_counts_and_lossless_text():
+    rows = [{"id": 9 + index * 3, "ok": index % 2 == 0, "note": note}
+            for index, note in enumerate(("Café listo", 'La pantalla muestra "error"', "", " línea\nsegunda ",
+                                           "true", "<html>", "texto más largo", "último caso"))]
+    doc = {"team": "norte", "tickets": rows, "page": 2}
+    wire = transport.dumps(doc, for_model=True)
+    assert wire.startswith('+{"team":"norte","page":2}\ntickets[8] id:i ok:b note:s\n9 true Café listo')
+    assert transport.loads(wire) == doc
+    assert transport.loads(transport.dumps(rows, for_model=True)) == rows
+    for wrong in (wire.replace("tickets[8]", "tickets[7]"), wire.replace("ok:b", "id:b"),
+                  wire.replace('"page":2', '"tickets":2')):
+        with pytest.raises(domain.DomainError):
+            transport.loads(wrong)
+
+
+def test_model_table_falls_back_to_complete_json_for_nested_rows():
+    doc = {"rows": [{"id": 1, "info": {"x": None}}, {"id": 2, "info": {"x": 4}}]}
+    assert transport.dumps(doc, for_model=True) == domain._json(doc)

@@ -2,7 +2,7 @@
 
 Toda cifra proviene de:
 - ``benchmark/public/competitors_results.json`` (o200k_base, cl100k_base, p50k_base; round-trip 100%)
-- ``benchmark/public/cloud_results.json`` (generación en la nube y compresión de entrada)
+- ``benchmark/public/cloud_results.json`` y ``native_schema_results.json`` (pruebas en la nube)
 - ``experiments/estudio_formatos/corridas/resultados.json`` (18 corridas reales + 180 cortes)
 - ``ctx.cifras`` (conformidad de 376 casos en 14 familias)
 
@@ -13,7 +13,7 @@ from __future__ import annotations
 import html
 
 
-from benchmarks import costo_por_mil, resumen_costo
+from benchmarks import costo_por_mil, costo_telemetria_por_mil, resumen_costo, resumen_transporte
 
 
 def resultados_nube(ctx):
@@ -49,7 +49,7 @@ def resultados_nube(ctx):
                 f'<caption class="sr">{etiqueta}</caption><thead><tr>{columnas}</tr></thead>'
                 f'<tbody>{"".join(filas)}</tbody></table></div>')
 
-    def tabla_nube(clave, titulo, *, con_cache=False, ancla=""):
+    def tabla_nube(clave, titulo, *, con_cache=False, ancla="", resumen=""):
         formatos = grupos[clave]["formats"]
         metrica = a("Tokens leídos de caché", "Cached input tokens") if con_cache else a("Tokens de instrucción", "Instruction tokens")
         encabezados = (a("Formato", "Format"), a("USD por 1.000 aciertos", "USD per 1,000 exact results"),
@@ -64,7 +64,68 @@ def resultados_nube(ctx):
                          f'<td>{resultado["retries"]}</td><td>{numero(tokens)}</td></tr>')
         atributo = f' id="{ancla}"' if ancla else ""
         return (f'<details class="disclosure val-run"{atributo}><summary>{titulo}</summary>'
-                f'{tabla(encabezados, filas, titulo)}</details>')
+                f'{resumen}{tabla(encabezados, filas, titulo)}</details>')
+
+    nuevo = ctx.leer_json("benchmark/public/native_schema_results.json")
+    ensayos = nuevo["runs"]
+    tarifas = nuevo["price_usd_per_million"]
+    nombres_nuevos = {**nombres,
+        "mini_columnar": a(".mini por columnas", ".mini columnar"),
+        "json_schema": a("JSON nativo por registro", "Native JSON by record"),
+        "json_schema_projected": a("JSON nativo sin repetir IDs", "Native JSON with IDs omitted"),
+    }
+
+    def tabla_telemetria(clave, titulo, orden, *, lectura=False, detalle=False):
+        formatos = ensayos[clave]["formats"]
+        encabezados = [a("Formato", "Format"), a("Aciertos", "Exact results"), a("Reintentos", "Retries")]
+        if lectura:
+            encabezados.append(a("Tokens del prompt inicial", "Initial prompt tokens"))
+        if detalle:
+            encabezados.extend((a("Entrada", "Input"), a("Salida", "Output")))
+        encabezados.append(a("USD/1.000 aciertos", "USD/1,000 exact results"))
+        if detalle:
+            encabezados.append(a("USD/1.000 con caché", "USD/1,000 with cache"))
+        filas = []
+        for clave_formato in orden:
+            r = formatos[clave_formato]
+            celdas = [f"{r['exact']}/{r['trials']}", r["retries"]]
+            if lectura:
+                celdas.append(numero(r["prompt_tokens"]))
+            if detalle:
+                celdas.extend((numero(r["input_tokens"]), numero(r["output_tokens"])))
+            for con_cache in ((False, True) if detalle else (False,)):
+                costo = costo_telemetria_por_mil(r, tarifas, con_cache=con_cache)
+                celdas.append(numero(costo, 4) if costo is not None else "—")
+            filas.append(f'<tr><th scope="row">{nombres_nuevos[clave_formato]}</th>'
+                         + "".join(f"<td>{celda}</td>" for celda in celdas) + "</tr>")
+        return tabla(encabezados, filas, titulo)
+
+    confirmacion = ensayos["columnar_confirmation"]["formats"]
+    costo_col = costo_telemetria_por_mil(confirmacion["mini_columnar"], tarifas)
+    costo_json = costo_telemetria_por_mil(confirmacion["json_schema"], tarifas)
+    diferencia_col = 100 * (1 - costo_col / costo_json)
+    diferencia_es = f"{diferencia_col:.1f}".replace(".", ",")
+    ahorro_salida = 100 * (1 - confirmacion["mini_columnar"]["output_tokens"] / confirmacion["json_schema"]["output_tokens"])
+    salida_es = f"{ahorro_salida:.1f}".replace(".", ",")
+    exactas_col = confirmacion["mini_columnar"]["exact"]
+    total_col = confirmacion["mini_columnar"]["trials"]
+    titulo_nativo = a("JSON con esquema nativo · generación en la nube", "Native JSON Schema · cloud generation")
+    titulo_base = a("Primera prueba con filas .mini", "Initial run with .mini rows")
+    titulo_tokens = a("Tokens reportados y caché", "Reported tokens and cache")
+    orden_nativo = ("mini_columnar", "json_schema", "json_schema_projected", "mini")
+    nativo = f'''<details class="disclosure val-run" id="esquema-nativo">
+      <summary>{titulo_nativo}</summary>
+      <p>{a(f".mini por columnas acertó {exactas_col} de {total_col} tareas. Frente a JSON nativo por registro usó {salida_es} % menos tokens de salida y costó {diferencia_es} % menos por acierto.",
+             f".mini columnar got {exactas_col} of {total_col} tasks right. Compared with native JSON by record it used {ahorro_salida:.1f}% fewer output tokens and cost {diferencia_col:.1f}% less per correct answer.")}</p>
+      {tabla_telemetria("columnar_confirmation", titulo_nativo, orden_nativo)}
+      <p class="val-method">{a("Mismo GPT-6 Luna en la nube, de 1 a 32 tickets por tarea y hasta dos intentos. La tabla usa la tarifa de API sin descuento de caché y cuenta todos los tokens reportados, incluido el contexto de Codex.",
+                               "Same cloud GPT-6 Luna, 1–32 tickets per task, and up to two attempts. The table uses API rates without a cache discount and includes all reported tokens, including Codex context.")}</p>
+      <details class="disclosure val-run"><summary>{titulo_tokens}</summary>
+        {tabla_telemetria("columnar_confirmation", titulo_tokens, orden_nativo, detalle=True)}</details>
+      <details class="disclosure val-run"><summary>{titulo_base}</summary>
+        {tabla_telemetria("compact_baseline", titulo_base, ("mini", "json_schema", "json_schema_projected"))}</details>
+      <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos por tarea, incluidos fallos", "Per-task data, including failures")}</a></p>
+    </details>'''
 
     lotes_medidos = [grupos[clave]["formats"] for clave in ("small_batch", "large_batch")]
     tokens_mini = sum(f["mini"]["instruction_tokens"] for f in lotes_medidos)
@@ -76,10 +137,8 @@ def resultados_nube(ctx):
     cache = grupos["cached_batch"]["formats"]
     ahorro_cache = 100 * (1 - costo_por_mil(cache["mini"], precios, con_cache=True)
                           / costo_por_mil(cache["ison"], precios, con_cache=True))
-    texto = grupos["projected_text_batches"]["formats"]
-    ahorro_texto = round(100 * (1 - costo_por_mil(texto["mini"], precios) / costo_por_mil(texto["json_compact"], precios)))
-    titulo_texto = a(f"De 25 a 48 filas de texto · {ahorro_texto} % menos costo que JSON compacto",
-                     f"25 to 48 text rows · {ahorro_texto}% lower cost than compact JSON")
+    titulo_texto = a("JSON compacto · lotes de 25 a 48 filas", "Compact JSON · batches of 25 to 48 rows")
+    resumen_texto = f'<div class="val-cloud-overview">{resumen_costo(datos, a)}</div>'
     reparacion = grupos["single_invalid_row_repair"]["formats"]
     ahorro_reparacion = round(100 * (1 - costo_por_mil(reparacion["mini"], precios)
                                    / costo_por_mil(reparacion["mini_previous"], precios)))
@@ -88,6 +147,7 @@ def resultados_nube(ctx):
     cloud = f'''<details class="disclosure val-group" id="generacion-nube">
     <summary>{a("Generación, precisión y reintentos", "Generation, accuracy and retries")}</summary>
     <div class="val-body prose">
+    {nativo}
     <p>{a(
         f"Con GPT-6 Luna, .mini generó {exactas} de {lotes} lotes exactos de 2 a 24 filas al primer intento. TOON 4.4 acertó {exactas_toon} de {lotes}. La instrucción de .mini usó {ahorro} % menos tokens que el flujo anterior.",
         f"With GPT-6 Luna, .mini generated {exactas} of {lotes} exact batches of 2 to 24 rows on the first attempt. TOON 4.4 got {exactas_toon} of {lotes} right. The .mini instructions used {ahorro}% fewer tokens than the previous workflow."
@@ -96,7 +156,7 @@ def resultados_nube(ctx):
         "Cada formato recibió las mismas tareas sintéticas en español y las mismas columnas conocidas. El costo por resultado exacto incluye todos los tokens de entrada y salida, también los de los intentos fallidos y los reintentos.",
         "Every format got the same synthetic Spanish tasks and known columns. Cost per exact result includes all input and output tokens, including failed attempts and retries."
     )}</p>
-    {tabla_nube("projected_text_batches", titulo_texto, ancla="lotes-texto")}
+    {tabla_nube("projected_text_batches", titulo_texto, ancla="lotes-texto", resumen=resumen_texto)}
     {tabla_nube("single_invalid_row_repair", titulo_reparacion, ancla="reparacion-filas")}
     <p class="val-method">{a("Cinco lotes con una falla simulada a partir de respuestas reales en la nube.",
                             "Five batches with one simulated fault in each recorded cloud response.")}</p>
@@ -161,9 +221,23 @@ def resultados_nube(ctx):
         "Tokens con o200k_base para enviar datos que la aplicación ya tiene. Se cuentan los metadatos y los contratos requeridos. Los siete conjuntos se reconstruyeron por completo con cada formato.",
         "Tokens with o200k_base for sending data the application already has. Metadata and required contracts are included. Every format reconstructed all seven datasets in full.",
     )
+    lectura = ensayos["reading_model_table"]["formats"]
+    ahorro_lectura = 100 * (1 - lectura["mini"]["prompt_tokens"] / lectura["toon"]["prompt_tokens"])
+    ahorro_lectura_es = f"{ahorro_lectura:.1f}".replace(".", ",")
+    titulo_lectura = a("Lectura con GPT-6 Luna", "Reading with GPT-6 Luna")
+    registros_lectura = lectura["mini"]["exact"]
+    prueba_lectura = f'''<details class="disclosure val-run" id="lectura-en-nube"><summary>{titulo_lectura}</summary>
+      <p>{a(f"GPT-6 Luna respondió correctamente las {registros_lectura} tareas de lectura con la tabla .mini. El prompt inicial completo usó {ahorro_lectura_es} % menos tokens que TOON 4.4, incluyendo la explicación de las columnas.",
+             f"GPT-6 Luna answered all {registros_lectura} reading tasks correctly with the .mini table. The full initial prompt used {ahorro_lectura:.1f}% fewer tokens than TOON 4.4, including the column instructions.")}</p>
+      {tabla_telemetria("reading_model_table", titulo_lectura, ("mini", "toon", "json_compact"), lectura=True)}
+      <p class="val-method">{a("Las tareas verifican el total de tickets, búsquedas por ID y filtros. Los tres formatos recuperaron el JSON original antes de enviarlo al modelo. El costo incluye entrada, salida y reintentos con la misma tarifa de entrada.",
+                               "Tasks check record counts, ID lookups and filters. All three formats reproduced the source JSON before model calls. Cost includes input, output and retries at the same input rate.")}</p>
+      <p><a href="/source/benchmark/public/native_schema_results.json">{a("Datos de ambos ensayos de lectura", "Data from both reading runs")}</a></p>
+    </details>'''
     transport = f'''<details class="disclosure val-group" id="compresion-entrada">
     <summary>{a("Tamaño de los datos en tokens", "Data size in tokens")}</summary>
     <div class="val-body prose">
+    {prueba_lectura}
     <p>{a(
         "Tokens del documento completo con o200k_base. Cada formato recuperó exactamente el JSON de origen.",
         "Full-document tokens with o200k_base. Every format recovered the original JSON exactly."
@@ -257,7 +331,7 @@ def construir(ctx) -> None:
         )
 
     cloud, transport = resultados_nube(ctx)
-    prueba = resumen_costo(ctx.leer_json("benchmark/public/cloud_results.json"), a)
+    prueba = resumen_transporte(ctx.leer_json("benchmark/public/transport_results.json"), a)
     cuerpo = f'''<div class="wrap val-wrap">
   <header class="val-heading">
     <h1>{a("Resultados de .mini", ".mini benchmark results")}</h1>
@@ -266,7 +340,7 @@ def construir(ctx) -> None:
   </header>
   <section class="val-overview">
     {prueba}
-    <a class="text-link" href="#lotes-texto">{a("Ver el detalle de esta prueba", "See the details of this test")}</a>
+    <a class="text-link" href="#transporte-adaptativo">{a("Ver el detalle de esta prueba", "See the details of this test")}</a>
   </section>
 
   <div class="val-groups">

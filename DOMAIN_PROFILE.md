@@ -156,6 +156,12 @@ it as `format` in Ollama. The Node method is
 `flow.runPositional(generate, task, {expectedRecords: 20})`. The workflow
 checks types and counts and keeps a validated `.mini` document in the history.
 
+For providers that require a JSON object in their native output schema, use
+`flow.run_columnar(generate, task, expected_records=20)`. Each field is sent
+once with its list of values. A single record uses scalars. `known_rows` restores
+application-owned fields, and `allowed_values` specifies valid field choices.
+In Node, call `runColumnar` with `expectedRecords`, `knownRows`, and `allowedValues`.
+
 ## Compact transport for existing JSON
 
 `minifmt.transport.dumps(value, count=counter)` chooses the lowest-cost
@@ -172,6 +178,10 @@ integer sequence. The decoder restores those values in row order.
 python -m minifmt.transport encode data.json --tokenizer o200k_base > data.txt
 python -m minifmt.transport decode data.txt
 ```
+
+For a table the model will read, use `dumps(value, for_model=True)` or
+`encode --for-model`. It keeps IDs and row counts explicit and uses compact
+JSON if it is shorter or the data does not fit the table layout.
 
 The default minimizes UTF-8 bytes. In Python, supply a function that returns the
 token count for your model. The CLI requires `tiktoken` for `--tokenizer`.

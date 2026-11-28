@@ -12,6 +12,7 @@
   background:rgb(var(--subtle));
 }
 .val-overview > a{ margin-top:1.25rem }
+.val-cloud-overview{ padding:1rem }
 .val-groups{ display:grid; gap:.65rem }
 .val-group > summary{
   padding:clamp(.9rem, 2.3vw, 1.2rem) clamp(.95rem, 3vw, 1.5rem);

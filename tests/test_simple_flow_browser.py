@@ -113,12 +113,20 @@ def test_benchmarks_show_one_comparison_and_open_the_linked_measurements(page, b
     page.goto(base_url + "/")
     assert page.locator(".cost-figure").count() == 1
     assert page.locator("table").count() == 0
-    pw.expect(page.locator(".cost-figure")).to_contain_text("Costo estimado por 1.000 respuestas correctas")
+    pw.expect(page.locator(".cost-figure")).to_contain_text("Tokens para los mismos 3.630 registros")
+    pw.expect(page.locator(".cost-bars li")).to_have_count(3)
     page.locator(".proof-actions > a").click()
-    assert page.locator(".val-group[open]").count() == 0
-    page.locator('a[href="#lotes-texto"]').click()
-    pw.expect(page.locator("#lotes-texto table")).to_be_visible()
+    pw.expect(page.locator("#esquema-nativo table").first).to_be_visible()
+    pw.expect(page.locator("#esquema-nativo table").first.locator("thead th")).to_have_count(4)
     assert page.locator(".val-group[open]").count() == 1
+    page.goto(base_url + "/validacion/")
+    assert page.locator(".val-group[open]").count() == 0
+    page.locator('a[href="#transporte-adaptativo"]').click()
+    pw.expect(page.locator("#transporte-adaptativo table")).to_be_visible()
+    assert page.locator(".val-group[open]").count() == 1
+    page.goto(base_url + "/validacion/#lotes-texto")
+    pw.expect(page.locator("#lotes-texto table")).to_be_visible()
+    assert page.locator("#generacion-nube").get_attribute("open") is not None
     page.goto(base_url + "/validacion/#reparacion-filas")
     pw.expect(page.locator("#reparacion-filas table")).to_be_visible()
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")

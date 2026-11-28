@@ -22,6 +22,9 @@ _KEY = re.compile(r"[A-Za-z_][A-Za-z_0-9./-]*")
 _INTEGER = re.compile(r"0|-?[1-9][0-9]*")
 _TREE = {"|\n", "\t\n", "1|\n", "1\t\n"}
 _SERIES_FIELD = re.compile(rf"({_KEY.pattern})(?:=({_INTEGER.pattern}):({_INTEGER.pattern}))?")
+_TABLE_TYPES = {"s": "string", "i": "integer", "n": "number", "b": "boolean"}
+_TABLE_HEAD = re.compile(rf"({_KEY.pattern})\[(0|[1-9][0-9]*)\] (.+)")
+_TABLE_FIELD = re.compile(rf"({_KEY.pattern}):([sinb])")
 
 
 def _schema_wire(node):
@@ -403,11 +406,62 @@ def _encode(value, contract, score, sections=True):
     return min(options, key=score)
 
 
-def dumps(value, contract=None, *, count=None):
-    """Encode JSON losslessly. Pass a token-counting callable to minimize its tokens."""
+def _model_table(name, rows, metadata):
+    if not _KEY.fullmatch(name) or not _table_fields(rows):
+        return None
+    contract = domain.infer_contract([rows], prefix="rows")
+    tail = domain._recommend_compact_tail([rows], contract)
+    if tail is None:
+        return None
+    fields = domain._compact_fields(contract, tail)
+    codes = {kind: code for code, kind in _TABLE_TYPES.items()}
+    headings = " ".join(f"{field['name']}:{codes[field['schema']['type']]}" for field in fields)
+    encoded = domain.encode_rows(rows, contract, last_text_field=tail)
+    metadata_line = "" if metadata is None else domain._json(metadata)
+    return f"+{metadata_line}\n{name}[{len(rows)}] {headings}\n{encoded}"
+
+
+def _read_model_table(metadata, body):
+    header, _, table = body.partition("\n")
+    match = _TABLE_HEAD.fullmatch(header)
+    if match is None:
+        raise ValueError("invalid model table header")
+    name, count, headings = match.groups()
+    fields = [_TABLE_FIELD.fullmatch(cell) for cell in headings.split(" ")]
+    if any(field is None for field in fields):
+        raise ValueError("invalid model table field")
+    entries = [field.groups() for field in fields]
+    wire = [6, [5, *[[key, _TYPES.index(_TABLE_TYPES[code])] for key, code in entries]]]
+    contract = _schema_contract(["rows", [], wire])
+    rows = domain.decode_rows(table, contract, last_text_field=entries[-1][0], expected_records=int(count))
+    if metadata == "":
+        return rows
+    root = domain._strict_json(metadata)
+    if not isinstance(root, dict) or name in root:
+        raise ValueError("invalid model table metadata")
+    return {**root, name: rows}
+
+
+def dumps(value, contract=None, *, count=None, for_model=False):
+    """Encode JSON losslessly. With for_model, keep IDs and row counts explicit."""
     if count is None:
         count = lambda text: len(text.encode("utf-8"))
     contract = domain.infer_contract([value]) if contract is None else domain._contract(contract)
+    if for_model:
+        domain._pack(value, contract["schema"])
+        options = [domain._json(value)]
+        if isinstance(value, dict):
+            for name, rows in value.items():
+                if _table_fields(rows):
+                    metadata = {key: cell for key, cell in value.items() if key != name}
+                    candidate = _model_table(name, rows, metadata)
+                    if candidate is not None:
+                        options.append(candidate)
+        else:
+            candidate = _model_table("records", value, None)
+            if candidate is not None:
+                options.append(candidate)
+        return min(options, key=count)
     return _encode(value, contract, count)
 
 
@@ -424,6 +478,8 @@ def _decode(text):
         return _restore_rows(domain._strict_json(header[1:]), body)
     if header.startswith("^"):
         return _read_series(header[1:], body)
+    if header.startswith("+"):
+        return _read_model_table(header[1:], body)
     if header.startswith("#"):
         base, descriptors = domain._strict_json(header[1:])
         if not isinstance(base, dict):
@@ -459,6 +515,7 @@ def main(argv=None):
     parser.add_argument("operation", choices=("encode", "decode"))
     parser.add_argument("file", help="UTF-8 file or - for stdin")
     parser.add_argument("--tokenizer", help="use an installed tokenizer instead of UTF-8 byte size")
+    parser.add_argument("--for-model", action="store_true", help="encode a table with explicit IDs and row counts")
     args = parser.parse_args(argv)
     text = sys.stdin.buffer.read().decode("utf-8") if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
     try:
@@ -470,7 +527,7 @@ def main(argv=None):
                 if tokenizer.backend != "tiktoken":
                     raise ValueError("an exact token count requires tiktoken")
                 count = tokenizer.count
-            output = dumps(domain._strict_json(text), count=count)
+            output = dumps(domain._strict_json(text), count=count, for_model=args.for_model)
         else:
             output = domain._json(loads(text))
     except ValueError as error:

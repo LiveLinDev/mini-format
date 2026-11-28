@@ -529,6 +529,29 @@ class Workflow:
         return self._process_positional(generate(prompt, schema), expected_records, retry=retry,
                                         max_repairs=max_repairs)
 
+    def _process_columnar(self, text, expected_records, known_rows=None, allowed_values=None, *, retry=None, max_repairs=1):
+        def parse(reply):
+            value, _ = _unwrap_json_reply(reply)
+            return self.runtime.decode_columnar_json(value, self.contract, expected_records=expected_records,
+                                                     known_rows=known_rows, allowed_values=allowed_values)
+
+        return self._process_compact(text, parse, retry, max_repairs, {"columnar_json": True})
+
+    def run_columnar(self, generate, task, *, expected_records, known_rows=None, allowed_values=None, max_repairs=1):
+        """Use a provider's native schema to generate columns and reconstruct exact rows."""
+        if max_repairs not in (0, 1, 2, 3):
+            raise ValueError("max_repairs must be between 0 and 3")
+        known_rows, allowed_values = copy.deepcopy((known_rows, allowed_values))
+        request = self.runtime.columnar_json_request(task, self.contract, expected_records=expected_records,
+                                                      known_rows=known_rows, allowed_values=allowed_values, lang=self.lang)
+        prompt, schema = request["prompt"], request["schema"]
+
+        def retry(correction):
+            return generate(prompt + "\n" + correction, schema)
+
+        return self._process_columnar(generate(prompt, schema), expected_records, known_rows, allowed_values,
+                                      retry=retry, max_repairs=max_repairs)
+
     async def run_async(self, generate, task, *, expected_records=None, max_repairs=1):
         """Use the same validated pipeline with an asynchronous model callback."""
         loop = asyncio.get_running_loop()
@@ -690,20 +713,26 @@ def main(argv=None):
     modes.add_argument("--rows-prompt", action="store_true", help="read the task and emit compact row instructions")
     modes.add_argument("--positional-request", action="store_true", help="read the task and emit a prompt and JSON schema")
     modes.add_argument("--positional-json", action="store_true", help="read compact positional JSON rows")
+    modes.add_argument("--columnar-request", action="store_true", help="read the task and emit a columnar request schema")
+    modes.add_argument("--columnar-json", action="store_true", help="read native JSON columns")
     ap.add_argument("--lang", choices=("es", "en"))
     ap.add_argument("--report", action="store_true", help="return the complete run report instead of only data")
     ap.add_argument("--envelope", action="store_true", help="read a JSON envelope with the text and optional row context")
     args = ap.parse_args(argv)
     workflow = Workflow(lang=args.lang)
     text = sys.stdin.read() if args.file == "-" else Path(args.file).read_bytes().decode("utf-8")
-    if args.positional_request or args.positional_json:
+    if args.positional_request or args.positional_json or args.columnar_request or args.columnar_json:
         if args.last_text_field is not None:
-            ap.error("positional JSON uses the contract's column order")
-        if args.positional_request:
+            ap.error("native JSON does not use --last-text-field")
+        if args.positional_request or args.columnar_request:
             try:
-                request = workflow.runtime.positional_json_request(
-                    text, workflow.contract, expected_records=args.expected_records, lang=workflow.lang
-                )
+                options = {"expected_records": args.expected_records, "lang": workflow.lang}
+                if args.columnar_request:
+                    packet = json.loads(text) if args.envelope else {"task": text}
+                    options.update(known_rows=packet.get("known_rows"), allowed_values=packet.get("allowed_values"))
+                    request = workflow.runtime.columnar_json_request(packet["task"], workflow.contract, **options)
+                else:
+                    request = workflow.runtime.positional_json_request(text, workflow.contract, **options)
             except ValueError as exc:
                 ap.error(str(exc))
             print(json.dumps(request, ensure_ascii=False))
@@ -720,17 +749,21 @@ def main(argv=None):
     correction = None
     task = ""
     known_rows = None
+    allowed_values = None
     if args.envelope:
         envelope = json.loads(text)
         text, correction = envelope["text"], envelope.get("correction")
         known_rows = envelope.get("known_rows")
+        allowed_values = envelope.get("allowed_values")
         task = envelope.get("task", "")
-        if known_rows is not None and (args.last_text_field is None or args.positional_json):
-            ap.error("known_rows requires --last-text-field")
+        if known_rows is not None and args.last_text_field is None and not args.columnar_json:
+            ap.error("known_rows requires --last-text-field or --columnar-json")
     try:
         generate = (lambda _: correction) if correction is not None else None
         if args.positional_json:
             data = workflow._process_positional(text, args.expected_records, retry=generate)
+        elif args.columnar_json:
+            data = workflow._process_columnar(text, args.expected_records, known_rows, allowed_values, retry=generate)
         elif args.last_text_field is None:
             data = workflow.process(text, generate=generate, expected_records=args.expected_records)
         else:

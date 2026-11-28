@@ -186,8 +186,8 @@ def test_el_sitio_construido_dice_el_total():
     assert f"Descargar las {C['familias']} familias" in families
 
 
-def test_el_resumen_de_la_portada_reproduce_el_costo_y_las_barras_del_ensayo():
-    from benchmarks import inject_benchmarks
+def test_la_portada_compara_el_transporte_y_el_detalle_conserva_el_costo():
+    from benchmarks import inject_benchmarks, resumen_costo
 
     datos = json.loads(leer(ROOT / "benchmark/public/cloud_results.json"))
     cohorte = datos["cohorts"]["projected_text_batches"]
@@ -202,12 +202,20 @@ def test_el_resumen_de_la_portada_reproduce_el_costo_y_las_barras_del_ensayo():
     portada = leer(PUBLICADOS["index.html"])
     es = inject_benchmarks(portada, "es")
     en = inject_benchmarks(portada, "en")
+    transporte = json.loads(leer(ROOT / "benchmark/public/transport_results.json"))
+    totales = [sum(d["tokenizers"]["o200k_base"][k] for d in transporte["datasets"].values())
+               for k in ("mini", "toon_4_4", "json_compact")]
+    ahorro_transporte = f"{100 * (1 - totales[0] / totales[-1]):.1f}"
+    assert f"{ahorro_transporte}&nbsp;%" in en
+    assert ahorro_transporte.replace(".", ",") + "&nbsp;%" in es
+    assert re.findall(r"--width:([0-9.]+)%", en) == [f"{100 * t / max(totales):.2f}" for t in totales]
+    assert inject_benchmarks(es, "es") == es
+
+    detalle = resumen_costo(datos, lambda es, en: en)
     ahorro = 100 * (1 - costo["mini"] / costo["json_compact"])
-    assert f"{ahorro:.1f}&nbsp;%" in en
-    assert f"{ahorro:.1f}".replace(".", ",") + "&nbsp;%" in es
+    assert f"{ahorro:.1f}&nbsp;%" in detalle
     for importe in costo.values():
-        assert f"${importe:.4f}" in en
-    assert re.findall(r"--width:([0-9.]+)%", en) == [
+        assert f"${importe:.4f}" in detalle
+    assert re.findall(r"--width:([0-9.]+)%", detalle) == [
         f'{100 * costo["mini"] / costo["json_compact"]:.2f}', "100.00",
     ]
-    assert inject_benchmarks(es, "es") == es
