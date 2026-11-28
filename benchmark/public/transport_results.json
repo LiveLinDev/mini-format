@@ -2,7 +2,7 @@
   "measured_on": "2026-11-27",
   "baseline_commit": "4c58288b95503b405428a7f5517fdd8dbd735f7d",
   "source_sha256": {
-    "transport": "3467e9d2a9ca49247190e22a59c718c99efcf094e9251b4c025ee2588eda580f"
+    "transport": "3c91d8a9c49bb836aa2971be47b417df016fe607d25d0496e4a4a163136fc8c8"
   },
   "metric": "tokens per full, exactly reversible document, including metadata and required sidecars",
   "controls": {
