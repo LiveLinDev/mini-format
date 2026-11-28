@@ -11,7 +11,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from minifmt.domain import build_bundle, decode, encode
+from minifmt.domain import DomainError, build_bundle, decode, decode_rows, encode
 from minifmt.integration import prepare
 from minifmt.workflow import Workflow, WorkflowError
 from test_onboarding import _wizard
@@ -308,6 +308,7 @@ def test_projected_text_pairs_use_exact_json_lines(tmp_path, count):
     assert f"{count} filas en orden grupo,titulo. Cada línea es un array JSON" in prompts[0]
     assert "use one JSON array per line" in prompts[1]
     assert decode(flow.last_run["mini"], contract) == rows
+    assert decode_rows(reply, contract, jsonl_pair=True, **options) == rows
 
     if count == 25:
         script = tmp_path / "jsonl.mjs"
@@ -322,6 +323,21 @@ console.log(JSON.stringify(data));
         node = subprocess.run(["node", str(script)], capture_output=True, text=True, encoding="utf-8")
         assert node.returncode == 0, node.stderr
         assert json.loads(node.stdout) == rows
+
+
+@pytest.mark.parametrize(("line", "line_count", "code"), [
+    ('["Equipo norte","Revisar"]\n', 24, "D_EXPECTED_COUNT"),
+    ('["Equipo norte"]\n', 25, "D_ARITY"),
+    ('["Equipo norte",1]\n', 25, "D_TYPE"),
+    ('Equipo norte Revisar\n', 25, "D_VALUE"),
+])
+def test_projected_json_lines_reject_bad_counts_or_values(line, line_count, code, tmp_path):
+    rows = [{"id": index, "grupo": "Equipo norte", "titulo": "Revisar"} for index in range(25)]
+    contract = build_bundle([rows], "ticket", tmp_path / ".mini", lang="es")
+    with pytest.raises(DomainError) as error:
+        decode_rows(line * line_count, contract, jsonl_pair=True, expected_records=25, last_text_field="titulo",
+                    known_rows=[{"id": row["id"]} for row in rows])
+    assert error.value.code == code
 
 
 def test_projected_text_batch_accepts_bare_text_and_json_escapes(tmp_path):
