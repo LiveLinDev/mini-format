@@ -107,6 +107,10 @@ def resultados_nube(ctx):
     diferencia_es = f"{diferencia_col:.1f}".replace(".", ",")
     ahorro_salida = 100 * (1 - confirmacion["mini_columnar"]["output_tokens"] / confirmacion["json_schema"]["output_tokens"])
     salida_es = f"{ahorro_salida:.1f}".replace(".", ",")
+    lotes_nativos = ensayos["columnar_confirmation"]["by_size"]["batch"]
+    ahorro_lotes = 100 * (1 - costo_telemetria_por_mil(lotes_nativos["mini_columnar"], tarifas)
+                         / costo_telemetria_por_mil(lotes_nativos["json_schema"], tarifas))
+    ahorro_lotes_es = f"{ahorro_lotes:.1f}".replace(".", ",")
     exactas_col = confirmacion["mini_columnar"]["exact"]
     total_col = confirmacion["mini_columnar"]["trials"]
     titulo_nativo = a("JSON con esquema nativo · generación en la nube", "Native JSON Schema · cloud generation")
@@ -118,6 +122,8 @@ def resultados_nube(ctx):
       <p>{a(f".mini por columnas acertó {exactas_col} de {total_col} tareas. Frente a JSON nativo por registro usó {salida_es} % menos tokens de salida y costó {diferencia_es} % menos por acierto.",
              f".mini columnar got {exactas_col} of {total_col} tasks right. Compared with native JSON by record it used {ahorro_salida:.1f}% fewer output tokens and cost {diferencia_col:.1f}% less per correct answer.")}</p>
       {tabla_telemetria("columnar_confirmation", titulo_nativo, orden_nativo)}
+      <p>{a(f"El costo fue similar con una fila. En lotes de 8 a 32, .mini por columnas costó {ahorro_lotes_es} % menos que JSON nativo por registro.",
+             f"A single row cost about the same. In batches of 8–32 rows, .mini columnar cost {ahorro_lotes:.1f}% less than native JSON by record.")}</p>
       <p class="val-method">{a("Mismo GPT-6 Luna en la nube, de 1 a 32 tickets por tarea y hasta dos intentos. La tabla usa la tarifa de API sin descuento de caché y cuenta todos los tokens reportados, incluido el contexto de Codex.",
                                "Same cloud GPT-6 Luna, 1–32 tickets per task, and up to two attempts. The table uses API rates without a cache discount and includes all reported tokens, including Codex context.")}</p>
       <details class="disclosure val-run"><summary>{titulo_tokens}</summary>

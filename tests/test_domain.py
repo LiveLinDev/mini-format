@@ -17,12 +17,61 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from minifmt import cli
-from minifmt.domain import (DomainError, _strict_json, apply_replacements, build_bundle, decode,
+from minifmt.domain import (DomainError, _strict_json, apply_replacements, build_bundle, columnar_json_request, decode,
+                            decode_columnar_json,
                             decode_rows, diagnose, encode, encode_rows, infer_contract, json_schema,
                             load_contract, make_prompt, make_rows_prompt, repair)
 
 
 class DomainTests(unittest.TestCase):
+    def test_columnar_json_projects_known_fields_and_reconstructs_rows(self):
+        expected = [{"id": 7, "title": "Pago", "value": 1.0}, {"id": 12, "title": "Acceso", "value": 2.5}]
+        contract = infer_contract([expected])
+        known = [{"id": 7}, {"id": 12}]
+        allowed = {"value": [1, 2.5]}
+        request = columnar_json_request("Ticket lookup", contract, expected_records=2,
+                                        known_rows=known, allowed_values=allowed)
+        self.assertEqual(request["schema"]["required"], ["title", "value"])
+        self.assertEqual(request["schema"]["properties"]["value"], {
+            "type": "array", "items": {"type": "number", "enum": [1, 2.5]}, "minItems": 2, "maxItems": 2,
+        })
+        self.assertEqual(decode_columnar_json('{"title":["Pago","Acceso"],"value":[1.0,2.5]}', contract,
+                                              expected_records=2, known_rows=known, allowed_values=allowed), expected)
+        self.assertEqual(decode_columnar_json('{"id":7,"title":"Pago","value":1.0}', contract,
+                                              expected_records=1), expected[:1])
+        self.assertEqual(decode_columnar_json('{"id":[],"title":[],"value":[]}', contract,
+                                              expected_records=0, known_rows=[]), [])
+
+    def test_columnar_json_rejects_bad_columns_and_values(self):
+        contract = infer_contract([[{"title": "Pago", "open": True}]])
+        for text, code in (
+            ('{"title":["Pago"]', "D_VALUE"),
+            ('{"title":["Pago"],"title":["Pago"],"open":[true]}', "D_VALUE"),
+            ('{"title":["Pago"],"open":[true],"extra":1}', "D_TYPE"),
+            ('{"title":"Pago","open":[true]}', "D_EXPECTED_COUNT"),
+            ('{"title":["Pago"],"open":[true]}', "D_EXPECTED_COUNT"),
+            ('{"title":["Pago","Acceso"],"open":[true,1]}', "D_TYPE"),
+            ('{"title":["Pago","Otro"],"open":[true,false]}', "D_VALUE"),
+        ):
+            with self.subTest(text=text), self.assertRaises(DomainError) as raised:
+                decode_columnar_json(text, contract, expected_records=2, allowed_values={"title": ["Pago", "Acceso"]})
+            self.assertEqual(raised.exception.code, code)
+
+    def test_columnar_json_rejects_invalid_projection_and_enums_before_a_call(self):
+        contract = infer_contract([[{"id": 1, "score": 1.5}]])
+        cases = (
+            ({"known_rows": [{"id": 1, "score": 1.5}]}, "D_COMPACT_SCHEMA"),
+            ({"known_rows": [{"missing": 1}]}, "D_COMPACT_SCHEMA"),
+            ({"allowed_values": {"missing": [1]}}, "D_COMPACT_SCHEMA"),
+            ({"allowed_values": {"score": []}}, "D_COMPACT_SCHEMA"),
+            ({"allowed_values": {"score": [1, 1.0]}}, "D_COMPACT_SCHEMA"),
+            ({"allowed_values": {"score": [True]}}, "D_TYPE"),
+        )
+        for options, code in cases:
+            with self.subTest(options=options), self.assertRaises(DomainError) as raised:
+                columnar_json_request("Task", contract, expected_records=1, **options)
+            self.assertEqual(raised.exception.code, code)
+
     def roundtrip(self, documents):
         contract = infer_contract(documents, "phone")
         for document in documents:
