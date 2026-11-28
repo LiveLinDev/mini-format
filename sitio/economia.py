@@ -110,14 +110,42 @@ def construir(ctx) -> None:
         '*Con Claude Haiku 5.5, el prompt completo antiguo de 11 reglas provocó 815 tokens de razonamiento CoT. Usar prompt_style="lean" o compact_rows elimina esa sobrecarga.',
         '*On Claude Haiku 5.5, the legacy 11-rule full prompt triggered 815 CoT reasoning tokens. Using prompt_style="lean" or compact_rows removes that bloat.',
     )
-    cuerpo = f'''<div class="eco-wrap prose">
-  <p class="eyebrow">{a("Evidencia económica verificada", "Verified cost economics")}</p>
-  <h1>{a("Economía", "Economics")}</h1>
-  <p class="lead">{a(
-      "Costo medido en dólares por cada 1.000 registros válidos, ahorro real en tokens de salida y optimización de caché KV y prompts anti-razonamiento.",
-      "Measured USD per 1,000 valid records, verified output-token reductions, and KV-cache plus anti-CoT prompt optimizations."
-  )}</p>
+    cuerpo = f'''<div class="wrap eco-wrap prose">
+  <h1>{a("Calculadora de costos", "Cost calculator")}</h1>
+  <p class="lead">{a("Estima cuánto pagarías con JSON y .mini según el modelo y tus llamadas mensuales.",
+                     "Estimate what you would spend with JSON and .mini based on the model and your monthly calls.")}</p>
 
+  <section class="eco-sim" id="ecoSim">
+    <h2>{a("Comparación mensual", "Monthly comparison")}</h2>
+    <div class="eco-controls">
+      <label>{a("Modelo (tarifa oficial verificada)", "Model (verified official tariff)")}
+        <select id="ecoModel">{"".join(options)}</select>
+      </label>
+      <label>{a("Llamadas mensuales (lotes de 20 registros)", "Monthly calls (20-record batches)")}
+        <input id="ecoCalls" type="number" min="100" step="1000" value="50000">
+      </label>
+      <label>{a("Modo .mini", ".mini mode")}
+        <select id="ecoMode">
+          <option value="rows" data-label-en="Compact rows">Filas compactas</option>
+          <option value="lean" data-label-en="domain/2 with short prompt">domain/2 con prompt breve</option>
+          <option value="full" data-label-en="Full domain/1">domain/1 completo</option>
+        </select>
+      </label>
+      <label>{a("Tasa de acierto KV-Cache (%)", "KV-Cache hit ratio (%)")}
+        <input id="ecoCache" type="number" min="0" max="95" step="5" value="80">
+      </label>
+    </div>
+    <div class="eco-results">
+      <div class="eco-out-box"><small>{a("Costo mensual JSON", "Monthly JSON spend")}</small><strong id="ecoJsonUsd">-</strong></div>
+      <div class="eco-out-box"><small>{a("Costo mensual .mini", "Monthly .mini spend")}</small><strong id="ecoMiniUsd">-</strong></div>
+      <div class="eco-out-box is-win"><small>{a("Ahorro estimado", "Estimated savings")}</small><strong id="ecoSavedUsd">-</strong></div>
+    </div>
+    <p class="fine" id="ecoSimNote" style="margin-top:12px"></p>
+  </section>
+
+  <details class="disclosure eco-measurements">
+    <summary>{a("Ver las mediciones de referencia", "See the reference measurements")}</summary>
+    <div class="eco-measurements-body">
   <div class="eco-grid">
     <div class="eco-card">
       <strong>-{opus_save:.1f}% USD</strong>
@@ -141,8 +169,7 @@ def construir(ctx) -> None:
     </div>
   </div>
 
-  <h2>{a("Medición empírica con tarifas verificadas", "Empirical runs with verified provider rates")}</h2>
-  <div class="tablewrap">
+  <div class="eco-table" tabindex="0">
     <table class="t">
       <thead>
         <tr>
@@ -157,34 +184,8 @@ def construir(ctx) -> None:
     </table>
   </div>
   <p class="fine">{nota_haiku}</p>
-
-  <section class="eco-sim" id="ecoSim">
-    <h2>{a("Simulador mensual interactivo (JSON vs .mini)", "Interactive monthly simulator (JSON vs .mini)")}</h2>
-    <div class="eco-controls">
-      <label>{a("Modelo (tarifa oficial verificada)", "Model (verified official tariff)")}
-        <select id="ecoModel">{"".join(options)}</select>
-      </label>
-      <label>{a("Llamadas mensuales (lotes de 20 registros)", "Monthly calls (20-record batches)")}
-        <input id="ecoCalls" type="number" min="100" step="1000" value="50000">
-      </label>
-      <label>{a("Modo .mini", ".mini mode")}
-        <select id="ecoMode">
-          <option value="rows">{a("Filas compactas (182 tok / prompt 68)", "Compact rows (182 tok / prompt 68)")}</option>
-          <option value="lean">{a("domain/2 + prompt lean (244 tok / prompt 100)", "domain/2 + lean prompt (244 tok / prompt 100)")}</option>
-          <option value="full">{a("domain/1 completo (278 tok / prompt 453)", "Full domain/1 (278 tok / prompt 453)")}</option>
-        </select>
-      </label>
-      <label>{a("Tasa de acierto KV-Cache (%)", "KV-Cache hit ratio (%)")}
-        <input id="ecoCache" type="number" min="0" max="95" step="5" value="80">
-      </label>
     </div>
-    <div class="eco-results">
-      <div class="eco-out-box"><small>{a("Costo mensual JSON", "Monthly JSON spend")}</small><strong id="ecoJsonUsd">-</strong></div>
-      <div class="eco-out-box"><small>{a("Costo mensual .mini", "Monthly .mini spend")}</small><strong id="ecoMiniUsd">-</strong></div>
-      <div class="eco-out-box is-win"><small>{a("Ahorro estimado", "Estimated savings")}</small><strong id="ecoSavedUsd">-</strong></div>
-    </div>
-    <p class="fine" id="ecoSimNote" style="margin-top:12px"></p>
-  </section>
+  </details>
 
   <p class="wip-links">
     <a class="btn btn-ghost" href="/validacion/">{a("Tabla contra competidores 2026", "2026 competitor leaderboard")}</a>
@@ -192,6 +193,6 @@ def construir(ctx) -> None:
     <a class="btn btn-ghost" href="/docs/metodologia/">{a("Metodología", "Methodology")}</a>
   </p>
 </div>'''
-    html_out = ctx.pagina("economia", "Economía", "Economics", cuerpo)
+    html_out = ctx.pagina("economia", "Calculadora de costos", "Cost calculator", cuerpo)
     html_out = ctx.recursos(html_out, css=("/economia.css",), js=("/economia-calculo.js", "/economia-ui.js"))
     ctx.escribir_pagina("economia", html_out)

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" data-localized-routes="1">
+<html lang="es" data-title-es="mini-format — menos tokens de IA, el mismo JSON para tu aplicación" data-title-en="mini-format — fewer AI tokens, the same JSON for your application">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,242 +8,129 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/base.css?v=5f6a4fa80e7c6ec4">
-<link rel="stylesheet" href="/landing.css?v=3057cd918d60e8cc">
-<link rel="stylesheet" href="/comofunciona.css?v=da3548ecd04a219b">
-<link rel="stylesheet" href="/flujo.css?v=d748508a91dd5e0e">
-<link rel="icon" href="/favicon.svg?v=1496ea04e852d75e" type="image/svg+xml">
-<meta name="description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos.">
-<link rel="canonical" href="https://mini-format.pmoluna.com/">
-<link rel="alternate" hreflang="es" href="https://mini-format.pmoluna.com/">
-<link rel="alternate" hreflang="en" href="https://mini-format.pmoluna.com/en/">
-<link rel="alternate" hreflang="x-default" href="https://mini-format.pmoluna.com/">
-<meta property="og:type" content="website"><meta property="og:title" content="mini-format — menos tokens de IA, el mismo JSON para tu aplicación"><meta property="og:description" content="Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos."><meta property="og:url" content="https://mini-format.pmoluna.com/"><meta property="og:locale" content="es_ES">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "mini-format", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "1.3.4", "license": "https://opensource.org/license/mit", "downloadUrl": "https://mini-format.pmoluna.com/downloads/mini-format-1.3.4.zip", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": "es", "description": "Crea tu toolkit .mini desde muestras JSON: contrato, prompt, parser, validador y reparación. Descarga el paquete y mide el ahorro con tus datos."}</script>
+<link rel="stylesheet" href="/base.css">
+<link rel="stylesheet" href="/landing.css">
 </head>
 <body>
-<a class="skip" href="#main">Saltar al contenido</a>
-
-<div class="announce">
-  mini-format 1.3.4 · de tu IA a tu aplicación, paso a paso
-  <a href="/docs/quickstart/">empezar →</a>
-</div>
+<a class="skip" href="#main"><span data-lang="es">Saltar al contenido</span><span data-lang="en" hidden>Skip to content</span></a>
 
 <!-- ═══════════ CABECERA ═══════════ -->
 <header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
   <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links"><span class="sr"><span data-lang="es">Menú</span><span data-lang="en" hidden>Menu</span></span><svg class="ico-abrir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="ico-cerrar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-  <ul class="nav-links" id="nav-links"><li><a href="/demo/"><span data-lang="es">Demo en vivo</span><span data-lang="en" hidden>Live demo</span></a></li><li><a href="/docs/"><span data-lang="es">Documentación</span><span data-lang="en" hidden>Documentation</span></a></li><li><a href="/flujo/"><span data-lang="es">Cómo funciona</span><span data-lang="en" hidden>How it works</span></a></li><li><a href="/playground/"><span data-lang="es">Playground</span><span data-lang="en" hidden>Playground</span></a></li><li><a href="/ejemplo/"><span data-lang="es">Más ejemplos</span><span data-lang="en" hidden>More examples</span></a></li><li class="nav-cta"><a class="btn btn-solid" href="#instalar"><span data-lang="es">Descargar</span><span data-lang="en" hidden>Download</span></a></li></ul>
+  <ul class="nav-links" id="nav-links"><li><a href="/docs/"><span data-lang="es">Documentación</span><span data-lang="en" hidden>Documentation</span></a></li><li><a href="/flujo/"><span data-lang="es">Cómo funciona</span><span data-lang="en" hidden>How it works</span></a></li><li><a href="/playground/"><span data-lang="es">Playground</span><span data-lang="en" hidden>Playground</span></a></li><li><a href="/validacion/"><span data-lang="es">Resultados</span><span data-lang="en" hidden>Results</span></a></li><li class="nav-cta"><a class="btn btn-solid" href="#instalar"><span data-lang="es">Instalar</span><span data-lang="en" hidden>Install</span></a></li></ul>
   <span class="spacer"></span>
-  <a class="search" href="/docs/" aria-label="Ir a la documentación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="search-txt">Buscar en la documentación <kbd>/</kbd></span></a>
-  <a class="icon-link" href="/downloads/mini-format-1.3.4-source.zip" aria-label="Descargar código fuente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
   <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
-  <a class="btn btn-solid" href="#instalar"><span data-lang="es">Descargar</span><span data-lang="en" hidden>Download</span></a>
+  <a class="btn btn-solid" href="#instalar"><span data-lang="es">Instalar</span><span data-lang="en" hidden>Install</span></a>
 </div></header>
 <!-- ═══════════ /CABECERA ═══════════ -->
 
 <main id="main">
-<section class="frame hero"><div class="hero-grid">
-<div><p class="eyebrow"><span class="badge">1.3.4</span> .mini · <span data-lang="es">Para aplicaciones que piden JSON a una IA</span><span data-lang="en" hidden>For apps that request JSON from AI</span></p>
-<h1><span data-lang="es">Tu IA puede<br><span style="color:rgb(var(--accent))">costar menos.</span></span><span data-lang="en" hidden>Your AI can<br><span style="color:rgb(var(--accent))">cost less.</span></span></h1>
-<p class="lead"><span data-lang="es">.mini reduce el texto que genera la IA. Defines los campos una vez y tu aplicación recibe JSON validado.</span><span data-lang="en" hidden">.mini reduces the text your AI generates. Define the fields once and get validated JSON in your application.</span></p>
-<div class="story-actions"><a class="btn btn-solid btn-lg" href="/flujo/"><span data-lang="es">Ver un ejemplo de integración →</span><span data-lang="en" hidden>See an integration example →</span></a><a class="btn btn-ghost" href="#instalar"><span data-lang="es">Descargar y empezar</span><span data-lang="en" hidden>Download and get started</span></a></div>
-</div>
-<aside class="simple-proof"><h2><span data-lang="es">De la IA a tu aplicación</span><span data-lang="en" hidden>From AI to your application</span></h2>
-<ol class="hero-format-steps">
-<li><h3><span data-lang="es">JSON repite las claves</span><span data-lang="en" hidden>JSON repeats the keys</span></h3><pre><span data-lang="es">{"<mark>titulo</mark>":"Error al iniciar sesión",
- "<mark>categoria</mark>":"acceso", "<mark>prioridad</mark>":"alta"}</span><span data-lang="en" hidden>{"<mark>title</mark>":"Sign-in error",
- "<mark>category</mark>":"access", "<mark>priority</mark>":"high"}</span></pre></li>
-<li><h3><span data-lang="es">.mini genera los valores</span><span data-lang="en" hidden>.mini generates the values</span></h3><p><span data-lang="es">El contrato define el orden.</span><span data-lang="en" hidden>The contract defines the order.</span></p><pre class="hero-mini-record"><span data-lang="es">Error al iniciar sesión|acceso|alta</span><span data-lang="en" hidden>Sign-in error|access|high</span></pre></li>
-<li><h3><span data-lang="es">Tu aplicación recibe JSON</span><span data-lang="en" hidden>Your app receives JSON</span></h3><p><span data-lang="es">.mini valida y repara antes de convertir.</span><span data-lang="en" hidden>.mini validates and repairs before converting.</span></p></li>
-</ol>
-<!-- PRUEBA DE TOKENS -->
-<a href="/validacion/"><span data-lang="es">Benchmarks</span><span data-lang="en" hidden>Benchmarks</span></a>
-<!-- /PRUEBA DE TOKENS -->
-</aside>
-</div></section>
-<!-- ═══════════ COMO FUNCIONA ═══════════ -->
-<section class="section" id="por-que"><div class="frame">
-    <p class="eyebrow"><span data-lang="es">Dónde se reduce el texto</span><span data-lang="en" hidden>Where text gets shorter</span></p>
-    <h2><span data-lang="es">JSON repite los nombres.<br><span class="dim">.mini acuerda las reglas una vez.</span></span><span data-lang="en" hidden>JSON repeats field names.<br><span class="dim">.mini agrees on the rules once.</span></span></h2>
-    <ol class="cf-flow">
-      <li><span class="cf-number">01</span><h3>JSON</h3><p><span data-lang="es">Cada ticket vuelve a escribir "titulo", "categoria" y "prioridad", con comillas y signos. Si max_tokens corta la respuesta, json.loads pierde todo el lote.</span><span data-lang="en" hidden>Every ticket writes "title", "category" and "priority" again, with quotes and punctuation. If max_tokens cuts the reply, json.loads loses the entire batch.</span></p></li>
-      <li><span class="cf-number">02</span><h3>TOON / ISON / CSV</h3><p><span data-lang="es">Otras notaciones tabulares quitan claves, pero mantienen delimitadores costosos en BPE o carecen de gramáticas GBNF, reparación selectiva y recuperación línea a línea.</span><span data-lang="en" hidden>Other tabular formats drop keys, yet retain costly BPE delimiters or lack GBNF grammars, selective repair, and line-level truncation recovery.</span></p></li>
-      <li><span class="cf-number">03</span><h3>.mini (domain/2 y filas compactas)</h3><p><span data-lang="es">Selecciona delimitador BPE óptimo, comprime deltas/prefijos sin pérdida, poda prompts CoT (prompt_style=lean) y recupera el 99,8 % de registros tras cortes.</span><span data-lang="en" hidden>Selects the optimal BPE delimiter, losslessly folds deltas/prefixes, prunes CoT prompts (prompt_style=lean), and recovers 99.8% of records after cuts.</span></p></li>
-    </ol><p class="fine"><span data-lang="es">Al serializar el ejemplo de 20 tickets, .mini ocupa 182 tokens y JSON compacto ocupa 443.</span><span data-lang="en" hidden>The serialized 20-ticket example uses 182 tokens in .mini and 443 in compact JSON.</span></p>
-    </div></section><section class="section cf-preview" id="como-funciona">
-  <div class="frame">
-    <p class="eyebrow"><span data-lang="es">Qué hace mini setup</span><span data-lang="en" hidden>What mini setup does</span></p>
-    <div class="split-head">
-      <h2><span data-lang="es">Tu formato nace<br><span class="dim">de los datos que necesitas.</span></span><span data-lang="en" hidden>Your format starts<br><span class="dim">with the data you need.</span></span></h2>
-      <p class="aside"><span data-lang="es">Es un asistente en tu terminal. Le das un JSON como el que necesita tu aplicación; prepara las reglas del formato, gramáticas GBNF/Lark y su conexión a tu llamada a IA.</span><span data-lang="en" hidden>It is a terminal wizard. Give it JSON like the data your app needs; it prepares format rules, GBNF/Lark grammars, and connects them to your AI call.</span></p>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title"><span data-lang="es">Tu IA puede<br><strong>costar menos.</strong></span><span data-lang="en" hidden>Your AI can<br><strong>cost less.</strong></span></h1>
+        <p class="lead"><span data-lang="es">Con .mini, la IA escribe los datos en menos tokens y tu aplicación recibe el mismo JSON, ya validado.</span><span data-lang="en" hidden>With .mini, AI writes the data in fewer tokens and your app gets the same JSON, already validated.</span></p>
+        <div class="landing-actions">
+          <a class="btn btn-solid btn-lg" href="/playground/"><span data-lang="es">Probar en el navegador</span><span data-lang="en" hidden>Try in the browser</span></a>
+          <a class="btn btn-ghost btn-lg" href="/flujo/"><span data-lang="es">Ver la integración</span><span data-lang="en" hidden>See the integration</span><span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <figure class="response-example" id="por-que" aria-labelledby="example-caption">
+        <figcaption id="example-caption"><span data-lang="es">Dos tickets de soporte</span><span data-lang="en" hidden>Two support tickets</span></figcaption>
+        <fieldset class="example-format">
+          <legend class="sr"><span data-lang="es">Formato de la respuesta</span><span data-lang="en" hidden>Response format</span></legend>
+          <input type="radio" name="example-format" id="view-mini" checked>
+          <input type="radio" name="example-format" id="view-json">
+          <div class="example-tabs">
+            <label for="view-mini">.mini</label>
+            <label for="view-json">JSON</label>
+          </div>
+          <div class="example-panel example-mini">
+            <pre><code><span data-lang="es"><span class="example-value">cuenta alta</span> Error al iniciar sesión
+<span class="example-value">pago media</span> Cobro duplicado</span><span data-lang="en" hidden><span class="example-value">account high</span> Sign-in error
+<span class="example-value">payment medium</span> Duplicate charge</span></code></pre>
+            <p><span data-lang="es">El orden ya está definido: categoría, prioridad, título.</span><span data-lang="en" hidden>The field order is already set: category, priority, title.</span></p>
+          </div>
+          <div class="example-panel example-json">
+            <pre><code><span data-lang="es">[
+  {"<span class="key">categoria</span>":"cuenta","<span class="key">prioridad</span>":"alta",
+   "<span class="key">titulo</span>":"Error al iniciar sesión"},
+  {"<span class="key">categoria</span>":"pago","<span class="key">prioridad</span>":"media",
+   "<span class="key">titulo</span>":"Cobro duplicado"}
+]</span><span data-lang="en" hidden>[
+  {"<span class="key">category</span>":"account","<span class="key">priority</span>":"high",
+   "<span class="key">title</span>":"Sign-in error"},
+  {"<span class="key">category</span>":"payment","<span class="key">priority</span>":"medium",
+   "<span class="key">title</span>":"Duplicate charge"}
+]</span></code></pre>
+            <p><span data-lang="es">Los nombres de campo se repiten en cada ticket.</span><span data-lang="en" hidden>The field names repeat in every ticket.</span></p>
+          </div>
+        </fieldset>
+        <div class="example-output">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+          <span data-lang="es">Tu aplicación recibe JSON validado</span><span data-lang="en" hidden>Your app receives validated JSON</span>
+        </div>
+      </figure>
     </div>
-    <ol class="cf-flow">
-      <li><span class="cf-number">01</span><h3><span data-lang="es">Describe tu JSON</span><span data-lang="en" hidden>Describe your JSON</span></h3><p><span data-lang="es">Elige español o inglés y una muestra de datos. El contrato guarda sus campos, su orden y sus tipos: las reglas de tu .mini.</span><span data-lang="en" hidden>Choose Spanish or English and a data sample. The contract stores its fields, order and types: the rules of your .mini.</span></p></li>
-      <li><span class="cf-number">02</span><h3><span data-lang="es">Recibe el kit preparado</span><span data-lang="en" hidden>Get your toolkit</span></h3><p><span data-lang="es">Incluye prompts completo y lean anti-CoT para KV-cache, workflow Python/JS y compilación directa a GBNF, Lark o Regex.</span><span data-lang="en" hidden>Includes full and lean anti-CoT prompts for KV-cache, Python/JS workflow, and direct GBNF, Lark, or Regex compilation.</span></p></li>
-      <li><span class="cf-number">03</span><h3><span data-lang="es">Elige el archivo de tu flujo</span><span data-lang="en" hidden>Choose your workflow file</span></h3><p><span data-lang="es">Indica dónde llamas a la IA para preparar la integración. Conecta OpenAI, Anthropic, DeepSeek o servidores locales en una línea.</span><span data-lang="en" hidden>Select the code that calls AI to prepare integration. Connects OpenAI, Anthropic, DeepSeek, or local endpoints in one line.</span></p></li>
-    </ol>
-    <div class="cf-preview-action"><a class="btn btn-ghost" href="/docs/quickstart/"><span data-lang="es">Seguir la instalación y el setup →</span><span data-lang="en" hidden>Follow installation and setup →</span></a><p><span data-lang="es">Explora las comparativas de 16 formatos en /validacion/ y costos reales en /economia/.</span><span data-lang="en" hidden>Explore the 16-format leaderboard on /validacion/ and live API costs on /economia/.</span></p></div>
-  </div>
-</section>
-<!-- ═══════════ /COMO FUNCIONA ═══════════ -->
-<section class="section" id="flujo-animado"><div class="frame g2">
-<div><p class="eyebrow"><span data-lang="es">Dentro de tu código</span><span data-lang="en" hidden>Inside your code</span></p>
-<h2 class="rv"><span data-lang="es">Comprueba primero.<br><span class="dim">Guarda después.</span></span><span data-lang="en" hidden>Check first.<br><span class="dim">Save afterwards.</span></span></h2>
-<p class="lead"><span data-lang="es">El workflow conecta tu llamada a IA con el validador y el parser. El validador comprueba las reglas; Repair corrige fallos de formato. El parser convierte una respuesta válida a objetos JSON para tu aplicación.</span><span data-lang="en" hidden>The workflow connects your AI call to the validator and parser. The validator checks the rules; Repair fixes formatting problems. The parser converts a valid response to JSON objects for your app.</span></p>
-<p class="aside"><span data-lang="es">Si hay un tipo incorrecto o faltan datos, el workflow puede pedir una corrección a la IA y vuelve a comprobarla. La animación muestra una ejecución guardada con 20 tickets.</span><span data-lang="en" hidden>If a type is wrong or data is missing, the workflow can request an AI correction and check again. The animation shows a recorded run with 20 tickets.</span></p>
-<div class="story-actions"><a class="btn btn-solid" href="/flujo/"><span data-lang="es">Inspeccionar la ejecución guardada →</span><span data-lang="en" hidden>Inspect the recorded run →</span></a><a class="btn btn-ghost" href="/playground/"><span data-lang="es">Abrir el playground</span><span data-lang="en" hidden>Open the playground</span></a></div></div>
-<div class="demo-video workflow-demo" id="demo-playground">
+  </section>
+
+  <!-- ═══════════ COMO FUNCIONA ═══════════ -->
+  <!-- ═══════════ /COMO FUNCIONA ═══════════ -->
+
+  <section class="landing-section landing-proof" id="comparar">
+    <div class="wrap">
+      <!-- ═══════════ RESUMEN DE COSTO ═══════════ -->
+      <!-- ═══════════ /RESUMEN DE COSTO ═══════════ -->
+      <div class="proof-actions">
+        <details class="disclosure proof-method" id="prueba-tokens">
+          <summary><span data-lang="es">Cómo se midió</span><span data-lang="en" hidden>How we measured it</span></summary>
+          <p><span data-lang="es">Se comparó el costo estimado de la instrucción, la respuesta y los reintentos. Un acierto devuelve exactamente el JSON esperado.</span><span data-lang="en" hidden>We compared the estimated cost of the instructions, response and retries. A correct answer matches the expected JSON exactly.</span></p>
+        </details>
+        <a class="text-link" href="/validacion/"><span data-lang="es">Ver todos los resultados</span><span data-lang="en" hidden>See all results</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="landing-section landing-install" id="instalar" aria-labelledby="install-title">
+    <div class="wrap install-grid">
+      <div>
+        <h2 id="install-title"><span data-lang="es">Pruébalo con tus datos.</span><span data-lang="en" hidden>Try it with your data.</span></h2>
+        <p><span data-lang="es">Descarga el paquete y usa una muestra JSON para preparar tu formato con el asistente.</span><span data-lang="en" hidden>Download the package and use a JSON sample to set up your format with the wizard.</span></p>
+        <div class="landing-actions">
+          <a class="btn btn-solid" href="/downloads/mini-format-1.3.4.zip" download><span data-lang="es">Descargar .mini</span><span data-lang="en" hidden>Download .mini</span></a>
+          <a class="btn btn-ghost" href="/docs/quickstart/"><span data-lang="es">Guía de instalación</span><span data-lang="en" hidden>Install guide</span></a>
+        </div>
+      </div>
+      <div class="install-commands">
+        <p><span data-lang="es">Desde la carpeta extraída</span><span data-lang="en" hidden>In the extracted folder</span></p>
+        <div class="cmd"><code>python -m pip install --no-index mini_format-1.3.4-py3-none-any.whl</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
+<div class="cmd"><code>mini setup</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div>
+        <a class="text-link" href="/docs/typescript/"><span data-lang="es">Instalación en TypeScript</span><span data-lang="en" hidden>Install in TypeScript</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap landing-examples">
+    <details class="disclosure" id="flujo-animado">
+      <summary><span data-lang="es">Ver la ejecución de 20 tickets</span><span data-lang="en" hidden>See the 20-ticket run</span></summary>
+      <div class="recorded-workflow">
+        <div class="demo-video workflow-demo" id="demo-playground">
 <div class="dv-screen"><div class="dv-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-dv-title>20 tickets · .mini → JSON</span><span class="dv-time" data-dv-time>0:00 / 0:36</span></div><pre class="dv-body" data-dv-body></pre><p class="dv-cap" data-dv-cap></p><div class="dv-progress" aria-hidden="true"><span data-dv-fill></span></div></div>
 <div class="dv-controls"><button type="button" class="dv-btn" data-dv-toggle aria-label="Reproducir el vídeo"><svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
 <div class="dv-dots" role="group" aria-label="Saltar a un paso del vídeo"><button type="button" data-dv-goto="0" aria-label="Paso 1: generar">1</button><button type="button" data-dv-goto="1" aria-label="Paso 2: validar">2</button><button type="button" data-dv-goto="2" aria-label="Paso 3: reparar">3</button><button type="button" data-dv-goto="3" aria-label="Paso 4: corregir">4</button><button type="button" data-dv-goto="4" aria-label="Paso 5: volver a validar">5</button><button type="button" data-dv-goto="5" aria-label="Paso 6: entregar JSON">6</button></div>
 <button type="button" class="dv-btn" data-dv-restart aria-label="Reiniciar el vídeo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button></div>
-</div></div></section>
-
-<section class="section" id="instalar"><div class="frame"><h2><span data-lang="es">Empieza con una muestra JSON.</span><span data-lang="en" hidden>Start with a JSON sample.</span></h2><p><span data-lang="es">Descarga y extrae el paquete. Instala el archivo Python incluido y abre el asistente:</span><span data-lang="en" hidden>Download and extract the package. Install the included Python file and open the wizard:</span></p><div class="cmd"><code>python -m pip install --no-index mini_format-1.3.4-py3-none-any.whl</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div><div class="cmd"><code>mini setup</code><button class="copy" type="button" aria-label="Copiar"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></button></div><p><span data-lang="es">El asistente pregunta el idioma, lee tu muestra JSON y prepara el kit. Después eliges el archivo que llama a la IA o «Todavía no tengo un flujo» para conectarlo más adelante.</span><span data-lang="en" hidden>The wizard asks for your language, reads your JSON sample and prepares the toolkit. Then select your AI call file or “I do not have a workflow yet” to connect it later.</span></p><div class="story-actions"><a class="btn btn-solid" href="/downloads/mini-format-1.3.4.zip" download><span data-lang="es">Descargar .mini 1.3.4 ↓</span><span data-lang="en" hidden>Download .mini 1.3.4 ↓</span></a><a class="btn btn-ghost" href="/docs/quickstart/"><span data-lang="es">Seguir la guía</span><span data-lang="en" hidden>Follow the guide</span></a></div><p class="aside">Python 3.9+ · MIT · <span data-lang="es">Ejemplo de 20 tickets e historial incluidos.</span><span data-lang="en" hidden>20-ticket example and history included.</span></p></div></section>
-<details class="landing-more"><summary><span data-lang="es">Ver más mediciones y documentación técnica</span><span data-lang="en" hidden>More measurements and technical documentation</span></summary>
-<section class="frame"><div>
-    <div class="bench"><div class="bench-tabs" role="tablist" aria-label="Datasets"><button role="tab" aria-selected="true" data-panel="public-products">Productos</button><button role="tab" aria-selected="false" data-panel="public-users">Usuarios</button><button role="tab" aria-selected="false" data-panel="public-comments">Comentarios</button><button role="tab" aria-selected="false" data-panel="public-earthquakes">USGS</button></div><div class="bench-body js-chart" id="public-products" role="tabpanel"><div class="bench-head"><h3>DummyJSON products</h3><button class="replay" type="button" data-replay>↻ animar</button></div><p class="unit">194 registros · Datos públicos de prueba</p><p class="howto">Tokens de salida relativos a .mini domain/2 · menos es mejor. <b>o200k_base</b></p><div class="bar is-mini" style="--w:35.61%" title="60431 tokens"><span class="name">mini-format<small>mini-domain/2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div><div class="bar" style="--w:37.76%" title="64090 tokens"><span class="name">mini-format<small>mini-domain/1</small></span><span class="track"><span class="fill"></span></span><span class="val">1,06×</span></div><div class="bar" style="--w:39.51%" title="67057 tokens"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,11×</span></div><div class="bar" style="--w:40.22%" title="68260 tokens"><span class="name">TOON<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,13×</span></div><div class="bar" style="--w:44.94%" title="76275 tokens"><span class="name">TONL<small>compact</small></span><span class="track"><span class="fill"></span></span><span class="val">1,26×</span></div><div class="bar" style="--w:45.34%" title="76950 tokens"><span class="name">ISON<small>v1.0</small></span><span class="track"><span class="fill"></span></span><span class="val">1,27×</span></div><div class="bar" style="--w:46.16%" title="78343 tokens"><span class="name">LEAN<small>tab</small></span><span class="track"><span class="fill"></span></span><span class="val">1,30×</span></div><div class="bar" style="--w:52.62%" title="89310 tokens"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">1,48×</span></div><div class="bar" style="--w:55.17%" title="93624 tokens"><span class="name">TOON<small>original</small></span><span class="track"><span class="fill"></span></span><span class="val">1,55×</span></div><div class="bar" style="--w:58.93%" title="100013 tokens"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,65×</span></div><div class="bar" style="--w:100.00%" title="169714 tokens"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">2,81×</span></div><div class="note"><span>11,47 % menos tokens que TOON plano (domain/2). Prompt reutilizable medido aparte.</span><a href="/validacion/">comparativa completa →</a></div></div><div class="bench-body js-chart" id="public-users" role="tabpanel" hidden><div class="bench-head"><h3>DummyJSON users</h3><button class="replay" type="button" data-replay>↻ animar</button></div><p class="unit">208 registros · Datos públicos de prueba</p><p class="howto">Tokens de salida relativos a .mini domain/2 · menos es mejor. <b>o200k_base</b></p><div class="bar is-mini" style="--w:19.16%" title="38751 tokens"><span class="name">mini-format<small>mini-domain/2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div><div class="bar" style="--w:21.40%" title="43268 tokens"><span class="name">mini-format<small>mini-domain/1</small></span><span class="track"><span class="fill"></span></span><span class="val">1,12×</span></div><div class="bar" style="--w:29.68%" title="60028 tokens"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,55×</span></div><div class="bar" style="--w:29.75%" title="60155 tokens"><span class="name">ISON<small>v1.0</small></span><span class="track"><span class="fill"></span></span><span class="val">1,55×</span></div><div class="bar" style="--w:29.77%" title="60211 tokens"><span class="name">TONL<small>compact</small></span><span class="track"><span class="fill"></span></span><span class="val">1,55×</span></div><div class="bar" style="--w:30.07%" title="60815 tokens"><span class="name">TOON<small>original</small></span><span class="track"><span class="fill"></span></span><span class="val">1,57×</span></div><div class="bar" style="--w:30.13%" title="60926 tokens"><span class="name">TOON<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,57×</span></div><div class="bar" style="--w:32.51%" title="65736 tokens"><span class="name">LEAN<small>tab</small></span><span class="track"><span class="fill"></span></span><span class="val">1,70×</span></div><div class="bar" style="--w:45.12%" title="91251 tokens"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">2,35×</span></div><div class="bar" style="--w:51.84%" title="104826 tokens"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">2,71×</span></div><div class="bar" style="--w:100.00%" title="202226 tokens"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">5,22×</span></div><div class="note"><span>36,40 % menos tokens que TOON plano (domain/2). Prompt reutilizable medido aparte.</span><a href="/validacion/">comparativa completa →</a></div></div><div class="bench-body js-chart" id="public-comments" role="tabpanel" hidden><div class="bench-head"><h3>JSONPlaceholder comments</h3><button class="replay" type="button" data-replay>↻ animar</button></div><p class="unit">500 registros · Datos públicos de prueba</p><p class="howto">Tokens de salida relativos a .mini domain/2 · menos es mejor. <b>o200k_base</b></p><div class="bar is-mini" style="--w:48.87%" title="29302 tokens"><span class="name">mini-format<small>mini-domain/2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div><div class="bar" style="--w:49.81%" title="29865 tokens"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,02×</span></div><div class="bar" style="--w:50.08%" title="30028 tokens"><span class="name">TONL<small>compact</small></span><span class="track"><span class="fill"></span></span><span class="val">1,02×</span></div><div class="bar" style="--w:50.19%" title="30092 tokens"><span class="name">ISON<small>v1.0</small></span><span class="track"><span class="fill"></span></span><span class="val">1,03×</span></div><div class="bar" style="--w:50.48%" title="30268 tokens"><span class="name">mini-format<small>mini-domain/1</small></span><span class="track"><span class="fill"></span></span><span class="val">1,03×</span></div><div class="bar" style="--w:50.73%" title="30419 tokens"><span class="name">LEAN<small>tab</small></span><span class="track"><span class="fill"></span></span><span class="val">1,04×</span></div><div class="bar" style="--w:51.72%" title="31014 tokens"><span class="name">TOON<small>original</small></span><span class="track"><span class="fill"></span></span><span class="val">1,06×</span></div><div class="bar" style="--w:51.74%" title="31022 tokens"><span class="name">TOON<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,06×</span></div><div class="bar" style="--w:59.64%" title="35761 tokens"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">1,22×</span></div><div class="bar" style="--w:66.24%" title="39719 tokens"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,36×</span></div><div class="bar" style="--w:100.00%" title="59960 tokens"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">2,05×</span></div><div class="note"><span>5,54 % menos tokens que TOON plano (domain/2). Prompt reutilizable medido aparte.</span><a href="/validacion/">comparativa completa →</a></div></div><div class="bench-body js-chart" id="public-earthquakes" role="tabpanel" hidden><div class="bench-head"><h3>USGS earthquake observations</h3><button class="replay" type="button" data-replay>↻ animar</button></div><p class="unit">1.000 registros · Observaciones reales</p><p class="howto">Tokens de salida relativos a .mini domain/2 · menos es mejor. <b>o200k_base</b></p><div class="bar is-mini" style="--w:21.36%" title="116471 tokens"><span class="name">mini-format<small>mini-domain/2</small></span><span class="track"><span class="fill"></span></span><span class="val">1,00×</span></div><div class="bar" style="--w:30.10%" title="164137 tokens"><span class="name">mini-format<small>mini-domain/1</small></span><span class="track"><span class="fill"></span></span><span class="val">1,41×</span></div><div class="bar" style="--w:30.54%" title="166517 tokens"><span class="name">ISON<small>v1.0</small></span><span class="track"><span class="fill"></span></span><span class="val">1,43×</span></div><div class="bar" style="--w:31.39%" title="171180 tokens"><span class="name">CSV<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,47×</span></div><div class="bar" style="--w:31.76%" title="173219 tokens"><span class="name">TONL<small>compact</small></span><span class="track"><span class="fill"></span></span><span class="val">1,49×</span></div><div class="bar" style="--w:31.87%" title="173803 tokens"><span class="name">TOON<small>plano</small></span><span class="track"><span class="fill"></span></span><span class="val">1,49×</span></div><div class="bar" style="--w:32.71%" title="178357 tokens"><span class="name">LEAN<small>tab</small></span><span class="track"><span class="fill"></span></span><span class="val">1,53×</span></div><div class="bar" style="--w:46.31%" title="252527 tokens"><span class="name">JSON<small>compacto</small></span><span class="track"><span class="fill"></span></span><span class="val">2,17×</span></div><div class="bar" style="--w:53.98%" title="294355 tokens"><span class="name">TOON<small>original</small></span><span class="track"><span class="fill"></span></span><span class="val">2,53×</span></div><div class="bar" style="--w:54.90%" title="299369 tokens"><span class="name">YAML<small>1.2</small></span><span class="track"><span class="fill"></span></span><span class="val">2,57×</span></div><div class="bar" style="--w:100.00%" title="545323 tokens"><span class="name">XML<small>elementos</small></span><span class="track"><span class="fill"></span></span><span class="val">4,68×</span></div><div class="note"><span>32,99 % menos tokens que TOON plano (domain/2). Prompt reutilizable medido aparte.</span><a href="/validacion/">comparativa completa →</a></div></div></div>
+</div>
+        <a class="text-link" href="/flujo/"><span data-lang="es">Inspeccionar el flujo paso a paso</span><span data-lang="en" hidden>Inspect the workflow step by step</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </details>
   </div>
-</section>
-<!-- ═══════════ RESULTADO PRINCIPAL ═══════════ -->
-<section class="section">
-  <div class="frame">
-    <div class="split-head">
-      <h2 class="rv">Cuantos más campos,<br><span class="dim">más gana.</span></h2>
-      <p class="aside rv">JSON repite el nombre de cada campo en cada objeto. mini-format lo declara una vez en el contrato. El coste de los nombres crece como O(W·N) en JSON y como O(W) aquí.</p>
-    </div>
-    <div class="g3">
-      <figure class="chart js-chart"><figcaption>3 campos</figcaption><p class="unit">registro estrecho</p><div class="bar is-mini" style="--w:64.4%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">32,2 %</span></div></figure>
-      <figure class="chart js-chart"><figcaption>20 campos</figcaption><p class="unit">registro típico de negocio</p><div class="bar is-mini" style="--w:93.4%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">46,7 %</span></div></figure>
-      <figure class="chart js-chart"><figcaption>50 campos</figcaption><p class="unit">registro ancho</p><div class="bar is-mini" style="--w:98.6%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">49,3 %</span></div></figure>
-    </div>
-    <p class="fine">Ahorro frente a JSON compacto · escala lineal, origen en 0 %, máximo del eje 50 % · 1000 registros · tokenizador o200k_base · mediana de 5 documentos por celda · datos sintéticos deterministas (semilla 20260915). La curva satura cerca de 32 campos. <a href="/source/experiments/v5_ancho/">reproducir →</a></p>
-  </div>
-</section>
-
-<!-- ═══════════ BENCHMARK COMPLETO ═══════════ -->
-<section class="section"><div class="frame"><div class="split-head"><h2 class="rv">Mismos datos.<br><span class="dim">Menos tokens medidos.</span></h2><p class="aside rv">1.902 registros de cuatro conjuntos públicos. 47,8 % menos tokens que JSON compacto y 26,7 % menos que TOON plano con mini-domain/2.</p></div><div class="tablewrap"><table class="t"><caption class="sr">Tokens de salida, comparativa contra ISON, TOON y CSV</caption><thead><tr><th scope="col">Conjunto</th><th scope="col">N</th><th scope="col">.mini v2</th><th scope="col">ISON</th><th scope="col">TOON flat</th><th scope="col">vs TOON</th><th scope="col">vs CSV</th></tr></thead><tbody><tr><th scope="row">DummyJSON products</th><td>194</td><td>60.431</td><td>76.950</td><td>68.260</td><td>11,5 %</td><td>9,9 %</td></tr><tr><th scope="row">DummyJSON users</th><td>208</td><td>38.751</td><td>60.155</td><td>60.926</td><td>36,4 %</td><td>35,4 %</td></tr><tr><th scope="row">JSONPlaceholder comments</th><td>500</td><td>29.302</td><td>30.092</td><td>31.022</td><td>5,5 %</td><td>1,9 %</td></tr><tr><th scope="row">USGS earthquake observations</th><td>1.000</td><td>116.471</td><td>166.517</td><td>173.803</td><td>33,0 %</td><td>32,0 %</td></tr></tbody></table></div><p class="fine">USGS: 1.000 observaciones reales. DummyJSON y JSONPlaceholder: 902 registros públicos de prueba. La tabla cuenta tokens del texto serializado con los perfiles del arnés. Para calcular el costo de generación también cuentan la instrucción, el contrato y los reintentos. <a href="/validacion/">Ver tabla de 16 formatos →</a> · <a href="/source/benchmark/public/competitors_results.json">JSON</a></p></div></section>
-<!-- ═══════════ TOKENIZADOR ═══════════ -->
-<section class="section">
-  <div class="frame">
-    <div class="split-head">
-      <h2 class="rv">El mismo documento<br><span class="dim">no cuesta lo mismo en cada modelo.</span></h2>
-      <p class="aside rv">Los separadores no se segmentan igual en todos los vocabularios. Mismos 14 dominios, lote de 10, frente a JSON compacto.</p>
-    </div>
-    <div class="g3">
-      <figure class="chart js-chart"><figcaption>r50k_base</figcaption><p class="unit">vocabulario de 50k</p><div class="bar is-mini" style="--w:88.6%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">30,2 %</span></div><p class="fine">IC95 [26,8 % · 31,5 %] · k=14</p></figure>
-      <figure class="chart js-chart"><figcaption>cl100k_base</figcaption><p class="unit">vocabulario de 100k</p><div class="bar is-mini" style="--w:94.4%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">32,2 %</span></div><p class="fine">IC95 [29,1 % · 33,5 %] · k=14</p></figure>
-      <figure class="chart js-chart"><figcaption>o200k_base</figcaption><p class="unit">vocabulario de 200k</p><div class="bar is-mini" style="--w:100%"><span class="name">ahorro</span><span class="track"><span class="fill"></span></span><span class="val">34,1 %</span></div><p class="fine">IC95 [31,5 % · 35,5 %] · k=14</p></figure>
-    </div>
-    <p class="fine">Escala lineal, origen en 0 %, máximo del eje 36 %: la diferencia es real pero pequeña — 3,9 puntos entre el vocabulario más antiguo y el más reciente. Los tres vocabularios pertenecen a la familia tiktoken. <a href="/source/experiments/v1_tokens/">reproducir →</a></p>
-  </div>
-</section>
-
-<!-- ═══════════ API ═══════════ -->
-<section class="section">
-  <div class="frame">
-    <p class="eyebrow">Interfaz</p>
-    <h2 style="margin-bottom:2.2rem">Todo sale<br><span class="dim">del contrato.</span></h2>
-    <div class="tabs" role="tablist" aria-label="Ejemplos de uso">
-      <button role="tab" aria-selected="true"  data-panel="a-py">Python</button>
-      <button role="tab" aria-selected="false" data-panel="a-ts">TypeScript</button>
-      <button role="tab" aria-selected="false" data-panel="a-stream">Streaming</button>
-      <button role="tab" aria-selected="false" data-panel="a-cli">Herramienta</button>
-      <button role="tab" aria-selected="false" data-panel="a-conf">Conformidad</button>
-    </div>
-    <div class="codeblock" id="a-py" role="tabpanel"><div class="tb"><span>python</span><span>minifmt 1.3.4</span></div><pre><code><span class="k">from</span> minifmt <span class="k">import</span> Contract, parse, dumps, spec_block, roundtrip_ok
-
-c <span class="p">=</span> Contract<span class="p">.</span><span class="f">load</span><span class="p">(</span><span class="s">"contrato.json"</span><span class="p">)</span>     <span class="c"># el contrato de tu aplicación</span>
-
-instruccion <span class="p">=</span> <span class="f">spec_block</span><span class="p">(</span>c<span class="p">,</span> lang<span class="p">=</span><span class="s">"es"</span><span class="p">)</span>      <span class="c"># bloque para el prompt de sistema</span>
-doc <span class="p">=</span> <span class="f">parse</span><span class="p">(</span>respuesta<span class="p">,</span> c<span class="p">,</span> strict<span class="p">=</span><span class="k">False</span><span class="p">)</span>     <span class="c"># tolerante: no lanza, acumula</span>
-
-doc<span class="p">.</span>records                                 <span class="c"># registros válidos, ya tipados</span>
-<span class="k">for</span> e <span class="k">in</span> doc<span class="p">.</span>errors<span class="p">:</span>                        <span class="c"># MiniError: code, line, field, message</span>
-    <span class="f">print</span><span class="p">(</span>e<span class="p">)</span>
-
-texto <span class="p">=</span> <span class="f">dumps</span><span class="p">(</span>doc<span class="p">.</span><span class="f">to_canonical</span><span class="p">(),</span> c<span class="p">)</span>          <span class="c"># canónico -&gt; .mini</span>
-<span class="k">assert</span> <span class="f">roundtrip_ok</span><span class="p">(</span>doc<span class="p">.</span><span class="f">to_canonical</span><span class="p">(),</span> c<span class="p">)</span></code></pre></div>
-    <div class="codeblock" id="a-ts" role="tabpanel" hidden><div class="tb"><span>typescript</span><span>@mini-format/core</span></div><pre><code><span class="k">import</span> <span class="p">{</span> normalizeContract, parse, dumps, specBlock <span class="p">}</span> <span class="k">from</span> <span class="s">'@mini-format/core'</span><span class="p">;</span>
-
-<span class="k">const</span> c <span class="p">=</span> <span class="f">normalizeContract</span><span class="p">(</span>miContrato<span class="p">);</span> <span class="c">// contract.json de tu aplicación</span>
-
-<span class="k">const</span> lenient <span class="p">=</span> <span class="f">parse</span><span class="p">(</span>texto<span class="p">,</span> c<span class="p">,</span> <span class="p">{</span> strict<span class="p">:</span> <span class="k">false</span> <span class="p">});</span>
-lenient<span class="p">.</span>records<span class="p">;</span>            <span class="c">// registros válidos</span>
-lenient<span class="p">.</span>errors<span class="p">;</span>             <span class="c">// MiniError[] con code, line, field, message</span>
-lenient<span class="p">.</span><span class="f">invalidLines</span><span class="p">();</span>     <span class="c">// líneas rechazadas: las que hay que regenerar</span>
-lenient<span class="p">.</span>missingRecords<span class="p">;</span>     <span class="c">// n − líneas recibidas</span>
-lenient<span class="p">.</span><span class="f">diagnostics</span><span class="p">();</span>      <span class="c">// mismas claves que la referencia Python</span></code></pre></div>
-    <div class="codeblock" id="a-stream" role="tabpanel" hidden><div class="tb"><span>typescript</span><span>stream.ts</span></div><pre><code><span class="k">import</span> <span class="p">{</span> createReader <span class="p">}</span> <span class="k">from</span> <span class="s">'@mini-format/core'</span><span class="p">;</span>
-
-<span class="k">const</span> reader <span class="p">=</span> <span class="f">createReader</span><span class="p">(</span>c<span class="p">,</span> <span class="p">{</span>                  <span class="c">// strict: false por defecto</span>
-  onRecord<span class="p">:</span> <span class="p">({</span> record, line, index <span class="p">})</span> <span class="p">=&gt;</span> <span class="f">mostrar</span><span class="p">(</span>record<span class="p">),</span>
-  onError<span class="p">:</span> <span class="p">(</span>e<span class="p">)</span> <span class="p">=&gt;</span> console<span class="p">.</span><span class="f">warn</span><span class="p">(</span><span class="f">String</span><span class="p">(</span>e<span class="p">)),</span>
-<span class="p">});</span>
-<span class="k">for await</span> <span class="p">(</span><span class="k">const</span> token <span class="k">of</span> respuestaDelModelo<span class="p">)</span> reader<span class="p">.</span><span class="f">push</span><span class="p">(</span>token<span class="p">);</span>
-
-<span class="k">const</span> res <span class="p">=</span> reader<span class="p">.</span><span class="f">end</span><span class="p">();</span>
-res<span class="p">.</span>missing<span class="p">;</span>      <span class="c">// registros que faltan respecto de n</span>
-res<span class="p">.</span>truncated<span class="p">;</span>    <span class="c">// se cortó: incompleto o menos líneas que n</span>
-res<span class="p">.</span>terminated<span class="p">;</span>   <span class="c">// el flujo terminó en salto de línea</span></code></pre></div>
-    <div class="codeblock" id="a-cli" role="tabpanel" hidden><div class="tb"><span>shell</span><span>mini</span></div><pre><code>mini from-schema ticket.schema.json -p tk --out contrato.json
-mini validate respuesta.mini --contract contrato.json
-mini diagnose respuesta.mini --contract contrato.json
-mini to-json respuesta.mini --contract contrato.json | jq .
-mini from-json datos.json --contract contrato.json
-mini prompt --contract contrato.json --lang es
-mini tokens respuesta.mini --enc o200k_base <span class="c"># tokens y bytes, con el tokenizador declarado</span>
-    </code></pre></div>
-    <div class="codeblock" id="a-conf" role="tabpanel" hidden><div class="tb"><span>shell</span><span>conformance/</span></div><pre><code>$ python conformance/run_python.py
-<span class="s">376 casos · 376 pasan · 0 fallan</span>
-
-$ cd ts &amp;&amp; npm test
-<span class="s">conformance.test.ts · 376/376</span>
-
-<span class="c"># las expectativas salen de la norma y de los fixtures publicados,</span>
-<span class="c"># nunca se calculan ejecutando la implementación</span></code></pre></div>
-  </div>
-</section>
-
-<!-- ═══════════ COMPARATIVA ═══════════ -->
-<section class="section">
-  <div class="frame">
-    <p class="eyebrow">Comparativa</p>
-    <h2 style="margin-bottom:2.5rem">Qué hace cada formato<br><span class="dim">cuando el emisor es un modelo.</span></h2>
-    <div class="tablewrap" id="cmp"><table class="t">
-      <thead><tr><th scope="col">Capacidad</th><th scope="col">mini-format</th><th scope="col">JSON</th><th scope="col">CSV</th><th scope="col">TOON</th></tr></thead>
-      <tbody>
-        <tr><th scope="row">Menos tokens que JSON compacto</th><td class="yes">✓</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><th scope="row">Tipos declarados en el contrato</th><td class="yes">✓</td><td class="no">parcial</td><td class="no">✗</td><td class="no">parcial</td></tr>
-        <tr><th scope="row">Error con código, línea y campo</th><td class="yes">✓</td><td class="no">parcial</td><td class="no">✗</td><td class="no">✗</td></tr>
-        <tr><th scope="row">Códigos de error estables en la norma</th><td class="yes">15</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-        <tr><th scope="row">Recuperación ante truncamiento</th><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td class="no">parcial</td></tr>
-        <tr data-extra><th scope="row">Reparación selectiva por línea</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Lectura en streaming, registro a registro</th><td class="yes">✓</td><td class="no">parcial</td><td class="yes">✓</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Suite de conformidad publicada</th><td class="yes">376</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Dos implementaciones independientes</th><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">parcial</td></tr>
-        <tr data-extra><th scope="row">Listas con elemento marcado</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Compatibilidad hacia adelante declarada</th><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-        <tr data-extra><th scope="row">Anidamiento arbitrario</th><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td></tr>
-        <tr data-extra><th scope="row">Lectura directa sin contrato</th><td class="no">parcial</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr data-extra><th scope="row">Soporte nativo en APIs de proveedores</th><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
-      </tbody>
-    </table></div>
-    <p style="margin-top:1.1rem"><button class="btn btn-ghost" type="button" id="cmp-toggle" aria-expanded="false" aria-controls="cmp">Mostrar las 14 filas</button></p>
-    <p class="fine">La compatibilidad conserva los campos conocidos cuando el mismo prefijo declara una versión superior. El perfil base usa registros planos; el toolkit generado reconstruye la estructura JSON de tu dominio. El modelo necesita el prompt y el lector, el contrato.</p>
-  </div>
-</section>
-
-<section class="section"><div class="frame"><p>376 casos independientes del lenguaje, con expectativas escritas desde la norma y nunca calculadas ejecutando el código. Python y TypeScript pasan 376/376.</p><p>Gramática EBNF, 15 códigos de error estables y protocolo de extensión.</p><p><a href="/docs/conformance/">Ver las pruebas de conformidad →</a></p></div></section>
-<p class="frame"><a href="/docs/spec/"><span data-lang="es">Especificación</span><span data-lang="en" hidden>Specification</span></a> · <a href="/validacion/"><span data-lang="es">Validación</span><span data-lang="en" hidden>Validation</span></a> · <a href="/docs/errors/"><span data-lang="es">Referencia de errores</span><span data-lang="en" hidden>Error reference</span></a> · <a href="/ejemplo/"><span data-lang="es">Ejemplos opcionales</span><span data-lang="en" hidden>Optional examples</span></a></p>
-</details>
 </main>
 
 <!-- ═══════════ PIE ═══════════ -->
-<footer class="site-footer"><div class="wrap"><div class="fgrid"><div><h3><span data-lang="es">Aprender</span><span data-lang="en" hidden>Learn</span></h3><ul><li><a href="/flujo/"><span data-lang="es">Cómo funciona</span><span data-lang="en" hidden>How it works</span></a></li><li><a href="/docs/"><span data-lang="es">Introducción</span><span data-lang="en" hidden>Introduction</span></a></li><li><a href="/docs/quickstart/"><span data-lang="es">Inicio rápido</span><span data-lang="en" hidden>Quickstart</span></a></li><li><a href="/docs/spec/"><span data-lang="es">Especificación 1.1</span><span data-lang="en" hidden>Specification 1.1</span></a></li><li><a href="/docs/errors/"><span data-lang="es">Índice de errores</span><span data-lang="en" hidden>Error index</span></a></li></ul></div><div><h3><span data-lang="es">Componente</span><span data-lang="en" hidden>Component</span></h3><ul><li><a href="/docs/python/"><span data-lang="es">Biblioteca Python</span><span data-lang="en" hidden>Python library</span></a></li><li><a href="/docs/typescript/"><span data-lang="es">Biblioteca TypeScript</span><span data-lang="en" hidden>TypeScript library</span></a></li><li><a href="/docs/cli/"><span data-lang="es">Herramienta</span><span data-lang="en" hidden>Command-line tool</span></a></li><li><a href="/docs/conformance/"><span data-lang="es">Conformidad</span><span data-lang="en" hidden>Conformance</span></a></li></ul></div><div><h3><span data-lang="es">Evidencia</span><span data-lang="en" hidden>Evidence</span></h3><ul><li><a href="/validacion/"><span data-lang="es">Validación</span><span data-lang="en" hidden>Validation</span></a></li><li><a href="/economia/"><span data-lang="es">Economía</span><span data-lang="en" hidden>Economics</span></a></li><li><a href="/ejemplo/"><span data-lang="es">Ejemplos</span><span data-lang="en" hidden>Examples</span></a></li><li><a href="/source/experiments/v5_ancho/"><span data-lang="es">Eje de ancho (V5)</span><span data-lang="en" hidden>Width axis (V5)</span></a></li><li><a href="/source/experiments/v1_tokens/"><span data-lang="es">Tokens (V1)</span><span data-lang="en" hidden>Tokens (V1)</span></a></li><li><a href="/source/experiments/v4_costos/"><span data-lang="es">Costos (V4)</span><span data-lang="en" hidden>Costs (V4)</span></a></li><li><a href="/docs/metodologia/"><span data-lang="es">Metodología</span><span data-lang="en" hidden>Methodology</span></a></li></ul></div><div><h3><span data-lang="es">Proyecto</span><span data-lang="en" hidden>Project</span></h3><ul><li><a href="/downloads/mini-format-1.3.4-source.zip"><span data-lang="es">Código fuente</span><span data-lang="en" hidden>Source code</span></a></li><li><a href="/playground/"><span data-lang="es">Playground</span><span data-lang="en" hidden>Playground</span></a></li><li><a href="/ejemplo/"><span data-lang="es">Ejemplos</span><span data-lang="en" hidden>Examples</span></a></li><li><a href="/docs/licencia/"><span data-lang="es">Licencia MIT</span><span data-lang="en" hidden>MIT License</span></a></li><li><a href="/docs/contribuir/"><span data-lang="es">Contribuir</span><span data-lang="en" hidden>Contributing</span></a></li></ul></div></div><div class="colophon"><span data-lang="es">mini-format 1.3.4 · SPEC 1.1 · Adrián Palma Obispo y Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.</span><span data-lang="en" hidden>mini-format 1.3.4 · SPEC 1.1 · Adrián Palma Obispo and Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Every published figure comes from a repository script and archived data.</span></div></div></footer>
+<footer class="site-footer"><div class="wrap"><div class="fgrid"><div><h3><span data-lang="es">Aprender</span><span data-lang="en" hidden>Learn</span></h3><ul><li><a href="/flujo/"><span data-lang="es">Cómo funciona</span><span data-lang="en" hidden>How it works</span></a></li><li><a href="/docs/"><span data-lang="es">Documentación</span><span data-lang="en" hidden>Documentation</span></a></li><li><a href="/docs/quickstart/"><span data-lang="es">Inicio rápido</span><span data-lang="en" hidden>Quickstart</span></a></li></ul></div><div><h3><span data-lang="es">Probar</span><span data-lang="en" hidden>Try</span></h3><ul><li><a href="/playground/"><span data-lang="es">Playground</span><span data-lang="en" hidden>Playground</span></a></li><li><a href="/demo/"><span data-lang="es">Demo en vivo</span><span data-lang="en" hidden>Live demo</span></a></li><li><a href="/ejemplo/"><span data-lang="es">Ejemplos</span><span data-lang="en" hidden>Examples</span></a></li></ul></div><div><h3><span data-lang="es">Resultados</span><span data-lang="en" hidden>Results</span></h3><ul><li><a href="/validacion/"><span data-lang="es">Benchmarks</span><span data-lang="en" hidden>Benchmarks</span></a></li><li><a href="/economia/"><span data-lang="es">Calculadora de costos</span><span data-lang="en" hidden>Cost calculator</span></a></li><li><a href="/docs/metodologia/"><span data-lang="es">Metodología</span><span data-lang="en" hidden>Methodology</span></a></li></ul></div><div><h3><span data-lang="es">Proyecto</span><span data-lang="en" hidden>Project</span></h3><ul><li><a href="/downloads/mini-format-1.3.4-source.zip"><span data-lang="es">Código fuente</span><span data-lang="en" hidden>Source code</span></a></li><li><a href="/docs/python/"><span data-lang="es">Python</span><span data-lang="en" hidden>Python</span></a></li><li><a href="/docs/typescript/"><span data-lang="es">TypeScript</span><span data-lang="en" hidden>TypeScript</span></a></li><li><a href="/docs/licencia/"><span data-lang="es">Licencia MIT</span><span data-lang="en" hidden>MIT License</span></a></li></ul></div></div><div class="colophon"><span data-lang="es">mini-format 1.3.4 · SPEC 1.1 · Adrián Palma Obispo y Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas (UPC), 2026.</span><span data-lang="en" hidden>mini-format 1.3.4 · SPEC 1.1 · Adrián Palma Obispo and Erick Palomino Santa Cruz · Universidad Peruana de Ciencias Aplicadas (UPC), 2026.</span></div></div></footer>
 <!-- ═══════════ /PIE ═══════════ -->
-<script src="/docs.js?v=b05931cb469441e9"></script>
-<script src="/app.js?v=b7c80ffbba52f4c3"></script>
+<script src="/docs.js"></script>
+<script src="/app.js"></script>
 </body>
 </html>

@@ -39,15 +39,15 @@ def region_de(html: str, nombre: str) -> str:
 def test_el_menu_prioriza_el_flujo_junto_a_documentacion():
     rutas = [r for r, _, _ in construir.NAV]
     assert rutas[:2] == ["docs", "flujo"]
-    assert rutas == ["docs", "flujo", "playground", "ejemplo"]
+    assert rutas == ["docs", "flujo", "playground", "validacion"]
     es, en = {r: e for r, e, _ in construir.NAV}, {r: e for r, _, e in construir.NAV}
     assert (es["flujo"], en["flujo"]) == ("Cómo funciona", "How it works")
 
 
 @pytest.mark.parametrize("activo, esperado", [
     ("docs", "docs"), ("docs/spec", "docs"), ("docs/spec/cambios", "docs"), ("docs/errors/E06", "docs"),
-    ("docs/forks/a", "docs"), ("docs/quickstart", "docs"), ("validacion", ""), ("playground", "playground"),
-    ("mesa-de-ayuda", ""), ("taller", ""), ("ejemplo", "ejemplo"), ("docsx", ""), ("", ""), ("economia", ""),
+    ("docs/forks/a", "docs"), ("docs/quickstart", "docs"), ("validacion", "validacion"), ("playground", "playground"),
+    ("mesa-de-ayuda", ""), ("taller", ""), ("ejemplo", ""), ("docsx", ""), ("", ""), ("economia", ""),
 ])
 def test_ruta_activa_es_la_mas_especifica_por_segmentos(activo, esperado):
     assert construir.ruta_activa(activo) == esperado
@@ -70,7 +70,6 @@ def test_la_cabecera_tiene_boton_de_menu_accesible_y_lista_controlada():
 def test_portada_y_resto_de_paginas_comparten_menu_y_solo_difieren_en_lo_previsto():
     portada, otra = construir.cabecera("", portada=True), construir.cabecera("docs")
     assert portada.startswith('<a class="skip" href="#main">') and otra.startswith('<a class="skip" href="#contenido">')
-    assert 'class="search"' in portada and 'class="search"' not in otra
     assert 'href="#instalar"' in portada and 'href="/docs/quickstart/"' in otra
     sacar = lambda h: re.findall(r'<li><a href="(/[^"]+)"', h)
     assert sacar(portada) == sacar(otra) == [f"/{r}/" for r, _, _ in construir.NAV]
@@ -112,11 +111,12 @@ def test_sincronizar_es_idempotente_sobre_las_fuentes(tmp_path, monkeypatch):
     assert construir.sincronizar_portada() is True and ">COMO FUNCIONA<" not in (tmp_path / "index.html").read_text(encoding="utf-8")
 
 
-def test_la_portada_enlaza_las_paginas_que_antes_no_enlazaba():
+def test_la_portada_enlaza_el_flujo_los_resultados_y_los_ejemplos():
     portada = (SITIO / "index.html").read_text(encoding="utf-8")
-    for destino in ("/flujo/", "/ejemplo/", "/docs/"):
+    for destino in ("/flujo/", "/validacion/", "/docs/"):
         assert f'href="{destino}"' in region_de(portada, "CABECERA"), destino
-        assert f'href="{destino}"' in region_de(portada, "PIE") or destino == "/docs/", destino
+        assert f'href="{destino}"' in region_de(portada, "PIE"), destino
+    assert 'href="/ejemplo/"' in region_de(portada, "PIE")
     assert '<script>document.documentElement.classList.add("js")</script>' in portada.split("</head>")[0]
 
 
@@ -296,7 +296,7 @@ def test_en_escritorio_el_menu_cabe_en_una_linea_sin_boton(navegador, base_url, 
 
 
 @pytest.mark.skipif(not CONSTRUIDO, reason="el sitio no está construido")
-def test_selector_de_idioma_buscador_y_descargar_siguen_funcionando(navegador, base_url):
+def test_selector_de_idioma_documentacion_e_instalacion_siguen_funcionando(navegador, base_url):
     contexto = navegador.new_context(viewport={"width": 1440, "height": 800}, locale="es-PE")
     pagina = contexto.new_page()
     simular_sima(pagina, [])
@@ -306,17 +306,16 @@ def test_selector_de_idioma_buscador_y_descargar_siguen_funcionando(navegador, b
     assert pagina.evaluate("document.documentElement.lang") == "en"
     assert pagina.locator('#nav-links li:nth-child(2) a span:visible').inner_text() == "How it works"
     assert pagina.locator(".nav > .btn span:visible").inner_text() == "Install"
-    # portada: EN navega a la copia /en/, y «Descargar» lleva al bloque de instalación
+    # portada: EN navega a la copia /en/, y «Instalar» lleva al bloque de instalación
     pagina.evaluate("localStorage.clear()")
     pagina.goto(base_url + "/")
     assert pagina.locator(".nav > .btn").get_attribute("href") == "#instalar" and pagina.locator("#instalar").count() == 1
     pagina.click('[data-lang-btn="en"]')
     pagina.wait_for_url("**/en/")
-    assert pagina.locator(".nav > .btn span:visible").inner_text() == "Download"
+    assert pagina.locator(".nav > .btn span:visible").inner_text() == "Install"
     assert pagina.locator("#nav-links li:nth-child(2) a").get_attribute("href") == "/flujo/", "las páginas en línea no tienen copia /en/"
-    # buscador: solo hay sitio en pantallas muy anchas; apunta a la documentación
-    pagina.set_viewport_size({"width": 1920, "height": 800})
-    assert pagina.locator("a.search").is_visible() and pagina.locator("a.search").get_attribute("href") == "/en/docs/"
+    docs = pagina.locator('#nav-links a[href="/en/docs/"]')
+    assert docs.is_visible() and docs.inner_text() == "Documentation"
     contexto.close()
 
 
@@ -337,47 +336,22 @@ def test_quien_entra_por_en_conserva_el_ingles_en_las_paginas_en_linea(navegador
 
 
 # --------------------------------------------------------------------------- sin JavaScript
-JS_OCULTOS = """() => {
-  // Texto propio de un elemento que, sin JavaScript, no se ve. Se ignoran los gemelos del idioma que no se muestra
-  // (el HTML estático ya los trae con `hidden`) y lo que nunca es contenido (scripts, estilos, .sr).
-  // También se ignoran los mandos que solo existen con JavaScript (pestañas, «animar», vídeo y terminal animados, CTA duplicado
-  // del menú móvil, buscador): son controles o decoración animada, no texto que el visitante deba leer.
-  const ignorar = 'script,style,template,noscript,option,title,head,.sr,[data-lang][hidden],[data-lang-body][hidden],' +
-    '[role="tablist"],.replay,.cmd-row .seg,#cmp-toggle,.term,.term-foot,.demo-video,.nav-cta,.search,.nav > .btn';
-  const res = [];
-  document.querySelectorAll('body *').forEach(e => {
-    if (e.closest(ignorar)) return;
-    const propio = Array.from(e.childNodes).some(n => n.nodeType === 3 && n.textContent.trim().length > 1);
-    if (!propio) return;
-    for (let x = e; x && x !== document.body; x = x.parentElement) {
-      const s = getComputedStyle(x);
-      if (s.display === 'none' || s.visibility === 'hidden' || parseFloat(s.opacity) === 0) {
-        res.push(e.tagName + '.' + (e.className || '') + ' ' + e.textContent.trim().slice(0, 50));
-        break;
-      }
-    }
-  });
-  return res;
-}"""
-
-
 @pytest.mark.skipif(not CONSTRUIDO, reason="el sitio no está construido")
 @pytest.mark.parametrize("ancho", [375, 1440])
 @pytest.mark.parametrize("ruta", ["/", "/en/"])
-def test_la_portada_con_javascript_desactivado_muestra_todo_el_texto(navegador, base_url, ancho, ruta):
+def test_la_portada_se_lee_y_responde_sin_javascript(navegador, base_url, ancho, ruta):
     contexto = navegador.new_context(viewport={"width": ancho, "height": 900}, java_script_enabled=False)
     pagina = contexto.new_page()
     pagina.goto(base_url + ruta)
     assert pagina.evaluate("document.documentElement.classList.contains('js')") is False
-    # Native disclosure works with JavaScript disabled; inspect the optional evidence too.
-    pagina.locator(".landing-more > summary").click()
-    assert pagina.evaluate(JS_OCULTOS) == [], "texto oculto sin JavaScript"
-    # cada elemento de aparición (.rv) es opaco y las barras tienen ancho
-    assert pagina.evaluate("Array.from(document.querySelectorAll('.rv')).every(e => getComputedStyle(e).opacity === '1')")
-    assert pagina.evaluate("Array.from(document.querySelectorAll('.bar .fill')).every(e => e.getBoundingClientRect().width > 0)")
-    # los cuatro paneles del benchmark y las pestañas de código se ven apilados
-    assert pagina.evaluate("Array.from(document.querySelectorAll('[role=tabpanel]')).every(e => e.getClientRects().length > 0)")
-    # y hay navegación: a 375 px los enlaces salen en línea (no hay botón que dependa de JS)
+    assert pagina.locator(".example-mini").is_visible()
+    pagina.locator('label[for="view-json"]').click()
+    assert pagina.locator(".example-json").is_visible()
+    pagina.locator("#prueba-tokens > summary").click()
+    assert pagina.locator("#prueba-tokens > p").is_visible()
+    assert pagina.locator(".cost-track > span").evaluate_all(
+        "barras => barras.length === 2 && barras.every(e => e.getBoundingClientRect().width > 0)"
+    )
     assert not pagina.locator(".nav-toggle").is_visible()
     assert pagina.locator("#nav-links a:visible").count() >= len(construir.NAV)
     if ancho == 375:

@@ -3,6 +3,8 @@ from pathlib import Path
 import json
 
 import pytest
+
+from minifmt.domain import decode_rows, infer_contract
 from test_examples_flow import base_url, browser, page, pw
 
 OUTPUT = Path(__file__).resolve().parents[1] / "output" / "playwright"
@@ -16,14 +18,19 @@ def test_hero_explains_the_format_change_without_overflow(page, base_url, langua
     page.emulate_media(color_scheme=theme, reduced_motion='reduce')
     page.goto(base_url + '/')
     page.locator(f'[data-lang-btn="{language}"]').click()
-    steps = page.locator('.hero-format-steps li')
-    assert steps.count() == 3
-    original = steps.nth(0).locator('pre').inner_text()
-    compact = steps.nth(1).locator('pre').inner_text()
-    assert len(compact) < len(original)
-    assert 'JSON' in steps.nth(2).inner_text()
-    contract_word = 'contrato' if language == 'es' else 'contract'
-    assert contract_word in steps.nth(1).inner_text()
+    mini = page.locator(".example-mini pre")
+    pw.expect(mini).to_be_visible()
+    compact = mini.inner_text()
+    page.locator("#view-mini").focus()
+    page.keyboard.press("ArrowRight")
+    original = page.locator(".example-json pre")
+    pw.expect(original).to_be_visible()
+    expected = json.loads(original.inner_text())
+    last_field = "titulo" if language == "es" else "title"
+    contract = infer_contract([expected], "ticket")
+    assert decode_rows(compact, contract, last_text_field=last_field, expected_records=2) == expected
+    assert len(compact) < len(original.inner_text())
+    assert page.locator(".example-output").is_visible()
     assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
     OUTPUT.mkdir(parents=True, exist_ok=True)
     page.screenshot(path=str(OUTPUT / f'hero-{language}-{theme}-{width}.png'))
@@ -33,13 +40,16 @@ def test_landing_leads_to_the_real_recorded_workflow(page, base_url):
     OUTPUT.mkdir(parents=True, exist_ok=True)
     page.goto(base_url + "/")
     pw.expect(page.locator("h1")).to_contain_text("costar menos")
-    assert page.locator('.landing-more').get_attribute('open') is None
+    assert page.locator('#prueba-tokens').get_attribute('open') is None
+    assert page.locator('#flujo-animado').get_attribute('open') is None
     page.screenshot(path=str(OUTPUT / "landing-overview.png"))
+    page.locator('#flujo-animado > summary').click()
     page.locator('[data-dv-goto="5"]').click()
     pw.expect(page.locator('[data-dv-cap]')).to_contain_text('El parser entrega')
     pw.expect(page.locator('[data-dv-body]')).to_contain_text('JSON listo para guardar')
     page.locator('[data-dv-toggle]').click()
     page.locator('[data-lang-btn="en"]').click()
+    page.locator('#flujo-animado > summary').click()
     page.locator('[data-dv-goto="5"]').click()
     pw.expect(page.locator('[data-dv-cap]')).to_contain_text('The parser returns')
     page.locator('[data-lang-btn="es"]').click()
@@ -79,7 +89,25 @@ def test_landing_mobile_has_no_overflow_and_installation_is_copyable(page, base_
     pw.expect(page.locator('#instalar .cmd code').last).to_have_text('mini setup')
     page.emulate_media(reduced_motion='reduce')
     page.reload()
+    page.locator('#flujo-animado > summary').click()
     page.locator('[data-dv-goto="5"]').click()
     pw.expect(page.locator('[data-dv-body]')).to_contain_text('JSON listo para guardar')
     assert page.locator('#demo-playground').get_attribute('data-playing') != '1'
     page.screenshot(path=str(OUTPUT / 'landing-simple-mobile.png'), full_page=True)
+
+
+def test_benchmarks_show_one_comparison_and_open_the_linked_measurements(page, base_url):
+    page.set_viewport_size({"width": 375, "height": 844})
+    page.emulate_media(reduced_motion="reduce")
+    page.goto(base_url + "/")
+    assert page.locator(".cost-figure").count() == 1
+    assert page.locator("table").count() == 0
+    pw.expect(page.locator(".cost-figure")).to_contain_text("Costo estimado por 1.000 respuestas correctas")
+    page.locator(".proof-actions > a").click()
+    assert page.locator(".val-group[open]").count() == 0
+    page.locator('a[href="#lotes-texto"]').click()
+    pw.expect(page.locator("#lotes-texto table")).to_be_visible()
+    assert page.locator(".val-group[open]").count() == 1
+    page.goto(base_url + "/validacion/#reparacion-filas")
+    pw.expect(page.locator("#reparacion-filas table")).to_be_visible()
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")

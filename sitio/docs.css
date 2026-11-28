@@ -1,8 +1,8 @@
 /* ===================== documentación ===================== */
-.docs-shell{ max-width:100rem; margin-inline:auto; display:grid; grid-template-columns:minmax(0,1fr) }
+.docs-shell{ max-width:var(--container); margin-inline:auto; display:grid; grid-template-columns:minmax(0,1fr) }
 @media (min-width:900px){ .docs-shell{ grid-template-columns:18rem minmax(0,1fr) } }
-.docs-side{ border-right:1px solid rgb(var(--line)); padding:1.75rem 1.25rem 3rem; font-size:.9rem }
-@media (min-width:900px){ .docs-side{ position:sticky; top:var(--header-h); height:calc(100vh - var(--header-h)); overflow-y:auto } }
+.docs-side{ background:rgb(var(--subtle)); border-right:1px solid rgb(var(--line)); padding:1.75rem 1.25rem 3rem; font-size:.9rem }
+@media (min-width:900px){ .docs-side{ position:sticky; top:var(--header-h); height:calc(100dvh - var(--header-h)); overflow-y:auto } }
 /* en pantallas estrechas el índice va arriba, acotado, para no empujar el artículo fuera de vista */
 @media (max-width:899px){ .docs-side{ max-height:14rem; overflow-y:auto; border-right:0; border-bottom:1px solid rgb(var(--line)); padding-block:1rem 1.25rem } }
 .docs-side h4{ font-family:var(--f-mono); font-size:var(--fs-fine); text-transform:uppercase; letter-spacing:.1em; color:rgb(var(--fg-faint)); margin:1.5rem 0 .6rem; font-weight:600 }
@@ -15,14 +15,14 @@
 .docs-main{ min-width:0; padding:2.5rem var(--gutter) 5rem }
 @media (min-width:1024px){ .docs-main{ padding-left:3.5rem } }
 .docs-article{ max-width:48rem }
-.docs-article .crumbs{ font-family:var(--f-mono); font-size:var(--fs-fine); color:rgb(var(--fg-faint)); letter-spacing:-.02em; margin-bottom:1.5rem; text-transform:uppercase }
+.docs-article .crumbs{ font-size:.85rem; color:rgb(var(--fg-muted)); margin-bottom:1.5rem }
 .docs-article .crumbs a{ text-decoration:none }
 .docs-article .lang{ font-size:.78rem; color:rgb(var(--fg-faint)); border:1px solid rgb(var(--line)); border-radius:var(--r-lg); padding:.5rem .8rem; margin:1.5rem 0 }
 
 /* prosa generada desde markdown */
 .prose{ font-size:1.02rem; line-height:1.75; color:rgb(var(--fg)) }
 .prose>*+*{ margin-top:1.1rem }
-.prose h1{ font-size:clamp(2.1rem,4vw,3rem); margin-bottom:1.5rem; line-height:.95 }
+.prose h1{ font-size:clamp(2.1rem,4vw,3rem); margin-bottom:1.5rem; line-height:1.05 }
 .prose h2{ font-size:clamp(1.5rem,2.6vw,1.9rem); letter-spacing:-.025em; font-weight:700; margin-top:3rem; padding-top:1.5rem; border-top:1px solid rgb(var(--line)); line-height:1.15 }
 .prose h3{ font-size:1.2rem; margin-top:2rem; font-weight:700; letter-spacing:-.015em; line-height:1.25 }
 .prose h2 a.anchor,.prose h3 a.anchor{ color:rgb(var(--fg-faint)); text-decoration:none; margin-left:.4rem; opacity:0 }

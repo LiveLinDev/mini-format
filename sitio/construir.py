@@ -176,11 +176,10 @@ def reescribir_enlaces(h: str, origin_dir: Path = Path(".")) -> str:
 # Un solo contrato para TODAS las páginas (docs, playground, demo, taller, ejemplo, SIMA, validación,
 # economía, 404 y la portada): el menú se define aquí y nadie lo copia a mano.
 NAV = [
-    ("demo", "Demo en vivo", "Live demo"),
     ("docs", "Documentación", "Documentation"),
     ("flujo", "Cómo funciona", "How it works"),
     ("playground", "Playground", "Playground"),
-    ("ejemplo", "Más ejemplos", "More examples"),
+    ("validacion", "Resultados", "Results"),
 ]
 ICONO_MENU = ('<svg class="ico-abrir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
               '<svg class="ico-cerrar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>')
@@ -200,7 +199,7 @@ def cabeza() -> str:
 
 def cabecera(activo: str = "", portada: bool = False) -> str:
     """Enlace de salto + cabecera. `portada=True` da la variante de la página de inicio (salto a #main,
-    buscador y «Descargar» en lugar de «Instalar»); el menú y el botón móvil son los mismos."""
+    enlace de instalación en la misma página); el menú y el botón móvil son los mismos."""
     salto = "#main" if portada else "#contenido"
     enlace = f'<a class="skip" href="{salto}">{ambos("Saltar al contenido", "Skip to content")}</a>'
     return enlace + "\n" + encabezado(activo, portada)
@@ -213,19 +212,13 @@ def encabezado(activo: str = "", portada: bool = False) -> str:
         cur = ' aria-current="page"' if ruta == marcada else ""
         return f'<li><a href="/{ruta}/"{cur}>{ambos(es, en)}</a></li>'
     nav = "".join(a(*item) for item in NAV)
-    buscador = ('<a class="search" href="/docs/" aria-label="Ir a la documentación">'
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
-                '<span class="search-txt">Buscar en la documentación <kbd>/</kbd></span></a>') if portada else ""
-    etiqueta_fuente = "Descargar código fuente" if portada else "Download source code"
-    cta = (f'<a class="btn btn-solid" href="#instalar">{ambos("Descargar", "Download")}</a>' if portada
-           else f'<a class="btn btn-solid" href="/docs/quickstart/">{ambos("Instalar", "Install")}</a>')
+    destino = "#instalar" if portada else "/docs/quickstart/"
+    cta = f'<a class="btn btn-solid" href="{destino}">{ambos("Instalar", "Install")}</a>'
     return f'''<header class="site-header"><div class="wrap nav">
   <a class="brand" href="/"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h7"/><circle cx="20" cy="15" r="2.6"/></svg>mini-format</a>
   <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links"><span class="sr">{ambos("Menú", "Menu")}</span>{ICONO_MENU}</button>
   <ul class="nav-links" id="nav-links">{nav}<li class="nav-cta">{cta}</li></ul>
   <span class="spacer"></span>
-  {buscador}
-  <a class="icon-link" href="{SOURCE}" aria-label="{etiqueta_fuente}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></a>
   <div class="seg lang-toggle" role="group" aria-label="Idioma / Language"><button type="button" data-lang-btn="es" aria-pressed="true">ES</button><button type="button" data-lang-btn="en" aria-pressed="false">EN</button></div>
   {cta}
 </div></header>'''
@@ -235,30 +228,23 @@ def pie() -> str:
     def col(es, en, enlaces):
         items = "".join(f'<li><a href="{h}">{ambos(t_es, t_en)}</a></li>' for h, t_es, t_en in enlaces)
         return f"<div><h3>{ambos(es, en)}</h3><ul>{items}</ul></div>"
-    c1 = col("Aprender", "Learn", [("/flujo/", "Cómo funciona", "How it works"), ("/docs/", "Introducción", "Introduction"),
-                                   ("/docs/quickstart/", "Inicio rápido", "Quickstart"),
-                                   (f"/docs/spec/", f"Especificación {SPEC_VERSION}", f"Specification {SPEC_VERSION}"),
-                                   ("/docs/errors/", "Índice de errores", "Error index")])
-    c2 = col("Componente", "Component", [("/docs/python/", "Biblioteca Python", "Python library"),
-                                         ("/docs/typescript/", "Biblioteca TypeScript", "TypeScript library"),
-                                         ("/docs/cli/", "Herramienta", "Command-line tool"),
-                                         ("/docs/conformance/", "Conformidad", "Conformance")])
-    c3 = col("Evidencia", "Evidence", [("/validacion/", "Validación", "Validation"),
-                                       ("/economia/", "Economía", "Economics"),
-                                       ("/ejemplo/", "Ejemplos", "Examples"),
-                                       (f"{REPO}/tree/main/experiments/v5_ancho", "Eje de ancho (V5)", "Width axis (V5)"),
-                                       (f"{REPO}/tree/main/experiments/v1_tokens", "Tokens (V1)", "Tokens (V1)"),
-                                       (f"{REPO}/tree/main/experiments/v4_costos", "Costos (V4)", "Costs (V4)"),
+    c1 = col("Aprender", "Learn", [("/flujo/", "Cómo funciona", "How it works"),
+                                   ("/docs/", "Documentación", "Documentation"),
+                                   ("/docs/quickstart/", "Inicio rápido", "Quickstart")])
+    c2 = col("Probar", "Try", [("/playground/", "Playground", "Playground"),
+                               ("/demo/", "Demo en vivo", "Live demo"),
+                               ("/ejemplo/", "Ejemplos", "Examples")])
+    c3 = col("Resultados", "Results", [("/validacion/", "Benchmarks", "Benchmarks"),
+                                       ("/economia/", "Calculadora de costos", "Cost calculator"),
                                        ("/docs/metodologia/", "Metodología", "Methodology")])
     c4 = col("Proyecto", "Project", [(SOURCE, "Código fuente", "Source code"),
-                                     ("/playground/", "Playground", "Playground"),
-                                     ("/ejemplo/", "Ejemplos", "Examples"),
-                                     ("/docs/licencia/", "Licencia MIT", "MIT License"),
-                                     ("/docs/contribuir/", "Contribuir", "Contributing")])
+                                     ("/docs/python/", "Python", "Python"),
+                                     ("/docs/typescript/", "TypeScript", "TypeScript"),
+                                     ("/docs/licencia/", "Licencia MIT", "MIT License")])
     es = (f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo y Erick Palomino Santa Cruz · "
-          "Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Cada cifra publicada sale de un script del repositorio y de datos archivados.")
+          "Universidad Peruana de Ciencias Aplicadas (UPC), 2026.")
     en = (f"mini-format {__version__} · SPEC {SPEC_VERSION} · Adrián Palma Obispo and Erick Palomino Santa Cruz · "
-          "Universidad Peruana de Ciencias Aplicadas (UPC), 2026. Every published figure comes from a repository script and archived data.")
+          "Universidad Peruana de Ciencias Aplicadas (UPC), 2026.")
     return f'''<footer class="site-footer"><div class="wrap"><div class="fgrid">{c1}{c2}{c3}{c4}</div><div class="colophon">{ambos(es, en)}</div></div></footer>'''
 
 

@@ -86,31 +86,18 @@ def test_las_palabras_de_los_numeros_existen():
 
 
 # --------------------------------------------------------------------------- el texto publicado
-def test_portada_dice_el_total_de_casos_vigente():
-    total = C["casos_conformidad"]
-    texto = sin_etiquetas(leer(PUBLICADOS["index.html"]))
-    # «372 casos independientes del lenguaje ... pasan 372/372.»
-    assert [int(n) for n in re.findall(r"(\d+) casos independientes", texto)] == [total]
-    assert [tuple(map(int, m)) for m in re.findall(r"pasan (\d+)/(\d+)\.", texto)] == [(total, total)]
-    # bloque de la terminal «N casos · N pasan · 0 fallan»
-    assert re.findall(r"(\d+) casos · (\d+) pasan · (\d+) fallan", texto) == [(str(total), str(total), "0")]
-    assert re.findall(r"conformance\.test\.ts · (\d+)/(\d+)", texto) == [(str(total), str(total))]
-    # fila de la tabla comparativa
-    fila = re.search(r"Suite de conformidad publicada\s*(\d+)", texto)
-    assert fila and int(fila.group(1)) == total
+def test_resultados_publica_cifras_de_conformidad_y_familias(tmp_path):
+    import construir
+    import modulos
+    import validacion
 
-
-def test_traduccion_inglesa_del_total_de_casos():
-    total = C["casos_conformidad"]
-    mapa = json.loads(leer(PUBLICADOS["landing.en.json"]))
-    claves = [k for k in mapa if "casos independientes" in k]
-    assert len(claves) == 1, "la frase de la portada debe tener una sola clave de traducción"
-    es, en = claves[0], mapa[claves[0]]
-    assert re.findall(r"(\d+) casos", es) == [str(total)] and re.findall(r"pasan (\d+)/(\d+)", es) == [(str(total), str(total))]
-    assert re.findall(r"(\d+) language-independent cases", en) == [str(total)]
-    assert re.findall(r"pass (\d+)/(\d+)", en) == [(str(total), str(total))]
-    # y la frase que sigue en la portada es EXACTAMENTE la clave: si no, la traducción se pierde en silencio
-    assert claves[0] in re.sub(r"\s+", " ", sin_etiquetas(leer(PUBLICADOS["index.html"]))).replace("  ", " ")
+    ctx = modulos.crear_contexto(construir)
+    ctx.escribir_pagina = lambda ruta, pagina: (tmp_path / f"{ruta}.html").write_text(pagina, encoding="utf-8")
+    validacion.construir(ctx)
+    pagina = leer(tmp_path / "validacion.html")
+    assert f'{C["casos_conformidad"]} casos de conformidad' in pagina
+    assert f'{C["casos_conformidad"]} conformance cases' in pagina
+    assert f'{C["familias"]} familias' in pagina and f'{C["familias"]} families' in pagina
 
 
 def test_ninguna_frase_de_la_portada_conserva_un_total_distinto():
@@ -120,29 +107,11 @@ def test_ninguna_frase_de_la_portada_conserva_un_total_distinto():
             assert n == total, f"{nombre}: dice «{n} casos» y la suite vigente tiene {total}"
 
 
-def test_codigos_de_error_en_la_portada():
-    n = str(C["codigos_error"])
-    html = leer(PUBLICADOS["index.html"])
-    assert re.findall(r"(\d+) códigos de error", html) == [n]
-    assert re.search(r"Códigos de error estables en la norma</th><td class=\"yes\">(\d+)</td>", html).group(1) == n
-    mapa = json.loads(leer(PUBLICADOS["landing.en.json"]))
-    for clave, valor in mapa.items():
-        if "códigos de error" in clave:
-            assert re.findall(r"(\d+) códigos", clave) == [n] and re.findall(r"(\d+) stable error codes", valor) == [n]
-
-
-def test_familias_en_la_portada_y_sus_traducciones():
+def test_los_enlaces_de_inicio_y_las_traducciones_del_recorrido():
     n = C["familias"]
-    html = sin_etiquetas(leer(PUBLICADOS["index.html"]))
-    assert "familias publicadas" not in html
-    assert 'href="/flujo/"' in leer(PUBLICADOS["index.html"])
-    assert re.findall(r"(\d+) dominios", html) == [str(n)]
-    # «Mostrar las N filas» cuenta las filas de la tabla comparativa (no son familias): debe coincidir con la tabla
-    fuente = leer(PUBLICADOS["index.html"])
-    tabla = re.search(r'<div class="tablewrap" id="cmp">.*?</table>', fuente, re.S).group(0)
-    assert re.findall(r"Mostrar las (\d+) filas", html) == [str(len(re.findall(r"<tr[ >]", tabla)) - 1)]
-    mapa = json.loads(leer(PUBLICADOS["landing.en.json"]))
-    assert "How it works" in mapa["Cómo funciona · ver los ejemplos →"]
+    portada = leer(PUBLICADOS["index.html"])
+    for ruta in ("/flujo/", "/validacion/", "/playground/", "/docs/quickstart/"):
+        assert f'href="{ruta}"' in portada
     app = leer(PUBLICADOS["app.js"])
     assert "mini forks" not in app
     anim = json.loads(leer(PUBLICADOS["animation.en.json"]))
@@ -167,7 +136,6 @@ def test_la_portada_no_llama_mini_format_1_1_a_la_version_del_paquete():
     for nombre in ("index.html", "landing.en.json"):
         assert not re.search(r"mini-format 1\.1\b", leer(PUBLICADOS[nombre])), nombre
     html = leer(PUBLICADOS["index.html"])
-    assert f'<span class="badge">{C["version_paquete"]}</span>' in html
     assert f"mini-format {C['version_paquete']} · SPEC {C['version_spec']}" in html
 
 
@@ -218,37 +186,28 @@ def test_el_sitio_construido_dice_el_total():
     assert f"Descargar las {C['familias']} familias" in families
 
 
-# --------------------------------------------------------------------------- ahorros escritos a mano en la portada
-def _es(valor: float, decimales: int = 1) -> str:
-    return f"{valor:.{decimales}f}".replace(".", ",")
+def test_el_resumen_de_la_portada_reproduce_el_costo_y_las_barras_del_ensayo():
+    from benchmarks import inject_benchmarks
 
+    datos = json.loads(leer(ROOT / "benchmark/public/cloud_results.json"))
+    cohorte = datos["cohorts"]["projected_text_batches"]
+    precios = datos["price_usd_per_million"]
+    costo = {}
+    for nombre in ("mini", "json_compact"):
+        medicion = cohorte["formats"][nombre]
+        gasto = (medicion["application_input_tokens"] * precios["input"]
+                 + medicion["output_tokens"] * precios["output"])
+        costo[nombre] = gasto / medicion["exact"] / 1000
 
-def test_los_ahorros_por_ancho_de_la_portada_salen_del_csv_de_v5():
-    """«Cuantos más campos, más gana»: mediana del ahorro frente a JSON compacto (o200k_base, lote 1000) de experiments/v5_ancho."""
-    import csv
-    filas = {int(r["ancho"]): float(r["mediana"]) for r in csv.DictReader(
-        (ROOT / "experiments" / "v5_ancho" / "results" / "ancho_resumen.csv").open(encoding="utf-8"))
-        if r["tokenizador"] == "o200k_base" and r["formato"] == "json_compact" and r["lote"] == "1000"}
-    html = leer(PUBLICADOS["index.html"])
-    seccion = html[html.index("Cuantos más campos"): html.index("Mismos datos.")]
-    valores = re.findall(r'<figcaption>(\d+) campos</figcaption>.*?--w:([\d.]+)%.*?class="val">([\d,]+) %', seccion, re.S)
-    assert [int(a) for a, _, _ in valores] == [3, 20, 50]
-    for ancho, barra, etiqueta in valores:
-        esperado = filas[int(ancho)]
-        assert etiqueta == _es(esperado), f"{ancho} campos: la portada dice {etiqueta} % y el CSV da {esperado}"
-        assert float(barra) == round(2 * float(etiqueta.replace(",", ".")), 1), f"{ancho} campos: la barra no corresponde a la escala 0-50 %"
-    assert "máximo del eje 50 %" in seccion
-
-
-def test_los_ahorros_por_tokenizador_de_la_portada_salen_del_csv_de_v1():
-    """«El mismo documento no cuesta lo mismo en cada modelo»: mediana e IC95 de experiments/v1_tokens (lote 10, muestreo, k=14)."""
-    import csv
-    filas = {r["tokenizador"]: r for r in csv.DictReader((ROOT / "experiments" / "v1_tokens" / "results" / "ahorro_resumen.csv").open(encoding="utf-8"))
-             if r["n"] == "10" and r["referencia"] == "json_compact" and r["variante"] == "muestreo"}
-    html = leer(PUBLICADOS["index.html"])
-    seccion = html[html.index("no cuesta lo mismo en cada modelo"): html.index("<!-- ═══════════ API")]
-    figuras = re.findall(r"<figcaption>(\w+)</figcaption>.*?class=\"val\">([\d,]+) %</span>.*?IC95 \[([\d,]+) % · ([\d,]+) %\] · k=(\d+)", seccion, re.S)
-    assert [f[0] for f in figuras] == ["r50k_base", "cl100k_base", "o200k_base"]
-    for nombre, valor, inf, sup, k in figuras:
-        fila = filas[nombre]
-        assert (valor, inf, sup, k) == (_es(float(fila["mediana"])), _es(float(fila["ic95_inf"])), _es(float(fila["ic95_sup"])), fila["k"]), nombre
+    portada = leer(PUBLICADOS["index.html"])
+    es = inject_benchmarks(portada, "es")
+    en = inject_benchmarks(portada, "en")
+    ahorro = 100 * (1 - costo["mini"] / costo["json_compact"])
+    assert f"{ahorro:.1f}&nbsp;%" in en
+    assert f"{ahorro:.1f}".replace(".", ",") + "&nbsp;%" in es
+    for importe in costo.values():
+        assert f"${importe:.4f}" in en
+    assert re.findall(r"--width:([0-9.]+)%", en) == [
+        f'{100 * costo["mini"] / costo["json_compact"]:.2f}', "100.00",
+    ]
+    assert inject_benchmarks(es, "es") == es

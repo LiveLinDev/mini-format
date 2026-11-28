@@ -8,7 +8,7 @@
     var boton = header && header.querySelector(".nav-toggle");
     var lista = document.getElementById("nav-links");
     if (!header || !boton || !lista) return;
-    var punto = window.matchMedia ? window.matchMedia("(max-width: 1339.98px)") : null;
+    var punto = window.matchMedia ? window.matchMedia("(max-width: 959.98px)") : null;
     function abierto() { return boton.getAttribute("aria-expanded") === "true"; }
     function fijar(abrir) {
       boton.setAttribute("aria-expanded", String(abrir));
@@ -31,6 +31,26 @@
     if (punto && punto.addEventListener) punto.addEventListener("change", function (ev) { if (!ev.matches) fijar(false); });
   })();
 
+  /* Show results linked from the home page or a shared report URL. */
+  function revealFragment() {
+    var id;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch (error) { return; }
+    var target = document.getElementById(id);
+    if (!target) return;
+    var opened = false;
+    for (var node = target; node; node = node.parentElement) {
+      if (node.tagName === "DETAILS" && !node.open) {
+        node.open = true;
+        opened = true;
+      }
+    }
+    if (opened) requestAnimationFrame(function () {
+      target.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+  }
+  window.addEventListener("hashchange", revealFragment);
+  revealFragment();
+
   /* ---- idioma ---- */
   var KEY = "mini-lang";
   var SESION = "mini-lang-sesion";
@@ -52,7 +72,14 @@
     if (/^(Europe\/(Madrid|Canary)|Atlantic\/Canary|America\/(Lima|Bogota|Santiago|Buenos_Aires|Argentina\/|Mexico_City|Monterrey|Merida|Cancun|Guatemala|Costa_Rica|El_Salvador|Managua|Tegucigalpa|Panama|Caracas|Guayaquil|La_Paz|Asuncion|Montevideo|Havana|Santo_Domingo|Puerto_Rico))/.test(zone)) return "es";
     return "en";
   }
+  var opciones = Array.from(document.querySelectorAll("option[data-label-en]"), function (opcion) {
+    return [opcion, opcion.textContent];
+  });
   function aplicar(lang) {
+    opciones.forEach(function (item) {
+      var opcion = item[0];
+      opcion.textContent = lang === "en" ? opcion.dataset.labelEn : item[1];
+    });
     document.querySelectorAll("[data-lang]").forEach(function (el) { el.hidden = el.dataset.lang !== lang; });
     document.querySelectorAll("[data-lang-body]").forEach(function (el) { el.hidden = el.dataset.langBody !== lang; });
     document.querySelectorAll("[data-lang-btn]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.langBtn === lang)); });

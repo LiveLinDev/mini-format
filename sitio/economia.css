@@ -1,94 +1,46 @@
-.eco-wrap {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 56px 24px 84px;
+.eco-wrap{
+  max-width:70rem;
+  padding-block:clamp(2.6rem, 6vw, 5rem) clamp(3.5rem, 7vw, 6rem);
 }
-
-.eco-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin: 28px 0 36px;
+.eco-wrap h1{ font-size:clamp(2.75rem, 6vw, 4.6rem) }
+.eco-wrap .lead{ max-width:62ch }
+.eco-sim{
+  background:rgb(var(--raised));
+  border:1px solid rgb(var(--line));
+  border-radius:var(--r-panel);
+  padding:clamp(1rem, 4vw, 2.3rem);
+  margin-block:1.8rem 1rem;
 }
-
-.eco-card {
-  background: var(--bg-soft, #111827);
-  border: 1px solid var(--border, #1f2937);
-  border-radius: 14px;
-  padding: 20px;
+.eco-sim h2{ border:0; padding:0; margin:0 0 1.2rem }
+.eco-controls, .eco-results, .eco-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%, 13.5rem),1fr));
+  gap:.8rem;
 }
-
-.eco-card strong {
-  display: block;
-  font-size: 1.65rem;
-  color: var(--accent, #10b981);
-  margin-bottom: 6px;
+.eco-controls label{ display:grid; align-content:end; gap:.35rem; font-size:.9rem; color:rgb(var(--fg-muted)) }
+.eco-controls input, .eco-controls select{
+  min-width:0;
+  width:100%;
+  color:rgb(var(--fg));
+  background:rgb(var(--canvas));
+  border:1px solid rgb(var(--line));
+  border-radius:var(--r-lg);
+  font:inherit;
+  padding:.55rem .65rem;
 }
-
-.eco-card span {
-  font-size: 0.92rem;
-  color: var(--muted, #94a3b8);
+.eco-results{ border-top:1px solid rgb(var(--line)); padding-top:1rem; margin-top:1.2rem }
+.eco-out-box, .eco-card{
+  padding:.9rem 1rem;
+  background:rgb(var(--subtle));
+  border:1px solid rgb(var(--line));
+  border-radius:var(--r-lg);
 }
-
-.eco-sim {
-  background: var(--bg-soft, #111827);
-  border: 1px solid var(--border, #1f2937);
-  border-radius: 16px;
-  padding: 24px;
-  margin: 32px 0;
-}
-
-.eco-controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.eco-controls label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 0.88rem;
-  color: var(--muted, #94a3b8);
-}
-
-.eco-controls select,
-.eco-controls input {
-  background: var(--bg, #090d16);
-  color: var(--fg, #f8fafc);
-  border: 1px solid var(--border, #334155);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 0.95rem;
-}
-
-.eco-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 14px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border, #1f2937);
-}
-
-.eco-out-box {
-  background: var(--bg, #090d16);
-  border: 1px solid var(--border, #1f2937);
-  border-radius: 10px;
-  padding: 14px 16px;
-}
-
-.eco-out-box small {
-  display: block;
-  color: var(--muted, #94a3b8);
-  margin-bottom: 4px;
-}
-
-.eco-out-box strong {
-  font-size: 1.3rem;
-  color: var(--fg, #f8fafc);
-}
-
-.eco-out-box.is-win strong {
-  color: var(--accent, #10b981);
-}
+.eco-out-box small, .eco-card span{ color:rgb(var(--fg-muted)); font-size:.88rem; display:block }
+.eco-out-box strong, .eco-card strong{ font-size:1.3rem }
+.eco-out-box.is-win{ background:rgb(var(--accent-soft)) }
+.eco-out-box.is-win strong{ color:rgb(var(--accent-strong)) }
+.eco-measurements-body{ padding:0 clamp(1rem, 3vw, 1.5rem) 1.2rem }
+.eco-grid{ margin-bottom:1.05rem }
+.eco-table{ overflow:auto }
+.eco-table > table{ display:table; font-variant-numeric:tabular-nums }
+.eco-table thead th{ white-space:nowrap }

@@ -57,8 +57,8 @@ Anclas de la portada
     <!-- ═══════════ /COMO FUNCIONA ═══════════ -->
 
 `ctx.region(html, "COMO FUNCIONA", contenido)` reemplaza lo que hay entre ambos y conserva las anclas, por lo que
-puede ejecutarse N veces con el mismo resultado. No coloques la sección dentro de las anclas de `benchmarks.py`
-(`<div class="bench">` del héroe ni «BENCHMARK COMPLETO»).
+puede ejecutarse N veces con el mismo resultado. Mantén la sección fuera de las anclas de `benchmarks.py`
+(«RESUMEN DE COSTO»).
 """
 from __future__ import annotations
 

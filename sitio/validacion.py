@@ -13,16 +13,7 @@ from __future__ import annotations
 import html
 
 
-def costo_por_mil(resultado, precios, *, con_cache=False):
-    if not resultado["exact"]:
-        return None
-    if con_cache:
-        cache = resultado["cached_input_tokens"]
-        entrada = (resultado["input_tokens"] - cache) * precios["input"] + cache * precios["cached_input"]
-    else:
-        entrada = resultado["application_input_tokens"] * precios["input"]
-    salida = resultado["output_tokens"] * precios["output"]
-    return (entrada + salida) / (1000 * resultado["exact"])
+from benchmarks import costo_por_mil, resumen_costo
 
 
 def resultados_nube(ctx):
@@ -49,13 +40,16 @@ def resultados_nube(ctx):
         espanol = ingles.translate(str.maketrans(",.", ".,"))
         return a(espanol, ingles) if espanol != ingles else ingles
 
+    pista = a("Desliza para ver todas las columnas.", "Scroll across to see all columns.")
+
     def tabla(encabezados, filas, etiqueta):
         columnas = "".join(f'<th scope="col">{texto}</th>' for texto in encabezados)
-        return (f'<div class="tablewrap val-result-table" tabindex="0"><table class="t">'
+        return (f'<p class="val-scroll-note">{pista}</p>'
+                f'<div class="tablewrap val-result-table" tabindex="0"><table class="t">'
                 f'<caption class="sr">{etiqueta}</caption><thead><tr>{columnas}</tr></thead>'
                 f'<tbody>{"".join(filas)}</tbody></table></div>')
 
-    def tabla_nube(clave, titulo, *, con_cache=False, abierta=False):
+    def tabla_nube(clave, titulo, *, con_cache=False, ancla=""):
         formatos = grupos[clave]["formats"]
         metrica = a("Tokens leídos de caché", "Cached input tokens") if con_cache else a("Tokens de instrucción", "Instruction tokens")
         encabezados = (a("Formato", "Format"), a("USD por 1.000 aciertos", "USD per 1,000 exact results"),
@@ -68,7 +62,8 @@ def resultados_nube(ctx):
             filas.append(f'<tr><th scope="row">{nombres[clave_formato]}</th>'
                          f'<td>{precio}</td><td>{resultado["exact"]}/{resultado["trials"]}</td>'
                          f'<td>{resultado["retries"]}</td><td>{numero(tokens)}</td></tr>')
-        return (f'<details class="val-run"{" open" if abierta else ""}><summary>{titulo}</summary>'
+        atributo = f' id="{ancla}"' if ancla else ""
+        return (f'<details class="disclosure val-run"{atributo}><summary>{titulo}</summary>'
                 f'{tabla(encabezados, filas, titulo)}</details>')
 
     lotes_medidos = [grupos[clave]["formats"] for clave in ("small_batch", "large_batch")]
@@ -90,8 +85,9 @@ def resultados_nube(ctx):
                                    / costo_por_mil(reparacion["mini_previous"], precios)))
     titulo_reparacion = a(f"Una fila inválida · {ahorro_reparacion} % menos costo por lote correcto",
                           f"One invalid row · {ahorro_reparacion}% lower cost per exact batch")
-    cloud = f'''<section class="val-sec" id="generacion-nube">
-    <h2>{a("Costo por respuesta correcta en la nube", "Cost per correct cloud response")}</h2>
+    cloud = f'''<details class="disclosure val-group" id="generacion-nube">
+    <summary>{a("Generación, precisión y reintentos", "Generation, accuracy and retries")}</summary>
+    <div class="val-body prose">
     <p>{a(
         f"Con GPT-6 Luna, .mini generó {exactas} de {lotes} lotes exactos de 2 a 24 filas al primer intento. TOON 4.4 acertó {exactas_toon} de {lotes}. La instrucción de .mini usó {ahorro} % menos tokens que el flujo anterior.",
         f"With GPT-6 Luna, .mini generated {exactas} of {lotes} exact batches of 2 to 24 rows on the first attempt. TOON 4.4 got {exactas_toon} of {lotes} right. The .mini instructions used {ahorro}% fewer tokens than the previous workflow."
@@ -100,8 +96,8 @@ def resultados_nube(ctx):
         "Cada formato recibió las mismas tareas sintéticas en español y las mismas columnas conocidas. El costo por resultado exacto incluye todos los tokens de entrada y salida, también los de los intentos fallidos y los reintentos.",
         "Every format got the same synthetic Spanish tasks and known columns. Cost per exact result includes all input and output tokens, including failed attempts and retries."
     )}</p>
-    <div id="lotes-texto">{tabla_nube("projected_text_batches", titulo_texto, abierta=True)}</div>
-    <div id="reparacion-filas">{tabla_nube("single_invalid_row_repair", titulo_reparacion)}</div>
+    {tabla_nube("projected_text_batches", titulo_texto, ancla="lotes-texto")}
+    {tabla_nube("single_invalid_row_repair", titulo_reparacion, ancla="reparacion-filas")}
     <p class="val-method">{a("Cinco lotes con una falla simulada a partir de respuestas reales en la nube.",
                             "Five batches with one simulated fault in each recorded cloud response.")}</p>
     {tabla_nube("single_row_recheck", a("Una fila · 4 repeticiones del caso original", "One row · 4 repeats of the original case"))}
@@ -123,7 +119,8 @@ def resultados_nube(ctx):
         "The first tables estimate application input with o200k_base. The cache tables use provider telemetry, including Codex context. Positional JSON and .mini had similar costs on batches of 9 to 24 rows."
     )} <a href="/source/benchmark/public/cloud_results.json">{a("Datos y commits (JSON)", "Data and commits (JSON)")}</a> ·
       <a href="https://developers.openai.com/api/docs/models/gpt-6-luna">{a("Tarifas del modelo", "Model pricing")}</a></p>
-  </section>'''
+    </div>
+  </details>'''
 
     muestras = {
         "soporte-20": a("20 tickets de soporte", "20 support tickets"),
@@ -147,22 +144,24 @@ def resultados_nube(ctx):
         celdas = "".join(f'<td>{numero(conteos[clave])}</td>' for clave in perfiles)
         filas_corpus.append(f'<tr><th scope="row">{titulos[conjunto]}</th>{celdas}</tr>')
     comparacion = a("1.902 registros contando contratos", "1,902 records including contracts")
-    transport = f'''<section class="val-sec" id="compresion-entrada">
-    <h2>{a("Compresión de datos para la entrada", "Compressing input data")}</h2>
+    transport = f'''<details class="disclosure val-group" id="compresion-entrada">
+    <summary>{a("Tamaño de los datos en tokens", "Data size in tokens")}</summary>
+    <div class="val-body prose">
     <p>{a(
         "Tokens del documento completo con o200k_base. Cada formato recuperó exactamente el JSON de origen.",
         "Full-document tokens with o200k_base. Every format recovered the original JSON exactly."
     )}</p>
     {tabla(encabezados, filas, a("Tokens por documento", "Tokens per document"))}
     <p class="val-method">{a("El guion indica una combinación sin ensayo.", "A dash marks a combination that was not tested.")}</p>
-    <details class="val-run"><summary>{comparacion}</summary>
+    <details class="disclosure val-run"><summary>{comparacion}</summary>
       <p>{a(
           "La medición anterior de .mini, en el commit 69f0596, incluye los contratos o mapas de reconstrucción. Usó menos tokens que TOON 4.4.0 en los cuatro conjuntos. CSV ganó en los 500 comentarios.",
           "The earlier .mini measurement at commit 69f0596 includes the contracts or reconstruction maps. It used fewer tokens than TOON 4.4.0 across all four datasets. CSV won on the 500 comments."
       )}</p>
       {tabla(rotulos, filas_corpus, comparacion)}
     </details>
-  </section>'''
+    </div>
+  </details>'''
     return cloud, transport
 
 
@@ -172,7 +171,8 @@ def construir(ctx) -> None:
     datasets = comp.get("datasets", [])
     ds_map = {d["name"]: d for d in datasets}
     casos = ctx.cifras.get("casos_conformidad", 376)
-    familias = len(ctx.leer_json("forks/registry.json")) if isinstance(ctx.leer_json("forks/registry.json"), list) else 14
+    registro = ctx.leer_json("forks/registry.json")
+    familias = len(registro) if isinstance(registro, list) else 14
 
     pub_names = ("products", "users", "comments", "earthquakes")
     tot_json = sum(ds_map[n]["formats"]["json_compact"]["o200k_base"] for n in pub_names)
@@ -234,45 +234,43 @@ def construir(ctx) -> None:
         )
 
     cloud, transport = resultados_nube(ctx)
-    cuerpo = f'''<div class="val-wrap prose">
-  <h1>{a("Validación y Benchmarks 2026", "Validation & 2026 Benchmarks")}</h1>
-  <section class="val-criteria" id="criterios" aria-labelledby="titulo-criterios">
-    <h2 id="titulo-criterios">{a("Qué medimos", "What we measure")}</h2>
-    <div class="val-criteria-grid">
-      <a href="#compresion-entrada"><strong>{a("Tamaño", "Size")}</strong>
-        <span>{a("Tokens de los mismos datos.", "Tokens for the same data.")}</span></a>
-      <a href="#generacion-nube"><strong>{a("Costo", "Cost")}</strong>
-        <span>{a("USD por acierto. Entrada, salida y reintentos.", "USD per exact result. Input, output and retries.")}</span></a>
-      <a href="#generacion-nube"><strong>{a("Precisión", "Accuracy")}</strong>
-        <span>{a("Respuestas con el JSON exacto ÷ casos.", "Responses with exact JSON ÷ cases.")}</span></a>
-    </div>
+    prueba = resumen_costo(ctx.leer_json("benchmark/public/cloud_results.json"), a)
+    cuerpo = f'''<div class="wrap val-wrap">
+  <header class="val-heading">
+    <h1>{a("Resultados de .mini", ".mini benchmark results")}</h1>
+    <p class="lead">{a("Compara cuánto cuesta generar los mismos datos, cuántas respuestas son correctas y cuántos tokens ocupa cada formato.",
+                       "Compare the cost of generating the same data, how many answers are correct, and how many tokens each format takes.")}</p>
+  </header>
+  <section class="val-overview">
+    {prueba}
+    <a class="text-link" href="#lotes-texto">{a("Ver el detalle de esta prueba", "See the details of this test")}</a>
   </section>
 
-  {cloud}
-  {transport}
-
-  <div class="val-kpi-grid">
-    <div class="val-kpi">
-      <strong>{a("4 conjuntos", "4 datasets")}</strong>
-      <span>{a("Datos públicos y un ejemplo adicional de 20 tickets.", "Public datasets and a separate 20-ticket example.")}</span>
-    </div>
-    <div class="val-kpi">
-      <strong>-{tot_save:.1f}% {a("total", "total")}</strong>
-      <span>{a(f"{tot_v2:,} vs {tot_json:,} JSON compacto en 1.902 registros.", f"{tot_v2:,} vs {tot_json:,} JSON compact across 1,902 public records.")}</span>
-    </div>
-    <div class="val-kpi">
-      <strong>99.8% {a("cortes", "recovery")}</strong>
-      <span>{a("1.705 / 1.708 registros salvados tras max_tokens vs 0 / 1.724 JSON.", "1,705 / 1,708 records recovered after truncation cuts vs 0 / 1,724 JSON.")}</span>
-    </div>
-    <div class="val-kpi">
-      <strong>{casos} {a("casos", "cases")}</strong>
-      <span>{a(f"Conformidad cruzada Python / JS / Oracle TS en {familias} familias más gramáticas GBNF/Lark.", f"Cross-runtime Python / JS / Oracle TS conformance across {familias} families plus GBNF/Lark.")}</span>
-    </div>
-  </div>
-
-  <section class="val-sec">
-    <h2>{a("Resultados por conjunto de datos (o200k_base)", "Per-workload results (o200k_base)")}</h2>
-    <div class="tablewrap">
+  <div class="val-groups">
+    <details class="disclosure val-group" id="criterios">
+      <summary>{a("Cómo se midió", "How we measured it")}</summary>
+      <div class="val-body prose">
+        <dl class="val-criteria-grid">
+          <div><dt>{a("Costo", "Cost")}</dt><dd>{a("USD por respuesta correcta. Cuenta la instrucción, la salida y los reintentos.",
+                                                    "USD per correct response. Counts instructions, output and retries.")}</dd></div>
+          <div><dt>{a("Precisión", "Accuracy")}</dt><dd>{a("Cuántas respuestas coinciden exactamente con el JSON esperado.",
+                                                           "How many responses match the expected JSON exactly.")}</dd></div>
+          <div><dt>{a("Tamaño", "Size")}</dt><dd>{a("Tokens del texto que representa los mismos datos.",
+                                                     "Tokens in the text representing the same data.")}</dd></div>
+        </dl>
+        <p><a href="/docs/metodologia/">{a("Metodología completa", "Full methodology")}</a> ·
+           <a href="/source/benchmark/public/">{a("Datos y scripts reproducibles", "Reproducible data and scripts")}</a></p>
+      </div>
+    </details>
+    {cloud}
+    {transport}
+  <details class="disclosure val-group" id="serializacion-publica">
+    <summary>{a("Comparación de 16 formatos", "Comparison of 16 formats")}</summary>
+    <div class="val-body prose">
+      <p>{a(f"En 1.902 registros públicos, .mini domain/2 y JSON compacto ocuparon {tot_v2:,} y {tot_json:,} tokens, respectivamente. Diferencia: {tot_save:.1f} % a favor de .mini.",
+             f"Across 1,902 public records, .mini domain/2 and compact JSON took {tot_v2:,} and {tot_json:,} tokens, respectively. Difference: {tot_save:.1f}% in favor of .mini.")}</p>
+      <h3>{a("Resultados por conjunto de datos", "Results by dataset")} <code>o200k_base</code></h3>
+      <div class="tablewrap val-result-table" tabindex="0">
       <table class="t">
         <thead>
           <tr>
@@ -289,15 +287,12 @@ def construir(ctx) -> None:
         <tbody>{"".join(summary_rows)}</tbody>
       </table>
     </div>
-  </section>
-
-  <section class="val-sec" id="serializacion-publica">
-    <h2>{a("Clasificación agregada multiformato (1.902 registros públicos)", "Aggregate multi-tokenizer leaderboard (1,902 public records)")}</h2>
+    <h3>{a("Totales de los 1.902 registros", "Totals for all 1,902 records")}</h3>
     <p>{a(
         "Tres tokenizadores BPE cuentan el texto serializado de cuatro conjuntos públicos. El arnés usa esquemas o mapas reutilizables cuando el perfil los requiere para reconstruir el JSON.",
         "Three BPE tokenizers count serialized text from four public datasets. The harness uses reusable schemas or maps when the profile needs them to reconstruct JSON."
     )}</p>
-    <div class="tablewrap">
+    <div class="tablewrap val-result-table" tabindex="0">
       <table class="t">
         <thead>
           <tr>
@@ -313,11 +308,13 @@ def construir(ctx) -> None:
         <tbody>{"".join(agg_rows)}</tbody>
       </table>
     </div>
-  </section>
-
-  <section class="val-sec">
-    <h2>{a("Supervivencia ante truncamiento (180 cortes reales)", "Truncation cut survival (180 real cuts)")}</h2>
-    <div class="tablewrap">
+    </div>
+  </details>
+  <details class="disclosure val-group">
+    <summary>{a("Recuperación de respuestas cortadas", "Recovering truncated responses")}</summary>
+    <div class="val-body prose">
+      <p>{a("180 cortes reales. Se cuentan los registros completos que el lector pudo recuperar.", "180 real cuts. This test counts the complete records each reader recovered.")}</p>
+    <div class="tablewrap val-result-table" tabindex="0">
       <table class="t">
         <thead>
           <tr>
@@ -333,14 +330,28 @@ def construir(ctx) -> None:
         </tbody>
       </table>
     </div>
-  </section>
+    </div>
+  </details>
+  <details class="disclosure val-group">
+    <summary>{a("Conformidad y otros estudios", "Conformance and other studies")}</summary>
+    <div class="val-body prose">
+      <p>{a(f"{casos} casos de conformidad en Python, JavaScript y el oráculo TypeScript, con {familias} familias.",
+             f"{casos} conformance cases across Python, JavaScript and the TypeScript oracle with {familias} families.")}</p>
+      <ul>
+        <li><a href="/docs/conformance/">{a("Suite de conformidad", "Conformance suite")}</a></li>
+        <li><a href="/source/experiments/v1_tokens/">{a("Ahorro de tokens por vocabulario", "Token savings by vocabulary")}</a></li>
+        <li><a href="/source/experiments/v4_costos/">{a("Costo por modelo", "Cost by model")}</a></li>
+        <li><a href="/source/experiments/v5_ancho/">{a("Efecto del número de columnas", "Effect of the number of columns")}</a></li>
+      </ul>
+    </div>
+  </details>
+  </div>
 
   <p class="wip-links">
     <a class="btn btn-ghost" href="/economia/">{a("Calculadora de costos LLM", "LLM Cost Simulator")}</a>
     <a class="btn btn-ghost" href="/source/benchmark/public/competitors_results.json">{a("Resultados completos (JSON)", "Full benchmark results (JSON)")}</a>
-    <a class="btn btn-ghost" href="/docs/conformance/">{a("Suite de conformidad", "Conformance suite")}</a>
   </p>
 </div>'''
-    html_out = ctx.pagina("validacion", "Validación y Benchmarks", "Validation & Benchmarks", cuerpo)
+    html_out = ctx.pagina("validacion", "Resultados de .mini", ".mini benchmark results", cuerpo)
     html_out = ctx.recursos(html_out, css=("/validacion.css",))
     ctx.escribir_pagina("validacion", html_out)

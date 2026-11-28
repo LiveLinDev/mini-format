@@ -82,11 +82,11 @@ def test_la_portada_simplificada_conserva_las_anclas_antes_de_instalar():
     portada = (SITIO / "index.html").read_text(encoding="utf-8")
     abre, cierra = f"<!-- {A} COMO FUNCIONA {A} -->", f"<!-- {A} /COMO FUNCIONA {A} -->"
     assert portada.count(abre) == portada.count(cierra) == 1
-    tira = portada.index('class="frame hero"')
+    tira = portada.index('class="hero"')
     piezas = portada.index('id="instalar"')
     assert tira < portada.index(abre) < portada.index(cierra) < piezas
-    # las anclas de benchmarks.py no se han tocado ni movido
-    assert portada.count('    <div class="bench">') == 1 and portada.count(f"<!-- {A} BENCHMARK COMPLETO {A} -->") == 1
+    assert portada.count(f"<!-- {A} RESUMEN DE COSTO {A} -->") == 1
+    assert portada.count(f"<!-- {A} /RESUMEN DE COSTO {A} -->") == 1
     assert modulos.region(portada, "COMO FUNCIONA", "<p>x</p>").count("<p>x</p>") == 1
 
 
@@ -231,4 +231,4 @@ def test_los_marcadores_de_validacion_y_economia_son_modulos_validos(tmp_path):
         assert "en construcción" not in pagina and "under construction" not in pagina
         assert "<h1>" in pagina and 'data-title-es=' in pagina and "<table" in pagina
         assert not re.search(r"[←-⇿⌀-⏿☀-➿⬀-⯿\U0001F000-\U0001FAFF]", pagina), "sin flechas, emojis ni dingbats"
-    assert construir.ruta_activa("validacion") == ""
+    assert construir.ruta_activa("validacion") == "validacion"

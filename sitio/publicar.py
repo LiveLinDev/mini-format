@@ -54,7 +54,7 @@ def version_assets(text: str, digest_cache: dict[str, str]) -> str:
         query.append(("v", digest_cache[relative]))
         target = url.path + "?" + urlencode(query) + ("#" + url.fragment if url.fragment else "")
         return f'{attr}="{html.escape(target, quote=True)}"'
-    return re.sub(r'(href|src)="([^"]+)"', replace, text)
+    return re.sub(r'(href|src|srcset)="([^"]+)"', replace, text)
 
 
 def source_link(rel: str) -> str:
@@ -111,6 +111,9 @@ def local_sources(text: str) -> str:
         target = source_link(found.group(1)) if found else SOURCE_ZIP
         return f'{attr}="{html.escape(target, quote=True)}"'
     text = re.sub(r'(href|src)="(' + re.escape(REPO) + r'[^"]*)"', replace, text)
+    # The README picture sources use one repository image per color scheme.
+    text = re.sub(r'srcset="(?:/source/)?(docs/assets/[^"\s,]+)"',
+                  lambda m: f'srcset="{html.escape(source_link(m.group(1)), quote=True)}"', text)
     # The landing source is also a rendered file; rebuild previously localized
     # evidence links after clearing the generated source directory.
     return re.sub(r'(href|src)="/source/([^"]+)"', lambda m: f'{m.group(1)}="{html.escape(source_link(m.group(2)), quote=True)}"', text)
